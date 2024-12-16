@@ -72,6 +72,12 @@ class DataJson(StructureMapper, StructureChecker):
         if DataJsonKey.CONTENT_LIST not in self.__json_data:  # 保证content_list一定存在
             self.__json_data[DataJsonKey.CONTENT_LIST] = []
 
+    def __getitem__(self, key):
+        return self.__json_data[key]  # 提供读取功能
+
+    def __setitem__(self, key, value):
+        self.__json_data[key] = value  # 提供设置功能
+
     def get_dataset_name(self) -> str:
         return self.__json_data[DataJsonKey.DATASET_NAME]
 
