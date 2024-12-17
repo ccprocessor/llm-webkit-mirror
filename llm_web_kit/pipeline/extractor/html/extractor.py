@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List
+from typing import List, Tuple
 
 from overrides import override
 
@@ -70,7 +70,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         base_url:str = data_json['url']
 
         main_html, method = self._extract_main_html(raw_html, base_url)
-        parsed_html = [main_html]
+        parsed_html = [(main_html,main_html)]
         for extract_func in [self._extract_code, self._extract_math, self._extract_image, self._extract_audio,
                              self._extract_video, self._extract_table, self._extract_list,
                              self._extract_title, self._extract_paragraph]:
@@ -97,12 +97,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         raise NotImplementedError
 
     @abstractmethod
-    def _extract_code(self, base_url:str, html_lst:List[str], raw_html:str) -> list[str]:
+    def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取代码.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -112,12 +112,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_math(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_math(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取数学公式.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -127,12 +127,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_image(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_image(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取图片.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -142,12 +142,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_audio(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_audio(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取音频.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -157,12 +157,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_video(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_video(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取视频.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -172,12 +172,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_table(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_table(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取表格.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -187,12 +187,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_list(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取列表.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -202,12 +202,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_title(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_title(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取标题.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -217,12 +217,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _extract_paragraph(self, base_url:str, html_lst:List[str], raw_html:str):
+    def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取段落.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:
@@ -232,12 +232,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         return lst
 
     @abstractmethod
-    def _export_to_content_list(self, base_url:str, html_lst:List[str], raw_html:str) -> ContentList:
+    def _export_to_content_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> ContentList:
         """将解析结果存入content_list格式中.
 
         Args:
             base_url (str): html文本的网页地址
-            html_lst (List[str]): html文本
+            html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
 
         Returns:

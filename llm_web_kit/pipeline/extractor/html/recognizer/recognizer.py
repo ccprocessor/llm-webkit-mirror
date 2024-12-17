@@ -1,13 +1,13 @@
 """基本的元素解析类."""
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple
 
 
 class BaseHTMLElementRecognizer(ABC):
     """基本的元素解析类."""
     @abstractmethod
-    def recognize(self, base_url:str, main_html_lst: List[str], raw_html:str) -> List[str]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """父类，解析html中的元素.
 
         Args:

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from overrides import override
 
@@ -9,7 +9,7 @@ from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
 class ListRecognizer(BaseHTMLElementRecognizer):
     """解析列表元素."""
     @override
-    def recognize(self, base_url:str, main_html_lst: List[str], raw_html:str) -> List[str]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """父类，解析列表元素.
 
         Args:
