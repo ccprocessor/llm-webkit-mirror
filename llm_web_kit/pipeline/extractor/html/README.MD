@@ -1,7 +1,6 @@
-
 ## HTML解析流程
-![](../../../../docs/images/HTMLExtractor.png)
 
+![](../../../../docs/images/HTMLExtractor.png)
 
 ## 各元素转换后的标准定义
 

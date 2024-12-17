@@ -1,19 +1,14 @@
-"""
-基本的元素解析类
-"""
+"""基本的元素解析类."""
 
 from abc import ABC, abstractmethod
 from typing import List
 
 
 class BaseHTMLElementRecognizer(ABC):
-    """
-    基本的元素解析类
-    """
+    """基本的元素解析类."""
     @abstractmethod
-    def recognize(self, base_url:str, main_html_lst:List[str], raw_html:str) ->List[str]:
-        """
-        父类，解析html中的元素
+    def recognize(self, base_url:str, main_html_lst: List[str], raw_html:str) -> List[str]:
+        """父类，解析html中的元素.
 
         Args:
             base_url: str: 基础url
@@ -21,6 +16,5 @@ class BaseHTMLElementRecognizer(ABC):
             raw_html: 原始完整的html
 
         Returns:
-
         """
         raise NotImplementedError

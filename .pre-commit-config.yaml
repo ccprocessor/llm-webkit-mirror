@@ -3,7 +3,7 @@ repos:
     rev: 5.0.4
     hooks:
       - id: flake8
-        args: ["--max-line-length=150", "--ignore=E131,E125,W503,W504,E203"]
+        args: ["--max-line-length=150", "--ignore=E131,E125,W503,W504,E203,E231"]
   - repo: https://github.com/PyCQA/isort
     rev: 5.11.5
     hooks:

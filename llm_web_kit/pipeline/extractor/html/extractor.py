@@ -3,24 +3,29 @@ from typing import List
 
 from overrides import override
 
-from llm_web_kit.input.datajson import DataJson, ContentList
+from llm_web_kit.input.datajson import ContentList, DataJson
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
-from llm_web_kit.pipeline.extractor.html.recognizer.audio import AudioRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
+    AudioRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.code import CodeRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.image import ImageRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.image import \
+    ImageRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.list import ListRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.math import MathRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import BaseHTMLElementRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.table import TableRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.text import TextParagraphRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.title import TitleRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.video import VideoRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
+    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.table import \
+    TableRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.text import \
+    TextParagraphRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.title import \
+    TitleRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.video import \
+    VideoRecognizer
 
 
 class HTMLFileFormatExtractor(BaseFileFormatExtractor):
-    """一个从html文件中提取数据的提取器.
-
-    """
+    """一个从html文件中提取数据的提取器."""
 
     def __init__(self, config: dict):
         """从参数指定的配置中初始化这个流水线链.
@@ -38,7 +43,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         self.__list_recognizer:BaseHTMLElementRecognizer = ListRecognizer()
         self.__title_recognizer:BaseHTMLElementRecognizer = TitleRecognizer()
         self.__paragraph_recognizer:BaseHTMLElementRecognizer = TextParagraphRecognizer()
-
 
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
@@ -68,8 +72,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         main_html, method = self._extract_main_html(raw_html, base_url)
         parsed_html = [main_html]
         for extract_func in [self._extract_code, self._extract_math, self._extract_image, self._extract_audio,
-                       self._extract_video, self._extract_table, self._extract_list, self._extract_title,
-                       self._extract_paragraph]:
+                             self._extract_video, self._extract_table, self._extract_list,
+                             self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
 
         content_list = self._export_to_content_list(base_url, parsed_html, raw_html)
@@ -79,8 +83,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_main_html(self, raw_html:str, base_url:str) -> (str, str):
-        """
-        从html文本中提取主要的内容
+        """从html文本中提取主要的内容.
 
         Args:
             raw_html (str): html文本
@@ -89,15 +92,13 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
             str1: 主要的内容
             str2: 获得内容的方式，可对质量进行评估
-
         """
         # TODO: 从html文本中提取主要的内容
         raise NotImplementedError
 
     @abstractmethod
     def _extract_code(self, base_url:str, html_lst:List[str], raw_html:str) -> list[str]:
-        """
-        从html文本中提取代码
+        """从html文本中提取代码.
 
         Args:
             base_url (str): html文本的网页地址
@@ -105,7 +106,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__code_recognizer.recognize(base_url, html_lst, raw_html)
@@ -113,8 +113,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_math(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取数学公式
+        """从html文本中提取数学公式.
 
         Args:
             base_url (str): html文本的网页地址
@@ -122,7 +121,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__math_recognizer.recognize(base_url, html_lst, raw_html)
@@ -130,8 +128,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_image(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取图片
+        """从html文本中提取图片.
 
         Args:
             base_url (str): html文本的网页地址
@@ -139,7 +136,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__image_recognizer.recognize(base_url, html_lst, raw_html)
@@ -147,8 +143,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_audio(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取音频
+        """从html文本中提取音频.
 
         Args:
             base_url (str): html文本的网页地址
@@ -156,7 +151,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__audio_recognizer.recognize(base_url, html_lst, raw_html)
@@ -164,8 +158,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_video(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取视频
+        """从html文本中提取视频.
 
         Args:
             base_url (str): html文本的网页地址
@@ -173,7 +166,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__video_recognizer.recognize(base_url, html_lst, raw_html)
@@ -181,8 +173,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_table(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取表格
+        """从html文本中提取表格.
 
         Args:
             base_url (str): html文本的网页地址
@@ -190,7 +181,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__table_recognizer.recognize(base_url, html_lst, raw_html)
@@ -198,8 +188,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_list(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取列表
+        """从html文本中提取列表.
 
         Args:
             base_url (str): html文本的网页地址
@@ -207,7 +196,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__list_recognizer.recognize(base_url, html_lst, raw_html)
@@ -215,8 +203,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_title(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取标题
+        """从html文本中提取标题.
 
         Args:
             base_url (str): html文本的网页地址
@@ -224,7 +211,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html)
@@ -232,8 +218,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
     @abstractmethod
     def _extract_paragraph(self, base_url:str, html_lst:List[str], raw_html:str):
-        """
-        从html文本中提取段落
+        """从html文本中提取段落.
 
         Args:
             base_url (str): html文本的网页地址
@@ -241,16 +226,14 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html)
-        return
+        return lst
 
     @abstractmethod
     def _export_to_content_list(self, base_url:str, html_lst:List[str], raw_html:str) -> ContentList:
-        """
-        将解析结果存入content_list格式中
+        """将解析结果存入content_list格式中.
 
         Args:
             base_url (str): html文本的网页地址
@@ -258,7 +241,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             raw_html (str): html文本
 
         Returns:
-
         """
 
         raise NotImplementedError

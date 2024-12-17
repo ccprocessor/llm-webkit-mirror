@@ -2,16 +2,15 @@ from typing import List
 
 from overrides import override
 
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
+    BaseHTMLElementRecognizer
+
 
 class MathRecognizer(BaseHTMLElementRecognizer):
-    """
-    解析数学公式元素
-    """
+    """解析数学公式元素."""
     @override
-    def recognize(self, base_url:str, main_html_lst:List[str], raw_html:str) ->List[str]:
-        """
-        父类，解析数学公式元素
+    def recognize(self, base_url:str, main_html_lst: List[str], raw_html:str) -> List[str]:
+        """父类，解析数学公式元素.
 
         Args:
             base_url: str: 基础url
@@ -19,6 +18,5 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             raw_html: 原始完整的html
 
         Returns:
-
         """
         raise NotImplementedError
