@@ -1,6 +1,8 @@
 import os
 from unittest.mock import MagicMock, patch
 
+os.environ['LLM_WEB_KIT_CFG_PATH'] = './assets/model_config.jsonc'
+
 from llm_web_kit.model.policical import (PoliticalDetector,
                                          decide_political_by_prob,
                                          decide_political_by_str,
