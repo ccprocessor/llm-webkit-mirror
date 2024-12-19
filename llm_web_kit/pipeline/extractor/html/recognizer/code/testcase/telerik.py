@@ -1,4 +1,4 @@
-html="""
+html = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -2947,4 +2947,6 @@ and vote to affect the priority of the items
 </body>
 </html>
 """
-base_url="https://www.telerik.com/forums/virtual-mode-custom-cell-datatemplate-problems"
+base_url = (
+    "https://www.telerik.com/forums/virtual-mode-custom-cell-datatemplate-problems"
+)
