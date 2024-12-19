@@ -1,32 +1,3062 @@
-data = {
-    "track_id": "10ccdb9b-944f-4941-9eba-5042cdbc8a7d",
-    "url": "https://www.geeksforgeeks.org/10-css-selectors-every-developer-should-know/?ref=rp",
-    "date": 1656112014,
-    "status": 200,
-    "response_header": {
-        "Server": "nginx",
-        "Content-Type": 'text/html; charset="UTF-8"',
-        "X-Frame-Options": "DENY",
-        "X-Crawler-Content-Encoding": "gzip",
-        "X-Akamai-Transformed": "9 27140 0 pmb=mRUM,2",
-        "Cache-Control": "max-age=21581",
-        "Date": "Fri, 24 Jun 2022 23:06:54 GMT",
-        "X-Crawler-Content-Length": "27140",
-        "Content-Length": "151316",
-        "Connection": "keep-alive",
-        "Vary": "Accept-Encoding",
-        "Server-Timing": "origin; dur=276",
-    },
-    "content_length": 151316,
-    "content_charset": '"utf-8"',
-    "html": '<!doctype html><html lang=en-us prefix="og: http://ogp.me/ns#"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><link rel="shortcut icon" href=https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_favicon.png type=image/x-icon><meta name=theme-color content="#308D46"><meta name=image property="og:image" content="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200x200-min.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="200"><meta property="og:image:height" content="200"><script defer src=https://apis.google.com/js/platform.js></script><script async src=//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js></script><title>10 CSS Selectors Every Developer Should Know - GeeksforGeeks</title><link rel=profile href=http://gmpg.org/xfn/11><link rel=pingback href><script type=application/ld+json>{"@context":"http://schema.org","@type":"Organization","name":"GeeksforGeeks","url":"https://www.geeksforgeeks.org/","logo":"https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200817185016/gfg_complete_logo_2x-min.png","description":"A computer science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions.","founder":[{"@type":"Person","name":"Sandeep Jain","url":"https://in.linkedin.com/in/sandeep-jain-b3940815"}],"sameAs":["https://www.facebook.com/geeksforgeeks.org/","https://twitter.com/geeksforgeeks","https://www.linkedin.com/company/1299009","https://www.youtube.com/geeksforgeeksvideos/"]}</script><script>var arrPostCat=new Array,arrPostCatName="WebTechnologies",tIds,domain,arrPost,post_id,post_type,post_slug,ip,post_title,post_status,post_date,commentSysUrl,postAdApiUrlString,link_on_code_run,link_search_modal_top,isAdminLoggedIn;arrPostCat.push(\'3615\'),arrPostCat.push(\'1710\'),arrPostCat.push(\'2628\'),tIds="3615,1710,2628",domain=1,arrPost=new Array,post_id="423476",post_type="post",post_slug=window.location.href,ip="44.228.141.202",post_title="10 CSS Selectors Every Developer Should Know",post_status="publish",post_date="2020-06-10 00:15:36",commentSysUrl="https://discuss.geeksforgeeks.org/commentEmbedV2.js",postAdApiUrlString="",link_on_code_run=\'<br><br><a href="https://practice.geeksforgeeks.org/explore?page=1&sortBy=submissions&utm_source=practice&utm_medium=IDE&utm_campaign=practice-IDE">Improve your Coding Skills with Practice</a>\',link_search_modal_top=\'\',isAdminLoggedIn=0</script><meta name=description content="A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions."><link rel=canonical href=https://www.geeksforgeeks.org/10-css-selectors-every-developer-should-know/><meta property="og:locale" content="en_US"><meta property="og:type" content="article"><meta property="og:title" content="10 CSS Selectors Every Developer Should Know - GeeksforGeeks"><meta property="og:description" content="A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions."><meta property="og:url" content="https://www.geeksforgeeks.org/10-css-selectors-every-developer-should-know/"><meta property="og:site_name" content="GeeksforGeeks"><meta property="article:section" content="GBlog"><meta property="article:published_time" content="2020-06-10T00:15:36+00:00"><meta property="article:modified_time" content="2021-09-02T20:07:58+00:00"><meta property="og:updated_time" content="2021-09-02T20:07:58+00:00"><meta property="og:image" content="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200609224155/10-CSS-Selectors-Every-Developer-Should-Know.png"><meta property="og:image:secure_url" content="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200609224155/10-CSS-Selectors-Every-Developer-Should-Know.png"><meta property="og:image:width" content="900"><meta property="og:image:height" content="565"><meta property="og:image:alt" content="10-CSS-Selectors-Every-Developer-Should-Know"><script type=application/ld+json>{"@context":"https:\\/\\/schema.org","@type":"Organization","url":"https:\\/\\/www.geeksforgeeks.org\\/","sameAs":[],"@id":"https:\\/\\/www.geeksforgeeks.org\\/#organization","name":"GeeksforGeeks","logo":"http:\\/\\/www.geeksforgeeks.org\\/wp-content\\/uploads\\/gfg_200X200-1.png"}</script><link rel=dns-prefetch href=//www.geeksforgeeks.org><link rel=dns-prefetch href=//s.w.org><link rel=alternate type=application/rss+xml title="GeeksforGeeks &#187; Feed" href=https://www.geeksforgeeks.org/feed/><link rel=alternate type=application/rss+xml title="GeeksforGeeks &#187; Comments Feed" href=https://www.geeksforgeeks.org/comments/feed/><script>window._wpemojiSettings={baseUrl:"https://s.w.org/images/core/emoji/11/72x72/",ext:".png",svgUrl:"https://s.w.org/images/core/emoji/11/svg/",svgExt:".svg",source:{concatemoji:"https://www.geeksforgeeks.org/wp-includes/js/wp-emoji-release.min.js?ver=4.9.8"}},!function(k,f,a){function i(d,e){var a=String.fromCharCode,f,g;return c.clearRect(0,0,b.width,b.height),c.fillText(a.apply(this,d),0,0),f=b.toDataURL(),c.clearRect(0,0,b.width,b.height),c.fillText(a.apply(this,e),0,0),g=b.toDataURL(),f===g}function l(b){var a;if(!c||!c.fillText)return!1;switch(c.textBaseline="top",c.font="600 32px Arial",b){case"flag":return!(a=i([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(a=i([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!a);case"emoji":return a=i([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!a}return!1}function j(b){var a=f.createElement("script");a.src=b,a.defer=a.type="text/javascript",f.getElementsByTagName("head")[0].appendChild(a)}var e,h,d,g,b=f.createElement("canvas"),c=b.getContext&&b.getContext("2d");for(g=Array("flag","emoji"),a.supports={everything:!0,everythingExceptFlag:!0},d=0;d<g.length;d++)a.supports[g[d]]=l(g[d]),a.supports.everything=a.supports.everything&&a.supports[g[d]],"flag"!==g[d]&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[g[d]]);a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.DOMReady=!1,a.readyCallback=function(){a.DOMReady=!0},a.supports.everything||(h=function(){a.readyCallback()},f.addEventListener?(f.addEventListener("DOMContentLoaded",h,!1),k.addEventListener("load",h,!1)):(k.attachEvent("onload",h),f.attachEvent("onreadystatechange",function(){"complete"===f.readyState&&a.readyCallback()})),e=a.source||{},e.concatemoji?j(e.concatemoji):e.wpemoji&&e.twemoji&&(j(e.twemoji),j(e.wpemoji)))}(window,document,window._wpemojiSettings)</script><style>img.wp-smiley,img.emoji{display:inline!important;border:none!important;box-shadow:none!important;height:1em!important;width:1em!important;margin:0 .07em!important;vertical-align:-.1em!important;background:0 0!important;padding:0!important}</style><link rel=stylesheet id=custom-style-css href="https://www.geeksforgeeks.org/wp-content/themes/iconic-one/css/gfg.min.css?ver=8.97" media=all><script src="https://code.jquery.com/jquery-3.1.1.min.js?ver=3.1.1"></script><script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js?ver=3.0.0"></script><script>var gfgObject={authUrl:"https://auth.geeksforgeeks.org/",writeApiUrl:"https://apiwrite.geeksforgeeks.org/",writeUrl:"https://write.geeksforgeeks.org/",utilUrl:"https://util.geeksforgeeks.org/",apiUrl:"https://api.geeksforgeeks.org/",cfApiUrl:"https://gfgapi.geeksforgeeks.org/"}</script><script async src="https://www.geeksforgeeks.org/wp-content/themes/iconic-one/js/gfg.min.js?ver=11.18"></script><link rel=https://api.w.org/ href=https://www.geeksforgeeks.org/wp-json/><link rel=edituri type=application/rsd+xml title=RSD href=https://www.cdn.geeksforgeeks.org/xmlrpc.php?rsd><link rel=wlwmanifest type=application/wlwmanifest+xml href=https://www.cdn.geeksforgeeks.org/wp-includes/wlwmanifest.xml><meta name=generator content="WordPress 4.9.8"><link rel=shortlink href="https://www.geeksforgeeks.org/?p=423476"><link rel=alternate type=application/json+oembed href="https://www.geeksforgeeks.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.geeksforgeeks.org%2F10-css-selectors-every-developer-should-know%2F"><link rel=alternate type=text/xml+oembed href="https://www.geeksforgeeks.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.geeksforgeeks.org%2F10-css-selectors-every-developer-should-know%2F&format=xml"><style>#wpadminbar{background:red!important}</style><style id=custom-background-css>body.custom-background{background-color:#fff}</style><link rel=amphtml href=https://www.geeksforgeeks.org/10-css-selectors-every-developer-should-know/amp/><link rel=icon href=https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-100x100.png sizes=32x32><link rel=icon href=https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png sizes=192x192><link rel=apple-touch-icon-precomposed href=https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png><meta name=msapplication-TileImage content="https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png"><script async src=https://www.googletagservices.com/tag/js/gpt.js></script><script async src="https://www.geeksforgeeks.org/wp-content/themes/iconic-one/js/prebid.js?ver=0.4"></script><script async src="https://cdnads.geeksforgeeks.org/gfg_ads.min.js?ver=0.1"></script><style>@media(max-width:1043px) and (min-width:992px){.hide-1043992{display:none!important}}</style><script async src="https://www.googletagmanager.com/gtag/js?id=G-DWCCJLKX3X"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag(\'js\',new Date),gtag(\'config\',\'AW-474915276\'),gtag(\'config\',\'G-DWCCJLKX3X\'),gtag(\'config\',\'AW-796001856\')</script><body class="post-template-default single single-post postid-423476 single-format-standard custom-background custom-background-white"><script>const gfgThemeList=Object.freeze({LIGHT:"gfgThemeLight",DARK:"gfgThemeDark"}),getThemeFromCookie=()=>{let a="",c=document.cookie,b=c.split(";");for(let c=0;c<b.length;c++){let d=b[c].split("=");d[0].trim()=="gfg_theme"&&(a=d[1].trim())}return a},toggleNineDotMenuImages=a=>{jQuery(".nineDot-menu_left .nineDot-menu_item").each((g,e)=>{let d=jQuery(e).find("img"),f=d.attr("src"),[b,c]=/(.*)\\.svg/g.exec(f);!b.includes("%40dark")&&a===gfgThemeList.DARK?b=`${c}%40dark.svg`:b.includes("%40dark")&&a===gfgThemeList.LIGHT&&(b=`${c.substr(0,c.length-7)}.svg`),d.attr("src",b)})};var isDarkMode=getThemeFromCookie()==gfgThemeList.DARK;document.querySelector("body").setAttribute("data-dark-mode",isDarkMode)</script><div class=header-main__wrapper><a class=gfg-stc style=top:0 href=#main>Skip to content</a>\n<a href=https://www.geeksforgeeks.org/ aria-label=Logo class=header-main__logo><div class=_logo><svg xmlns="http://www.w3.org/2000/svg" width="76.533" height="39.026" viewBox="0 0 76.533 39.026"><path d="M2380.7 6597.866a12.252 12.252.0 00-.261-1.513l-30.726-.027a12.545 12.545.0 01.908-3.443 12.337 12.337.0 012.739-4.044 12.151 12.151.0 014.018-2.581 12.634 12.634.0 0114.3 3.051l4.852-4.748a18.176 18.176.0 00-6.131-4.331 20.037 20.037.0 00-8.112-1.564 20.25 20.25.0 00-7.671 1.459 19.158 19.158.0 00-6.261 4.07 19.584 19.584.0 00-4.226 6.184 18.7 18.7.0 00-1.487 5.947h-.2a18.674 18.674.0 00-1.489-5.947 19.544 19.544.0 00-4.226-6.184 19.133 19.133.0 00-6.261-4.07 21.354 21.354.0 00-15.783.1 18.2 18.2.0 00-6.131 4.331l4.853 4.748a13.264 13.264.0 0114.3-3.051 12.131 12.131.0 014.017 2.581 12.323 12.323.0 012.74 4.044 12.527 12.527.0 01.908 3.443l-30.726.027a12.256 12.256.0 00-.261 1.513 15 15 0 00-.1 1.773 20.713 20.713.0 001.1 6.783 15.709 15.709.0 003.443 5.686 17.309 17.309.0 006 4.123 20.587 20.587.0 007.983 1.46 20.226 20.226.0 007.669-1.46 19.086 19.086.0 006.261-4.07 19.506 19.506.0 004.226-6.184 18.163 18.163.0 001.153-3.629h.871a18.27 18.27.0 001.151 3.629 19.545 19.545.0 004.226 6.184 19.111 19.111.0 006.261 4.07 20.241 20.241.0 007.671 1.46 20.572 20.572.0 007.981-1.46 17.282 17.282.0 006-4.123 15.717 15.717.0 003.445-5.686 20.726 20.726.0 001.1-6.783A15.259 15.259.0 002380.7 6597.866zm-46.245 5.608a12.1 12.1.0 01-2.766 4.043 12.467 12.467.0 01-4.043 2.583 14.378 14.378.0 01-9.939.052 11.776 11.776.0 01-3.522-2.218 8.459 8.459.0 01-1.8-2.374 13.476 13.476.0 01-1.173-3.208h23.658A11.487 11.487.0 012334.457 6603.475zm38.236 2.086a8.466 8.466.0 01-1.8 2.374 11.771 11.771.0 01-3.522 2.218 14.378 14.378.0 01-9.939-.052 12.491 12.491.0 01-4.044-2.583 12.088 12.088.0 01-2.765-4.043 11.427 11.427.0 01-.415-1.126h11.92v0h11.739A13.509 13.509.0 012372.692 6605.561z" transform="translate(-2304.273 -6578.666)" fill="#2f8d46"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="155" height="21.281" viewBox="0 0 205.805 21.281"><g id="Group_156" data-name="Group 156" transform="translate(26.144 4.527)"><line id="Line_1" data-name="Line 1" x1="1.046" fill="#0f2b3c"/></g><g id="Group_157" data-name="Group 157" transform="translate(56.695 0.004)"><path id="Path_243" data-name="Path 243" d="M1352.9 615.759l-6.714-6.771v6.771h-3.09V594.521h3.09v12.53l6.084-6.056h3.909l-6.988 6.988 7.67 7.782z" transform="translate(-1343.095 -594.521)" fill="#0f2b3c"/></g><g id="Group_158" data-name="Group 158" transform="translate(113.247 6.427)"><path id="Path_244" data-name="Path 244" d="M1504.614 627.712V612.948h3.09v2.558a3.7 3.7.0 011.447-1.91 3.9 3.9.0 012.262-.73 5.447 5.447.0 011.208.112l-.7 3a2.449 2.449.0 00-.842-.082 3.044 3.044.0 00-2.388 1.138 4.676 4.676.0 00-.983 3.16v7.515z" transform="translate(-1504.614 -612.865)" fill="#0f2b3c"/></g><g id="Group_159" data-name="Group 159" transform="translate(70.943 6.509)"><path id="Path_245" data-name="Path 245" d="M1385.943 626.817a5.668 5.668.0 01-2.152-2.683l2.669-1.171a3.743 3.743.0 001.376 1.662 3.657 3.657.0 002.029.572 4.049 4.049.0 001.879-.395 1.266 1.266.0 00.763-1.185 1.367 1.367.0 00-.654-1.2 6.492 6.492.0 00-2.016-.763l-1.662-.409a5.974 5.974.0 01-2.752-1.444 3.452 3.452.0 01-1.089-2.615 3.4 3.4.0 01.722-2.152 4.647 4.647.0 011.948-1.43 6.957 6.957.0 012.67-.5 7.191 7.191.0 013.405.776 4.6 4.6.0 012.125 2.247l-2.615 1.144a2.925 2.925.0 00-2.888-1.608 3.231 3.231.0 00-1.689.409 1.213 1.213.0 00-.681 1.063 1.226 1.226.0 00.518 1.021 4.442 4.442.0 001.526.667l2.043.518a6.573 6.573.0 013.092 1.566 3.5 3.5.0 011.049 2.575 3.72 3.72.0 01-.749 2.3 4.829 4.829.0 01-2.057 1.539 7.44 7.44.0 01-2.887.545A6.781 6.781.0 011385.943 626.817z" transform="translate(-1383.791 -613.101)" fill="#0f2b3c"/></g><g id="Group_160" data-name="Group 160" transform="translate(96.285 6.525)"><path id="Path_246" data-name="Path 246" d="M1463.543 613.146a7.374 7.374.0 107.374 7.374A7.374 7.374.0 001463.543 613.146zm0 11.532a4.228 4.228.0 114.228-4.228A4.228 4.228.0 011463.543 624.678z" transform="translate(-1456.169 -613.146)" fill="#0f2b3c"/></g><g id="Group_161" data-name="Group 161" transform="translate(23.011 6.524)"><path id="Path_247" data-name="Path 247" d="M1261.615 621.145c.017-.232.027-.466.024-.7a7.292 7.292.0 00-.212-1.685 7.375 7.375.0 00-14.537 1.84c0 .236.017.47.04.7a7.263 7.263.0 00.673 2.382 7.374 7.374.0 0013.389-.141l-3.267.034a4.617 4.617.0 01-8.014-2.3zm-11.664-2.266a4.614 4.614.0 018.592-.09z" transform="translate(-1246.891 -613.144)" fill="#0f2b3c"/></g><g id="Group_162" data-name="Group 162" transform="translate(39.461 6.524)"><path id="Path_248" data-name="Path 248" d="M1308.6 621.145c.017-.232.027-.466.025-.7a7.375 7.375.0 10-14.749.155c0 .236.017.47.04.7a7.257 7.257.0 00.672 2.382 7.375 7.375.0 0013.39-.141l-3.268.034a4.616 4.616.0 01-8.014-2.3zm-11.663-2.266a4.614 4.614.0 018.592-.09z" transform="translate(-1293.873 -613.144)" fill="#0f2b3c"/></g><g id="Group_163" data-name="Group 163" transform="translate(85.044 0.245)"><path id="Path_249" data-name="Path 249" d="M1430.636 598.566a2.5 2.5.0 011.8-.549 4.2 4.2.0 011.657.281v-2.752a7.24 7.24.0 00-2.3-.337 4.82 4.82.0 00-3.455 1.278 4.666 4.666.0 00-1.349 3.554v1.417h-2.922v2.752h2.922v12.036h3.091V604.209h4.016v-2.752h-4.016V600.4A2.5 2.5.0 011430.636 598.566z" transform="translate(-1424.063 -595.209)" fill="#0f2b3c"/></g><g id="Group_164" data-name="Group 164" transform="translate(0)"><path id="Path_250" data-name="Path 250" d="M1202.443 605.147a10.637 10.637.0 11-2.72-7.1l-1.983 1.982a7.837 7.837.0 101.656 7.09h-6.883v-2.851h9.895Q1202.443 604.7 1202.443 605.147z" transform="translate(-1181.169 -594.51)" fill="#0f2b3c"/></g><g id="Group_165" data-name="Group 165" transform="translate(179.788 0.004)"><path id="Path_251" data-name="Path 251" d="M1704.467 615.759l-6.714-6.771v6.771h-3.09V594.521h3.09v12.53l6.084-6.056h3.909l-6.988 6.988 7.669 7.782z" transform="translate(-1694.663 -594.521)" fill="#0f2b3c"/></g><g id="Group_166" data-name="Group 166" transform="translate(194.036 6.509)"><path id="Path_252" data-name="Path 252" d="M1737.51 626.817a5.667 5.667.0 01-2.152-2.683l2.67-1.171a3.742 3.742.0 001.375 1.662 3.658 3.658.0 002.03.572 4.051 4.051.0 001.88-.395 1.267 1.267.0 00.763-1.185 1.367 1.367.0 00-.654-1.2 6.492 6.492.0 00-2.016-.763l-1.662-.409a5.974 5.974.0 01-2.751-1.444 3.451 3.451.0 01-1.09-2.615 3.4 3.4.0 01.722-2.152 4.651 4.651.0 011.948-1.43 6.96 6.96.0 012.67-.5 7.191 7.191.0 013.405.776 4.6 4.6.0 012.125 2.247l-2.615 1.144a2.926 2.926.0 00-2.888-1.608 3.232 3.232.0 00-1.689.409 1.214 1.214.0 00-.681 1.063 1.227 1.227.0 00.518 1.021 4.443 4.443.0 001.526.667l2.043.518a6.576 6.576.0 013.092 1.566 3.5 3.5.0 011.049 2.575 3.719 3.719.0 01-.749 2.3 4.833 4.833.0 01-2.057 1.539 7.44 7.44.0 01-2.888.545A6.781 6.781.0 011737.51 626.817z" transform="translate(-1735.358 -613.101)" fill="#0f2b3c"/></g><g id="Group_167" data-name="Group 167" transform="translate(146.104 6.524)"><path id="Path_253" data-name="Path 253" d="M1613.182 621.145c.017-.232.027-.466.025-.7a7.375 7.375.0 10-14.749.155c0 .236.017.47.04.7a7.254 7.254.0 00.673 2.382 7.375 7.375.0 0013.389-.141l-3.268.034a4.616 4.616.0 01-8.014-2.3zm-11.663-2.266a4.615 4.615.0 018.592-.09z" transform="translate(-1598.458 -613.144)" fill="#0f2b3c"/></g><g id="Group_168" data-name="Group 168" transform="translate(162.554 6.524)"><path id="Path_254" data-name="Path 254" d="M1660.165 621.145c.017-.232.027-.466.024-.7a7.375 7.375.0 10-14.749.155c0 .236.017.47.04.7a7.266 7.266.0 00.673 2.382 7.375 7.375.0 0013.389-.141l-3.268.034a4.616 4.616.0 01-8.014-2.3zm-11.663-2.266a4.614 4.614.0 018.592-.09z" transform="translate(-1645.44 -613.144)" fill="#0f2b3c"/></g><g id="Group_169" data-name="Group 169" transform="translate(123.093)"><path id="Path_255" data-name="Path 255" d="M1554.01 605.147a10.636 10.636.0 11-2.72-7.1l-1.983 1.982a7.837 7.837.0 101.656 7.09h-6.884v-2.851h9.895Q1554.01 604.7 1554.01 605.147z" transform="translate(-1532.736 -594.51)" fill="#0f2b3c"/></g></svg></div></a><div class=header-main__container><span class=hamburger-menu><span class=gfg-burger-1></span><span class=gfg-burger-2></span><span class=gfg-burger-3></span></span><ul class=header-main__list><li class=header-main__list-item data-parent=false aria-expanded=true data-expandable=true><span>Courses</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>For Working Professionals</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>LIVE</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/geeks-classes-live?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>DSA Live Classes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/system-design-live?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>System Design</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/java-backend-live?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Java Backend Development</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/full-stack-node?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Full Stack LIVE</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/category/all?courseType=live&utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Explore More</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Self-Paced</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/dsa-self-paced?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>DSA- Self Paced</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/SDE-theory?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>SDE Theory</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/Must-Do-Premium?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Must-Do Coding Questions</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/category/all?courseType=online&utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Explore More</a></li></ul></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>For Students</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>LIVE</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/competitive-programming-live?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Competitive Programming</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/dsa-foundation?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Data Structures with C++</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/data-science-live?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Data Science</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/category/all?courseType=live&utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Explore More</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Self-Paced</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/dsa-self-paced?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>DSA- Self Paced</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/complete-interview-preparation?utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>CIP</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href=https://www.geeksforgeeks.org/a-freshers-guide-to-programming/ target=_self>JAVA / Python / C++</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/category/all?courseType=online&utm_source=gfg&utm_medium=Submenu&utm_campaign=courses-submenu" target=_self>Explore More</a></li></ul></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>School Courses</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/school-guide-course?utm_source=gfg&utm_medium=submenu&utm_campaign=courses-submenu" target=_self>School Guide</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/python-programming-course?utm_source=gfg&utm_medium=submenu&utm_campaign=courses-submenu" target=_self>Python Programming</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/app-lab?utm_source=gfg&utm_medium=submenu&utm_campaign=courses-submenu" target=_self>Learn To Make Apps</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses/category/school?utm_source=gfg&utm_medium=submenu&utm_campaign=courses-submenu" target=_self>Explore more</a></li></ul></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/courses?utm_source=gfg&utm_medium=submenu&utm_campaign=courses-submenu" class=remove-anchor__decoration target=_self>All Courses</a></li></ul></li><li class=header-main__list-item data-parent=true aria-expanded=true data-expandable=true><span>Tutorials</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Algorithms</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Analysis of Algorithms</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-of-algorithms-set-1-asymptotic-analysis/?ref=ghm" target=_self>Asymptotic Analysis</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-of-algorithms-set-2-asymptotic-analysis/?ref=ghm" target=_self>Worst, Average and Best Cases</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-of-algorithms-set-3asymptotic-notations/?ref=ghm" target=_self>Asymptotic Notations</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-of-algorithems-little-o-and-little-omega-notations/?ref=ghm" target=_self>Little o and little omega notations</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/lower-and-upper-bound-theory/?ref=ghm" target=_self>Lower and Upper Bound Theory</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-of-algorithms-set-4-analysis-of-loops/?ref=ghm" target=_self>Analysis of Loops</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-algorithm-set-4-master-method-solving-recurrences/?ref=ghm" target=_self>Solving Recurrences</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/analysis-algorithm-set-5-amortized-analysis-introduction/?ref=ghm" target=_self>Amortized Analysis</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/g-fact-86/?ref=ghm" target=_self>What does \'Space Complexity\' mean ?</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/pseudo-polynomial-in-algorithms/?ref=ghm" target=_self>Pseudo-polynomial Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/polynomial-time-approximation-scheme/?ref=ghm" target=_self>Polynomial Time Approximation Scheme</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/a-time-complexity-question/?ref=ghm" target=_self>A Time Complexity Question</a></li></ul></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/searching-algorithms/?ref=ghm" target=_self>Searching Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/sorting-algorithms/?ref=ghm" target=_self>Sorting Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/?ref=ghm" target=_self>Graph Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/algorithms-gq/pattern-searching/?ref=ghm" target=_self>Pattern Searching</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/geometric-algorithms/?ref=ghm" target=_self>Geometric Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/mathematical-algorithms/?ref=ghm" target=_self>Mathematical</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/bitwise-algorithms/?ref=ghm" target=_self>Bitwise Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/randomized-algorithms/?ref=ghm" target=_self>Randomized Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/greedy-algorithms/?ref=ghm" target=_self>Greedy Algorithms</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/dynamic-programming/?ref=ghm" target=_self>Dynamic Programming</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/divide-and-conquer/?ref=ghm" target=_self>Divide and Conquer</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/backtracking-algorithms/?ref=ghm" target=_self>Backtracking</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/branch-and-bound-algorithm/?ref=ghm" target=_self>Branch and Bound</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/fundamentals-of-algorithms/?ref=ghm" target=_self>All Algorithms</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Data Structures</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/array-data-structure/?ref=ghm" target=_self>Arrays</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/data-structures/linked-list/?ref=ghm" target=_self>Linked List</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/stack-data-structure/?ref=ghm" target=_self>Stack</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/queue-data-structure/?ref=ghm" target=_self>Queue</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/binary-tree-data-structure/?ref=ghm" target=_self>Binary Tree</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/binary-search-tree-data-structure/?ref=ghm" target=_self>Binary Search Tree</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/heap-data-structure/?ref=ghm" target=_self>Heap</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/hashing-data-structure/?ref=ghm" target=_self>Hashing</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/?ref=ghm" target=_self>Graph</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/advanced-data-structures/?ref=ghm" target=_self>Advanced Data Structure</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/matrix/?ref=ghm" target=_self>Matrix</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/string-data-structure/?ref=ghm" target=_self>Strings</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/data-structures/?ref=ghm" target=_self>All Data Structures</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Interview Corner</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/company-preparation/?ref=ghm" target=_self>Company Preparation</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/interview-preparation-for-software-developer/?ref=ghm" target=_self>Top Topics</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/company-tags/?ref=ghm" target=_self>Practice Company Questions</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/company-interview-corner/?ref=ghm" target=_self>Interview Experiences</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/experienced-interview-experiences-company-wise/?ref=ghm" target=_self>Experienced Interviews</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/internship-interview-experiences-company-wise/?ref=ghm" target=_self>Internship Interviews</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/?ref=ghm" target=_self>Competititve Programming</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/software-design-patterns/?ref=ghm" target=_self>Design Patterns</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href=https://www.geeksforgeeks.org/system-design-tutorial/ target=_self>System Design Tutorial</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/quiz-corner-gq/?ref=ghm" target=_self>Multiple Choice Quizzes</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Languages</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/c-programming-language/?ref=ghm" target=_self>C</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/c-plus-plus/?ref=ghm" target=_self>C++</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/java/?ref=ghm" target=_self>Java</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/python-programming-language/?ref=ghm" target=_self>Python</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/csharp-programming-language/?ref=ghm" target=_self>C#</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/javascript-tutorial/?ref=ghm" target=_self>JavaScript</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/jquery-tutorials/?ref=ghm" target=_self>jQuery</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/sql-tutorial/?ref=ghm" target=_self>SQL</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/php-tutorials/?ref=ghm" target=_self>PHP</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/scala-programming-language/?ref=ghm" target=_self>Scala</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/perl-programming-language/?ref=ghm" target=_self>Perl</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/golang/?ref=ghm" target=_self>Go Language</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/html-tutorials/?ref=ghm" target=_self>HTML</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/css-tutorials/?ref=ghm" target=_self>CSS</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/kotlin-programming-language/?ref=ghm" target=_self>Kotlin</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>ML & Data Science</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/machine-learning/?ref=ghm" target=_self>Machine Learning</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/data-science-tutorial/?ref=ghm" target=_self>Data Science</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>CS Subjects</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/engineering-mathematics-tutorials/?ref=ghm" target=_self>Mathematics</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/operating-systems/?ref=ghm" target=_self>Operating System</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/dbms/?ref=ghm" target=_self>DBMS</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/computer-network-tutorials/?ref=ghm" target=_self>Computer Networks</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/computer-organization-and-architecture-tutorials/?ref=ghm" target=_self>Computer Organization and Architecture</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/theory-of-computation-automata-tutorials/?ref=ghm" target=_self>Theory of Computation</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/compiler-design-tutorials/?ref=ghm" target=_self>Compiler Design</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/digital-electronics-logic-design-tutorials/#blg/?ref=ghm" target=_self>Digital Logic</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/software-engineering/?ref=ghm" target=_self>Software Engineering</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>GATE</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/gate-cs-notes-gq/?ref=ghm" target=_self>GATE Computer Science Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/lmns-gq/?ref=ghm" target=_self>Last Minute Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/gate-corner-2-gq/?ref=ghm" target=_self>GATE CS Solved Papers</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/original-gate-previous-year-question-papers-cse-and-it-gq/?ref=ghm" target=_self>GATE CS Original Papers and Official Keys</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/gate-cs-2021-official-important-dates/?ref=ghm" target=_self>GATE 2021 Dates</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/gate-cs-2021-revised-syllabus/?ref=ghm" target=_self>GATE CS 2021 Syllabus</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/important-topics-prepare-gate-2020-computer-science-paper/?ref=ghm" target=_self>Important Topics for GATE CS</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Web Technologies</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/html-tutorials/?ref=ghm" target=_self>HTML</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/css-tutorials/?ref=ghm" target=_self>CSS</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/javascript-tutorial/?ref=ghm" target=_self>JavaScript</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/angularjs-tutorials/?ref=ghm" target=_self>AngularJS</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/reactjs-tutorials/?ref=ghm" target=_self>ReactJS</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/nodejs-tutorials/?ref=ghm" target=_self>NodeJS</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/bootstrap-tutorials/?ref=ghm" target=_self>Bootstrap</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/jquery-tutorials/?ref=ghm" target=_self>jQuery</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/php-tutorials/?ref=ghm" target=_self>PHP</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Software Designs</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/software-design-patterns/?ref=ghm" target=_self>Software Design Patterns</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/system-design-tutorial/?ref=ghm" target=_self>System Design Tutorial</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>School Learning</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/school-learning/?ref=ghm" target=_self>School Programming</a></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Mathematics</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/number-system-and-arithmetic/?ref=ghm" target=_self>Number System</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/algebra/?ref=ghm" target=_self>Algebra</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/trigonometry/?ref=ghm" target=_self>Trigonometry</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/statistics/?ref=ghm" target=_self>Statistics</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/probability-in-maths/?ref=ghm" target=_self>Probability</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/geometry/?ref=ghm" target=_self>Geometry</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/mensuration/?ref=ghm" target=_self>Mensuration</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/calculus/?ref=ghm" target=_self>Calculus</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Maths Notes (Class 8-12)</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-8-maths-notes/?ref=ghm" target=_self>Class 8 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-9-maths-notes/?ref=ghm" target=_self>Class 9 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-10-maths-notes/?ref=ghm" target=_self>Class 10 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-11-maths-notes/?ref=ghm" target=_self>Class 11 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-12-maths-notes/?ref=ghm" target=_self>Class 12 Notes</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>NCERT Solutions</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ncert-solutions-for-class-8-maths/?ref=ghm" target=_self>Class 8 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ncert-solutions-for-class-9-maths/?ref=ghm" target=_self>Class 9 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ncert-solutions-for-class-10-maths/?ref=ghm" target=_self>Class 10 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ncert-solutions-for-class-11-maths/?ref=ghm" target=_self>Class 11 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ncert-solutions-for-class-12-maths/?ref=ghm" target=_self>Class 12 Maths Solution</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>RD Sharma Solutions</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/rd-sharma-class-8-solutions-for-maths/?ref=ghm" target=_self>Class 8 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/rd-sharma-class-9-solutions/?ref=ghm" target=_self>Class 9 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/rd-sharma-class-10-solutions/?ref=ghm" target=_self>Class 10 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/rd-sharma-class-11-solutions-for-maths/?ref=ghm" target=_self>Class 11 Maths Solution</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/rd-sharma-class-12-solutions-for-maths/?ref=ghm" target=_self>Class 12 Maths Solution</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Physics Notes (Class 8-11)</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-physics-class-8-notes/?ref=ghm" target=_self>Class 8 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-9-physics-notes/?ref=ghm" target=_self>Class 9 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-notes-for-class-10-physics/?ref=ghm" target=_self>Class 10 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-11-physics-notes/?ref=ghm" target=_self>Class 11 Notes</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Chemistry Notes</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-8-chemistry-notes/?ref=ghm" target=_self>Class 8 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-9-chemistry-notes/?ref=ghm" target=_self>Class 9 Notes</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/cbse-class-10-chemistry-notes/?ref=ghm" target=_self>Class 10 Notes</a></li></ul></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>CS Exams/PSUs</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>ISRO</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/isro-original-papers-official-keys/?ref=ghm" target=_self>ISRO CS Original Papers and Official Keys</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/isro-cs-preparation/?ref=ghm" target=_self>ISRO CS Solved Papers</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/isro-cse-syllabus-scientistengineer-exam-2018/?ref=ghm" target=_self>ISRO CS Syllabus for Scientist/Engineer Exam</a></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>UGC NET</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ugc-net-cs-notes-according-to-syllabus-of-paper-ii/?ref=ghm" target=_self>UGC NET CS Notes Paper II</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ugc-net-cs-notes-according-to-syllabus-of-paper-iii-core-group/?ref=ghm" target=_self>UGC NET CS Notes Paper III</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/ugc-net-cs-preparation/?ref=ghm" target=_self>UGC NET CS Solved Papers</a></li></ul></li></ul></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Student</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/campus-ambassador-program-by-geeksforgeeks/?ref=ghm" target=_self>Campus Ambassador Program</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/school-ambassador/?ref=ghm" target=_self>School Ambassador Program</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/computer-science-projects/?ref=ghm" target=_self>Project</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/geek-of-the-month/?ref=ghm" target=_self>Geek of the Month</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/campus-geek-of-the-month/?ref=ghm" target=_self>Campus Geek of the Month</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/placements-gq/?ref=ghm" target=_self>Placement Course</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/?ref=ghm" target=_self>Competititve Programming</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/testimonials/?ref=ghm" target=_self>Testimonials</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/geeksforgeeks-student-chapter/?ref=ghm" target=_self>Student Chapter</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/category/geek-on-the-top/?ref=ghm" target=_self>Geek on the Top</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/internship/?ref=ghm" target=_self>Internship</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/careers/?ref=ghm" target=_self>Careers</a></li></ul></li></ul></li><li class=header-main__list-item data-parent=true aria-expanded=true data-expandable=true><span>Jobs</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/jobs/?ref=ghm" target=_self>Apply for Jobs</a></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Post a Job</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/hire-with-us/?ref=ghm" target=_self>Hire with Us</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://www.geeksforgeeks.org/geeksforgeeks-job-a-thon/?ref=ghm" target=_self>Know about Jobathon</a></li></ul></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/events/rec/job-a-thon/?ref=ghm" target=_self>Jobathon</a></li></ul></li><li class=header-main__list-item data-parent=true aria-expanded=true data-expandable=true><span>Practice</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>All DSA Problems</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/problem-of-the-day?utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Problem of the Day</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/events/rec/interview-series?utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Interview Series: Weekly Contests</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/events/rec/step-up-coding-school?utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Bi-Wizard Coding: School Contests</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/events?utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Contests and Events</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&curated[]=1&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Practice SDE Sheet</a></li><li class=mega-dropdown__list-item data-parent=true aria-expanded=true data-expandable=true><span>Curated DSA Lists</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class=mega-dropdown><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&curated[]=2&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Top 50 Array Problems</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&curated[]=3&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Top 50 String Problems</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&curated[]=6&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Top 50 Tree Problems</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&curated[]=5&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Top 50 Graph Problems</a></li><li class=mega-dropdown__list-item data-child=true aria-expanded=false data-expandable=false><a href="https://practice.geeksforgeeks.org/explore?page=1&curated[]=4&sortBy=submissions&utm_source=gfg&utm_medium=gfg_header&utm_campaign=gfgpractice_header" target=_self>Top 50 DP Problems</a></li></ul></li></ul></li></ul><ul class=header-main__left-list data-nl=false><li class="header-main__left-list-item gcse-search_li p-relative" aria-expanded=false data-expandable=false><form id=gcse-form data-sm=false class=p-relative><input class=gcse-search-input__wrapper id=gcse-search-input aria-expanded=false>\n<i class="gfg-icon gfg-icon_times gfg-icon_white hide-search"></i>\n<button class="gcse-search__btn not-expanded">\n<i class="gfg-icon gfg-icon_search gfg-icon_white gcse-search__icon"></i></button></form></li><li class="header-main__left-list-item p-relative" aria-expanded=false data-expandable=true><i class="gfg-icon gfg-icon_ndot cursor-p" data-gfg-action=nineDot-menu></i><div class=nineDot-menu data-show=false><div class=nineDot-menu_container><div class=nineDot-menu_left><a href="https://write.geeksforgeeks.org/?ref=ndm" class=nineDot-menu_item rel="noopener noreferrer"><div class=img-wrapper><img src=https://media.geeksforgeeks.org/wp-content/cdn-uploads/write_ndi_20210312.svg alt=Write></div><div class=nineDot-menu_item-wrap><div class=head>Write</div><div class=text>Come write articles for us and get featured</div></div></a><a href="https://practice.geeksforgeeks.org/?ref=ndm" class=nineDot-menu_item rel="noopener noreferrer"><div class=img-wrapper><img src=https://media.geeksforgeeks.org/wp-content/cdn-uploads/practice_ndi_20210312.svg alt=Practice></div><div class=nineDot-menu_item-wrap><div class=head>Practice</div><div class=text>Learn and code with the best industry experts</div></div></a><a href="https://premium.geeksforgeeks.org/premium-plans/?ref=ndm" class=nineDot-menu_item rel="noopener noreferrer"><div class=img-wrapper><img src=https://media.geeksforgeeks.org/wp-content/cdn-uploads/premium_ndi_20210312.svg alt=Premium></div><div class=nineDot-menu_item-wrap><div class=head>Premium</div><div class=text>Get access to ad-free content, doubt assistance and more!</div></div></a><a href="https://practice.geeksforgeeks.org/jobs/?ref=ndm" class=nineDot-menu_item rel="noopener noreferrer"><div class=img-wrapper><img src=https://media.geeksforgeeks.org/wp-content/cdn-uploads/jobs_ndi_20210312.svg alt=Jobs></div><div class=nineDot-menu_item-wrap><div class=head>Jobs</div><div class=text>Come and find your dream job with us</div></div></a><script>toggleNineDotMenuImages(isDarkMode?gfgThemeList.DARK:gfgThemeList.LIGHT)</script></div><div class=nineDot-menu_right><ul><li><a href="https://www.geeksforgeeks.org/geeks-digest/?ref=ndm">Geeks Digest</a></li><li><a href="https://www.geeksforgeeks.org/quiz-corner-gq/?ref=ndm">Quizzes</a></li><li><a href="https://practice.geeksforgeeks.org/geeks-campus/?ref=ndm">Geeks Campus</a></li></ul><ul><li><a href="https://www.geeksforgeeks.org/category/guestblogs/?ref=ndm">Gblog Articles</a></li><li><a href="https://ide.geeksforgeeks.org/?ref=ndm">IDE</a></li><li><a href="https://www.geeksforgeeks.org/campus-ambassador-program-by-geeksforgeeks/?ref=ndm">Campus Mantri</a></li></ul></div></div></div></li><li class="header-main__left-list-item google-translate-parent-element" aria-expanded=false data-expanded=true><div class=translate id=g_translater><div id=google_translate_element data-show=false></div></div><i class="gfg-icon gfg-icon_translate googleTranslateToggle" data-gfg-action=google_translate_element></i></li><li id=userProfileId class="header-main__left-list-item p-relative" aria-expanded=false data-expandable=false></li></ul></div><div class="gfg-overlay display-none" id=gfg-overlay></div><div class=header-sidebar__wrapper><ul class=header-sidebar__list><li class=header-sidebar__list-item><a href="https://www.geeksforgeeks.org/?ref=ghm" target=_self>Home</a></li><li class=header-sidebar__list-item><a href="https://www.geeksforgeeks.org/videos/watchlist/?ref=ghm" target=_self><span class="gfg-icon gfg-icon_video"></span><span>Saved Videos</span></a></li><li class=header-sidebar__list-item><a href="https://practice.geeksforgeeks.org/?ref=ghm" target=_self>Courses</a></li><li><ul id=sidebar-list></ul></li><li class=header-sidebar__list-item><a href="https://www.geeksforgeeks.org/category/guestblogs/?ref=ghm" target=_self>GBlog</a></li><li class=header-sidebar__list-item><a href="https://www.geeksforgeeks.org/puzzles/?ref=ghm" target=_self>Puzzles</a></li><li class=header-sidebar__list-item><a href="https://www.geeksforgeeks.org/geeks-classes-geeksforgeeks/?ref=ghm" target=_self>What\'s New ?</a></li></ul><div class=mobile_translate><div id=google_translate_mobile data-show=false></div><div style=margin:auto><button class=toggle-darkMode data-gfg-action=toggleGFGTheme>\n<i class="gfg-icon gfg-icon_dark-mode"></i></button>\n<button class=google_translate_element_mobile data-gfg-action=google_translate_mobile aria-expanded=false data-expanded=true>\n<i class="gfg-icon gfg-icon_translate googleTranslateToggleMobile"></i>Change Language</button></div></div><div style=height:80px></div></div><div class=header-main__slider><button class="header-main__slider-arrow previous hideIt">\n<i class="gfg-icon gfg-icon_arrow-left gicon-centered"></i></button><ul id=hslider><li><a href=https://www.geeksforgeeks.org/css-properties-complete-reference/>CSS-Properties</a></li><li><a href=https://www.geeksforgeeks.org/css-selectors-complete-reference/>CSS-Selectors</a></li><li><a href=https://www.geeksforgeeks.org/css-functions-complete-reference/>CSS-Functions</a></li><li><a href=https://www.geeksforgeeks.org/css-examples/>CSS-Examples</a></li><li><a href=https://www.geeksforgeeks.org/tag/css-questions/>CSS-Questions</a></li><li><a href=https://www.geeksforgeeks.org/css-quiz-set-1/>CSS-Quiz 1</a></li><li><a href=https://www.geeksforgeeks.org/css-quiz-set-2/>CSS-Quiz 2</a></li><li><a href=https://www.geeksforgeeks.org/css-quiz-set-3/>CSS-Quiz 3</a></li><li><a href=https://www.geeksforgeeks.org/css/>CSS-Tutorial</a></li><li><a href=https://www.geeksforgeeks.org/web-development/>Web Development</a></li><li><a href=https://www.geeksforgeeks.org/web-technology>Web-Technology</a></li></ul><button class="header-main__slider-arrow next hideIt">\n<i class="gfg-icon gfg-icon_arrow-right gicon-centered"></i></button></div></div><div class="header-main__slider header-main__slider-sticky" style=display:none!important><div class=header-main__slider-flex><div class=header-main__slider-flex-inner title="Related articles" data-gfg-action=article-slider><i class="gfg-icon gfg-icon_article"></i>\n<span style=margin-top:-2px>Related Articles</span>\n<i class="gfg-icon gfg-icon_arrow-right"></i></div><div class=header-main__slider-flex-inner title="Bookmark Article" data-gfg-action=bookmark-article data-bookmark-value=0><i class="gfg-icon gfg-icon_bookmark"></i>\n<span class=hide-sm style=margin-top:-2px data-value=bookmark-message></span></div></div></div><button id=scrollTopBtn title="Scroll to Top" type=button class="btn btn-success">&#9650;</button><div id=main class="wrapper single-page"><style>.wrapper{flex-direction:column!important}</style><div class=article-page_sidebar data-article-slider=0><div class=article-page_sidebar-overlay data-gfg-action=article-slider></div><div class=article-page_sidebar-inner><div class=article-page_sidebar-head><h2>Related Articles</h2><i class="gfg-icon gfg-icon_close cursor-p" data-gfg-action=article-slider></i></div><ul class=leftBarList><div class=leftbar-dropdown><div class=dropdown-title>CSS Basics<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css/?ref=lbp">CSS</a></li><li><a href="https://www.geeksforgeeks.org/css-introduction/?ref=lbp">CSS Introduction</a></li><li><a href="https://www.geeksforgeeks.org/css-full-form/?ref=lbp">CSS Full Form</a></li><li><a href="https://www.geeksforgeeks.org/what-is-the-best-way-to-include-css-file-why-use-import/?ref=lbp">What is the best way to include CSS file? Why use @import?</a></li><li><a href="https://www.geeksforgeeks.org/css-comments/?ref=lbp">CSS Comments</a></li><li><a href="https://www.geeksforgeeks.org/css-colors/?ref=lbp">CSS | Colors</a></li><li><a href="https://www.geeksforgeeks.org/css-background/?ref=lbp">CSS Background</a></li><li><a href="https://www.geeksforgeeks.org/css-borders/?ref=lbp">CSS Borders</a></li><li><a href="https://www.geeksforgeeks.org/css-margins-padding/?ref=lbp">CSS Margins and Padding</a></li><li><a href="https://www.geeksforgeeks.org/css-height-and-width/?ref=lbp">CSS | Height and Width</a></li><li><a href="https://www.geeksforgeeks.org/css-box-model/?ref=lbp">CSS Box model</a></li><li><a href="https://www.geeksforgeeks.org/css-outline/?ref=lbp">CSS Outline</a></li><li><a href="https://www.geeksforgeeks.org/css-text-formatting/?ref=lbp">CSS | Text Formatting</a></li><li><a href="https://www.geeksforgeeks.org/css-fonts/?ref=lbp">CSS Fonts</a></li><li><a href="https://www.geeksforgeeks.org/css-icons/?ref=lbp">CSS Icons</a></li><li><a href="https://www.geeksforgeeks.org/css-links/?ref=lbp">CSS | Links</a></li><li><a href="https://www.geeksforgeeks.org/css-lists/?ref=lbp">CSS Lists</a></li><li><a href="https://www.geeksforgeeks.org/css-tables/?ref=lbp">CSS Tables</a></li><li><a href="https://www.geeksforgeeks.org/css-overflow/?ref=lbp">CSS | Overflow</a></li><li><a href="https://www.geeksforgeeks.org/css-float/?ref=lbp">CSS Float</a></li><li><a href="https://www.geeksforgeeks.org/css-align/?ref=lbp">CSS Align</a></li><li><a href="https://www.geeksforgeeks.org/css-combinators/?ref=lbp">CSS | Combinators</a></li><li><a href="https://www.geeksforgeeks.org/css-pseudo-classes/?ref=lbp">CSS | Pseudo-classes</a></li><li><a href="https://www.geeksforgeeks.org/css-pseudo-elements/?ref=lbp">CSS | Pseudo Elements</a></li><li><a href="https://www.geeksforgeeks.org/css-opacity-transparency/?ref=lbp">CSS Opacity / Transparency</a></li><li><a href="https://www.geeksforgeeks.org/css-dropdowns/?ref=lbp">CSS | DropDowns</a></li><li><a href="https://www.geeksforgeeks.org/css-image-gallery/?ref=lbp">CSS | Image Gallery</a></li><li><a href="https://www.geeksforgeeks.org/css-image-sprites/?ref=lbp">CSS | Image Sprites</a></li><li><a href="https://www.geeksforgeeks.org/css-styling-forms/?ref=lbp">CSS | Styling Forms</a></li><li><a href="https://www.geeksforgeeks.org/css-counters/?ref=lbp">CSS | Counters</a></li><li><a href="https://www.geeksforgeeks.org/css-website-layout/?ref=lbp">CSS | Website Layout</a></li><li><a href="https://www.geeksforgeeks.org/css-units/?ref=lbp">CSS Units</a></li><li><a href="https://www.geeksforgeeks.org/css-specificity/?ref=lbp">CSS | Specificity</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Properties<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-all-property/?ref=lbp">CSS | all Property</a></li><li><a href="https://www.geeksforgeeks.org/css-display-property/?ref=lbp">CSS | Display property</a></li><li><a href="https://www.geeksforgeeks.org/css-positioning-elements/?ref=lbp">CSS Positioning Elements</a></li><li><a href="https://www.geeksforgeeks.org/css-border-property/?ref=lbp">CSS border Property</a></li><li><a href="https://www.geeksforgeeks.org/css-border-image-property/?ref=lbp">CSS | border-image Property</a></li><li><a href="https://www.geeksforgeeks.org/css-filter-property/?ref=lbp">CSS filter Property</a></li><li><a href="https://www.geeksforgeeks.org/css-flex-property/?ref=lbp">CSS flex Property</a></li><li><a href="https://www.geeksforgeeks.org/css-font-family-property/?ref=lbp">CSS font-family Property</a></li><li><a href="https://www.geeksforgeeks.org/css-grid-property/?ref=lbp">CSS | grid Property</a></li><li><a href="https://www.geeksforgeeks.org/css-height-property/?ref=lbp">CSS | height Property</a></li><li><a href="https://www.geeksforgeeks.org/css-properties-complete-reference/?ref=lbp">CSS Properties Complete Reference</a></li></ul></div><div class=leftbar-dropdown><div class="dropdown-title active">CSS Selectors<span class="gfg-icon gfg-icon_arrow-down-thin upside"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-syntax-and-selectors/?ref=lbp">CSS Syntax and Selectors</a></li><li><a href="https://www.geeksforgeeks.org/css-id-selector/?ref=lbp">CSS | #id Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-selector/?ref=lbp">CSS | * Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-class-selector/?ref=lbp">CSS Class Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-element-selector/?ref=lbp">CSS | element Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-hover-selector/?ref=lbp">CSS :hover Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-lang-selector/?ref=lbp">CSS | :lang Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-nth-child-selector/?ref=lbp">CSS :nth-child() Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-visited-selector/?ref=lbp">CSS | :visited Selector</a></li><li><a href="https://www.geeksforgeeks.org/wildcard-selectors-and-in-css-for-classes/?ref=lbp">Wildcard Selectors (*, ^ and $) in CSS for classes</a></li><li><a href="https://www.geeksforgeeks.org/advanced-selectors-in-css/?ref=lbp">Advanced Selectors in CSS</a></li><li class=currentpage><a href="https://www.geeksforgeeks.org/10-css-selectors-every-developer-should-know/?ref=lbp">10 CSS Selectors Every Developer Should Know</a></li><li><a href="https://www.geeksforgeeks.org/css-selectors-complete-reference/?ref=lbp">CSS Selectors Complete Reference</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Functions<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-attr-function/?ref=lbp">CSS | attr() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-calc-function/?ref=lbp">CSS | calc() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-env-function/?ref=lbp">CSS env() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-hsl-function/?ref=lbp">CSS | hsl() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-rgb-function/?ref=lbp">CSS | rgb() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-url-function/?ref=lbp">CSS | url() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-var-function/?ref=lbp">CSS | var() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-functions-complete-reference/?ref=lbp">CSS Functions Complete Reference</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Advanced<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-2d-transforms/?ref=lbp">CSS 2D Transforms</a></li><li><a href="https://www.geeksforgeeks.org/css-3d-transforms/?ref=lbp">CSS | 3D Transforms</a></li><li><a href="https://www.geeksforgeeks.org/css-media-queries/?ref=lbp">CSS media queries</a></li><li><a href="https://www.geeksforgeeks.org/css-pagination/?ref=lbp">CSS | Pagination</a></li><li><a href="https://www.geeksforgeeks.org/css-gradients/?ref=lbp">CSS Gradients</a></li><li><a href="https://www.geeksforgeeks.org/css-shadow-effect/?ref=lbp">CSS | Shadow Effect</a></li><li><a href="https://www.geeksforgeeks.org/css-animations/?ref=lbp">CSS Animations</a></li><li><a href="https://www.geeksforgeeks.org/css-border-images/?ref=lbp">CSS | Border Images</a></li><li><a href="https://www.geeksforgeeks.org/css-buttons/?ref=lbp">CSS Buttons</a></li><li><a href="https://www.geeksforgeeks.org/advance-css-layout-with-flexbox/?ref=lbp">Advance CSS layout with flexbox</a></li><li><a href="https://www.geeksforgeeks.org/css-variables/?ref=lbp">CSS Variables</a></li><li><a href="https://www.geeksforgeeks.org/adding-html-entities-using-css-content/?ref=lbp">Adding HTML entities using CSS content</a></li><li><a href="https://www.geeksforgeeks.org/css-web-fonts/?ref=lbp">CSS | Web Fonts</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Plugins<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-marqueemenu-plugin/?ref=lbp">CSS MarqueeMenu Plugin</a></li><li><a href="https://www.geeksforgeeks.org/css-stacking-page-plugin/?ref=lbp">CSS Stacking Page Plugin</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Questions<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/how-order-of-classes-work-in-css/?ref=lbp">How order of classes work in CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/create-a-transparent-border-with-css/?ref=lbp">Create a transparent border with CSS</a></li><li><a href="https://www.geeksforgeeks.org/what-is-the-use-of-asterisk-selector-in-css/?ref=lbp">What is the use of asterisk (*) selector in CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-wave-background-using-css/?ref=lbp">How to Create Wave Background using CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-shapes-using-css/?ref=lbp">How to create shapes using CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-wave-ball-effect-using-css/?ref=lbp">How to create wave ball effect using CSS?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-text-fill-animation-using-css/?ref=lbp">How to create text-fill animation using CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/css-examples/?ref=lbp">CSS Examples</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>SASS<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-preprocessor-sass/?ref=lbp">CSS Preprocessor SASS</a></li><li><a href="https://www.geeksforgeeks.org/sass-introduction/?ref=lbp">SASS | Introduction</a></li><li><a href="https://www.geeksforgeeks.org/sass-syntax/?ref=lbp">SASS | Syntax</a></li><li><a href="https://www.geeksforgeeks.org/sass-comments/?ref=lbp">SASS | Comments</a></li><li><a href="https://www.geeksforgeeks.org/sass-variables/?ref=lbp">SASS | Variables</a></li><li><a href="https://www.geeksforgeeks.org/sass-import/?ref=lbp">SASS | @import</a></li><li><a href="https://www.geeksforgeeks.org/sass-mixin-and-include/?ref=lbp">SASS | @mixin and @include</a></li><li><a href="https://www.geeksforgeeks.org/sass-extend-rule/?ref=lbp">Sass @extend Rule</a></li><li><a href="https://www.geeksforgeeks.org/sass-each-rule/?ref=lbp">Sass @each Rule</a></li><li><a href="https://www.geeksforgeeks.org/sass-if-and-else/?ref=lbp">SASS | @if and @else</a></li><li><a href="https://www.geeksforgeeks.org/sass-operators/?ref=lbp">SASS | Operators</a></li><li><a href="https://www.geeksforgeeks.org/sass-numeric-operators/?ref=lbp">SASS | Numeric operators</a></li><li><a href="https://www.geeksforgeeks.org/sass-placeholder-selectors/?ref=lbp">SASS | Placeholder Selectors</a></li><li><a href="https://www.geeksforgeeks.org/sass-nesting/?ref=lbp">SASS | Nesting</a></li><li><a href="https://www.geeksforgeeks.org/sass-parent-selector/?ref=lbp">SASS | Parent Selector</a></li><li><a href="https://www.geeksforgeeks.org/sass-booleans-and-boolean-operators/?ref=lbp">SASS | Booleans and Boolean operators</a></li><li><a href="https://www.geeksforgeeks.org/sass-shadowing-and-flow-control/?ref=lbp">SASS | Shadowing and Flow Control</a></li><li><a href="https://www.geeksforgeeks.org/sass-interpolation/?ref=lbp">SASS | Interpolation</a></li></ul></div></ul></div></div><div class="container-fluid bg-light" id=home-page style=position:relative;max-width:100%><div class=article-page_flex><div class=sideBar><div class=sideBar--wrap><ul class=leftBarList><div class=leftbar-dropdown><div class=dropdown-title>CSS Basics<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css/?ref=lbp">CSS</a></li><li><a href="https://www.geeksforgeeks.org/css-introduction/?ref=lbp">CSS Introduction</a></li><li><a href="https://www.geeksforgeeks.org/css-full-form/?ref=lbp">CSS Full Form</a></li><li><a href="https://www.geeksforgeeks.org/what-is-the-best-way-to-include-css-file-why-use-import/?ref=lbp">What is the best way to include CSS file? Why use @import?</a></li><li><a href="https://www.geeksforgeeks.org/css-comments/?ref=lbp">CSS Comments</a></li><li><a href="https://www.geeksforgeeks.org/css-colors/?ref=lbp">CSS | Colors</a></li><li><a href="https://www.geeksforgeeks.org/css-background/?ref=lbp">CSS Background</a></li><li><a href="https://www.geeksforgeeks.org/css-borders/?ref=lbp">CSS Borders</a></li><li><a href="https://www.geeksforgeeks.org/css-margins-padding/?ref=lbp">CSS Margins and Padding</a></li><li><a href="https://www.geeksforgeeks.org/css-height-and-width/?ref=lbp">CSS | Height and Width</a></li><li><a href="https://www.geeksforgeeks.org/css-box-model/?ref=lbp">CSS Box model</a></li><li><a href="https://www.geeksforgeeks.org/css-outline/?ref=lbp">CSS Outline</a></li><li><a href="https://www.geeksforgeeks.org/css-text-formatting/?ref=lbp">CSS | Text Formatting</a></li><li><a href="https://www.geeksforgeeks.org/css-fonts/?ref=lbp">CSS Fonts</a></li><li><a href="https://www.geeksforgeeks.org/css-icons/?ref=lbp">CSS Icons</a></li><li><a href="https://www.geeksforgeeks.org/css-links/?ref=lbp">CSS | Links</a></li><li><a href="https://www.geeksforgeeks.org/css-lists/?ref=lbp">CSS Lists</a></li><li><a href="https://www.geeksforgeeks.org/css-tables/?ref=lbp">CSS Tables</a></li><li><a href="https://www.geeksforgeeks.org/css-overflow/?ref=lbp">CSS | Overflow</a></li><li><a href="https://www.geeksforgeeks.org/css-float/?ref=lbp">CSS Float</a></li><li><a href="https://www.geeksforgeeks.org/css-align/?ref=lbp">CSS Align</a></li><li><a href="https://www.geeksforgeeks.org/css-combinators/?ref=lbp">CSS | Combinators</a></li><li><a href="https://www.geeksforgeeks.org/css-pseudo-classes/?ref=lbp">CSS | Pseudo-classes</a></li><li><a href="https://www.geeksforgeeks.org/css-pseudo-elements/?ref=lbp">CSS | Pseudo Elements</a></li><li><a href="https://www.geeksforgeeks.org/css-opacity-transparency/?ref=lbp">CSS Opacity / Transparency</a></li><li><a href="https://www.geeksforgeeks.org/css-dropdowns/?ref=lbp">CSS | DropDowns</a></li><li><a href="https://www.geeksforgeeks.org/css-image-gallery/?ref=lbp">CSS | Image Gallery</a></li><li><a href="https://www.geeksforgeeks.org/css-image-sprites/?ref=lbp">CSS | Image Sprites</a></li><li><a href="https://www.geeksforgeeks.org/css-styling-forms/?ref=lbp">CSS | Styling Forms</a></li><li><a href="https://www.geeksforgeeks.org/css-counters/?ref=lbp">CSS | Counters</a></li><li><a href="https://www.geeksforgeeks.org/css-website-layout/?ref=lbp">CSS | Website Layout</a></li><li><a href="https://www.geeksforgeeks.org/css-units/?ref=lbp">CSS Units</a></li><li><a href="https://www.geeksforgeeks.org/css-specificity/?ref=lbp">CSS | Specificity</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Properties<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-all-property/?ref=lbp">CSS | all Property</a></li><li><a href="https://www.geeksforgeeks.org/css-display-property/?ref=lbp">CSS | Display property</a></li><li><a href="https://www.geeksforgeeks.org/css-positioning-elements/?ref=lbp">CSS Positioning Elements</a></li><li><a href="https://www.geeksforgeeks.org/css-border-property/?ref=lbp">CSS border Property</a></li><li><a href="https://www.geeksforgeeks.org/css-border-image-property/?ref=lbp">CSS | border-image Property</a></li><li><a href="https://www.geeksforgeeks.org/css-filter-property/?ref=lbp">CSS filter Property</a></li><li><a href="https://www.geeksforgeeks.org/css-flex-property/?ref=lbp">CSS flex Property</a></li><li><a href="https://www.geeksforgeeks.org/css-font-family-property/?ref=lbp">CSS font-family Property</a></li><li><a href="https://www.geeksforgeeks.org/css-grid-property/?ref=lbp">CSS | grid Property</a></li><li><a href="https://www.geeksforgeeks.org/css-height-property/?ref=lbp">CSS | height Property</a></li><li><a href="https://www.geeksforgeeks.org/css-properties-complete-reference/?ref=lbp">CSS Properties Complete Reference</a></li></ul></div><div class=leftbar-dropdown><div class="dropdown-title active">CSS Selectors<span class="gfg-icon gfg-icon_arrow-down-thin upside"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-syntax-and-selectors/?ref=lbp">CSS Syntax and Selectors</a></li><li><a href="https://www.geeksforgeeks.org/css-id-selector/?ref=lbp">CSS | #id Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-selector/?ref=lbp">CSS | * Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-class-selector/?ref=lbp">CSS Class Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-element-selector/?ref=lbp">CSS | element Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-hover-selector/?ref=lbp">CSS :hover Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-lang-selector/?ref=lbp">CSS | :lang Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-nth-child-selector/?ref=lbp">CSS :nth-child() Selector</a></li><li><a href="https://www.geeksforgeeks.org/css-visited-selector/?ref=lbp">CSS | :visited Selector</a></li><li><a href="https://www.geeksforgeeks.org/wildcard-selectors-and-in-css-for-classes/?ref=lbp">Wildcard Selectors (*, ^ and $) in CSS for classes</a></li><li><a href="https://www.geeksforgeeks.org/advanced-selectors-in-css/?ref=lbp">Advanced Selectors in CSS</a></li><li class=currentpage><a href="https://www.geeksforgeeks.org/10-css-selectors-every-developer-should-know/?ref=lbp">10 CSS Selectors Every Developer Should Know</a></li><li><a href="https://www.geeksforgeeks.org/css-selectors-complete-reference/?ref=lbp">CSS Selectors Complete Reference</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Functions<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-attr-function/?ref=lbp">CSS | attr() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-calc-function/?ref=lbp">CSS | calc() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-env-function/?ref=lbp">CSS env() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-hsl-function/?ref=lbp">CSS | hsl() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-rgb-function/?ref=lbp">CSS | rgb() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-url-function/?ref=lbp">CSS | url() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-var-function/?ref=lbp">CSS | var() Function</a></li><li><a href="https://www.geeksforgeeks.org/css-functions-complete-reference/?ref=lbp">CSS Functions Complete Reference</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Advanced<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-2d-transforms/?ref=lbp">CSS 2D Transforms</a></li><li><a href="https://www.geeksforgeeks.org/css-3d-transforms/?ref=lbp">CSS | 3D Transforms</a></li><li><a href="https://www.geeksforgeeks.org/css-media-queries/?ref=lbp">CSS media queries</a></li><li><a href="https://www.geeksforgeeks.org/css-pagination/?ref=lbp">CSS | Pagination</a></li><li><a href="https://www.geeksforgeeks.org/css-gradients/?ref=lbp">CSS Gradients</a></li><li><a href="https://www.geeksforgeeks.org/css-shadow-effect/?ref=lbp">CSS | Shadow Effect</a></li><li><a href="https://www.geeksforgeeks.org/css-animations/?ref=lbp">CSS Animations</a></li><li><a href="https://www.geeksforgeeks.org/css-border-images/?ref=lbp">CSS | Border Images</a></li><li><a href="https://www.geeksforgeeks.org/css-buttons/?ref=lbp">CSS Buttons</a></li><li><a href="https://www.geeksforgeeks.org/advance-css-layout-with-flexbox/?ref=lbp">Advance CSS layout with flexbox</a></li><li><a href="https://www.geeksforgeeks.org/css-variables/?ref=lbp">CSS Variables</a></li><li><a href="https://www.geeksforgeeks.org/adding-html-entities-using-css-content/?ref=lbp">Adding HTML entities using CSS content</a></li><li><a href="https://www.geeksforgeeks.org/css-web-fonts/?ref=lbp">CSS | Web Fonts</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Plugins<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-marqueemenu-plugin/?ref=lbp">CSS MarqueeMenu Plugin</a></li><li><a href="https://www.geeksforgeeks.org/css-stacking-page-plugin/?ref=lbp">CSS Stacking Page Plugin</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>CSS Questions<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/how-order-of-classes-work-in-css/?ref=lbp">How order of classes work in CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/create-a-transparent-border-with-css/?ref=lbp">Create a transparent border with CSS</a></li><li><a href="https://www.geeksforgeeks.org/what-is-the-use-of-asterisk-selector-in-css/?ref=lbp">What is the use of asterisk (*) selector in CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-wave-background-using-css/?ref=lbp">How to Create Wave Background using CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-shapes-using-css/?ref=lbp">How to create shapes using CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-wave-ball-effect-using-css/?ref=lbp">How to create wave ball effect using CSS?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-text-fill-animation-using-css/?ref=lbp">How to create text-fill animation using CSS ?</a></li><li><a href="https://www.geeksforgeeks.org/css-examples/?ref=lbp">CSS Examples</a></li></ul></div><div class=leftbar-dropdown><div class=dropdown-title>SASS<span class="gfg-icon gfg-icon_arrow-down-thin"></span></div><ul><li><a href="https://www.geeksforgeeks.org/css-preprocessor-sass/?ref=lbp">CSS Preprocessor SASS</a></li><li><a href="https://www.geeksforgeeks.org/sass-introduction/?ref=lbp">SASS | Introduction</a></li><li><a href="https://www.geeksforgeeks.org/sass-syntax/?ref=lbp">SASS | Syntax</a></li><li><a href="https://www.geeksforgeeks.org/sass-comments/?ref=lbp">SASS | Comments</a></li><li><a href="https://www.geeksforgeeks.org/sass-variables/?ref=lbp">SASS | Variables</a></li><li><a href="https://www.geeksforgeeks.org/sass-import/?ref=lbp">SASS | @import</a></li><li><a href="https://www.geeksforgeeks.org/sass-mixin-and-include/?ref=lbp">SASS | @mixin and @include</a></li><li><a href="https://www.geeksforgeeks.org/sass-extend-rule/?ref=lbp">Sass @extend Rule</a></li><li><a href="https://www.geeksforgeeks.org/sass-each-rule/?ref=lbp">Sass @each Rule</a></li><li><a href="https://www.geeksforgeeks.org/sass-if-and-else/?ref=lbp">SASS | @if and @else</a></li><li><a href="https://www.geeksforgeeks.org/sass-operators/?ref=lbp">SASS | Operators</a></li><li><a href="https://www.geeksforgeeks.org/sass-numeric-operators/?ref=lbp">SASS | Numeric operators</a></li><li><a href="https://www.geeksforgeeks.org/sass-placeholder-selectors/?ref=lbp">SASS | Placeholder Selectors</a></li><li><a href="https://www.geeksforgeeks.org/sass-nesting/?ref=lbp">SASS | Nesting</a></li><li><a href="https://www.geeksforgeeks.org/sass-parent-selector/?ref=lbp">SASS | Parent Selector</a></li><li><a href="https://www.geeksforgeeks.org/sass-booleans-and-boolean-operators/?ref=lbp">SASS | Booleans and Boolean operators</a></li><li><a href="https://www.geeksforgeeks.org/sass-shadowing-and-flow-control/?ref=lbp">SASS | Shadowing and Flow Control</a></li><li><a href="https://www.geeksforgeeks.org/sass-interpolation/?ref=lbp">SASS | Interpolation</a></li></ul></div></ul></div></div><div class=leftBar><div class=article--viewer><div class=article--viewer_content><div class=a-wrapper><div style=z-index:9999!important;position:relative></div><article class="content post-423476 post type-post status-publish format-standard hentry category-css category-guestblogs category-web-technologies" id=post-423476><div style=position:relative><div class=article-title><h1>10 CSS Selectors Every Developer Should Know</h1></div><div class=article-buttons><div class="article--viewer_comments tooltip"><span class=tooltiptext>View Discussion</span>\n<button data-gfg-action=loadComments>\n<i class="gfg-icon gfg-icon_comment"></i></button></div><div pid=423476 ptitle="10 CSS Selectors Every Developer Should Know" class="article--viewer_improve tooltip"><span class=tooltiptext>Improve Article</span>\n<button onclick=improveArticleCall()>\n<i class="gfg-icon gfg-icon_edit"></i></button></div><div pid=423476 class="article--viewer_bookmark tooltip"><span class=tooltiptext>Save Article</span>\n<button data-gfg-action=bookmark-article data-bookmark-value=0>\n<i class="gfg-icon gfg-icon_bookmark"></i></button></div><div pid=423476 class="article--viewer_like tooltip"><span class=tooltiptext>Like Article</span>\n<button data-gfg-action=like-article data-bookmark-value=0>\n<i class="gfg-icon gfg-icon_thumbs"></i></button></div></div></div><div class=media><div class=meta><ul><li><span class=strong>Difficulty Level :</span>\n<span><a href=https://www.geeksforgeeks.org/easy/>Easy</a></span></li><li><span class=strong>Last Updated :</span>\n<span>02 Sep, 2021</span></li></ul></div></div><div class=text><p style=text-align:justify>What&#8217;s the first thing for any website to create a good impression on a user? &#8230;&nbsp;</p><p style=text-align:justify>Yes&#8230;it&#8217;s the user interface for any website. Every developer knows how important it is to create a beautiful design for users to interact with any website. Giving styling to the web pages smartly in a minimal amount of time is not an easy task if you don&#8217;t have a good knowledge of CSS and it&#8217;s selectors. <a href=https://www.geeksforgeeks.org/css-tutorials/><strong>CSS</strong></a> selectors target the specified elements in an HTML document and help developers to apply styling to the web pages. You might have knowledge of some basic CSS selectors but a bit more than basic knowledge helps in achieving your goal faster. Using the right CSS selectors minimize the amount of code, makes it more readable, and makes the CSS simpler to maintain that in the future.</p><p><img src=https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200609224155/10-CSS-Selectors-Every-Developer-Should-Know.png alt=10-CSS-Selectors-Every-Developer-Should-Know></p><div id=GFG_AD_gfg_mobile_336x280></div><p style=text-align:justify>There are a wide variety of CSS selectors available. Let&#8217;s discuss some important ones to simplify your work in frontend development.&nbsp;</p><h3 style=text-align:justify>1. Element or Group Selector</h3><p style=text-align:justify>This is one of the most basic selector to use in CSS. Element selector allows you to select and give styling to all elements with the same specified element name. If there are multiple elements with the same style definitions, you can group all the elements and apply styling to all of them together. This way you can minimize the code because you won&#8217;t have to use class for each of the elements.&nbsp;</p><p><strong>Example 1:&nbsp;</strong>Here, all paragraph on the page will be right-aligned, with a yellow text color&nbsp;&nbsp;</p><pre>p {\n  text-align: right;\n  color: red;\n}</pre><p style=text-align:justify><strong>Example 2:</strong>&nbsp;Now, look at the following CSS code&#8230;&nbsp;&nbsp;</p><pre>h2 {\n text-align: center;\n color: yellow;\n}\nh3 {\n text-align: center;\n color: yellow;\n}\np \n text-align: center;\n color: yellow;\n}</pre><p style=text-align:justify>You can minimize the above code using the group selector and write the same code as given below:&nbsp;</p><pre>h2, h3, p {\n text-align: center;\n color: yellow;\n}</pre><h3 style=text-align:justify>2. #id selector&nbsp;</h3><p style=text-align:justify>id selector is the other most powerful common selector in CSS. Using the # symbol followed by id name allows you to target by id and apply styling to all specified elements with a selected id. Using this selector sounds good because of its simplicity but keep in mind that id should be unique for the entire web page. It means you are not allowed to assign an id selector for multiple elements. If you won&#8217;t assign unique id you will face problems in manipulating a specific element in JavaScript. Also, your code will not be validated by W3C and you will face compatibility issues across different browsers. So instead of creating many #id&#8217;s use classes or any other logic for styling, else it will be tough to maintain your CSS later on.</p><p style=text-align:justify><strong>Example:&nbsp;</strong></p><pre>#box{\nwidth : 250px;\nheight: 250px;\nbackground : yellow;\n}</pre><h3 style=text-align:justify>3. .class selector</h3><p style=text-align:justify>Class selector is the most useful common selector used by the developers. You can define the class selector using period (.) followed by the class name. It gives styling to all elements with a specified class attribute. It is similar to the id selector but the only difference is, class selector allows you to target multiple elements in a page. You can also use multiple classes (separated by a space) on HTML elements. &nbsp;</p><p style=text-align:justify><strong>Example 1:&nbsp;</strong></p><pre>.center{\ntext-align: center;\ncolor: yellow;\n}</pre><p style=text-align:justify><strong>Example 2: </strong>In the below example, only p elements with class &#8216;center&#8217; will be affected.</p><pre>p.center {\n text-align: center;\n color: yellow;\n}</pre><h3 style=text-align:justify>4. Attribute selector</h3><p style=text-align:justify>Using attribute selector, you can select all elements by the name or value of a given attribute and apply styling to them.&nbsp;</p><p style=text-align:justify><strong>Example 1: </strong>Below is an example of an HTML line which has &#8216;rel&#8217; attribute with the value of &#8220;newfriend&#8221;</p><pre>&lt;h3 id="title" class="friend" rel="newfriend"&gt;David Walsh&lt;/h3&gt;</pre><p style=text-align:justify>Let&#8217;s see how to use attribute selector for &#8216;rel&#8217; attribute in the above line.</p><pre>h3[rel="newfriend"] {\n  color: yellow;\n}</pre><p style=text-align:justify>This selector is frequently used by the developers in code for &#8216;checkbox&#8217; element. Read the example given below.</p><p style=text-align:justify><strong>Example 2:</strong></p><pre>input[type="checkbox"] {\n     color: purple;\n}</pre><p style=text-align:justify>It is also frequently used for the anchor tags in the code. Read the example given below.</p><p style=text-align:justify><strong>Example 3:</strong>&nbsp;</p><pre>a[title] {\n  color: red;\n}</pre><p style=text-align:justify><strong>Combinators: </strong>These<strong> </strong>are used to apply styling to the html elements by using the relationship between the selectors. Combinators allows you to mix simple selectors and apply logic between them. Let&#8217;s discuss four different combinator selectors in CSS.</p><ul><li style=text-align:justify>Descendant selector</li><li style=text-align:justify>Child selector</li><li style=text-align:justify>Adjacent sibling selector</li><li style=text-align:justify>General sibling selector</li></ul><h3 style=text-align:justify>5. Descendant selector</h3><p style=text-align:justify>Descendant selector apply styling to only those elements that are descendants of a specified element. This selector is very useful when you need to apply styling only for some specific elements. For example, what if, rather than targeting all &#8216;h2&#8217; tags, you only need to target the &#8216;h2&#8217; which are the part of &#8216;div&#8217; tag only. These are the cases where you can use descendant selectors.&nbsp;</p><p style=text-align:justify><strong>Example 1:</strong></p><pre>div h2 {\n background-color: green;\n}</pre><p style=text-align:justify><strong>Example 2: </strong>You can also make a chain and use descendant selector.</p><pre>ol li a {\n background-color: green;\n}</pre><p style=text-align:justify><strong>Example 3:</strong> In the below example, you can mix it with class selector.</p><pre>.box a{\ncolor :green;\n}</pre><h3 style=text-align:justify>6. Child selector</h3><p style=text-align:justify>Child selector allows you to selects all elements that are the children of a specified element.&nbsp;</p><p style=text-align:justify><strong>Example 1:</strong></p><pre>div &gt; h1 {\n background-color: green;\n}</pre><p style=text-align:justify>The difference between child selector and descendant selector is that the latter will only select direct children.&nbsp;</p><p style=text-align:justify><strong>Example 2:&nbsp;</strong></p><p style=text-align:justify><strong>CSS:</strong></p><pre>span {\n background-color: white;\n}\n\ndiv &gt; span {\n background-color: yellow;\n}</pre><p style=text-align:justify><strong>HTML:</strong></p><pre>&lt;div&gt;\n &lt;span&gt;Span #1, in the div.\n   &lt;span&gt;Span #2, in the span that\'s in the div.&lt;/span&gt;\n &lt;/span&gt;\n&lt;/div&gt;\n&lt;span&gt;Span #3, not in the div at all.&lt;/span&gt;</pre><p style=text-align:justify><strong>Result:</strong></p><p><img src=https://media.geeksforgeeks.org/wp-content/uploads/20200602172824/childcombinator.PNG></p><p style=text-align:justify><strong>Example 3: </strong>You have a &#8216;ul&#8217; that has some items and inside these items, there are new &#8216;ol&#8217; of items, you might want to select a certain style just for the higher-hierarchy list items but not for the nested list’s items.</p><p style=text-align:justify><strong>CSS:</strong>&nbsp;</p><pre>ul &gt; li {\n   border-top: 5px solid red;\n}</pre><p style=text-align:justify><strong>HTML:</strong></p><pre>&lt;ul&gt;\n   &lt;li&gt;Unordered item&lt;/li&gt;\n   &lt;li&gt;Unordered item\n       &lt;ol&gt;\n           &lt;li&gt;Item 1&lt;/li&gt;\n           &lt;li&gt;Item 2&lt;/li&gt;\n       &lt;/ol&gt;\n   &lt;/li&gt;\n&lt;/ul&gt;</pre><p style=text-align:justify><strong>Result:&nbsp;</strong></p><p><img src=https://media.geeksforgeeks.org/wp-content/uploads/20200602173605/childlistexample.PNG></p><h3 style=text-align:justify>7. Adjacent and general sibling selectors</h3><p style=text-align:justify><strong>Adjacent</strong> means &#8220;immediately following&#8221;. This selector is used when you want to select the elements that immediately follow the specified element (adjacent siblings). &nbsp;In other words it selects the element which is right next to another element at the same level of the hierarchy.&nbsp;</p><p style=text-align:justify><strong>Example: </strong>Below example select p element that are directly following a &#8216;div&#8217; element&nbsp;</p><p style=text-align:justify><strong>CSS:</strong></p><pre>div + p {\n background-color: red;\n}</pre><p style=text-align:justify><strong>HTML:</strong></p><pre>&lt;div&gt;\n &lt;p&gt;Paragraph 1 in the div.&lt;/p&gt;\n &lt;p&gt;Paragraph 2 in the div.&lt;/p&gt;\n&lt;/div&gt;\n\n&lt;p&gt;Paragraph 3. Not in a div.&lt;/p&gt;\n&lt;p&gt;Paragraph 4. Not in a div.&lt;/p&gt;</pre><p style=text-align:justify><strong>Result:</strong></p><p><img src=https://media.geeksforgeeks.org/wp-content/uploads/20200602180944/adjacentselector.PNG></p><p style=text-align:justify><strong>General sibling selectors</strong> (~) are less strict than adjacent sibling selector. It allows you to select all the elements that are siblings of a specified element even if they are not directly adjacent.&nbsp;</p><p style=text-align:justify><strong>Example:</strong> Below example selects all &#8216;p&#8217; elements that are siblings of &#8216;div&#8217; elements</p><p style=text-align:justify><strong>CSS:</strong></p><pre>div ~ p {\n background-color: red;\n}</pre><p style=text-align:justify><strong>HTML:</strong></p><pre>&lt;p&gt;Paragraph 1.&lt;/p&gt;\n\n&lt;div&gt;\n &lt;p&gt;Paragraph 2.&lt;/p&gt;\n&lt;/div&gt;\n\n&lt;p&gt;Paragraph 3.&lt;/p&gt;\n&lt;span&gt;GeeksforGeeks&lt;/span&gt;\n&lt;p&gt;Paragraph 4.&lt;/p&gt;</pre><p style=text-align:justify><strong>Result:</strong>&nbsp;</p><p><img src=https://media.geeksforgeeks.org/wp-content/uploads/20200602182856/generalsiblingselector-200x186.PNG></p><h3 style=text-align:justify>8. The star selector *</h3><p style=text-align:justify>It is also called as universal selector (*) and it selects everything in the document and apply styling to them. By default your browser already defines the styling to the element and when you want to reset the browser default styles you can use star selector. For example, instead of using the default styling of your browser such as margin, padding, text-align or font-size, you can define your own styling for the entire elements of your web page..</p><p style=text-align:justify><strong>Example 1:</strong></p><pre>* {\ntext-align: center;\ncolor: green;\nmargin: 0;\npadding: 0;\nfont-size: 30px;\nborder: 0;\n}</pre><p style=text-align:justify><strong>Example 2: </strong>Select all elements inside &lt;div> elements and set their background color to red.</p><pre>div * {\n   background-color: red;\n}</pre><p style=text-align:justify>&nbsp;<i>Did you notice that when you use other selectors like &#8216;class&#8217; , &#8216;element&#8217; or &#8216;id&#8217;, they already imply the star selector?</i></p><pre>h1 {\n...\n}\nis similar to \n*h1 {\n...\n}</pre><p style=text-align:justify>It is generally recommended to use * selector less in your code or use it for testing purpose only because it adds unnecessary too much weight on the browser.</p><h3 style=text-align:justify>9. Pseudo-classes and Pseudo element</h3><p style=text-align:justify>If you want to style an element based on the state of a specified element, you can use <strong>pseudo classes</strong> (:) for that. For example, you can apply styling on an element when a user mouses over it, when a user visit or hover a link when an element gets focus. So this selector is useful to apply styles based on element states. Let&#8217;s see the syntax and example.</p><p style=text-align:justify><strong>Syntax:</strong></p><pre>selector:pseudo-class {\n property:value;\n}</pre><p style=text-align:justify><strong>Example 1:&nbsp;</strong> Read the code below to change a button&#8217;s color when the user&#8217;s pointer hovers over it</p><pre>button:hover {\n color: green;\n}</pre><p style=text-align:justify><strong>Example 2:</strong></p><pre>a:link {\n color: red;\n}\n/* visited link */\na:visited {\n color: green;\n}</pre><p style=text-align:justify><strong>Example 3:</strong></p><pre>input[type=radio]:checked {\n border: 2px solid green;\n}</pre><p style=text-align:justify><strong>Pseudo element</strong> (::) allows you to apply styling to the specific piece or fragment of the selected element. For example, style the first character, or line, of an element.&nbsp;</p><p style=text-align:justify><strong>Syntax:</strong></p><pre>selector::pseudo-element {\n property:value;\n}</pre><p style=text-align:justify><strong>Example 1:&nbsp;</strong> ::first-line can be used to change the font of the first line of a paragraph.&nbsp;</p><pre>p::first-line {\n color: green;\n font-size: 1.2em;\n text-transform: uppercase;\n}</pre><p style=text-align:justify><strong>Example 2: </strong>Pseudo element can also be combined with the CSS classes. Read the example given below</p><pre>p.intro::first-letter {\n color: red;\n font-size: 1.2em;\n font-weight: bold;\n}</pre><p style=text-align:justify><strong>Example 3: </strong>Pseudo element can also be used to insert<strong> </strong>content before, or after, the content of an element. Read the example given below which insert an image before the content of each &#8216;h1&#8217; element.</p><pre>h1::before {\n content: url(abc.gif);\n}</pre><h3 style=text-align:justify>10. nth-of-type and nth-child</h3><p style=text-align:justify>Consider a scenario where you have four unordered lists. If you want to apply CSS only on the third item of the ul, and you don&#8217;t have a unique id to hook into, you can use the nth-of-type(n). Basically <strong>:nth-of-type</strong> selector allows you to select every element that is a specified nth child of a specified type of it parent. n can be any number, keyword, or formula that will specify the position of an element among a group of siblings. If the explanation still sounds complicated then let&#8217;s understand with the example.</p><p style=text-align:justify><strong>Example 1:</strong> In the example given below only the third &#8216;li&#8217; will be affected by the<strong> :</strong>nth-of-type style.</p><p style=text-align:justify><strong>CSS:</strong></p><pre>li:nth-of-type(3) {\n color: red;\n}</pre><p style=text-align:justify><strong>HTML:</strong></p><pre>&lt;ul&gt;\n&lt;li&gt;First item.&lt;/li&gt;\n&lt;li&gt;Second item.&lt;/li&gt;\n&lt;li&gt;Third item.&lt;/li&gt;\n&lt;li&gt;Fourth item.&lt;/li&gt;\n&lt;/ul&gt;</pre><p style=text-align:justify><strong>Result:</strong></p><p><img src=https://media.geeksforgeeks.org/wp-content/uploads/20200602212434/nthtypeselector.PNG></p><p style=text-align:justify><strong>Syntax:</strong></p><pre>:nth-of-type(number) {\n css declarations;\n}</pre><p style=text-align:justify><strong>:nth-child(n)</strong> selector matches every element that is the nth child, regardless of type, of its parent. n can be a number, a keyword, or a formula that will specify the position of an element among a group of siblings.</p><p style=text-align:justify><strong>Example 1:</strong></p><p style=text-align:justify><strong>CSS:</strong></p><pre>p:nth-child(3) {\n background: yellow;\n}</pre><p style=text-align:justify><strong>HTML:</strong></p><pre>&lt;p&gt;The first paragraph.&lt;/p&gt;\n&lt;p&gt;The second paragraph.&lt;/p&gt;\n&lt;p&gt;The third paragraph.&lt;/p&gt;\n&lt;p&gt;The fourth paragraph.&lt;/p&gt;</pre><p style=text-align:justify><strong>Result:</strong>&nbsp;</p><p><img src=https://media.geeksforgeeks.org/wp-content/uploads/20200602214407/nthchild.PNG></p><p style=text-align:justify><strong>Example 2:</strong></p><pre>p:nth-child(2n) {\n background: yellow;\n}</pre><p style=text-align:justify><strong>Example 3: </strong>You can also chain multiple nth-child together for different elements with same styling.</p><pre>div:nth-of-type(4) p:nth-of-child(3) {\n color: red;\n}</pre><div class=textBasedMannualAds_2><p><a href="https://practice.geeksforgeeks.org/jobs?utm_source=gfg&utm_medium=in-article&utm_campaign=Get-hired" target=_blank rel=noopener><img class=ad_course_banner src=https://media.geeksforgeeks.org/wp-content/post-ads-banner/2022-05-23-17-21-58-Top-Tech-CompaniesIn-Article-Ad.webp alt></a></p></div><br><div id=AP_G4GR_6></div><div id=personalNoteDiv class="clear hideIt"><div class="personalNoteHeader clear"><span class=noteHeaderText>My Personal Notes</span>\n<span class=hideNotesDivIcon><i class="material-icons personalNotesIcon">arrow_drop_up</i></span></div><div class=collapsableDivPersonalNotes><textarea maxlength=5000 id=enteredPersonalNote class=personalNoteStyle placeholder="Add your personal notes here! (max 5000 chars)"></textarea><div class=saveNoteDiv><span class=processSaveNote></span><button class=savePersonalNoteButton onclick=saveUserPersonalNote()>Save</button></div></div></div></div></article><div class=article-meta><div class=vote-wrap><div style=display:flex;align-items:center;justify-content:center;width:100%><button data-type=like class=vote-this style=margin-right:0;margin-left:0>\n<i class="gfg-icon gfg-icon_like favoriteIcon"></i>\n<span class=favoriteLike>Like</span><figure class=favoriteText></figure></button></div></div><div class="d-row content-bw article-pgnavi v-divider-gfg"><div class=article-pgnavi_prev><a href=https://www.geeksforgeeks.org/advanced-selectors-in-css/ class=pg-head><span class="gfg-icon gfg-icon_previous"></span><span style=margin-left:5px>Previous</span></a><div class=pg-main><a href=https://www.geeksforgeeks.org/advanced-selectors-in-css/>Advanced Selectors in CSS</a></div></div><div class=article-pgnavi_next><a href=https://www.geeksforgeeks.org/css-selectors-complete-reference/ class=pg-head><span style=margin-right:5px;margin-left:auto>Next</span>\n<span class="gfg-icon gfg-icon_next"></span></a><div class=pg-main><a href=https://www.geeksforgeeks.org/css-selectors-complete-reference/>CSS Selectors Complete Reference</a></div></div></div></div><div class=article--recommended><div class=article--recommended_wrapper><div class=top-bar><div class="def-title_wrap pl-0"><div class="title large">Recommended Articles</div></div><div class=page-list><div class=page-h>Page :</div><div class=pages></div></div></div><div class=gfg--carousel><div class=gfg--carousel_wrap data-flex=2><div class=gfg--carousel_wrap-slide><div class=slide-item_list><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/10-css-functions-every-front-end-developer-should-know/?ref=rp" title="Permalink to 10 CSS functions every Front End developer Should Know" rel=bookmark class=c-wrap><div class=head>10 CSS functions every Front End developer Should Know</div><div class=meta>12, Mar 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/5-amazing-css-styles-that-every-developer-should-know/?ref=rp" title="Permalink to 5 Amazing CSS Styles that Every Developer Should Know" rel=bookmark class=c-wrap><div class=head>5 Amazing CSS Styles that Every Developer Should Know</div><div class=meta>23, Jul 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/css-tricks-that-every-web-developer-should-know/?ref=rp" title="Permalink to CSS Tricks That Every Web Developer Should Know" rel=bookmark class=c-wrap><div class=head>CSS Tricks That Every Web Developer Should Know</div><div class=meta>10, Jul 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/7-css-hacks-every-developer-should-know/?ref=rp" title="Permalink to 7 CSS Hacks Every Developer Should Know" rel=bookmark class=c-wrap><div class=head>7 CSS Hacks Every Developer Should Know</div><div class=meta>20, Aug 21</div></a></div></div></div><div class=gfg--carousel_wrap-slide><div class=slide-item_list><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/7-javascript-concepts-that-every-developer-must-know/?ref=rp" title="Permalink to 7 JavaScript Concepts That Every Web Developer Should Know" rel=bookmark class=c-wrap><div class=head>7 JavaScript Concepts That Every Web Developer Should Know</div><div class=meta>28, Oct 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/8-best-android-libraries-that-every-android-developer-should-know/?ref=rp" title="Permalink to 8 Best Android Libraries That Every Android Developer Should Know" rel=bookmark class=c-wrap><div class=head>8 Best Android Libraries That Every Android Developer Should Know</div><div class=meta>05, Nov 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/simple-and-concise-git-commands-that-every-software-developer-should-know/?ref=rp" title="Permalink to Simple and Concise Git Commands That Every Software Developer Should know" rel=bookmark class=c-wrap><div class=head>Simple and Concise Git Commands That Every Software Developer Should know</div><div class=meta>20, Sep 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-10-libraries-every-java-developer-should-know/?ref=rp" title="Permalink to Top 10 Libraries Every Java Developer Should Know" rel=bookmark class=c-wrap><div class=head>Top 10 Libraries Every Java Developer Should Know</div><div class=meta>25, Nov 21</div></a></div></div></div><div class=gfg--carousel_wrap-slide><div class=slide-item_list><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/7-kotlin-extensions-that-every-android-developer-should-know/?ref=rp" title="Permalink to 7 Kotlin Extensions That Every Android Developer Should Know" rel=bookmark class=c-wrap><div class=head>7 Kotlin Extensions That Every Android Developer Should Know</div><div class=meta>02, Jan 22</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-nosql-databases-that-every-data-scientist-should-know-about/?ref=rp" title="Permalink to Top NoSQL Databases That Every Data Scientist Should Know About" rel=bookmark class=c-wrap><div class=head>Top NoSQL Databases That Every Data Scientist Should Know About</div><div class=meta>27, Oct 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-10-algorithms-every-machine-learning-engineer-should-know/?ref=rp" title="Permalink to Top 10 Algorithms every Machine Learning Engineer should know" rel=bookmark class=c-wrap><div class=head>Top 10 Algorithms every Machine Learning Engineer should know</div><div class=meta>22, May 19</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/10-things-you-should-know-as-a-web-developer/?ref=rp" title="Permalink to 10 Things You Should Know As a Web Developer" rel=bookmark class=c-wrap><div class=head>10 Things You Should Know As a Web Developer</div><div class=meta>01, Nov 19</div></a></div></div></div><div class=gfg--carousel_wrap-slide><div class=slide-item_list><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/5-operating-system-concepts-you-should-know-as-a-developer/?ref=rp" title="Permalink to 5 Operating System Concepts You Should Know As a Developer" rel=bookmark class=c-wrap><div class=head>5 Operating System Concepts You Should Know As a Developer</div><div class=meta>30, Apr 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/6-best-css-frameworks-you-should-know-to-design-attractive-websites/?ref=rp" title="Permalink to 6 Best CSS frameworks You should Know to design Attractive Websites" rel=bookmark class=c-wrap><div class=head>6 Best CSS frameworks You should Know to design Attractive Websites</div><div class=meta>26, Nov 18</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/5-vue-js-advantages-that-every-developer-must-know/?ref=rp" title="Permalink to 5 Vue.Js Advantages That Every Developer Must Know" rel=bookmark class=c-wrap><div class=head>5 Vue.Js Advantages That Every Developer Must Know</div><div class=meta>04, May 22</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-7-payment-gateway-apis-that-every-developer-must-know/?ref=rp" title="Permalink to Top 7 Payment Gateway APIs That Every Developer Must Know" rel=bookmark class=c-wrap><div class=head>Top 7 Payment Gateway APIs That Every Developer Must Know</div><div class=meta>18, Mar 20</div></a></div></div></div><div class=gfg--carousel_wrap-slide><div class=slide-item_list><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/13-things-you-should-know-before-you-enter-in-web-development/?ref=rp" title="Permalink to 13 Things You Should Know Before You Enter In Web Development" rel=bookmark class=c-wrap><div class=head>13 Things You Should Know Before You Enter In Web Development</div><div class=meta>03, Feb 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-5-html-tricks-that-you-should-know/?ref=rp" title="Permalink to Top 5 HTML Tricks That You Should Know" rel=bookmark class=c-wrap><div class=head>Top 5 HTML Tricks That You Should Know</div><div class=meta>02, Mar 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/10-mac-os-keyboard-shortcuts-that-you-should-know/?ref=rp" title="Permalink to 10 Mac OS Keyboard Shortcuts That You Should Know" rel=bookmark class=c-wrap><div class=head>10 Mac OS Keyboard Shortcuts That You Should Know</div><div class=meta>02, Aug 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/10-web-development-and-web-design-facts-that-you-should-know/?ref=rp" title="Permalink to 10 Web Development and Web Design Facts That You Should Know" rel=bookmark class=c-wrap><div class=head>10 Web Development and Web Design Facts That You Should Know</div><div class=meta>08, Aug 20</div></a></div></div></div><div class=gfg--carousel_wrap-slide><div class=slide-item_list><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-10-cybersecurity-tools-that-you-should-know/?ref=rp" title="Permalink to Top 10 Cybersecurity Tools That You Should Know" rel=bookmark class=c-wrap><div class=head>Top 10 Cybersecurity Tools That You Should Know</div><div class=meta>02, Dec 20</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/how-much-python-should-you-know-to-learn-django/?ref=rp" title="Permalink to How Much Python Should You know To Learn Django?" rel=bookmark class=c-wrap><div class=head>How Much Python Should You know To Learn Django?</div><div class=meta>27, Mar 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/things-you-should-know-about-react-hooks/?ref=rp" title="Permalink to Things You Should Know About React Hooks" rel=bookmark class=c-wrap><div class=head>Things You Should Know About React Hooks</div><div class=meta>17, Jul 21</div></a></div><div class=slide-item><div class=sno></div><a href="https://www.geeksforgeeks.org/top-10-mobile-app-development-trends-you-should-know/?ref=rp" title="Permalink to Top 10 Mobile App Development Trends You Should Know" rel=bookmark class=c-wrap><div class=head>Top 10 Mobile App Development Trends You Should Know</div><div class=meta>20, Aug 21</div></a></div></div></div></div></div><div class=gfg--carousel_dots><div class=carousel--dots></div></div></div></div><div class=article-meta><div class="bottom-wrap d-row divider-gfg" style=margin-top:0><div class=credits><div class=by>Article Contributed By :</div><div class=media><div class=author><div class=image-wrap><img src=https://media.geeksforgeeks.org/auth/profile/ytr6t5q800tkf05o2mv6 class="img-fluid restrict-popup-gfg" alt=https://media.geeksforgeeks.org/auth/avatar.png></div><div class=info><div class=name><a href=https://auth.geeksforgeeks.org/user/anuupadhyay/articles>anuupadhyay</a></div><div class=handle><a href=https://auth.geeksforgeeks.org/user/anuupadhyay>@anuupadhyay</a></div></div></div></div></div><div class=vote-block><div class=vote-d>Vote for difficulty</div><div class=vote-s>Current difficulty :\n<a href=https://www.geeksforgeeks.org/easy/>Easy</a></div><div class=d-column style=margin-top:20px><div class="label-list without-bg"><button data-gfg-action=article-difficulty data-rating=1 class=btn>Easy</button>\n<button data-gfg-action=article-difficulty data-rating=2 class=btn>Normal</button>\n<button data-gfg-action=article-difficulty data-rating=3 class=btn>Medium</button>\n<button data-gfg-action=article-difficulty data-rating=4 class=btn>Hard</button>\n<button data-gfg-action=article-difficulty data-rating=5 class=btn>Expert</button></div><div class=gfg-process style=margin-top:10px;font-size:10pt;font-family:var(--font-din)></div></div></div></div><div class=bottom-wrap><div class=improved><div class=t-head>Improved By :</div><ul><li><a href=https://auth.geeksforgeeks.org/user/bunnyram19>bunnyram19</a></li><li><a href=https://auth.geeksforgeeks.org/user/arorakashish0911>arorakashish0911</a></li></ul></div><div class=improved><div class=t-head>Article Tags :</div><ul><li><a href=https://www.geeksforgeeks.org/category/web-technologies/css/>CSS</a></li><li><a href=https://www.geeksforgeeks.org/category/guestblogs/>GBlog</a></li><li><a href=https://www.geeksforgeeks.org/category/web-technologies/>Web Technologies</a></li></ul></div></div><div class=bottom-wrap><div class=improveArticleWrap><div pid=423476 ptitle="10 CSS Selectors Every Developer Should Know" id=improveArticleButtonDiv></div><a href=mailto:review-team@geeksforgeeks.org class=reportButton>Report Issue</a></div></div></div></div><div><div class=disqus--viewer><div id=ide_link style=text-align:center;margin-top:50px><p>Writing code in comment?\nPlease use <a href=https://ide.geeksforgeeks.org/>ide.geeksforgeeks.org</a>,\ngenerate link and share the link here.</a></p></div><br><div class=disqus-comment><button id=comment class=action-button style="width:45%;cursor:pointer;margin-right:0%;box-shadow:0 2px 5px rgba(0,0,0,.4),0 6px 20px transparent;border-color:#4cb96b;border-radius:4px">\nLoad Comments</button></div><div class=bottom-comment-section hidden><div><style>#comment-system #discuss-iframe{min-height:450px!important}</style><div id=comment-system></div></div></div></div></div></div></div></div><div class=rightBar><div id=secondary class=widget-area role=complementary><aside id=text-15 class="widget widget_text"><div class=textwidget><div id=GFG_AD_Desktop_RightSideBar_ATF_300x600 style=min-width:300px;min-height:600px;margin-bottom:10px></div><div id=GFG_AD_Desktop_RightSideBar_ATF_300x250_2 style=min-width:300px;min-height:250px></div></div></aside><div class=rba_all_pages><div class=heading><div class=def-title_wrap><div class=title>What\'s New</div><div id=edit-icon></div></div></div><div class=card-layout><div class=content-wrapper><div class=side--container_wscard><a href="https://practice.geeksforgeeks.org/courses/category/all?courseType=live&utm_source=gfg&utm_medium=right-bar&utm_campaign=Live_courses"><div class=card-content><div class=thumbnail><img src="https://media.geeksforgeeks.org/wp-content/post-ads-banner/2022-06-24-15-10-16-Group 35.png" class=img-fluid></div><div class=content><div class=head>Placement Assistance With LIVE Courses @ INR 0</div><div class=meta></div><div class=ref>View Details</div></div></div></a></div></div></div><div class=card-layout><div class=content-wrapper><div class=side--container_wscard style=margin-top:-20px><a href="https://practice.geeksforgeeks.org/courses/complete-interview-preparation?utm_source=right-bar&utm_medium=gfg&utm_campaign=dsa&utm_term=dsa"><div class=card-content><div class=thumbnail><img src=https://media.geeksforgeeks.org/wp-content/post-ads-banner/2021-12-29-16-30-50-CIP_Icon.png class=img-fluid></div><div class=content><div class=head>Complete Interview Preparation- Self Paced Course</div><div class=meta></div><div class=ref>View Details</div></div></div></a></div></div></div><div class=card-layout style=margin-bottom:20px><div class=content-wrapper><div class=side--container_wscard style=margin-top:-20px><a href="https://practice.geeksforgeeks.org/courses/dsa-self-paced?utm_source=right-bar&utm_medium=gfg&utm_campaign=dsa&utm_term=dsa"><div class=card-content><div class=thumbnail><img src="https://media.geeksforgeeks.org/wp-content/post-ads-banner/2021-12-29-11-18-16-DSA_Ad_icon (1).png" class=img-fluid></div><div class=content><div class=head>Data Structures & Algorithms- Self Paced Course</div><div class=meta></div><div class=ref>View Details</div></div></div></a></div></div></div></div><aside id=text-16 class="widget widget_text"><div class=textwidget><div id=GFG_AD_Desktop_RightSideBar_MTF_300x600 style=min-width:300px;min-height:600px></div></div></aside><div class="side--container mb-40"><div class=card-layout><div class=heading><div class=def-title_wrap><div class=title>Most popular in CSS</div></div></div><div class="rightbar--articles_container fw-medium"><div class=content-wrapper><ul class="content-wrapper content-wrapper_links"><li><a href="https://www.geeksforgeeks.org/how-to-update-node-js-and-npm-to-next-version/?ref=leftbar-rightbar">How to update Node.js and NPM to next version ?</a></li><li><a href="https://www.geeksforgeeks.org/how-to-insert-spaces-tabs-in-text-using-html-css/?ref=leftbar-rightbar">How to insert spaces/tabs in text using HTML/CSS?</a></li><li><a href="https://www.geeksforgeeks.org/top-10-projects-for-beginners-to-practice-html-and-css-skills/?ref=leftbar-rightbar">Top 10 Projects For Beginners To Practice HTML and CSS Skills</a></li><li><a href="https://www.geeksforgeeks.org/how-to-create-footer-to-stay-at-the-bottom-of-a-web-page/?ref=leftbar-rightbar">How to create footer to stay at the bottom of a Web page?</a></li><li><a href="https://www.geeksforgeeks.org/ui-ux-developer-education-skills-salary-and-career/?ref=leftbar-rightbar">UI & UX Developer - Education, Skills, Salary, and Career</a></li></ul></div></div></div></div><aside id=text-17 class="widget widget_text"><div class=textwidget><div id=GFG_AD_Desktop_RightSideBar_BTF_300x600 style=min-width:300px;min-height:600px></div></div></aside><div class="side--container mb-40"><div class=card-layout><div class=heading><div class=def-title_wrap><div class=title>Most visited in GBlog</div></div></div><div class="rightbar--articles_container fw-medium"><div class=content-wrapper><ul class="content-wrapper content-wrapper_links"><li><a href="https://www.geeksforgeeks.org/dsa-sheet-by-love-babbar/?ref=leftbar-rightbar">DSA Sheet by Love Babbar</a></li><li><a href="https://www.geeksforgeeks.org/must-do-coding-questions-for-companies-like-amazon-microsoft-adobe/?ref=leftbar-rightbar">Must Do Coding Questions for Companies like Amazon, Microsoft, Adobe, ...</a></li><li><a href="https://www.geeksforgeeks.org/geeksforgeeks-jobathon-exclusive-hiring-challenge-for-amazon-alexa/?ref=leftbar-rightbar">GeeksforGeeks Job-A-Thon Exclusive - Hiring Challenge For Amazon Alexa</a></li><li><a href="https://www.geeksforgeeks.org/get-post-requests-using-python/?ref=leftbar-rightbar">GET and POST requests using Python</a></li><li><a href="https://www.geeksforgeeks.org/socket-programming-cc/?ref=leftbar-rightbar">Socket Programming in C/C++</a></li></ul></div></div></div></div><aside id=text-18 class="widget widget_text"><div class=textwidget><div id=GFG_AD_Desktop_RightSideBar_BTFdocked_300x600 style=min-width:300px;min-height:600px></div></div></aside></div></div></div><section class=disqus-section><div class=article-page_flex><div class=leftBar></div></div></section></div></div><div id=displayModal class="modal fade" role=dialog><div class=modal-dialog><div class=upper-box><h3 style="font:700 18px/31px var(--font-sofia);color:var(--color-black)">Improve your Coding Skills with Practice</h3><button class=upper-box-btn><a style=color:#fff!important href="https://practice.geeksforgeeks.org/explore?page=1&sortBy=submissions&utm_source=gfg&utm_medium=search-bar&utm_campaign=practice-search">Try It!</a></button></div><div class=modal-content><div class=error-message></div><div class=modal-body id=dmBody><div id=modal-dm-content></div><div class=modal-overlay aria-hidden=true><span class=loader__animation></span></div></div><div class=modal-footer></div></div></div></div><div id=displayModalBackdrop class=backdrop></div><footer class=gfg-footer id=gfg-footer><div class=footer-wrapper><div class=footer-wrapper_branding><a class=footer-wrapper_branding-anchor href=https://www.geeksforgeeks.org/><svg class="footer-wrapper_branding-nlogo" id="Group_230" data-name="Group 230" xmlns="http://www.w3.org/2000/svg" width="300.826" height="39.577" viewBox="0 0 300.826 39.577"><g id="logo" transform="translate(-3608 -227)"><g id="Group_155" data-name="Group 155" transform="translate(3608 227)"><path id="Path_242" data-name="Path 242" d="M988.871 586.642h-32.7a13.06 13.06.0 0122.949-6.9l4.757-4.783a19.789 19.789.0 00-34.466 11.678H949.3a19.789 19.789.0 00-34.466-11.678l4.757 4.783a13.06 13.06.0 0122.949 6.9h-32.7q-.057.757-.058 1.529a19.791 19.791.0 0039.055 4.533h1.042a19.789 19.789.0 0039.055-4.533Q988.929 587.4 988.871 586.642zm-59.305 14.589a13.063 13.063.0 01-12.261-8.555h24.522A13.064 13.064.0 01929.565 601.231zm39.576.0a13.064 13.064.0 01-12.262-8.555H981.4A13.063 13.063.0 01969.141 601.231z" transform="translate(-909.777 -568.383)" fill="#2f8d46"/></g><g id="Group_170" data-name="Group 170" transform="translate(3703.022 236.148)"><g id="Group_156" data-name="Group 156" transform="translate(26.144 4.527)"><line id="Line_1" data-name="Line 1" x1="1.046" fill="#0f2b3c"/></g><g id="Group_157" data-name="Group 157" transform="translate(56.695 0.004)"><path id="Path_243" data-name="Path 243" d="M1352.9 615.759l-6.714-6.771v6.771h-3.09V594.521h3.09v12.53l6.084-6.056h3.909l-6.988 6.988 7.67 7.782z" transform="translate(-1343.095 -594.521)" fill="#0f2b3c"/></g><g id="Group_158" data-name="Group 158" transform="translate(113.247 6.427)"><path id="Path_244" data-name="Path 244" d="M1504.614 627.712V612.948h3.09v2.558a3.7 3.7.0 011.447-1.91 3.9 3.9.0 012.262-.73 5.447 5.447.0 011.208.112l-.7 3a2.449 2.449.0 00-.842-.082 3.044 3.044.0 00-2.388 1.138 4.676 4.676.0 00-.983 3.16v7.515z" transform="translate(-1504.614 -612.865)" fill="#0f2b3c"/></g><g id="Group_159" data-name="Group 159" transform="translate(70.943 6.509)"><path id="Path_245" data-name="Path 245" d="M1385.943 626.817a5.668 5.668.0 01-2.152-2.683l2.669-1.171a3.743 3.743.0 001.376 1.662 3.657 3.657.0 002.029.572 4.049 4.049.0 001.879-.395 1.266 1.266.0 00.763-1.185 1.367 1.367.0 00-.654-1.2 6.492 6.492.0 00-2.016-.763l-1.662-.409a5.974 5.974.0 01-2.752-1.444 3.452 3.452.0 01-1.089-2.615 3.4 3.4.0 01.722-2.152 4.647 4.647.0 011.948-1.43 6.957 6.957.0 012.67-.5 7.191 7.191.0 013.405.776 4.6 4.6.0 012.125 2.247l-2.615 1.144a2.925 2.925.0 00-2.888-1.608 3.231 3.231.0 00-1.689.409 1.213 1.213.0 00-.681 1.063 1.226 1.226.0 00.518 1.021 4.442 4.442.0 001.526.667l2.043.518a6.573 6.573.0 013.092 1.566 3.5 3.5.0 011.049 2.575 3.72 3.72.0 01-.749 2.3 4.829 4.829.0 01-2.057 1.539 7.44 7.44.0 01-2.887.545A6.781 6.781.0 011385.943 626.817z" transform="translate(-1383.791 -613.101)" fill="#0f2b3c"/></g><g id="Group_160" data-name="Group 160" transform="translate(96.285 6.525)"><path id="Path_246" data-name="Path 246" d="M1463.543 613.146a7.374 7.374.0 107.374 7.374A7.374 7.374.0 001463.543 613.146zm0 11.532a4.228 4.228.0 114.228-4.228A4.228 4.228.0 011463.543 624.678z" transform="translate(-1456.169 -613.146)" fill="#0f2b3c"/></g><g id="Group_161" data-name="Group 161" transform="translate(23.011 6.524)"><path id="Path_247" data-name="Path 247" d="M1261.615 621.145c.017-.232.027-.466.024-.7a7.292 7.292.0 00-.212-1.685 7.375 7.375.0 00-14.537 1.84c0 .236.017.47.04.7a7.263 7.263.0 00.673 2.382 7.374 7.374.0 0013.389-.141l-3.267.034a4.617 4.617.0 01-8.014-2.3zm-11.664-2.266a4.614 4.614.0 018.592-.09z" transform="translate(-1246.891 -613.144)" fill="#0f2b3c"/></g><g id="Group_162" data-name="Group 162" transform="translate(39.461 6.524)"><path id="Path_248" data-name="Path 248" d="M1308.6 621.145c.017-.232.027-.466.025-.7a7.375 7.375.0 10-14.749.155c0 .236.017.47.04.7a7.257 7.257.0 00.672 2.382 7.375 7.375.0 0013.39-.141l-3.268.034a4.616 4.616.0 01-8.014-2.3zm-11.663-2.266a4.614 4.614.0 018.592-.09z" transform="translate(-1293.873 -613.144)" fill="#0f2b3c"/></g><g id="Group_163" data-name="Group 163" transform="translate(85.044 0.245)"><path id="Path_249" data-name="Path 249" d="M1430.636 598.566a2.5 2.5.0 011.8-.549 4.2 4.2.0 011.657.281v-2.752a7.24 7.24.0 00-2.3-.337 4.82 4.82.0 00-3.455 1.278 4.666 4.666.0 00-1.349 3.554v1.417h-2.922v2.752h2.922v12.036h3.091V604.209h4.016v-2.752h-4.016V600.4A2.5 2.5.0 011430.636 598.566z" transform="translate(-1424.063 -595.209)" fill="#0f2b3c"/></g><g id="Group_164" data-name="Group 164" transform="translate(0)"><path id="Path_250" data-name="Path 250" d="M1202.443 605.147a10.637 10.637.0 11-2.72-7.1l-1.983 1.982a7.837 7.837.0 101.656 7.09h-6.883v-2.851h9.895Q1202.443 604.7 1202.443 605.147z" transform="translate(-1181.169 -594.51)" fill="#0f2b3c"/></g><g id="Group_165" data-name="Group 165" transform="translate(179.788 0.004)"><path id="Path_251" data-name="Path 251" d="M1704.467 615.759l-6.714-6.771v6.771h-3.09V594.521h3.09v12.53l6.084-6.056h3.909l-6.988 6.988 7.669 7.782z" transform="translate(-1694.663 -594.521)" fill="#0f2b3c"/></g><g id="Group_166" data-name="Group 166" transform="translate(194.036 6.509)"><path id="Path_252" data-name="Path 252" d="M1737.51 626.817a5.667 5.667.0 01-2.152-2.683l2.67-1.171a3.742 3.742.0 001.375 1.662 3.658 3.658.0 002.03.572 4.051 4.051.0 001.88-.395 1.267 1.267.0 00.763-1.185 1.367 1.367.0 00-.654-1.2 6.492 6.492.0 00-2.016-.763l-1.662-.409a5.974 5.974.0 01-2.751-1.444 3.451 3.451.0 01-1.09-2.615 3.4 3.4.0 01.722-2.152 4.651 4.651.0 011.948-1.43 6.96 6.96.0 012.67-.5 7.191 7.191.0 013.405.776 4.6 4.6.0 012.125 2.247l-2.615 1.144a2.926 2.926.0 00-2.888-1.608 3.232 3.232.0 00-1.689.409 1.214 1.214.0 00-.681 1.063 1.227 1.227.0 00.518 1.021 4.443 4.443.0 001.526.667l2.043.518a6.576 6.576.0 013.092 1.566 3.5 3.5.0 011.049 2.575 3.719 3.719.0 01-.749 2.3 4.833 4.833.0 01-2.057 1.539 7.44 7.44.0 01-2.888.545A6.781 6.781.0 011737.51 626.817z" transform="translate(-1735.358 -613.101)" fill="#0f2b3c"/></g><g id="Group_167" data-name="Group 167" transform="translate(146.104 6.524)"><path id="Path_253" data-name="Path 253" d="M1613.182 621.145c.017-.232.027-.466.025-.7a7.375 7.375.0 10-14.749.155c0 .236.017.47.04.7a7.254 7.254.0 00.673 2.382 7.375 7.375.0 0013.389-.141l-3.268.034a4.616 4.616.0 01-8.014-2.3zm-11.663-2.266a4.615 4.615.0 018.592-.09z" transform="translate(-1598.458 -613.144)" fill="#0f2b3c"/></g><g id="Group_168" data-name="Group 168" transform="translate(162.554 6.524)"><path id="Path_254" data-name="Path 254" d="M1660.165 621.145c.017-.232.027-.466.024-.7a7.375 7.375.0 10-14.749.155c0 .236.017.47.04.7a7.266 7.266.0 00.673 2.382 7.375 7.375.0 0013.389-.141l-3.268.034a4.616 4.616.0 01-8.014-2.3zm-11.663-2.266a4.614 4.614.0 018.592-.09z" transform="translate(-1645.44 -613.144)" fill="#0f2b3c"/></g><g id="Group_169" data-name="Group 169" transform="translate(123.093)"><path id="Path_255" data-name="Path 255" d="M1554.01 605.147a10.636 10.636.0 11-2.72-7.1l-1.983 1.982a7.837 7.837.0 101.656 7.09h-6.884v-2.851h9.895Q1554.01 604.7 1554.01 605.147z" transform="translate(-1532.736 -594.51)" fill="#0f2b3c"/></g></g></g></svg></a><div class=footer-wrapper_branding-address><i class="gfg-icon gfg-icon_pin"></i>\n<span>A-143, 9th Floor, Sovereign Corporate Tower,<br>Sector-136, Noida, Uttar Pradesh - 201305</span></div><div class=footer-wrapper_branding-email><i class="gfg-icon gfg-icon_mail"></i>\n<a href=mailto:feedback@geeksforgeeks.org>feedback@geeksforgeeks.org</a></div><div class=footer-wrapper_branding-social><a href=https://www.facebook.com/geeksforgeeks.org/ rel="noopener noreferrer" aria-label="GeeksforGeeks Facebook" target=_blank><div class=facebook></div></a><a href=https://www.instagram.com/geeks_for_geeks/ rel="noopener noreferrer" aria-label="GeeksforGeeks Instagram" target=_blank><div class=instagram></div></a><a href=https://in.linkedin.com/company/geeksforgeeks rel="noopener noreferrer" aria-label="GeeksforGeeks LinkedIn" target=_blank><div class=linkedin></div></a><a href=https://twitter.com/geeksforgeeks rel="noopener noreferrer" aria-label="GeeksforGeeks Twitter" target=_blank><div class=twitter></div></a><a href=https://www.youtube.com/geeksforgeeksvideos rel="noopener noreferrer" aria-label="GeeksforGeeks YouTube" target=_blank><div class=youtube></div></a><a href="https://play.google.com/store/apps/details?id=free.programming.programming" rel="noopener noreferrer" aria-label="GeeksforGeeks App" target=_blank><div class=android></div></a></div></div><div class=footer-wrapper_links><ul class=footer-wrapper_links-list><li>Company</li><li><a href="https://www.geeksforgeeks.org/about/?ref=footer">About Us</a></li><li><a href="https://www.geeksforgeeks.org/careers/?ref=footer">Careers</a></li><li><a href="https://www.geeksforgeeks.org/press-release/?ref=footer">In Media</a></li><li><a href="https://www.geeksforgeeks.org/about/contact-us/?ref=footer">Contact Us</a></li><li><a href="https://www.geeksforgeeks.org/privacy-policy/?ref=footer">Privacy Policy</a></li><li><a href="https://www.geeksforgeeks.org/copyright-information/?ref=footer">Copyright Policy</a></li></ul><ul class=footer-wrapper_links-list><li>Learn</li><li><a href="https://www.geeksforgeeks.org/fundamentals-of-algorithms/?ref=footer">Algorithms</a></li><li><a href="https://www.geeksforgeeks.org/data-structures/?ref=footer">Data Structures</a></li><li><a href="https://www.geeksforgeeks.org/gfg-sde-sheet-a-complete-guide-for-sde-preparation/?ref=footer">SDE Cheat Sheet</a></li><li><a href="https://www.geeksforgeeks.org/machine-learning/?ref=footer">Machine learning</a></li><li><a href="https://www.geeksforgeeks.org/articles-on-computer-science-subjects-gq/?ref=footer">CS Subjects</a></li><li><a href="https://www.geeksforgeeks.org/videos/?ref=footer">Video Tutorials</a></li><li><a href="https://practice.geeksforgeeks.org/courses/?ref=footer">Courses</a></li></ul><ul class=footer-wrapper_links-list><li><a class=link-head href="https://news.geeksforgeeks.org/?ref=footer">News</a></li><li><a href="https://news.geeksforgeeks.org/top?ref=footer">Top News</a></li><li><a href="https://news.geeksforgeeks.org/technology?ref=footer">Technology</a></li><li><a href="https://news.geeksforgeeks.org/work-career?ref=footer">Work & Career</a></li><li><a href="https://news.geeksforgeeks.org/business?ref=footer">Business</a></li><li><a href="https://news.geeksforgeeks.org/finance?ref=footer">Finance</a></li><li><a href="https://news.geeksforgeeks.org/lifestyle?ref=footer">Lifestyle</a></li><li><a href="https://news.geeksforgeeks.org/knowledge?ref=footer">Knowledge</a></li></ul><ul class=footer-wrapper_links-list><li>Languages</li><li><a href="https://www.geeksforgeeks.org/python-programming-language/?ref=footer">Python</a></li><li><a href="https://www.geeksforgeeks.org/java/?ref=footer">Java</a></li><li><a href="https://www.geeksforgeeks.org/c-plus-plus/?ref=footer">CPP</a></li><li><a href="https://www.geeksforgeeks.org/golang/?ref=footer">Golang</a></li><li><a href="https://www.geeksforgeeks.org/csharp-programming-language/?ref=footer">C#</a></li><li><a href="https://www.geeksforgeeks.org/sql-tutorial/?ref=footer">SQL</a></li><li><a href="https://www.geeksforgeeks.org/kotlin-programming-language/?ref=footer">Kotlin</a></li></ul><ul class=footer-wrapper_links-list><li>Web Development</li><li><a href="https://www.geeksforgeeks.org/web-development/?ref=footer">Web Tutorials</a></li><li><a href="https://www.geeksforgeeks.org/django-tutorial/?ref=footer">Django Tutorial</a></li><li><a href="https://www.geeksforgeeks.org/html-tutorials/?ref=footer">HTML</a></li><li><a href="https://www.geeksforgeeks.org/javascript-tutorial/?ref=footer">JavaScript</a></li><li><a href="https://www.geeksforgeeks.org/bootstrap-tutorials/?ref=footer">Bootstrap</a></li><li><a href="https://www.geeksforgeeks.org/reactjs-tutorials/?ref=footer">ReactJS</a></li><li><a href="https://www.geeksforgeeks.org/nodejs/?ref=footer">NodeJS</a></li></ul><ul class=footer-wrapper_links-list><li>Contribute</li><li><a href="https://www.geeksforgeeks.org/contribute/?ref=footer">Write an Article</a></li><li><a href="https://www.geeksforgeeks.org/how-to-improve-an-article/?ref=footer">Improve an Article</a></li><li><a href="https://write.geeksforgeeks.org/pick-article?ref=footer">Pick Topics to Write</a></li><li><a href="https://www.geeksforgeeks.org/write-interview-experience/?ref=footer">Write Interview Experience</a></li><li><a href="https://www.geeksforgeeks.org/careers/?job_type=1&ref=footer">Internships</a></li><li><a href="https://script.geeksforgeeks.org/on-boarding/youtube?ref=footer">Video Internship</a></li></ul></div></div><div class=footer-strip><div class=copyright><a href=https://www.geeksforgeeks.org/ rel="noopener noreferrer" target=_blank>@geeksforgeeks</a>\n<span>, <a href=https://www.geeksforgeeks.org/copyright-information/>Some rights reserved</a></span></div><div class=social-links></div></div></footer><div class=darkMode-wrap data-mode="Switch to Dark Mode"><button data-gfg-action=toggleGFGTheme>\n<i class="gfg-icon gfg-icon_dark-mode"></i></button></div></div><script src="https://www.geeksforgeeks.org/wp-includes/js/wp-embed.min.js?ver=4.9.8"></script><div class="cookie-consent hide-consent"><span class=cookie-text>We use cookies to ensure you have the best browsing experience on our website. By using our site, you\nacknowledge that you have read and understood our\n<a href=https://www.geeksforgeeks.org/cookie-policy/ target=_blank><u>Cookie Policy</u></a> &\r\n        <a href=https://www.geeksforgeeks.org/privacy-policy/ target=_blank><u>Privacy Policy</u></a></span>\n<button class=consent-btn>\nGot It !</button></div><div class=lightbox-target><img id=lightbox-image src alt=Lightbox>\n<span class=lightbox-close></span></div><div class=shell><div class=shell-container><div class=shell-container_content><h2>Start Your Coding Journey Now!</h2><div class=shell-container_actions><button title=Login data-gfg-action=login-modal>Login</button>\n<button title=Register data-gfg-action=register-modal>Register</button></div></div></div></div><link rel=stylesheet href=https://use.typekit.net/mrg0hpc.css><script>(function(a,e,b,f,g,c,d){a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},c=e.createElement(f),c.async=1,c.src="https://www.clarity.ms/tag/"+g,d=e.getElementsByTagName(f)[0],d.parentNode.insertBefore(c,d)})(window,document,"clarity","script","ayc7ypwwuk")</script><script>try{var isAdblockEnabled=a=>fetch(new Request(\'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\',{method:\'HEAD\',mode:\'no-cors\'})).catch(a);isAdblockEnabled(()=>{var a=window.document.createElement(\'script\'),b=41782;a.setAttribute(\'src\',\'https://delivery.adrecover.com/\'.concat(b,\'/adRecover.js\')),a.setAttribute(\'type\',\'text/javascript\'),a.setAttribute(\'async\',!0),window.document.head.append(a)})}catch(a){console.log(a)}</script><script src=//m.servedby-buysellads.com/monetization.js></script><script>(function(){typeof _bsa!=\'undefined\'&&_bsa&&_bsa.init(\'fancybar\',\'C6ADVKE\',\'placement:geeksforgeeks\')})()</script><div id=GFG_AD_gfg_mobile_320x50></div>',
-    "remark": {
-        "warc_headers": {
-            "WARC-IP-Address": "23.15.9.42",
-            "WARC-Identified-Payload-Type": "text/html",
+html = """
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en-US" prefix="og: http://ogp.me/ns#" >
+
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0"> 
+<link rel="shortcut icon" href="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_favicon.png" type="image/x-icon" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+<meta name="theme-color" content="#308D46" />
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1' />
+
+<meta name="image" property="og:image" content="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200x200-min.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="200">
+<meta property="og:image:height" content="200">
+<meta name="facebook-domain-verification" content="xo7t4ve2wn3ywfkjdvwbrk01pvdond" />
+
+<meta property="og:title" content="Output of Java Program | Set 7 - GeeksforGeeks" />
+<meta name="description" content="A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions." />
+<meta property="og:url" content="https://www.geeksforgeeks.org/output-java-program-set-7/" />
+<meta name="keywords" content="Data Structures, Algorithms, Python, Java, C, C++, JavaScript, Android Development, SQL, Data Science, Machine Learning, PHP, Web Development, System Design, Tutorial, Technical Blogs, Interview Experience, Interview Preparation, Programming, Competitive Programming, Jobs, Coding Contests, GATE CSE, HTML, CSS, React, NodeJS, Placement, Aptitude, Quiz, Computer Science, Programming Examples, GeeksforGeeks Courses, Puzzles, SSC, Banking, UPSC, Commerce, Finance, CBSE, School, k12, General Knowledge, News, Mathematics, Exams" />
+<meta property="og:site_name" content="GeeksforGeeks" />
+<meta property="og:image" content="http://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png" />
+<meta property="article:section" content="Java" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_US" />
+<meta property="article:published_time" content="2016-11-07 18:29:48+00:00" />
+<meta property="article:modified_time" content="2021-06-28 17:51:51+00:00" />
+<meta property="og:updated_time" content="2021-06-28 17:51:51+00:00" />
+<meta property="og:image:secure_url" content="http://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png" />
+<meta property="og:description" content="A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions." />
+<script src="https://cdnads.geeksforgeeks.org/synchronously_gfg_ads.min.js"></script>
+<script defer src="https://apis.google.com/js/platform.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js"></script>
+<!-- Removed the below script from here to prevent loading google translate js at initial load
+<script async src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> -->
+
+<!-- FIXME:-  To be finalised whether we need to put this gpt script in header or footer  -->
+<!-- //gpt.js script -->
+<!-- <script async src='https://www.googletagservices.com/tag/js/gpt.js'></script> -->
+<script>
+   var IHPWT={}; //Initialize Namespace
+  var pbjs = pbjs || {};
+  pbjs.que = pbjs.que || [];
+  var googletag = googletag || {};
+  googletag.cmd = googletag.cmd || [];
+  var gptRan = false;
+</script>
+<script defer src="https://ads.pubmatic.com/AdServer/js/pwt/162080/12331/pwt.js"></script>
+      <script defer src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+  <script defer src="https://cdnads.geeksforgeeks.org/prebid.js?ver=0.1"></script>
+<script defer src="https://cdnads.geeksforgeeks.org/gfg_ads.min.js?ver=0.1"></script>
+
+<!-- gfg tabs compatablity bundled js -->
+
+<title>Output of Java Program | Set 7 - GeeksforGeeks</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="pingback" href="" />
+<!--[if lt IE 9]>
+<script src="https://www.geeksforgeeks.org/wp-content/themes/iconic-one/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+
+<!-- Video Schema for posts only -->
+
+<!-- adding article schema markup -->
+
+
+<!--POST SCHEMA through API-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "id": "https://www.geeksforgeeks.org/output-java-program-set-7/"
+  },
+  "headline": "Output of Java Program | Set 7",
+  "datePublished": "2016-11-07 06:29:48",
+  "dateModified": "2021-06-28 05:51:51",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://media.geeksforgeeks.org/wp-content/uploads/gfg_200X200-100x100.png",
+    "width": "100",
+    "height": "100"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "GeeksforGeeks",
+    "url": "https://www.geeksforgeeks.org/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/logo-new-2.svg",
+      "width": "301",
+      "height": "40"
+    }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GeeksforGeeks",
+    "url": "https://www.geeksforgeeks.org/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/logo-new-2.svg",
+      "width": "301",
+      "height": "40"
+    }
+  },
+  "description": "Difficulty level : Intermediate Predict the output of following Java Programs. Program 1 : Java public class Calculator { int num = 100; public void calc(int num) { this.num = num * 10; } public void printNum() { System.out.println(num); } public static void main(String[] args) { Calculator obj = new",
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Java"
+    }
+  ]
+}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": "https://www.geeksforgeeks.org/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.geeksforgeeks.org/search/{search_term_string}/",
+    "query-input": "required name=search_term_string"
+  }
+}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "GeeksforGeeks",
+  "url": "https://www.geeksforgeeks.org/",
+  "logo": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200817185016/gfg_complete_logo_2x-min.png",
+  "description": "A computer science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions.",
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Sandeep Jain",
+      "url": "https://in.linkedin.com/in/sandeep-jain-b3940815"
+    }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/geeksforgeeks.org/",
+    "https://twitter.com/geeksforgeeks",
+    "https://www.linkedin.com/company/1299009",
+    "https://www.youtube.com/geeksforgeeksvideos/"
+  ]
+}</script>
+
+<script>
+    var arrPostCat = new Array();
+    var arrPostCatName="Java";
+            arrPostCat.push('2058');
+        var tIds = "2058";
+    var termsNames = "Java,ProgrammingLanguage";
+    var tIdsInclusiveParents = "2058,2056"
+    var domain = 1;
+    var arrPost = new Array();
+    var post_id = "139720";
+    var post_type = "post";
+    var post_slug = window.location.href;
+    var ip = "64.252.71.17";
+    var post_title = `Output of Java Program | Set 7`;
+    var post_status = "publish";
+    var practiceAPIURL="https://practiceapi.geeksforgeeks.org/";
+    var practiceURL="https://practice.geeksforgeeks.org/";
+    var post_date = "2016-11-07 18:29:48";
+    var commentSysUrl = "https://discuss.geeksforgeeks.org/commentEmbedV2.js";
+    //var postAdApiUrlString = "";
+    var link_on_code_run = '';
+    var link_search_modal_top = '';
+    var country_code_cf = "DE";
+    
+    
+        var postAdApiUrlString = '2056/2058/';
+</script>
+
+
+
+
+<!-- This site is optimized with the Yoast SEO plugin v7.6 - https://yoast.com/wordpress/plugins/seo/ -->
+<link rel="canonical" href="https://www.geeksforgeeks.org/output-java-program-set-7/" />
+<script type='application/ld+json'>{"@context":"https:\/\/schema.org","@type":"Organization","url":"https:\/\/www.geeksforgeeks.org\/","sameAs":[],"@id":"https:\/\/www.geeksforgeeks.org\/#organization","name":"GeeksforGeeks","logo":"http:\/\/www.geeksforgeeks.org\/wp-content\/uploads\/gfg_200X200-1.png"}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//www.geeksforgeeks.org' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.geeksforgeeks.org\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.8"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='custom-style-css'  href='https://www.geeksforgeeks.org/wp-content/themes/iconic-one/css/gfg.min.css?ver=11.75' type='text/css' media='all' />
+<script type='text/javascript' src='https://code.jquery.com/jquery-3.7.1.min.js?ver=3.7.1'></script>
+<script type='text/javascript' src='https://code.jquery.com/jquery-migrate-3.5.2.min.js?ver=3.5.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var gfgObject = {"authUrl":"https:\/\/auth.geeksforgeeks.org\/","writeApiUrl":"https:\/\/apiwrite.geeksforgeeks.org\/","writeUrl":"https:\/\/write.geeksforgeeks.org\/","utilUrl":"https:\/\/util.geeksforgeeks.org\/","apiUrl":"https:\/\/api.geeksforgeeks.org\/","cfApiUrl":"https:\/\/gfgapi.geeksforgeeks.org\/","baseCompilerURL":"https:\/\/codejudge.geeksforgeeks.org\/","idePageBaseUrl":"https:\/\/ide.geeksforgeeks.org\/","gfgApiScriptUrl":"https:\/\/apiscript.geeksforgeeks.org\/","gfgSiteUrl":"https:\/\/www.geeksforgeeks.org\/","curatedListId":"1","curatedListTitle":"SDE Sheet Problems","utilDjangoCfUrl":"https:\/\/utilapi.geeksforgeeks.org\/","premiumCheckoutSlug":"premium-plans-payment\/","premiumLandingSlug":"premium-plans\/","premiumCssUrl":"https:\/\/www.geeksforgeeks.org\/wp-content\/themes\/iconic-one\/css\/gfgpremium.min.css?ver=1.6","premiumJsUrl":"https:\/\/www.geeksforgeeks.org\/wp-content\/themes\/iconic-one\/js\/gfgpremium.min.js?ver=1.5","utilGoogleUrl":"https:\/\/ugprod.geeksforgeeks.org\/","communityApiUrl":"https:\/\/communityapi.geeksforgeeks.org\/","utilDjangoUrl":"https:\/\/gfgutil.geeksforgeeks.org\/","gfgPracticeUrl":"https:\/\/practiceapi.geeksforgeeks.org\/","gfgMediaUrl":"https:\/\/media.geeksforgeeks.org\/","authDjangoApiUrl":"https:\/\/authapi.geeksforgeeks.org\/","gfgMlApiUrl":"https:\/\/recommendations.geeksforgeeks.org\/","is_home":"","is_category":"","userlevelPremiumPlus":"2","practiceUrl":"https:\/\/practice.geeksforgeeks.org\/","gfgNotificationsApiUrl":"https:\/\/notificationsapi.geeksforgeeks.org\/"};
+/* ]]> */
+</script>
+<script type='text/javascript' async="async" src='https://www.geeksforgeeks.org/wp-content/themes/iconic-one/js/gfg.min.js?ver=13.44'></script>
+
+<link rel='shortlink' href='https://www.geeksforgeeks.org/?p=139720' />
+<style>
+#wpadminbar{
+background: #ff0000 !important;
+}
+</style>
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #ffffff; }
+</style>
+<link rel="icon" href="https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-100x100.png" sizes="32x32" />
+<link rel="icon" href="https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png" />
+<meta name="msapplication-TileImage" content="https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200.png" />
+
+<!--
+<script type='text/javascript'>
+  var googletag = googletag || {};
+  googletag.cmd = googletag.cmd || [];
+  (function() {
+    var gads = document.createElement('script');
+    gads.async = true;
+    gads.type = 'text/javascript';
+    var useSSL = 'https:' == document.location.protocol;
+    gads.src = (useSSL ? 'https:' : 'http:') +
+      '//www.googletagservices.com/tag/js/gpt.js';
+    var node = document.getElementsByTagName('script')[0];
+    node.parentNode.insertBefore(gads, node);
+  })();
+</script>
+
+ AutoAds
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+google_ad_client: "ca-pub-9465609616171866",
+enable_page_level_ads: true
+});
+</script>
+-->
+
+
+
+
+<style>
+
+    #internal-promo-section{
+        display: none !important;
+    }
+    @media screen and (max-width:1500px) and (min-width:1280px){
+        body.single .article-page_flex .leftBar {
+            flex-basis: calc(100% - 605px);
+            max-width: calc(100% - 605px);
+            min-width: calc(100% - 605px);
         }
-    },
+        
+        .sidebar_wrapper{
+            max-width: 300px;
+            min-width: 300px;
+        }
+        
+        div#secondary {
+            min-width: 300px;
+            max-width: 300px;
+        }
+        
+        .widget-area{
+            padding: 0px;
+        }
+        
+        .article-page_flex .rightBar{
+            padding: 20px 0px 0px 0px;
+        }
+        
+        .article--viewer_content .a-wrapper .content {
+            padding: 0px 10px 55px 20px;
+        }
+        
+        .oinLeftbar {
+            height: calc(100vh - 350px) !important;
+        }  
+    }
+    .autoLeftBar_oin_child{
+        height: 100% !important;
+    }
+    .autoLeftBar_oin_non_sticky{
+        height: unset !important;
+    }
+    .sideBar--wrap.newLeftbar > div[id^='GFG_AD_Leftsidebar_']:nth-of-type(1){
+        padding-top: 20px;
+    }
+    .sideBar--wrap.newLeftbar > div[id^='GFG_AD_Leftsidebar_']{
+        padding: 5px 0;
+    }
+
+@media (max-width:1043px) and (min-width:992px) {
+ .hide-1043992 {
+   display: none!important;
+ }
 }
 
-html = data["html"]
-base_url = data["url"]
+.mobile-header-list-item{
+    padding-left:30px; 
+    padding-right:10px;
+    margin-top:5px;
+}
+
+.mobile-header-list{
+    border-bottom: 1px solid rgba(158, 158, 158, 0.3) !important;
+}
+
+.mobile-header-list .dropdown-title{
+    border-bottom: none !important;
+    font-size: 16px!important; 
+    padding: 0px!important; 
+    padding-left: 45px!important; 
+    font-weight: normal;
+}
+
+.mobile-header-list .upside::after{
+    transform: rotate(180deg);
+}
+
+</style>
+<!-- End Google Tag Manager -->
+<!-- Global site tag (gtag.js) - Google Ads: 474915276 -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=AW-474915276"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-474915276');
+</script> -->
+
+</head>
+
+<body class="post-template-default single single-post postid-139720 single-format-standard custom-background custom-background-white">
+
+    <script>
+        // Dark mode script
+
+        const gfgThemeList = Object.freeze({
+            LIGHT: "gfgThemeLight",
+            DARK: "gfgThemeDark"
+        })
+        const getThemeFromCookie = () => {
+            let gfg_def_theme = "";
+            let cookies = document.cookie;
+            let cooks = cookies.split(";");
+        
+            for (let i = 0; i < cooks.length; i++) {   
+                let icook = cooks[i].split("=");
+                if (icook[0].trim() == "gfg_theme") {
+                    gfg_def_theme = icook[1].trim();
+                }
+            }
+            return gfg_def_theme
+        }
+        if(!(post_slug.includes('premium-plans-payment/') || post_slug.includes('premium-plans/'))){
+            var isDarkMode = getThemeFromCookie() == gfgThemeList.DARK ? true : false;
+            document.querySelector("body").setAttribute("data-dark-mode", isDarkMode);
+        }
+ 
+
+        function setSearchBarFocus() {
+          const myTimeout = setTimeout(searchBarFocus, 0);
+          function searchBarFocus() {
+            document.getElementById("gcse-search-input").focus();
+          }
+        }
+
+        
+    </script>
+
+    <!-- <div class="header-main__wrapper not-fixed"> -->
+    <nav>
+    <div class="header-main__wrapper">
+
+        <a class="gfg-stc" style="top:0" href="#main">Skip to content</a>
+
+        <a href="https://www.geeksforgeeks.org/" aria-label="Logo" class="header-main__logo">
+            <div class="_logo">
+                <!-- Original Logo -->
+                <img class="gfg_logo_img" style="height: 30px; width: 80px; max-width: fit-content;" src="https://media.geeksforgeeks.org/gfg-gg-logo.svg" alt="geeksforgeeks">
+            </div>
+        </a>
+        <div class="header-main__container">
+            <!-- for mobile only -->
+            
+        <!-- For Web view only -->
+        <ul class="header-main__list"><li class="header-main__list-item Header_1" data-parent="false" aria-expanded="true" data-expandable="true"><span>Courses</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class="mega-dropdown Screen_1"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/dsa-to-development-coding-guide?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">DSA to Development</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/data-science-live?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Machine Learning & Data Science</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/mastering-generative-ai-and-chat-gpt?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Generative AI & ChatGPT</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/search?query=AWS&itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Become AWS Certified</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>DSA Courses</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/dsa-self-paced?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Data Structure & Algorithm(C++/JAVA)</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/Data-Structures-With-Python?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Data Structure & Algorithm(Python)</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/data-structures-and-algorithms-in-javascript?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Data Structure & Algorithm(JavaScript)</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Programming Languages</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/cpp-programming-basic-to-advanced?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">CPP</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/Java-Programming-basic-to-advanced?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Java</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/Python-Foundation?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">Python</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/javascript?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">JavaScript</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses/c-Programming-basic-to-advanced?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">C</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/courses?itm_source=geeksforgeeks&itm_medium=main_header&itm_campaign=courses" target="_self">All Courses</a></li></ul></li><li class="header-main__list-item Header_2" data-parent="false" aria-expanded="true" data-expandable="true"><span>Tutorials</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class="mega-dropdown Screen_1"><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><a href="https://www.geeksforgeeks.org/python3-tutorial/?ref=ghm" class="remove-anchor__decoration" target="_self" style="display: inline-flex; padding: 0;">Python Tutorial</a><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/taking-input-in-python/?ref=outind" target="_self">Taking Input in Python</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-operators/?ref=outind" target="_self">Python Operators</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-data-types/?ref=outind" target="_self">Python Data Types</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Python Loops and Control Flow</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python3-if-if-else-nested-if-if-elif-statements/?ref=outind" target="_self">Python Conditional Statements</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/loops-in-python/?ref=outind" target="_self">Python Loops</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-functions/?ref=outind" target="_self">Python Functions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-oops-concepts/?ref=outind" target="_self">Python OOPS Concept</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-data-structures-and-algorithms/?ref=outind" target="_self">Python Data Structures</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-exception-handling/?ref=outind" target="_self">Python Exception Handling</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/file-handling-python/?ref=outind" target="_self">Python File Handling</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-exercises-practice-questions-and-solutions/?ref=outind" target="_self">Python Exercises</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Java</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java/?ref=outind" target="_self">Learn Java Programming Language</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/collections-in-java-2/?ref=outind" target="_self">Java Collections</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java-8-features/?ref=outind" target="_self">Java 8 Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java-programming-examples/?ref=outind" target="_self">Java Programs</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Java Interview Questions</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java-interview-questions/?ref=outind" target="_self">Java Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/core-java-interview-questions-for-freshers/?ref=outind" target="_self">Core Java Interview Questions-Freshers</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-20-java-multithreading-interview-questions-answers/?ref=outind" target="_self">Java Multithreading Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/oops-interview-questions/?ref=outind" target="_self">OOPs Interview Questions and Answers</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java-exercises/?ref=outind" target="_self">Java Exercises</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Java Quiz</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/quizzes/50-java-language-mcqs-with-answers-2/?ref=outind" target="_self">Java Quiz</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java-multiple-choice-questions/?ref=outind" target="_self">Core Java MCQ</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/java-projects/?ref=outind" target="_self">Java Projects</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Advance Java</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/spring/?ref=outind" target="_self">Spring Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/spring-boot/?ref=outind" target="_self">Spring Boot Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/spring-boot-interview-questions/?ref=outind" target="_self">Spring Boot Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/spring-mvc/?ref=outind" target="_self">Spring MVC Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/spring-mvc-interview-questions/?ref=outind" target="_self">Spring MVC Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/hibernate-tutorial/?ref=outind" target="_self">Hibernate Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/hibernate-interview-questions/?ref=outind" target="_self">Hibernate Interview Questions</a></li></ul></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Programming Languages</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/javascript/?ref=outind" target="_self">JavaScript</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/c-plus-plus/?ref=outind" target="_self">C++</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/r-tutorial/?ref=outind" target="_self">R Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/sql-tutorial/?ref=outind" target="_self">SQL</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/php-tutorial/?ref=outind" target="_self">PHP</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/csharp-programming-language/?ref=outind" target="_self">C#</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/c-programming-language/?ref=outind" target="_self">C</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/scala-programming-language/?ref=outind" target="_self">Scala</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/perl-programming-language/?ref=outind" target="_self">Perl</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/golang/?ref=outind" target="_self">Go Language</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/kotlin-programming-language/?ref=outind" target="_self">Kotlin</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><a href="https://www.geeksforgeeks.org/data-structures/?ref=ghm" class="remove-anchor__decoration" target="_self" style="display: inline-flex; padding: 0;">System Design</a><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/system-design-tutorial/?ref=ghm" target="_self">System Design Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/software-design-patterns/?ref=outind" target="_self">Software Design Patterns</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/complete-roadmap-to-learn-system-design/?ref=outind" target="_self">System Design Roadmap</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-10-system-design-interview-questions-and-answers/?ref=outind" target="_self">Top 10 System Design Interview Questions and Answers</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Interview Corner</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/company-preparation/?ref=outind" target="_self">Company Preparation</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/interview-preparation-for-software-developer/?ref=outind" target="_self">Top Topics</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://practice.geeksforgeeks.org/company-tags/?ref=outind" target="_self">Practice Company Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/company-interview-corner/?ref=outind" target="_self">Interview Experiences</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/experienced-interview-experiences-company-wise/?ref=outind" target="_self">Experienced Interviews</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/internship-interview-experiences-company-wise/?ref=outind" target="_self">Internship Interviews</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/?ref=outind" target="_self">Competitive Programming</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/quiz-corner-gq/?ref=outind" target="_self">Multiple Choice Quizzes</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/aptitude-questions-and-answers/?ref=outind" target="_self">Aptitude for Placements</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Computer Science Subjects</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/operating-systems/?ref=outind" target="_self">Operating System</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/dbms/?ref=outind" target="_self">DBMS</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/computer-network-tutorials/?ref=outind" target="_self">Computer Networks</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/engineering-mathematics-tutorials/?ref=outind" target="_self">Engineering Mathematics</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/computer-organization-and-architecture-tutorials/?ref=outind" target="_self">Computer Organization and Architecture</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/theory-of-computation-automata-tutorials/?ref=outind" target="_self">Theory of Computation</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/compiler-design-tutorials/?ref=outind" target="_self">Compiler Design</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/digital-electronics-logic-design-tutorials/#blg/?ref=outind" target="_self">Digital Logic</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/software-engineering/?ref=outind" target="_self">Software Engineering</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>DevOps</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/git-tutorial/?ref=outind" target="_self">GIT</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/aws-tutorial/?ref=outind" target="_self">AWS</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/docker-tutorial/?ref=outind" target="_self">Docker</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/kubernetes-tutorial/?ref=outind" target="_self">Kubernetes</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/microsoft-azure/?ref=outind" target="_self">Microsoft Azure Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/google-cloud-platform-tutorial/?ref=outind" target="_self">Google Cloud Platform</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Linux</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linux-tutorial/?ref=outind" target="_self">Linux Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linux-commands/?ref=outind" target="_self">Linux Commands A-Z</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linux-commands-cheat-sheet/?ref=outind" target="_self">Linux Commands Cheatsheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/permissions-in-linux/?ref=outind" target="_self">File Permission Commands</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/beginners-guide-to-linux-system-administration/?ref=outind" target="_self">Linux System Administration</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linux-file-system/?ref=outind" target="_self">Linux File System</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-linux-shell-shell-scripting/?ref=outind" target="_self">Linux Shell Scripting</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/network-configuration-trouble-shooting-commands-linux/?ref=outind" target="_self">Linux Networking</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linux-interview-questions/?ref=outind" target="_self">Linux Interview Questions</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Software Testing</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/software-testing-tutorial/?ref=outind" target="_self">Software Testing Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/software-engineering/?ref=outind" target="_self">Software Engineering Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/software-testing-interview-questions/?ref=outind" target="_self">Testing Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/jira-tutorial/?ref=outind" target="_self">Jira</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Databases</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/dbms/?ref=outind" target="_self">DBMS Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/sql-tutorial/?ref=outind" target="_self">SQL Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/postgresql-tutorial/?ref=outind" target="_self">PostgreSQL Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/mongodb-tutorial/?ref=outind" target="_self">MongoDB Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/sql-interview-questions/?ref=outind" target="_self">SQL Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/mysql-interview-questions/?ref=outind" target="_self">MySQL Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/pl-sql-interview-questions/?ref=outind" target="_self">PL/SQL Interview Questions</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Android</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/android-tutorial/?ref=outind" target="_self">Android Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/android-studio-tutorial/?ref=outind" target="_self">Android Studio Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/kotlin-android-tutorial/?ref=outind" target="_self">Kotlin For Android</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/android-projects-from-basic-to-advanced-level/?ref=outind" target="_self">Android Projects</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-50-android-interview-questions-answers-sde-i-to-sde-iii/?ref=outind" target="_self">Android Interview Questions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/6-weeks-of-android-app-development-free-project-based-learning/?ref=outind" target="_self">6 Weeks of Android App Development</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Excel</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/excel-tutorial/?ref=outind" target="_self">MS Excel Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-ms-excel/?ref=outind" target="_self">Introduction to MS Excel</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/data-analysis-in-excel/?ref=outind" target="_self">Data Analysis in Excel</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/basic-excel-formulas-and-functions/?ref=outind" target="_self">Basic Excel Formulas & Functions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/instant-data-analysis-in-advanced-excel/?ref=outind" target="_self">Data Analysis in Advanced Excel</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/workbooks-in-microsoft-excel/?ref=outind" target="_self">Workbooks</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/statistical-functions-in-excel-with-examples/?ref=outind" target="_self">Statistical Functions</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/data-visualization-in-excel/?ref=outind" target="_self">Data Visualization in Excel</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/pivot-tables-in-excel/?ref=outind" target="_self">Pivot Tables in Excel</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/working-with-excel-spreadsheets-in-python/?ref=outind" target="_self">Excel Spreadsheets in Python</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/basic-excel-shortcuts/?ref=outind" target="_self">Basic Excel Shortcuts</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Mathematics</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/number-theory/?ref=outind" target="_self">Number System</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/algebra/?ref=outind" target="_self">Algebra</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linear-algebra/?ref=outind" target="_self">Linear Algebra</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/math-trigonometry/?ref=outind" target="_self">Trigonometry</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/set-theory/?ref=outind" target="_self">Set Theory</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/statistics/?ref=outind" target="_self">Statistics</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/probability-in-maths/?ref=outind" target="_self">Probability</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/geometry/?ref=outind" target="_self">Geometry</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/mensuration/?ref=outind" target="_self">Mensuration</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/logarithms/?ref=outind" target="_self">Logarithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/math-calculus/?ref=outind" target="_self">Calculus</a></li></ul></li></ul></li><li class="header-main__list-item Header_3" data-parent="false" aria-expanded="true" data-expandable="true"><span>DSA</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class="mega-dropdown Screen_1"><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Data Structures</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/array-data-structure-guide/?ref=outind" target="_self">Arrays</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/matrix/?ref=outind" target="_self">Matrix</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/string-data-structure/?ref=outind" target="_self">Strings</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-linked-list-data-structure/?ref=ghm" target="_self">Linked List</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/stack-data-structure/?ref=outind" target="_self">Stack</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/queue-data-structure/?ref=outind" target="_self">Queue</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-tree-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Tree</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/heap-data-structure/?ref=outind" target="_self">Heap</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/hashing-data-structure/?ref=outind" target="_self">Hashing</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/?ref=outind" target="_self">Graph</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-set-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Set Data Structure</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-map-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Map Data Structure</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/advanced-data-structures/?ref=outind" target="_self">Advanced Data Structure</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-data-structures/?ref=outind" target="_self">Data Structures Tutorial</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Algorithms</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Analysis of Algorithms</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/design-and-analysis-of-algorithms/?ref=outind" target="_self">Design and Analysis of Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/asymptotic-notation-and-analysis-based-on-input-size-of-algorithms/?ref=outind" target="_self">Asymptotic Analysis</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/types-of-asymptotic-notations-in-complexity-analysis-of-algorithms/?ref=outind" target="_self">Asymptotic Notations</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/worst-average-and-best-case-analysis-of-algorithms/?ref=outind" target="_self">Worst, Average and Best Cases</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Searching Algorithms</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/linear-search/?ref=outind" target="_self">Linear Search</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/binary-search/?ref=outind" target="_self">Binary Search</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/searching-algorithms/?ref=outind" target="_self">Searching Algorithms Tutorial</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Sorting Algorithms</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/selection-sort/?ref=outind" target="_self">Selection Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/bubble-sort/?ref=outind" target="_self">Bubble Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/insertion-sort/?ref=outind" target="_self">Insertion Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/merge-sort/?ref=outind" target="_self">Merge Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/quick-sort/?ref=outind" target="_self">Quick Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/heap-sort/?ref=outind" target="_self">Heap Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/counting-sort/?ref=outind" target="_self">Counting Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/radix-sort/?ref=outind" target="_self">Radix Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/bucket-sort-2/?ref=outind" target="_self">Bucket Sort</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-sorting-algorithm/?ref=outind" target="_self">Sorting Algorithms Tutorial</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-greedy-algorithm-data-structures-and-algorithm-tutorials/?ref=outind" target="_self">Greedy Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-dynamic-programming-data-structures-and-algorithm-tutorials/?ref=outind" target="_self">Dynamic Programming</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-graphs-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Graph Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-pattern-searching-data-structure-and-algorithm-tutorial/?ref=outind" target="_self">Pattern Searching</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-recursion-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Recursion</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-backtracking-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Backtracking</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-divide-and-conquer-algorithm-data-structure-and-algorithm-tutorials/?ref=outind" target="_self">Divide and Conquer</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/mathematical-algorithms/?ref=outind" target="_self">Mathematical Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/geometric-algorithms/?ref=outind" target="_self">Geometric Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-bitwise-algorithms-data-structures-and-algorithms-tutorial/?ref=outind" target="_self">Bitwise Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/randomized-algorithms/?ref=outind" target="_self">Randomized Algorithms</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-branch-and-bound-data-structures-and-algorithms-tutorial/?ref=outind" target="_self">Branch and Bound</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-algorithms/?ref=outind" target="_self">Algorithms Tutorial</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/learn-data-structures-and-algorithms-dsa-tutorial/?ref=outind" target="_self">DSA Tutorial</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Practice</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sortBy=submissions&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">All DSA Problems</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/problem-of-the-day?itm_source=geeksforgeeksitm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Problem of the Day</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Company Wise Coding Practice</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&company=Amazon&sortBy=submissions&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Amazon</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&company=Microsoft&sortBy=submissions&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Microsoft</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&company=Flipkart&sortBy=submissions&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Flipkart</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sortBy=submissions&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Explore All</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&curated[]=1&sortBy=submissions&curated_names[]=SDE Sheet?itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">GfG SDE Sheet</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Practice Problems Difficulty Wise</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&difficulty=School&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">School</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&difficulty=Basic&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Basic</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&difficulty=Easy&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Easy</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&difficulty=Medium&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Medium</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&difficulty=Hard&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Hard</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Language Wise Coding Practice</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&category=CPP&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">CPP</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&category=Java&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Java</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?category=python&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Python</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Curated DSA Lists</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sprint=ca8ae412173dbd8346c26a0295d098fd&sortBy=submissions&sprint_name=Beginner's DSA Sheet&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Beginner's DSA Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sprint=50746f92a895c22a50504ac0c1fb9c84&sortBy=submissions&sprint_name=Top 50 Array Problems&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Top 50 Array Problems</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sprint=57184072610b884e5df3584cc534115d&sortBy=submissions&sprint_name=Top 50 String Problems&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Top 50 String Problems</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sprint=93d672753b74440c7427214c8ebf866d&sortBy=submissions&sprint_name=Top 50 DP Problems&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Top 50 DP Problems</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sprint=405e9db0f353691ad3b2d546b19145e9&sortBy=submissions&sprint_name=Top 50 Graph Problems&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Top 50 Graph Problems</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/explore?page=1&sprint=5f24de84b65bf7c4f4399c8111e26b81&sortBy=submissions&sprint_name=Top 50 Tree Problems&itm_source=geeksforgeeks&itm_medium=main_header_outIndia&itm_campaign=DSA_Header" target="_self">Top 50 Tree Problems</a></li></ul></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/?ref=outind" target="_self">Competitive Programming</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Company Wise SDE Sheets</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/facebookmeta-sde-sheet-interview-questions-and-answers/?ref=outind" target="_self">Facebook SDE Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/amazon-sde-sheet-interview-questions-and-answers/?ref=outind" target="_self">Amazon SDE Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/apple-sde-sheet-interview-questions-and-answers/?ref=outind" target="_self">Apple SDE Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/netflix-sde-sheet-interview-questions-and-answers/?ref=outind" target="_self">Netflix SDE Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/google-sde-sheet-interview-questions-and-answers/?ref=outind" target="_self">Google SDE Sheet</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>DSA Cheat Sheets</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/sde-sheet-a-complete-guide-for-sde-preparation/?ref=outind" target="_self">SDE Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/most-asked-dsa-interview-problems-for-beginners/?ref=outind" target="_self">DSA Sheet for Beginners</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/must-do-coding-questions-for-companies-like-amazon-microsoft-adobe/?ref=outind" target="_self">FAANG Coding Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/must-do-coding-questions-for-product-based-companies/?ref=outind" target="_self">Product-Based Coding Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/must-coding-questions-company-wise/?ref=outind" target="_self">Company-Wise Preparation Sheet</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-100-data-structure-and-algorithms-dsa-interview-questions-topic-wise/?ref=outind" target="_self">Top Interview Questions</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Puzzles</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/puzzles/?ref=outind" target="_self">All Puzzles</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-100-puzzles-asked-in-interviews/?ref=outind" target="_self">Top 100 Puzzles Asked In Interviews</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-20-puzzles-commonly-asked-during-sde-interviews/?ref=outind" target="_self">Top 20 Puzzles Commonly Asked During SDE Interviews</a></li></ul></li></ul></li><li class="header-main__list-item Header_4" data-parent="false" aria-expanded="true" data-expandable="true"><span>Data Science</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class="mega-dropdown Screen_1"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-programming-language/?ref=outind" target="_self">Python Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/r-tutorial/?ref=outind" target="_self">R Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/machine-learning/?ref=outind" target="_self">Machine Learning</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/data-science-with-python-tutorial/?ref=outind" target="_self">Data Science using Python</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/r-programming-for-data-science/?ref=outind" target="_self">Data Science using R</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Data Science Packages</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/pandas-tutorial/?ref=outind" target="_self">Pandas Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/numpy-tutorial/?ref=outind" target="_self">NumPy Tutorial</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Data Visualization</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/python-data-visualization-tutorial/?ref=outind" target="_self">Python Data Visualization Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/data-visualization-in-r/?ref=outind" target="_self">Data Visualization with R</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Data Analysis</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/data-analysis-with-python/?ref=outind" target="_self">Data Analysis with Python</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/data-analysis-using-r/?ref=outind" target="_self">Data Analysis with R</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/deep-learning-tutorial/?ref=outind" target="_self">Deep Learning</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/natural-language-processing-nlp-tutorial/?ref=outind" target="_self">NLP Tutorial</a></li></ul></li><li class="header-main__list-item Header_5" data-parent="false" aria-expanded="true" data-expandable="true"><span>Web Tech</span><i class="gfg-icon gfg-icon_arrow-down gfg-icon_header"></i><ul class="mega-dropdown Screen_1"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/html-tutorial/?ref=outind" target="_self">HTML Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/css-tutorial/?ref=outind" target="_self">CSS Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/javascript/?ref=outind" target="_self">JavaScript Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/php-tutorial/?ref=outind" target="_self">PHP Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/react-tutorial/?ref=outind" target="_self">ReactJS Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/nodejs/?ref=outind" target="_self">NodeJS Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/bootstrap/?ref=outind" target="_self">Bootstrap Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/typescript/?ref=outind" target="_self">Typescript</a></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Web Development Using Python</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Django</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/django-tutorial/?ref=outind" target="_self">Django Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/top-django-projects-for-beginners/?ref=outind" target="_self">Django Projects</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/django-interview-questions/?ref=outind" target="_self">Django Interview Questions</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Flask</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_3"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/flask-tutorial/?ref=outind" target="_self">Flask Tutorial</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/flask-projects/?ref=outind" target="_self">Flask Projects</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/flask-interview-questions-and-answers/?ref=outind" target="_self">Flask Interview Questions</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/postman-tutorial/?ref=outind" target="_self">Postman</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/introduction-to-github/?ref=outind" target="_self">Github</a></li></ul></li><li class="mega-dropdown__list-item" data-parent="false" aria-expanded="true" data-expandable="true"><span>Cheat Sheets</span><i class="gfg-icon gfg-icon_arrow-right"></i><ul class="mega-dropdown Screen_2"><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/html-cheat-sheet-a-basic-guide-to-html/?ref=outind" target="_self">HTML Cheat Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/css-cheat-sheet-a-basic-guide-to-css/?ref=outind" target="_self">CSS Cheat Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/javascript-cheat-sheet-a-basic-guide-to-javascript/?ref=outind" target="_self">JavaScript Cheat Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/react-cheat-sheet/?ref=outind" target="_self">React Cheat Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/angular-cheat-sheet-a-basic-guide-to-angular/?ref=outind" target="_self">Angular Cheat Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/jquery-cheat-sheet-a-basic-guide-to-jquery/?ref=outind" target="_self">jQuery Cheat Sheet</a></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/bootstrap-cheatsheet-a-basic-guide-to-bootstrap/?ref=outind" target="_self">Bootstrap Cheat Sheet</a></li></ul></li><li class="mega-dropdown__list-item" data-child="true" aria-expanded="false" data-expandable="false"><a href="https://www.geeksforgeeks.org/web-development/?ref=outind" target="_self">Learn Complete Web Development</a></li></ul></li></ul>
+        <!-- right now only search is visible for mobile view because of css and all are visible for web view -->
+            <ul class="header-main__left-list" data-nl="false">
+                <li class="header-main__left-list-item gcse-search_li p-relative" aria-expanded="false" data-expandable="false">
+                    <div class="gcse-form-search-suggestion_wrapper">
+                        <form id="gcse-form" class="gcse-form_class p-relative closeChatScreen" data-sm="false">
+                            <span class="front-search-icon"><i class="gfg-icon gfg-icon_search gfg-icon_white gcse-search__icon gcse-search-icon_grey"></i> </span>
+                            <input class="gcse-search-input__wrapper" id="gcse-search-input" aria-expanded="false" placeholder="Search..." autocomplete="off" />
+                            <i class="gfg-icon gfg-icon_times gfg-icon_white hide-search"></i>
+                            <button  aria-label="search" type="submit" class="gcse-search__btn not-expanded">
+                                <i class="gfg-icon gfg-icon_search gfg-icon_white gcse-search__icon"></i>
+                            </button>
+                        </form>
+                        <div class="gfg-search-suggestion_wrapper" style="display:none"></div>
+                    <div>
+                </li>
+                                <li>
+                    <div class="darkMode-wrap" data-mode="Switch to Dark Mode">
+                        <button aria-label="toggle theme" data-gfg-action="toggleGFGTheme">
+                            <div id="darkMode-wrap-red-dot" style="height:12px;width:12px;background-color:#EB2222;border-radius:999999px;position:absolute;top:4px;right:0;display:none;"></div>
+                            <i class="gfg-icon gfg-icon_dark-mode"></i>
+                        </button>
+                        <span id="darkModeTooltipText"></span>
+                    </div>
+                </li>
+                                
+                <li class="header-main__left-list-item google-translate-parent-element" aria-expanded="false" data-expanded="true">
+                    <div class="translate" id="g_translater">
+                        <div id="google_translate_element" data-show="false"></div>
+                    </div>
+                    <i class ="gfg-icon gfg-icon_translate googleTranslateToggle" data-gfg-action="google_translate_element"></i>
+                    <!-- removed below code from here to load google translate js dynamically -->
+                    <!-- <script>
+                        var m = false;
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+                            setTimeout(function(){
+                                if (jQuery( window ).width() < 768){
+                                    m = true;
+                                     jQuery('#g_translater').detach().appendTo('#google_translate_mobile');                            
+                                }
+                            }, 7000);
+                        }
+                        jQuery( window ).resize(function() {
+                            if (jQuery( window ).width() < 768 && m == false){
+                                m = true;
+                                jQuery('#g_translater').detach().appendTo('#google_translate_mobile');  
+                            } else if (jQuery( window ).width() >= 768 && m == true){
+                                m = false;
+                                jQuery('#g_translater').detach().prependTo('.google-translate-parent-element');                            
+                            }
+                        });
+                    </script> -->
+                </li>
+                <li id="userProfileId" class="header-main__left-list-item p-relative" aria-expanded="false" data-expandable="false">
+                    <!-- Profile Section to be added via JS -->
+                </li>
+                            </ul>
+        </div>
+
+        <!-- for mobile only -->
+        
+        <!-- for mobile only -->
+               
+       </div>
+    </nav>
+    <div class="header-main__slider">
+        <button aria-label="sub header slider previous" class="header-main__slider-arrow previous hideIt">
+            <i class="gfg-icon gfg-icon_arrow-left gicon-centered"></i>
+        </button>
+        <!-- main content for leftbar -->
+        <ul id="hslider">
+        <li><a href="https://www.geeksforgeeks.org/arrays-in-java/?ref=shm">Java Arrays</a></li><li><a href="https://www.geeksforgeeks.org/strings-in-java/?ref=shm">Java Strings</a></li><li><a href="https://www.geeksforgeeks.org/object-oriented-programming-oops-concept-in-java/?ref=shm">Java OOPs</a></li><li><a href="https://www.geeksforgeeks.org/java-collection-tutorial/?ref=shm">Java Collection</a></li><li><a href="https://www.geeksforgeeks.org/java-8/?ref=shm">Java 8 Tutorial</a></li><li><a href="https://www.geeksforgeeks.org/java-multithreading-tutorial/?ref=shm">Java Multithreading</a></li><li><a href="https://www.geeksforgeeks.org/exceptions-in-java/?ref=shm">Java Exception Handling</a></li><li><a href="https://www.geeksforgeeks.org/java-programming-examples/?ref=shm">Java Programs</a></li><li><a href="https://www.geeksforgeeks.org/top-50-java-project-ideas-for-beginners-advanced/?ref=shm">Java Project</a></li><li><a href="https://www.geeksforgeeks.org/java-collections-interview-questions/?ref=shm">Java Collections Interview</a></li><li><a href="https://www.geeksforgeeks.org/interview-questions-for-java-professionals/?ref=shm">Java Interview Questions</a></li><li><a href="https://www.geeksforgeeks.org/quizzes/50-java-language-mcqs-with-answers-2/?ref=shm">Java MCQs</a></li><li><a href="https://www.geeksforgeeks.org/spring/?ref=shm">Spring</a></li><li><a href="https://www.geeksforgeeks.org/spring-mvc/?ref=shm">Spring MVC</a></li><li><a href="https://www.geeksforgeeks.org/spring-boot/?ref=shm">Spring Boot</a></li><li><a href="https://www.geeksforgeeks.org/hibernate-tutorial/?ref=shm">Hibernate</a></li>        </ul>
+        <button aria-label="sub header slider next" class="header-main__slider-arrow next hideIt">
+            <i class="gfg-icon gfg-icon_arrow-right gicon-centered"></i>
+        </button>
+    </div>
+    <button id="scrollTopBtn" title="Scroll to Top" type="button" class="btn btn-success">&#x25B2;</button>
+    <!-- .top-spacing to give space on single pages-->
+    <div id="main" class="wrapper single-page">
+
+<script>
+    if(post_slug.includes('premium-plans-payment/') || post_slug.includes('premium-plans/')){
+        $(".header-main__slider").remove();
+    }
+    //getting tags for the page type data
+    let mobileView = false;
+    let pageTags = JSON.parse('null');
+    let allTags = JSON.parse('["Java","ProgrammingLanguage"]');
+</script>
+
+<script>
+    window.have_dsa_term = false;
+    // var practiceTab = ; 
+</script>
+
+<style>
+    .wrapper {
+        flex-direction: column !important;
+    }
+    /* spinner css */
+    @keyframes spinner {
+        to {transform: rotate(360deg);}
+    }
+    
+    .spinner:before {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        margin-left: -10px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        border-top-color: #000;
+        animation: spinner .6s linear infinite;
+    }
+
+    .report-loader{
+        position: relative;
+        
+    }
+
+    .report-loader.spinner{
+        margin-left: 16px;
+    }
+    .badges{
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+    .badges .gfg-badge-icon.md::after{
+        transform: scale(0.25);
+        position:relative;
+        top: 2px;
+        left: -2px;
+    }
+    .sep{
+        margin: 0px 5px;
+        font-size: 20px;
+        color: var(--badge-name-color);
+    }
+    .pub-count{
+        font-size: 14px;
+        font-family: var(--font-secondary);
+    }
+    .badge-details{
+        display:none;
+    }
+    .badges{
+        cursor: pointer;
+        position: relative;
+        /* width: 0px;
+        height: 20px;
+        top: -32px; */
+    }
+    .badge-icon{
+        display: flex;
+        align-items: center;
+    }
+    .badge-content{
+        margin-left: 9px;
+    }
+    .badge-name{
+        color: var(--badge-nam-color);
+        font-weight: 600;
+        font-size: 16px;
+        text-transform: capitalize;
+    }
+    .badge-data{
+        color: #A5A4A4;
+        font-size: 10px;
+    }
+    .badges:hover .badge-details{
+        display: block;
+        background: var(--badge-bg);
+        padding: 10px 18px 10px 18px;
+        position: absolute;
+        width: 175px;
+        top: -10px;
+        z-index: 10;
+        left: 112%;
+        box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+        border-radius: 5px;
+        /* transform-origin: top right; */
+    }
+    .badge-details::before {
+        content: "";
+        position: absolute;
+        transform: rotate(90deg);
+        /* transform-origin: right; */
+        left: -6px;
+        top: 50%;
+        margin-left: -17px;
+        border-width: 12px;
+        border-style: solid;
+        border-color: var(--badge-bg) transparent transparent transparent;
+        margin-top: -12px;
+    }
+    .badge-icon .icon{
+        border: 1px solid var(--icon-border-color);
+        padding: 4px 3px;
+        border-radius: 4px;
+        width: 22px;
+        height: 24px;
+        position: relative;
+    }
+    .b-icon-pos{
+        position: relative;
+        top: -34px;
+        left: -34px;
+    }
+    /* article viewer */
+    .article--viewer .a-wrapper{
+        margin-top: 0px !important;
+    }
+    .content{
+        padding-top: 10px !important;
+    }
+    .u-name{
+        font-size: 14px;
+    }
+    .article--viewer_content .a-wrapper .content{
+        padding-bottom: 10px !important;
+    }
+    .likeTooltipBottom{
+        font-size: 14px;
+    }
+    @media (max-width: 434px) {
+        .article-buttons.show-bg{
+            margin-top: 56px !important;
+        }
+    }
+    @media (max-width: 730px),
+            ((min-width: 992px) and (max-width:1100px))  {
+        .article--viewer .media{
+            position: relative;
+        }
+        .article--viewer .media{
+            margin-bottom: 0px !important;
+        }
+        .badges:hover .badge-details{
+            top: -56px;
+            left: 62px;
+        }
+        .badge-details::before{
+            transform: rotate(0deg);
+            left: 10%;
+            top: 117%;
+        }
+        .article-buttons.show-bg{
+            margin-top: 22px;
+            top: 0px !important;
+        }
+    }
+    @media ((min-width:731px) and (max-width:1223px)) {
+        .article-buttons.show-bg{
+            top: 18px;
+        }
+    }
+    @media ((min-width:993px) and (max-width:1190px)) {
+        .article--viewer .media{
+            position: relative;
+        }
+        .article--viewer .media{
+            margin-bottom: 25px !important;
+        }
+    }
+</style>
+<!-- Survey modal implementation -->
+<script>
+    function getCookie(name) {
+        function escape(s) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
+        var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
+        return match ? match[1] : null;
+    }
+</script>
+<!-- END Survey modal implementation-->
+
+<!-- Open in App Button and CSS-->
+
+<!-- Above code is for old openInApp pop-up with open in app and continue buttons-->
+
+<div id='openInApp-modal' class='openInApp'>
+    <a href = 'https://geeksforgeeksapp.page.link/?link=https://www.geeksforgeeks.org/output-java-program-set-7/?type%3Darticle%26id%3D139720&apn=free.programming.programming&isi=1641848816&ibi=org.geeksforgeeks.GeeksforGeeksDev&efr=1' class='openInAppLink'>
+        <span style='color: #fff;'>Open In App</span>
+    </a>
+</div>
+    <script>
+        var consentValue = localStorage.getItem("gfg_cc");
+        var isIOS = !!navigator.platform && /iPad|iPhone|iPod|MacIntel/.test(navigator.platform) && navigator.maxTouchPoints > 0;
+        const isSafari = navigator.userAgent.indexOf("Safari") > -1;
+        const isMozilla = navigator.userAgent.indexOf("Mozilla") > -1;
+        if(consentValue){
+            if(window.innerHeight > window.innerWidth && navigator.maxTouchPoints > 1 && (isSafari || isMozilla || navigator.userAgentData.mobile)){
+                $('.openInApp').css({
+                    display: "block"
+                });
+                $('#scrollTopBtn').css({
+                    bottom: "44px"
+                });
+                //adding a new class to check stats for clicks on iOS and Android
+                isIOS ? jQuery('.openInAppLink').addClass("oia-iOS") : $('.openInAppLink').addClass("oia-android");      //for openInApp Link
+            }
+        }
+        
+    </script>
+    <style>
+        .openInApp{
+            display: none;
+            bottom: 0px;
+            width: 100%;
+            position: fixed;
+            z-index: 1025;
+            opacity: 0.93;
+        }
+        .openInAppLink{
+            height: 44px;
+            background: var(--color-gfg);
+            font-weight: bold;
+            display: block;
+            text-align: center;
+            padding: 12px;
+            font-size: large;
+        }
+        .openInAppLink, .openInAppLink:hover, .openInAppLink:active, .openInAppLink:visited, .openInAppLink:focus {
+            text-decoration:none;
+        }
+    </style>
+<!-- END Open in App Button and CSS-->
+<div class="container-fluid bg-light" id="home-page" style="position: relative; max-width:100%;">
+    <div class="article-page_flex">
+            <div class="sidebar_wrapper  auto_leftbar ">
+          <div class="sideBar autoLeftBar_oin_non_sticky" style="height: unset !important">
+                <!-- <div class="sideBar--wrap newLeftbar oinLeftbar autoLeftBar_oin_child"> -->
+                <div class="sideBar--wrap newLeftbar autoLeftBar_oin_child">
+                                        <div id="GFG_AD_Leftsidebar_300x250_chained_1"></div>
+                        <div id="GFG_AD_Leftsidebar_300x250_chained_2"></div>
+                        <div id="GFG_AD_Leftsidebar_300x250_chained_3"></div>
+                        <div id="GFG_AD_Leftsidebar_300x600_chained_1"></div>
+                    </div>
+                               </div>
+             <div id="GFG_AD_Desktop_LeftSideBar_Docked_160x600" style="max-width:160px; max-height:600px"></div>
+        </div>
+                <div class="leftBar">
+            <div class="article--viewer">
+                <div class="article--viewer_content">
+                    <div class="a-wrapper">
+                        <div class="" style="z-index:9999 !important;position:relative;">
+                        </div>
+                        <article class="content post-139720 post type-post status-publish format-standard hentry category-java" id="post-139720">
+                                                                                   <!-- when comment system will be scalable from practice side then we will display  Article/Discussion tab-->
+                            <div class="main_wrapper" style="display:flex;">
+                                                                <div style="width: 100%;">
+                                        <div class="article-title">
+                                            <h1>Output of Java Program | Set 7</h1>
+                                        </div>
+                                                                                    <div class="last_updated_parent">
+                                                <div>
+                                                    <span class="strong">Last Updated : </span>
+                                                    <span>28 Jun, 2021</span>
+                                                </div>
+
+                                                 <!-- three dot menu -->
+                                                <div class="three_dot_dropdown"> 
+                                                                                                            <div style="display: flex;">
+                                                                                                                    <div pid="139720" ptitle="Output of Java Program | Set 7" class="top-summary-icon-div ">
+                                                                <div class="three_dot_dropdown_div tooltip">
+                                                                    <span class="summary_tooltiptext">Summarize</span>
+                                                                    <div class="summarize_header">
+                                                                    <i class= "summary_button" style="position: relative;"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                                                                                                                                                        <div pid="139720" ptitle="Output of Java Program | Set 7" class="article--viewer_comment tooltip top-comment-icon-div">
+                                                                    <span class="comment_tooltiptext">Comments</span>
+                                                                    <div class="three_dot_dropdown_div" data-gfg-action='loadComments'>
+                                                                        <div class="comment_header">
+                                                                        <i class= "discussion_button" style="position: relative; transform: scale(0.9);"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                                                                        <div pid="139720" ptitle="Output of Java Program | Set 7" class="article--viewer_improve tooltip">
+                                                                <span class="improve_tooltiptext">Improve</span>
+                                                                <div class="three_dot_dropdown_div three_dot_dropdown_improve" onclick="improveArticleCall()">
+                                                                    <div class="improve_wrapper_top">
+                                                                    <i class="gfg-icon gfg-icon-pencil  gfg-icon_edit" style="position: relative; z-index: 3;"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- <button onclick="improveArticleCall()">
+                                                                    <i class="gfg-icon gfg-icon_edit"></i>
+                                                                </button> -->
+                                                            </div> 
+                                                                                                                    <!-- three dots -->
+                                                        <ul class="dropbtn icons btn-right showLeft" onclick="showDropdown()">
+                                                            <li>
+                                                                                                                            </li>
+                                                            <li></li>
+                                                            <li></li>
+                                                        </ul>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                                                            </div>
+                                                            </div>
+                            <!-- menu -->
+                            <div id="myDropdown" class="three_dot_dropdown_content">
+                                        <div class="article-buttons drop" onmouseleave="closeKebabMenu()">
+                                            <!-- If the status of the summary API is true than we are showing the summarize button otherwise not  -->
+                                                                                         <div pid="139720" ptitle="Output of Java Program | Set 7" class="improve_article--viewer tooltip">
+                                                <div class="three_dot_dropdown_div three_dot_dropdown_improve" onclick="suggestionArticleCall()" style="margin-top: 1px;">
+                                                    <div class="three_dot_dropdown_inner_div improve_dot_dropdown_inner_div">
+                                                        <i class="gfg-icon gfg-icon_suggest_changes gfg-icon_edit"></i>
+                                                        <span>Suggest changes</span>
+                                                    </div>
+                                                </div>
+                                            </div>                                                                                          <div pid="139720" class="article--viewer_like tooltip">
+                                            <div class="three_dot_dropdown_div three_dot_dropdown_likearticle" onmouseleave='toggleLikeElementVisibility("showLikesContainer", false)'  onmouseenter='toggleLikeElementVisibility("showLikesContainer", true)'>
+                                                    <div class="showLikesContainer"> 
+                                                        <span class="likeTooltip">Like Article</span>
+                                                    </div>
+                                                    <div class="three_dot_dropdown_inner_div" data-gfg-action="like-article" data-bookmark-value="0">
+                                                        <i class="gfg-icon gfg-icon_thumbs"></i>
+                                                        <span>Like</span>
+                                                    </div>
+                                                </div>
+<!-- <button data-gfg-action="like-article" data-bookmark-value="0">
+                                                    <i class="gfg-icon gfg-icon_thumbs"></i>
+                                                </button> -->
+                                            </div>
+                                            <div pid="139720" class="article--viewer_bookmark tooltip">
+                                                <div class="three_dot_dropdown_div three_dot_dropdown_save">
+                                                    <div class="three_dot_dropdown_inner_div" data-gfg-action="bookmark-article" data-bookmark-value="0">
+                                                        <i class="gfg-icon gfg-icon_bookmark"></i>
+                                                        <span>Save</span>
+                                                    </div>
+                                                </div>
+<!-- <button data-gfg-action="bookmark-article" data-bookmark-value="0">
+                                                    <i class="gfg-icon gfg-icon_bookmark"></i>
+                                                </button> -->
+                                            </div>
+                                            <div pid="139720" class="article--viewer_share tooltip">
+                                                <div class="three_dot_dropdown_div three_dot_dropdown_share" onmouseleave="closeShareModal()" onmouseenter="openShareModal()">
+                                                    <div style="display: flex;align-items: center;" class="three_dot_dropdown_inner_div" data-gfg-action="share-article" data-bookmark-value="0">
+                                                        <i class="gfg-share-icon"></i>
+                                                        <span>Share</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="article--viewer_report tooltip">
+                                                <div class="three_dot_dropdown_div three_dot_dropdown_reportarticle">
+                                                    <div class="three_dot_dropdown_inner_div" data-gfg-action="report-article" onclick="report_article();">
+                                                        <i class="gfg-icon gfg-icon_report"></i>
+                                                        <span>Report</span>
+                                                    </div>
+                                                </div>
+<!-- <button data-gfg-action="like-article" data-bookmark-value="0">
+                                                    <i class="gfg-icon gfg-icon_thumbs"></i>
+                                                </button> -->
+                                            </div>
+                                            <div class="article--viewer_Gnews tooltip">
+                                                <a class="three_dot_dropdown_inner_div Gnews_wrapper" href ='https://news.google.com/publications/CAAqBwgKMLTrzwsw44bnAw?hl=en-IN&gl=IN&ceid=IN%3Aen' target="_blank">
+                                                    <img class="gfg-icon_Gnews no-zoom-in-cursor" src=https://media.geeksforgeeks.org/auth-dashboard-uploads/Google-news.svg  loading="lazy" alt="News"></img>
+                                                    <span class='kebab_menu_news_text'>Follow</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <div class="text">
+                                                                <p><strong>Difficulty level : </strong> Intermediate</p>
+<p>Predict the output of following Java Programs.</p>
+<p><strong>Program 1 :</strong></p>
+<div class="code-block">
+<div class="code-gutter">
+<div class="editor-buttons-container">
+<div class="editor-buttons">
+<div class="editor-buttons-div" title="Run and Edit">
+                                    <i id="copy-code-button" title="Copy Code" class="gfg-icon gfg-icon_copy code-sidebar-button padding-2px copy-code-button"></i></p>
+<div  id = "run-and-edit-loader" class="ring-load"></div>
+<p>                                    <i id="run-and-edit-button" title="Edit Code" lang="java"  class="gfg-icon gfg-icon_edit_1 padding-2px code-sidebar-button"></i><br />
+                                    <i id="close-code-editor-button" title="Close Editor" class="gfg-icon gfg-icon_close-editor padding-2px code-sidebar-button close-code-editor-button"></i></p>
+<div id = "run-code-loader" class="ring-load"></div>
+<p>                                    <i id="run-code-button" lang="java" title="Run Code and See Output" class="gfg-icon gfg-icon_play padding-2px code-sidebar-button"></i></p>
+<div  id = "generate-url-loader" class="ring-load"></div>
+<p>                                    <i id="generate-url-and-run-button" title="Run Code and Generate IDE URL" lang="java"  class="gfg-icon gfg-icon_link padding-2px code-sidebar-button generate-url-and-run-button"></i><br />
+                                    <i title="Dark Mode" class="gfg-icon gfg-icon_dark-toggle padding-2px code-sidebar-button dark-editor-button"></i><br />
+                                    <i id = "edit-on-ide-button" title="Edit on IDE"  lang="java" class="gfg-icon gfg-icon_code padding-2px code-sidebar-button edit-on-ide-button"></i>
+                                </div>
+</p></div>
+</p></div>
+</p></div>
+<div class= "code-container">
+<div id="highlighter_957163" class="syntaxhighlighter nogutter  ">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="keyword">public</code> <code class="keyword">class</code> <code class="plain">Calculator </code></div>
+<div class="line number2 index1 alt1"><code class="plain">{ </code></div>
+<div class="line number3 index2 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">int</code> <code class="plain">num = </code><code class="value">100</code><code class="plain">; </code></div>
+<div class="line number4 index3 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">void</code> <code class="plain">calc(</code><code class="keyword">int</code> <code class="plain">num)&nbsp; { </code><code class="keyword">this</code><code class="plain">.num = num * </code><code class="value">10</code><code class="plain">;&nbsp; } </code></div>
+<div class="line number5 index4 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">void</code> <code class="plain">printNum()&nbsp;&nbsp;&nbsp;&nbsp; { System.out.println(num); } </code></div>
+<div class="line number6 index5 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number7 index6 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">main(String[] args) </code></div>
+<div class="line number8 index7 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number9 index8 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">Calculator obj = </code><code class="keyword">new</code> <code class="plain">Calculator(); </code></div>
+<div class="line number10 index9 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">obj.calc(</code><code class="value">2</code><code class="plain">); </code></div>
+<div class="line number11 index10 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">obj.printNum(); </code></div>
+<div class="line number12 index11 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number13 index12 alt2"><code class="plain">} </code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="code-editor-container"></div>
+</p></div>
+<div class="code-output-container">
+<div class = "output-block">
+                        <i id="output-icon" title="Output" class="gfg-icon gfg-icon_arrow-right-editor padding-2px code-sidebar-button output-icon"></i></p>
+<pre class="output-pre"></pre>
+</p></div>
+<div class = "ide-link-div">
+                        <i id="copy-url-button" title="Copy Generated Ide URL" class="gfg-icon gfg-icon_copy padding-2px code-sidebar-button copy-url-button"></i></p>
+<pre id="ide-url"></pre>
+</p></div>
+</p></div>
+<p><strong>Options :</strong><br />
+A) 20<br />
+B) 100<br />
+C) 1000<br />
+D) 2<br />
+<strong>Answer : A) 20 </strong><br />
+<strong>Explanation :</strong> Here the class instance variable name(num) is same as <em>calc()</em> method local variable name(num). So for referencing class instance variable from  <em>calc()</em> method, <strong><a href="https://www.geeksforgeeks.org/this-reference-in-java/">this</a></strong> keyword is used. So in statement <strong>this.num = num * 10</strong>, <em>num</em> represents local variable of the method whose value is 2 and <em>this.num</em> represents class instance variable whose initial value is 100. Now in <em>printNum()</em> method, as it has no local variable whose name is same as class instance variable, so we can directly use <em>num</em> to reference instance variable, although <em>this.num</em> can be used.</p>
+<p>&nbsp;</p>
+<p><strong>Program 2 :</strong></p>
+<div class="code-block">
+<div class="code-gutter">
+<div class="editor-buttons-container">
+<div class="editor-buttons">
+<div class="editor-buttons-div" title="Run and Edit">
+                                    <i id="copy-code-button" title="Copy Code" class="gfg-icon gfg-icon_copy code-sidebar-button padding-2px copy-code-button"></i></p>
+<div  id = "run-and-edit-loader" class="ring-load"></div>
+<p>                                    <i id="run-and-edit-button" title="Edit Code" lang="java"  class="gfg-icon gfg-icon_edit_1 padding-2px code-sidebar-button"></i><br />
+                                    <i id="close-code-editor-button" title="Close Editor" class="gfg-icon gfg-icon_close-editor padding-2px code-sidebar-button close-code-editor-button"></i></p>
+<div id = "run-code-loader" class="ring-load"></div>
+<p>                                    <i id="run-code-button" lang="java" title="Run Code and See Output" class="gfg-icon gfg-icon_play padding-2px code-sidebar-button"></i></p>
+<div  id = "generate-url-loader" class="ring-load"></div>
+<p>                                    <i id="generate-url-and-run-button" title="Run Code and Generate IDE URL" lang="java"  class="gfg-icon gfg-icon_link padding-2px code-sidebar-button generate-url-and-run-button"></i><br />
+                                    <i title="Dark Mode" class="gfg-icon gfg-icon_dark-toggle padding-2px code-sidebar-button dark-editor-button"></i><br />
+                                    <i id = "edit-on-ide-button" title="Edit on IDE"  lang="java" class="gfg-icon gfg-icon_code padding-2px code-sidebar-button edit-on-ide-button"></i>
+                                </div>
+</p></div>
+</p></div>
+</p></div>
+<div class= "code-container">
+<div id="highlighter_37046" class="syntaxhighlighter nogutter  ">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="keyword">public</code> <code class="keyword">class</code> <code class="plain">MyStuff </code></div>
+<div class="line number2 index1 alt1"><code class="plain">{ </code></div>
+<div class="line number3 index2 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">String name; </code></div>
+<div class="line number4 index3 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number5 index4 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">MyStuff(String n) {&nbsp; name = n;&nbsp; } </code></div>
+<div class="line number6 index5 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number7 index6 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">main(String[] args) </code></div>
+<div class="line number8 index7 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number9 index8 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">MyStuff m1 = </code><code class="keyword">new</code> <code class="plain">MyStuff(</code><code class="string">"guitar"</code><code class="plain">); </code></div>
+<div class="line number10 index9 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">MyStuff m2 = </code><code class="keyword">new</code> <code class="plain">MyStuff(</code><code class="string">"tv"</code><code class="plain">); </code></div>
+<div class="line number11 index10 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">System.out.println(m2.equals(m1)); </code></div>
+<div class="line number12 index11 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number13 index12 alt2"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number14 index13 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="color1">@Override</code></div>
+<div class="line number15 index14 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">boolean</code> <code class="plain">equals(Object obj) </code></div>
+<div class="line number16 index15 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number17 index16 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">MyStuff m = (MyStuff) obj; </code></div>
+<div class="line number18 index17 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">if</code> <code class="plain">(m.name != </code><code class="keyword">null</code><code class="plain">)&nbsp; { </code><code class="keyword">return</code> <code class="keyword">true</code><code class="plain">;&nbsp; } </code></div>
+<div class="line number19 index18 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">return</code> <code class="keyword">false</code><code class="plain">; </code></div>
+<div class="line number20 index19 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number21 index20 alt2"><code class="plain">} </code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="code-editor-container"></div>
+</p></div>
+<div class="code-output-container">
+<div class = "output-block">
+                        <i id="output-icon" title="Output" class="gfg-icon gfg-icon_arrow-right-editor padding-2px code-sidebar-button output-icon"></i></p>
+<pre class="output-pre"></pre>
+</p></div>
+<div class = "ide-link-div">
+                        <i id="copy-url-button" title="Copy Generated Ide URL" class="gfg-icon gfg-icon_copy padding-2px code-sidebar-button copy-url-button"></i></p>
+<pre id="ide-url"></pre>
+</p></div>
+</p></div>
+<p><strong>Options :</strong><br />
+A) The output is true and MyStuff fulfills the Object.equals() contract.<br />
+B) The output is false and MyStuff fulfills the Object.equals() contract.<br />
+C) The output is true and MyStuff does NOT fulfill the Object.equals() contract.<br />
+D) The output is false and MyStuff does NOT fulfill the Object.equals() contract.     </p>
+<p><strong>Answer :</strong> C) The output is true and MyStuff does NOT fulfill the Object.equals() contract.<br />
+<strong>Explanation :</strong> As <em>equals(Object obj)</em> method in Object class, compares two objects on the basis of equivalence relation. But here we are just confirming that the object is null or not, So it doesn&#8217;t fulfill <a href="https://www.geeksforgeeks.org/overriding-equals-method-in-java/">Object.equals()</a> contract. As <em>m1</em> is not null, true will be printed.</p>
+<p>&nbsp;</p>
+<p><strong>Program 3 :</strong></p>
+<div class="code-block">
+<div class="code-gutter">
+<div class="editor-buttons-container">
+<div class="editor-buttons">
+<div class="editor-buttons-div" title="Run and Edit">
+                                    <i id="copy-code-button" title="Copy Code" class="gfg-icon gfg-icon_copy code-sidebar-button padding-2px copy-code-button"></i></p>
+<div  id = "run-and-edit-loader" class="ring-load"></div>
+<p>                                    <i id="run-and-edit-button" title="Edit Code" lang="java"  class="gfg-icon gfg-icon_edit_1 padding-2px code-sidebar-button"></i><br />
+                                    <i id="close-code-editor-button" title="Close Editor" class="gfg-icon gfg-icon_close-editor padding-2px code-sidebar-button close-code-editor-button"></i></p>
+<div id = "run-code-loader" class="ring-load"></div>
+<p>                                    <i id="run-code-button" lang="java" title="Run Code and See Output" class="gfg-icon gfg-icon_play padding-2px code-sidebar-button"></i></p>
+<div  id = "generate-url-loader" class="ring-load"></div>
+<p>                                    <i id="generate-url-and-run-button" title="Run Code and Generate IDE URL" lang="java"  class="gfg-icon gfg-icon_link padding-2px code-sidebar-button generate-url-and-run-button"></i><br />
+                                    <i title="Dark Mode" class="gfg-icon gfg-icon_dark-toggle padding-2px code-sidebar-button dark-editor-button"></i><br />
+                                    <i id = "edit-on-ide-button" title="Edit on IDE"  lang="java" class="gfg-icon gfg-icon_code padding-2px code-sidebar-button edit-on-ide-button"></i>
+                                </div>
+</p></div>
+</p></div>
+</p></div>
+<div class= "code-container">
+<div id="highlighter_863862" class="syntaxhighlighter nogutter  ">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="keyword">class</code> <code class="plain">Alpha </code></div>
+<div class="line number2 index1 alt1"><code class="plain">{ </code></div>
+<div class="line number3 index2 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="plain">String type = </code><code class="string">"a "</code><code class="plain">; </code></div>
+<div class="line number4 index3 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="plain">Alpha() {&nbsp; System.out.print(</code><code class="string">"alpha "</code><code class="plain">); } </code></div>
+<div class="line number5 index4 alt2"><code class="plain">} </code></div>
+<div class="line number6 index5 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number7 index6 alt2"><code class="keyword">public</code> <code class="keyword">class</code> <code class="plain">Beta </code><code class="keyword">extends</code> <code class="plain">Alpha </code></div>
+<div class="line number8 index7 alt1"><code class="plain">{ </code></div>
+<div class="line number9 index8 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="plain">Beta()&nbsp; {&nbsp; System.out.print(</code><code class="string">"beta "</code><code class="plain">);&nbsp; } </code></div>
+<div class="line number10 index9 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number11 index10 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">void</code> <code class="plain">go() </code></div>
+<div class="line number12 index11 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number13 index12 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">type = </code><code class="string">"b "</code><code class="plain">; </code></div>
+<div class="line number14 index13 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">System.out.print(</code><code class="keyword">this</code><code class="plain">.type + </code><code class="keyword">super</code><code class="plain">.type); </code></div>
+<div class="line number15 index14 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number16 index15 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number17 index16 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">main(String[] args) </code></div>
+<div class="line number18 index17 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number19 index18 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">new</code> <code class="plain">Beta().go(); </code></div>
+<div class="line number20 index19 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number21 index20 alt2"><code class="plain">} </code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="code-editor-container"></div>
+</p></div>
+<div class="code-output-container">
+<div class = "output-block">
+                        <i id="output-icon" title="Output" class="gfg-icon gfg-icon_arrow-right-editor padding-2px code-sidebar-button output-icon"></i></p>
+<pre class="output-pre"></pre>
+</p></div>
+<div class = "ide-link-div">
+                        <i id="copy-url-button" title="Copy Generated Ide URL" class="gfg-icon gfg-icon_copy padding-2px code-sidebar-button copy-url-button"></i></p>
+<pre id="ide-url"></pre>
+</p></div>
+</p></div>
+<p><strong>Options :</strong><br />
+A) alpha beta b b<br />
+B) alpha beta a b<br />
+C) beta alpha b b<br />
+D) beta alpha a b</p>
+<p><strong>Answer :</strong> A) alpha beta b b<br />
+<strong>Explanation :</strong> The statement <strong>new Beta().go() </strong>executes in two phases. In first phase <em>Beta</em> class constructor is called. There is no instance member present in <em>Beta</em> class. So now <em>Beta</em> class constructor is executed. As <em>Beta</em> class extends  <em>Alpha</em> class, so call goes to <em>Alpha</em> class constructor as first statement by default(Put by the compiler) is <strong>super()</strong> in the <em>Beta</em> class constructor. Now as one instance variable(<em>type</em>) is present in <em>Alpha</em> class, so it will get memory and now <em>Alpha</em> class constructor is executed, then call return to <em>Beta</em> class constructor next statement. So <em>alpha beta</em> is printed.<br />
+In second phase <em>go()</em> method is called on this object. As there is only one variable(<em>type</em>) in the object whose value is <em>a</em>. So it will be changed to <em>b</em> and printed two times. The  <a href="https://www.geeksforgeeks.org/super-keyword/">super keyword</a> here is of no use. </p>
+<p>&nbsp;</p>
+<p><strong>Program 4 :</strong></p>
+<div class="code-block">
+<div class="code-gutter">
+<div class="editor-buttons-container">
+<div class="editor-buttons">
+<div class="editor-buttons-div" title="Run and Edit">
+                                    <i id="copy-code-button" title="Copy Code" class="gfg-icon gfg-icon_copy code-sidebar-button padding-2px copy-code-button"></i></p>
+<div  id = "run-and-edit-loader" class="ring-load"></div>
+<p>                                    <i id="run-and-edit-button" title="Edit Code" lang="java"  class="gfg-icon gfg-icon_edit_1 padding-2px code-sidebar-button"></i><br />
+                                    <i id="close-code-editor-button" title="Close Editor" class="gfg-icon gfg-icon_close-editor padding-2px code-sidebar-button close-code-editor-button"></i></p>
+<div id = "run-code-loader" class="ring-load"></div>
+<p>                                    <i id="run-code-button" lang="java" title="Run Code and See Output" class="gfg-icon gfg-icon_play padding-2px code-sidebar-button"></i></p>
+<div  id = "generate-url-loader" class="ring-load"></div>
+<p>                                    <i id="generate-url-and-run-button" title="Run Code and Generate IDE URL" lang="java"  class="gfg-icon gfg-icon_link padding-2px code-sidebar-button generate-url-and-run-button"></i><br />
+                                    <i title="Dark Mode" class="gfg-icon gfg-icon_dark-toggle padding-2px code-sidebar-button dark-editor-button"></i><br />
+                                    <i id = "edit-on-ide-button" title="Edit on IDE"  lang="java" class="gfg-icon gfg-icon_code padding-2px code-sidebar-button edit-on-ide-button"></i>
+                                </div>
+</p></div>
+</p></div>
+</p></div>
+<div class= "code-container">
+<div id="highlighter_319550" class="syntaxhighlighter nogutter  ">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="keyword">public</code> <code class="keyword">class</code> <code class="plain">Test </code></div>
+<div class="line number2 index1 alt1"><code class="plain">{ </code></div>
+<div class="line number3 index2 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">main(String[] args) </code></div>
+<div class="line number4 index3 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number5 index4 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">StringBuilder s1 = </code><code class="keyword">new</code> <code class="plain">StringBuilder(</code><code class="string">"Java"</code><code class="plain">); </code></div>
+<div class="line number6 index5 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">String s2 = </code><code class="string">"Love"</code><code class="plain">; </code></div>
+<div class="line number7 index6 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">s1.append(s2); </code></div>
+<div class="line number8 index7 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">s1.substring(</code><code class="value">4</code><code class="plain">); </code></div>
+<div class="line number9 index8 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">int</code> <code class="plain">foundAt = s1.indexOf(s2); </code></div>
+<div class="line number10 index9 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">System.out.println(foundAt); </code></div>
+<div class="line number11 index10 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number12 index11 alt1"><code class="plain">} </code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="code-editor-container"></div>
+</p></div>
+<div class="code-output-container">
+<div class = "output-block">
+                        <i id="output-icon" title="Output" class="gfg-icon gfg-icon_arrow-right-editor padding-2px code-sidebar-button output-icon"></i></p>
+<pre class="output-pre"></pre>
+</p></div>
+<div class = "ide-link-div">
+                        <i id="copy-url-button" title="Copy Generated Ide URL" class="gfg-icon gfg-icon_copy padding-2px code-sidebar-button copy-url-button"></i></p>
+<pre id="ide-url"></pre>
+</p></div>
+</p></div>
+<p><strong>Options :</strong><br />
+A) -1<br />
+B) 3<br />
+C) 4<br />
+D) A <strong>StringIndexOutOfBoundsException</strong> is thrown at runtime.<br />
+<strong>Answer :</strong> C) 4<br />
+<strong>Explanation :</strong> <em>append(String str)</em> method,concatenate the str to <em>s1</em>. The <em>substring(int index)</em> method return the String from the given index to the end. But as there is no any String variable to store the returned string,so it will be destroyed.Now <em>indexOf(String s2)</em> method return the index of first occurrence of <em>s2</em>. So 4 is printed as s1=&#8221;JavaLove&#8221;.</p>
+<p>&nbsp;</p>
+<p><strong>Program 5 :</strong></p>
+<div class="code-block">
+<div class="code-gutter">
+<div class="editor-buttons-container">
+<div class="editor-buttons">
+<div class="editor-buttons-div" title="Run and Edit">
+                                    <i id="copy-code-button" title="Copy Code" class="gfg-icon gfg-icon_copy code-sidebar-button padding-2px copy-code-button"></i></p>
+<div  id = "run-and-edit-loader" class="ring-load"></div>
+<p>                                    <i id="run-and-edit-button" title="Edit Code" lang="java"  class="gfg-icon gfg-icon_edit_1 padding-2px code-sidebar-button"></i><br />
+                                    <i id="close-code-editor-button" title="Close Editor" class="gfg-icon gfg-icon_close-editor padding-2px code-sidebar-button close-code-editor-button"></i></p>
+<div id = "run-code-loader" class="ring-load"></div>
+<p>                                    <i id="run-code-button" lang="java" title="Run Code and See Output" class="gfg-icon gfg-icon_play padding-2px code-sidebar-button"></i></p>
+<div  id = "generate-url-loader" class="ring-load"></div>
+<p>                                    <i id="generate-url-and-run-button" title="Run Code and Generate IDE URL" lang="java"  class="gfg-icon gfg-icon_link padding-2px code-sidebar-button generate-url-and-run-button"></i><br />
+                                    <i title="Dark Mode" class="gfg-icon gfg-icon_dark-toggle padding-2px code-sidebar-button dark-editor-button"></i><br />
+                                    <i id = "edit-on-ide-button" title="Edit on IDE"  lang="java" class="gfg-icon gfg-icon_code padding-2px code-sidebar-button edit-on-ide-button"></i>
+                                </div>
+</p></div>
+</p></div>
+</p></div>
+<div class= "code-container">
+<div id="highlighter_205208" class="syntaxhighlighter nogutter  ">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="keyword">class</code> <code class="plain">Writer </code></div>
+<div class="line number2 index1 alt1"><code class="plain">{ </code></div>
+<div class="line number3 index2 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code>&nbsp; <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">write() </code></div>
+<div class="line number4 index3 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number5 index4 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">System.out.println(</code><code class="string">"Writing..."</code><code class="plain">); </code></div>
+<div class="line number6 index5 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number7 index6 alt2"><code class="plain">} </code></div>
+<div class="line number8 index7 alt1"><code class="keyword">class</code> <code class="plain">Author </code><code class="keyword">extends</code> <code class="plain">Writer </code></div>
+<div class="line number9 index8 alt2"><code class="plain">{ </code></div>
+<div class="line number10 index9 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code>&nbsp; <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">write() </code></div>
+<div class="line number11 index10 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number12 index11 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">System.out.println(</code><code class="string">"Writing book"</code><code class="plain">); </code></div>
+<div class="line number13 index12 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number14 index13 alt1"><code class="plain">} </code></div>
+<div class="line number15 index14 alt2"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number16 index15 alt1"><code class="keyword">public</code> <code class="keyword">class</code> <code class="plain">Programmer </code><code class="keyword">extends</code> <code class="plain">Author </code></div>
+<div class="line number17 index16 alt2"><code class="plain">{ </code></div>
+<div class="line number18 index17 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code>&nbsp; <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">write() </code></div>
+<div class="line number19 index18 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number20 index19 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">System.out.println(</code><code class="string">"Writing code"</code><code class="plain">); </code></div>
+<div class="line number21 index20 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number22 index21 alt1"><code class="undefined spaces">&nbsp;</code>&nbsp;</div>
+<div class="line number23 index22 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="keyword">public</code> <code class="keyword">static</code> <code class="keyword">void</code> <code class="plain">main(String[] args) </code></div>
+<div class="line number24 index23 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">{ </code></div>
+<div class="line number25 index24 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">Author a = </code><code class="keyword">new</code> <code class="plain">Programmer(); </code></div>
+<div class="line number26 index25 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">a.write(); </code></div>
+<div class="line number27 index26 alt2"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain">} </code></div>
+<div class="line number28 index27 alt1"><code class="plain">} </code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="code-editor-container"></div>
+</p></div>
+<div class="code-output-container">
+<div class = "output-block">
+                        <i id="output-icon" title="Output" class="gfg-icon gfg-icon_arrow-right-editor padding-2px code-sidebar-button output-icon"></i></p>
+<pre class="output-pre"></pre>
+</p></div>
+<div class = "ide-link-div">
+                        <i id="copy-url-button" title="Copy Generated Ide URL" class="gfg-icon gfg-icon_copy padding-2px code-sidebar-button copy-url-button"></i></p>
+<pre id="ide-url"></pre>
+</p></div>
+</p></div>
+<p><strong>Options :</strong><br />
+A) Writing&#8230;<br />
+B) Writing book<br />
+C) Writing code<br />
+D) Compilation fails</p>
+<p><strong>Answer :</strong> B) Writing book<br />
+<strong>Explanation :</strong> Since static methods can&#8217;t be overridden, it doesn&#8217;t matter which class object is created. As <em>a</em> is a<em> Author</em> referenced type, so always <em>Author</em> class method is called. If we remove <em>write()</em> method from <em>Author </em>class then <em>Writer </em> class method is called, as <em>Author </em>class extends <em>Writer</em> class.</p>
+<div hideAd="MID"></div><br/><div id="AP_G4GR_6"></div>
+
+                                    <div class='article_bottom_text'></div><br>
+                                                                          <div id="video-tab-content" class="video-tab-content">
+                                        <div style="text-align: center; margin: 20px 0px;" id="GFG_AD_InContent_Desktop_728x280"></div>
+                                                                              </div>
+                                                                <div class="d-row content-bw article-pgnavi v-divider-gfg"style="margin-top: 20px;">
+                            <div class="article-pgnavi_prev"><div class="comment_div" data-title="Comments"><button class="author_footer_btn"  data-gfg-action="loadComments">
+    <div class='discussion_panel'>
+        <i class='discussion_button'>
+        </i>
+        Comment
+    </div></button></div><div class="trigger-div"><button class="author_footer_btn"><div class="more_info">More info<span class="more_info_uparrow gfg-icon gfg-icon_arrow-down-thin"></span></div></button></div></div>
+                                                              <div class="article-pgnavi_next">
+                                    <a href="https://www.geeksforgeeks.org/data-types-in-java/?ref=next_article" class="pg-head">
+                                        <span>Next Article</span>
+                                        <span class="gfg-icon gfg-icon_next"></span>
+                                    </a>
+                                    <!-- <div class="pg-meta">8 Min Read&ensp;|&ensp;<a href="#">Java</a></div> -->
+                                    <div class="pg-main">
+                                        <a href="https://www.geeksforgeeks.org/data-types-in-java/?ref=next_article">Java Data Types</a>
+                                    </div>
+                                </div>
+                                                        </div>
+                            <div class="article-meta-author-details hidden-div">
+                                        <div class="article-meta-author-details-block">
+                                            <div class="article-meta-author-details-profile-display">
+                                                <div class="author_info">
+                                                <div class="article-meta-author-details-profile-display-icon">
+                                                    <div class="image-wrap auth-external-author" style="position: relative; pointer-events: none; user-select: none;"><p class="profileCard-profile-picture" style="background-color:#E5F9DB;margin: 0px;">G</p></div>                                                </div>
+                                                <div class="article-meta-author-details-profile-display-name" >
+                                                    <div class="info" style="position: unset;">
+<div class="name" style="cursor: default;">
+    <span class="footer_author_name" style="font-weight: 600">Gaurav Miglani</span>
+</div>
+</div>                                                </div>
+                                                </div>
+                                                                                            </div>
+                                            
+                                        </div>
+                                        <div class="article_bottom_suggestion_wrapper">
+                                            <div class="article_bottom_suggestion" data-title="Follow">
+                                                <a href='https://news.google.com/publications/CAAqBwgKMLTrzwsw44bnAw?hl=en-IN&gl=IN&ceid=IN%3Aen' target="_blank">
+                                                    <img class="gfg-icon_Gnews no-zoom-in-cursor" src=https://media.geeksforgeeks.org/auth-dashboard-uploads/Google-news.svg  loading="lazy" alt="News"></img>
+                                                </a>
+                                            </div> 
+                                            <div pid="139720" class="article--viewer_like tooltip tooltipBottom" data-title="Like Article">
+                                                <!-- <span class="tooltiptext likeTooltipBottom">Like Article</span> -->
+                                                <button id="likeButton" aria-label="like article" data-gfg-action="like-article" data-bookmark-value="0" data-liked="false" style="color: #5B5A5A !important; display: flex; align-items: center; background-color: unset; margin: 0px !important; padding: 5px 0px;">
+                                                    <i class="author-badge-like-button"></i>
+                                                    <figure id="likeCount" style="margin-left: 3px; margin-top: 4px; color: var(--like-count-color); font-size: 14px; font-weight: 600;" class="favoriteText"></figure>
+                                                </button>
+                                            </div>
+                                            <div class="article_bottom_suggestion" onclick="improveArticleCall()" data-title="Improve">
+                                            <span class="improveTooltipBottom">Improve</span>
+                                                <i class="author-badge-improvement-button"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                                                </article>
+                        
+                                                 <div class="article--recommended article--recommended_wrapper" id="similar-reads">
+                                <h3 class="new-top-bar top-bar-title">Similar Reads</h3>
+                                <div class="gfg-similar-reads-list">
+                                    <ul class="similarReadLeftBarList"><div class='second'><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-program-set-17/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java program | Set 17
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">1) What is the output of following program? public class Test { private static float temp() { public static float sum = 21; return(--(sum)); } public static void main(String[] args) { Test test = new Test(); System.out.println(test.temp()); } } a) 21 b) 20 c) Compilation error d) Runtime error Ans.</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">2 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-of-java-program-set-1/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java Program | Set 1
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Difficulty Level: Rookie Predict the output of the following Java Programs.Program 1: Java Code // filename Main.java class Test { protected int x, y; } class Main { public static void main(String args[]) { Test t = new Test(); System.out.println(t.x + &amp;quot; &amp;quot; + t.y); } } Output: 0 0 I</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-of-java-program-set-3/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java Program | Set 3
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Predict the output of the following Java Programs: Example1: Java Code // filename: Test.java class Test { // Declaring and initializing integer variable int x = 10; // Main driver method public static void main(String[] args) { // Creating an object of class inside main() Test t = new Test(); // Pr</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-program-set-6/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java Program | Set 6
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Difficulty level : Intermediate Predict the output of following Java Programs. Program 1: class First { public First() { System.out.println(&quot;a&quot;); } } class Second extends First { public Second() { System.out.println(&quot;b&quot;); } } class Third extends Second { public Third() { System.o</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">2 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-program-set-19/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java Program | Set 19
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Predict the output of following Java Programs. Program 1 : public class RuntimePolymorphism { public static void main(String[] args) { A a = new B(); B b = new B(); System.out.println(a.c + &quot; &quot; + a.getValue() + &quot; &quot; + b.getValue() + &quot; &quot; + b.getSuperValue()); } } class A</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-program-set-23-inheritance/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java program | Set 23 (Inheritance)
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Prerequisite: Inheritance in Java 1) What is the output of the following program? Java Code public class A extends B { public static String sing() { return &quot;fa&quot;; } public static void main(String[] args) { A a = new A(); B b = new A(); System.out.println(a.sing() + &quot; &quot; + b.sing())</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-of-java-programs-set-13-collections/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java programs | Set 13 (Collections)
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Prerequisite - Collections in Java 1) What is the output of the following program? Java Code import java.util.*; public class priorityQueue { public static void main(String[] args) { PriorityQueue&lt;Integer&gt; queue = new PriorityQueue&lt;&gt;(); queue.add(11); queue.add(10); queue.add(22); queue.</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-programs-set-14-constructors/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java Programs | Set 14 (Constructors)
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Prerequisite - Java Constructors 1) What is the output of the following program? [GFGTABS] Java class Helper { private int data; private Helper() { data = 5; } } public class Test { public static void main(String[] args) { Helper help = new Helper(); System.out.println(help.data); } } [/GFGTABS]a) C</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-programs-set-24-final-modifier/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java programs | Set 24 (Final Modifier)
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Difficulty level : Easy Prerequisite : final keyword in java Predict the output of following Java Programs: What will be output of following program? class Test { final int MAXIMUM; final double PI; public Test(int max) { MAXIMUM = max; } public Test(double pi) { PI = pi; } public static void main(S</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/output-java-program-set-12exception-handling/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Output of Java program | Set 12(Exception Handling)
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Prerequisites : Exception handling , control flow in try-catch-finally 1) What is the output of the following program? public class Test { public static void main(String[] args) { try { System.out.printf(&quot;1&quot;); int sum = 9 / 0; System.out.printf(&quot;2&quot;); } catch(ArithmeticException e</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/how-to-run-java-program/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">How to Run Java Program?
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Java is a popular, high-level, object-oriented programming language that was developed by James Gosling and his team at Sun Microsystems (now owned by Oracle Corporation) in the mid-1990s. It is widely used for developing various kinds of software, including web applications, desktop applications, m</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">2 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/shift-operator-in-java/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Shift Operator in Java
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Operators in Java are used to performing operations on variables and values. Examples of operators: +, -, *, /, &gt;&gt;, &lt;&lt;. Types of operators: Arithmetic Operator,Shift Operator,Relational Operator,Bitwise Operator,Logical Operator,Ternary Operator andAssignment Operator. In this article, w</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">4 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/system-out-println-in-java/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">System.out.println in Java
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Java System.out.println() is used to print an argument that is passed to it. Parts of System.out.println()The statement can be broken into 3 parts which can be understood separately: System: It is a final class defined in the java.lang package.out: This is an instance of PrintStream type, which is a</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">5 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/few-tricky-programs-in-java/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Few Tricky Programs in Java
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Comments that execute : Till now, we were always taught "Comments do not Execute". Let us see today "The comments that execute" Following is the code snippet: public class Testing { public static void main(String[] args) { // the line below this gives an output // \u000d System.out.println(&quot;com</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">2 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/update-the-list-items-in-java/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Java Program to Update the List Items
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">In Java, Lists are dynamic collections that allow modifications, such as updating elements. We can use the set method to update the elements in the List. This method replaces the element at the given index with a new value, allowing modification of list contents. In this article, we will learn to up</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">2 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/java-tricky-output-questions/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Java Tricky Output Questions
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Question 1: What will be the Output of the below code: public class A { public static void main(String[] args) { if (true) break; } } Choices: a) Nothing b) Error Answer: b) Error Reason: Break statement can only be used with loop or switch. So, using break with if statement causes "break outside sw</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">3 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/java-hello-world-program/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Java Hello World Program
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Java is one of the most popular and widely used programming languages and platforms. Java is fast, reliable, and secure. Java is used in every nook and corner from desktop to web applications, scientific supercomputers to gaming consoles, cell phones to the Internet. In this article, we will learn h</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">5 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/redirecting-system-out-println-output-to-a-file-in-java/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Redirecting System.out.println() Output to a File in Java
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">System.out.println() is used mostly to print messages to the console. However very few of us are actually aware of its working mechanism. We can use System.out.println() to print messages to other sources too, not just restricting it to the console. However, before doing so, we must reassign the sta</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">2 min read</span>
+                </div>
+                </a></li><li class="similarReadDropdownItem"><a href="https://www.geeksforgeeks.org/formatted-output-in-java/?ref=ml_lbp"><div class="gfg-similar-read-item-content">
+                    <div class="gfg-similar-read-item-heading">Formatted Output in Java using printf()
+                    </div>
+                    <div class="gfg-similar-read-item-subheading">Sometimes in programming, it is essential to print the output in a given specified format. Most users are familiar with the printf function in C. Let us discuss how we can Formatting Output with printf() in Java in this article. Formatting Using Java Printf()printf() uses format specifiers for forma</div>
+                </div>
+                <div class="reading-time">
+                    <i class="reading-time-icon" data-gfg-action="readingtime"></i>
+                    <span style="color: var(--recommendation-card-text-color);font-size: 14px;font-weight: 500;line-height: 17px;">5 min read</span>
+                </div>
+                </a></li></div></ul>                                </div>
+                            </div>
+                        
+
+                        <div class="bottom-wrap" style="padding: 0px 20px;margin-bottom: 10px;">
+                                                            <div class="improved">
+                                    <div class="t-head">Article Tags : </div>
+                                    <ul>
+                                        
+            <li style="border-radius: 25px;" class="">
+                <a href="https://www.geeksforgeeks.org/category/programming-language/java/?ref=article_category">Java</a>
+            </li>                                    </ul>
+                                                                    </div>
+                                                                                        <div class="improved">
+                                    <div class="t-head">Practice Tags : </div>
+                                    <ul class="practice-tags">
+                                        <li><a href="https://www.geeksforgeeks.org/explore?category=Java&ref=article_practice_tag">Java</a></li>                                    </ul>
+                                                                    </div>
+                                                    </div>
+                                                <div class="vote-wrap">
+                                <div style="display:none;align-items:center;justify-content:center;width:100%;">
+                                    <button aria-label="like" data-type="like" class="vote-this" style="margin-right: 0; margin-left:0 ;">
+                                        <i class="gfg-icon gfg-icon_like favoriteIcon"></i>
+                                        <span class="favoriteLike">Like</span>
+                                        <figure class="favoriteText"></figure>
+                                    </button>
+                                                                    </div>
+                            </div>
+
+                        </div>
+                            <div class="article-meta">
+                                                                                    <div class="bottom-wrap">
+                              <div id="GFG_AD_InContent_Desktop_BTF_650x250" style="text-align:center;max-height: 300px;"></div>
+                            </div>
+                                                        <!-- end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div id="report_modal_content" class="report_modal_content" style="display:hidden;"></div>
+        <div class="onopen-discussion-panel">
+            <div class="discussion-tab">
+                <div class="discussion_heading">
+                    <div></div>
+                    <i class="gfg-icon close-tab-icon"></i>
+                </div> 
+                <div class="discussion_content">                            <div style="height:100%">
+                                <div style="height:100%" id="comment-system"></div>
+                            </div>
+
+                            
+</div>
+            </div>
+        </div>  
+
+        <div class="rightBar" style="padding-right: 5px;">
+                
+<style>
+	.article--container_content{
+		align-items: unset !important;
+	}
+	.sideBar {
+		position: sticky !important;
+	}
+	.gfg-icon_switch::after {
+		background-position: -40px -281px !important;
+	}
+	.gfg-icon_transaction::after {
+		background-position: -40px -321px !important;
+	}
+	.header-main__profile.selected+.mega-dropdown{
+		width: 225px !important;
+	}
+	#courses-container .course-price{
+		display:none;
+	}
+	/* .side--container_wscard .card-content .content .meta:empty, .practiceBannerFromPlugin{
+		display:none !important;
+	} */
+	.side--container_wscard .card-content .content .meta{
+		display:block !important;
+	}
+	.side--container_wscard .card-content .content .meta p{
+		background-color: rgba(254, 212, 91, 0.6);
+		font-size: 10pt;
+		font-weight: bold;
+		display: inline-block;
+		color: var(--color-black);
+		margin-top: 15px;
+		padding: 0px 5px;
+	}
+	#try-it{
+		display:initial !important;
+	}
+	#try-it .try-it-div{
+		line-height: 34px;
+	}
+	.gfg-icon_dark-mode::after {
+		background-position: -40px -680px;
+	}
+	.side--container_wscard .head{
+		font-size: 14px !important;
+	}
+	.nineDot-menu, .gfg-icon_ndot{
+		display: none;
+	}
+	#text-15{
+		flex-direction: column;
+	}
+	.mtq_correct_marker, .mtq_wrong_marker{
+		display: none;
+	}
+	.sidebar_wrapper > :last-child{
+		margin: unset !important;
+		margin-left: 5px !important;
+		margin-top: 20px !important;
+		top: 70px !important;
+	}
+	.darkMode-wrap{
+		bottom:1% !important;
+	}
+	#secondary .textwidget{
+		margin-left: auto;
+		margin-right: 0;
+		text-align: right;
+	}
+	#secondary .widget_text:last-child{
+		top: 70px !important;
+	}
+	@media(max-width:768px){
+		#scrollTopBtn{
+			display:none !important;
+		}
+	}
+	.rightbar_loggedin_promo_cta{
+		display:flex;
+		cursor:pointer;
+		margin-bottom:20px;
+	}
+</style>
+
+<div id="secondary" class="widget-area">
+	<div class='OINTechPromoRightBarBanner' id='rightBarSaleBanner' style='text-align:right; margin-bottom:5px;'><a href=https://www.geeksforgeeks.org/geeksforgeeks-premium-subscription?itm_source=geeksforgeeks&itm_medium=rightbar_oin&itm_campaign=premium><img src=https://media.geeksforgeeks.org/auth-dashboard-uploads/premium_oin_rbar_min.png alt='three90RightbarBannerImg' style='width:300px; height:250px;'></a></div>
+	<!------------------------ text-15 (for Ads) ------------------------ -->
+	<aside id="text-15" class="widget widget_text">
+		<div class="textwidget">
+					<div id="_GFG_ABP_Desktop_RightSideBar_ATF_300x600_2"></div>
+			<div id="GFG_AD_Desktop_RightSideBar_ATF_300x250_2" style="min-width: 300px;margin-bottom:10px;"></div>
+			<div id='GFG_AD_Desktop_RightSideBar_ATF_300x600' style='min-width: 300px; min-height: 600px;margin-bottom:10px;'></div>
+					</div>
+	</aside>
+
+	<!------------------------ text-16 (For Ads)------------------------ -->
+	<aside id="text-16" class="widget widget_text">
+		<div class="textwidget">
+					<div id="_GFG_ABP_Desktop_RightSideBar_MTF_300x600"></div>
+			<div id='GFG_AD_Desktop_RightSideBar_MTF_300x250' style='min-width: 300px;'></div>
+			<div id="_GFG_ABP_Desktop_RightSideBar_BTF_300x600"></div>
+			<div id="_GFG_ABP_Desktop_RightSideBar_BTF_300x600_3"></div>
+				</div>
+	</aside>
+
+	<!-- ---------------------- courses section ------------------------- -->
+	<style>.right-bar-explore-more{ visibility: hidden; min-height: 230px;text-align:left;min-width:300px;max-width:300px; padding-left: 19px; padding-right: 25px; margin-top: 20px;}
+        .right-bar-explore-more .title{text-align:left;font-size:20px; font-weight: 600; line-height: 22px; color:var(--em-heading);padding:14px 0;font-family:var(--font-primary)}
+        .right-bar-explore-more .rightbar-sticky-ul {list-style: disc outside; padding-left: 17px;} 
+        .right-bar-explore-more li{font-size: 14px !important;font-weight: 400;line-height: 18px !important;color: var(--em-text);margin: 14px 0;font-family:var(--font-primary);}
+        .right-bar-explore-more li::marker{color: var(--em-text) !important;}
+        .right-bar-explore-more .rightbar-sticky-ul a{text-align:left !important; color: var(--em-text); display: block !important;}  
+        .right-bar-explore-more .rightbar-sticky-ul a:hover{text-decoration:underline;color:var(--em-link)!important;}
+        .right-bar-explore-more hr {margin: 0;background-color: var(--tn-hr);}
+        @media (max-width: 991px){
+          .right-bar-explore-more{
+            width: 85%;
+            margin: auto;
+            margin-top: 20px;
+            max-width: unset;
+            display: none !important;
+          }
+        
+          #text-18 .textwidget{
+            width: 100%;
+          }
+        }</style>    <script>
+        var rightBarExploreMoreList = `<li style="color:var(--color-black)"><a href="https://www.geeksforgeeks.org/java-interview-questions/?ref=rightbar_explore" target="_blank" style="font-family:var(--font-primary)">Java Interview Questions and Answers</a></li><li style="color:var(--color-black)"><a href="https://www.geeksforgeeks.org/java/?ref=rightbar_explore" target="_blank" style="font-family:var(--font-primary)">Java Tutorial</a></li><li style="color:var(--color-black)"><a href="https://www.geeksforgeeks.org/object-oriented-programming-oops-concept-in-java/?ref=rightbar_explore" target="_blank" style="font-family:var(--font-primary)">Object Oriented Programming (OOPs) Concept in Java</a></li><li style="color:var(--color-black)"><a href="https://www.geeksforgeeks.org/arrays-in-java/?ref=rightbar_explore" target="_blank" style="font-family:var(--font-primary)">Arrays in Java</a></li><li style="color:var(--color-black)"><a href="https://www.geeksforgeeks.org/inheritance-in-java/?ref=rightbar_explore" target="_blank" style="font-family:var(--font-primary)">Inheritance in Java</a></li>`
+	</script>
+
+	<!-------------------------------- Text-18 (explore more section + ads) --------------------------->
+	<aside id="text-18" class="widget widget_text">
+		<div class="textwidget">
+					<div class="right-bar-explore-more" style="display:none;visibility: unset;">
+				<div class="title">Explore More</div>
+				<ul class="rightbar-sticky-ul"></ul>
+			</div>
+							<div id='GFG_AD_Desktop_RightSideBar_BTF_Sticky_300x250' style='min-width: 300px;margin-bottom:10px'></div>
+			<div id='GFG_AD_Desktop_RightSideBar_Docked_160x600' style='min-width: 160px;'></div><div id='GFG_AD_Desktop_RightSideBar_BTFdocked_300x600' style='min-width: 300px;'></div>
+			</aside>
+
+	<!-------------------------- Text -20 (For maintaining some CSS) ---------------------- -->
+	<aside id="text-20" class="widget widget_text">
+		<div class="textwidget">
+		 <!-- Please do not delete this div -->
+		</div>
+	</aside>
+</div>
+
+                <div id="user-personal-note" style="display: none;"></div>
+        </div>
+    </div>
+    <section class="disqus-section">
+        <div class="article-page_flex">
+            <div class="leftBar">
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="video-popup" style="display:none"></div>
+
+<link rel="stylesheet" href='https://www.geeksforgeeks.org/wp-content/themes/iconic-one/css/articleList.min.css?ver=1.7'>
+
+<script>
+$(document).ready(function() {
+    var isfollowingApiCall = false;
+    if ($('.follow-btn').length) {
+        var articleRecommendedTop = $(".article--recommended").offset().top;
+        var articleRecommendedBottom = articleRecommendedTop + $(".article--recommended").outerHeight();
+        $(window).scroll(function() {
+            var top_of_element = $(".article--recommended").offset().top;
+            var bottom_of_element = $(".article--recommended").offset().top + $(".article--recommended").outerHeight();
+            var bottom_of_screen = $(window).scrollTop() + $(window).innerHeight();
+            var top_of_screen = $(window).scrollTop();
+            if ((bottom_of_screen > top_of_element && top_of_screen < bottom_of_element) || 
+                (bottom_of_screen > articleRecommendedTop && top_of_screen < articleRecommendedBottom) ||
+                (top_of_screen > articleRecommendedBottom)) {
+                if (!isfollowingApiCall) {
+                    isfollowingApiCall = true;
+                    setTimeout(function(){
+                        if (loginData && loginData.isLoggedIn) {
+                            if (loginData.userName !== $('#followAuthor').val()) {
+                                is_following();
+                            } else {
+                                $('.profileCard-profile-picture').css('background-color', '#E7E7E7');
+                            }
+                        } else {
+                            $('.follow-btn').removeClass('hideIt');
+                        }
+                    }, 3000);
+                }
+            }
+        });
+    }
+    
+    $(".accordion-header").click(function() {
+        var arrowIcon = $(this).find('.bottom-arrow-icon');
+        arrowIcon.toggleClass('rotate180');
+    });
+
+});
+
+window.isReportArticle = false;
+function report_article(){
+    if (!loginData || !loginData.isLoggedIn) {
+        const loginModalButton = $('.login-modal-btn')
+            if (loginModalButton.length) {
+                loginModalButton.click();
+            }
+    return;
+}
+
+    if(!window.isReportArticle){
+            //to add loader
+            $('.report-loader').addClass('spinner');
+            jQuery('#report_modal_content').load(gfgSiteUrl+'wp-content/themes/iconic-one/report-modal.php', {
+                PRACTICE_API_URL: practiceAPIURL,
+                PRACTICE_URL:practiceURL
+            },function(responseTxt, statusTxt, xhr){
+                if(statusTxt == "error"){
+                    alert("Error: " + xhr.status + ": " + xhr.statusText);
+                }
+            });
+    }else{
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        $("#report_modal_content").show();
+    }
+} 
+
+function closeShareModal() {
+    const shareOption = document.querySelector('[data-gfg-action="share-article"]');
+    shareOption.classList.remove("hover_share_menu");
+    let shareModal = document.querySelector(".hover__share-modal-container");
+    shareModal && shareModal.remove();
+}
+
+function openShareModal() {
+    closeShareModal(); // Remove existing modal if any
+
+    let shareModal = document.querySelector(".three_dot_dropdown_share");
+    shareModal.appendChild(Object.assign(document.createElement("div"), { className: "hover__share-modal-container" }));
+
+    document.querySelector(".hover__share-modal-container").append(
+        Object.assign(document.createElement('div'), { className: "share__modal" }),
+    );
+
+    document.querySelector(".share__modal").append(Object.assign(document.createElement('h1'), { className: "share__modal-heading" }, { textContent: "Share to" }));
+    const socialOptions = ["LinkedIn", "WhatsApp", "Copy Link"];
+
+    socialOptions.forEach((socialOption) => {
+        const socialContainer = Object.assign(document.createElement('div'), { className: "social__container" });
+        const icon = Object.assign(document.createElement("div"), { className: `share__icon share__${socialOption.split(" ").join("")}-icon` });
+        const socialText = Object.assign(document.createElement("span"), { className: "share__option-text" }, { textContent: `${socialOption}` });
+        const shareLink = (socialOption === "Copy Link") ? 
+            Object.assign(document.createElement('div'), { role: "button", className: "link-container CopyLink" }) : 
+            Object.assign(document.createElement('a'), { className: "link-container" });
+
+       
+        if (socialOption === "LinkedIn") {
+            shareLink.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`);
+            shareLink.setAttribute('target', '_blank');
+        }
+        if (socialOption === "WhatsApp") {
+            shareLink.setAttribute('href', `https://api.whatsapp.com/send?text=${window.location.href}`); 
+            shareLink.setAttribute('target', "_blank");
+        }
+
+        shareLink.append(icon, socialText);
+        socialContainer.append(shareLink);
+        document.querySelector(".share__modal").appendChild(socialContainer);
+
+        //adding copy url functionality
+        if(socialOption === "Copy Link") {
+            shareLink.addEventListener("click", function() {
+                var tempInput = document.createElement("input");
+                tempInput.value = window.location.href; 
+                document.body.appendChild(tempInput); 
+                tempInput.select();
+                tempInput.setSelectionRange(0, 99999); // For mobile devices
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                this.querySelector(".share__option-text").textContent = "Copied"
+            })
+        }
+    });
+    document.querySelector(".hover__share-modal-container").addEventListener("mouseover", () => document.querySelector('[data-gfg-action="share-article"]').classList.add("hover_share_menu"));
+}
+function toggleLikeElementVisibility(selector, show) {
+    document.querySelector(`.${selector}`).style.display = show ? "block" : "none";
+}
+
+function closeKebabMenu(){
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+</script>
+<!-- Script for the new design of similar read  -->
+<script>
+$(document).ready(function() {
+
+    $("#showMoreTagsBtn").click(function() {
+        $('.articles-hidden-tags').show();
+        $(this).hide();
+    });
+
+    $("#showMorePracticeTagsBtn").click(function() {
+        $(".practice-tags li:nth-child(n+5)").show();
+        $(this).hide();
+    });
+});
+</script>
+<!-- Script end for similar read -->
+<style>
+        .grecaptcha-badge {
+            visibility: hidden !important;
+        }
+        .thank-you-message {
+            height: 100%;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .thank-you-message-content {
+            margin-top: 17px;
+            font: 400 20px var(--font-secondary);
+            color: var(--improve-modal-text);
+            line-height: 180%;
+            text-align: center;
+        }
+        .thank-you-message-content h2{
+          font-family: var(--font-secondary);
+        }
+        .all-footer-information{
+          width: 100% !important;;
+        }
+        .footer-wrapper_links-list{
+           margin-block-start: 0em !important;
+           width: 16% !important; 
+           padding-inline-start: 18px !important;
+        }
+        .link-head{
+               margin-bottom: 0px;
+        }
+        @media only screen and (max-width:1340px) {
+              .footer-wrapper_links-list{
+              overflow-wrap: break-word;
+          }
+        }
+        @media screen and (min-width: 991px)  {
+              .all-footer-information{
+                padding-left:15px;
+          }
+        }
+        @media only screen and (max-width:980px) {
+          .footer-wrapper_branding-address{
+               padding-top: 10px;
+          }
+        }
+        @media (max-width: 750px) {
+            .thank-you-message-content{
+                font-size: 14px;
+                line-height: 170%;
+            }
+        }
+
+        /* CSS variable meant to handle the dark and light mode icon for three 90 event in header courses dropdown */
+        :root{
+          --three90headericon : url('https://media.geeksforgeeks.org/auth-dashboard-uploads/three90daylogocompressed.svg');
+          --three90headericonposition : 0px -40px;
+          --three90leftbarimggrid : url('https://media.geeksforgeeks.org/auth-dashboard-uploads/three90leftbarspritecompressed.svg');
+          --three90leftbarimgposition : -5px -55px;
+          --three90leftbarbgcolour : #b3abd0;
+        }
+
+        body[data-dark-mode="true"]{
+          --three90leftbarimgposition : -6px 1px;
+          --three90headericonposition : 0px 0px;
+          --three90leftbarbgcolour: #8c82b9;
+        }
+
+        .three90leftbarimg{
+          margin-left: -5px;
+          height: 30px;
+          background-image: var(--three90leftbarimggrid);
+          background-repeat: no-repeat;
+          background-position: var(--three90leftbarimgposition);
+          background-size: 212px;
+        }
+
+        .courseTabShimmer{
+          position: absolute;
+          height: 110%;
+          width: 0;
+          opacity: .7;
+          -webkit-animation: courseShimmer 2s cubic-bezier(0,0,.07,.61) infinite;
+          animation: courseShimmer 2s cubic-bezier(0,0,.07,.61) infinite;
+          box-shadow: 0 0 25px 5px #dddcdc;
+          -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+          padding:0px !important;
+          border:unset !important;
+        }
+
+        @keyframes courseShimmer{
+          0% {
+              left: 0;
+          }
+          55% {
+              left: 100%;
+          }
+          99% {
+              left: 110%;
+          }
+        }
+
+</style>
+
+
+	</div><!-- #main .wrapper -->
+  <div id="displayModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- <div class="upper-box">
+        <h3 style="font: normal normal bold 18px/31px var(--font-primary); color: var(--color-black);">Improve your Coding Skills with Practice</h3>
+        <button class="upper-box-btn"><a style="color: white !important;" href="https://practice.geeksforgeeks.org/explore?page=1&sortBy=submissions&utm_source=gfg&utm_medium=search-bar&utm_campaign=practice-search">Try It!</a></button>
+      </div> -->
+      <div class="modal-content">
+        <div class="error-message"></div>
+        <!-- <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" data-modal="displayModal">&times;</button>
+          <h2 class="modal-title" id="dmTitle"></h2>
+        </div> -->
+        <div class="modal-body" id="dmBody">
+            <div id="modal-dm-content"></div>
+              <div class="modal-overlay" aria-hidden=true>
+                <span class="loader__animation"></span>
+              </div>
+            <!-- body -->
+        </div>
+      </div>
+    </div>
+  </div>  
+  <div id="displayModalBackdrop" class="backdrop"></div>
+  <!-- Footer start -->
+  <footer class="gfg-footer" id="gfg-footer">
+      <div class="footer-wrapper">
+          <div class="footer-wrapper_branding">
+              <a class="footer-wrapper_branding-anchor" aria-label="GeeksforGeeks Logo" href="https://www.geeksforgeeks.org/">
+                <img style="height: 32px; width: 230px; max-width: fit-content;" class="footer-wrapper_branding-nlogo" src="https://media.geeksforgeeks.org/auth-dashboard-uploads/gfgFooterLogo.png" alt="geeksforgeeks-footer-logo"/>
+              </a>
+              <div class="footer-wrapper_branding-address">
+                  <div class="address_section">
+                    <div class="address-icon-wrapper">
+                      <i class="gfg-icon gfg-icon_pin"></i> 
+                    <div class="address_div">
+                                          <div class="footer-address">
+                      Corporate & Communications Address:- A-143, 7th Floor, Sovereign Corporate Tower, Sector- 136, Noida, Uttar Pradesh (201305) | Registered Address:- K 061, Tower K, Gulshan Vivante Apartment, Sector 137, Noida, Gautam Buddh Nagar, Uttar Pradesh, 201305                    </div>
+                    </div>
+                  </div>
+                                      </div>
+              </div>
+              <div class="footer-wrapper_branding-social">
+                  <a href="https://www.facebook.com/geeksforgeeks.org/" rel="noopener noreferrer" aria-label="GeeksforGeeks Facebook" target="_blank">
+                      <div class="facebook"></div>
+                  </a>
+                  <a href="https://www.instagram.com/geeks_for_geeks/" rel="noopener noreferrer" aria-label="GeeksforGeeks Instagram" target="_blank">
+                      <div class="instagram"></div>
+                  </a>
+                  <a href="https://in.linkedin.com/company/geeksforgeeks" rel="noopener noreferrer" aria-label="GeeksforGeeks LinkedIn" target="_blank">
+                      <div class="linkedin"></div>
+                  </a>
+                  <a href="https://twitter.com/geeksforgeeks" rel="noopener noreferrer" aria-label="GeeksforGeeks Twitter" target="_blank">
+                      <div class="twitter"></div>
+                  </a>
+                  <a href="https://www.youtube.com/geeksforgeeksvideos" rel="noopener noreferrer" aria-label="GeeksforGeeks YouTube" target="_blank">
+                      <div class="youtube"></div>
+                  </a>
+              </div>
+              <div class="footer-wrapper_branding-app">
+                  <a aria-label="GeeksforGeeks App Link" href="https://geeksforgeeksapp.page.link/gfg-app" target="_blank" ><img src="https://media.geeksforgeeks.org/auth-dashboard-uploads/googleplay.png" alt="GFG App on Play Store" id="gplay" loading="lazy"></a>
+                  <a aria-label="GeeksforGeeks App Link" href="https://geeksforgeeksapp.page.link/gfg-app" target="_blank"><img src="https://media.geeksforgeeks.org/auth-dashboard-uploads/appstore.png" alt="GFG App on App Store" id="appstore" loading="lazy"></a>
+              </div>
+          </div> 
+        <div class="all-footer-information">
+          <div class="footer-wrapper_links" style="justify-content: space-between; text-align: -webkit-left;"><ul class="footer-wrapper_links-list" ><li>Company</li><li><a href=https://www.geeksforgeeks.org/about/?ref=outindfooter>About Us</a></li><li><a href=https://www.geeksforgeeks.org/legal/?ref=outindfooter>Legal</a></li><li><a href=https://www.geeksforgeeks.org/press-release/?ref=outindfooter>In Media</a></li><li><a href=https://www.geeksforgeeks.org/about/contact-us/?ref=outindfooter>Contact Us</a></li><li><a href=https://www.geeksforgeeks.org/advertise-with-us/?ref=outindfooter>Advertise with us</a></li><li><a href=https://www.geeksforgeeks.org/gfg-corporate-solution/?ref=outindfooter>GFG Corporate Solution</a></li><li><a href=https://www.geeksforgeeks.org/campus-training-program/?ref=outindfooter>Placement Training Program</a></li><li><a href=https://www.geeksforgeeks.org/community/?ref=outindfooter>GeeksforGeeks Community</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/introduction-to-programming-languages/?ref=outindfooter>Languages</a></li><li><a href=https://www.geeksforgeeks.org/python-programming-language/?ref=outindfooter>Python</a></li><li><a href=https://www.geeksforgeeks.org/java/?ref=outindfooter>Java</a></li><li><a href=https://www.geeksforgeeks.org/c-plus-plus/?ref=outindfooter>C++</a></li><li><a href=https://www.geeksforgeeks.org/php-tutorials/?ref=outindfooter>PHP</a></li><li><a href=https://www.geeksforgeeks.org/golang/?ref=outindfooter>GoLang</a></li><li><a href=https://www.geeksforgeeks.org/sql-tutorial/?ref=outindfooter>SQL</a></li><li><a href=https://www.geeksforgeeks.org/r-tutorial/?ref=outindfooter>R Language</a></li><li><a href=https://www.geeksforgeeks.org/android-tutorial/?ref=outindfooter>Android Tutorial</a></li><li><a href=https://www.geeksforgeeks.org/geeksforgeeks-online-tutorials-free/?ref=outindfooter>Tutorials Archive</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/learn-data-structures-and-algorithms-dsa-tutorial/?ref=outindfooter>DSA</a></li><li><a href=https://www.geeksforgeeks.org/data-structures/?ref=outindfooter>Data Structures</a></li><li><a href=https://www.geeksforgeeks.org/fundamentals-of-algorithms/?ref=outindfooter>Algorithms</a></li><li><a href=https://www.geeksforgeeks.org/complete-guide-to-dsa-for-beginners/?ref=outindfooter>DSA for Beginners</a></li><li><a href=https://www.geeksforgeeks.org/basic-coding-problems-in-dsa-for-beginners/?ref=outindfooter>Basic DSA Problems</a></li><li><a href=https://www.geeksforgeeks.org/complete-roadmap-to-learn-dsa-from-scratch/?ref=outindfooter>DSA Roadmap</a></li><li><a href=https://www.geeksforgeeks.org/top-100-data-structure-and-algorithms-dsa-interview-questions-topic-wise/?ref=outindfooter>Top 100 DSA Interview Problems</a></li><li><a href=https://www.geeksforgeeks.org/dsa-roadmap-for-beginner-to-advanced-by-sandeep-jain/?ref=outindfooter>DSA Roadmap by Sandeep Jain</a></li><li><a href=https://www.geeksforgeeks.org/geeksforgeeks-master-sheet-list-of-all-cheat-sheets/?ref=outindfooter>All Cheat Sheets</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/ai-ml-ds/?ref=outindfooter>Data Science & ML</a></li><li><a href=https://www.geeksforgeeks.org/data-science-tutorial/?ref=outindfooter>Data Science With Python</a></li><li><a href=https://www.geeksforgeeks.org/data-science-for-beginners/?ref=outindfooter>Data Science For Beginner</a></li><li><a href=https://www.geeksforgeeks.org/machine-learning/?ref=outindfooter>Machine Learning</a></li><li><a href=https://www.geeksforgeeks.org/machine-learning-mathematics/?ref=outindfooter>ML Maths</a></li><li><a href=https://www.geeksforgeeks.org/python-data-visualization-tutorial/?ref=outindfooter>Data Visualisation</a></li><li><a href=https://www.geeksforgeeks.org/pandas-tutorial/?ref=outindfooter>Pandas</a></li><li><a href=https://www.geeksforgeeks.org/numpy-tutorial/?ref=outindfooter>NumPy</a></li><li><a href=https://www.geeksforgeeks.org/natural-language-processing-nlp-tutorial/?ref=outindfooter>NLP</a></li><li><a href=https://www.geeksforgeeks.org/deep-learning-tutorial/?ref=outindfooter>Deep Learning</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/web-technology/?ref=outindfooter>Web Technologies</a></li><li><a href=https://www.geeksforgeeks.org/html/?ref=outindfooter>HTML</a></li><li><a href=https://www.geeksforgeeks.org/css/?ref=outindfooter>CSS</a></li><li><a href=https://www.geeksforgeeks.org/javascript/?ref=outindfooter>JavaScript</a></li><li><a href=https://www.geeksforgeeks.org/typescript/?ref=outindfooter>TypeScript</a></li><li><a href=https://www.geeksforgeeks.org/learn-reactjs/?ref=outindfooter>ReactJS</a></li><li><a href=https://www.geeksforgeeks.org/nextjs/?ref=outindfooter>NextJS</a></li><li><a href=https://www.geeksforgeeks.org/bootstrap/?ref=outindfooter>Bootstrap</a></li><li><a href=https://www.geeksforgeeks.org/web-design/?ref=outindfooter>Web Design</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/python-programming-language/?ref=outindfooter>Python Tutorial</a></li><li><a href=https://www.geeksforgeeks.org/python-programming-examples/?ref=outindfooter>Python Programming Examples</a></li><li><a href=https://www.geeksforgeeks.org/python-projects-beginner-to-advanced/?ref=outindfooter>Python Projects</a></li><li><a href=https://www.geeksforgeeks.org/python-tkinter-tutorial/?ref=outindfooter>Python Tkinter</a></li><li><a href=https://www.geeksforgeeks.org/python-web-scraping-tutorial/?ref=outindfooter>Web Scraping</a></li><li><a href=https://www.geeksforgeeks.org/opencv-python-tutorial/?ref=outindfooter>OpenCV Tutorial</a></li><li><a href=https://www.geeksforgeeks.org/python-interview-questions/?ref=outindfooter>Python Interview Question</a></li><li><a href=https://www.geeksforgeeks.org/django-tutorial/?ref=outindfooter>Django</a></li></ul></div><div class="footer-wrapper_links" style="justify-content: space-between; text-align: -webkit-left;"><ul class="footer-wrapper_links-list" style="margin-block-start: 0em; width:16%; padding-inline-start: 18px;"><li>Computer Science</li><li><a href=https://www.geeksforgeeks.org/operating-systems/?ref=outindfooter>Operating Systems</a></li><li><a href=https://www.geeksforgeeks.org/computer-network-tutorials/?ref=outindfooter>Computer Network</a></li><li><a href=https://www.geeksforgeeks.org/dbms/?ref=outindfooter>Database Management System</a></li><li><a href=https://www.geeksforgeeks.org/software-engineering/?ref=outindfooter>Software Engineering</a></li><li><a href=https://www.geeksforgeeks.org/digital-electronics-logic-design-tutorials/?ref=outindfooter>Digital Logic Design</a></li><li><a href=https://www.geeksforgeeks.org/engineering-mathematics-tutorials/?ref=outindfooter>Engineering Maths</a></li><li><a href=https://www.geeksforgeeks.org/software-development/?ref=outindfooter>Software Development</a></li><li><a href=https://www.geeksforgeeks.org/software-testing-tutorial/?ref=outindfooter>Software Testing</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/devops-tutorial/?ref=outindfooter>DevOps</a></li><li><a href=https://www.geeksforgeeks.org/git-tutorial/?ref=outindfooter>Git</a></li><li><a href=https://www.geeksforgeeks.org/linux-tutorial/?ref=outindfooter>Linux</a></li><li><a href=https://www.geeksforgeeks.org/aws-tutorial/?ref=outindfooter>AWS</a></li><li><a href=https://www.geeksforgeeks.org/docker-tutorial/?ref=outindfooter>Docker</a></li><li><a href=https://www.geeksforgeeks.org/kubernetes-tutorial/?ref=outindfooter>Kubernetes</a></li><li><a href=https://www.geeksforgeeks.org/microsoft-azure/?ref=outindfooter>Azure</a></li><li><a href=https://www.geeksforgeeks.org/google-cloud-platform-tutorial/?ref=outindfooter>GCP</a></li><li><a href=https://www.geeksforgeeks.org/devops-roadmap/?ref=outindfooter>DevOps Roadmap</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/system-design-tutorial/?ref=outindfooter>System Design</a></li><li><a href=https://www.geeksforgeeks.org/what-is-high-level-design-learn-system-design/?ref=outindfooter>High Level Design</a></li><li><a href=https://www.geeksforgeeks.org/what-is-low-level-design-or-lld-learn-system-design/?ref=outindfooter>Low Level Design</a></li><li><a href=https://www.geeksforgeeks.org/unified-modeling-language-uml-introduction/?ref=outindfooter>UML Diagrams</a></li><li><a href=https://www.geeksforgeeks.org/system-design-interview-guide/?ref=outindfooter>Interview Guide</a></li><li><a href=https://www.geeksforgeeks.org/software-design-patterns/?ref=outindfooter>Design Patterns</a></li><li><a href=https://www.geeksforgeeks.org/object-oriented-analysis-and-design/?ref=outindfooter>OOAD</a></li><li><a href=https://www.geeksforgeeks.org/system-design-interview-bootcamp-guide/?ref=outindfooter>System Design Bootcamp</a></li><li><a href=https://www.geeksforgeeks.org/most-commonly-asked-system-design-interview-problems-questions/?ref=outindfooter>Interview Questions</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/technical-interview-preparation/?ref=outindfooter>Inteview Preparation</a></li><li><a href=https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/?ref=outindfooter>Competitive Programming</a></li><li><a href=https://www.geeksforgeeks.org/top-algorithms-and-data-structures-for-competitive-programming/?ref=outindfooter>Top DS or Algo for CP</a></li><li><a href=https://www.geeksforgeeks.org/company-wise-recruitment-process/?ref=outindfooter>Company-Wise Recruitment Process</a></li><li><a href=https://www.geeksforgeeks.org/company-preparation/?ref=outindfooter>Company-Wise Preparation</a></li><li><a href=https://www.geeksforgeeks.org/aptitude-questions-and-answers/?ref=outindfooter>Aptitude Preparation</a></li><li><a href=https://www.geeksforgeeks.org/puzzles/?ref=outindfooter>Puzzles</a></li></ul><ul class="footer-wrapper_links-list" ><li>School Subjects</li><li><a href=https://www.geeksforgeeks.org/maths/?ref=outindfooter>Mathematics</a></li><li><a href=https://www.geeksforgeeks.org/physics/?ref=outindfooter>Physics</a></li><li><a href=https://www.geeksforgeeks.org/chemistry/?ref=outindfooter>Chemistry</a></li><li><a href=https://www.geeksforgeeks.org/biology/?ref=outindfooter>Biology</a></li><li><a href=https://www.geeksforgeeks.org/social-science/?ref=outindfooter>Social Science</a></li><li><a href=https://www.geeksforgeeks.org/english-grammar/?ref=outindfooter>English Grammar</a></li><li><a href=https://www.geeksforgeeks.org/commerce/?ref=outindfooter>Commerce</a></li><li><a href=https://www.geeksforgeeks.org/tag/world-general-knowledge/?ref=outindfooter>World GK</a></li></ul><ul class="footer-wrapper_links-list" ><li><a class="link-head" href=https://www.geeksforgeeks.org/videos/?ref=outindfooter>GeeksforGeeks Videos</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/sde-sheet/?ref=outindfooter>DSA</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/python/?ref=outindfooter>Python</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/java-w6y5f4/?ref=outindfooter>Java</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/c/?ref=outindfooter>C++</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/web-development/?ref=outindfooter>Web Development</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/data-science/?ref=outindfooter>Data Science</a></li><li><a href=https://www.geeksforgeeks.org/videos/category/cs-subjects/?ref=outindfooter>CS Subjects</a></li></ul></div>        </div> 
+      </div>
+            <!-- Jobs Fair 2024 related CSS changes -->
+
+<style>
+  :root{
+    --home-jobs-section-jf-logo: url('https://media.geeksforgeeks.org/auth-dashboard-uploads/JobFair2024Logo.svg');
+  }
+
+  body[data-dark-mode="true"]
+  {
+    --home-jobs-section-jf-logo: url('https://media.geeksforgeeks.org/auth-dashboard-uploads/JobFair2024LogoDark.svg');
+  }
+
+  .hp_job_section_jf_logo, .job-a-thon-jf-sticky-header-logo{
+    background: var(--home-jobs-section-jf-logo);
+    height: 50px;
+    background-repeat: no-repeat;
+    width: 105px;
+    background-size: 100px;
+  }
+
+  @keyframes challenge {
+	0%{
+		transform: scale(1);
+	}
+	50%{
+		transform: scale(1.03);
+	}
+	100%{
+		transform: scale(1);
+	}
+  }
+
+  .job-a-thon-jf-sticky-header-logo{
+    height: 45px;
+  }
+
+</style>
+
+<!-- ---------------------------------- -->
+      <div class="footer-strip" >
+          <div class="copyright">
+              <a href="https://www.geeksforgeeks.org/" rel="noopener noreferrer" target="_blank">@GeeksforGeeks, Sanchhaya Education Private Limited</a><span>, <a href="https://www.geeksforgeeks.org/copyright-information/">All rights reserved</a></span>
+          </div>
+          <div class="social-links">
+          </div>
+      </div>
+  </footer>
+</div><!-- #page -->
+<script type='text/javascript' src='https://www.geeksforgeeks.org/wp-includes/js/wp-embed.min.js?ver=4.9.8'></script>
+
+<!-- Cookie Consent Div-->
+<div class="cookie-consent hide-consent">
+    <span class="cookie-text">
+        We use cookies to ensure you have the best browsing experience on our website. By using our site, you
+        acknowledge that you have read and understood our
+        <a href="https://www.geeksforgeeks.org/cookie-policy/" target="_blank"><u>Cookie Policy</u></a> &
+        <a href="https://www.geeksforgeeks.org/privacy-policy/" target="_blank"><u>Privacy Policy</u></a>
+            </span>
+    <button class="consent-btn">
+        Got It !
+    </button>
+</div>
+<!-- Cookie Consent Div ends -->
+
+<!--Light Box Div starts-->
+<div class="lightbox-target">
+   <img id="lightbox-image" src="" alt="Lightbox"/>
+   <span class="lightbox-close"></span>
+</div>
+<!--Light Box Div ends-->
+
+<!-- <link rel="stylesheet" href="https://use.typekit.net/mrg0hpc.css"/> -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<script>
+  if(post_slug.includes('premium-plans-payment/') || post_slug.includes('premium-plans/')){
+    $('.darkMode-wrap').remove();
+    $('.toggle-darkMode').remove();
+  }
+
+function setGoogleRecaptcha() {
+    var captchaSiteKey = '6LdMFNUZAAAAAIuRtzg0piOT-qXCbDF-iQiUi9KY';
+    grecaptcha.ready(function() {
+        grecaptcha.execute(captchaSiteKey).then(function(token) {
+            document.getElementById('g-recaptcha-response-suggestion-form').value = token;
+            suggestionCall();
+        });
+    });
+}
+
+</script>
+
+        <div class="improve-modal--overlay" style="display: none;">
+            <div class="improve-modal--improvement" status="locked">
+                <div class="improve-modal--improve-header">
+                    <div class="improve-header-fst-child">Improvement</div>
+                    <div class="improve-header-sec-child">
+                        <i class="gfg-icon improve-cross-icon"></i>
+                    </div>
+                </div>
+                <div class="locked-status--impove-modal">
+                    <div class="improve-modal--improve-content error-message"></div>                    
+                    <div class="improve-modal--improve-bottom">
+                        <button class="improve-bottom-btn" type="button">Suggest changes</button>
+                    </div>
+                </div>
+                <div class="unlocked-status--improve-modal-content">
+                  <div class="suggest-change_wrapper">
+                    <div class="suggest-change-content_wrapper">
+                      <div class="suggest-change">Suggest Changes</div>
+                      <div class="suggest-changes-about">Help us improve. Share your suggestions to enhance the article. Contribute your expertise and make a difference in the GeeksforGeeks portal.</div>
+                    </div>
+                    <div class="suggest-change-icon_wrapper">
+                      <img class="suggest-change-icon" src="https://media.geeksforgeeks.org/auth-dashboard-uploads/suggestChangeIcon.png" alt="geeksforgeeks-suggest-icon"/>
+                    </div>
+                  </div>
+                  <div class="create-improvement_wrapper">
+                    <div class="create-improvement-content_wrapper">
+                      <div class="create-improvement">Create Improvement</div>
+                      <div class="create-improvements-about">Enhance the article with your expertise. Contribute to the GeeksforGeeks community and help create better learning resources for all.</div>
+                    </div>
+                    <div class="create-improvement-icon_wrapper">
+                    <img class="create-improvement-icon" src="https://media.geeksforgeeks.org/auth-dashboard-uploads/createImprovementIcon.png" alt="geeksforgeeks-improvement-icon"/>
+                    </div>
+                  </div>
+                  <div class="error-status"></div>
+                </div>
+            </div>
+            <div class="improve-modal--suggestion" style="display: none;">
+                <!-- Header of improve-modal--improvement and improve-modal--suggestion have same CSS rule that's why I use same class name -->
+                <div class="improve-modal--improve-header">
+                  <div class="left-arrow-icon_suggest_wrapper">
+                    <div class="left-arrow-icon_wrapper">
+                      <i class="gfg-icon improve-left-arrow-icon"></i>
+                    </div>
+                    <div class="improve-header-fst-child">Suggest Changes</div>
+                  </div>
+                  <div class="improve-header-sec-child">
+                        <i class="gfg-icon improve-cross-icon"></i>
+                  </div>
+                </div>
+                <div class="suggestion-modal-section">
+                    <form>
+                        <label for="suggestion-section">min 4 words, max CharLimit:2000</label>
+                        <textarea id="suggestion-section-textarea" name="suggestion-section" placeholder="Write your suggestions here"></textarea>
+                        <input type="hidden" name="g-recaptcha-suggestion-response" id="g-recaptcha-response-suggestion-form">
+                    </form>
+                </div> 
+                <!-- Button of improve-modal--improvement and improve-modal--suggestion have same CSS rule that's why I use same class name -->
+                <div class="improve-modal--improve-bottom suggestion-btn">
+                    <p><span id="suggestion-modal-alert" style="display: none;"></span></p>
+                    <button class="suggest-bottom-btn" type="button"></button>
+                </div>
+            </div>
+            <a href="#" style="visibility:hidden" class="create-improvement-redirection-to-write" target="_blank"></a>
+        </div>
+        <script>
+            var lockedCasesHtml = `<span class="improve-modal--improve-content-modified"></span><span>You can suggest the changes for now and it will be under 'My Suggestions' Tab on Write.</span><br><br><span>You will be notified via email once the article is available for improvement. Thank you for your valuable feedback!</span>`;
+            var badgesRequiredHtml = `<span>It seems that you do not meet the eligibility criteria to create improvements for this article, as only users who have earned specific badges are permitted to do so.</span><br><br><span>However, you can still create improvements through the <a href="https://write.geeksforgeeks.org/pick-improvements/pick" target='_blank'>Pick for Improvement</a> section.</span>`;
+            jQuery('.improve-header-sec-child').on('click', function(){
+                jQuery('.improve-modal--overlay').hide();
+                $('.improve-modal--suggestion').hide();
+            });
+
+            $('.suggest-change_wrapper, .locked-status--impove-modal .improve-bottom-btn').on('click',function(){ // when suggest changes option is clicked
+              $('#suggestion-section-textarea').val("");
+              $('.suggest-bottom-btn').html("Suggest changes");
+              $('.improve-modal--improvement').hide();
+              $('.improve-modal--suggestion').show();
+            });
+            $('.create-improvement_wrapper').on('click',function(){  // when create improvement option clicked then improvement reason will be shown
+              if(loginData && loginData.isLoggedIn) {
+                $('body').append('<div class="spinner-loading-overlay"></div>');
+                $('.spinner-loading-overlay').show();
+                jQuery.ajax({
+                  url: writeApiUrl + 'create-improvement-post/?v=1',
+                  type: "POST",
+                  contentType: 'application/json; charset=utf-8',
+                  dataType: 'json',
+                  xhrFields: {
+                    withCredentials: true
+                  },
+                  data: JSON.stringify({
+                    gfg_id: post_id
+                  }),
+                  success:function(result) {
+                    $('.spinner-loading-overlay:eq(0)').remove();
+                    $('.improve-modal--overlay').hide();
+                    $('.unlocked-status--improve-modal-content').css("display","none");
+                    $('.create-improvement-redirection-to-write').attr('href',writeUrl + 'improve-post/' + `${result.id}` + '/', '_blank');
+                    $('.create-improvement-redirection-to-write')[0].click();
+                  },
+                  error:function(e) {
+                    showErrorMessage(e.responseJSON,e.status)
+                  },
+                });
+              }
+              else {
+               if(loginData && !loginData.isLoggedIn) {
+                   $('.improve-modal--overlay').hide();
+                if ($('.header-main__wrapper').find('.header-main__signup.login-modal-btn').length) {
+                $('.header-main__wrapper').find('.header-main__signup.login-modal-btn').click();
+                 }
+                return;
+                }
+              }
+            });
+            $('.left-arrow-icon_wrapper').on('click',function(){
+              if($('.improve-modal--suggestion').is(":visible"))
+              $('.improve-modal--suggestion').hide();
+              else{
+              }
+
+              $('.improve-modal--improvement').show();
+            });
+            const showErrorMessage = (result,statusCode) => {
+                if(!result)
+                return;
+                $('.spinner-loading-overlay:eq(0)').remove();
+                if(statusCode == 403) {
+                    $('.improve-modal--improve-content.error-message').html(result.message);
+                    jQuery('.improve-modal--overlay').show();
+                    jQuery('.improve-modal--improvement').show();
+                    $('.locked-status--impove-modal').css("display","block");
+                    $('.unlocked-status--improve-modal-content').css("display","none");
+                    $('.improve-modal--improvement').attr("status","locked");
+                    return;
+                }
+                            }
+            function loadScript(src, callback) {
+                var script = document.createElement('script');
+                script.src = src;
+                script.onload = callback;
+                document.head.appendChild(script);
+            }
+            function suggestionCall() {              
+                var suggest_val = $.trim($("#suggestion-section-textarea").val());
+                var array_String= suggest_val.split(" ") 
+                var gCaptchaToken = $("#g-recaptcha-response-suggestion-form").val();
+                var error_msg = false;
+                if(suggest_val != "" && array_String.length >=4){
+                    if(suggest_val.length <= 2000){
+                        var payload = {
+                                    "gfg_post_id" : `${post_id}`,
+                                    "suggestion" : `<p>${suggest_val}</p>`,
+                                }
+                        if(!loginData || !loginData.isLoggedIn)                  // User is not logged in
+                        payload["g-recaptcha-token"] = gCaptchaToken
+
+                        jQuery.ajax({
+                            type:'post',
+                            url:  "https://apiwrite.geeksforgeeks.org/suggestions/auth/create/",
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            crossDomain: true,
+                            contentType:'application/json',
+                            data: JSON.stringify(payload),
+                            success:function(data) {
+                                jQuery('.spinner-loading-overlay:eq(0)').remove();
+                                jQuery('#suggestion-section-textarea').val("");
+                                jQuery('.suggest-bottom-btn').css("display","none");
+                                
+                                // Update the modal content
+                                const modalSection = document.querySelector('.suggestion-modal-section');
+                                modalSection.innerHTML = `
+                                    <div class="thank-you-message" style="text-align: center;">
+                                      <h2>Thank You!</h2>
+                                      <div class="thank-you-message-content">Your suggestions are valuable to us.</div>
+                                    </div>
+                                `;
+
+                            },
+                            error:function(data) {
+                                jQuery('.spinner-loading-overlay:eq(0)').remove();
+                                jQuery('#suggestion-modal-alert').html("Something went wrong.");
+                                jQuery('#suggestion-modal-alert').show();
+                                error_msg = true;
+                            }
+                        });
+                    }
+                    else{
+                        jQuery('.spinner-loading-overlay:eq(0)').remove();
+                        jQuery('#suggestion-modal-alert').html("Minimum 5 Words and Maximum Character limit is 2000.");
+                        jQuery('#suggestion-modal-alert').show();
+                        jQuery('#suggestion-section-textarea').focus();
+                        error_msg = true;
+                    }
+                }
+                else{
+                    jQuery('.spinner-loading-overlay:eq(0)').remove();
+                    jQuery('#suggestion-modal-alert').html("Enter atleast four words !");
+                    jQuery('#suggestion-modal-alert').show();
+                    jQuery('#suggestion-section-textarea').focus();
+                    error_msg = true;
+                }
+                if(error_msg){
+                    setTimeout(() => {
+                        jQuery('#suggestion-section-textarea').focus();
+                        jQuery('#suggestion-modal-alert').hide();
+                    }, 3000);
+                }
+            }
+            
+            document.querySelector('.suggest-bottom-btn').addEventListener('click', function(){
+              jQuery('body').append('<div class="spinner-loading-overlay"></div>');
+              jQuery('.spinner-loading-overlay').show();
+              if(loginData && loginData.isLoggedIn) {
+                 suggestionCall();
+                 return;
+              }
+              // load the captcha script and set the token
+              loadScript('https://www.google.com/recaptcha/api.js?render=6LdMFNUZAAAAAIuRtzg0piOT-qXCbDF-iQiUi9KY',[], function() {
+                setGoogleRecaptcha();
+              });
+            });
+            
+            $('.improvement-bottom-btn.create-improvement-btn').click(function() {  //create improvement button is clicked
+              $('body').append('<div class="spinner-loading-overlay"></div>');
+              $('.spinner-loading-overlay').show();
+              // send this option via create-improvement-post api
+              jQuery.ajax({
+                url: writeApiUrl + 'create-improvement-post/?v=1',
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                xhrFields: {
+                  withCredentials: true
+                },
+                data: JSON.stringify({
+                  gfg_id: post_id
+                }),
+                success:function(result) {
+                  $('.spinner-loading-overlay:eq(0)').remove();
+                  $('.improve-modal--overlay').hide();
+                  $('.create-improvement-redirection-to-write').attr('href',writeUrl + 'improve-post/' + `${result.id}` + '/', '_blank');
+                  $('.create-improvement-redirection-to-write')[0].click();
+                },
+                error:function(e) {
+                  showErrorMessage(e.responseJSON,e.status);
+                },
+              });
+            });
+        </script>
+    <script>
+var AdblockPlus = new function() {
+     this.detect = function(px, callback) {
+         var detected = false;
+         var checksRemain = 2;
+         var error1 = false;
+         var error2 = false;
+         if (typeof callback != "function") return;
+         px += "?ch=*&rn=*";
+
+         function beforeCheck(callback, timeout) {
+             if (checksRemain == 0 || timeout > 1E3) callback(checksRemain == 0 && detected);
+             else setTimeout(function() {
+                 beforeCheck(callback, timeout * 2)
+             }, timeout * 2)
+         }
+
+         function checkImages() {
+             if (--checksRemain) return;
+             detected = !error1 && error2
+         }
+         var random = Math.random() * 11;
+         var img1 = new Image;
+         img1.onload = checkImages;
+         img1.onerror = function() {
+             error1 = true;
+             checkImages()
+         };
+         img1.src = px.replace(/\*/, 1).replace(/\*/, random);
+         var img2 = new Image;
+         img2.onload = checkImages;
+         img2.onerror = function() {
+             error2 = true;
+             checkImages()
+         };
+         img2.src = px.replace(/\*/, 2).replace(/\*/, random);
+         beforeCheck(callback, 250)
+     }
+ };
+
+/*
+AdblockPlus.detect("https://cdnads.geeksforgeeks.org/res/px.gif", function(abp){
+    window.googletag = window.googletag || {cmd: []};
+    window.abp=abp;
+    var elms = [...document.querySelectorAll('div[id^=_GFG_ABP_]')];
+    const units=elms.map(elem=>elem.id)
+    if(abp) {
+        for(let curr_unit of units) {
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('src',"https://aa.geeksforgeeks.org/iframe.html?code="+curr_unit.substr(1))
+            const elem = document.getElementById(curr_unit)
+            const div = document.createElement('div');
+            div.setAttribute('id',curr_unit.substr(1))
+            let sizes = curr_unit.split("_");
+            sizes = sizes.filter(val => val.includes('x'));
+            let [width, height] = sizes[0].split("x");
+            iframe.style.width = `${+width+20}px`
+            iframe.style.height = `${+height+20}px`
+            if(elem) {
+                elem.appendChild(iframe);
+            }
+        }
+        var gfgAdDivs = [...document.querySelectorAll('div[id^=GFG_AD_]')];
+        gfgAdDivs.forEach(gfgDiv => document.getElementById(gfgDiv.id).removeAttribute("style"));
+        jQuery('#secondary .widget_text:last-child').css({"position": "unset"});
+    }
+});*/
+    AdblockPlus.detect("https://cdnads.geeksforgeeks.org/res/px.gif", function(abp){
+    window.googletag = window.googletag || {cmd: []};
+    window.abp=abp;
+    var elms = [...document.querySelectorAll('div[id^=_GFG_ABP_]')];
+    //const units=elms.map(elem=>elem.id)
+    const units = elms
+      .filter(elem => !(window.innerWidth < 1500 && elem.id === "_GFG_ABP_Incontent_728x90"))
+      .map(elem => elem.id);
+    if(abp) {
+        isAdBlockerPresent = true;
+        for(let curr_unit of units) {
+            const iframe = document.createElement('iframe');
+            iframe.addEventListener("load", () => {
+              iframe.contentWindow.postMessage(JSON.stringify({host: window.location.host,category: window.arrPostCatName,parentWidth: window.innerWidth}),'https://aa.geeksforgeeks.org');
+            });
+            iframe.setAttribute('src',"https://aa.geeksforgeeks.org/iframe.html?code="+curr_unit.substr(1))
+            const elem = document.getElementById(curr_unit)
+            const div = document.createElement('div');
+            div.setAttribute('id',curr_unit.substr(1))
+            let sizes = curr_unit.split("_");
+            sizes = sizes.filter(val => val.includes('x'));
+            let [width, height] = sizes[0].split("x");
+            iframe.style.width = `${+width+20}px`
+            iframe.style.height = `${+height+20}px`
+            if(elem) {
+                elem.appendChild(iframe);
+            }
+        }
+        var gfgAdDivs = [...document.querySelectorAll('div[id^=GFG_AD_]')];
+        gfgAdDivs.forEach(gfgDiv => document.getElementById(gfgDiv.id).removeAttribute("style"));
+        jQuery('#secondary .widget_text:last-child').css({"position": "unset"});
+    }
+    else{
+      try {
+        var isAdblockEnabled = t =>
+            fetch(
+                new Request('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
+                    method: 'HEAD',
+                    mode: 'no-cors'
+                })
+            ).catch(t);
+          isAdblockEnabled(() => {
+            // here goes modal pop-up code
+            isAdBlockerPresent = true;
+          });
+      } catch (err) {console.log(err);}
+    }
+});
+
+  function closeAdBlockPopupModal(){
+    const modal = document.getElementById("adBlockerModal");
+    $('body').removeClass('body-for-ad-blocker');
+    $('#adBlockerModal').remove()
+    localStorage.setItem('gfgAdBlockPopup',new Date())
+  }
+  function showAdblockerModal(){
+    let randomNumberForButtonText = Math.round(Math.random()); 
+    let currTime = new Date();
+    let lastTime = new Date(localStorage.getItem('gfgAdBlockPopup'));
+    if(((currTime-lastTime)/(1000*60*60))<1)
+    {
+      return;
+    }
+    const adBlockerModal = `<div id="adBlockerModal" class="ad-blocker-modal">
+      <div id="ad-blocker-modal-overlay">
+        <div id="ad-blocker-outer-div">
+          <div id="ad-blocker-div">
+          <p id="ad-blocker-div-warning" style="margin-bottom: 30px;">It seems that you are using an ad blocker.<br><span style="font-size: 22px;font-weight: normal;">Please disable it to support us!</span></p>
+              <div id="ad-blocker-div-btns">
+                  <button id="ad-blocker-div-button1" onclick="handleAdBlockerClick('disabled')">
+                      I disabled my ad blocker
+                  </button>
+                  <a href="https://www.geeksforgeeks.org/geeksforgeeks-premium-subscription${randomNumberForButtonText === 1 ? "/?itm_source=geeksforgeeks&itm_medium=adblocker&itm_campaign=premium1" : "/?itm_source=geeksforgeeks&itm_medium=adblocker&itm_campaign=premium2"}" target="_blank">
+                      <button
+                          id="ad-blocker-div-button2"
+                          style="
+                              background: linear-gradient(45deg, #f0bd36, #bf873f);
+                              border: 1px solid transparent;
+                              color: white;
+                          "
+                      >
+                          ${randomNumberForButtonText === 1 ? "Go Ad-Free with Premium" : "Upgrade for No Ads"}
+                      </button>
+                  </a>
+              </div>
+              <div id="ad-blocker-div-continue-premium-promo-text">
+                  "For an ad-free experience and exclusive features, subscribe to our Premium Plan!"<br>
+              </div>
+              <div id="ad-blocker-div-continue-btn-div">
+                  <a id="ad-blocker-div-continue-btn" href="#" onclick="closeAdBlockPopupModal()">Continue without supporting</a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    $('body').append(adBlockerModal);
+    $('body').addClass('body-for-ad-blocker');
+    const modal = document.getElementById("adBlockerModal");
+    modal.style.display = "block";
+  }
+  function handleAdBlockerClick(type){
+      if(type == 'disabled'){
+        window.location.reload();
+      }
+      else if(type == 'info'){
+        document.getElementById("ad-blocker-div").style.display = "none";
+        document.getElementById("ad-blocker-info-div").style.display = "flex";
+        handleAdBlockerIconClick(0);
+      }
+  }
+  var lastSelected= null;
+  //Mapping of name and video URL with the index.
+  const adBlockerVideoMap = [
+    ['Ad Block Plus','https://media.geeksforgeeks.org/auth-dashboard-uploads/abp-blocker-min.mp4'],
+    ['Ad Block','https://media.geeksforgeeks.org/auth-dashboard-uploads/Ad-block-min.mp4'],
+    ['uBlock Origin','https://media.geeksforgeeks.org/auth-dashboard-uploads/ub-blocke-min.mp4'],
+    ['uBlock','https://media.geeksforgeeks.org/auth-dashboard-uploads/U-blocker-min.mp4'],
+  ]
+  function handleAdBlockerIconClick(currSelected){
+    const videocontainer = document.getElementById('ad-blocker-info-div-gif');
+    const videosource = document.getElementById('ad-blocker-info-div-gif-src');
+    if(lastSelected != null){
+      document.getElementById("ad-blocker-info-div-icons-"+lastSelected).style.backgroundColor = "white";  
+      document.getElementById("ad-blocker-info-div-icons-"+lastSelected).style.borderColor = "#D6D6D6";
+    }
+    document.getElementById("ad-blocker-info-div-icons-"+currSelected).style.backgroundColor = "#D9D9D9";
+    document.getElementById("ad-blocker-info-div-icons-"+currSelected).style.borderColor = "#848484";
+    document.getElementById('ad-blocker-info-div-name-span').innerHTML = adBlockerVideoMap[currSelected][0]
+    videocontainer.pause();
+    videosource.setAttribute('src', adBlockerVideoMap[currSelected][1]);
+    videocontainer.load();
+    videocontainer.play();
+    lastSelected = currSelected;
+  }
+</script>
+<!-- <script async src="https://www.googleoptimize.com/optimize.js?id=OPT-5PGZ8MN"></script> -->
+
+<style>
+/* Temporary CSS for Three90 pop up modal (START)*/
+    .three90popup__container {
+      width: 100vw;
+      height: 100vh; 
+      position: fixed;
+      top:0px;
+      background: var(--job-tab-faded-background);
+      z-index: 1024;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .three90modal__wrapper{
+      background-color: white;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 10px;
+      overflow: hidden;
+
+    }
+    .three90modal__message-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-primary);
+    }
+    .three90modal__subheading {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .three90modal__text-message {
+      margin-top: 20px;
+      font-size: 15px;
+      font-weight: 400;
+      text-align: center;
+      padding: 0 5px;
+    }
+    .three90__modal__button-wrapper {
+      width: 100%;
+      padding: 20px 0px;
+      display: flex;
+      justify-content: space-evenly;
+    }
+    .three90__modal__button-wrapper > button {
+      width: 105px;
+      height: 35px;
+      border-radius: 13px;
+      border:none;
+      font-weight: 600;
+      cursor: pointer;
+    } 
+    #three90__modal-close-btn:hover {
+      background-color: #cacbcd;
+    }
+    #three90__modal-explore-btn {
+      background-color: #0a0727;
+      color: white
+    }
+
+    @media screen and (max-width: 441px) {
+      .three90modal__wrapper {
+        max-width: 300px;
+      }
+    }
+
+  /* Temporary CSS for Three90 pop up modal (END)*/
+</style>
+
+<script type="text/javascript" >
+    const coursePromotionCities = JSON.parse(`{"NCR":{"LOCATIONS":["Noida","Greater Noida","Ghaziabad","Faridabad","Delhi","New Delhi"],"COURSES":[{"name":"GATE CS 2025 Classroom Program","url":"https:\/\/www.geeksforgeeks.org\/courses\/gate-cs-self-paced"},{"name":"MERN Full Stack Development","url":"https:\/\/www.geeksforgeeks.org\/courses\/mern-full-stack-development-classroom"},{"name":"DSA For Interview Preparation","url":" https:\/\/www.geeksforgeeks.org\/courses\/dsa-interview-preparation-classroom"},{"name":"JAVA Backend Development","url":"https:\/\/www.geeksforgeeks.org\/courses\/complete-java-backend-development-program"},{"name":"Data Analytics Programme","url":"https:\/\/www.geeksforgeeks.org\/courses\/complete-data-analytics-program"},{"name":"AWS Solutions Architect Certification","url":"https:\/\/www.geeksforgeeks.org\/courses\/aws-solutions-architect-certification-classroom-training"},{"name":"Explore All","url":"https:\/\/www.geeksforgeeks.org\/courses\/offline-courses"}]},"NON_NCR":{"Bengaluru":[{"name":"Data Science Classroom Program","url":"https:\/\/www.geeksforgeeks.org\/courses\/data-science-classroom-program"},{"name":"System Design Classroom Program","url":"https:\/\/www.geeksforgeeks.org\/courses\/system-design-classroom-program"},{"name":"MERN Full Stack Development","url":"https:\/\/www.geeksforgeeks.org\/courses\/mern-full-stack-development-classroom"},{"name":"DSA For Interview Preparation","url":"https:\/\/www.geeksforgeeks.org\/courses\/dsa-interview-preparation-classroom"},{"name":"JAVA Backend Development","url":"https:\/\/www.geeksforgeeks.org\/courses\/complete-java-backend-development-program"},{"name":"Data Analytics Programme","url":"https:\/\/www.geeksforgeeks.org\/courses\/complete-data-analytics-program"},{"name":"AWS Solutions Architect Certification","url":"https:\/\/www.geeksforgeeks.org\/courses\/aws-solutions-architect-certification-classroom-training"},{"name":"Explore All","url":"https:\/\/www.geeksforgeeks.org\/courses\/offline-courses"}],"Pune":[{"name":"MERN Full Stack Development","url":"https:\/\/www.geeksforgeeks.org\/courses\/mern-full-stack-development-classroom"},{"name":"DSA For Interview Preparation","url":"https:\/\/www.geeksforgeeks.org\/courses\/dsa-interview-preparation-classroom"},{"name":"Complete Data Analytics Program","url":"https:\/\/www.geeksforgeeks.org\/courses\/complete-data-analytics-program"},{"name":"Explore All","url":"https:\/\/www.geeksforgeeks.org\/courses\/offline-courses"}]}}`);
+    const offlineCourseTermMapper = JSON.parse(`{"ALL_TERMIDS":["2058","6263","2628","1745","1789","2601","2057","5037","2971","2023","2162","2795"],"COURSE_TERMID_MAP":{"JAVA":["2058"],"DATA_ANALYTICS":["1745","1789","2601","2057","5037","2971","2023","2162","2795"],"DSA":["6263"],"MERN":["2628"]}}`);
+</script>
+
+  
+<!-- gfg tabs compatablity bundled js -->
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KDVRCT5');</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DWCCJLKX3X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+//  gtag('config', 'AW-474915276');
+  gtag('config', 'G-DWCCJLKX3X');
+  gtag('config', 'AW-796001856');
+</script>
+
+<!-- fancybar ad code start -->
+<div id="GFG_AD_Desktop_Stickyunit_1x1"></div>
+<!-- fancybar ad code ends -->
+<!-- <div id="GFG_AD_gfg_mobile_320x50"></div> -->
+<style>
+    :root {
+        --com-extra-icons-mobile-image: url(https://media.geeksforgeeks.org/auth-dashboard-uploads/Com-Extra-Icons13.svg);
+        --write-experience-card-1: #ECF5F5;
+        --write-experience-card-icon-1: #21898C;
+        --write-experience-card-2: #EAF2F7;
+        --write-experience-card-icon-2: #3079AC;
+        --write-experience-card-3: #FDEFE6;
+        --write-experience-card-icon-3: #F5A572;
+        --write-experience-card-4: #F1F8F5;
+        --write-experience-card-icon-4: #91C4AD;
+        --write-experience-card-5: #EEE7FF;
+        --write-experience-card-icon-5: #8B72C9;
+        --write-experience-card-6: #F2F8E6;
+        --write-experience-card-icon-6: #78C57F;
+        --editor-button-text-color: #6E6E73;
+        --write-modal-background: #fefefe;
+        --experience-sidebar: #000;
+        --left-bar-background: #FFFFFF;
+        --write-redirect-container:#EAF2F7;
+        --write-redirect-container-hover:#d6e7f2;
+        
+    }
+
+    /* Dark Mode */
+    body[data-dark-mode="true"] {
+        --write-modal-background: #161c23;
+        --experience-sidebar: #000;
+        --left-bar-background: #F0F3F5;
+    }
+
+    .popup-main {
+        padding: 20px 18px 20px 18px;
+        border-radius: 8px;
+    }
+
+    .popup-main .popup-heading {
+        display: flex;
+        align-items: center;
+        color: #E9E9EA;
+        margin-bottom: 10px;
+        justify-content: space-between;
+    }
+
+    .popup-main .close-icon {
+        background-image: var(--com-extra-icons-mobile-image);background-position: -15px -1651px;height: 22px;width: 22px;transform: scale(1);
+        margin-bottom: 12px;
+        cursor: pointer;
+    }
+
+    .popup-main .experience-card {
+        color: #000;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        /* margin-bottom:10px; */
+    }
+
+    .popup-main a:hover,
+    .popup-main a:active,
+    .popup-main a:visited {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .popup-main .exp-card1,
+    .popup-main .exp-card2,
+    .popup-main .exp-card3,
+    .popup-main .exp-card4,
+    .popup-main .exp-card5,
+    .popup-main .exp-card6 {
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .popup-main .exp-card1 .icon1,
+    .popup-main .exp-card2 .icon2,
+    .popup-main .exp-card3 .icon3,
+    .popup-main .exp-card4 .icon4,
+    .popup-main .exp-card5 .icon5,
+    .popup-main .exp-card6 .icon6 {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px 0px 0px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--write-experience-card-icon-1);
+    }
+
+    .popup-main .exp-card1 .icon1,
+    .popup-main .exp-card2 .icon2,
+    .popup-main .exp-card3 .icon3,
+    .popup-main .exp-card4 .icon4,
+    .popup-main .exp-card5 .icon5,
+    .popup-main .exp-card6 .icon6 {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px 0px 0px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .popup-main .exp-card1 .icon1 {
+        background: var(--write-experience-card-icon-1);
+    }
+
+    .popup-main .exp-card2 .icon2 {
+        background: var(--write-experience-card-icon-2);
+    }
+
+    .popup-main .exp-card3 .icon3 {
+        background: var(--write-experience-card-icon-3);
+    }
+
+    .popup-main .exp-card4 .icon4 {
+        background: var(--write-experience-card-icon-4);
+    }
+
+    .popup-main .exp-card5 .icon5 {
+        background: var(--write-experience-card-icon-5);
+    }
+
+    .popup-main .exp-card6 .icon6 {
+        background: var(--write-experience-card-icon-6);
+    }
+
+    .popup-main .exp-card6 .icon6-image {
+        background-image: url(https://media.geeksforgeeks.org/auth-dashboard-uploads/compass.svg);
+        width: 46px;
+        height: 30px;
+        background-size: 30px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .popup-main .exp-card1 .icon1-image {
+        background-image: var(--com-extra-icons-mobile-image);
+        width: 46px;
+        height: 28px;
+        background-position: -4px -812px;
+    }
+
+    .popup-main .exp-card2 .icon2-image {
+        background-image: var(--com-extra-icons-mobile-image);
+        width: 46px;
+        height: 28px;
+        background-position: -4px -888px;
+    }
+
+    .popup-main .exp-card3 .icon3-image {
+        background-image: var(--com-extra-icons-mobile-image);
+        width: 46px;
+        height: 28px;
+        background-position: -4px -848px;
+    }
+
+    .popup-main .exp-card4 .icon4-image {
+        background-image: url(https://media.geeksforgeeks.org/auth-dashboard-uploads/competitive.svg);
+        width: 46px;
+        height: 30px;
+        background-size: 30px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .popup-main .exp-card5 .icon5-image {
+        background-image: var(--com-extra-icons-mobile-image);
+        width: 46px;
+        height: 33px;
+        background-position: -4px -1217px;
+    }
+
+
+    .popup-main .exp-card1 .exp-card1-text,
+    .popup-main .exp-card2 .exp-card2-text,
+    .popup-main .exp-card3 .exp-card3-text,
+    .popup-main .exp-card4 .exp-card4-text,
+    .popup-main .exp-card5 .exp-card5-text,
+    .popup-main .exp-card6 .exp-card6-text {
+        display: flex;
+        align-items: center;
+        border-radius: 0px 10px 10px 0px;
+        height: 80px;
+        width: calc(100% - 80px);
+    }
+
+    .popup-main .exp-card1 {
+        justify-content: flex-start;
+        background: var(--write-experience-card-1);
+    }
+
+    .popup-main .exp-card2 {
+        justify-content: flex-start;
+        background: var(--write-experience-card-2);
+    }
+
+    .popup-main .exp-card3 {
+        justify-content: flex-start;
+        background: var(--write-experience-card-3);
+    }
+
+    .popup-main .exp-card4 {
+        justify-content: flex-start;
+        background: var(--write-experience-card-4);
+    }
+
+    .popup-main .exp-card5 {
+        justify-content: flex-start;
+        background: var(--write-experience-card-5);
+    }
+
+    .popup-main .exp-card6 {
+        justify-content: flex-start;
+        background: var(--write-experience-card-6);
+    }
+
+    .popup-main span {
+        font-family: var(--font-primary);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    #popup {
+        display: none;
+        background-color: var(--write-modal-background);
+        padding: 20px;
+        text-align: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1026;
+        width: min(650px, calc(100% - 20px));
+    }
+    .link-container-write{
+        display:flex;
+        flex-direction:column;
+    }
+    .link-container-write > a {
+        margin:7px 0px;
+    }
+    .phrase__container{
+        color:var(--color-gfg);
+        border-radius: 6px;
+        width: 100%;
+        background-color:var(--write-redirect-container);
+        padding: 15px;
+        text-align: justify;
+        font-size:14px;
+    }
+    .phrase__container:hover {
+        color:var(--color-gfg) !important;
+        background-color:var(--write-redirect-container-hover);
+    }
+</style>
+<div class="popup-container">
+        <div id="popup" accesskey="" class="popup-main">
+            <div class="popup-heading">
+                <h2>What kind of Experience do you want to share?</h2>
+                <div class="close-icon share-experience-modal-close"></div>
+            </div>
+            <!-- <span class="description"style="color: #BEBEC2;">Tell us your type of experiences which can help other fellow Geeks for their future events and preparations.</span> -->
+            <div class="experience-card">
+                <a class="exp-card5" href= "https://write.geeksforgeeks.org/posts-new?cid=e8fc46fe-75e7-4a4b-be3c-0c862d655ed0" target="_blank">
+                    <div class="icon5">
+                        <div class="icon5-image"></div>
+                    </div>
+                    <div class="exp-card5-text">
+                        <span style="color: #000;">Interview Experiences</span>
+                    </div>
+                </a>
+                <a class="exp-card1" href="https://write.geeksforgeeks.org/posts-new?cid=82536bdb-84e6-4661-87c3-e77c3ac04ede" target="_blank">
+                    <div class="icon1">
+                        <div class="icon1-image"></div>
+                    </div>
+                    <div class="exp-card1-text">
+                        <span style="color: #000;">Admission Experiences</span>
+                    </div>
+                </a>
+                <a class="exp-card6" href= "https://write.geeksforgeeks.org/posts-new?cid=5219b0b2-7671-40a0-9bda-503e28a61c31" target="_blank">
+                    <div class="icon6">
+                        <div class="icon6-image"></div>
+                    </div>
+                    <div class="exp-card6-text">
+                        <span style="color: #000;">Career Journeys</span>
+                    </div>
+                </a>
+                <a class="exp-card2" href="https://write.geeksforgeeks.org/posts-new?cid=22ae3354-15b6-4dd4-a5b4-5c7a105b8a8f" target="_blank">
+                    <div class="icon2">
+                        <div class="icon2-image"></div>
+                    </div>
+                    <div class="exp-card2-text">
+                        <span style="color: #000;">Work Experiences</span>
+                    </div>
+                </a>
+                <a class="exp-card3" href= "https://write.geeksforgeeks.org/posts-new?cid=c5e1ac90-9490-440a-a5fa-6180c87ab8ae" target="_blank">
+                    <div class="icon3">
+                        <div class="icon3-image"></div>
+                    </div>
+                    <div class="exp-card3-text">
+                        <span style="color: #000;">Campus Experiences</span>
+                    </div>
+                </a>
+                <a class="exp-card4" href= "https://write.geeksforgeeks.org/posts-new?cid=5ebb8fe9-b980-4891-af07-f2d62a9735f2" target="_blank">
+                    <div class="icon4">
+                        <div class="icon4-image"></div>
+                    </div>
+                    <div class="exp-card4-text">
+                        <span style="color: #000;">Competitive Exam Experiences</span>
+                    </div>
+                </a>
+            </div>
+        <!--    <div class="link-container-write">
+                <a href="https://write.geeksforgeeks.org/pick-article?taxonomy=10261&page=1">
+                    <div role="span" class="phrase__container">
+                        Can't choose a topic to write? click here for suggested topics
+                    </div>
+                </a>
+                <a href="https://write.geeksforgeeks.org/posts-new">
+                    <div role="span" class="phrase__container">
+                       Write and publish your own Article
+                    </div>
+                </a>
+            </div> -->
+        </div>
+        <div id="overlay" onclick="toggleExperiencePopup()" style="display: block;min-height: 100vh;min-width: 100vw;position: fixed;top: 0;bottom: 0;right: 0;left: 0;display: none;justify-content: center;align-items: center;background: rgba(0,0,0,.702);z-index: 1025 !important;backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);word-break: keep-all;"></div>
+    </div>
+
+    <script>
+        $('.share-experience-modal').click(function(e){
+            e.preventDefault();
+            var link = $(this).attr('href');
+            toggleExperiencePopup(link);
+        });
+        function toggleExperiencePopup(link) {
+            var popup = document.getElementById("popup");
+            var overlay = document.getElementById("overlay");
+
+            if (window.innerWidth < 992) {
+                window.location.href = link;
+            } else {
+                popup.style.display = (popup.style.display === "block") ? "none" : "block";
+                overlay.style.display = (overlay.style.display === "block") ? "none" : "block";
+            }
+        }
+        $('.share-experience-modal-close').click(function(e){
+            var popup = document.getElementById("popup");
+            popup.style.display = 'none';
+            var overlay = document.getElementById("overlay");
+            overlay.style.display = 'none';
+        });
+</script>
+</div><script type="text/javascript">
+    $(window).on('load', function() {
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ayc7ypwwuk");
+    });
+</script>
+<!-- Chat bot is being shown for these category articles (8 -> linked-list 9172 -> AI-ML-DS, 1789 -> python  4667 -> math)  -->
+
+</body>
+</html>
+
+
+<!-- Dynamic page generated in 0.983 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2024-12-18 16:57:09 -->
+
+<!-- Compression = gzip -->
+<!-- super cache -->
+"""
+base_url = "https://www.geeksforgeeks.org/output-java-program-set-7/?ref=rp"

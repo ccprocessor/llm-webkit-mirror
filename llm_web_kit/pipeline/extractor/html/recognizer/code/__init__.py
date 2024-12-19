@@ -24,32 +24,49 @@ def detect_language(node: etree._Element) -> str:
     return "unkonwn"
 
 
-def get_code(root: etree._Element, by: str) -> list[tuple[str, str]]:
-    if root.tag == "code":
-        language = detect_language(root)
-
-        full_text = "".join(root.itertext())
-        full_text: str = html.escape(full_text)
-        return [
-            (
-                f'<cccode language="{language}" by="{by}">\n{full_text}\n</cccode>',
-                etree.tostring(root),
+def split_code(root: etree._Element, by: str) -> list[tuple[str, str]]:
+    if len(root.getchildren()) == 0:
+        html_str: str = etree.tostring(root).decode()
+        if root.tag == "code":
+            language = detect_language(root)
+            full_text = "".join(root.itertext(None))
+            full_text: str = html.escape(full_text)
+            code_str = (
+                f'<cccode language="{language}" by="{by}">\n{full_text}\n</cccode>'
             )
-        ]
+            return [(html_str, code_str)]
+        return [(html_str, html_str)]
 
     rtn: list[tuple[str, str]] = []
-    for node in root.iter("code"):
+    if root.text:
+        rtn.append((root.text, root.text))
+    for node in root.getchildren():
         assert isinstance(node, etree._Element)
-        language = detect_language(node)
 
-        full_text = "".join(node.itertext())
-        full_text: str = html.escape(full_text)
-        rtn.append(
-            (
-                f'<cccode language="{language}" by="{by}">\n{full_text}\n</cccode>',
-                etree.tostring(root),
+        html_str: str = etree.tostring(node).decode()
+
+        if node.tag == "code":
+            language = detect_language(root)
+            full_text = "".join(node.itertext(None))
+            full_text: str = html.escape(full_text)
+            code_str = (
+                f'<cccode language="{language}" by="{by}">\n{full_text}\n</cccode>'
             )
-        )
+            rtn.append((html_str, code_str))
+            if node.tail:
+                rtn.append((node.tail, node.tail))
+            continue
+
+        if len(list(node.iter("code"))) == 0:
+            rtn.append((html_str, html_str))
+            if node.tail:
+                rtn.append((node.tail, node.tail))
+            continue
+
+        rtn.extend(split_code(node, by))
+        if node.tail:
+            rtn.append((node.tail, node.tail))
+
     return rtn
 
 
@@ -103,10 +120,8 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
         if detect_pre_code(raw_html):
             for pre_node in body.iter("pre"):
-                codes.extend(get_code(pre_node, "pre_code_tag"))
+                codes.extend(split_code(pre_node, "pre_code_tag"))
 
-        if len(codes) == 0:
-            # if maybe_pre_only(raw_html):
-            # pass
-            pass
+        codes = [(code[0].strip(), code[1].strip()) for code in codes]
+
         return codes
