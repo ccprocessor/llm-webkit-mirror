@@ -22,7 +22,7 @@ TEST_CASES = [
         ],
         'expected': [
             ('<ccmath type="latex" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath>',
-             '<span class=mathjax>$$a^2 + b^2 = c^2$$</span>')
+             '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>')
         ]
     }
 ]

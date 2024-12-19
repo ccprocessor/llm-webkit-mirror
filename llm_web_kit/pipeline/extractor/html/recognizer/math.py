@@ -158,12 +158,12 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
-    test_html = (
+    test_html = [(
         '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
         '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'
-    )
+    )]
     print(math_recognizer.recognize(
         'https://www.baidu.com',
-        [test_html],
+        test_html,
         ''
     ))
