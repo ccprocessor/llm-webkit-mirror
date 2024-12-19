@@ -12,6 +12,7 @@ __pycache__
 debug/
 *.ipynb
 .idea
+.python-version
 
 # vscode history
 .history
