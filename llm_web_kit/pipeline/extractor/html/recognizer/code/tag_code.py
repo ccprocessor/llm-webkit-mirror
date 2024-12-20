@@ -1,5 +1,6 @@
 import html
 
+from functools import reduce
 from lxml import etree
 
 from llm_web_kit.pipeline.extractor.html.recognizer.code.common import detect_language
@@ -77,7 +78,13 @@ def get_tree_roots(
                             break
                     root_paths[tree_index] = root_paths[tree_index][:common_node_idx]
 
-    return ["/".join(root_path) for root_path in root_paths]
+    removed = set()
+    root_paths_joined = ["/".join(root_path) for root_path in root_paths]
+    for x in root_paths_joined:
+        for y in root_paths_joined:
+            if len(x) < len(y) and y.startswith(x):
+                removed.add(y)
+    return [x for x in root_paths_joined if x not in removed]
 
 
 def split_tree_by_roots(
@@ -130,9 +137,11 @@ def split_code(body: etree._Element) -> list[tuple[str, str]]:
 
     dist = get_dist(node_paths)
 
-    # TODO: cut dist
-
-    cut = 4
+    cut = 6
 
     tree_roots = get_tree_roots(node_paths, cut, dist)
+
+    # for tree_root in tree_roots:
+    #     print(tree_root)
+
     return split_tree_by_roots(tree, body, tree_roots)
