@@ -6,7 +6,8 @@ from lxml import etree
 def detect_language(node: etree._Element) -> str:
     ptr = node
     while ptr is not None:
-        classes: list[str] = [c for c in ptr.attrib.get("class", "").split(" ") if c]
+        attrib: dict[str, str] = ptr.attrib
+        classes: list[str] = [c for c in attrib.get("class", "").split(" ") if c]
         for c in classes:
             if c.startswith("language-") or c.startswith("lang-"):
                 return c.replace("language-", "").replace("lang-", "")
