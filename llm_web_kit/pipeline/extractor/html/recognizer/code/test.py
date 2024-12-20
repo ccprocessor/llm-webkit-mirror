@@ -23,6 +23,7 @@ testcases: list[ModuleType] = [
 ]
 for testcase in testcases:
     filename = testcase.__name__.split(".")[-1] + ".txt"
+    print(filename)
     codes = cr.recognize(
         testcase.base_url,
         [(testcase.html, testcase.html)],
