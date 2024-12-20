@@ -1,3 +1,5 @@
+exclude: ^tests/llm_web_kit/pipeline/extractor/html/magic_html/assets/
+
 repos:
   - repo: https://github.com/PyCQA/flake8
     rev: 5.0.4
