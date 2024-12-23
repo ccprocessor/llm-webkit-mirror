@@ -32,6 +32,16 @@ def get_dist(node_paths: list[list[str]]) -> list[list[int]]:
                         break
                 d = len(node_paths[i]) + len(node_paths[j]) - common_node_idx * 2
                 dist[i].append(d)
+
+    dist_counter = {}
+    for i in range(len(node_paths)):
+        for j in range(len(node_paths)):
+            if dist[i][j] not in dist_counter:
+                dist_counter[dist[i][j]] = 0
+            dist_counter[dist[i][j]] += 1
+    dist_counter = dict(sorted(list(dist_counter.items())))
+    print(dist_counter)
+
     return dist
 
 
@@ -127,21 +137,41 @@ def split_tree_by_roots(
     return rtn
 
 
-def split_code(body: etree._Element) -> list[tuple[str, str]]:
+def get_node_paths(tree: etree._ElementTree, body: etree._Element) -> list[list[str]]:
+    node_set: set[str] = set()
     node_paths: list[list[str]] = []
-    tree: etree._ElementTree = etree.ElementTree(body)
+
     for code_node in body.iter("code"):
         assert isinstance(code_node, etree._Element)
         node_path: str = tree.getpath(code_node)
+        node_set.add(node_path)
+
+    remove_node_set: set[str] = set()
+    # 如果出现 code 嵌套 code，取最外层
+    for maybe_parent in node_set:
+        for maybe_child in node_set:
+            if len(maybe_parent) < len(maybe_child):
+                if maybe_child.startswith(maybe_parent):
+                    remove_node_set.add(maybe_child)
+    node_set = {node_path for node_path in node_set if node_path not in remove_node_set}
+
+    for node_path in node_set:
         node_paths.append(node_path.split("/"))
+
+    return node_paths
+
+
+def split_code(body: etree._Element) -> list[tuple[str, str]]:
+    tree: etree._ElementTree = etree.ElementTree(body)
+    node_paths = get_node_paths(tree, body)
 
     dist = get_dist(node_paths)
 
-    cut = 6
+    cut = 6  # magic number
 
     tree_roots = get_tree_roots(node_paths, cut, dist)
 
-    # for tree_root in tree_roots:
-    #     print(tree_root)
+    for tree_root in tree_roots:
+        print(tree_root)
 
     return split_tree_by_roots(tree, body, tree_roots)
