@@ -84,6 +84,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 检查是否包含数学公式
             contains_math, math_type = self.contains_math(cc_html)
             if contains_math and not self.is_cc_html(cc_html):
+                # 获取数学公式渲染器
                 math_render = self.get_math_render(raw_html)
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_type, math_render))
             else:
@@ -174,16 +175,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         """
         soup = BeautifulSoup(html, 'html.parser')
+        head = soup.head
 
-        # Check for MathJax
-        mathjax_script = soup.find('script', {'src': lambda x: x and 'mathjax' in x.lower()})
-        if mathjax_script:
-            return MATH_RENDER_MAP['MATHJAX']
+        if head:
+            # Check for MathJax
+            mathjax_script = head.find('script', {'src': lambda x: x and 'mathjax' in x.lower()})
+            if mathjax_script:
+                return MATH_RENDER_MAP['MATHJAX']
 
-        # Check for KaTeX
-        katex_link = soup.find('link', {'href': lambda x: x and 'katex' in x.lower()})
-        if katex_link:
-            return MATH_RENDER_MAP['KATEX']
+            # Check for KaTeX
+            katex_link = head.find('link', {'href': lambda x: x and 'katex' in x.lower()})
+            if katex_link:
+                return MATH_RENDER_MAP['KATEX']
 
         return None
 
