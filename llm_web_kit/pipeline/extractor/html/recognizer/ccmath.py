@@ -108,7 +108,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 检查是否包含数学公式
             contains_math, math_type = self.contains_math(cc_html)
             if contains_math and not self.is_cc_html(cc_html):
-                # 获取数学公式渲染器
                 math_render = self.get_math_render(raw_html)
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_type, math_render))
             else:
