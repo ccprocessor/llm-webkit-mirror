@@ -63,12 +63,20 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         示例：
         main_html_lst = [
             ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-            ('<pre>Some text with a formula $$x = 5$$ in it.</pre>', '<pre>Some text with a formula $$x = 5$$ in it.</pre>'),
+            ('<pre>Some text with a formula $$x = 5$$ in it.</pre>',
+             '<pre>Some text with a formula $$x = 5$$ in it.</pre>'),
+            ('<p>爱因斯坦质能方程的公式是：<math>E=mc^2</math>其中<math>mc^2</math>代表了...E是能量。</p>',
+             '<p>爱因斯坦质能方程的公式是：<math>E=mc^2</math>其中<math>mc^2</math>代表了...E是能量。</p>')
         ]
         Returns:
         [
             ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-            ('<ccmath type="latex" by="">Some text with a formula $$x = 5$$ in it.</ccmath>', '<pre>Some text with a formula $$x = 5$$ in it.</pre>'),
+            ('<ccmath type="latex" by="">Some text with a formula $$x = 5$$ in it.</ccmath>',
+             '<pre>Some text with a formula $$x = 5$$ in it.</pre>'),
+            ('<p>爱因斯坦质能方程的公式是：<ccmath type="mathml" by="mathjax">E=mc^2</ccmath>'
+             '其中<ccmath type="mathml" by="mathjax">mc^2</ccmath>代表了...E是能量。</p>',
+             '<p>爱因斯坦质能方程的公式是：<math>E=mc^2</math>其中<math>mc^2</math>'
+             '代表了...E是能量。</p>')
         ]
         """
         result = []
@@ -76,6 +84,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 检查是否包含数学公式
             contains_math, math_type = self.contains_math(cc_html)
             if contains_math and not self.is_cc_html(cc_html):
+                # 获取数学公式渲染器
                 math_render = self.get_math_render(raw_html)
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_type, math_render))
             else:
@@ -166,16 +175,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         """
         soup = BeautifulSoup(html, 'html.parser')
+        head = soup.head
 
-        # Check for MathJax
-        mathjax_script = soup.find('script', {'src': lambda x: x and 'mathjax' in x.lower()})
-        if mathjax_script:
-            return MATH_RENDER_MAP['MATHJAX']
+        if head:
+            # Check for MathJax
+            mathjax_script = head.find('script', {'src': lambda x: x and 'mathjax' in x.lower()})
+            if mathjax_script:
+                return MATH_RENDER_MAP['MATHJAX']
 
-        # Check for KaTeX
-        katex_link = soup.find('link', {'href': lambda x: x and 'katex' in x.lower()})
-        if katex_link:
-            return MATH_RENDER_MAP['KATEX']
+            # Check for KaTeX
+            katex_link = head.find('link', {'href': lambda x: x and 'katex' in x.lower()})
+            if katex_link:
+                return MATH_RENDER_MAP['KATEX']
 
         return None
 
@@ -186,8 +197,16 @@ if __name__ == '__main__':
         '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
         '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'
     )]
+    raw_html = (
+        '<head> '
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
+        '?config=TeX-MML-AM_CHTML"> </script> '
+        '</head> '
+        '<p>This is a test.</p> '
+        '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>'
+    )
     print(math_recognizer.recognize(
         'https://www.baidu.com',
         test_html,
-        ''
+        raw_html
     ))
