@@ -25,6 +25,32 @@ class BaseHTMLElementRecognizer(ABC):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def to_content_list_node(self, content: str) -> dict:
+        """将content转换成content_list_node.
+        每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
+        例如代码的返回格式：
+        ```json
+        {
+            "type": "code",
+            "bbox": [0, 0, 50, 50],
+            "raw_content": "<code>def add(a, b):\n    return a + b</code>" // 原始的html代码
+            "content": {
+                  "code_content": "def add(a, b):\n    return a + b",
+                  "language": "python",
+                  "by": "hilightjs"
+            }
+        }
+        ```
+
+        Args:
+            content: str: 要转换的content
+
+        Returns:
+            dict: content_list_node
+        """
+        raise NotImplementedError
+
     @staticmethod
     def html_split_by_tags(html_segment: str, split_tag_name:str | list, parent=False) -> List[Tuple[str,str]]:
         """根据split_tag_name将html分割成不同的部分.
