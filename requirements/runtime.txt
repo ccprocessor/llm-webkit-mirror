@@ -1,4 +1,3 @@
-beautifulsoup4==4.12.2
 boto3==1.28.43
 commentjson==0.9.0
 fasttext==0.9.3

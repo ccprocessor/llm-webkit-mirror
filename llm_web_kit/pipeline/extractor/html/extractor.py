@@ -7,11 +7,13 @@ from llm_web_kit.input.datajson import ContentList, DataJson
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
 from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
     AudioRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.code import CodeRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
+    CodeRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
+    MathRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.image import \
     ImageRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.list import ListRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.math import MathRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.table import \

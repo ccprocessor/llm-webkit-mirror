@@ -1,7 +1,13 @@
 """基本的元素解析类."""
-
+import inspect
 from abc import ABC, abstractmethod
+from copy import deepcopy
 from typing import List, Tuple
+
+from lxml import etree
+from lxml.etree import _Element as HtmlElement
+
+from llm_web_kit.libs.logger import mylogger
 
 
 class BaseHTMLElementRecognizer(ABC):
@@ -18,3 +24,98 @@ class BaseHTMLElementRecognizer(ABC):
         Returns:
         """
         raise NotImplementedError
+
+    @staticmethod
+    def html_split_by_tags(html_segment: str, split_tag_name:str | list, parent=False) -> List[Tuple[HtmlElement,str]]:
+        """根据split_tag_name将html分割成不同的部分.
+
+        Args:
+            html_segment: str: 要分割的html源码
+            split_tag_name: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
+            parent: bool: False时候，只分割split_tag_name标签，True时候，分割split_tag_name标签的所有上级标签以及属性
+
+        Returns:
+             List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
+        """
+        def __contain_wanted_tag(el: HtmlElement, tags_to_check:list) -> bool:
+            # 遍历需要检查的标签列表
+            for tag in tags_to_check:
+                if el.tag == tag:  # 如果当前节点就是我们想要的标签，直接返回即可
+                    mylogger.info(f'{el.tag} is wanted tag: {tag}')
+                    return True
+                # 使用XPath查找当前节点下是否包含我们想要的标签
+                elements = el.xpath(f'.//{tag}')
+                if elements:
+                    mylogger.info(f'{el.tag} contain wanted tag: {tag}')
+                    return True
+
+            mylogger.info(f'{el.tag} not contain wanted tag: {tags_to_check}')
+            return False
+
+        def __push_el(lst: List[Tuple[HtmlElement,str]], el: HtmlElement, split_tail=False) -> List[Tuple[HtmlElement,str]]:
+            """将节点和节点的html字符串添加到列表中, 此处着重处理了节点的text和tail部分 ```html.
+
+            <p>
+            这里没有在任何内部标签中，出现在p的开头，叫做p的text属性
+            <img src="http..."/> 这里是img的tail属性
+            </p>
+            这里呢也是p的tail属性
+            ```
+
+            Args:
+                lst: list: 要添加的列表
+                el: HtmlElement: 节点
+                split_tail: bool: tail 是否单独作为一个节点
+
+            Returns:
+                List[Tuple[HtmlElement,str]]: 节点和节点的html字符串
+            """
+            tail_text = el.tail
+            new_el = deepcopy(el)
+            if split_tail:
+                new_el.tail = None
+                html_source_segment = etree.tostring(new_el, encoding='utf-8').decode()
+            else:
+                html_source_segment = etree.tostring(el, encoding='utf-8').decode()
+
+            lst.append((new_el, html_source_segment))
+            if tail_text and split_tail:
+                lst.append((tail_text, tail_text))
+
+            return lst
+
+        def __split_html(root_el: HtmlElement, wanted_tag_names:list) -> List[Tuple[HtmlElement,str]]:
+            """递归分割html.
+
+            Args:
+                root_el: HtmlElement: html节点
+                wanted_tag_names: str: 分割标签名
+
+            Returns:
+                List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
+            """
+            assert isinstance(wanted_tag_names, list), f'{__file__}:{inspect.currentframe().f_back.f_lineno} wanted_tag_names must be a list'
+            parts = []
+            if not __contain_wanted_tag(root_el, wanted_tag_names):  # 这个节点里没有包含想要分割的标签，就原样返回
+                __push_el(parts, root_el, split_tail=False)
+            else:  # 这个节点里肯定包含了我们想要分割的标签
+                if root_el.tag in wanted_tag_names:  # 如果这个节点就是我们想要的标签，直接返回即可
+                    __push_el(parts, root_el, split_tail=True)
+                else:  # 继续逐层分割
+                    # 先将当前节点的text部分添加到列表中
+                    if root_el.text and root_el.text.strip():
+                        parts.append((root_el.text.strip(), root_el.text))
+                    for child_el in root_el.iterchildren():  # 遍历直接子节点
+                        lst = __split_html(child_el, wanted_tag_names)
+                        parts = parts + lst  # 将子节点的分割结果合并到当前节点
+                    if root_el.tail and root_el.tail.strip():  # 将当前节点的tail部分添加到列表中
+                        parts.append((root_el.tail.strip(), root_el.tail))
+
+            return parts
+
+        if isinstance(split_tag_name, str):
+            split_tag_name = [split_tag_name]
+        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+        root = etree.HTML(html_segment, parser)
+        html_parts = __split_html(root, split_tag_name)
+        return html_parts
