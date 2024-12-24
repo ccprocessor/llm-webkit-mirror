@@ -143,7 +143,8 @@
     "raw_content": "<code>def add(a, b):\n    return a + b</code>"
     "content": {
           "code_content": "def add(a, b):\n    return a + b",
-          "language": "python"
+          "language": "python",
+          "by": "hilightjs"
     }
 }
 ```
@@ -155,6 +156,7 @@
 | raw_content          | string | 原始文本内容                  | 可选     |
 | content.code_content | string | 干净的，格式化过的代码内容    | 是       |
 | content.language     | string | 代码语言，python\\cpp\\php... | 可选     |
+| content.by           | string | 哪种代码高亮工具              | 规则     |
 
 ### 公式段
 
@@ -165,7 +167,8 @@
     "raw_content": "a^2 + b^2 = c^2",
     "content": {
           "math_content": "a^2 + b^2 = c^2",
-          "math_type": "kelatex"
+          "math_type": "kelatex",
+          "by": "mathjax"
     }
 }
 ```
@@ -177,6 +180,7 @@
 | raw_content          | string | 原始文本内容                                                    | 可选     |
 | content.math_content | string | 干净的，格式化过的公式内容。无论是行内还是行间公式两边都不能有$ | 是       |
 | content.math_type    | string | 公式类型，kelatex\\mathml\\asciimath                            | 可选     |
+| content.by           | string | 哪种检测方法检测出来的                                          | 可选     |
 
 ### 图片段
 

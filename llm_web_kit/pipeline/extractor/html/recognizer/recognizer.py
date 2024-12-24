@@ -26,7 +26,7 @@ class BaseHTMLElementRecognizer(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def html_split_by_tags(html_segment: str, split_tag_name:str | list, parent=False) -> List[Tuple[HtmlElement,str]]:
+    def html_split_by_tags(html_segment: str, split_tag_name:str | list, parent=False) -> List[Tuple[str,str]]:
         """根据split_tag_name将html分割成不同的部分.
 
         Args:
@@ -113,9 +113,15 @@ class BaseHTMLElementRecognizer(ABC):
 
             return parts
 
-        if isinstance(split_tag_name, str):
+        if isinstance(split_tag_name, str):  # 如果参数是str，转换成list
             split_tag_name = [split_tag_name]
         parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
         root = etree.HTML(html_segment, parser)
         html_parts = __split_html(root, split_tag_name)
-        return html_parts
+        return_parts = []
+        for p in html_parts:
+            if isinstance(p[0], str):
+                return_parts.append([p[0], p[1]])
+            else:
+                return_parts.append((etree.tostring(p[0], encoding='utf-8').decode(), p[1]))
+        return return_parts
