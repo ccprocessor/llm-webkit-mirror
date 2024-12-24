@@ -12,3 +12,10 @@ class TestBaseHTMLElementRecognizer(unittest.TestCase):
 
         result = BaseHTMLElementRecognizer.html_split_by_tags(html_content, ['img'])
         assert len(result) == 14
+
+    def test_html_split_by_tags_2(self):
+        with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/cccode.html', 'r') as file:
+            html_content = file.read()
+
+        result = BaseHTMLElementRecognizer.html_split_by_tags(html_content, ['cccode'])
+        assert len(result) == 3

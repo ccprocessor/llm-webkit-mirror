@@ -79,8 +79,8 @@ class BaseHTMLElementRecognizer(ABC):
                 html_source_segment = etree.tostring(el, encoding='utf-8').decode()
 
             lst.append((new_el, html_source_segment))
-            if tail_text and split_tail:
-                lst.append((tail_text, tail_text))
+            if tail_text and split_tail and tail_text.strip():
+                lst.append((tail_text.strip(), tail_text.strip()))
 
             return lst
 
