@@ -73,3 +73,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                 rtn.append((etree.tostring(x).decode(), html_str))
 
         return rtn
+
+    @override
+    def to_content_list_node(self, content: str) -> dict:
+        raise NotImplementedError

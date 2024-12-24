@@ -3,6 +3,7 @@ from lxml import etree
 
 # 对 prismjs 和 highlightjs 有效
 # 但是如果没写，那没有办法
+# TODO: guesslang ?
 def detect_language(node: etree._Element) -> str:
     ptr = node
     while ptr is not None:
