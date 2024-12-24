@@ -1,6 +1,7 @@
 import unittest
 
-from llm_web_kit.pipeline.extractor.html.recognizer.math import MathRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
+    MathRecognizer
 
 TEST_CASES = [
     # 基本公式测试用例
