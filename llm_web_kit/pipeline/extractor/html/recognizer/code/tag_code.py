@@ -1,6 +1,5 @@
 import html
 
-from functools import reduce
 from lxml import etree
 
 from llm_web_kit.pipeline.extractor.html.recognizer.code.common import detect_language
@@ -97,13 +96,13 @@ def get_tree_roots(
     return [x for x in root_paths_joined if x not in removed]
 
 
-def split_tree_by_roots(
+def modify_tree_by_roots(
     root: etree._ElementTree,
     node: etree._Element,
     tree_roots: list[str],
-) -> list[tuple[str, str]]:
+) -> None:
     node_path: str = root.getpath(node)
-    node_path = node_path.removeprefix("/html")
+    # node_path = node_path.removeprefix("/html")
     hit = False
     prefix_hit = False
     for tree_root in tree_roots:
@@ -113,28 +112,22 @@ def split_tree_by_roots(
             hit = True
 
     if not prefix_hit:
-        html_str: str = etree.tostring(node).decode()
-        return [(html_str, html_str)]
+        return
 
     if hit:
         language = detect_language(node)
-        html_str: str = etree.tostring(node).decode()
         full_text = "".join(node.itertext(None))
-        full_text: str = html.escape(full_text)
-        code_str = (
-            f'<cccode language="{language}" by="tag_code">\n{full_text}\n</cccode>'
-        )
-        return [(html_str, code_str)]
 
-    rtn: list[tuple[str, str]] = []
-    if node.text:
-        rtn.append((node.text, node.text))
+        node.clear(keep_tail=True)
+        node.set("language", language)
+        node.set("by", "tag_pre_code")
+        node.tag = "cccode"  # type: ignore
+        node.text = full_text  # type: ignore
+        return
+
     for cnode in node.getchildren():
         assert isinstance(cnode, etree._Element)
-        rtn.extend(split_tree_by_roots(root, cnode, tree_roots))
-        if cnode.tail:
-            rtn.append((cnode.tail, cnode.tail))
-    return rtn
+        modify_tree_by_roots(root, cnode, tree_roots)
 
 
 def get_node_paths(tree: etree._ElementTree, body: etree._Element) -> list[list[str]]:
@@ -161,9 +154,9 @@ def get_node_paths(tree: etree._ElementTree, body: etree._Element) -> list[list[
     return node_paths
 
 
-def split_code(body: etree._Element) -> list[tuple[str, str]]:
-    tree: etree._ElementTree = etree.ElementTree(body)
-    node_paths = get_node_paths(tree, body)
+def modify_tree(root: etree._Element) -> None:
+    tree: etree._ElementTree = etree.ElementTree(root)
+    node_paths = get_node_paths(tree, root)
 
     dist = get_dist(node_paths)
 
@@ -174,4 +167,4 @@ def split_code(body: etree._Element) -> list[tuple[str, str]]:
     for tree_root in tree_roots:
         print(tree_root)
 
-    return split_tree_by_roots(tree, body, tree_roots)
+    modify_tree_by_roots(tree, root, tree_roots)

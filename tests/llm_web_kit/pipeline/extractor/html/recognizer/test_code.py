@@ -65,9 +65,7 @@ class TestMathRecognizer(unittest.TestCase):
             base_url = test_case["input"][1]
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            for part in parts:
-                if "cccode" in part[1]:
-                    print(part)
+            # TODO: add assertions
 
 
 if __name__ == "__main__":
