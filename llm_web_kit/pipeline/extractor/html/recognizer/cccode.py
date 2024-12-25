@@ -63,17 +63,25 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
         html_str: str = etree.tostring(root).decode()
 
-        rtn = []
-        resp = BaseHTMLElementRecognizer.html_split_by_tags(html_str, "cccode")
-
-        for x, html_str in resp:
-            if type(x) is str:
-                rtn.append((x, html_str))
-            else:
-                rtn.append((etree.tostring(x).decode(), html_str))
-
-        return rtn
+        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, "cccode")
 
     @override
     def to_content_list_node(self, content: str) -> dict:
-        raise NotImplementedError
+        code_node: etree._Element = etree.fromstring(content, None)
+
+        d = {
+            "type": "code",
+            # "bbox": [],
+            "raw_content": content,
+            "content": {
+                "code_content": code_node.text,
+            },
+        }
+
+        if lang := code_node.get("language", None):
+            d["content"]["language"] = lang
+
+        if by := code_node.get("by", None):
+            d["content"]["by"] = by
+
+        return d

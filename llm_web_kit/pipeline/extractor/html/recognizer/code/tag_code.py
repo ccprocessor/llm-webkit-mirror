@@ -2,7 +2,9 @@ import html
 
 from lxml import etree
 
-from llm_web_kit.pipeline.extractor.html.recognizer.code.common import detect_language
+from llm_web_kit.pipeline.extractor.html.recognizer.code.common import (
+    replace_node_by_cccode,
+)
 
 
 def detect(body: etree._Element) -> bool:
@@ -115,14 +117,7 @@ def modify_tree_by_roots(
         return
 
     if hit:
-        language = detect_language(node)
-        full_text = "".join(node.itertext(None))
-
-        node.clear(keep_tail=True)
-        node.set("language", language)
-        node.set("by", "tag_pre_code")
-        node.tag = "cccode"  # type: ignore
-        node.text = full_text  # type: ignore
+        replace_node_by_cccode(node, "tag_code")
         return
 
     for cnode in node.getchildren():
