@@ -103,8 +103,8 @@ class TestMathRecognizer(unittest.TestCase):
             parts = [part for part in parts if "cccode" in part]
             # self.assertEqual(len(parts), len(test_case["expected"]))
             print(len(test_case["expected"]))
-            for part in parts:
-                print(parts[0], parts[1])
+            for answer_path in test_case["expected"]:
+                answer = base_dir.joinpath(answer_path).read_text()
                 # self.assertEqual()
 
 
