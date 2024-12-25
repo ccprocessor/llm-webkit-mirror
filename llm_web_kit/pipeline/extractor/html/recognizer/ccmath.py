@@ -1,9 +1,17 @@
+import html
 import re
 from typing import List, Tuple
 
+import lxml.etree
 from bs4 import BeautifulSoup
+from lxml.etree import Element
 from overrides import override
+from py_asciimath.translator.translator import ASCIIMath2Tex
 
+from llm_web_kit.libs.logger import logger
+from llm_web_kit.pipeline.extractor.html.magic_html.utils import (iter_node,
+                                                                  load_html)
+from llm_web_kit.pipeline.extractor.html.recognizer.common import text_strip
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 
@@ -27,7 +35,7 @@ LATEX_PATTERNS = [
     r'\\begin{equation}(.*?)\\end{equation}',  # 匹配 equation 环境
     r'\\begin{align}(.*?)\\end{align}',        # 匹配 align 环境
     r'\\[(.*?)\\]',    # 匹配 \[...\]
-    r'\\((.*?)\\)',    # 匹配 \(...\)
+    r'\\((.*?)\\)',    # 匹����� \(...\)
 ]
 
 # 数学标记语言
@@ -42,6 +50,9 @@ MATH_RENDER_MAP = {
     'MATHJAX': 'mathjax',
     'KATEX': 'katex',
 }
+
+
+asciimath2tex = ASCIIMath2Tex(log=False)
 
 
 class MathRecognizer(BaseHTMLElementRecognizer):
@@ -99,10 +110,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         return False, None
 
-    def is_cc_html(self, html: str) -> bool:
-        """判断html片段是否是cc标签."""  # 这里需要判断是否包含自定义cc标签，应该需要一个全局通用方法
-        return html.startswith('<cc')
-
     def process_ccmath_html(self, cc_html: str, o_html: str, math_type: str, math_render: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
 
@@ -113,15 +120,39 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns:
             List[Tuple[str, str]]: 处理后的HTML对
         """
-        soup = BeautifulSoup(cc_html, 'html.parser')
-        content = soup.get_text(strip=True)
+        # node是从cc_html中解析出来的lxml节点
+        tree = load_html(cc_html)
+        if tree is None:
+            raise ValueError(f'Failed to load html: {cc_html}')
 
-        # 确定数学公式的类型和处理器
+        for node in iter_node(tree):
+            # 如果节点是span标签，并且class属性包含mathjax，MathJax，mathjax_display，MathJax_Display等
+            if (node.tag == 'span' and node.get('class') and
+               any('mathjax' in cls.lower() for cls in node.get('class').split())):
+                parent = node.getparent()
 
-        # 创建新的 ccmath 标签
-        new_cc_html = f'<ccmath type="{math_type}" by="{math_render}">{content}</ccmath>'
+                try:
+                    # Get the inner text of the mathjax tag
+                    text = node.text
+                    if text_strip(text):
+                        text = html.unescape(text)
+                        # Create a new ccmath tag
+                        new_cc_html = Element('ccmath')
+                        new_cc_html.text = text
+                        new_cc_html.set('type', math_type)
+                        new_cc_html.set('by', math_render)
+                        # Then, we need to replace the mathjax tag with the new span tag
+                        if parent is not None:
+                            if text_strip(node.tail):
+                                new_cc_html.tail = node.tail
+                                parent.replace(node, new_cc_html)
+                    else:
+                        logger.info(f'Processing mathjax tag: {node.text}')
+                        new_cc_html = node
+                except Exception as e:
+                    logger.error(f'Error processing mathjax tag: {e}')
 
-        return [(new_cc_html, o_html)]
+        return [(lxml.etree.tostring(new_cc_html, encoding='unicode'), o_html)]
 
     # def contains_mathml(self, html: str) -> bool:
     #     """检查html中是否包含mathml标签."""
@@ -172,20 +203,21 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
         Katex:
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-
         """
-        soup = BeautifulSoup(html, 'html.parser')
-        head = soup.head
-
-        if head:
-            # Check for MathJax
-            mathjax_script = head.find('script', {'src': lambda x: x and 'mathjax' in x.lower()})
-            if mathjax_script:
+        tree = load_html(html)
+        if tree is None:
+            return None
+        # 查找head标签
+        head = tree.find('head')
+        if head is not None:
+            # 检查 MathJax
+            mathjax_script = head.find('.//script[@src]')
+            if mathjax_script is not None and 'mathjax' in mathjax_script.get('src', '').lower():
                 return MATH_RENDER_MAP['MATHJAX']
 
-            # Check for KaTeX
-            katex_link = head.find('link', {'href': lambda x: x and 'katex' in x.lower()})
-            if katex_link:
+            # 检查 KaTeX
+            katex_link = head.find('.//link[@href]')
+            if katex_link is not None and 'katex' in katex_link.get('href', '').lower():
                 return MATH_RENDER_MAP['KATEX']
 
         return None

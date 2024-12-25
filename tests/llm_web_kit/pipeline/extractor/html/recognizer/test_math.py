@@ -12,25 +12,37 @@ TEST_CASES = [
         ],
         'raw_html': '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
         'expected': [
-            ('<ccmath type="latex" by="None">Some text with a formula $$x = 5$$ in it.</ccmath>',
+            ('<ccmath type="latex">Some text with a formula $$x = 5$$ in it.</ccmath>',
              '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>')
         ]
     },
-    # html_list包含多个html
+    # 已经包含cccode标签
+    {
+        'input': [
+            ('<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>',
+             '<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>')
+        ],
+        'raw_html': '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
+        'expected': [
+            ('<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>',
+             '<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>')
+        ]
+    },
+    # html_list包含多个html，class=MathJax_Display
     {
         'input': [
             ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-            ('<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>',
-             '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>')
+            ('<span class=Mathjax_display>$$a^2 + b^2 = c^2$$</span>',
+             '<span class=Mathjax_display>$$a^2 + b^2 = c^2$$</span>')
         ],
         'raw_html': '<p>This is a test.</p> <span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>',
         'expected': [
             ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-            ('<ccmath type="latex" by="None">$$a^2 + b^2 = c^2$$</ccmath>',
-             '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>')
+            ('<ccmath type="latex">$$a^2 + b^2 = c^2$$</ccmath>',
+             '<span class=Mathjax_display>$$a^2 + b^2 = c^2$$</span>')
         ]
     },
-    # raw_html包含mathjax渲染器定义
+    # raw_html包含mathjax渲染器定义，class=mathjax_display
     {
         'input': [
             ('<p>This is a test.</p>', '<p>This is a test.</p>'),

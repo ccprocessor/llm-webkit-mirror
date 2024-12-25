@@ -8,6 +8,7 @@ from lxml import etree
 from lxml.etree import _Element as HtmlElement
 
 from llm_web_kit.libs.logger import mylogger
+from llm_web_kit.pipeline.extractor.html.magic_html.utils import load_html
 
 
 class BaseHTMLElementRecognizer(ABC):
@@ -156,3 +157,14 @@ class BaseHTMLElementRecognizer(ABC):
             else:
                 return_parts.append((etree.tostring(p[0], encoding='utf-8').decode(), p[1]))
         return return_parts
+
+    @staticmethod
+    def is_cc_html(html: str) -> bool:
+        """判断html片段是否是cc标签."""
+        # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
+        tree = load_html(html)
+        if tree is None:
+            return False
+        if tree.tag.startswith('cc'):
+            return True
+        return False
