@@ -3,10 +3,10 @@ from typing import List, Tuple
 from lxml import etree
 from overrides import override
 
-from llm_web_kit.pipeline.extractor.html.recognizer.code import tag_code, tag_pre_code
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
-    BaseHTMLElementRecognizer,
-)
+from llm_web_kit.pipeline.extractor.html.recognizer.code import (tag_code,
+                                                                 tag_pre_code)
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
+    BaseHTMLElementRecognizer
 
 
 class CodeRecognizer(BaseHTMLElementRecognizer):
@@ -59,25 +59,25 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
         html_str: str = etree.tostring(root).decode()
 
-        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, "cccode", True)
+        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode', True)
 
     @override
-    def to_content_list_node(self, content: str) -> dict:
-        code_node: etree._Element = etree.fromstring(content, None)
+    def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
+        code_node: etree._Element = etree.fromstring(parsed_content, None)
 
         d = {
-            "type": "code",
+            'type': 'code',
             # "bbox": [],
-            "raw_content": content,
-            "content": {
-                "code_content": code_node.text,
+            'raw_content': raw_html_segment,
+            'content': {
+                'code_content': code_node.text,
             },
         }
 
-        if lang := code_node.get("language", None):
-            d["content"]["language"] = lang
+        if lang := code_node.get('language', None):
+            d['content']['language'] = lang
 
-        if by := code_node.get("by", None):
-            d["content"]["by"] = by
+        if by := code_node.get('by', None):
+            d['content']['by'] = by
 
         return d
