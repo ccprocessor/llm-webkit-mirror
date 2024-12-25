@@ -26,7 +26,7 @@ class BaseHTMLElementRecognizer(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def to_content_list_node(self, content: str) -> dict:
+    def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -44,7 +44,9 @@ class BaseHTMLElementRecognizer(ABC):
         ```
 
         Args:
-            content: str: 要转换的content
+            base_url: str: 基础url
+            parsed_content: str: 被解析后的内容<ccmath ...>...</ccmath>等
+            raw_html_segment: str: 原始html片段
 
         Returns:
             dict: content_list_node
@@ -62,6 +64,9 @@ class BaseHTMLElementRecognizer(ABC):
 
         Returns:
              List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
+
+        TODO
+        1. <script>和<style>中出现的 <, >, & 等字符会被转义，需要跳过，但是目前没有看到影响正文提取，因此暂时不处理
         """
         def __contain_wanted_tag(el: HtmlElement, tags_to_check:list) -> bool:
             # 遍历需要检查的标签列表

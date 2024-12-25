@@ -156,7 +156,7 @@
 | raw_content          | string | 原始文本内容                  | 可选     |
 | content.code_content | string | 干净的，格式化过的代码内容    | 是       |
 | content.language     | string | 代码语言，python\\cpp\\php... | 可选     |
-| content.by           | string | 哪种代码高亮工具              | 规则     |
+| content.by           | string | 哪种代码高亮工具 、自定义规则 | 是       |
 
 ### 公式段
 
@@ -240,7 +240,7 @@
 | content.title   | string | 音频的title属性    | 可选     |
 | content.caption | string | 音频的caption属性  | 可选     |
 
-## 视频段
+### 视频段
 
 ```json
 {

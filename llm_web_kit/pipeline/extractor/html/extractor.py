@@ -4,6 +4,7 @@ from typing import List, Tuple
 from overrides import override
 
 from llm_web_kit.input.datajson import ContentList, DataJson
+from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
 from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
     AudioRecognizer
@@ -45,6 +46,18 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         self.__list_recognizer:BaseHTMLElementRecognizer = ListRecognizer()
         self.__title_recognizer:BaseHTMLElementRecognizer = TitleRecognizer()
         self.__paragraph_recognizer:BaseHTMLElementRecognizer = TextParagraphRecognizer()
+
+        self.__to_content_list_mapper = {
+            '<cccode'[:7]: self.__code_recognizer,
+            '<ccmath'[:7]: self.__math_recognizer,
+            '<ccimag'[:7]: self.__image_recognizer,
+            '<ccaudi'[:7]: self.__audio_recognizer,
+            '<ccvide'[:7]: self.__video_recognizer,
+            '<cctabl'[:7]: self.__table_recognizer,
+            '<cclist'[:7]: self.__list_recognizer,
+            '<cctitl'[:7]: self.__title_recognizer,
+            '<cctext'[:7]: self.__paragraph_recognizer
+        }
 
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
@@ -244,5 +257,16 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         Returns:
         """
+        # 在这个地方，根据tuple中的第一个元素的类型，将其转换为content_list中的元素，转换之后如果还有剩余的元素，则证明解析出现问题，有内容缺失的风险。
+        content_list = ContentList([])
+        for parsed_html, raw_html in html_lst:
+            tag_prefix = parsed_html[:7]
+            parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(tag_prefix)
+            if parser:
+                node = parser.to_content_list_node(base_url, parsed_html, raw_html)
+                content_list.append(node)
+            else:
+                mylogger.warning(f'无法识别的html标签：{tag_prefix}, {parsed_html}')
+                # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
 
-        raise NotImplementedError
+        return content_list
