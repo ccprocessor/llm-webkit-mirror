@@ -32,6 +32,12 @@ def detect_language(node: etree._Element) -> Optional[str]:
 
 def replace_node_by_cccode(node: etree._Element, by: str) -> None:
     language = detect_language(node)
+
+    # 让使用 br 换行的代码可以正确换行
+    for br in node.xpath("*//br"):
+        assert isinstance(br, etree._Element)
+        br.tail = ("\n" + br.tail) if br.tail else ("\n")  # type: ignore
+
     full_text = "".join(node.itertext(None))
 
     node.clear(keep_tail=True)

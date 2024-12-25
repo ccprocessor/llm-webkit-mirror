@@ -33,11 +33,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         assert main_html_lst[0][0] == main_html_lst[0][1]
 
         main_html = main_html_lst[0][0]
-        html_parser = etree.HTMLParser()
-        # 有一些代码用 br 换行
-        main_html = main_html.replace("<br>", "\n")
-        main_html = main_html.replace("<br/>", "\n")
-        root: etree._Element = etree.fromstring(main_html, html_parser)
+        root: etree._Element = etree.fromstring(main_html, etree.HTMLParser())
 
         while True:
             # 最常见:

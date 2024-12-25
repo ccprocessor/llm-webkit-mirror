@@ -1,5 +1,3 @@
-import html
-
 from lxml import etree
 
 from llm_web_kit.pipeline.extractor.html.recognizer.code.common import (
@@ -104,7 +102,6 @@ def modify_tree_by_roots(
     tree_roots: list[str],
 ) -> None:
     node_path: str = root.getpath(node)
-    # node_path = node_path.removeprefix("/html")
     hit = False
     prefix_hit = False
     for tree_root in tree_roots:
