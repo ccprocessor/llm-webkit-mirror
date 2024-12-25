@@ -59,30 +59,17 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 if isinstance(child, Tag):
                     if child.name == 'table':
                         table_type = "simple"
-                        # Check if the current table is complex by iterating
-                        # only within this table
                         for td in child.find_all('td', recursive=True):
-                            if int(
-                                td.get(
-                                    'rowspan',
-                                    1)) > 1 or int(
-                                td.get(
-                                    'colspan',
-                                    1)) > 1:
+                            if int(td.get('rowspan', 1)) > 1 or int(td.get('colspan', 1)) > 1:
                                 table_type = "complex"
                                 break
-
                         cc_table = f'<cctable type="{table_type}">{child.decode()}</cctable>'
                         o_table = str(child)
                         result.append((True, cc_table, o_table))
                     else:
-                        # Process direct children of non-table tags
                         process_direct_children(child)
-                elif str(element).strip():  # Only include non-empty text nodes directly under a tag
+                elif str(element).strip(): 
                     result.append((False, str(element), str(element)))
-
-        # Start processing from the root of the document, but only process its
-        # direct children
         for child in soup.body.children if soup.body else soup.children:
             process_direct_children(child)
 
