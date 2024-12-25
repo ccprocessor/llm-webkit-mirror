@@ -35,7 +35,7 @@ LATEX_PATTERNS = [
     r'\\begin{equation}(.*?)\\end{equation}',  # 匹配 equation 环境
     r'\\begin{align}(.*?)\\end{align}',        # 匹配 align 环境
     r'\\[(.*?)\\]',    # 匹配 \[...\]
-    r'\\((.*?)\\)',    # 匹����� \(...\)
+    r'\\((.*?)\\)',    # 匹配 \(...\)
 ]
 
 # 数学标记语言
@@ -51,6 +51,19 @@ MATH_RENDER_MAP = {
     'KATEX': 'katex',
 }
 
+# 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
+EQUATION_INLINE = 'equation-inline'
+EQUATION_DISPLAY = 'equation-display'
+latex_config = {
+    'inlineMath': [
+        ['$', '$'],
+        ['\\(', '\\)']
+    ],
+    'displayMath': [
+        ['\\[', '\\]'],
+        ['$$', '$$']
+    ],
+}
 
 asciimath2tex = ASCIIMath2Tex(log=False)
 
@@ -101,6 +114,54 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             else:
                 result.append((cc_html, o_html))
 
+        return result
+
+    @override
+    def to_content_list_node(self, content: str) -> dict:
+        """将content转换成content_list_node.
+        每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
+        例如代码的返回格式：
+        ```json
+            {
+                "type": "equation-inline", # 数学公式类型，一共equation-inline和equation-display两种
+                "raw_content": "<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>",
+                "content": {
+                    "math_content": "u_{x_0}^{in}(x)",
+                    "math_type": "latex",
+                    "by": "mathjax"
+                }
+            }
+            ```
+
+            Args:
+                content: str: 要转换的content
+
+        Returns:
+            dict: content_list_node
+        """
+        result = {}
+        tree = load_html(content)
+        if tree is None:
+            raise ValueError(f'Failed to load html: {content}')
+
+        if tree.tag != 'ccmath':
+            raise ValueError(f'No ccmath element found in content: {content}')
+        else:
+            # 获取math_content
+            math_content = tree.text  # TODO: 需要处理math_content两边的$符号
+            math_type = tree.get('type')
+            math_render = tree.get('by')
+            equation_type = self.get_equation_type(math_content)
+
+            result = {
+                'type': equation_type,
+                'raw_content': content,
+                'content': {
+                    'math_content': math_content,
+                    'math_type': math_type,
+                    'by': math_render
+                }
+            }
         return result
 
     def contains_math(self, html: str) -> Tuple[bool, str]:
@@ -222,6 +283,35 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         return None
 
+    def get_equation_type(self, content: str) -> str:
+        """根据latex_config判断数学公式是行内还是行间公式.
+
+        Args:
+            html: 包含数学公式的HTML文本
+
+        Returns:
+            str: EQUATION_INLINE 或 EQUATION_DISPLAY
+
+        Examples:
+            >>> get_equation_type("这是行内公式 $x^2$ 测试")
+            'equation-inline'
+            >>> get_equation_type("这是行间公式 $$y=mx+b$$ 测试")
+            'equation-display'
+        """
+        def check_delimiters(delims_list):
+            for start, end in delims_list:
+                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                if re.search(pattern, content, re.DOTALL):
+                    return True
+            return False
+        # 优先检查行间公式
+        if check_delimiters(latex_config['displayMath']):
+            return EQUATION_DISPLAY
+        if check_delimiters(latex_config['inlineMath']):
+            return EQUATION_INLINE
+
+        return None
+
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
@@ -241,4 +331,7 @@ if __name__ == '__main__':
         'https://www.baidu.com',
         test_html,
         raw_html
+    ))
+    print(math_recognizer.to_content_list_node(
+        '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>'
     ))
