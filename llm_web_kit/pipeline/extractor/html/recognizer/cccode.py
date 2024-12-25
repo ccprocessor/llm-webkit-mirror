@@ -59,7 +59,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
         html_str: str = etree.tostring(root).decode()
 
-        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, "cccode")
+        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, "cccode", True)
 
     @override
     def to_content_list_node(self, content: str) -> dict:
