@@ -35,7 +35,7 @@ LATEX_PATTERNS = [
     r'\\begin{equation}(.*?)\\end{equation}',  # 匹配 equation 环境
     r'\\begin{align}(.*?)\\end{align}',        # 匹配 align 环境
     r'\\[(.*?)\\]',    # 匹配 \[...\]
-    r'\\((.*?)\\)',    # 匹配 \(...\)
+    r'\\((.*?)\\)',    # 匹����� \(...\)
 ]
 
 # 数学标记语言
@@ -64,6 +64,9 @@ latex_config = {
         ['$$', '$$']
     ],
 }
+
+asciimath2tex = ASCIIMath2Tex(log=False)
+
 
 asciimath2tex = ASCIIMath2Tex(log=False)
 
