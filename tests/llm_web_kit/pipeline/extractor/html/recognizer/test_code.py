@@ -1,6 +1,6 @@
 import unittest
-
 from pathlib import Path
+
 from lxml import etree
 
 from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
