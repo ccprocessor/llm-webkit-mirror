@@ -27,8 +27,10 @@ repos:
       - id: trailing-whitespace
       - id: check-yaml
       - id: end-of-file-fixer
+        exclude: '^tests/.*/assets/'
       - id: requirements-txt-fixer
       - id: double-quote-string-fixer
+        exclude: '^tests/.*/assets/'
       - id: check-merge-conflict
       - id: fix-encoding-pragma
         args: ["--remove"]
