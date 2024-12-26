@@ -30,9 +30,6 @@ def detect_language(node: etree._Element) -> Optional[str]:
     return None
 
 
-__total__ = 0
-
-
 def replace_node_by_cccode(node: etree._Element, by: str) -> None:
     language = detect_language(node)
 
@@ -55,12 +52,3 @@ def replace_node_by_cccode(node: etree._Element, by: str) -> None:
     node.set('by', by)
     node.tag = 'cccode'  # type: ignore
     node.text = full_text  # type: ignore
-
-    global __total__
-    # with open(
-    #     f"/home/SENSETIME/wuziming/llm-webkit-mirror/tests/llm_web_kit/pipeline/extractor/html/recognizer/assets/cccode/{__total__}",
-    #     "wt",
-    # ) as f:
-    #     f.write(full_text)
-    print(__total__)
-    __total__ += 1

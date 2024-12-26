@@ -59,7 +59,8 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
         html_str: str = etree.tostring(root).decode()
 
-        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode', True)
+        resp = BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode', True)
+        return [(p1, p2.replace("<cccode", "<code").replace("</cccode>","</code>")) for p1, p2 in resp]
 
     @override
     def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:

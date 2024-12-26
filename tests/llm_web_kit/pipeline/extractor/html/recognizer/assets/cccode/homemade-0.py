@@ -1,2 +1,2 @@
 def abc() -> dict:
-    return 'abc'
+    return "abc"

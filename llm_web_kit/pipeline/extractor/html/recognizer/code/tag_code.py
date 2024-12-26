@@ -60,7 +60,7 @@ def get_tree_roots(
         for i in range(len(node_paths)):
             for j in range(len(node_paths)):
                 if dist[i][j] == nlen and get_father(i) != get_father(j):
-                    father[i] = father[j]
+                    father[j] = father[i]
 
     tree_size = [0] * len(node_paths)
     for i in range(len(node_paths)):
