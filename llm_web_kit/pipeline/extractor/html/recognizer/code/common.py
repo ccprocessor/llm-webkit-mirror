@@ -31,6 +31,8 @@ def detect_language(node: etree._Element) -> Optional[str]:
 
 
 def replace_node_by_cccode(node: etree._Element, by: str) -> None:
+    origin_html = etree.tostring(node).decode()
+
     language = detect_language(node)
 
     # 让使用 br 换行的代码可以正确换行
@@ -53,5 +55,6 @@ def replace_node_by_cccode(node: etree._Element, by: str) -> None:
     if language:
         node.set('language', language)
     node.set('by', by)
+    node.set('html', origin_html)
     node.tag = 'cccode'  # type: ignore
     node.text = full_text  # type: ignore
