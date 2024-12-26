@@ -1,0 +1,22 @@
+
+<Style TargetType="CustomControls:BasicStructure">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CustomControls:BasicStructure">
+                    <Grid x:Name="LayoutRoot" Background="{TemplateBinding Background}">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock x:Name="txbImageName"
+
+
+                                    Text="{Binding RelativeSource={RelativeSource TemplatedParent},  Path=ImageName}"    />
+                                <Image x:Name="StructureImage"
+                                       Source="{Binding RelativeSource={RelativeSource TemplatedParent},
+                                                    Path=ImageName, Converter={StaticResource imageNameToImageConverter}}"
+                                        Height="100" Width="100"  />
+                            </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>

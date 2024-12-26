@@ -38,7 +38,7 @@ def get_dist(node_paths: list[list[str]]) -> list[list[int]]:
                 dist_counter[dist[i][j]] = 0
             dist_counter[dist[i][j]] += 1
     dist_counter = dict(sorted(list(dist_counter.items())))
-    print(dist_counter)
+    # print(dist_counter)
 
     return dist
 
@@ -87,7 +87,9 @@ def get_tree_roots(
                     root_paths[tree_index] = root_paths[tree_index][:common_node_idx]
 
     removed = set()
-    root_paths_joined = ['/'.join(root_path) for root_path in root_paths]
+    root_paths_joined = sorted(
+        list(set(['/'.join(root_path) for root_path in root_paths]))
+    )
     for x in root_paths_joined:
         for y in root_paths_joined:
             if len(x) < len(y) and y.startswith(x):
@@ -95,11 +97,11 @@ def get_tree_roots(
     return [x for x in root_paths_joined if x not in removed]
 
 
-def modify_tree_by_roots(
+def get_candidates(
     root: etree._ElementTree,
     node: etree._Element,
     tree_roots: list[str],
-) -> None:
+) -> list[etree._Element]:
     node_path: str = root.getpath(node)
     hit = False
     prefix_hit = False
@@ -110,15 +112,16 @@ def modify_tree_by_roots(
             hit = True
 
     if not prefix_hit:
-        return
+        return []
 
     if hit:
-        replace_node_by_cccode(node, 'tag_code')
-        return
+        return [node]
 
+    rtn = []
     for cnode in node.getchildren():
         assert isinstance(cnode, etree._Element)
-        modify_tree_by_roots(root, cnode, tree_roots)
+        rtn.extend(get_candidates(root, cnode, tree_roots))
+    return rtn
 
 
 def get_node_paths(tree: etree._ElementTree, body: etree._Element) -> list[list[str]]:
@@ -155,7 +158,9 @@ def modify_tree(root: etree._Element) -> None:
 
     tree_roots = get_tree_roots(node_paths, cut, dist)
 
-    for tree_root in tree_roots:
-        print(tree_root)
+    # for tree_root in tree_roots:
+    #     print(tree_root)
 
-    modify_tree_by_roots(tree, root, tree_roots)
+    nodes = get_candidates(tree, root, tree_roots)
+    for node in nodes:
+        replace_node_by_cccode(node, 'tag_code')

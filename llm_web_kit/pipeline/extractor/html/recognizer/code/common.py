@@ -39,12 +39,15 @@ def replace_node_by_cccode(node: etree._Element, by: str) -> None:
         br.tail = ('\n' + br.tail) if br.tail else ('\n')  # type: ignore
 
     full_text = ''.join(node.itertext(None))
-    full_text = '\n'.join(
-        [
-            sub_text.replace(' ', ' ').rstrip()
-            for sub_text in full_text.strip().split('\n')
-        ]
-    )  # 去除每行的结尾空白符
+    chunks = [sub_text.replace(' ', ' ').rstrip() for sub_text in full_text.split('\n')]
+
+    while not chunks[0]:
+        chunks = chunks[1:]
+    while not chunks[len(chunks) - 1]:
+        chunks = chunks[:-1]
+
+    full_text = '\n'.join(chunks)
+    # print(full_text)
 
     node.clear(keep_tail=True)
     if language:
