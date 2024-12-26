@@ -55,6 +55,10 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             # 最后手段：用fasttext看看又没有可能是代码的
             # TODO:
 
+            # 现在已知两种情况无法处理：
+            # 1. 在线代码编辑器里的代码 (react testcase)
+            # 2. 使用 table 模拟的代码展示 (telerik testcase)
+
             break
 
         html_str: str = etree.tostring(root).decode()
