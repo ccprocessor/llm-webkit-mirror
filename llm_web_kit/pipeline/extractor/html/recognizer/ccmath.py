@@ -3,7 +3,6 @@ import re
 from typing import List, Tuple
 
 import lxml.etree
-from bs4 import BeautifulSoup
 from lxml.etree import Element
 from overrides import override
 from py_asciimath.translator.translator import ASCIIMath2Tex
@@ -42,7 +41,8 @@ LATEX_PATTERNS = [
 MATH_TYPE_MAP = {
     'LATEX': 'latex',
     'MATHML': 'mathml',
-    'ASCIIMATH': 'AsciiMath',
+    'ASCIIMATH': 'asciimath',
+    'HTMLMATH': 'htmlmath',  # sub, sup, etc.
 }
 
 # 数学公式渲染器
@@ -117,7 +117,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         return result
 
     @override
-    def to_content_list_node(self, content: str) -> dict:
+    def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -140,12 +140,12 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             dict: content_list_node
         """
         result = {}
-        tree = load_html(content)
+        tree = load_html(parsed_content)
         if tree is None:
-            raise ValueError(f'Failed to load html: {content}')
+            raise ValueError(f'Failed to load html: {parsed_content}')
 
         if tree.tag != 'ccmath':
-            raise ValueError(f'No ccmath element found in content: {content}')
+            raise ValueError(f'No ccmath element found in content: {parsed_content}')
         else:
             # 获取math_content
             math_content = tree.text  # TODO: 需要处理math_content两边的$符号
@@ -155,7 +155,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             result = {
                 'type': equation_type,
-                'raw_content': content,
+                'raw_content': parsed_content,
                 'content': {
                     'math_content': math_content,
                     'math_type': math_type,
@@ -165,9 +165,41 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         return result
 
     def contains_math(self, html: str) -> Tuple[bool, str]:
-        """判断html中是否包含数学公式."""
-        if self.contains_mathjax(html):  # 先认为mathjax公式就是latex公式
-            return True, MATH_TYPE_MAP['LATEX']
+        """判断html中是否包含数学公式.并根据不同的公式类型返回对应的math_type.
+
+        Args:
+            html: 要检查的HTML字符串
+
+        Returns:
+            Tuple[bool, str]: (是否包含数学公式, 公式类型)
+
+        示例:
+            >>> contains_math('<span>$$x^2$$</span>')
+            (True, 'latex')
+        """
+        # 检查是否包含 LaTeX 格式的公式
+        for pattern in LATEX_PATTERNS:
+            if re.search(pattern, html, re.DOTALL):
+                return True, MATH_TYPE_MAP['LATEX']
+
+        # 检查是否包含 MathML 标签
+        tree = load_html(html)
+        if tree is not None:
+            math_elements = tree.xpath('.//math')
+            if math_elements and any(text_strip(elem.text) for elem in math_elements):
+                return True, MATH_TYPE_MAP['MATHML']
+
+            # 检查 HTML 数学标记（sub 和 sup）
+            sub_elements = tree.xpath('.//sub')
+            sup_elements = tree.xpath('.//sup')
+            if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
+               (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
+                return True, MATH_TYPE_MAP['HTMLMATH']
+
+        # 检查是否包含 AsciiMath
+        # 通常 AsciiMath 被包含在 `...` 中
+        if re.search(r'`[^`]+`', html):
+            return True, MATH_TYPE_MAP['ASCIIMATH']
 
         return False, None
 
@@ -214,48 +246,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     logger.error(f'Error processing mathjax tag: {e}')
 
         return [(lxml.etree.tostring(new_cc_html, encoding='unicode'), o_html)]
-
-    # def contains_mathml(self, html: str) -> bool:
-    #     """检查html中是否包含mathml标签."""
-    #     soup = BeautifulSoup(html, 'html.parser')
-    #     return bool(soup.find("math") and soup.find("math").get_text(strip=True))
-
-    # def contains_latex(self, html: str) -> bool:
-    #     """检查html中是否包含latex公式."""
-    #     return bool(re.search(r'\$.*\$', html)) or \
-    #         bool(re.search(r'\\(.*\\)', html))
-
-    def contains_mathjax(self, html: str) -> bool:
-        """检查html中是否包含mathjax公式.
-        示例:
-            <span class="MathJax">x^2 + y^2 = z^2</span>
-            <div class="MathJax_Display">E = mc^2</div>
-        """
-        soup = BeautifulSoup(html, 'html.parser')
-        mathjax_pattern = re.compile(r'mathjax', re.IGNORECASE)
-        display_pattern = re.compile(r'mathjax_display', re.IGNORECASE)
-        mathjax_tags = (
-            soup.find_all('span', {'class': mathjax_pattern}) +
-            soup.find_all('div', {'class': display_pattern})
-        )
-        for tag in mathjax_tags:
-            if tag.get_text(strip=True):  # 如果标签内有非空文本内容，则认为包含mathjax公式
-                return True
-        return False
-
-    def contains_katex(self, html: str) -> bool:
-        """检查html中是否包含katex公式."""
-        soup = BeautifulSoup(html, 'html.parser')
-        katex_pattern = re.compile(r'katex', re.IGNORECASE)
-        katex_display = re.compile(r'katex_display', re.IGNORECASE)
-        katex_tags = (
-            soup.find_all('span', {'class': katex_pattern}) +
-            soup.find_all('span', {'class': katex_display})
-        )
-        for tag in katex_tags:
-            if tag.get_text(strip=True):
-                return True
-        return False
 
     def get_math_render(self, html: str) -> str:
         """获取数学公式渲染器.
@@ -333,5 +323,11 @@ if __name__ == '__main__':
         raw_html
     ))
     print(math_recognizer.to_content_list_node(
-        '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>'
+        'https://www.baidu.com',
+        '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>',
+        raw_html
+    ))
+    print(math_recognizer.html_split_by_tags(
+        raw_html,
+        ['ccmath']
     ))
