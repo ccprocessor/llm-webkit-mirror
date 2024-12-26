@@ -1,12 +1,11 @@
 from lxml import etree
 
-from llm_web_kit.pipeline.extractor.html.recognizer.code.common import (
-    replace_node_by_cccode,
-)
+from llm_web_kit.pipeline.extractor.html.recognizer.code.common import \
+    replace_node_by_cccode
 
 
 def detect(body: etree._Element) -> bool:
-    for _ in body.iter("code"):
+    for _ in body.iter('code'):
         return True
     return False
 
@@ -88,7 +87,7 @@ def get_tree_roots(
                     root_paths[tree_index] = root_paths[tree_index][:common_node_idx]
 
     removed = set()
-    root_paths_joined = ["/".join(root_path) for root_path in root_paths]
+    root_paths_joined = ['/'.join(root_path) for root_path in root_paths]
     for x in root_paths_joined:
         for y in root_paths_joined:
             if len(x) < len(y) and y.startswith(x):
@@ -114,7 +113,7 @@ def modify_tree_by_roots(
         return
 
     if hit:
-        replace_node_by_cccode(node, "tag_code")
+        replace_node_by_cccode(node, 'tag_code')
         return
 
     for cnode in node.getchildren():
@@ -126,7 +125,7 @@ def get_node_paths(tree: etree._ElementTree, body: etree._Element) -> list[list[
     node_set: set[str] = set()
     node_paths: list[list[str]] = []
 
-    for code_node in body.iter("code"):
+    for code_node in body.iter('code'):
         assert isinstance(code_node, etree._Element)
         node_path: str = tree.getpath(code_node)
         node_set.add(node_path)
@@ -141,7 +140,7 @@ def get_node_paths(tree: etree._ElementTree, body: etree._Element) -> list[list[
     node_set = {node_path for node_path in node_set if node_path not in remove_node_set}
 
     for node_path in node_set:
-        node_paths.append(node_path.split("/"))
+        node_paths.append(node_path.split('/'))
 
     return node_paths
 

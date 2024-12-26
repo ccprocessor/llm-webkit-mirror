@@ -1,6 +1,8 @@
 from typing import List, Tuple
+
 from bs4 import BeautifulSoup, Tag
 from overrides import override
+
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 
@@ -58,17 +60,17 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             for child in element.children:
                 if isinstance(child, Tag):
                     if child.name == 'table':
-                        table_type = "simple"
+                        table_type = 'simple'
                         for td in child.find_all('td', recursive=True):
                             if int(td.get('rowspan', 1)) > 1 or int(td.get('colspan', 1)) > 1:
-                                table_type = "complex"
+                                table_type = 'complex'
                                 break
                         cc_table = f'<cctable type="{table_type}">{child.decode()}</cctable>'
                         o_table = str(child)
                         result.append((True, cc_table, o_table))
                     else:
                         process_direct_children(child)
-                elif str(element).strip(): 
+                elif str(element).strip():
                     result.append((False, str(element), str(element)))
         for child in soup.body.children if soup.body else soup.children:
             process_direct_children(child)
@@ -78,11 +80,11 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
 if __name__ == '__main__':
     recognizer = TableRecognizer()
-    base_url = "https://www.baidu.com"
+    base_url = 'https://www.baidu.com'
     main_html_lst = [
-        ("<cccode>hello</cccode>",
-         "<code>hello</code>"),
+        ('<cccode>hello</cccode>',
+         '<code>hello</code>'),
         ("""<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>""",
          """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>""",
          )]
-    print(recognizer.recognize(base_url, main_html_lst, raw_html=""))
+    print(recognizer.recognize(base_url, main_html_lst, raw_html=''))

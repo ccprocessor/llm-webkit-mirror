@@ -1,14 +1,14 @@
-from lxml import etree
-
 from typing import Optional
+
+from lxml import etree
 
 
 def get_lang_maybe(node: etree._Element) -> Optional[str]:
     attrib: dict[str, str] = node.attrib
-    classes: list[str] = [c for c in attrib.get("class", "").split(" ") if c]
+    classes: list[str] = [c for c in attrib.get('class', '').split(' ') if c]
     for c in classes:
-        if c.startswith("language-") or c.startswith("lang-"):
-            return c.replace("language-", "").replace("lang-", "")
+        if c.startswith('language-') or c.startswith('lang-'):
+            return c.replace('language-', '').replace('lang-', '')
     return None
 
 
@@ -37,23 +37,23 @@ def replace_node_by_cccode(node: etree._Element, by: str) -> None:
     language = detect_language(node)
 
     # 让使用 br 换行的代码可以正确换行
-    for br in node.xpath("*//br"):
+    for br in node.xpath('*//br'):
         assert isinstance(br, etree._Element)
-        br.tail = ("\n" + br.tail) if br.tail else ("\n")  # type: ignore
+        br.tail = ('\n' + br.tail) if br.tail else ('\n')  # type: ignore
 
-    full_text = "".join(node.itertext(None))
-    full_text = "\n".join(
+    full_text = ''.join(node.itertext(None))
+    full_text = '\n'.join(
         [
-            sub_text.replace(" ", " ").rstrip()
-            for sub_text in full_text.strip().split("\n")
+            sub_text.replace(' ', ' ').rstrip()
+            for sub_text in full_text.strip().split('\n')
         ]
     )  # 去除每行的结尾空白符
 
     node.clear(keep_tail=True)
     if language:
-        node.set("language", language)
-    node.set("by", by)
-    node.tag = "cccode"  # type: ignore
+        node.set('language', language)
+    node.set('by', by)
+    node.tag = 'cccode'  # type: ignore
     node.text = full_text  # type: ignore
 
     global __total__
