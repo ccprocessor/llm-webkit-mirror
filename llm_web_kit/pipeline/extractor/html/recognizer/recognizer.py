@@ -69,22 +69,24 @@ class BaseHTMLElementRecognizer(ABC):
         TODO
         1. <script>和<style>中出现的 <, >, & 等字符会被转义，需要跳过，但是目前没有看到影响正文提取，因此暂时不处理
         """
+        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+
         def __contain_wanted_tag(el: HtmlElement, tags_to_check:list) -> bool:
             # 遍历需要检查的标签列表
             for tag in tags_to_check:
                 if el.tag == tag:  # 如果当前节点就是我们想要的标签，直接返回即可
-                    mylogger.info(f'{el.tag} is wanted tag: {tag}')
+                    mylogger.debug(f'{el.tag} is wanted tag: {tag}')
                     return True
                 # 使用XPath查找当前节点下是否包含我们想要的标签
                 elements = el.xpath(f'.//{tag}')
                 if elements:
-                    mylogger.info(f'{el.tag} contain wanted tag: {tag}')
+                    mylogger.debug(f'{el.tag} contain wanted tag: {tag}')
                     return True
 
-            mylogger.info(f'{el.tag} not contain wanted tag: {tags_to_check}')
+            mylogger.debug(f'{el.tag} not contain wanted tag: {tags_to_check}')
             return False
 
-        def __push_el(lst: List[Tuple[HtmlElement,str]], el: HtmlElement, split_tail=False, extra_html=False) -> List[Tuple[HtmlElement,str]]:
+        def __push_el(parent_nodes:list[HtmlElement], lst: List[Tuple[HtmlElement,str]], el: HtmlElement, split_tail=False, extra_html=False) -> List[Tuple[HtmlElement,str]]:
             """将节点和节点的html字符串添加到列表中, 此处着重处理了节点的text和tail部分 ```html.
 
             <p>
@@ -95,10 +97,11 @@ class BaseHTMLElementRecognizer(ABC):
             ```
 
             Args:
+                parent_nodes: list: 父节点列表
                 lst: list: 要添加的列表
                 el: HtmlElement: 节点
                 split_tail: bool: tail 是否单独作为一个节点
-                extra_html: bool: 是否从el中提取html，这个html是代表了el的原始html。el节点为自定义标签的那些节点：ccmath, ccimage, ccvideo等
+                extra_html: bool: 是否从el中提取html属性，这个html是代表了el的原始html。el节点为自定义标签的那些节点：ccmath, ccimage, ccvideo等
 
             Returns:
                 List[Tuple[HtmlElement,str]]: 节点和节点的html字符串
@@ -117,18 +120,56 @@ class BaseHTMLElementRecognizer(ABC):
                     mylogger.error(f'{el.tag} has no html attribute')
                     # TODO 正式生产的时候抛出异常，说明程序有bug
 
+            if parent:
+                new_el = __attach_parent_nodes_path(new_el, parent_nodes)
             lst.append((new_el, html_source_segment))
             if tail_text and split_tail and tail_text.strip():
-                lst.append((tail_text.strip(), tail_text.strip()))
+                if parent:
+                    new_tail = __attach_parent_nodes_path(tail_text.strip(), parent_nodes)
+                    lst.append((new_tail, tail_text.strip()))
+                else:
+                    lst.append((tail_text.strip(), tail_text.strip()))
 
             return lst
 
-        def __split_html(root_el: HtmlElement, wanted_tag_names:list) -> List[Tuple[HtmlElement,str]]:
+        def __attach_parent_nodes_path(el: HtmlElement | str, parent_nodes: list[HtmlElement]) -> HtmlElement:
+            """将父节点附加到当前节点上，返回一个新的节点.
+
+            Args:
+                el: HtmlElement|str: 当前节点, 或者是个text
+                parent_nodes: list: 父节点列表
+
+            Returns:
+                HtmlElement: 新的节点
+            """
+            if isinstance(el, HtmlElement):
+                new_el = deepcopy(el)
+                if parent_nodes and parent:  # 如果有父节点，并且调用方要求返回父节点
+                    for p in reversed(parent_nodes):
+                        new_p = parser.makeelement(p.tag, p.attrib)
+                        new_p.append(new_el)
+                        new_el = new_p
+            else:
+                if parent and parent_nodes:
+                    new_el = parser.makeelement(parent_nodes[-1].tag, parent_nodes[-1].attrib)
+                    new_el.text = el
+                    for p in reversed(parent_nodes[:-1]):
+                        new_p = parser.makeelement(p.tag, p.attrib)
+
+                        new_p.append(new_el)
+                        new_el = new_p
+                else:
+                    new_el = el  # 单纯的文字就可以了
+
+            return new_el
+
+        def __split_html(root_el: HtmlElement, wanted_tag_names:list, parent_nodes:list[HtmlElement]) -> List[Tuple[HtmlElement,str]]:
             """递归分割html.
 
             Args:
                 root_el: HtmlElement: html节点
                 wanted_tag_names: str: 分割标签名
+                parent_nodes: list: 父节点列表
 
             Returns:
                 List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
@@ -136,27 +177,29 @@ class BaseHTMLElementRecognizer(ABC):
             assert isinstance(wanted_tag_names, list), f'{__file__}:{inspect.currentframe().f_back.f_lineno} wanted_tag_names must be a list'
             parts = []
             if not __contain_wanted_tag(root_el, wanted_tag_names):  # 这个节点里没有包含想要分割的标签，就原样返回
-                __push_el(parts, root_el, split_tail=False)
+                __push_el(parent_nodes, parts, root_el, split_tail=False)
             else:  # 这个节点里肯定包含了我们想要分割的标签
                 if root_el.tag in wanted_tag_names:  # 如果这个节点就是我们想要的标签，直接返回即可
-                    __push_el(parts, root_el, split_tail=True, extra_html=True)
+                    __push_el(parent_nodes, parts, root_el, split_tail=True, extra_html=True)
                 else:  # 继续逐层分割
+                    new_parent_nodes = parent_nodes + [root_el]
                     # 先将当前节点的text部分添加到列表中
                     if root_el.text and root_el.text.strip():
-                        parts.append((root_el.text.strip(), root_el.text))
+                        parts.append((__attach_parent_nodes_path(root_el.text.strip(), new_parent_nodes), root_el.text))
                     for child_el in root_el.iterchildren():  # 遍历直接子节点
-                        lst = __split_html(child_el, wanted_tag_names)
+                        lst = __split_html(child_el, wanted_tag_names, new_parent_nodes)
                         parts = parts + lst  # 将子节点的分割结果合并到当前节点
                     if root_el.tail and root_el.tail.strip():  # 将当前节点的tail部分添加到列表中
-                        parts.append((root_el.tail.strip(), root_el.tail))
+                        parts.append((__attach_parent_nodes_path(root_el.tail.strip(), new_parent_nodes), root_el.tail))
 
             return parts
 
+        # ########################################################################################################
         if isinstance(split_tag_name, str):  # 如果参数是str，转换成list
             split_tag_name = [split_tag_name]
-        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+
         root = etree.HTML(html_segment, parser)
-        html_parts = __split_html(root, split_tag_name)
+        html_parts = __split_html(root, split_tag_name, parent_nodes=[])
         return_parts = []
         for p in html_parts:
             if isinstance(p[0], str):
