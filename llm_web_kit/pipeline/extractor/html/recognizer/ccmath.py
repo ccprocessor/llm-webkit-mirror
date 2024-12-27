@@ -10,7 +10,8 @@ from py_asciimath.translator.translator import ASCIIMath2Tex
 from llm_web_kit.libs.logger import logger
 from llm_web_kit.pipeline.extractor.html.magic_html.utils import (iter_node,
                                                                   load_html)
-from llm_web_kit.pipeline.extractor.html.recognizer.common import text_strip
+from llm_web_kit.pipeline.extractor.html.recognizer.common import (text_strip,
+                                                                   wrap_math)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 
@@ -219,21 +220,84 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             raise ValueError(f'Failed to load html: {cc_html}')
 
         for node in iter_node(tree):
-            # 如果节点是span标签，并且class属性包含mathjax，MathJax，mathjax_display，MathJax_Display等
-            # 示例：
-            # <span class="mathjax">
-            #     <span class="math-inline">$\frac{1}{2}$</span>
-            #     是一个分数
-            # </span>
             parent = node.getparent()
-            # print(etree.tostring(parent, encoding='utf-8', method='html').decode())
+            node_class = node.get('class')
 
+            # 1. 文本中有\\begin{align} 或 \\begin{equation}
+            if node.tag not in ['script', 'style'] and text_strip(node.text):
+                regex = r'\\begin{align}(.*?)\\end{align}'
+                text = node.text
+                matches = re.findall(regex, text, re.DOTALL)
+                if matches:
+                    node.text = text.replace('\\begin{align}', '').replace('\\end{align}', '')
+
+            if node.tag not in ['script', 'style'] and text_strip(node.text):
+                regex = r'\\begin{equation}(.*?)\\end{equation}'
+                text = node.text
+                matches = re.findall(regex, text, re.DOTALL)
+                for match in matches:
+                    match = match.replace('\\begin{equation}', '')
+                    match = match.replace('\\end{equation}', '')
+                    wrapped_text = wrap_math(match, display=True)
+                    text = text.replace(match, wrapped_text)
+                if matches:
+                    # Remove the \begin{equation} and \end{equation} tags
+                    text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
+                    node.text = text
+
+            if node.tag not in ['script', 'style'] and text_strip(node.tail):
+                regex = r'\\begin{align}(.*?)\\end{align}'
+                text = node.tail
+                matches = re.findall(regex, text, re.DOTALL)
+                if matches:
+                    node.tail = text.replace('\\begin{align}', '').replace('\\end{align}', '')
+
+            if node.tag not in ['script', 'style'] and text_strip(node.tail):
+                regex = r'\\begin{equation}(.*?)\\end{equation}'
+                text = node.tail
+                matches = re.findall(regex, text, re.DOTALL)
+                for match in matches:
+                    match = match.replace('\\begin{equation}', '')
+                    match = match.replace('\\end{equation}', '')
+                    wrapped_text = wrap_math(match, display=True)
+                    text = text.replace(match, wrapped_text)
+                if matches:
+                    # Remove the \begin{equation} and \end{equation} tags
+                    text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
+                    node.tail = text
+
+            # 4. class 为 math-container
+            if node_class == 'math-container':
+                try:
+                    text = node.text
+                    if text_strip(text):
+                        new_span = Element('ccmath')
+                        wrapped_math = wrap_math(text, display=True)
+                        new_span.text = wrapped_math
+                        new_span.set('type', math_type)
+                        new_span.set('by', math_render)
+                        # 将原始节点转换为HTML字符串并解除转义
+                        original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
+                        new_span.set('html', original_html)
+                        if parent is not None:
+                            if text_strip(node.tail):
+                                new_span.tail = node.tail
+                            parent.replace(node, new_span)
+                except Exception as e:
+                    logger.error(f'Error processing math-container class: {e}')
+
+            # 5. class 为 mathjax
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
+                # 如果节点是span标签，并且class属性包含mathjax，MathJax，mathjax_display，MathJax_Display等
+                # 示例：
+                # <span class="mathjax">
+                #     <span class="math-inline">$\frac{1}{2}$</span>
+                #     是一个分数
+                # </span>
 
                 try:
                     # Get the inner text of the mathjax tag
-                    # text = node.text
                     text = ''.join([
                         (node.text or '') +
                         ''.join([etree.tostring(child, encoding='utf-8', method='text').decode() for child in node])
@@ -261,7 +325,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                                 new_cc_html.tail = node.tail
                             tree = new_cc_html
                 except Exception as e:
-                    logger.error(f'Error processing mathjax tag: {e}')
+                    logger.error(f'Error processing mathjax class: {e}')
 
         return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), ['ccmath'])
 
@@ -325,11 +389,41 @@ if __name__ == '__main__':
     math_recognizer = MathRecognizer()
     # test_html = [
     #         (
-    #             ('<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'),
-    #     ('<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>')
-    # )]
-    test_html = [(('<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
-                   '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'))]
+    #             ('<p>这是p的text<span class="mathjax_display">'
+    #              '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>'
+    #              '这是b的text</b>这是b的tail</p>'),
+    #             ('<p>这是p的text<span class="mathjax_display">'
+    #              '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>'
+    #              '这是b的text</b>这是b的tail</p>')
+    #         )]
+    # test_html = [(('<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
+    #                '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'))]
+    test_html = [
+        (
+            (
+                '<p>I think I can now answer my own question, having come across some decent '
+                'references I hadn\'t found before asking it. I found the equation for the '
+                'gravitational strain <span class=\"math-container\">$h$</span> - the proportional '
+                'change in length of an object due to gravitational waves from a mass '
+                '<span class=\"math-container\">$M$</span>:</p>\n\n'
+                '<p><span class=\"math-container\">$$h \\approx {{GM} \\over c^2} \\times '
+                '{1 \\over r} \\times {v^2 \\over c^2}$$</span></p>\n\n'
+                '<p><a href=\"http://www.tapir.caltech.edu/~teviet/Waves/gwave.html\" '
+                'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
+            ),
+            (
+                '<p>I think I can now answer my own question, having come across some decent '
+                'references I hadn\'t found before asking it. I found the equation for the '
+                'gravitational strain <span class=\"math-container\">$h$</span> - the proportional '
+                'change in length of an object due to gravitational waves from a mass '
+                '<span class=\"math-container\">$M$</span>:</p>\n\n'
+                '<p><span class=\"math-container\">$$h \\approx {{GM} \\over c^2} \\times '
+                '{1 \\over r} \\times {v^2 \\over c^2}$$</span></p>\n\n'
+                '<p><a href=\"http://www.tapir.caltech.edu/~teviet/Waves/gwave.html\" '
+                'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
+            )
+        )
+    ]
     raw_html = (
         '<head> '
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
@@ -344,12 +438,12 @@ if __name__ == '__main__':
         test_html,
         raw_html
     ))
-    print(math_recognizer.to_content_list_node(
-        'https://www.baidu.com',
-        '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>',
-        raw_html
-    ))
-    print(math_recognizer.html_split_by_tags(
-        raw_html,
-        ['ccmath']
-    ))
+    # print(math_recognizer.to_content_list_node(
+    #     'https://www.baidu.com',
+    #     '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>',
+    #     raw_html
+    # ))
+    # print(math_recognizer.html_split_by_tags(
+    #     raw_html,
+    #     ['ccmath']
+    # ))

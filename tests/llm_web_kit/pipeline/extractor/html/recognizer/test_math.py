@@ -8,8 +8,12 @@ TEST_CASES = [
     {
         'input': [
             (
-                ('<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'),
-                ('<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>')
+                ('<p>这是p的text<span class="mathjax_display">'
+                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+                 '这是b的tail</p>'),
+                ('<p>这是p的text<span class="mathjax_display">'
+                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+                 '这是b的tail</p>')
             )
         ],
         'raw_html': (
