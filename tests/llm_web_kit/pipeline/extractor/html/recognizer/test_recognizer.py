@@ -40,6 +40,6 @@ class TestBaseHTMLElementRecognizer(unittest.TestCase):
         assert result_with_parent[0][0] == "<html><body><article>这里是text</article></body></html>"
         assert result_with_parent[3][0] == '<html><body><article><cccode>print("BBBBBB")</cccode></article></body></html>'
         assert result_with_parent[9][0] == '<html><body><article><div><p>这里是tail2</p></div></article></body></html>'
-        
+
         result = BaseHTMLElementRecognizer.html_split_by_tags(html_content, 'cccode')
         assert len(result) == 10
