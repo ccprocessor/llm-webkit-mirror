@@ -2,7 +2,7 @@ import html
 import re
 from typing import List, Tuple
 
-import lxml.etree
+from lxml import etree
 from lxml.etree import Element
 from overrides import override
 from py_asciimath.translator.translator import ASCIIMath2Tex
@@ -220,13 +220,24 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         for node in iter_node(tree):
             # 如果节点是span标签，并且class属性包含mathjax，MathJax，mathjax_display，MathJax_Display等
+            # 示例：
+            # <span class="mathjax">
+            #     <span class="math-inline">$\frac{1}{2}$</span>
+            #     是一个分数
+            # </span>
+            parent = node.getparent()
+            # print(etree.tostring(parent, encoding='utf-8', method='html').decode())
+
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
-                parent = node.getparent()
 
                 try:
                     # Get the inner text of the mathjax tag
-                    text = node.text
+                    # text = node.text
+                    text = ''.join([
+                        (node.text or '') +
+                        ''.join([etree.tostring(child, encoding='utf-8', method='text').decode() for child in node])
+                    ])
                     if text_strip(text):
                         text = html.unescape(text)
                         # Create a new ccmath tag
@@ -234,18 +245,25 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         new_cc_html.text = text
                         new_cc_html.set('type', math_type)
                         new_cc_html.set('by', math_render)
-                        # Then, we need to replace the mathjax tag with the new span tag
+                        # 将原始节点转换为HTML字符串并解除转义
+                        original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
+                        new_cc_html.set('html', original_html)
+                        # 处理节点替换
                         if parent is not None:
-                            if text_strip(node.tail):
+                            # 保存原始节点的tail文本
+                            if node.tail:
                                 new_cc_html.tail = node.tail
-                                parent.replace(node, new_cc_html)
-                    else:
-                        logger.info(f'Processing mathjax tag: {node.text}')
-                        new_cc_html = node
+                            # 在父节点中替换原始节点
+                            parent.replace(node, new_cc_html)
+                        else:
+                            # 如果是根节点，直接替换整个树
+                            if node.tail:
+                                new_cc_html.tail = node.tail
+                            tree = new_cc_html
                 except Exception as e:
                     logger.error(f'Error processing mathjax tag: {e}')
 
-        return [(lxml.etree.tostring(new_cc_html, encoding='unicode'), o_html)]
+        return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), ['ccmath'])
 
     def get_math_render(self, html: str) -> str:
         """获取数学公式渲染器.
@@ -305,15 +323,19 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
-    test_html = [(
-        '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
-        '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'
-    )]
+    # test_html = [
+    #         (
+    #             ('<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'),
+    #     ('<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>')
+    # )]
+    test_html = [(('<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
+                   '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'))]
     raw_html = (
         '<head> '
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
         '?config=TeX-MML-AM_CHTML"> </script> '
         '</head> '
+        '<ccmath type="mathml" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath>'
         '<p>This is a test.</p> '
         '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>'
     )
