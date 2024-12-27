@@ -61,7 +61,7 @@ class BaseHTMLElementRecognizer(ABC):
         Args:
             html_segment: str: 要分割的html源码
             split_tag_name: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
-            parent: bool: False时候，只分割split_tag_name标签，True时候，分割split_tag_name标签的所有上级标签以及属性
+            parent: bool: False时候，只返回带内容的叶子标签，True时候，分割html标签的时候会带上所有上级标签以及属性
 
         Returns:
              List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
@@ -84,7 +84,7 @@ class BaseHTMLElementRecognizer(ABC):
             mylogger.info(f'{el.tag} not contain wanted tag: {tags_to_check}')
             return False
 
-        def __push_el(lst: List[Tuple[HtmlElement,str]], el: HtmlElement, split_tail=False) -> List[Tuple[HtmlElement,str]]:
+        def __push_el(lst: List[Tuple[HtmlElement,str]], el: HtmlElement, split_tail=False, extra_html=False) -> List[Tuple[HtmlElement,str]]:
             """将节点和节点的html字符串添加到列表中, 此处着重处理了节点的text和tail部分 ```html.
 
             <p>
@@ -98,6 +98,7 @@ class BaseHTMLElementRecognizer(ABC):
                 lst: list: 要添加的列表
                 el: HtmlElement: 节点
                 split_tail: bool: tail 是否单独作为一个节点
+                extra_html: bool: 是否从el中提取html，这个html是代表了el的原始html。el节点为自定义标签的那些节点：ccmath, ccimage, ccvideo等
 
             Returns:
                 List[Tuple[HtmlElement,str]]: 节点和节点的html字符串
@@ -109,6 +110,12 @@ class BaseHTMLElementRecognizer(ABC):
                 html_source_segment = etree.tostring(new_el, encoding='utf-8').decode()
             else:
                 html_source_segment = etree.tostring(el, encoding='utf-8').decode()
+
+            if extra_html:
+                html_source_segment = el.attrib.get('html')
+                if not html_source_segment:
+                    mylogger.error(f'{el.tag} has no html attribute')
+                    # TODO 正式生产的时候抛出异常，说明程序有bug
 
             lst.append((new_el, html_source_segment))
             if tail_text and split_tail and tail_text.strip():
@@ -132,7 +139,7 @@ class BaseHTMLElementRecognizer(ABC):
                 __push_el(parts, root_el, split_tail=False)
             else:  # 这个节点里肯定包含了我们想要分割的标签
                 if root_el.tag in wanted_tag_names:  # 如果这个节点就是我们想要的标签，直接返回即可
-                    __push_el(parts, root_el, split_tail=True)
+                    __push_el(parts, root_el, split_tail=True, extra_html=True)
                 else:  # 继续逐层分割
                     # 先将当前节点的text部分添加到列表中
                     if root_el.text and root_el.text.strip():
