@@ -44,8 +44,8 @@ def get_dist(node_paths: list[list[str]]) -> list[list[int]]:
 
 
 def get_tree_roots(
+    root: etree._Element,
     node_paths: list[list[str]],
-    cut: int,
     dist: list[list[int]],
 ) -> list[str]:
     father = list(range(len(node_paths)))
@@ -56,35 +56,60 @@ def get_tree_roots(
         father[x] = get_father(father[x])
         return father[x]
 
-    for nlen in range(1, cut + 1):
-        for i in range(len(node_paths)):
-            for j in range(len(node_paths)):
-                if dist[i][j] == nlen and get_father(i) != get_father(j):
-                    father[j] = father[i]
-
-    tree_size = [0] * len(node_paths)
-    for i in range(len(node_paths)):
-        tree_size[get_father(i)] += 1
-
+    edges: list[tuple[int, int, int]] = []
     root_paths: list[list[str]] = []
-
-    tree_index = -1
     for i in range(len(node_paths)):
-        if tree_size[i]:
-            root_paths.append(node_paths[i])
-            tree_index += 1
+        root_paths.append(node_paths[i])
+        for j in range(i + 1, len(node_paths)):
+            edges.append((dist[i][j], i, j))
+    edges = sorted(edges)
 
-            for j in range(len(node_paths)):
-                if i != j and get_father(j) == i:
-                    for idx, (x, y) in enumerate(
-                        zip(root_paths[tree_index], node_paths[j])
-                    ):
-                        if idx == 0:
-                            continue
-                        if x != y:
-                            common_node_idx = idx
-                            break
-                    root_paths[tree_index] = root_paths[tree_index][:common_node_idx]
+    def check_trees_done(l: int) -> bool:
+        # print(l)
+        # print()
+        # print()
+        for i in range(len(node_paths)):
+            if i == get_father(i):
+                path = '/'.join(root_paths[i])
+                path = path.removeprefix('/html/')
+                # print('------------------------------------')
+                text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
+                # print(text)
+                # print('------------------------------------')
+                # 替换之前的 magic number
+                # 如果出现一棵子树，其组成的内容不存在任何单词
+                # 那么认为它是用于代码格式化的空白换行结构，或是 { } 等格式符号
+                # 即：代码的树依旧不完整
+                if not any(c.isalpha() for c in text):
+                    return False
+        return True
+
+    used_edge = 0
+    edge_len = edges[0][0]
+    for edge in edges:
+        l, i, j = edge
+        i = get_father(i)
+        j = get_father(j)
+        if i != j:
+            if l > edge_len:
+                if check_trees_done(l):
+                    break
+                edge_len = l
+            used_edge += 1
+            father[j] = i
+            for idx, (x, y) in enumerate(zip(root_paths[i], root_paths[j])):
+                if idx == 0:
+                    continue
+                if x != y:
+                    common_node_idx = idx
+                    break
+            root_paths[i] = root_paths[i][:common_node_idx]
+
+    # print(used_edge)
+
+    root_paths = [
+        root_path for i, root_path in enumerate(root_paths) if i == get_father(i)
+    ]
 
     removed = set()
     root_paths_joined = sorted(
@@ -154,9 +179,7 @@ def modify_tree(root: etree._Element) -> None:
 
     dist = get_dist(node_paths)
 
-    cut = 6  # magic number
-
-    tree_roots = get_tree_roots(node_paths, cut, dist)
+    tree_roots = get_tree_roots(root, node_paths, dist)
 
     # for tree_root in tree_roots:
     #     print(tree_root)
