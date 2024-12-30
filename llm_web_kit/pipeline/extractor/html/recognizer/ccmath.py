@@ -28,6 +28,10 @@ MATH_KEYWORDS = [
     "class='tex'",
 ]
 
+# ccmath标签，区分行内行间公式
+CCMATH_INTERLINE = 'ccmath-interline'
+CCMATH_INLINE = 'ccmath-inline'
+
 # 数学公式的正则表达式模式
 LATEX_PATTERNS = [
     r'\$\$(.*?)\$\$',  # 匹配 $$...$$
@@ -54,7 +58,7 @@ MATH_RENDER_MAP = {
 
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = 'equation-inline'
-EQUATION_DISPLAY = 'equation-display'
+EQUATION_INTERLINE = 'equation-interline'
 latex_config = {
     'inlineMath': [
         ['$', '$'],
@@ -124,7 +128,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         例如代码的返回格式：
         ```json
             {
-                "type": "equation-inline", # 数学公式类型，一共equation-inline和equation-display两种
+                "type": "equation-inline", # 数学公式类型，一共equation-inline和equation-interline两种
                 "raw_content": "<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>",
                 "content": {
                     "math_content": "u_{x_0}^{in}(x)",
@@ -362,13 +366,13 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             html: 包含数学公式的HTML文本
 
         Returns:
-            str: EQUATION_INLINE 或 EQUATION_DISPLAY
+            str: EQUATION_INLINE 或 EQUATION_INTERLINE
 
         Examples:
             >>> get_equation_type("这是行内公式 $x^2$ 测试")
             'equation-inline'
             >>> get_equation_type("这是行间公式 $$y=mx+b$$ 测试")
-            'equation-display'
+            'equation-interline'
         """
         def check_delimiters(delims_list):
             for start, end in delims_list:
@@ -378,7 +382,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             return False
         # 优先检查行间公式
         if check_delimiters(latex_config['displayMath']):
-            return EQUATION_DISPLAY
+            return EQUATION_INTERLINE
         if check_delimiters(latex_config['inlineMath']):
             return EQUATION_INLINE
 
