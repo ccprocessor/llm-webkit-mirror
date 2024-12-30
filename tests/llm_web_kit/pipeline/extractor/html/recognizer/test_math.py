@@ -91,8 +91,8 @@ TEST_CASES_HTML = [
     {
         'input': (
             'assets/ccmath/stackexchange_1.html',
-            'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         ),
+        'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         'expected': [
             'assets/ccmath/stackexchange_1_interline_1.html',
             'assets/ccmath/stackexchange_1_interline_2.html',
@@ -103,7 +103,7 @@ TEST_CASES_HTML = [
 TEST_EQUATION_TYPE = [
     {
         'input': '$$a^2 + b^2 = c^2$$',
-        'expected': 'equation-display'
+        'expected': 'equation-interline'
     },
     {
         'input': '$a^2 + b^2 = c^2$',
@@ -115,14 +115,14 @@ TEST_CONTENT_LIST_NODE = [
     {
         'input': (
             'https://www.baidu.com',
-            '<ccmath type="latex" by="mathjax">$$x = 5$$</ccmath>',
-            '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>'
+            '<ccmath-interline type="latex" by="mathjax" html="&lt;span class=&quot;math-container&quot;&gt;$$h$$&lt;/span&gt;">$$h$$</ccmath-interline>',
+            '<span class="math-container">$$h$$</span>'
         ),
         'expected': {
-            'type': 'equation-display',
-            'raw_content': "<ccmath type=\"latex\" by=\"mathjax\">$$x = 5$$</ccmath>",
+            'type': 'equation-interline',
+            'raw_content': '<span class="math-container">$$h$$</span>',
             'content': {
-                'math_content': '$$x = 5$$',
+                'math_content': '$$h$$',
                 'math_type': 'latex',
                 'by': 'mathjax'
             }
@@ -176,7 +176,7 @@ class TestMathRecognizer(unittest.TestCase):
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
-            base_url = test_case['input'][1]
+            base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
             parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
@@ -229,3 +229,4 @@ if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
     r.test_math_recognizer_html()
+    # r.test_to_content_list_node()

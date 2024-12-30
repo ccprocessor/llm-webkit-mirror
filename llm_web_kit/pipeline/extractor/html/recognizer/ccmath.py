@@ -88,24 +88,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             raw_html: 原始完整的html
 
         Returns: main_html_lst中发现有公式，则返回处理后的元素，标签更新为ccmath，否则原样返回.
-        示例：
-        main_html_lst = [
-            ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-            ('<pre>Some text with a formula $$x = 5$$ in it.</pre>',
-             '<pre>Some text with a formula $$x = 5$$ in it.</pre>'),
-            ('<p>爱因斯坦质能方程的公式是：<math>E=mc^2</math>其中<math>mc^2</math>代表了...E是能量。</p>',
-             '<p>爱因斯坦质能方程的公式是：<math>E=mc^2</math>其中<math>mc^2</math>代表了...E是能量。</p>')
-        ]
-        Returns:
-        [
-            ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-            ('<ccmath type="latex" by="">Some text with a formula $$x = 5$$ in it.</ccmath>',
-             '<pre>Some text with a formula $$x = 5$$ in it.</pre>'),
-            ('<p>爱因斯坦质能方程的公式是：<ccmath type="mathml" by="mathjax">E=mc^2</ccmath>'
-             '其中<ccmath type="mathml" by="mathjax">mc^2</ccmath>代表了...E是能量。</p>',
-             '<p>爱因斯坦质能方程的公式是：<math>E=mc^2</math>其中<math>mc^2</math>'
-             '代表了...E是能量。</p>')
-        ]
         """
         result = []
         for cc_html, o_html in main_html_lst:
@@ -121,7 +103,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         return result
 
     @override
-    def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment:str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -143,30 +125,27 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns:
             dict: content_list_node
         """
-        result = {}
-        tree = parse_html(parsed_content)
+        # tree = parse_html(parsed_content)
+        tree: etree._Element = etree.fromstring(parsed_content, None)
         if tree is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
-        if tree.tag != CCMATH_INTERLINE or tree.tag != CCMATH_INLINE:
-            raise ValueError(f'No ccmath element found in content: {parsed_content}')
-        else:
+        if tree.tag == CCMATH_INTERLINE or tree.tag == CCMATH_INLINE:
             # 获取math_content
             math_content = tree.text  # TODO: 需要处理math_content两边的$符号
-            math_type = tree.get('type')
-            math_render = tree.get('by')
-            equation_type = self.get_equation_type(math_content)
 
             result = {
-                'type': equation_type,
-                'raw_content': parsed_content,
+                'type': self.get_equation_type(math_content),
+                'raw_content': raw_html_segment,
                 'content': {
-                    'math_content': math_content,
-                    'math_type': math_type,
-                    'by': math_render
+                    'math_content': tree.text,
+                    'math_type': tree.get('type'),
+                    'by': tree.get('by')
                 }
             }
-        return result
+            return result
+        else:
+            raise ValueError(f'No ccmath element found in content: {parsed_content}')
 
     def contains_math(self, html: str) -> Tuple[bool, str]:
         """判断html中是否包含数学公式.并根据不同的公式类型返回对应的math_type.
@@ -441,17 +420,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
-    # test_html = [
-    #         (
-    #             ('<p>这是p的text<span class="mathjax_display">'
-    #              '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>'
-    #              '这是b的text</b>这是b的tail</p>'),
-    #             ('<p>这是p的text<span class="mathjax_display">'
-    #              '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>'
-    #              '这是b的text</b>这是b的tail</p>')
-    #         )]
-    # test_html = [(('<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
-    #                '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>'))]
     test_html = [
         (
             (
