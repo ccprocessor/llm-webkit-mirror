@@ -1,5 +1,7 @@
 import re
 
+from lxml import etree
+from lxml.html import HtmlElement
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -29,3 +31,17 @@ def wrap_math(s, display=False):
     if display:
         return '$$' + s + '$$'
     return '$' + s + '$'
+
+
+def parse_html(html_str: str) -> HtmlElement:
+    """将html str转为 HtmlElement.
+
+    Args:
+        html_str: 网页str
+
+    Returns:
+        HtmlElement
+    """
+    parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+    tree = etree.HTML(html_str, parser)
+    return tree

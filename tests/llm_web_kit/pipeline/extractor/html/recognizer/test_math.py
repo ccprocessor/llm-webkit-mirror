@@ -1,7 +1,10 @@
 import unittest
+from pathlib import Path
 
-from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
-    MathRecognizer
+from lxml import etree
+
+from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import (
+    CCTag, MathRecognizer)
 
 TEST_CASES = [
     # 基本公式测试用例
@@ -25,11 +28,14 @@ TEST_CASES = [
         ),
         'expected': [
             ['这是p的text', '这是p的text'],
-            ('<ccmath type="latex" by="mathjax" '
-             'html="&lt;span class=&quot;mathjax_display&quot;&gt;'
-             '$$a^2 + b^2 = c^2$$&lt;/span&gt;&#x8FD9;&#x662F;span&#x7684;tail">'
-             '$$a^2 + b^2 = c^2$$</ccmath>',
-             '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'),
+            (
+                '<ccmath-interline type="latex" by="mathjax" '
+                'html="&lt;span class=&quot;mathjax_display&quot;&gt;'
+                '$$a^2 + b^2 = c^2$$&lt;/span&gt;&#x8FD9;&#x662F;'
+                'span&#x7684;tail">$$a^2 + b^2 = c^2$$</ccmath-interline>',
+                '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>'
+                '这是span的tail'
+            ),
             ['这是span的tail', '这是span的tail'],
             ('<b>这是b的text</b>这是b的tail', '<b>这是b的text</b>这是b的tail')
         ]
@@ -78,6 +84,20 @@ TEST_CASES = [
     #          '<p>这是p的text<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>')
     #     ]
     # }
+]
+
+TEST_CASES_HTML = [
+    # math-container
+    {
+        'input': (
+            'assets/ccmath/stackexchange_1.html',
+            'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
+        ),
+        'expected': [
+            'assets/ccmath/stackexchange_1_interline_1.html',
+            'assets/ccmath/stackexchange_1_interline_2.html',
+        ],
+    },
 ]
 
 TEST_EQUATION_TYPE = [
@@ -133,6 +153,8 @@ TEST_CONTAINS_MATH = [
     }
 ]
 
+base_dir = Path(__file__).parent
+
 
 class TestMathRecognizer(unittest.TestCase):
     def setUp(self):
@@ -150,6 +172,19 @@ class TestMathRecognizer(unittest.TestCase):
                 self.assertEqual(len(output_html), len(test_case['expected']))
                 for i in range(len(output_html)):
                     self.assertEqual(output_html[i], test_case['expected'][i])
+
+    def test_math_recognizer_html(self):
+        for test_case in TEST_CASES_HTML:
+            raw_html_path = base_dir.joinpath(test_case['input'][0])
+            base_url = test_case['input'][1]
+            raw_html = raw_html_path.read_text()
+            parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
+            self.assertEqual(len(parts), len(test_case['expected']))
+            for expect_path, part in zip(test_case['expected'], parts):
+                expect = base_dir.joinpath(expect_path).read_text().strip()
+                answer = (etree.fromstring(part, None).text or '').strip()
+                self.assertEqual(expect, answer)
 
     def test_get_equation_type(self):
         for test_case in TEST_EQUATION_TYPE:
@@ -188,3 +223,9 @@ class TestMathRecognizer(unittest.TestCase):
                 output_contains, output_type = self.math_recognizer.contains_math(test_case['input'])
                 self.assertEqual(output_contains, test_case['expected'][0])
                 self.assertEqual(output_type, test_case['expected'][1])
+
+
+if __name__ == '__main__':
+    r = TestMathRecognizer()
+    r.setUp()
+    r.test_math_recognizer_html()

@@ -11,15 +11,17 @@ from llm_web_kit.libs.logger import mylogger
 
 
 class CCTag:
-    CC_CODE = "cccode"
-    CC_MATH = "ccmath"
-    CC_IMAGE = "ccimage"
-    CC_VIDEO = "ccvideo"
-    CC_AUDIO = "ccaudio"
-    CC_TABLE = "cctable"
-    CC_LIST = "cclist"
-    CC_TEXT = "cctext"
-    CC_TITLE = "cctitle"
+    CC_CODE = 'cccode'
+    CC_MATH = 'ccmath'
+    CC_MATH_INLINE = 'ccmath-inline'
+    CC_MATH_INTERLINE = 'ccmath-interline'
+    CC_IMAGE = 'ccimage'
+    CC_VIDEO = 'ccvideo'
+    CC_AUDIO = 'ccaudio'
+    CC_TABLE = 'cctable'
+    CC_LIST = 'cclist'
+    CC_TEXT = 'cctext'
+    CC_TITLE = 'cctitle'
 
 
 class BaseHTMLElementRecognizer(ABC):
@@ -164,10 +166,9 @@ class BaseHTMLElementRecognizer(ABC):
         return rtn
 
     @staticmethod
-    def is_cc_html(html: str, tag_name:str | list=None) -> bool:
-        """判断html片段是否是cc标签.
-        判断的时候由于自定义ccmath等标签可能会含有父标签，因此要逐层判断tagname.
-        含有父html完整路径的如：<html><body><ccmath>...</ccmath></body></html>，这种情况也会被识别为cc标签
+    def is_cc_html(html: str, tag_name: str | list = None) -> bool:
+        """判断html片段是否是cc标签. 判断的时候由于自定义ccmath等标签可能会含有父标签，因此要逐层判断tagname. 含有父html
+        完整路径的如：<html><body><ccmath>...</ccmath></body></html>，这种情况也会被识别为cc标签.
 
         Args:
             html: str: html片段
@@ -175,7 +176,7 @@ class BaseHTMLElementRecognizer(ABC):
         """
         parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
         # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
-        tree  = etree.HTML(html, parser)
+        tree = etree.HTML(html, parser)
         if tree is None:
             return False
 

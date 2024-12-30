@@ -8,12 +8,11 @@ from overrides import override
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.libs.logger import logger
-from llm_web_kit.pipeline.extractor.html.magic_html.utils import (iter_node,
-                                                                  load_html)
-from llm_web_kit.pipeline.extractor.html.recognizer.common import (text_strip,
+from llm_web_kit.pipeline.extractor.html.recognizer.common import (parse_html,
+                                                                   text_strip,
                                                                    wrap_math)
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
 
 MATH_KEYWORDS = [
     'MathJax',
@@ -29,8 +28,8 @@ MATH_KEYWORDS = [
 ]
 
 # ccmath标签，区分行内行间公式
-CCMATH_INTERLINE = 'ccmath-interline'
-CCMATH_INLINE = 'ccmath-inline'
+CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
+CCMATH_INLINE = CCTag.CC_MATH_INLINE
 
 # 数学公式的正则表达式模式
 LATEX_PATTERNS = [
@@ -145,11 +144,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             dict: content_list_node
         """
         result = {}
-        tree = load_html(parsed_content)
+        tree = parse_html(parsed_content)
         if tree is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
-        if tree.tag != 'ccmath':
+        if tree.tag != CCMATH_INTERLINE or tree.tag != CCMATH_INLINE:
             raise ValueError(f'No ccmath element found in content: {parsed_content}')
         else:
             # 获取math_content
@@ -188,7 +187,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 return True, MATH_TYPE_MAP['LATEX']
 
         # 检查是否包含 MathML 标签
-        tree = load_html(html)
+        tree = parse_html(html)
         if tree is not None:
             math_elements = tree.xpath('.//math')
             if math_elements and any(text_strip(elem.text) for elem in math_elements):
@@ -219,13 +218,14 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
-        tree = load_html(cc_html)
+        tree = parse_html(cc_html)
         if tree is None:
             raise ValueError(f'Failed to load html: {cc_html}')
 
-        for node in iter_node(tree):
+        for node in tree.iter():
+            assert isinstance(node, etree._Element)
+            original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
             parent = node.getparent()
-            node_class = node.get('class')
 
             # 1. 文本中有\\begin{align} 或 \\begin{equation}
             if node.tag not in ['script', 'style'] and text_strip(node.text):
@@ -270,18 +270,29 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
                     node.tail = text
 
-            # 4. class 为 math-container
-            if node_class == 'math-container':
+            # 3. img中的latex
+            if node.tag == 'img':
+                pass
+
+            # 4. class 为 math-container，默认为latex
+            if node.tag == 'span' and node.get('class') and 'math-container' in node.get('class'):
                 try:
                     text = node.text
-                    if text_strip(text):
-                        new_span = Element('ccmath')
-                        wrapped_math = wrap_math(text, display=True)
-                        new_span.text = wrapped_math
-                        new_span.set('type', math_type)
-                        new_span.set('by', math_render)
-                        # 将原始节点转换为HTML字符串并解除转义
-                        original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
+
+                    if text and text_strip(text):
+                        equation_type = self.get_equation_type(text)
+                        if equation_type == EQUATION_INLINE:
+                            new_span = Element(CCMATH_INLINE)
+                        elif equation_type == EQUATION_INTERLINE:
+                            new_span = Element(CCMATH_INTERLINE)
+                        else:
+                            raise ValueError(f'Unknown equation type: {equation_type}')
+                        # wrapped_math = wrap_math(text, display=False)
+                        new_span.text = text
+                        if math_type:
+                            new_span.set('type', math_type)
+                        if math_render:
+                            new_span.set('by', math_render)
                         new_span.set('html', original_html)
                         if parent is not None:
                             if text_strip(node.tail):
@@ -290,7 +301,39 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 except Exception as e:
                     logger.error(f'Error processing math-container class: {e}')
 
-            # 5. class 为 mathjax
+            # 5. class 为 wp-katex-eq
+            if node.tag == 'span' and node.get('class') and 'wp-katex-eq' in node.get('class'):
+                pass
+
+            # 6. script[type="math/tex"]
+            if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
+                pass
+
+            # 7. script[type="math/asciimath"]
+            if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
+                pass
+
+            # 8. class tex
+            if node.tag == 'span' and node.get('class') and 'tex' in node.get('class'):
+                pass
+
+            # 9. span.katex
+            if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
+                pass
+
+            # 10. class 为 x-ck12-mathEditor
+            if node.tag == 'span' and node.get('class') and 'x-ck12-mathEditor' in node.get('class'):
+                pass
+
+            # 11. Remove any .MathJax_Preview spans
+            if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
+                self.remove_node(node)
+
+            # 12. math tags
+            if node.tag == 'math':
+                pass
+
+            # 13. class 为 mathjax
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
                 # 如果节点是span标签，并且class属性包含mathjax，MathJax，mathjax_display，MathJax_Display等
@@ -308,11 +351,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     ])
                     if text_strip(text):
                         text = html.unescape(text)
-                        # Create a new ccmath tag
-                        new_cc_html = Element('ccmath')
+                        equation_type = self.get_equation_type(text)
+                        if equation_type == EQUATION_INLINE:
+                            new_cc_html = Element(CCMATH_INLINE)
+                        elif equation_type == EQUATION_INTERLINE:
+                            new_cc_html = Element(CCMATH_INTERLINE)
+                        else:
+                            raise ValueError(f'Unknown equation type: {equation_type}')
                         new_cc_html.text = text
-                        new_cc_html.set('type', math_type)
-                        new_cc_html.set('by', math_render)
+                        if math_type:
+                            new_cc_html.set('type', math_type)
+                        if math_render:
+                            new_cc_html.set('by', math_render)
                         # 将原始节点转换为HTML字符串并解除转义
                         original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
                         new_cc_html.set('html', original_html)
@@ -331,7 +381,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 except Exception as e:
                     logger.error(f'Error processing mathjax class: {e}')
 
-        return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), ['ccmath'])
+        return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), [CCMATH_INTERLINE])
 
     def get_math_render(self, html: str) -> str:
         """获取数学公式渲染器.
@@ -341,21 +391,21 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Katex:
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
         """
-        tree = load_html(html)
+        tree = parse_html(html)
         if tree is None:
             return None
         # 查找head标签
         head = tree.find('head')
         if head is not None:
             # 检查 MathJax
-            mathjax_script = head.find('.//script[@src]')
-            if mathjax_script is not None and 'mathjax' in mathjax_script.get('src', '').lower():
-                return MATH_RENDER_MAP['MATHJAX']
+            for script in head.iter('script'):
+                if script.get('src') and 'mathjax' in script.get('src', '').lower():
+                    return MATH_RENDER_MAP['MATHJAX']
 
             # 检查 KaTeX
-            katex_link = head.find('.//link[@href]')
-            if katex_link is not None and 'katex' in katex_link.get('href', '').lower():
-                return MATH_RENDER_MAP['KATEX']
+            for link in head.iter('link'):
+                if link.get('href') and 'katex' in link.get('href', '').lower():
+                    return MATH_RENDER_MAP['KATEX']
 
         return None
 
