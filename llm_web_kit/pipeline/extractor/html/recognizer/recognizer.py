@@ -2,6 +2,7 @@
 import inspect
 from abc import ABC, abstractmethod
 from copy import deepcopy
+from dataclasses import dataclass
 from typing import List, Tuple
 
 from lxml import etree
@@ -9,6 +10,18 @@ from lxml.etree import _Element as HtmlElement
 
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.html.magic_html.utils import load_html
+
+
+class CCTag:
+    CC_CODE = "cccode"
+    CC_MATH = "ccmath"
+    CC_IMAGE = "ccimage"
+    CC_VIDEO = "ccvideo"
+    CC_AUDIO = "ccaudio"
+    CC_TABLE = "cctable"
+    CC_LIST = "cclist"
+    CC_TEXT = "cctext"
+    CC_TITLE = "cctitle"
 
 
 class BaseHTMLElementRecognizer(ABC):
@@ -209,12 +222,30 @@ class BaseHTMLElementRecognizer(ABC):
         return return_parts
 
     @staticmethod
-    def is_cc_html(html: str) -> bool:
-        """判断html片段是否是cc标签."""
+    def is_cc_html(html: str, tag_name:str | list=None) -> bool:
+        """判断html片段是否是cc标签.
+        判断的时候由于自定义ccmath等标签可能会含有父标签，因此要逐层判断tagname.
+        含有父html完整路径的如：<html><body><ccmath>...</ccmath></body></html>，这种情况也会被识别为cc标签
+
+        Args:
+            html: str: html片段
+            tag_name: str|list: cc标签，如ccmath, cccode, 如果指定了那么就只检查这几个标签是否在html里，否则检查所有cc标签
+        """
+        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
         # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
-        tree = load_html(html)
+        tree  = etree.HTML(html, parser)
         if tree is None:
             return False
-        if tree.tag.startswith('cc'):
-            return True
+
+        if tag_name:
+            if isinstance(tag_name, str):
+                tag_to_check = [tag_name]
+            else:
+                tag_to_check = tag_name
+        else:
+            tag_to_check = [CCTag.CC_CODE, CCTag.CC_MATH, CCTag.CC_IMAGE, CCTag.CC_VIDEO, CCTag.CC_AUDIO, CCTag.CC_TABLE, CCTag.CC_LIST, CCTag.CC_TEXT, CCTag.CC_TITLE]
+
+        for tag in tag_to_check:
+            if tree.xpath(f'.//{tag}'):
+                return True
         return False

@@ -43,3 +43,14 @@ class TestBaseHTMLElementRecognizer(unittest.TestCase):
 
         result = BaseHTMLElementRecognizer.html_split_by_tags(html_content, 'cccode')
         assert len(result) == 10
+
+    def test_is_cctag(self):
+        with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/iscctag.html', 'r') as file:
+            html_content = file.read()
+
+        assert BaseHTMLElementRecognizer.is_cc_html(html_content, 'cccode')
+        assert BaseHTMLElementRecognizer.is_cc_html(html_content, 'ccmath')
+        assert BaseHTMLElementRecognizer.is_cc_html(html_content, 'ccimage')
+        assert not BaseHTMLElementRecognizer.is_cc_html(html_content, 'ccvideo')
+        assert not BaseHTMLElementRecognizer.is_cc_html(html_content, 'cctitle')
+        assert  BaseHTMLElementRecognizer.is_cc_html(html_content, ['cccode', 'ccxxx'])
