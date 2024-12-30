@@ -1,3 +1,4 @@
+from abc import ABC
 from typing import List, Tuple
 
 from overrides import override
@@ -8,6 +9,11 @@ from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
 
 class TextParagraphRecognizer(BaseHTMLElementRecognizer):
     """解析文本段落元素."""
+
+    @override
+    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
+        pass
+
     @override
     def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """父类，解析文本段落元素.

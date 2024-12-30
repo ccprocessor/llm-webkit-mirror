@@ -2,14 +2,12 @@
 import inspect
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from dataclasses import dataclass
 from typing import List, Tuple
 
 from lxml import etree
 from lxml.etree import _Element as HtmlElement
 
 from llm_web_kit.libs.logger import mylogger
-from llm_web_kit.pipeline.extractor.html.magic_html.utils import load_html
 
 
 class CCTag:
@@ -68,158 +66,102 @@ class BaseHTMLElementRecognizer(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def html_split_by_tags(html_segment: str, split_tag_name:str | list, parent=False) -> List[Tuple[str,str]]:
-        """根据split_tag_name将html分割成不同的部分.
+    def html_split_by_tags(html_segment: str, split_tag_names:str | list) -> List[Tuple[str,str]]:
+        """
+        根据split_tag_name将html分割成不同的部分.
 
         Args:
             html_segment: str: 要分割的html源码
-            split_tag_name: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
-            parent: bool: False时候，只返回带内容的叶子标签，True时候，分割html标签的时候会带上所有上级标签以及属性
-
-        Returns:
-             List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
-
-        TODO
-        1. <script>和<style>中出现的 <, >, & 等字符会被转义，需要跳过，但是目前没有看到影响正文提取，因此暂时不处理
+            split_tag_names: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
         """
         parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
-
-        def __contain_wanted_tag(el: HtmlElement, tags_to_check:list) -> bool:
-            # 遍历需要检查的标签列表
-            for tag in tags_to_check:
-                if el.tag == tag:  # 如果当前节点就是我们想要的标签，直接返回即可
-                    mylogger.debug(f'{el.tag} is wanted tag: {tag}')
-                    return True
-                # 使用XPath查找当前节点下是否包含我们想要的标签
-                elements = el.xpath(f'.//{tag}')
-                if elements:
-                    mylogger.debug(f'{el.tag} contain wanted tag: {tag}')
-                    return True
-
-            mylogger.debug(f'{el.tag} not contain wanted tag: {tags_to_check}')
-            return False
-
-        def __push_el(parent_nodes:list[HtmlElement], lst: List[Tuple[HtmlElement,str]], el: HtmlElement, split_tail=False, extra_html=False) -> List[Tuple[HtmlElement,str]]:
-            """将节点和节点的html字符串添加到列表中, 此处着重处理了节点的text和tail部分 ```html.
-
-            <p>
-            这里没有在任何内部标签中，出现在p的开头，叫做p的text属性
-            <img src="http..."/> 这里是img的tail属性
-            </p>
-            这里呢也是p的tail属性
-            ```
-
-            Args:
-                parent_nodes: list: 父节点列表
-                lst: list: 要添加的列表
-                el: HtmlElement: 节点
-                split_tail: bool: tail 是否单独作为一个节点
-                extra_html: bool: 是否从el中提取html属性，这个html是代表了el的原始html。el节点为自定义标签的那些节点：ccmath, ccimage, ccvideo等
-
-            Returns:
-                List[Tuple[HtmlElement,str]]: 节点和节点的html字符串
-            """
-            tail_text = el.tail
-            new_el = deepcopy(el)
-            if split_tail:
-                new_el.tail = None
-                html_source_segment = etree.tostring(new_el, encoding='utf-8').decode()
-            else:
-                html_source_segment = etree.tostring(el, encoding='utf-8').decode()
-
-            if extra_html:
-                html_source_segment = el.attrib.get('html')
-                if not html_source_segment:
-                    mylogger.error(f'{el.tag} has no html attribute')
-                    # TODO 正式生产的时候抛出异常，说明程序有bug
-
-            if parent:
-                new_el = __attach_parent_nodes_path(new_el, parent_nodes)
-            lst.append((new_el, html_source_segment))
-            if tail_text and split_tail and tail_text.strip():
-                if parent:
-                    new_tail = __attach_parent_nodes_path(tail_text.strip(), parent_nodes)
-                    lst.append((new_tail, tail_text.strip()))
-                else:
-                    lst.append((tail_text.strip(), tail_text.strip()))
-
-            return lst
-
-        def __attach_parent_nodes_path(el: HtmlElement | str, parent_nodes: list[HtmlElement]) -> HtmlElement:
-            """将父节点附加到当前节点上，返回一个新的节点.
-
-            Args:
-                el: HtmlElement|str: 当前节点, 或者是个text
-                parent_nodes: list: 父节点列表
-
-            Returns:
-                HtmlElement: 新的节点
-            """
-            if isinstance(el, HtmlElement):
-                new_el = deepcopy(el)
-                if parent_nodes and parent:  # 如果有父节点，并且调用方要求返回父节点
-                    for p in reversed(parent_nodes):
-                        new_p = parser.makeelement(p.tag, p.attrib)
-                        new_p.append(new_el)
-                        new_el = new_p
-            else:
-                if parent and parent_nodes:
-                    new_el = parser.makeelement(parent_nodes[-1].tag, parent_nodes[-1].attrib)
-                    new_el.text = el
-                    for p in reversed(parent_nodes[:-1]):
-                        new_p = parser.makeelement(p.tag, p.attrib)
-
-                        new_p.append(new_el)
-                        new_el = new_p
-                else:
-                    new_el = el  # 单纯的文字就可以了
-
-            return new_el
-
-        def __split_html(root_el: HtmlElement, wanted_tag_names:list, parent_nodes:list[HtmlElement]) -> List[Tuple[HtmlElement,str]]:
-            """递归分割html.
-
-            Args:
-                root_el: HtmlElement: html节点
-                wanted_tag_names: str: 分割标签名
-                parent_nodes: list: 父节点列表
-
-            Returns:
-                List[Tuple[HtmlElement,str]]: 分割后的html(html节点，原始html字符串)
-            """
-            assert isinstance(wanted_tag_names, list), f'{__file__}:{inspect.currentframe().f_back.f_lineno} wanted_tag_names must be a list'
-            parts = []
-            if not __contain_wanted_tag(root_el, wanted_tag_names):  # 这个节点里没有包含想要分割的标签，就原样返回
-                __push_el(parent_nodes, parts, root_el, split_tail=False)
-            else:  # 这个节点里肯定包含了我们想要分割的标签
-                if root_el.tag in wanted_tag_names:  # 如果这个节点就是我们想要的标签，直接返回即可
-                    __push_el(parent_nodes, parts, root_el, split_tail=True, extra_html=True)
-                else:  # 继续逐层分割
-                    new_parent_nodes = parent_nodes + [root_el]
-                    # 先将当前节点的text部分添加到列表中
-                    if root_el.text and root_el.text.strip():
-                        parts.append((__attach_parent_nodes_path(root_el.text.strip(), new_parent_nodes), root_el.text))
-                    for child_el in root_el.iterchildren():  # 遍历直接子节点
-                        lst = __split_html(child_el, wanted_tag_names, new_parent_nodes)
-                        parts = parts + lst  # 将子节点的分割结果合并到当前节点
-                    if root_el.tail and root_el.tail.strip():  # 将当前节点的tail部分添加到列表中
-                        parts.append((__attach_parent_nodes_path(root_el.tail.strip(), new_parent_nodes), root_el.tail))
-
-            return parts
-
-        # ########################################################################################################
-        if isinstance(split_tag_name, str):  # 如果参数是str，转换成list
-            split_tag_name = [split_tag_name]
-
         root = etree.HTML(html_segment, parser)
-        html_parts = __split_html(root, split_tag_name, parent_nodes=[])
-        return_parts = []
-        for p in html_parts:
-            if isinstance(p[0], str):
-                return_parts.append([p[0], p[1]])
-            else:
-                return_parts.append((etree.tostring(p[0], encoding='utf-8').decode(), p[1]))
-        return return_parts
+        if isinstance(split_tag_names, str):  # 如果参数是str，转换成list
+            split_tag_names = [split_tag_names]
+
+        """root is not considered"""
+        path: List[HtmlElement] = []
+
+        def  __is_element_text_empty(element):
+            """
+            """
+            if element.text is not None and element.text.strip():
+                return False
+            # 遍历所有子元素，检查它们的文本和尾随文本
+            for child in element.iter():
+                # 检查子元素的文本
+                if child.text is not None and child.text.strip():
+                    return False
+                # 检查子元素的尾随文本
+                if child.tail is not None and child.tail.strip():
+                    return False
+            # 如果没有找到文本，返回 True
+            return True
+
+        def __rebuild_empty_parent_nodes_path():
+            """rebuild path with only tag & attrib"""
+            for i in range(len(path)):
+                elem = path[i]
+                copied = parser.makeelement(elem.tag, elem.attrib)
+                if i > 0:
+                    path[i - 1].append(copied)
+                path[i] = copied
+
+        def __copy_tree(elem: HtmlElement):
+            """deep copy w/o root's tail"""
+            copied = parser.makeelement(elem.tag, elem.attrib)
+            copied.text = elem.text
+            for sub_elem in elem:
+                sub_copied = __copy_tree(sub_elem)
+                sub_copied.tail = sub_elem.tail
+                copied.append(sub_copied)
+            return copied
+
+        def __split_node(elem: HtmlElement):
+            copied = parser.makeelement(elem.tag, elem.attrib)
+            if elem.text and elem.text.strip():
+                copied.text = elem.text
+
+            if path:
+                path[-1].append(copied)
+
+            path.append(copied)
+
+            for sub_elem in elem:
+                if sub_elem.tag in split_tag_names:
+                    # previous elements
+                    nodes = raw_nodes = etree.tostring(path[0], encoding='utf-8').decode()
+                    if not __is_element_text_empty(path[0]):
+                        yield nodes, raw_nodes
+
+                    # current sub element
+                    __rebuild_empty_parent_nodes_path()
+                    path[-1].append(__copy_tree(sub_elem))
+                    html_source_segment = sub_elem.attrib.get('html')
+                    if not html_source_segment:
+                        mylogger.error(f'{sub_elem.tag} has no html attribute')
+                        # TODO raise exception
+                    nodes, raw_nodes = etree.tostring(path[0], encoding='utf-8').decode(), html_source_segment
+                    yield nodes, raw_nodes
+
+                    # following elements
+                    __rebuild_empty_parent_nodes_path()
+                    if sub_elem.tail and sub_elem.tail.strip():
+                        path[-1].text = sub_elem.tail
+                    continue
+
+                yield from __split_node(sub_elem)
+
+            copied = path.pop()
+            if elem.tail and elem.tail.strip():
+                copied.tail = elem.tail
+
+            if not path:
+                nodes = raw_nodes = etree.tostring(copied, encoding='utf-8').decode()
+                yield nodes, raw_nodes
+
+        rtn = list(__split_node(root))
+        return rtn
 
     @staticmethod
     def is_cc_html(html: str, tag_name:str | list=None) -> bool:

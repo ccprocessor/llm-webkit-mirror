@@ -4,6 +4,7 @@ import commentjson as json
 
 from llm_web_kit.exception.exception import PipelineInitExp
 from llm_web_kit.input.datajson import DataJsonKey
+from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.pipeline import PipelineSimpleFactory
 
 
@@ -94,9 +95,11 @@ class PipelineSuit(object):
                 except KeyError:
                     raise PipelineInitExp(f'Dataset name {dataset_name} is not found in the configuration file.')
                 except ValueError as e:
+                    mylogger.exception(e)
                     raise PipelineInitExp(
                         f'Failed to initialize pipeline for dataset: {dataset_name}, check pipeline config file of this dataset.') from e
                 except Exception as e:
+                    mylogger.exception(e)
                     raise PipelineInitExp(f'Failed to initialize pipeline for dataset: {dataset_name}') from e
 
             # 检查Pipeline实例是否有这个方法
