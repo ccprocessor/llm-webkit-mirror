@@ -33,11 +33,11 @@ class TestTableRecognizer(unittest.TestCase):
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             parts = [part[0] for part in parts if 'cctable' in part[0]]
-            #self.assertEqual(len(parts), len(test_case['expected']))
+            # self.assertEqual(len(parts), len(test_case['expected']))
             for expect_path, part in zip(test_case['expected'], parts):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
                 answer = (etree.fromstring(part, None).text or '').strip()
-                #self.assertEqual(expect, answer)
+                self.assertEqual(expect, answer)
             print(base_url, 'ok')
 
 

@@ -64,7 +64,7 @@ def get_tree_roots(
             edges.append((dist[i][j], i, j))
     edges = sorted(edges)
 
-    def check_trees_done(l: int) -> bool:
+    def check_trees_done(length: int) -> bool:
         # print(l)
         # print()
         # print()
