@@ -27,17 +27,21 @@ TEST_CASES = [
             '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
         ),
         'expected': [
-            ['这是p的text', '这是p的text'],
             (
-                '<ccmath-interline type="latex" by="mathjax" '
-                'html="&lt;span class=&quot;mathjax_display&quot;&gt;'
-                '$$a^2 + b^2 = c^2$$&lt;/span&gt;&#x8FD9;&#x662F;'
-                'span&#x7684;tail">$$a^2 + b^2 = c^2$$</ccmath-interline>',
-                '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>'
-                '这是span的tail'
+                '<html><body><p>这是p的text</p></body></html>',
+                '<html><body><p>这是p的text</p></body></html>'
             ),
-            ['这是span的tail', '这是span的tail'],
-            ('<b>这是b的text</b>这是b的tail', '<b>这是b的text</b>这是b的tail')
+            (
+                '<html><body><p><ccmath-interline type="latex" by="mathjax" '
+                'html="&lt;span class=&quot;mathjax_display&quot;&gt;$$a^2 + b^2 = c^2$$'
+                '&lt;/span&gt;&#x8FD9;&#x662F;span&#x7684;tail">$$a^2 + b^2 = c^2$$'
+                '</ccmath-interline></p></body></html>',
+                '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
+            ),
+            (
+                '<html><body><p>这是span的tail<b>这是b的text</b>这是b的tail</p></body></html>',
+                '<html><body><p>这是span的tail<b>这是b的text</b>这是b的tail</p></body></html>'
+            )
         ]
     },
     # 已经包含cccode标签
@@ -184,6 +188,7 @@ class TestMathRecognizer(unittest.TestCase):
             for expect_path, part in zip(test_case['expected'], parts):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
                 answer = (etree.fromstring(part, None).text or '').strip()
+                print('answer::::::::', answer)
                 self.assertEqual(expect, answer)
 
     def test_get_equation_type(self):

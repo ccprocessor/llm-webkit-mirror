@@ -1,7 +1,5 @@
 """基本的元素解析类."""
-import inspect
 from abc import ABC, abstractmethod
-from copy import deepcopy
 from typing import List, Tuple
 
 from lxml import etree
@@ -69,8 +67,7 @@ class BaseHTMLElementRecognizer(ABC):
 
     @staticmethod
     def html_split_by_tags(html_segment: str, split_tag_names:str | list) -> List[Tuple[str,str]]:
-        """
-        根据split_tag_name将html分割成不同的部分.
+        """根据split_tag_name将html分割成不同的部分.
 
         Args:
             html_segment: str: 要分割的html源码
@@ -84,9 +81,8 @@ class BaseHTMLElementRecognizer(ABC):
         """root is not considered"""
         path: List[HtmlElement] = []
 
-        def  __is_element_text_empty(element):
-            """
-            """
+        def __is_element_text_empty(element):
+            """"""
             if element.text is not None and element.text.strip():
                 return False
             # 遍历所有子元素，检查它们的文本和尾随文本
@@ -101,7 +97,7 @@ class BaseHTMLElementRecognizer(ABC):
             return True
 
         def __rebuild_empty_parent_nodes_path():
-            """rebuild path with only tag & attrib"""
+            """rebuild path with only tag & attrib."""
             for i in range(len(path)):
                 elem = path[i]
                 copied = parser.makeelement(elem.tag, elem.attrib)
@@ -110,7 +106,7 @@ class BaseHTMLElementRecognizer(ABC):
                 path[i] = copied
 
         def __copy_tree(elem: HtmlElement):
-            """deep copy w/o root's tail"""
+            """deep copy w/o root's tail."""
             copied = parser.makeelement(elem.tag, elem.attrib)
             copied.text = elem.text
             for sub_elem in elem:

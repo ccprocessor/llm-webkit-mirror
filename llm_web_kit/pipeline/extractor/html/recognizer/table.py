@@ -1,11 +1,11 @@
 from typing import List, Tuple
-from lxml import html
-from lxml import etree
+
+from lxml import etree, html
 from overrides import override
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    CCTag
+
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
+
 
 class TableRecognizer(BaseHTMLElementRecognizer):
     """解析table元素."""
@@ -38,7 +38,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             else:
                 final_result.extend(self.contain_table_elements(tree))
         merged_cc_html = self.merge_html_fragments(final_result)
-        #print(merged_cc_html)
+        # print(merged_cc_html)
         final_html = BaseHTMLElementRecognizer.html_split_by_tags(merged_cc_html, 'cctable')
         return final_html
 
@@ -59,9 +59,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         return d
 
     def merge_html_fragments(self, html_list):
-        """
-        合并html 片段
-        """
+        """合并html 片段."""
         merged_html = ''.join(html_list)
         return merged_html
 
@@ -70,10 +68,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         return BaseHTMLElementRecognizer.is_cc_html(cc_html)
 
     def is_contain_table(self, tree):
-        """
-        html中是否包含table标签
-        """
-        #解析html
+        """html中是否包含table标签."""
+        # 解析html
         tables = tree.xpath('//table')
         if tables:
             return True
@@ -81,9 +77,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             return False
 
     def is_simple_table(self, tree) -> bool:
-        """
-        处理table元素，判断是是否复杂：是否包含合并单元格
-        """
+        """处理table元素，判断是是否复杂：是否包含合并单元格."""
         cells = tree.xpath('//td | //th')
         for cell in cells:
             colspan = cell.get('colspan', '1')
@@ -93,10 +87,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 return False
             else:
                 return True
+
     def is_table_contain_img(self, tree) -> bool:
-        """
-        判断table元素是否包含图片
-        """
+        """判断table元素是否包含图片."""
         imgs = tree.xpath('//table//img')
         if imgs:
             return False
@@ -104,19 +97,15 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             return True
 
     def is_table_nested(self, tree) -> bool:
-        """
-        判断table元素是否嵌套
-        """
+        """判断table元素是否嵌套."""
         nested_tables = tree.xpath('//table//table')
         if nested_tables:
             return False
         else:
             return True
 
-
     def contain_table_elements(self, tree) -> List[str]:
-        """
-        判断html中是否包含table元素并返回修改后的HTML.
+        """判断html中是否包含table元素并返回修改后的HTML.
 
         Args:
             tree: HTML树结构
@@ -135,7 +124,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                         table_type = 'simple'
                     else:
                         table_type = 'complex'
-                    #保留原来的Html
+                    # 保留原来的Html
                     new_table_html = ''.join([html.tostring(table_child, encoding='unicode') for table_child in child])
                     cc_table = f"<{CCTag.CC_TABLE} type='{table_type}' html='{original_table_html}'>'{new_table_html}'</{CCTag.CC_TABLE}>"
                     result.append(cc_table)
@@ -150,14 +139,19 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
         return result
 
+
 if __name__ == '__main__':
     recognizer = TableRecognizer()
-    base_url = "https://www.baidu.com"
+    base_url = 'https://www.baidu.com'
     main_html_lst = [
-        ("<cccode>hello</cccode>",
-         "<code>hello</code>"),
+        ('<cccode>hello</cccode>',
+         '<code>hello</code>'),
         ("""<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>""",
          """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>""",
          )]
-    raw_html =  """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>"""
-    print(recognizer.recognize(base_url, main_html_lst, raw_html=""))
+    raw_html = (
+        """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr>"""
+        """<tr><td>3</td></tr></table><p>段落2</p><table><tr>"""
+        """<td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>"""
+    )
+    print(recognizer.recognize(base_url, main_html_lst, raw_html=''))
