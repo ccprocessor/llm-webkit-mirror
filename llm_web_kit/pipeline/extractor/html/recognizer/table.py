@@ -1,5 +1,5 @@
 from typing import List, Tuple
-
+import json
 from lxml import etree, html
 from overrides import override
 
@@ -30,17 +30,16 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         final_result = list()
         for cc_html, o_html in main_html_lst:
             if self.is_contain_cc_html(cc_html):
-                final_result.append(cc_html)
+                final_result.append((cc_html, o_html))
                 continue
             tree = html.fromstring(cc_html)
-            if not self.is_contain_table(tree):
-                final_result.append(cc_html)
+            if self.is_contain_table(tree):
+                table_html = self.merge_html_fragments(self.contain_table_elements(tree))
+                table_res = BaseHTMLElementRecognizer.html_split_by_tags(table_html, ["cctable"])
+                final_result.extend(table_res)
             else:
-                final_result.extend(self.contain_table_elements(tree))
-        merged_cc_html = self.merge_html_fragments(final_result)
-        # print(merged_cc_html)
-        final_html = BaseHTMLElementRecognizer.html_split_by_tags(merged_cc_html, 'cctable')
-        return final_html
+                final_result.extend((cc_html, o_html))
+        return final_result
 
     @override
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:

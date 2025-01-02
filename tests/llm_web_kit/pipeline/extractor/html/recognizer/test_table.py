@@ -10,11 +10,12 @@ TEST_CASES = [
     {
         'input': (
             'assets/recognizer/table.html',
-            'https://www.geeksforgeeks.org/output-java-program-set-7/?ref=rp',
+            'assets/recognizer/table_exclude.html',
         ),
-        'expected': [
-            'assets/cccode/geeksforgeeks-0.java'
+        'expected':[
+            ('<cccode>hello</cccode>', '<code>hello</code>'), ('<html><body><p>段落2</p></body></html>', '<html><body><p>段落2</p></body></html>'), ('<html><body><cctable type="complex" html="<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>">\'<tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr>\'</cctable></body></html>', '<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>'), ('<html><body><p>段落2</p></body></html>', '<html><body><p>段落2</p></body></html>'), ('<html><body><cctable type="complex" html="<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>">\'<tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr>\'</cctable></body></html>', '<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>')
         ]
+
     }
 ]
 
@@ -29,19 +30,24 @@ class TestTableRecognizer(unittest.TestCase):
         for test_case in TEST_CASES:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
             base_url = test_case['input'][1]
-            print(base_url)
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            parts = [part[0] for part in parts if 'cctable' in part[0]]
-            # self.assertEqual(len(parts), len(test_case['expected']))
-            for expect_path, part in zip(test_case['expected'], parts):
-                expect = base_dir.joinpath(expect_path).read_text().strip()
-                answer = (etree.fromstring(part, None).text or '').strip()
-                self.assertEqual(expect, answer)
-            print(base_url, 'ok')
+            self.assertEqual(len(parts), len(test_case['expected']))
+
+
+    def test_not_involve_table(self):
+        """
+        不包含表格
+        """
+        for test_case in TEST_CASES:
+            raw_html_path = base_dir.joinpath(test_case['input'][1])
+            base_url = test_case['input'][1]
+            raw_html = raw_html_path.read_text()
+            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            self.assertEqual(len(parts), 2)
 
 
 if __name__ == '__main__':
     r = TestTableRecognizer()
     r.setUp()
-    r.test_involve_cctale()
+    r.test_not_involve_table()
