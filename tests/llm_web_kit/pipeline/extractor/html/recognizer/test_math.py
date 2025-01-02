@@ -96,7 +96,7 @@ TEST_CASES = [
 TEST_CASES_HTML = [
     # math-container, latex + mathjax
     {
-        'input': ('assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'),
+        'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
         'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         'expected': [
             'assets/ccmath/stackexchange_1_interline_1.html',
@@ -104,9 +104,9 @@ TEST_CASES_HTML = [
         ],
     },
     {
-        'input': (
+        'input': [
             'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-        ),
+        ],
         'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
         'expected': [
             # 'assets/ccmath/libretexts_1_interline_1.html',
@@ -169,14 +169,16 @@ TEST_CONTAINS_MATH = [
 
 TEST_GET_MATH_RENDER = [
     {
-        'input': ('assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'),
+        'input': [
+            'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'
+        ],
         'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         'expected': 'mathjax',
     },
     {
-        'input': (
+        'input': [
             'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-        ),
+        ],
         'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
         'expected': 'mathjax',
     }
@@ -205,6 +207,8 @@ class TestMathRecognizer(unittest.TestCase):
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
+            print('base_dir::::::::', base_dir)
+            print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
