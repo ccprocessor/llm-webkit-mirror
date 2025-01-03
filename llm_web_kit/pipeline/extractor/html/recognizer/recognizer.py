@@ -73,6 +73,7 @@ class BaseHTMLElementRecognizer(ABC):
             html_segment: str: 要分割的html源码
             split_tag_names: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
         """
+        copy_attri = False  # 是否copy 父节点的属性
         parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
         root = etree.HTML(html_segment, parser)
         if isinstance(split_tag_names, str):  # 如果参数是str，转换成list
@@ -98,16 +99,19 @@ class BaseHTMLElementRecognizer(ABC):
 
         def __rebuild_empty_parent_nodes_path():
             """rebuild path with only tag & attrib."""
+            """rebuild path with only tag & attrib."""
             for i in range(len(path)):
                 elem = path[i]
-                copied = parser.makeelement(elem.tag, elem.attrib)
+                attrib = elem.attrib if copy_attri else {}
+                copied = parser.makeelement(elem.tag, attrib)
                 if i > 0:
                     path[i - 1].append(copied)
                 path[i] = copied
 
         def __copy_tree(elem: HtmlElement):
             """deep copy w/o root's tail."""
-            copied = parser.makeelement(elem.tag, elem.attrib)
+            attrib = elem.attrib if copy_attri else {}
+            copied = parser.makeelement(elem.tag, attrib)
             copied.text = elem.text
             for sub_elem in elem:
                 sub_copied = __copy_tree(sub_elem)
@@ -116,7 +120,8 @@ class BaseHTMLElementRecognizer(ABC):
             return copied
 
         def __split_node(elem: HtmlElement):
-            copied = parser.makeelement(elem.tag, elem.attrib)
+            attrib = elem.attrib if copy_attri else {}
+            copied = parser.makeelement(elem.tag, attrib)
             if elem.text and elem.text.strip():
                 copied.text = elem.text
 
