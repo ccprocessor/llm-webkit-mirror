@@ -1,9 +1,9 @@
 from typing import List, Tuple
 
-from lxml import etree
 from lxml.etree import _Element as HtmlElement
 from overrides import override
 
+from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 
@@ -25,7 +25,7 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         """
         level, text = self.__get_attribute(parsed_content)
         cctitle_content_node = {
-            'type': 'title',
+            'type': DocElementType.TITLE,
             'raw_content': raw_html_segment,
             'content': {
                 'title_content': text,
@@ -64,24 +64,34 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str,str]]: 多级标题元素, 第一个str是<cctitle>xxx</cctitle>, 第二个str是原始的html内容
 
         """
-        result = []
         tree = self._build_html_tree(raw_html)
-        # 遍历这个tree, 找到所有h1, h2, h3, h4, h5, h6标签, 并得到其对应的原始的html片段
-        for ele in tree.iter():
-            if ele.tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-                title_text = self.__extract_title_text(ele)
-                title_raw_html = self._element_to_html(ele)
-                title_level = str(self.__extract_title_level(ele.tag))
-                cctitle_element = self.__build_cc_element(CCTag.CC_TITLE, title_text, level=title_level, html=title_raw_html)
-                # 用cctitle_element替换ele
-                self.__replace_element(ele, cctitle_element)
-
+        self.__do_extract_title(tree)  # 遍历这个tree, 找到所有h1, h2, h3, h4, h5, h6标签, 并得到其对应的原始的html片段
         # 最后切割html
         new_html = self._element_to_html(tree)
         lst = self.html_split_by_tags(new_html, CCTag.CC_TITLE)
-        result.extend(lst)
 
-        return result
+        return lst
+
+    def __do_extract_title(self, root:HtmlElement) -> None:
+        """递归处理所有子标签.
+
+        Args:
+            root: HtmlElement: 标签元素
+
+        Returns:
+        """
+        # 匹配需要替换的标签
+        if root.tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            title_text = self.__extract_title_text(root)
+            title_raw_html = self._element_to_html(root)
+            title_level = str(self.__extract_title_level(root.tag))
+            cc_element = self._build_cc_element(CCTag.CC_TITLE, title_text, level=title_level, html=title_raw_html)
+            self._replace_element(root, cc_element)
+            return
+
+        # 递归处理所有子标签必须放到最后。这样能保证对于嵌套的表格、list等元素，能够只处理最外层的标签。（也就是默认不处理嵌套的标签，留给处理者自行决策如何组织）
+        for child in root.getchildren():
+            self.__do_extract_title(child)  # 递归处理所有子标签
 
     def __extract_title_level(self, header_tag:str) -> int:
         """提取标题的级别.
@@ -105,34 +115,6 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         """
         return ''.join(header_el.xpath('.//text()'))
 
-    def __build_cc_element(self, html_tag_name:str, text:str, **kwargs) -> str:
-        """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
-
-        Args:
-            title_text: str: 标题的文本
-            title_level: int: 标题的级别
-            raw_html: str: 原始的html
-
-        Returns:
-            str: cctitle的html
-        """
-        attrib = {k:v for k,v in kwargs.items()}
-        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
-        cc_element = parser.makeelement(html_tag_name, attrib)
-        cc_element.text = text
-        return cc_element
-
-    def __replace_element(self, element:HtmlElement, cc_element:HtmlElement) -> None:
-        """替换element为cc_element."""
-        # 清空element的子元素
-        if element.getparent():
-            element.getparent().replace(element, cc_element)
-        else:
-            element.tag = cc_element.tag
-            element.text = cc_element.text
-            element.attrib = cc_element.attrib
-            element.tail = cc_element.tail
-
     def __get_attribute(self, html:str) -> Tuple[int, str]:
         """获取element的属性."""
         ele = self._build_html_tree(html)
@@ -143,5 +125,5 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             text = cctitle_ele.text
             return level, text
         else:
-            # TODO 抛出异常
+            # TODO 抛出异常, 需要自定义
             raise ValueError(f'{html}中没有cctitle标签')
