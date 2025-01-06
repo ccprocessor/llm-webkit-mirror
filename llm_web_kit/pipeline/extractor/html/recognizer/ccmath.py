@@ -1,10 +1,16 @@
+import sys
+sys.path.append('/nvme/pzx/llm-webkit-mirror')
+
 from typing import List, Tuple
 
 from lxml import etree
 from overrides import override
+# from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
+#     tag_math, tag_span_mathcontainer, tag_span_mathjax)
 
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_math, tag_span_mathcontainer, tag_span_mathjax)
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import tag_span_mathjax, tag_span_mathcontainer
+
+
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, parse_html)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
@@ -221,8 +227,8 @@ if __name__ == '__main__':
                 'gravitational strain <span class=\"math-container\">$h$</span> - the proportional '
                 'change in length of an object due to gravitational waves from a mass '
                 '<span class=\"math-container\">$M$</span>:</p>\n\n'
-                '<p><span class=\"math-container\">$$h \\approx {{GM} \\over c^2} \\times '
-                '{1 \\over r} \\times {v^2 \\over c^2}$$</span></p>\n\n'
+                '<p><span class=\"math-container</\">$$h \\approx {{GM} \\over c^2} \\times '
+                '{1 \\over r} \\times {v^2 \\over c^2}$$</span>p>\n\n'
                 '<p><a href=\"http://www.tapir.caltech.edu/~teviet/Waves/gwave.html\" '
                 'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
             )

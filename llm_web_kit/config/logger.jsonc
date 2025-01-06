@@ -1,0 +1,50 @@
+{
+    "s3": {
+        "bucket_name1": {
+            "ak": "XXXXXXXXXXXXXXXXXXXX",
+            "sk": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "endpoint": "http://endpoint1",
+            "addressing_style": "path"
+        },
+        "bucket_name2": {
+            "ak": "XXXXXXXXXXXXXXXXXXXX",
+            "sk": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "endpoint": "http://endpoint2",
+            "addressing_style": "path"
+        }
+    },
+    "resources": {
+        "common":{
+            "cache_path": "~/.llm_web_kit_cache"
+        },
+        "lang-id-176": {
+            "download_path": "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin",
+            "md5": "01810bc59c6a3d2b79c79e6336612f65"
+        },
+        "political-24m7": {
+            "download_path": "XXXXXX",
+            "md5": "XXXXX"
+        }
+    },
+    "logger": [
+                {
+                    "to": "sys.stdout",
+                    "log-level": "DEBUG",
+                    "log-format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
+                },
+                {
+                    "to": "/tmp/logs/test-{time:YYYY-MM-DD}.log",
+                    "rotation": "1 day",
+                    "retention": "10 days",
+                    "log-level": "INFO",
+                    "log-format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
+                },
+                {
+                    "to": "/tmp/logs/error-{time:YYYY-MM-DD}.log",
+                    "rotation": "1 day",
+                    "retention": "10 days",
+                    "log-level": "ERROR",
+                    "log-format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
+                }
+            ]
+}
