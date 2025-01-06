@@ -1,75 +1,16 @@
-import html
-import re
 from typing import List, Tuple
 
 from lxml import etree
-from lxml.etree import Element
 from overrides import override
-from py_asciimath.translator.translator import ASCIIMath2Tex
 
-from llm_web_kit.libs.logger import logger
-from llm_web_kit.pipeline.extractor.html.recognizer.common import (parse_html,
-                                                                   text_strip,
-                                                                   wrap_math)
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
-    BaseHTMLElementRecognizer, CCTag)
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
+    tag_math, tag_span_mathcontainer, tag_span_mathjax)
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
+    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, parse_html)
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
+    BaseHTMLElementRecognizer
 
-MATH_KEYWORDS = [
-    'MathJax',
-    'mathjax',
-    '<math',
-    'math-container',
-    'katex.min.css',
-    'latex.php',
-    'codecogs',
-    'tex.cgi',
-    'class="tex"',
-    "class='tex'",
-]
-
-# ccmath标签，区分行内行间公式
-CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
-CCMATH_INLINE = CCTag.CC_MATH_INLINE
-
-# 数学公式的正则表达式模式
-LATEX_PATTERNS = [
-    r'\$\$(.*?)\$\$',  # 匹配 $$...$$
-    r'\$(.*?)\$',      # 匹配 $...$
-    r'\\begin{equation}(.*?)\\end{equation}',  # 匹配 equation 环境
-    r'\\begin{align}(.*?)\\end{align}',        # 匹配 align 环境
-    r'\\[(.*?)\\]',    # 匹配 \[...\]
-    r'\\((.*?)\\)',    # 匹配 \(...\)
-]
-
-# 数学标记语言
-MATH_TYPE_MAP = {
-    'LATEX': 'latex',
-    'MATHML': 'mathml',
-    'ASCIIMATH': 'asciimath',
-    'HTMLMATH': 'htmlmath',  # sub, sup, etc.
-}
-
-# 数学公式渲染器
-MATH_RENDER_MAP = {
-    'MATHJAX': 'mathjax',
-    'KATEX': 'katex',
-}
-
-# 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
-EQUATION_INLINE = 'equation-inline'
-EQUATION_INTERLINE = 'equation-interline'
-latex_config = {
-    'inlineMath': [
-        ['$', '$'],
-        ['\\(', '\\)']
-    ],
-    'displayMath': [
-        ['\\[', '\\]'],
-        ['$$', '$$']
-    ],
-}
-
-asciimath2tex = ASCIIMath2Tex(log=False)
+cm = CCMATH()
 
 
 class MathRecognizer(BaseHTMLElementRecognizer):
@@ -92,10 +33,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         result = []
         for cc_html, o_html in main_html_lst:
             # 检查是否包含数学公式
-            contains_math, math_type = self.contains_math(cc_html)
+            contains_math, math_type = cm.contains_math(cc_html)
             if contains_math and not self.is_cc_html(cc_html):
                 # 获取数学公式渲染器
-                math_render = self.get_math_render(raw_html)
+                math_render = cm.get_math_render(raw_html)
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_type, math_render))
             else:
                 result.append((cc_html, o_html))
@@ -135,7 +76,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             math_content = tree.text  # TODO: 需要处理math_content两边的$符号
 
             result = {
-                'type': self.get_equation_type(math_content),
+                'type': cm.get_equation_type(math_content),
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': tree.text,
@@ -146,45 +87,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             return result
         else:
             raise ValueError(f'No ccmath element found in content: {parsed_content}')
-
-    def contains_math(self, html: str) -> Tuple[bool, str]:
-        """判断html中是否包含数学公式.并根据不同的公式类型返回对应的math_type.
-
-        Args:
-            html: 要检查的HTML字符串
-
-        Returns:
-            Tuple[bool, str]: (是否包含数学公式, 公式类型)
-
-        示例:
-            >>> contains_math('<span>$$x^2$$</span>')
-            (True, 'latex')
-        """
-        # 检查是否包含 LaTeX 格式的公式
-        for pattern in LATEX_PATTERNS:
-            if re.search(pattern, html, re.DOTALL):
-                return True, MATH_TYPE_MAP['LATEX']
-
-        # 检查是否包含 MathML 标签
-        tree = parse_html(html)
-        if tree is not None:
-            math_elements = tree.xpath('.//math')
-            if math_elements and any(text_strip(elem.text) for elem in math_elements):
-                return True, MATH_TYPE_MAP['MATHML']
-
-            # 检查 HTML 数学标记（sub 和 sup）
-            sub_elements = tree.xpath('.//sub')
-            sup_elements = tree.xpath('.//sup')
-            if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
-               (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
-                return True, MATH_TYPE_MAP['HTMLMATH']
-
-        # 检查是否包含 AsciiMath
-        # 通常 AsciiMath 被包含在 `...` 中
-        if re.search(r'`[^`]+`', html):
-            return True, MATH_TYPE_MAP['ASCIIMATH']
-
-        return False, None
 
     def process_ccmath_html(self, cc_html: str, o_html: str, math_type: str, math_render: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
@@ -206,48 +108,49 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
             parent = node.getparent()
 
-            # 1. 文本中有\\begin{align} 或 \\begin{equation}
-            if node.tag not in ['script', 'style'] and text_strip(node.text):
-                regex = r'\\begin{align}(.*?)\\end{align}'
-                text = node.text
-                matches = re.findall(regex, text, re.DOTALL)
-                if matches:
-                    node.text = text.replace('\\begin{align}', '').replace('\\end{align}', '')
+            # TODO: 先保留原始latex格式不做格式替换
+            # # 1. 文本中有\\begin{align} 或 \\begin{equation}
+            # if node.tag not in ['script', 'style'] and text_strip(node.text):
+            #     regex = r'\\begin{align}(.*?)\\end{align}'
+            #     text = node.text
+            #     matches = re.findall(regex, text, re.DOTALL)
+            #     if matches:
+            #         node.text = text.replace('\\begin{align}', '').replace('\\end{align}', '')
 
-            if node.tag not in ['script', 'style'] and text_strip(node.text):
-                regex = r'\\begin{equation}(.*?)\\end{equation}'
-                text = node.text
-                matches = re.findall(regex, text, re.DOTALL)
-                for match in matches:
-                    match = match.replace('\\begin{equation}', '')
-                    match = match.replace('\\end{equation}', '')
-                    wrapped_text = wrap_math(match, display=True)
-                    text = text.replace(match, wrapped_text)
-                if matches:
-                    # Remove the \begin{equation} and \end{equation} tags
-                    text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
-                    node.text = text
+            # if node.tag not in ['script', 'style'] and text_strip(node.text):
+            #     regex = r'\\begin{equation}(.*?)\\end{equation}'
+            #     text = node.text
+            #     matches = re.findall(regex, text, re.DOTALL)
+            #     for match in matches:
+            #         match = match.replace('\\begin{equation}', '')
+            #         match = match.replace('\\end{equation}', '')
+            #         wrapped_text = wrap_math(match, display=True)
+            #         text = text.replace(match, wrapped_text)
+            #     if matches:
+            #         # Remove the \begin{equation} and \end{equation} tags
+            #         text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
+            #         node.text = text
 
-            if node.tag not in ['script', 'style'] and text_strip(node.tail):
-                regex = r'\\begin{align}(.*?)\\end{align}'
-                text = node.tail
-                matches = re.findall(regex, text, re.DOTALL)
-                if matches:
-                    node.tail = text.replace('\\begin{align}', '').replace('\\end{align}', '')
+            # if node.tag not in ['script', 'style'] and text_strip(node.tail):
+            #     regex = r'\\begin{align}(.*?)\\end{align}'
+            #     text = node.tail
+            #     matches = re.findall(regex, text, re.DOTALL)
+            #     if matches:
+            #         node.tail = text.replace('\\begin{align}', '').replace('\\end{align}', '')
 
-            if node.tag not in ['script', 'style'] and text_strip(node.tail):
-                regex = r'\\begin{equation}(.*?)\\end{equation}'
-                text = node.tail
-                matches = re.findall(regex, text, re.DOTALL)
-                for match in matches:
-                    match = match.replace('\\begin{equation}', '')
-                    match = match.replace('\\end{equation}', '')
-                    wrapped_text = wrap_math(match, display=True)
-                    text = text.replace(match, wrapped_text)
-                if matches:
-                    # Remove the \begin{equation} and \end{equation} tags
-                    text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
-                    node.tail = text
+            # if node.tag not in ['script', 'style'] and text_strip(node.tail):
+            #     regex = r'\\begin{equation}(.*?)\\end{equation}'
+            #     text = node.tail
+            #     matches = re.findall(regex, text, re.DOTALL)
+            #     for match in matches:
+            #         match = match.replace('\\begin{equation}', '')
+            #         match = match.replace('\\end{equation}', '')
+            #         wrapped_text = wrap_math(match, display=True)
+            #         text = text.replace(match, wrapped_text)
+            #     if matches:
+            #         # Remove the \begin{equation} and \end{equation} tags
+            #         text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
+            #         node.tail = text
 
             # 3. img中的latex
             if node.tag == 'img':
@@ -255,30 +158,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 4. class 为 math-container，默认为latex
             if node.tag == 'span' and node.get('class') and 'math-container' in node.get('class'):
-                try:
-                    text = node.text
-
-                    if text and text_strip(text):
-                        equation_type = self.get_equation_type(text)
-                        if equation_type == EQUATION_INLINE:
-                            new_span = Element(CCMATH_INLINE)
-                        elif equation_type == EQUATION_INTERLINE:
-                            new_span = Element(CCMATH_INTERLINE)
-                        else:
-                            raise ValueError(f'Unknown equation type: {equation_type}')
-                        # wrapped_math = wrap_math(text, display=False)
-                        new_span.text = text
-                        if math_type:
-                            new_span.set('type', math_type)
-                        if math_render:
-                            new_span.set('by', math_render)
-                        new_span.set('html', original_html)
-                        if parent is not None:
-                            if text_strip(node.tail):
-                                new_span.tail = node.tail
-                            parent.replace(node, new_span)
-                except Exception as e:
-                    logger.error(f'Error processing math-container class: {e}')
+                tag_span_mathcontainer.modify_tree(cm, math_render, original_html, node, parent)
 
             # 5. class 为 wp-katex-eq
             if node.tag == 'span' and node.get('class') and 'wp-katex-eq' in node.get('class'):
@@ -310,112 +190,14 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 12. math tags
             if node.tag == 'math':
-                pass
+                tag_math.modify_tree(node, parent)
 
             # 13. class 为 mathjax
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
-                # 如果节点是span标签，并且class属性包含mathjax，MathJax，mathjax_display，MathJax_Display等
-                # 示例：
-                # <span class="mathjax">
-                #     <span class="math-inline">$\frac{1}{2}$</span>
-                #     是一个分数
-                # </span>
-
-                try:
-                    # Get the inner text of the mathjax tag
-                    text = ''.join([
-                        (node.text or '') +
-                        ''.join([etree.tostring(child, encoding='utf-8', method='text').decode() for child in node])
-                    ])
-                    if text_strip(text):
-                        text = html.unescape(text)
-                        equation_type = self.get_equation_type(text)
-                        if equation_type == EQUATION_INLINE:
-                            new_cc_html = Element(CCMATH_INLINE)
-                        elif equation_type == EQUATION_INTERLINE:
-                            new_cc_html = Element(CCMATH_INTERLINE)
-                        else:
-                            raise ValueError(f'Unknown equation type: {equation_type}')
-                        new_cc_html.text = text
-                        if math_type:
-                            new_cc_html.set('type', math_type)
-                        if math_render:
-                            new_cc_html.set('by', math_render)
-                        # 将原始节点转换为HTML字符串并解除转义
-                        original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
-                        new_cc_html.set('html', original_html)
-                        # 处理节点替换
-                        if parent is not None:
-                            # 保存原始节点的tail文本
-                            if node.tail:
-                                new_cc_html.tail = node.tail
-                            # 在父节点中替换原始节点
-                            parent.replace(node, new_cc_html)
-                        else:
-                            # 如果是根节点，直接替换整个树
-                            if node.tail:
-                                new_cc_html.tail = node.tail
-                            tree = new_cc_html
-                except Exception as e:
-                    logger.error(f'Error processing mathjax class: {e}')
+                tag_span_mathjax.modify_tree(cm, math_render, original_html, node, parent)
 
         return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), [CCMATH_INTERLINE])
-
-    def get_math_render(self, html: str) -> str:
-        """获取数学公式渲染器.
-        示例:
-        MathJax:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
-        Katex:
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-        """
-        tree = parse_html(html)
-        if tree is None:
-            return None
-        # 查找head标签
-        head = tree.find('head')
-        if head is not None:
-            # 检查 MathJax
-            for script in head.iter('script'):
-                if script.get('src') and 'mathjax' in script.get('src', '').lower():
-                    return MATH_RENDER_MAP['MATHJAX']
-
-            # 检查 KaTeX
-            for link in head.iter('link'):
-                if link.get('href') and 'katex' in link.get('href', '').lower():
-                    return MATH_RENDER_MAP['KATEX']
-
-        return None
-
-    def get_equation_type(self, content: str) -> str:
-        """根据latex_config判断数学公式是行内还是行间公式.
-
-        Args:
-            html: 包含数学公式的HTML文本
-
-        Returns:
-            str: EQUATION_INLINE 或 EQUATION_INTERLINE
-
-        Examples:
-            >>> get_equation_type("这是行内公式 $x^2$ 测试")
-            'equation-inline'
-            >>> get_equation_type("这是行间公式 $$y=mx+b$$ 测试")
-            'equation-interline'
-        """
-        def check_delimiters(delims_list):
-            for start, end in delims_list:
-                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                if re.search(pattern, content, re.DOTALL):
-                    return True
-            return False
-        # 优先检查行间公式
-        if check_delimiters(latex_config['displayMath']):
-            return EQUATION_INTERLINE
-        if check_delimiters(latex_config['inlineMath']):
-            return EQUATION_INLINE
-
-        return None
 
 
 if __name__ == '__main__':
