@@ -111,6 +111,15 @@ TEST_CASES_HTML = [
         'expected': [
             # 'assets/ccmath/libretexts_1_interline_1.html',
         ],
+    },
+    {
+        'input': [
+            'assets/ccmath/wikipedia_1_math_annotation.html',
+        ],
+        'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
+        'expected': [
+            # 'assets/ccmath/wikipedia_1_interline_1.html',
+        ],
     }
 ]
 
@@ -207,20 +216,26 @@ class TestMathRecognizer(unittest.TestCase):
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
-            print('base_dir::::::::', base_dir)
-            print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
             print(len(parts))
+            # 将parts列表中第一个元素拼接保存到文件，带随机数
+            # import random
+            # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
+            #     for part in parts:
+            #         f.write(str(part[0]))
             parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
             self.assertEqual(len(parts), len(test_case['expected']))
             for expect_path, part in zip(test_case['expected'], parts):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
-                answer = (etree.fromstring(part, None).text or '').strip()
+                a_tree = etree.fromstring(part, None)
+                a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
+                answer = a_result.text
+                print('part::::::::', part)
                 print('answer::::::::', answer)
-                print('expect::::::::', expect)
-                # self.assertEqual(expect, answer)
+                # print('expect::::::::', expect)
+                self.assertEqual(expect, answer)
 
     # def test_get_math_render(self):
     #     for test_case in TEST_GET_MATH_RENDER:
