@@ -1,4 +1,3 @@
-import os
 from unittest.mock import MagicMock, patch
 
 from llm_web_kit.model.lang_id import (LanguageIdentification,
@@ -8,8 +7,6 @@ from llm_web_kit.model.lang_id import (LanguageIdentification,
                                        detect_inline_equation,
                                        detect_latex_env,
                                        update_language_by_str)
-
-os.environ['LLM_WEB_KIT_CFG_PATH'] = os.path.join(os.path.dirname(__file__), 'assets/model_config.jsonc')
 
 
 class TestLanguageIdentification:
