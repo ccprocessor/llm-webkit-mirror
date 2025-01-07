@@ -46,7 +46,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         return result
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment:str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -117,6 +117,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if tree is None:
             raise ValueError(f'Failed to load html: {cc_html}')
 
+        # 打印遍历node次数
+        # count = 0
         for node in tree.iter():
             assert isinstance(node, etree._Element)
             original_html = element_to_html(node)

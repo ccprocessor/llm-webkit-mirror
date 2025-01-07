@@ -118,7 +118,7 @@ TEST_CASES_HTML = [
         ],
         'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
         'expected': [
-            # 'assets/ccmath/wikipedia_1_interline_1.html',
+            'assets/ccmath/wikipedia_1_interline_1.html',
         ],
     }
 ]

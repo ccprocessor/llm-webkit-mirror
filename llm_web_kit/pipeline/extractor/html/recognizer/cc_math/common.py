@@ -80,6 +80,10 @@ def wrap_math(s, display=False):
     s = color_regex.sub('', s)
     s = s.replace('$', '')
     s = s.replace('\n', ' ').replace('\\n', '')
+    # 只移除开头和结尾的花括号，例如在wikipidia中：{\displaystyle d_{Y}(f(y),f(x))&lt;\epsilon } -> \displaystyle d_{Y}(f(y),f(x))&lt;\epsilon
+    s = s.strip()
+    if s.startswith('{') and s.endswith('}'):
+        s = s[1:-1]
     s = s.strip()
     if len(s) == 0:
         return s
