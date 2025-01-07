@@ -1,5 +1,5 @@
 from typing import List, Tuple
-import json
+
 from lxml import etree, html
 from overrides import override
 
@@ -35,7 +35,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             tree = html.fromstring(cc_html)
             if self.is_contain_table(tree):
                 table_html = self.merge_html_fragments(self.contain_table_elements(tree))
-                table_res = BaseHTMLElementRecognizer.html_split_by_tags(table_html, ["cctable"])
+                table_res = BaseHTMLElementRecognizer.html_split_by_tags(table_html, ['cctable'])
                 final_result.extend(table_res)
             else:
                 final_result.extend((cc_html, o_html))

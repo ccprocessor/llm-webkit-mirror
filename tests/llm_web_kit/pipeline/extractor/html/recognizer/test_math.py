@@ -118,7 +118,7 @@ TEST_CASES_HTML = [
         ],
         'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
         'expected': [
-            # 'assets/ccmath/wikipedia_1_interline_1.html',
+            'assets/ccmath/wikipedia_1_interline_1.html',
         ],
     }
 ]
@@ -138,14 +138,14 @@ TEST_CONTENT_LIST_NODE = [
     {
         'input': (
             'https://www.baidu.com',
-            '<ccmath-interline type="latex" by="mathjax" html="&lt;span class=&quot;math-container&quot;&gt;$$h$$&lt;/span&gt;">$$h$$</ccmath-interline>',
-            '<span class="math-container">$$h$$</span>'
+            '<html><body><p><ccmath-interline type="latex" by="mathjax" html="&lt;span class=&quot;math-container&quot;&gt;$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$&lt;/span&gt;">$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$</ccmath-interline></p></body></html>',
+            '<span class="math-container">$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$</span>'
         ),
         'expected': {
             'type': 'equation-interline',
-            'raw_content': '<span class="math-container">$$h$$</span>',
+            'raw_content': '<span class="math-container">$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$</span>',
             'content': {
-                'math_content': '$$h$$',
+                'math_content': '$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$',
                 'math_type': 'latex',
                 'by': 'mathjax'
             }
