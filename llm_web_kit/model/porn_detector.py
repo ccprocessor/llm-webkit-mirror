@@ -1,7 +1,8 @@
-import os
 import json
+import os
+from typing import Dict, List, Union
+
 import torch
-from typing import Dict, Union, List
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from llm_web_kit.config.cfg_reader import load_config
@@ -11,42 +12,43 @@ from llm_web_kit.model.resource_utils.download_assets import (
 from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
                                                         unzip_local_file)
 
+
 class BertModel():
     def __init__(self, model_path: str = None) -> None:
         if not model_path:
             model_path = self.auto_download()
-        self.model = AutoModelForSequenceClassification.from_pretrained(os.path.join(model_path, "porn_classifier/classifier_hf"))
-        with open(os.path.join(model_path, "porn_classifier/extra_parameters.json")) as reader:
+        self.model = AutoModelForSequenceClassification.from_pretrained(os.path.join(model_path, 'porn_classifier/classifier_hf'))
+        with open(os.path.join(model_path, 'porn_classifier/extra_parameters.json')) as reader:
             model_config = json.load(reader)
 
-        self.cls_index = int(model_config.get("cls_index", 1))
-        self.use_sigmoid = bool(model_config.get("use_sigmoid", False))
-        self.max_tokens = int(model_config.get("max_tokens", 512))
-        self.remain_tail = min(self.max_tokens - 1, int(model_config.get("remain_tail", -1)))
-        self.device = model_config.get("device", "cpu")
+        self.cls_index = int(model_config.get('cls_index', 1))
+        self.use_sigmoid = bool(model_config.get('use_sigmoid', False))
+        self.max_tokens = int(model_config.get('max_tokens', 512))
+        self.remain_tail = min(self.max_tokens - 1, int(model_config.get('remain_tail', -1)))
+        self.device = model_config.get('device', 'cpu')
 
         self.model.eval()
         self.model.to(self.device, dtype=torch.float16)
-        
-        if hasattr(self.model, "to_bettertransformer"):
+
+        if hasattr(self.model, 'to_bettertransformer'):
             self.model = self.model.to_bettertransformer()
-        
-        self.tokenizer = AutoTokenizer.from_pretrained(os.path.join(model_path, "porn_classifier/classifier_hf"))
+
+        self.tokenizer = AutoTokenizer.from_pretrained(os.path.join(model_path, 'porn_classifier/classifier_hf'))
         self.tokenizer_config = {
-            "padding": True,
-            "truncation": self.remain_tail <= 0,
-            "max_length": self.max_tokens if self.remain_tail <= 0 else None,
-            "return_tensors": "pt" if self.remain_tail <= 0 else None,
+            'padding': True,
+            'truncation': self.remain_tail <= 0,
+            'max_length': self.max_tokens if self.remain_tail <= 0 else None,
+            'return_tensors': 'pt' if self.remain_tail <= 0 else None,
         }
 
-        self.output_prefix = str(model_config.get("output_prefix", "")).rstrip("_")
-        self.output_postfix = str(model_config.get("output_postfix", "")).lstrip("_")
+        self.output_prefix = str(model_config.get('output_prefix', '')).rstrip('_')
+        self.output_postfix = str(model_config.get('output_postfix', '')).lstrip('_')
 
-        self.model_name = str(model_config.get("model_name", "porn-23w44"))
+        self.model_name = str(model_config.get('model_name', 'porn-23w44'))
 
     def auto_download(self) -> str:
-        """Default download the 23w44.zip model.""" 
-        resource_name = "porn-23w44"
+        """Default download the 23w44.zip model."""
+        resource_name = 'porn-23w44'
         resource_config = load_config()['resources']
         porn_23w44_config: Dict = resource_config[resource_name]
         porn_23w44_s3 = porn_23w44_config['download_path']
@@ -69,7 +71,7 @@ class BertModel():
         else:
             logger.info(f'unzip_path: {unzip_path} exist')
         return unzip_path
-    
+
     def pre_process(self, samples: Union[List[str], str]) -> Dict:
         contents = samples if isinstance(samples, list) else [samples]
 
@@ -79,7 +81,7 @@ class BertModel():
             processed_inputs = []
 
             # 对每个输入进行处理
-            for tokens_id in inputs["input_ids"]:
+            for tokens_id in inputs['input_ids']:
                 # 通过sep_token_id找到tokens的长度
                 length = tokens_id.index(self.tokenizer.sep_token_id) + 1
                 # 如果tokens的长度小于等于max_tokens，则直接在尾部补0，不需要截断
@@ -94,26 +96,26 @@ class BertModel():
                     attn = [1] * self.max_tokens
 
                 # 将处理后的tokens添加到新的inputs列表中
-                processed_inputs.append({"input_ids": torch.tensor(tokens), "attention_mask": torch.tensor(attn)})
+                processed_inputs.append({'input_ids': torch.tensor(tokens), 'attention_mask': torch.tensor(attn)})
 
             # 将所有inputs整合成一个batch
             inputs = {
-                "input_ids": torch.cat([inp["input_ids"].unsqueeze(0) for inp in processed_inputs]),
-                "attention_mask": torch.cat([inp["attention_mask"].unsqueeze(0) for inp in processed_inputs]),
+                'input_ids': torch.cat([inp['input_ids'].unsqueeze(0) for inp in processed_inputs]),
+                'attention_mask': torch.cat([inp['attention_mask'].unsqueeze(0) for inp in processed_inputs]),
             }
         inputs = {name: tensor.to(self.device) for name, tensor in inputs.items()}
-        return {"inputs": inputs}
+        return {'inputs': inputs}
 
     def get_output_key(self, f: str):
         prefix = self.output_prefix if self.output_prefix else self.model_name
-        postfix = f"_{self.output_postfix}" if self.output_postfix else ""
-        return f"{prefix}_{f}{postfix}"
+        postfix = f'_{self.output_postfix}' if self.output_postfix else ''
+        return f'{prefix}_{f}{postfix}'
 
     def predict(self, texts: Union[List[str], str]):
         inputs_dict = self.pre_process(texts)
         with torch.no_grad():
-            logits = self.model(**inputs_dict["inputs"]).logits
-            
+            logits = self.model(**inputs_dict['inputs']).logits
+
             if self.use_sigmoid:
                 probs = torch.sigmoid(logits)
             else:
@@ -124,7 +126,7 @@ class BertModel():
         outputs = []
         for prob in pos_prob:
             prob = round(float(prob), 6)
-            output = {self.get_output_key("prob"): prob}
+            output = {self.get_output_key('prob'): prob}
             outputs.append(output)
 
         return outputs

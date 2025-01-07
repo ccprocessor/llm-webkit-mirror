@@ -14,11 +14,13 @@ class TestPoliticalDetector:
 
     @patch('llm_web_kit.model.policical.AutoTokenizer.from_pretrained')
     @patch('llm_web_kit.model.policical.fasttext.load_model')
-    def test_init(self, mock_load_model, mock_auto_tokenizer):
+    @patch('llm_web_kit.model.policical.fasttext.auto_download')
+    def test_init(self, mock_auto_download, mock_load_model, mock_auto_tokenizer):
+        mock_auto_download.return_value = '/fake/model/path'
         # Test with default model path
         _ = PoliticalDetector()
-        mock_load_model.assert_called_once()
-        mock_auto_tokenizer.assert_called_once()
+        mock_load_model.assert_called_once_with('/fake/model/path/model.bin')
+        mock_auto_tokenizer.assert_called_once_with('/fake/model/path/internlm2-chat-20b')
 
         # Test with custom model path
         mock_load_model.reset_mock()
@@ -33,7 +35,8 @@ class TestPoliticalDetector:
 
     @patch('llm_web_kit.model.policical.AutoTokenizer.from_pretrained')
     @patch('llm_web_kit.model.policical.fasttext.load_model')
-    def test_predict(self, mock_load_model, mock_auto_tokenizer):
+    @patch('llm_web_kit.model.policical.fasttext.auto_download')
+    def test_predict(self, mock_auto_download, mock_load_model, mock_auto_tokenizer):
         political_detect = PoliticalDetector()
         political_detect.model.predict.return_value = (['label1', 'label2'], [0.9, 0.1])
         predictions, probabilities = political_detect.predict('test text')

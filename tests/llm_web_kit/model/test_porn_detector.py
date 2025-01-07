@@ -2,14 +2,15 @@ import os
 import sys
 import unittest
 from unittest import TestCase
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, mock_open, patch
 
 current_file_path = os.path.abspath(__file__)
 parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)
 normalized_path = os.path.normpath(parent_dir_path)
 sys.path.append(normalized_path)
 
-from llm_web_kit.model.porn_detector import BertModel
+from llm_web_kit.model.porn_detector import BertModel  # noqa: E402
+
 
 class TestBertModel(TestCase):
     @patch('llm_web_kit.model.porn_detector.AutoModelForSequenceClassification.from_pretrained')
@@ -28,7 +29,7 @@ class TestBertModel(TestCase):
         # 验证是否调用了预期的函数
         mock_auto_download.assert_called_once()
         mock_from_pretrained_model.assert_called_once_with('/fake/model/path/porn_classifier/classifier_hf')
-        mock_from_pretrained_tokenizer.assert_called_once_with('/fake/model/path/porn_classifier/classifier_hf')        
+        mock_from_pretrained_tokenizer.assert_called_once_with('/fake/model/path/porn_classifier/classifier_hf')
         mock_open.assert_called_once_with('/fake/model/path/porn_classifier/extra_parameters.json')
 
         # 检查模型初始化的参数
@@ -36,18 +37,18 @@ class TestBertModel(TestCase):
         self.assertTrue(model.use_sigmoid)
         self.assertEqual(model.max_tokens, 512)
         self.assertEqual(model.remain_tail, -1)
-        self.assertEqual(model.device, "cuda")
-        self.assertEqual(model.output_prefix, "")
-        self.assertEqual(model.output_postfix, "")
-        self.assertEqual(model.model_name, "porn-23w44")
+        self.assertEqual(model.device, 'cuda')
+        self.assertEqual(model.output_prefix, '')
+        self.assertEqual(model.output_postfix, '')
+        self.assertEqual(model.model_name, 'porn-23w44')
         # 检查tokenizer的参数
         self.assertEqual(
-            model.tokenizer_config, 
+            model.tokenizer_config,
             {
-                "padding": True,
-                "truncation": True,
-                "max_length": 512,
-                "return_tensors": "pt",
+                'padding': True,
+                'truncation': True,
+                'max_length': 512,
+                'return_tensors': 'pt',
             }
         )
 
@@ -64,34 +65,34 @@ class TestBertModel(TestCase):
         mock_torch.tensor.side_effect = lambda x: MagicMock(unsqueeze=MagicMock(return_value=x))
         mock_torch.cat.side_effect = lambda x: MagicMock(to=MagicMock(return_value=x))
         # 模拟tokenizer的行为
-        mock_tokenizer_instance = MagicMock(sep_token_id = 102, pad_token_id = 0)
-        input_ids = [[101, 7592, 1010, 2088,  999,  102]]
+        mock_tokenizer_instance = MagicMock(sep_token_id=102, pad_token_id=0)
+        input_ids = [[101, 7592, 1010, 2088, 999, 102]]
         attn_mask = [[1, 1, 1, 1, 1, 1]]
-        mock_input_ids = MagicMock(to = MagicMock(return_value=input_ids))
-        mock_attn_mask = MagicMock(to = MagicMock(return_value=attn_mask))
+        mock_input_ids = MagicMock(to=MagicMock(return_value=input_ids))
+        mock_attn_mask = MagicMock(to=MagicMock(return_value=attn_mask))
         mock_input_ids.__iter__.return_value = iter(input_ids)
-        mock_attn_mask.__iter__.return_value = iter(attn_mask)        
+        mock_attn_mask.__iter__.return_value = iter(attn_mask)
         mock_tokenizer_instance.return_value = {
             'input_ids': mock_input_ids,
             'attention_mask': mock_attn_mask
         }
-        
+
         mock_from_pretrained_tokenizer.return_value = mock_tokenizer_instance
 
         # 实例化 BertModel 并调用 pre_process
         model = BertModel()
         result = model.pre_process('Hello, world!')
-        
+
         # 测试默认情况
         self.assertEqual(
-            result['inputs']['input_ids'], 
+            result['inputs']['input_ids'],
             input_ids
         )
         self.assertEqual(
-            result['inputs']['attention_mask'], 
+            result['inputs']['attention_mask'],
             attn_mask,
         )
-        
+
         # 测试remain_tail>0, input_length > self.max_tokens的情况
         mock_input_ids.reset_mock()
         mock_attn_mask.reset_mock()
@@ -100,7 +101,7 @@ class TestBertModel(TestCase):
         model.max_tokens = 4
         result = model.pre_process('Hello, world!')
         expected_input_ids = [
-            input_ids[0][:(model.max_tokens-model.remain_tail)]+input_ids[0][-model.remain_tail:]
+            input_ids[0][:(model.max_tokens - model.remain_tail)] + input_ids[0][-model.remain_tail:]
         ]
         expected_attn_mask = [attn_mask[0][:model.max_tokens]]
         self.assertEqual(result['inputs']['input_ids'], expected_input_ids)
@@ -126,7 +127,7 @@ class TestBertModel(TestCase):
         mock_tokenizer_instance = MagicMock()
         mock_from_pretrained_tokenizer.return_value = mock_tokenizer_instance
         mock_tokenizer_instance.return_value = {
-            'input_ids': [[101, 7592, 1010, 2088,  999,  102]],
+            'input_ids': [[101, 7592, 1010, 2088, 999, 102]],
             'attention_mask': [[1, 1, 1, 1, 1, 1]]
         }
 
@@ -153,10 +154,10 @@ class TestBertModel(TestCase):
 
         # 验证 eval 和 to 方法是否被正确调用
         mock_model_instance.eval.assert_called_once()
-        mock_model_instance.to.assert_called_once_with("cuda", dtype=mock_torch.float16)
-        
+        mock_model_instance.to.assert_called_once_with('cuda', dtype=mock_torch.float16)
+
         # 如果存在 to_bettertransformer 方法，验证它也被调用了
-        if hasattr(mock_model_instance, "to_bettertransformer"):
+        if hasattr(mock_model_instance, 'to_bettertransformer'):
             mock_model_instance.to_bettertransformer.assert_called_once()
 
         # 验证torch.no_grad()的调用
@@ -169,7 +170,8 @@ class TestBertModel(TestCase):
             mock_torch.softmax.assert_called_once_with(logit_tensor)
 
         # 验证结果
-        self.assertEqual(result, [{"porn-23w44_prob": 0.2}])
+        self.assertEqual(result, [{'porn-23w44_prob': 0.2}])
+
 
 if __name__ == '__main__':
     unittest.main()
