@@ -85,6 +85,8 @@ llm-web-kit is a python library that ...
 
 # contributors
 
+![contributors](https://contrib.rocks/image?repo=ccprocessor/llm-webkit-mirror)
+
 # License Information
 
 # Acknowledgments
@@ -92,5 +94,7 @@ llm-web-kit is a python library that ...
 # Citation
 
 # Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ccprocessor/llm-webkit-mirror&type=Date)](https://star-history.com/#ccprocessor/llm-webkit-mirror&Date)
 
 # links

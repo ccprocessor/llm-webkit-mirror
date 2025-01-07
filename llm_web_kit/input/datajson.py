@@ -51,11 +51,16 @@ class StructureChecker(object):
 class ContentList(StructureMapper):
     """content_list格式的工具链实现."""
 
-    def __init__(self, json_data: dict):
-        self.__content_list = json_data
+    def __init__(self, json_data_lst: list):
+        if json_data_lst is None:
+            json_data_lst = []
+        self.__content_list = json_data_lst
 
     def length(self) -> int:
         return len(self.__content_list)
+
+    def append(self, content: dict):
+        self.__content_list.append(content)
 
 
 class DataJson(StructureMapper, StructureChecker):

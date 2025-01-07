@@ -1,19 +1,22 @@
-from abc import abstractmethod
 from typing import List, Tuple
 
 from overrides import override
 
 from llm_web_kit.input.datajson import ContentList, DataJson
+from llm_web_kit.libs.html_utils import build_html_tree
+from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
 from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
     AudioRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.code import CodeRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
+    CodeRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
+    MathRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.image import \
     ImageRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.list import ListRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.math import MathRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.pipeline.extractor.html.recognizer.table import \
     TableRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.text import \
@@ -44,6 +47,18 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         self.__title_recognizer:BaseHTMLElementRecognizer = TitleRecognizer()
         self.__paragraph_recognizer:BaseHTMLElementRecognizer = TextParagraphRecognizer()
 
+        self.__to_content_list_mapper = {
+            CCTag.CC_CODE: self.__code_recognizer,
+            CCTag.CC_MATH_INTERLINE: self.__math_recognizer,
+            CCTag.CC_IMAGE: self.__image_recognizer,
+            CCTag.CC_AUDIO: self.__audio_recognizer,
+            CCTag.CC_VIDEO: self.__video_recognizer,
+            CCTag.CC_TABLE: self.__table_recognizer,
+            CCTag.CC_LIST: self.__list_recognizer,
+            CCTag.CC_TITLE: self.__title_recognizer,
+            CCTag.CC_TEXT: self.__paragraph_recognizer
+        }
+
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
         """根据规则过滤content_list.
@@ -71,8 +86,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         main_html, method = self._extract_main_html(raw_html, base_url)
         parsed_html = [(main_html,main_html)]
-        for extract_func in [self._extract_code, self._extract_math, self._extract_image, self._extract_audio,
-                             self._extract_video, self._extract_table, self._extract_list,
+        for extract_func in [self._extract_table, self._extract_list, self._extract_code, self._extract_math,
+                             self._extract_image, self._extract_audio, self._extract_video,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
 
@@ -81,7 +96,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         return data_json
 
-    @abstractmethod
     def _extract_main_html(self, raw_html:str, base_url:str) -> (str, str):
         """从html文本中提取主要的内容.
 
@@ -96,7 +110,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         # TODO: 从html文本中提取主要的内容
         raise NotImplementedError
 
-    @abstractmethod
     def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取代码.
 
@@ -111,7 +124,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__code_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_math(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取数学公式.
 
@@ -126,7 +138,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__math_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_image(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取图片.
 
@@ -141,7 +152,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__image_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_audio(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取音频.
 
@@ -156,7 +166,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__audio_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_video(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取视频.
 
@@ -171,7 +180,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__video_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_table(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取表格.
 
@@ -186,7 +194,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__table_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取列表.
 
@@ -201,7 +208,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__list_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_title(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取标题.
 
@@ -216,7 +222,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取段落.
 
@@ -231,7 +236,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    @abstractmethod
     def _export_to_content_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> ContentList:
         """将解析结果存入content_list格式中.
 
@@ -242,5 +246,28 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         Returns:
         """
+        # 在这个地方，根据tuple中的第一个元素的类型，将其转换为content_list中的元素，转换之后如果还有剩余的元素，则证明解析出现问题，有内容缺失的风险。
+        content_list = ContentList([])
+        for parsed_html, raw_html in html_lst:
+            cc_tag = self.__get_root_tag_name(parsed_html)
+            parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
+            if parser:
+                node = parser.to_content_list_node(base_url, parsed_html, raw_html)
+                content_list.append(node)
+            else:
+                mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
+                # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
 
-        raise NotImplementedError
+        return content_list
+
+    def __get_root_tag_name(self, html:str) -> str:
+        """获取html文本的根标签名.
+
+        Args:
+            html (str): html文本
+
+        Returns:
+            str: 根标签名
+        """
+        el = build_html_tree(html)
+        return el.tag
