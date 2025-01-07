@@ -3,12 +3,14 @@ from typing import List, Tuple
 from lxml import etree
 from overrides import override
 
+from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
     tag_math, tag_span_mathcontainer, tag_span_mathjax)
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
-    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, parse_html)
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
+    CCMATH
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
 
 cm = CCMATH()
 
@@ -66,25 +68,37 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns:
             dict: content_list_node
         """
-        # tree = parse_html(parsed_content)
-        tree: etree._Element = etree.fromstring(parsed_content, None)
+        tree = self._build_html_tree(parsed_content)
         if tree is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
-        if tree.tag == CCMATH_INTERLINE or tree.tag == CCMATH_INLINE:
+        inter_ele = tree.find(f'.//{CCTag.CC_MATH_INTERLINE}')
+        in_els = tree.find(f'.//{CCTag.CC_MATH_INLINE}')
+        if inter_ele is not None:
             # 获取math_content
-            math_content = tree.text  # TODO: 需要处理math_content两边的$符号
+            math_content = inter_ele.text  # TODO: 需要处理math_content两边的$符号
 
-            result = {
-                'type': cm.get_equation_type(math_content),
+            return {
+                'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
                 'content': {
-                    'math_content': tree.text,
-                    'math_type': tree.get('type'),
-                    'by': tree.get('by')
+                    'math_content': math_content,
+                    'math_type': inter_ele.get('type'),
+                    'by': inter_ele.get('by')
                 }
             }
-            return result
+        elif in_els is not None:
+            math_content = in_els.text  # TODO: 需要处理math_content两边的$符号
+
+            return {
+                'type': DocElementType.EQUATION_INLINE,
+                'raw_content': raw_html_segment,
+                'content': {
+                    'math_content': math_content,
+                    'math_type': in_els.get('type'),
+                    'by': in_els.get('by')
+                }
+            }
         else:
             raise ValueError(f'No ccmath element found in content: {parsed_content}')
 
@@ -99,13 +113,13 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
-        tree = parse_html(cc_html)
+        tree = self._build_html_tree(cc_html)
         if tree is None:
             raise ValueError(f'Failed to load html: {cc_html}')
 
         for node in tree.iter():
             assert isinstance(node, etree._Element)
-            original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
+            original_html = element_to_html(node)
             parent = node.getparent()
 
             # TODO: 先保留原始latex格式不做格式替换
@@ -197,7 +211,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
                 tag_span_mathjax.modify_tree(cm, math_render, original_html, node, parent)
 
-        return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), [CCMATH_INTERLINE])
+        return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
 if __name__ == '__main__':
@@ -233,7 +247,7 @@ if __name__ == '__main__':
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
         '?config=TeX-MML-AM_CHTML"> </script> '
         '</head> '
-        '<ccmath type="mathml" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath>'
+        '<ccmath-interline type="mathml" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath-interline>'
         '<p>This is a test.</p> '
         '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>'
     )
@@ -242,11 +256,12 @@ if __name__ == '__main__':
         test_html,
         raw_html
     ))
-    # print(math_recognizer.to_content_list_node(
-    #     'https://www.baidu.com',
-    #     '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>',
-    #     raw_html
-    # ))
+    print(math_recognizer.to_content_list_node(
+        'https://www.baidu.com',
+        '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
+        # raw_html,
+        raw_html
+    ))
     # print(math_recognizer.html_split_by_tags(
     #     raw_html,
     #     ['ccmath']

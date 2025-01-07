@@ -1,10 +1,10 @@
 import re
 from typing import Tuple
 
-from lxml import etree
-from lxml.html import HtmlElement
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
+from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import build_html_tree
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -53,8 +53,8 @@ MATH_RENDER_MAP = {
 }
 
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
-EQUATION_INLINE = 'equation-inline'
-EQUATION_INTERLINE = 'equation-interline'
+EQUATION_INLINE = DocElementType.EQUATION_INLINE
+EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
 latex_config = {
     'inlineMath': [
         ['$', '$'],
@@ -91,20 +91,6 @@ def wrap_math(s, display=False):
     return '$' + s + '$'
 
 
-def parse_html(html_str: str) -> HtmlElement:
-    """将html str转为 HtmlElement.
-
-    Args:
-        html_str: 网页str
-
-    Returns:
-        HtmlElement
-    """
-    parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
-    tree = etree.HTML(html_str, parser)
-    return tree
-
-
 class CCMATH():
     def extract_asciimath(s: str) -> str:
         parsed = asciimath2tex.translate(s)
@@ -118,7 +104,7 @@ class CCMATH():
         Katex:
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
         """
-        tree = parse_html(html)
+        tree = build_html_tree(html)
         if tree is None:
             return None
         # 查找head标签
@@ -184,7 +170,7 @@ class CCMATH():
                 return True, MATH_TYPE_MAP['LATEX']
 
         # 检查是否包含 MathML 标签
-        tree = parse_html(html)
+        tree = build_html_tree(html)
         if tree is not None:
             math_elements = tree.xpath('.//math')
             if math_elements and any(text_strip(elem.text) for elem in math_elements):
