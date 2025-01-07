@@ -156,7 +156,6 @@ class BaseHTMLElementRecognizer(ABC):
 
         def __rebuild_empty_parent_nodes_path():
             """rebuild path with only tag & attrib."""
-            """rebuild path with only tag & attrib."""
             for i in range(len(path)):
                 elem = path[i]
                 attrib = elem.attrib if copy_attri else {}
@@ -190,7 +189,7 @@ class BaseHTMLElementRecognizer(ABC):
             for sub_elem in elem:
                 if sub_elem.tag in split_tag_names:
                     # previous elements
-                    nodes = raw_nodes = etree.tostring(path[0], encoding='utf-8').decode()
+                    nodes = raw_nodes = element_to_html(path[0])
                     if not __is_element_text_empty(path[0]):
                         yield nodes, raw_nodes
 
@@ -202,7 +201,7 @@ class BaseHTMLElementRecognizer(ABC):
                     if not html_source_segment:
                         mylogger.error(f'{sub_elem.tag} has no html attribute')
                         # TODO raise exception
-                    nodes, raw_nodes = etree.tostring(path[0], encoding='utf-8').decode(), html_source_segment
+                    nodes, raw_nodes = element_to_html(path[0]), html_source_segment
                     if not __is_element_text_empty(path[0]):
                         yield nodes, raw_nodes
 
@@ -219,7 +218,7 @@ class BaseHTMLElementRecognizer(ABC):
                 copied.tail = elem.tail
 
             if not path:
-                nodes = raw_nodes = etree.tostring(copied, encoding='utf-8').decode()
+                nodes = raw_nodes = element_to_html(copied)
                 if not __is_element_text_empty(copied):
                     yield nodes, raw_nodes
 
