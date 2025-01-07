@@ -7,8 +7,6 @@ from llm_web_kit.model.policical import (PoliticalDetector,
                                          decide_political_func,
                                          update_political_by_str)
 
-os.environ['LLM_WEB_KIT_CFG_PATH'] = os.path.join(os.path.dirname(__file__), 'assets/model_config.jsonc')
-
 
 class TestPoliticalDetector:
 
