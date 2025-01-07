@@ -11,6 +11,7 @@ TEST_CASES = [
         'input': (
             'assets/recognizer/table.html',
             'assets/recognizer/table_exclude.html',
+            'assets/recognizer/only_table.html'
         ),
         'expected':[
             ('<cccode>hello</cccode>', '<code>hello</code>'), ('<html><body><p>段落2</p></body></html>', '<html><body><p>段落2</p></body></html>'), ('<html><body><cctable type="complex" html="<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>">\'<tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr>\'</cctable></body></html>', '<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>'), ('<html><body><p>段落2</p></body></html>', '<html><body><p>段落2</p></body></html>'), ('<html><body><cctable type="complex" html="<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>">\'<tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr>\'</cctable></body></html>', '<table><tr><td rowspan="2">1</td><td>2</td></tr><tr><td>3</td></tr></table>')
@@ -32,7 +33,7 @@ class TestTableRecognizer(unittest.TestCase):
             base_url = test_case['input'][1]
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            self.assertEqual(len(parts), len(test_case['expected']))
+            self.assertEqual(len(parts), 4)
 
 
     def test_not_involve_table(self):
@@ -44,10 +45,20 @@ class TestTableRecognizer(unittest.TestCase):
             base_url = test_case['input'][1]
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            self.assertEqual(len(parts), 2)
+            self.assertEqual(len(parts), 1)
 
+    def test_only_involve_table(self):
+        """
+        只包含表格的Html解析
+        """
+        for test_case in TEST_CASES:
+            raw_html_path = base_dir.joinpath(test_case['input'][2])
+            base_url = test_case['input'][1]
+            raw_html = raw_html_path.read_text()
+            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            self.assertEqual(len(parts), 2)
 
 if __name__ == '__main__':
     r = TestTableRecognizer()
     r.setUp()
-    r.test_not_involve_table()
+    r.test_only_involve_table()
