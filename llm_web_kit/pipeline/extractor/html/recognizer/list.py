@@ -88,16 +88,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         list_tag_names = ['ul', 'ol', 'dl', 'menu', 'dir']
 
         if root.tag in list_tag_names:
-            is_ordered, content_list, raw_html = self.__extract_list_element(root)
+            is_ordered, content_list, raw_html, tail_text = self.__extract_list_element(root)
             text = json.dumps(content_list, ensure_ascii=False, indent=4)
-            cc_element = self._build_cc_element(CCTag.CC_LIST, text, ordered=is_ordered, html=raw_html)
+            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, ordered=is_ordered, html=raw_html)
             self._replace_element(root, cc_element)  # cc_element 替换掉原来的列表元素
             return
 
         for child in root.iterchildren():
             self.__do_extract_list(child)
 
-    def __extract_list_element(self, ele: HtmlElement) -> Tuple[bool, list, str]:
+    def __extract_list_element(self, ele: HtmlElement) -> Tuple[bool, list, str, str]:
         """
         提取列表元素:
         假如有如下列表：
@@ -121,7 +121,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         <cclist ordered="False" html="raw_html">
             [
                 [
-                    {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
+                    {"c": "爱因斯坦的质量方程公式是", "t": "text", "bbox": [0, 0, 10, 10]},
                     {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
                     {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
                 ]
@@ -135,6 +135,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             (bool, str, str): 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
         is_ordered = ele.tag in ['ol', 'dl']
+        tail_text = ele.tail
         content_list = []
         raw_html = self._element_to_html(ele)
         for item in ele.iterchildren():
@@ -143,7 +144,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             text_paragraph = self.__extract_list_item_text(item)
             content_list.append(text_paragraph)
 
-        return is_ordered, content_list, raw_html
+        return is_ordered, content_list, raw_html, tail_text
 
     def __extract_list_item_text(self, item:HtmlElement) -> list[list]:
         """提取列表项的文本.

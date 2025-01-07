@@ -20,3 +20,7 @@ class AudioRecognizer(BaseHTMLElementRecognizer):
         Returns:
         """
         raise NotImplementedError
+
+    @override
+    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
+        raise NotImplementedError

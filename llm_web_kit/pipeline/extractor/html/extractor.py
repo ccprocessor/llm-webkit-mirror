@@ -3,6 +3,7 @@ from typing import List, Tuple
 from overrides import override
 
 from llm_web_kit.input.datajson import ContentList, DataJson
+from llm_web_kit.libs.html_utils import build_html_tree
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
 from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
@@ -14,8 +15,8 @@ from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
 from llm_web_kit.pipeline.extractor.html.recognizer.image import \
     ImageRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.list import ListRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.pipeline.extractor.html.recognizer.table import \
     TableRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.text import \
@@ -47,15 +48,15 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         self.__paragraph_recognizer:BaseHTMLElementRecognizer = TextParagraphRecognizer()
 
         self.__to_content_list_mapper = {
-            '<cccode'[:7]: self.__code_recognizer,
-            '<ccmath'[:7]: self.__math_recognizer,
-            '<ccimag'[:7]: self.__image_recognizer,
-            '<ccaudi'[:7]: self.__audio_recognizer,
-            '<ccvide'[:7]: self.__video_recognizer,
-            '<cctabl'[:7]: self.__table_recognizer,
-            '<cclist'[:7]: self.__list_recognizer,
-            '<cctitl'[:7]: self.__title_recognizer,
-            '<cctext'[:7]: self.__paragraph_recognizer
+            CCTag.CC_CODE: self.__code_recognizer,
+            CCTag.CC_MATH_INTERLINE: self.__math_recognizer,
+            CCTag.CC_IMAGE: self.__image_recognizer,
+            CCTag.CC_AUDIO: self.__audio_recognizer,
+            CCTag.CC_VIDEO: self.__video_recognizer,
+            CCTag.CC_TABLE: self.__table_recognizer,
+            CCTag.CC_LIST: self.__list_recognizer,
+            CCTag.CC_TITLE: self.__title_recognizer,
+            CCTag.CC_TEXT: self.__paragraph_recognizer
         }
 
     @override
@@ -248,13 +249,25 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         # 在这个地方，根据tuple中的第一个元素的类型，将其转换为content_list中的元素，转换之后如果还有剩余的元素，则证明解析出现问题，有内容缺失的风险。
         content_list = ContentList([])
         for parsed_html, raw_html in html_lst:
-            tag_prefix = parsed_html[:7]
-            parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(tag_prefix)
+            cc_tag = self.__get_root_tag_name(parsed_html)
+            parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
                 node = parser.to_content_list_node(base_url, parsed_html, raw_html)
                 content_list.append(node)
             else:
-                mylogger.warning(f'无法识别的html标签：{tag_prefix}, {parsed_html}')
+                mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
                 # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
 
         return content_list
+
+    def __get_root_tag_name(self, html:str) -> str:
+        """获取html文本的根标签名.
+
+        Args:
+            html (str): html文本
+
+        Returns:
+            str: 根标签名
+        """
+        el = build_html_tree(html)
+        return el.tag

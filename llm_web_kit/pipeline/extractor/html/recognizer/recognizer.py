@@ -87,13 +87,14 @@ class BaseHTMLElementRecognizer(ABC):
         """
         return element_to_html(element)
 
-    def _build_cc_element(self, html_tag_name:str, text:str, **kwargs) -> HtmlElement:
+    def _build_cc_element(self, html_tag_name:str, text:str, tail:str, **kwargs) -> HtmlElement:
         """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
 
         Args:
-            title_text: str: 标题的文本
-            title_level: int: 标题的级别
-            raw_html: str: 原始的html
+            html_tag_name: str: html标签名称，例如 'cctitle'
+            text: str: 标签的文本内容
+            tail: str: 标签后的文本内容
+            **kwargs: 标签的其他属性，例如 level='1', html='<h1>标题</h1>' 等
 
         Returns:
             str: cctitle的html
@@ -102,10 +103,16 @@ class BaseHTMLElementRecognizer(ABC):
         parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
         cc_element = parser.makeelement(html_tag_name, attrib)
         cc_element.text = text
+        cc_element.tail = tail
         return cc_element
 
     def _replace_element(self, element:HtmlElement, cc_element:HtmlElement) -> None:
-        """替换element为cc_element."""
+        """Replaces element with cc_element.
+
+        Args:
+            element: The element to be replaced
+            cc_element: The element to replace with
+        """
         # 清空element的子元素
         if element.getparent():
             element.getparent().replace(element, cc_element)

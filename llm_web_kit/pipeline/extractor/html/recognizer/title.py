@@ -85,7 +85,8 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             title_text = self.__extract_title_text(root)
             title_raw_html = self._element_to_html(root)
             title_level = str(self.__extract_title_level(root.tag))
-            cc_element = self._build_cc_element(CCTag.CC_TITLE, title_text, level=title_level, html=title_raw_html)
+            tail_text = root.tail
+            cc_element = self._build_cc_element(CCTag.CC_TITLE, title_text, tail_text, level=title_level, html=title_raw_html)
             self._replace_element(root, cc_element)
             return
 
