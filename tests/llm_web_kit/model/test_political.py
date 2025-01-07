@@ -20,7 +20,11 @@ class TestPoliticalDetector:
         # Test with default model path
         _ = PoliticalDetector()
         mock_load_model.assert_called_once_with('/fake/model/path/model.bin')
-        mock_auto_tokenizer.assert_called_once_with('/fake/model/path/internlm2-chat-20b')
+        mock_auto_tokenizer.assert_called_once_with(
+            '/fake/model/path/internlm2-chat-20b',
+            use_fast=False,
+            trust_remote_code=True,
+        )
 
         # Test with custom model path
         mock_load_model.reset_mock()
