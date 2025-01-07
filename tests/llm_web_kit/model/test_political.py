@@ -14,7 +14,7 @@ class TestPoliticalDetector:
 
     @patch('llm_web_kit.model.policical.AutoTokenizer.from_pretrained')
     @patch('llm_web_kit.model.policical.fasttext.load_model')
-    @patch('llm_web_kit.model.policical.fasttext.auto_download')
+    @patch('llm_web_kit.model.policical.PoliticalDetector.auto_download')
     def test_init(self, mock_auto_download, mock_load_model, mock_auto_tokenizer):
         mock_auto_download.return_value = '/fake/model/path'
         # Test with default model path
@@ -35,7 +35,7 @@ class TestPoliticalDetector:
 
     @patch('llm_web_kit.model.policical.AutoTokenizer.from_pretrained')
     @patch('llm_web_kit.model.policical.fasttext.load_model')
-    @patch('llm_web_kit.model.policical.fasttext.auto_download')
+    @patch('llm_web_kit.model.policical.PoliticalDetector.auto_download')
     def test_predict(self, mock_auto_download, mock_load_model, mock_auto_tokenizer):
         political_detect = PoliticalDetector()
         political_detect.model.predict.return_value = (['label1', 'label2'], [0.9, 0.1])
