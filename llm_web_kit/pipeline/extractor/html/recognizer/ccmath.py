@@ -190,7 +190,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 12. math tags
             if node.tag == 'math':
-                tag_math.modify_tree(node, parent)
+                tag_math.modify_tree(cm, math_render, original_html, node, parent)
 
             # 13. class 为 mathjax
             if (node.tag == 'span' and node.get('class') and

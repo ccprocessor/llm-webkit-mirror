@@ -17,10 +17,12 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: etree._Element,
 
     try:
         # Get the inner text of the mathjax tag
-        text = ''.join([
-            (node.text or '') +
-            ''.join([etree.tostring(child, encoding='utf-8', method='text').decode() for child in node])
-        ])
+        # text = ''.join([
+        #     (node.text or '') +
+        #     ''.join([etree.tostring(child, encoding='utf-8', method='text').decode() for child in node])
+        # ])
+        o_html = etree.tostring(node, encoding='utf-8', method='html').decode()
+        text = node.text
         if text and text_strip(text):
             equation_type = cm.get_equation_type(text)
             contains_math, math_type = cm.contains_math(text)

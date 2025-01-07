@@ -1,6 +1,7 @@
 ## HTML解析流程
 
 ![](../../../../docs/images/HTMLExtractor.png)
+https://aicarrier.feishu.cn/wiki/PyMEwtTguiPtALkb5XDcYH20nYd
 
 ## 各元素转换后的标准定义
 
@@ -56,10 +57,10 @@
     <tr>
         <td>&lt;cclist&gt;</td>
         <td>
-            &lt;cclist type="ol|li"&gt; &lt;ol&gt;xxxx&lt;/ol&gt;&lt;cclist&gt;<br/>
-            - type<br/>
-              - ol: 有序列表<br/>
-              - li: 无序列表<br/>
+            &lt;cclist ordered="True|False"&gt;[{"c":"这里是一个列表项", "t":"text"}] &lt;cclist&gt;<br/>
+            - ordered<br/>
+              - True: 有序列表<br/>
+              - False: 无序列表<br/>
         </td>
     </tr>
     <tr>

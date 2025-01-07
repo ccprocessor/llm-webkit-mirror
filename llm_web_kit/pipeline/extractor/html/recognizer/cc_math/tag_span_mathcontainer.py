@@ -25,12 +25,12 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: etree._Element,
             new_span.text = text
             if math_type:
                 new_span.set('type', math_type)
-                if math_render:
-                    new_span.set('by', math_render)
-                new_span.set('html', o_html)
-                if parent is not None:
-                    if text_strip(node.tail):
-                        new_span.tail = node.tail
-            parent.replace(node, new_span)
+            if math_render:
+                new_span.set('by', math_render)
+            new_span.set('html', o_html)
+            if parent is not None:
+                if text_strip(node.tail):
+                    new_span.tail = node.tail
+                parent.replace(node, new_span)
     except Exception as e:
         logger.error(f'Error processing math-container class: {e}')
