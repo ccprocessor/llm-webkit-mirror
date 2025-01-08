@@ -1,5 +1,5 @@
 from typing import List, Tuple
-import json
+
 from lxml import etree, html
 from lxml.etree import _Element as HtmlElement
 from overrides import override
@@ -39,7 +39,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     @override
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
-        table_node: etree._Element = etree.fromstring(parsed_content, None)
+        table_node: etree._Element = etree.fromstring(parsed_content)
 
         d = {
             'type':  DocElementType.TABLE,
