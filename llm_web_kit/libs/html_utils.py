@@ -41,7 +41,7 @@ def element_to_html(element : Element) -> str:
     return etree.tostring(element, encoding='utf-8').decode()
 
 
-def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> HtmlElement:
+def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> Element:
     """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
 
     Args:

@@ -6,7 +6,8 @@ from lxml import etree
 from llm_web_kit.libs.html_utils import build_cc_element, element_to_html
 from llm_web_kit.libs.logger import logger
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
-    CCMATH, CCMATH_INTERLINE, MathType, text_strip, wrap_math)
+    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
+    EQUATION_INTERLINE, MathType, text_strip, wrap_math)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: etree._Element, parent: etree._Element):
@@ -39,6 +40,13 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: etree._Element,
                     parent.replace(node, new_span)
         else:
             math_type = MathType.MATHML
+            equation_type = cm.get_equation_type(o_html)
+            if equation_type == EQUATION_INLINE:
+                new_tag = CCMATH_INLINE
+            elif equation_type == EQUATION_INTERLINE:
+                new_tag = CCMATH_INTERLINE
+            else:
+                raise ValueError(f'Unknown equation type: {equation_type}')
             # Try translating to LaTeX
             tmp_node = deepcopy(node)
             tmp_node.tail = None
@@ -53,8 +61,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: etree._Element,
             #     mathml = re.sub(r"xmlns='.*?'", '', mathml)
             latex = cm.mml_to_latex(mathml)
             # Set the html of the new span tag to the text
-            wrapped_text = wrap_math(latex, display=True)
-            new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+            new_span = build_cc_element(html_tag_name=new_tag, text=latex, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             parent.replace(node, new_span)
     except Exception as e:
         logger.error(f'Error processing math tag: {e}')
