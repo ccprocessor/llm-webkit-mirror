@@ -6,27 +6,27 @@ from llm_web_kit.pipeline.extractor.html.recognizer.image import \
 
 TEST_CASES_HTML = [
     {
-        'input': [r'assets\ccimage\figure_iframe.html'],
+        'input': ['assets/ccimage/figure_iframe.html'],
         'base_url': 'http://15.demooo.pl/produkt/okulary-ochronne/',
         'expected': 21,
     },
     {
-        'input': [r'assets\ccimage\picture_img.html'],
+        'input': ['assets/ccimage/picture_img.html'],
         'base_url': 'http://yuqiaoli.cn/Shop/List_249.html',
         'expected': 53,
     },
     # {
-    #     'input': [r'assets\ccimage\svg_base64.html'],
+    #     'input': ['assets/ccimage/svg_base64.html'],
     #     'base_url': 'https://www.terrasoleil.com/collections/bestsellers/products/luna-soleil-tarot-deck',
     #     'expected': 186,
     # },
     # {
-    #     'input': [r'assets\ccimage\svg_img.html'],
+    #     'input': ['assets/ccimage/svg_img.html'],
     #     'base_url': 'https://villarichic.com/collections/dresses/products/dont-hang-up-faux-suede-shirt-dress1?variant=45860191863029',
     #     'expected': 26,
     # },
     # {
-    #     'input': [r'assets\ccimage\table_img.html'],
+    #     'input': ['assets/ccimage/table_img.html'],
     #     'base_url': 'http://www.99ja.cn/products/product-86-401.html',
     #     'expected': 1,
     # },

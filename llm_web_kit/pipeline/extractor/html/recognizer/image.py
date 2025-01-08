@@ -80,7 +80,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             else:
                 new_html_li = self.__parse_html_img(html_li)
                 if new_html_li:
-                    # print(f"new_html_li: {len(new_html_li)}")
+                    # print(f'new_html_li: {len(new_html_li)}')
                     ccimg_html.extend(new_html_li)
                 else:
                     ccimg_html.append(html_li)
@@ -113,7 +113,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         if base_img:
             img_elements.extend(base_img)
         if img_elements:
-            # print(f"img_elements size: {len(img_elements)}")
+            # print(f'img_elements size: {len(img_elements)}')
             update_html, img_tag = self.__parse_img_elements(img_elements, html_obj)
             if img_tag:
                 return self.html_split_by_tags(update_html, CCTag.CC_IMAGE)
@@ -126,9 +126,9 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             tag = elem.tag
             # raw_img_html = self._element_to_html(elem)
             raw_img_html = tostring(elem).decode('utf-8')
-            # print(f"raw_img_html: {raw_img_html}")
+            # print(f'raw_img_html: {raw_img_html}')
             if tag in ['embed', 'object', 'iframe', 'video', 'audio']:
-                # print(f"elem_tag is {tag}")
+                # print(f'elem_tag is {tag}')
                 if not [img_elem for img_elem in ['.jpg', '.jpeg', '.png', '.webp'] if
                         img_elem in raw_img_html] or not elem.get('src'):
                     continue
@@ -146,7 +146,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 if elem.xpath('.//img'):
                     attributes = self.__parse_img_attr(elem.xpath('.//img')[-1], attributes)
                 else:
-                    # print("picture & figure img tag but no img data")
+                    # print('picture & figure img tag but no img data')
                     img_tag.pop()
                     continue
             elif tag == 'svg' and elem.xpath('.//image'):
@@ -162,12 +162,12 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             try:
                 self._replace_element(elem, new_ccimage)
             except Exception as e:
-                mylogger.error(f"replace img element fail: {e}")
+                mylogger.error(f'replace img element fail: {e}')
             # elem.getparent().replace(elem, new_ccimage)  # 替换原始 <img> 标签
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
-            # print(f"updated_html: {updated_html}")
+            # print(f'updated_html: {updated_html}')
             return (updated_html, img_tag)
         else:
             return (None, None)
@@ -211,7 +211,7 @@ def read_gz_and_parse_json_line_by_line(file_path):
                 json_line = json.loads(line)
                 yield json_line
     except Exception as e:
-        print(f"Error reading or parsing the file: {e}")
+        print(f'Error reading or parsing the file: {e}')
 
 
 if __name__ == '__main__':
@@ -225,34 +225,35 @@ if __name__ == '__main__':
         if idx > 1:
             break
         print(f"start analysis idx: {idx}, url: {html_d['url']}")
-        html_d['html'] = """<html>
-    <head><title>Sample Page</title></head>
-    <body>
-       <!--  这里是HEAD 注释内容  -->
-        <p>Some text before an image.</p>
-        first span tail
-        <div>
-            div 的TEXT内容
-            <span>
-                <img src="http://example.com/image1.jpg" />
-                这是span
-            </span>
-            span的TAIL内容
-        </div>
-        这也是DIV的tail内容
-        <p>Some text in between images.</p>
-        这是P的tail内容
-        <img src="http://example.com/image2.jpg" />
-        hello
-        <img src="http://example.com/image3.jpg" />
-        这是img的tail内容
-        <p>Some text after the last image.</p>
-        这里是TAIL TEXT
-        <span>这是span的内容</span>
-        span的tail
-    </body>
-</html>
-"""
+        html_d['html'] = """
+        <html>
+            <head><title>Sample Page</title></head>
+            <body>
+               <!--  这里是HEAD 注释内容  -->
+                <p>Some text before an image.</p>
+                first span tail
+                <div>
+                    div 的TEXT内容
+                    <span>
+                        <img src="http://example.com/image1.jpg" />
+                        这是span
+                    </span>
+                    span的TAIL内容
+                </div>
+                这也是DIV的tail内容
+                <p>Some text in between images.</p>
+                这是P的tail内容
+                <img src="http://example.com/image2.jpg" />
+                hello
+                <img src="http://example.com/image3.jpg" />
+                这是img的tail内容
+                <p>Some text after the last image.</p>
+                这里是TAIL TEXT
+                <span>这是span的内容</span>
+                span的tail
+            </body>
+        </html>
+        """
         # print(html_d['html'])
         print('-----\n' * 5)
         res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
