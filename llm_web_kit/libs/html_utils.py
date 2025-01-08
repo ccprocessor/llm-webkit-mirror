@@ -7,7 +7,7 @@ def build_html_tree(html:str) -> Element:
     """构建html树.
 
     Args:
-        html: str: html字符串
+        html: str: 完整的html源码
 
     Returns:
         etree._Element: html树
