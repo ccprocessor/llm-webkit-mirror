@@ -5,7 +5,8 @@ from typing import List, Tuple
 from lxml import etree
 from lxml.etree import _Element as HtmlElement
 
-from llm_web_kit.libs.html_utils import build_html_tree, element_to_html
+from llm_web_kit.libs.html_utils import (build_cc_element, build_html_tree,
+                                         element_to_html)
 from llm_web_kit.libs.logger import mylogger
 
 
@@ -87,7 +88,7 @@ class BaseHTMLElementRecognizer(ABC):
         """
         return element_to_html(element)
 
-    def _build_cc_element(self, html_tag_name:str, text:str, tail:str, **kwargs) -> HtmlElement:
+    def _build_cc_element(self, html_tag_name: str, text: str, tail: str, **kwargs) -> HtmlElement:
         """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
 
         Args:
@@ -99,12 +100,7 @@ class BaseHTMLElementRecognizer(ABC):
         Returns:
             str: cctitle的html
         """
-        attrib = {k:str(v) for k,v in kwargs.items()}
-        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
-        cc_element = parser.makeelement(html_tag_name, attrib)
-        cc_element.text = text
-        cc_element.tail = tail
-        return cc_element
+        return build_cc_element(html_tag_name, text, tail, **kwargs)
 
     def _replace_element(self, element:HtmlElement, cc_element:HtmlElement) -> None:
         """Replaces element with cc_element.

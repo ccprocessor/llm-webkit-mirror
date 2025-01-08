@@ -1,6 +1,9 @@
+import os
 import re
+from pathlib import Path
 from typing import Tuple
 
+from lxml import etree
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -38,19 +41,20 @@ LATEX_PATTERNS = [
     r'\\((.*?)\\)',    # 匹配 \(...\)
 ]
 
+
 # 数学标记语言
-MATH_TYPE_MAP = {
-    'LATEX': 'latex',
-    'MATHML': 'mathml',
-    'ASCIIMATH': 'asciimath',
-    'HTMLMATH': 'htmlmath',  # sub, sup, etc.
-}
+class MathType:
+    LATEX = 'latex'
+    MATHML = 'mathml'
+    ASCIIMATH = 'asciimath'
+    HTMLMATH = 'htmlmath'  # sub, sup, etc.
+
 
 # 数学公式渲染器
-MATH_RENDER_MAP = {
-    'MATHJAX': 'mathjax',
-    'KATEX': 'katex',
-}
+class MathRender:
+    MATHJAX = 'mathjax'
+    KATEX = 'katex'
+
 
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
@@ -95,6 +99,11 @@ def wrap_math(s, display=False):
     return '$' + s + '$'
 
 
+xsl_path = os.path.join(Path(__file__).parent, 'mmltex/mmltex.xsl')
+xslt = etree.parse(xsl_path)
+transform = etree.XSLT(xslt)
+
+
 class CCMATH():
     def extract_asciimath(s: str) -> str:
         parsed = asciimath2tex.translate(s)
@@ -117,16 +126,16 @@ class CCMATH():
         # 检查 MathJax
         for script in tree.iter('script'):
             if script.get('src') and 'mathjax' in script.get('src', '').lower():
-                return MATH_RENDER_MAP['MATHJAX']
+                return MathRender.MATHJAX
 
         # 检查 KaTeX
         for link in tree.iter('link'):
             if link.get('href') and 'katex' in link.get('href', '').lower():
-                return MATH_RENDER_MAP['KATEX']
+                return MathRender.KATEX
 
         return None
 
-    def get_equation_type(self, content: str) -> str:
+    def get_equation_type(self, html: str) -> str:
         """根据latex_config判断数学公式是行内还是行间公式.
 
         Args:
@@ -136,22 +145,37 @@ class CCMATH():
             str: EQUATION_INLINE 或 EQUATION_INTERLINE
 
         Examples:
-            >>> get_equation_type("这是行内公式 $x^2$ 测试")
+            >>> get_equation_type("<span>这是行内公式 $x^2$ 测试</span>")
             'equation-inline'
-            >>> get_equation_type("这是行间公式 $$y=mx+b$$ 测试")
+            >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
             'equation-interline'
         """
-        def check_delimiters(delims_list):
-            for start, end in delims_list:
-                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                if re.search(pattern, content, re.DOTALL):
-                    return True
-            return False
-        # 优先检查行间公式
-        if check_delimiters(latex_config['displayMath']):
-            return EQUATION_INTERLINE
-        if check_delimiters(latex_config['inlineMath']):
-            return EQUATION_INLINE
+        tree = build_html_tree(html)
+        if tree is None:
+            raise ValueError(f'Failed to load html: {html}')
+
+        for node in tree.iter():
+            # 先检查mathml
+            math_elements = node.find('.//math')
+            if math_elements is not None:
+                if math_elements.get('display') == 'block':
+                    return EQUATION_INTERLINE
+                else:
+                    return EQUATION_INLINE
+
+            # 再检查latex
+            if text_strip(node.text):
+                def check_delimiters(delims_list):
+                    for start, end in delims_list:
+                        pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                        if re.search(pattern, text_strip(node.text), re.DOTALL):
+                            return True
+                    return False
+                # 优先检查行间公式
+                if check_delimiters(latex_config['displayMath']):
+                    return EQUATION_INTERLINE
+                if check_delimiters(latex_config['inlineMath']):
+                    return EQUATION_INLINE
 
         return None
 
@@ -171,25 +195,59 @@ class CCMATH():
         # 检查是否包含 LaTeX 格式的公式
         for pattern in LATEX_PATTERNS:
             if re.search(pattern, html, re.DOTALL):
-                return True, MATH_TYPE_MAP['LATEX']
+                return True, MathType.LATEX
 
         # 检查是否包含 MathML 标签
         tree = build_html_tree(html)
         if tree is not None:
             math_elements = tree.xpath('.//math')
             if math_elements and any(text_strip(elem.text) for elem in math_elements):
-                return True, MATH_TYPE_MAP['MATHML']
+                return True, MathType.MATHML
 
             # 检查 HTML 数学标记（sub 和 sup）
             sub_elements = tree.xpath('.//sub')
             sup_elements = tree.xpath('.//sup')
             if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
                 (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
-                return True, MATH_TYPE_MAP['HTMLMATH']
+                return True, MathType.HTMLMATH
 
         # 检查是否包含 AsciiMath
         # 通常 AsciiMath 被包含在 `...` 中
         if re.search(r'`[^`]+`', html):
-            return True, MATH_TYPE_MAP['ASCIIMATH']
+            return True, MathType.ASCIIMATH
 
         return False, None
+
+    def mml_to_latex(self, mml_code):
+        # Remove any attributes from the math tag
+        mml_code = re.sub(r'(<math.*?>)', r'\1', mml_code)
+        mml_ns = mml_code.replace('<math>', '<math xmlns="http://www.w3.org/1998/Math/MathML">')  # Required.
+
+        mml_ns = mml_ns.replace('&quot;', '"')
+        mml_ns = mml_ns.replace("'\\\"", '"').replace("\\\"'", '"')
+
+        # 很多网页中标签内容就是错误
+        # pattern = r"(<[^<>]*?\s)(mathbackground|mathsize|mathvariant|mathfamily|class|separators|style|id|rowalign|columnspacing|rowlines|columnlines|frame|framespacing|equalrows|equalcolumns|align|linethickness|lspace|rspace|mathcolor|rowspacing|displaystyle|style|columnalign|open|close|right|left)(?=\s|>)(?![\"'][^<>]*?>)"
+        # def replace_attr(match):
+        #     tag_start = match.group(1)  # 标签开始部分和空格
+        #     attr_name = match.group(2)  # 属性名
+        #     return f'{tag_start}{attr_name}=\"\" '
+        # # 替换文本
+        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
+        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
+        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
+
+        pattern = r'"([^"]+?)\''
+        mml_ns = re.sub(pattern, r'"\1"', mml_ns)
+
+        mml_dom = etree.fromstring(mml_ns)
+        mmldom = transform(mml_dom)
+        latex_code = str(mmldom)
+        return latex_code
+
+
+if __name__ == '__main__':
+    cm = CCMATH()
+    print(cm.get_equation_type('<span>$$a^2 + b^2 = c^2$$</span>'))
+    print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
+    print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
