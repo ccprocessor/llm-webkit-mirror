@@ -211,7 +211,6 @@ class CCMATH():
 
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
-
         mml_dom = html_to_element(mml_ns)
         mmldom = transform(mml_dom)
         latex_code = str(mmldom)

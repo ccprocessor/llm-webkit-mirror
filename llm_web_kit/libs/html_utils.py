@@ -69,3 +69,18 @@ def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
         for k, v in new_element.attrib.items():
             old_element.attrib[k] = v
         old_element.tail = new_element.tail
+
+        
+def iter_node(element: HtmlElement):
+    """迭代html树.
+
+    Args:
+        element: lxml.html.HtmlElement: html树
+
+    Returns:
+        generator: 迭代html树
+    """
+    yield element
+    for sub_element in element:
+        if isinstance(sub_element, HtmlElement):
+            yield from iter_node(sub_element)
