@@ -2,11 +2,10 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 
-from lxml import etree
-from lxml.etree import _Element as HtmlElement
+from lxml.html import HtmlElement, HTMLParser
 
-from llm_web_kit.libs.html_utils import (build_cc_element, build_html_tree,
-                                         element_to_html)
+from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
+                                         html_to_element)
 from llm_web_kit.libs.logger import mylogger
 
 
@@ -24,6 +23,8 @@ class CCTag:
 
 
 class BaseHTMLElementRecognizer(ABC):
+    HTML_PARSER = HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+
     """基本的元素解析类."""
     @abstractmethod
     def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
@@ -75,7 +76,7 @@ class BaseHTMLElementRecognizer(ABC):
         Returns:
             etree._Element: html树
         """
-        return build_html_tree(html_source)
+        return html_to_element(html_source)
 
     def _element_to_html(self, element: HtmlElement) -> str:
         """将element转换成html字符串.
@@ -127,8 +128,7 @@ class BaseHTMLElementRecognizer(ABC):
             split_tag_names: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
         """
         copy_attri = False  # 是否copy 父节点的属性
-        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
-        root = etree.HTML(html_segment, parser)
+        root = html_to_element(html_segment)
         if isinstance(split_tag_names, str):  # 如果参数是str，转换成list
             split_tag_names = [split_tag_names]
 
@@ -155,7 +155,7 @@ class BaseHTMLElementRecognizer(ABC):
             for i in range(len(path)):
                 elem = path[i]
                 attrib = elem.attrib if copy_attri else {}
-                copied = parser.makeelement(elem.tag, attrib)
+                copied = BaseHTMLElementRecognizer.HTML_PARSER.makeelement(elem.tag, attrib)
                 if i > 0:
                     path[i - 1].append(copied)
                 path[i] = copied
@@ -163,7 +163,7 @@ class BaseHTMLElementRecognizer(ABC):
         def __copy_tree(elem: HtmlElement, copy_attr=False):
             """deep copy w/o root's tail."""
             attrib = elem.attrib if copy_attr else {}
-            copied = parser.makeelement(elem.tag, attrib)
+            copied = BaseHTMLElementRecognizer.HTML_PARSER.makeelement(elem.tag, attrib)
             copied.text = elem.text
             for sub_elem in elem:
                 sub_copied = __copy_tree(sub_elem)
@@ -173,7 +173,7 @@ class BaseHTMLElementRecognizer(ABC):
 
         def __split_node(elem: HtmlElement):
             attrib = elem.attrib if copy_attri else {}
-            copied = parser.makeelement(elem.tag, attrib)
+            copied = BaseHTMLElementRecognizer.HTML_PARSER.makeelement(elem.tag, attrib)
             if elem.text and elem.text.strip():
                 copied.text = elem.text
 
@@ -198,8 +198,8 @@ class BaseHTMLElementRecognizer(ABC):
                         mylogger.error(f'{sub_elem.tag} has no html attribute')
                         # TODO raise exception
                     nodes, raw_nodes = element_to_html(path[0]), html_source_segment
-                    if not __is_element_text_empty(path[0]):
-                        yield nodes, raw_nodes
+                    # if not __is_element_text_empty(path[0]):
+                    yield nodes, raw_nodes  # 这个地方无需检查是否为空，因为这个是分割元素，必须返还
 
                     # following elements
                     __rebuild_empty_parent_nodes_path()
@@ -230,9 +230,8 @@ class BaseHTMLElementRecognizer(ABC):
             html: str: html片段
             tag_name: str|list: cc标签，如ccmath, cccode, 如果指定了那么就只检查这几个标签是否在html里，否则检查所有cc标签
         """
-        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
         # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
-        tree = etree.HTML(html, parser)
+        tree = html_to_element(html)
         if tree is None:
             return False
 

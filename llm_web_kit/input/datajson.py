@@ -75,7 +75,9 @@ class DataJson(StructureMapper, StructureChecker):
         self._validate(input_data)
         self.__json_data = input_data
         if DataJsonKey.CONTENT_LIST not in self.__json_data:  # 保证content_list一定存在
-            self.__json_data[DataJsonKey.CONTENT_LIST] = []
+            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList([])
+        else:
+            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList(self.__json_data[DataJsonKey.CONTENT_LIST])
 
     def __getitem__(self, key):
         return self.__json_data[key]  # 提供读取功能
@@ -90,5 +92,5 @@ class DataJson(StructureMapper, StructureChecker):
         return self.__json_data[DataJsonKey.FILE_FORMAT]
 
     def get_content_list(self) -> ContentList:
-        cl = ContentList(self.__json_data[DataJsonKey.CONTENT_LIST])
+        cl = self.__json_data[DataJsonKey.CONTENT_LIST]
         return cl

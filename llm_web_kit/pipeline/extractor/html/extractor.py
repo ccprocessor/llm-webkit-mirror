@@ -3,9 +3,10 @@ from typing import List, Tuple
 from overrides import override
 
 from llm_web_kit.input.datajson import ContentList, DataJson
-from llm_web_kit.libs.html_utils import build_html_tree
+from llm_web_kit.libs.html_utils import html_to_element
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
+from llm_web_kit.pipeline.extractor.html.magic_html import GeneralExtractor
 from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
     AudioRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
@@ -59,6 +60,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             CCTag.CC_TEXT: self.__paragraph_recognizer
         }
 
+        self.__magic_html_extractor = GeneralExtractor()  # TODO custom magic-html extractor
+
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
         """根据规则过滤content_list.
@@ -87,11 +90,11 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         main_html, method = self._extract_main_html(raw_html, base_url)
         parsed_html = [(main_html,main_html)]
         for extract_func in [self._extract_table, self._extract_list, self._extract_code, self._extract_math,
-                             self._extract_image, self._extract_audio, self._extract_video,
+                             self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
 
-        content_list = self._export_to_content_list(base_url, parsed_html, raw_html)
+        content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
         data_json['content_list'] = content_list
 
         return data_json
@@ -108,7 +111,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             str2: 获得内容的方式，可对质量进行评估
         """
         # TODO: 从html文本中提取主要的内容
-        raise NotImplementedError
+        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url)
+        return dict_result['html'], dict_result['xp_num']
 
     def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取代码.
@@ -269,5 +273,5 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
             str: 根标签名
         """
-        el = build_html_tree(html)
+        el = html_to_element(html)
         return el.tag

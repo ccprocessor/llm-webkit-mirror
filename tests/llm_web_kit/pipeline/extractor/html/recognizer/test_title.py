@@ -18,5 +18,7 @@ def test_title_recognizer(title_recognizer):
 
     result = title_recognizer.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
     assert len(result) == 10
-    assert result[0][0].replace('\n', '') == '<html><body><cctitle level="1" html="&lt;h1&gt;&#x5927;&#x6A21;&#x578B;&#x597D;&#xFF0C;&#x5927;&#x6A21;&#x578B;&#x68D2;1&lt;/h1&gt;&#10;        ">大模型好，大模型棒1</cctitle></body></html>'
-    assert result[6][0].replace('\n', '') == '<html><body><cctitle level="3" html="&lt;h3&gt;&#x5927;&#x6A21;&#x578B;&#x597D;&#xFF0C;&#x5927;&#x6A21;&#x578B;&#x68D2;5&lt;span&gt;&#x5927;&#x6A21;&#x578B;&#x5F88;&#x68D2;&lt;/span&gt;&lt;/h3&gt;&#10;        ">大模型好，大模型棒5大模型很棒</cctitle></body></html>'
+    assert result[0][0] == """<html><body><cctitle level="1" html="&lt;h1&gt;大模型好，大模型棒1&lt;/h1&gt;
+        ">大模型好，大模型棒1</cctitle></body></html>"""
+    assert result[6][0] == """<html><body><cctitle level="3" html="&lt;h3&gt;大模型好，大模型棒5&lt;span&gt;大模型很棒&lt;/span&gt;&lt;/h3&gt;
+        ">大模型好，大模型棒5大模型很棒</cctitle></body></html>"""

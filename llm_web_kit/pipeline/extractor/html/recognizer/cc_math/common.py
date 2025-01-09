@@ -7,7 +7,7 @@ from lxml import etree
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import build_html_tree
+from llm_web_kit.libs.html_utils import html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -117,7 +117,7 @@ class CCMATH():
         Katex:
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
         """
-        tree = build_html_tree(html)
+        tree = html_to_element(html)
         if tree is None:
             return None
         # 查找head标签
@@ -150,7 +150,7 @@ class CCMATH():
             >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
             'equation-interline'
         """
-        tree = build_html_tree(html)
+        tree = html_to_element(html)
         if tree is None:
             raise ValueError(f'Failed to load html: {html}')
 
@@ -198,7 +198,7 @@ class CCMATH():
                 return True, MathType.LATEX
 
         # 检查是否包含 MathML 标签
-        tree = build_html_tree(html)
+        tree = html_to_element(html)
         if tree is not None:
             math_elements = tree.xpath('.//math')
             if math_elements and any(text_strip(elem.text) for elem in math_elements):
