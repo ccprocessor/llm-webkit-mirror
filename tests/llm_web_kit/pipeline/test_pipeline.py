@@ -13,7 +13,7 @@ class TestPipelineSuite(unittest.TestCase):
         # html
         pipesuit = PipelineSuit(f'{os.path.dirname(os.path.abspath(__file__))}/assets/html_pipe_normal.jsonc')
         self.assertIsNotNone(pipesuit)
-        input_data = {'dataset_name': 'news', 'file_format': 'html'}
+        input_data = {'dataset_name': 'news', 'file_format': 'html', 'html': '<html><body><h1>hello</h1></body></html>', 'url': 'http://www.baidu.com'}
         data: DataJson = pipesuit.format(input_data)
         assert data.get_content_list().length() == 0
         assert data.get_dataset_name() == 'news'

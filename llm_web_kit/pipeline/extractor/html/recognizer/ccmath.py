@@ -33,13 +33,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns: main_html_lst中发现有公式，则返回处理后的元素，标签更新为ccmath，否则原样返回.
         """
         result = []
+        # 获取数学公式渲染器
+        math_render = cm.get_math_render(raw_html)
         for cc_html, o_html in main_html_lst:
-            # 检查是否包含数学公式
-            contains_math, math_type = cm.contains_math(cc_html)
-            if contains_math and not self.is_cc_html(cc_html):
-                # 获取数学公式渲染器
-                math_render = cm.get_math_render(raw_html)
-                result.extend(self.process_ccmath_html(cc_html, o_html, math_type, math_render))
+            if not self.is_cc_html(cc_html):
+                result.extend(self.process_ccmath_html(cc_html, o_html, math_render))
             else:
                 result.append((cc_html, o_html))
 
@@ -102,7 +100,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         else:
             raise ValueError(f'No ccmath element found in content: {parsed_content}')
 
-    def process_ccmath_html(self, cc_html: str, o_html: str, math_type: str, math_render: str) -> List[Tuple[str, str]]:
+    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
 
         Args:
@@ -123,51 +121,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             assert isinstance(node, etree._Element)
             original_html = element_to_html(node)
             parent = node.getparent()
-
-            # TODO: 先保留原始latex格式不做格式替换
-            # # 1. 文本中有\\begin{align} 或 \\begin{equation}
-            # if node.tag not in ['script', 'style'] and text_strip(node.text):
-            #     regex = r'\\begin{align}(.*?)\\end{align}'
-            #     text = node.text
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     if matches:
-            #         node.text = text.replace('\\begin{align}', '').replace('\\end{align}', '')
-
-            # if node.tag not in ['script', 'style'] and text_strip(node.text):
-            #     regex = r'\\begin{equation}(.*?)\\end{equation}'
-            #     text = node.text
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     for match in matches:
-            #         match = match.replace('\\begin{equation}', '')
-            #         match = match.replace('\\end{equation}', '')
-            #         wrapped_text = wrap_math(match, display=True)
-            #         text = text.replace(match, wrapped_text)
-            #     if matches:
-            #         # Remove the \begin{equation} and \end{equation} tags
-            #         text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
-            #         node.text = text
-
-            # if node.tag not in ['script', 'style'] and text_strip(node.tail):
-            #     regex = r'\\begin{align}(.*?)\\end{align}'
-            #     text = node.tail
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     if matches:
-            #         node.tail = text.replace('\\begin{align}', '').replace('\\end{align}', '')
-
-            # if node.tag not in ['script', 'style'] and text_strip(node.tail):
-            #     regex = r'\\begin{equation}(.*?)\\end{equation}'
-            #     text = node.tail
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     for match in matches:
-            #         match = match.replace('\\begin{equation}', '')
-            #         match = match.replace('\\end{equation}', '')
-            #         wrapped_text = wrap_math(match, display=True)
-            #         text = text.replace(match, wrapped_text)
-            #     if matches:
-            #         # Remove the \begin{equation} and \end{equation} tags
-            #         text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
-            #         node.tail = text
-
             # 3. img中的latex
             if node.tag == 'img':
                 pass

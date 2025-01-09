@@ -2,7 +2,7 @@ import json
 import os
 import unittest
 
-from llm_web_kit.libs.html_utils import build_html_element_from_string
+from llm_web_kit.libs.html_utils import html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.text import \
     TextParagraphRecognizer
 
@@ -28,14 +28,14 @@ class TestTextParagraphRecognizer(unittest.TestCase):
 
         # 验证第一个段落
         first_para = result[0][0]
-        ccel = build_html_element_from_string(first_para)
+        ccel = html_to_element(first_para)
         jso = json.loads(ccel.text)
         self.assertEqual(jso[0]['c'], '质量方程')
         self.assertEqual(jso[0]['t'], 'text')
 
         # 验证第二个段落
         second_para = result[1][0]
-        text = build_html_element_from_string(second_para).text
+        text = html_to_element(second_para).text
         jso = json.loads(text)
         self.assertEqual(jso[0]['c'], '\n    爱因斯坦的方程\n    ')
         self.assertEqual(jso[0]['t'], 'text')
