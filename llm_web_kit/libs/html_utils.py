@@ -1,4 +1,6 @@
 
+from copy import deepcopy
+
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
 
 
@@ -13,7 +15,8 @@ def html_to_element(html:str) -> HtmlElement:
     """
     parser = HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
     root = fromstring(html, parser=parser)
-    return root
+    standalone = deepcopy(root)  # 通过拷贝才能去掉自动加入的<html><body>等标签， 非常奇怪的表现。
+    return standalone
 
 
 def element_to_html(element : HtmlElement) -> str:
@@ -25,7 +28,8 @@ def element_to_html(element : HtmlElement) -> str:
     Returns:
         str: html字符串
     """
-    return tostring(element, encoding='utf-8').decode()
+    s = tostring(element, encoding='utf-8').decode()
+    return s
 
 
 def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> HtmlElement:
@@ -46,3 +50,22 @@ def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> Html
     cc_element.text = text
     cc_element.tail = tail
     return cc_element
+
+
+def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
+    """替换element为cc_element.
+
+    Args:
+        old_element: HtmlElement: 要替换的元素
+        new_element: HtmlElement: 替换的元素
+    """
+    if old_element.getparent():
+        old_element.getparent().replace(old_element, new_element)
+    else:
+        old_element.tag = new_element.tag
+        old_element.text = new_element.text
+        for k,_ in old_element.attrib.items():
+            del old_element.attrib[k]
+        for k, v in new_element.attrib.items():
+            old_element.attrib[k] = v
+        old_element.tail = new_element.tail

@@ -5,7 +5,7 @@ from typing import List, Tuple
 from lxml.html import HtmlElement, HTMLParser
 
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         html_to_element)
+                                         html_to_element, replace_element)
 from llm_web_kit.libs.logger import mylogger
 
 
@@ -110,14 +110,7 @@ class BaseHTMLElementRecognizer(ABC):
             element: The element to be replaced
             cc_element: The element to replace with
         """
-        # 清空element的子元素
-        if element.getparent():
-            element.getparent().replace(element, cc_element)
-        else:
-            element.tag = cc_element.tag
-            element.text = cc_element.text
-            element.attrib = cc_element.attrib
-            element.tail = cc_element.tail
+        replace_element(element, cc_element)
 
     @staticmethod
     def html_split_by_tags(html_segment: str, split_tag_names:str | list) -> List[Tuple[str,str]]:
