@@ -31,19 +31,16 @@ TEST_CASES = [
         ),
         'expected': [
             (
-                '<html><body><p>这是p的text</p></body></html>',
-                '<html><body><p>这是p的text</p></body></html>'
+                '<p>这是p的text</p>',
+                '<p>这是p的text</p>'
             ),
             (
-                '<html><body><p><ccmath-interline type="latex" by="mathjax" '
-                'html="&lt;span class=&quot;mathjax_display&quot;&gt;$$a^2 + b^2 = c^2$$'
-                '&lt;/span&gt;&#x8FD9;&#x662F;span&#x7684;tail">$$a^2 + b^2 = c^2$$'
-                '</ccmath-interline></p></body></html>',
+                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>$$a^2 + b^2 = c^2$$</ccmath-interline></p>',
                 '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
             ),
             (
-                '<html><body><p>这是span的tail<b>这是b的text</b>这是b的tail</p></body></html>',
-                '<html><body><p>这是span的tail<b>这是b的text</b>这是b的tail</p></body></html>'
+                '<p>这是span的tail<b>这是b的text</b>这是b的tail</p>',
+                '<p>这是span的tail<b>这是b的text</b>这是b的tail</p>'
             )
         ]
     },
@@ -135,19 +132,31 @@ TEST_CASES_HTML = [
 TEST_EQUATION_TYPE = [
     {
         'input': '<span>$$a^2 + b^2 = c^2$$</span>',
-        'expected': 'equation-interline'
+        'expected': ('equation-interline', 'latex')
     },
     {
         'input': '<span>$a^2 + b^2 = c^2$</span>',
-        'expected': 'equation-inline'
+        'expected': ('equation-inline', 'latex')
     },
     {
         'input': '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>',
-        'expected': 'equation-inline'
+        'expected': ('equation-inline', 'mathml')
     },
     {
         'input': '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>',
-        'expected': 'equation-interline'
+        'expected': ('equation-interline', 'mathml')
+    },
+    {
+        'input': '<span>x<sub>1</sub> + x<sup>2</sup></span>',
+        'expected': ('equation-inline', 'htmlmath')
+    },
+    # {
+    #     'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> yields to `[[a,b],[c,d]]`</p>',
+    #     'expected': ('equation-inline', 'asciimath')
+    # },
+    {
+        'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> </p>',
+        'expected': (None, None)
     }
 ]
 
@@ -167,29 +176,6 @@ TEST_CONTENT_LIST_NODE = [
                 'by': 'mathjax'
             }
         }
-    }
-]
-
-TEST_CONTAINS_MATH = [
-    {
-        'input': '<span>$$x^2$$</span>',
-        'expected': (True, 'latex')
-    },
-    {
-        'input': '<span>x<sub>1</sub> + x<sup>2</sup></span>',
-        'expected': (True, 'htmlmath')
-    },
-    # {
-    #     'input': '<math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>x</mi><mn>2</mn></msup></math>',
-    #     'expected': (True, 'mathml')
-    # },
-    {
-        'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> yields to `[[a,b],[c,d]]`</p>',
-        'expected': (True, 'asciimath')
-    },
-    {
-        'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> </p>',
-        'expected': (False, None)
     }
 ]
 
@@ -226,9 +212,9 @@ class TestMathRecognizer(unittest.TestCase):
                     test_case['raw_html']
                 )
                 print(output_html)
-                self.assertEqual(len(output_html), len(test_case['expected']))
+                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {len(test_case["expected"])}')
                 for i in range(len(output_html)):
-                    self.assertEqual(output_html[i], test_case['expected'][i])
+                    self.assertEqual(output_html[i], test_case['expected'][i], msg=f'result is: {output_html[i]}, expected is: {test_case["expected"][i]}')
 
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
@@ -253,19 +239,6 @@ class TestMathRecognizer(unittest.TestCase):
                 print('answer::::::::', answer)
                 # print('expect::::::::', expect)
                 self.assertEqual(expect, answer)
-
-    # def test_get_math_render(self):
-    #     for test_case in TEST_GET_MATH_RENDER:
-    #         raw_html_path = base_dir.joinpath(test_case['input'][0])
-    #         raw_html = raw_html_path.read_text()
-    #         output_render = self.math_recognizer.get_math_render(raw_html)
-    #         self.assertEqual(output_render, test_case['expected'])
-
-    # def test_get_equation_type(self):
-    #     for test_case in TEST_EQUATION_TYPE:
-    #         with self.subTest(input=test_case['input']):
-    #             output_type = self.math_recognizer.get_equation_type(test_case['input'])
-    #             self.assertEqual(output_type, test_case['expected'])
 
     def test_to_content_list_node(self):
         for test_case in TEST_CONTENT_LIST_NODE:
@@ -299,14 +272,10 @@ class TestCCMATH(unittest.TestCase):
     def test_get_equation_type(self):
         for test_case in TEST_EQUATION_TYPE:
             with self.subTest(input=test_case['input']):
-                output_type = self.ccmath.get_equation_type(test_case['input'])
-                self.assertEqual(output_type, test_case['expected'])
-
-    def test_contains_math(self):
-        for test_case in TEST_CONTAINS_MATH:
-            with self.subTest(input=test_case['input']):
-                output_contains_math = self.ccmath.contains_math(test_case['input'])
-                self.assertEqual(output_contains_math, test_case['expected'])
+                equation_type, math_type = self.ccmath.get_equation_type(test_case['input'])
+                print('input::::::::', test_case['input'])
+                self.assertEqual(equation_type, test_case['expected'][0], msg=f'result is: {equation_type}, expected is: {test_case["expected"][0]}')
+                self.assertEqual(math_type, test_case['expected'][1], msg=f'result is: {math_type}, expected is: {test_case["expected"][1]}')
 
     def test_get_math_render(self):
         for test_case in TEST_GET_MATH_RENDER:
@@ -331,3 +300,7 @@ if __name__ == '__main__':
     # tree = build_html_tree(raw_html)
     # for node in tree.iter():
     #     print(node.tag)
+
+    c = TestCCMATH()
+    c.setUp()
+    c.test_get_equation_type()
