@@ -179,6 +179,8 @@ class CCMATH():
             (True, 'latex')
         """
         # 检查是否包含 LaTeX 格式的公式
+        # print(html)
+        # exit(0)
         for pattern in LATEX_PATTERNS:
             if re.search(pattern, html, re.DOTALL):
                 return True, MATH_TYPE_MAP['LATEX']

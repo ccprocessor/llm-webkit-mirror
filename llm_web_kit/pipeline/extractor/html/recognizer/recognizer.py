@@ -124,7 +124,8 @@ class BaseHTMLElementRecognizer(ABC):
                 path[-1].append(copied)
 
             path.append(copied)
-
+            # for sub_elem in elem.iter():
+            #     print(sub_elem.tag, sub_elem.text)
             for sub_elem in elem:
                 if sub_elem.tag in split_tag_names:
                     # previous elements
