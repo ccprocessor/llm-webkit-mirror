@@ -4,7 +4,7 @@ from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import element_to_html
+from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
     tag_math, tag_span_mathcontainer, tag_span_mathjax)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
@@ -117,7 +117,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         # 打印遍历node次数
         # count = 0
-        for node in tree.iter():
+        for node in iter_node(tree):
             assert isinstance(node, HtmlElement)
             original_html = element_to_html(node)
             parent = node.getparent()

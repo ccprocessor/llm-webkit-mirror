@@ -46,3 +46,35 @@ def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> Html
     cc_element.text = text
     cc_element.tail = tail
     return cc_element
+
+
+def iter_node(element: HtmlElement):
+    """迭代html树.
+
+    Args:
+        element: lxml.html.HtmlElement: html树
+
+    Returns:
+        generator: 迭代html树
+    """
+    yield element
+    for sub_element in element:
+        if isinstance(sub_element, HtmlElement):
+            yield from iter_node(sub_element)
+
+
+def replace_element(element: HtmlElement, cc_element: HtmlElement) -> None:
+    """替换element为cc_element.
+
+    Args:
+        element: lxml.html.HtmlElement: 要替换的元素
+        cc_element: lxml.html.HtmlElement: 替换后的元素
+    """
+    # 清空element的子元素
+    if element.getparent() is not None:
+        element.getparent().replace(element, cc_element)
+    else:
+        element.tag = cc_element.tag
+        element.text = cc_element.text
+        element.attrib = cc_element.attrib
+        element.tail = cc_element.tail
