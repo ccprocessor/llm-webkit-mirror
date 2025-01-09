@@ -3,8 +3,10 @@ from typing import List, Tuple
 from overrides import override
 
 from llm_web_kit.input.datajson import ContentList, DataJson
+from llm_web_kit.libs.html_utils import html_to_element
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
+from llm_web_kit.pipeline.extractor.html.magic_html import GeneralExtractor
 from llm_web_kit.pipeline.extractor.html.recognizer.audio import \
     AudioRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
@@ -14,8 +16,8 @@ from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
 from llm_web_kit.pipeline.extractor.html.recognizer.image import \
     ImageRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.list import ListRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.pipeline.extractor.html.recognizer.table import \
     TableRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.text import \
@@ -47,16 +49,18 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         self.__paragraph_recognizer:BaseHTMLElementRecognizer = TextParagraphRecognizer()
 
         self.__to_content_list_mapper = {
-            '<cccode'[:7]: self.__code_recognizer,
-            '<ccmath'[:7]: self.__math_recognizer,
-            '<ccimag'[:7]: self.__image_recognizer,
-            '<ccaudi'[:7]: self.__audio_recognizer,
-            '<ccvide'[:7]: self.__video_recognizer,
-            '<cctabl'[:7]: self.__table_recognizer,
-            '<cclist'[:7]: self.__list_recognizer,
-            '<cctitl'[:7]: self.__title_recognizer,
-            '<cctext'[:7]: self.__paragraph_recognizer
+            CCTag.CC_CODE: self.__code_recognizer,
+            CCTag.CC_MATH_INTERLINE: self.__math_recognizer,
+            CCTag.CC_IMAGE: self.__image_recognizer,
+            CCTag.CC_AUDIO: self.__audio_recognizer,
+            CCTag.CC_VIDEO: self.__video_recognizer,
+            CCTag.CC_TABLE: self.__table_recognizer,
+            CCTag.CC_LIST: self.__list_recognizer,
+            CCTag.CC_TITLE: self.__title_recognizer,
+            CCTag.CC_TEXT: self.__paragraph_recognizer
         }
+
+        self.__magic_html_extractor = GeneralExtractor()  # TODO custom magic-html extractor
 
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
@@ -85,12 +89,12 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         main_html, method = self._extract_main_html(raw_html, base_url)
         parsed_html = [(main_html,main_html)]
-        for extract_func in [self._extract_code, self._extract_math, self._extract_image, self._extract_audio,
-                             self._extract_video, self._extract_table, self._extract_list,
+        for extract_func in [self._extract_table, self._extract_list, self._extract_code, self._extract_math,
+                             self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
 
-        content_list = self._export_to_content_list(base_url, parsed_html, raw_html)
+        content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
         data_json['content_list'] = content_list
 
         return data_json
@@ -107,7 +111,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             str2: 获得内容的方式，可对质量进行评估
         """
         # TODO: 从html文本中提取主要的内容
-        raise NotImplementedError
+        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url)
+        return dict_result['html'], dict_result['xp_num']
 
     def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取代码.
@@ -248,13 +253,25 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         # 在这个地方，根据tuple中的第一个元素的类型，将其转换为content_list中的元素，转换之后如果还有剩余的元素，则证明解析出现问题，有内容缺失的风险。
         content_list = ContentList([])
         for parsed_html, raw_html in html_lst:
-            tag_prefix = parsed_html[:7]
-            parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(tag_prefix)
+            cc_tag = self.__get_root_tag_name(parsed_html)
+            parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
                 node = parser.to_content_list_node(base_url, parsed_html, raw_html)
                 content_list.append(node)
             else:
-                mylogger.warning(f'无法识别的html标签：{tag_prefix}, {parsed_html}')
+                mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
                 # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
 
         return content_list
+
+    def __get_root_tag_name(self, html:str) -> str:
+        """获取html文本的根标签名.
+
+        Args:
+            html (str): html文本
+
+        Returns:
+            str: 根标签名
+        """
+        el = html_to_element(html)
+        return el.tag

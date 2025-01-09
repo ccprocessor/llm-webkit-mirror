@@ -3,9 +3,10 @@ sys.path.append('/nvme/pzx/llm-webkit-mirror')
 
 from typing import List, Tuple
 
-from lxml import etree
+from lxml.html import HtmlElement
 from overrides import override
 
+<<<<<<< HEAD
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import tag_math, tag_span_mathjax, tag_span_mathcontainer, tag_p
 
 
@@ -13,6 +14,16 @@ from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, parse_html)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import BaseHTMLElementRecognizer
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.utils import TreeOpt
+=======
+from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import element_to_html
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
+    tag_math, tag_span_mathcontainer, tag_span_mathjax)
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
+    CCMATH
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
+>>>>>>> pp/dev
 
 cm = CCMATH()
 
@@ -34,19 +45,17 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns: main_html_lst中发现有公式，则返回处理后的元素，标签更新为ccmath，否则原样返回.
         """
         result = []
+        # 获取数学公式渲染器
+        math_render = cm.get_math_render(raw_html)
         for cc_html, o_html in main_html_lst:
-            # 检查是否包含数学公式
-            contains_math, math_type = cm.contains_math(cc_html)
-            if contains_math and not self.is_cc_html(cc_html):
-                # 获取数学公式渲染器
-                math_render = cm.get_math_render(raw_html)
-                result.extend(self.process_ccmath_html(cc_html, o_html, math_type, math_render))
+            if not self.is_cc_html(cc_html):
+                result.extend(self.process_ccmath_html(cc_html, o_html, math_render))
             else:
                 result.append((cc_html, o_html))
         return result
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment:str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -68,30 +77,46 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns:
             dict: content_list_node
         """
-        # tree = parse_html(parsed_content)
-        tree: etree._Element = etree.fromstring(parsed_content, None)
+        tree = self._build_html_tree(parsed_content)
         if tree is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
-        if tree.tag == CCMATH_INTERLINE or tree.tag == CCMATH_INLINE:
+        inter_ele = tree.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
+        in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
+        if len(inter_ele) > 0:
             # 获取math_content
-            math_content = tree.text  # TODO: 需要处理math_content两边的$符号
+            math_content = inter_ele[0].text  # TODO: 需要处理math_content两边的$符号
 
-            result = {
-                'type': cm.get_equation_type(math_content),
+            return {
+                'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
                 'content': {
-                    'math_content': tree.text,
-                    'math_type': tree.get('type'),
-                    'by': tree.get('by')
+                    'math_content': math_content,
+                    'math_type': inter_ele[0].get('type'),
+                    'by': inter_ele[0].get('by')
                 }
             }
-            return result
+        elif len(in_els) > 0:
+            math_content = in_els[0].text  # TODO: 需要处理math_content两边的$符号
+
+            return {
+                'type': DocElementType.EQUATION_INLINE,
+                'raw_content': raw_html_segment,
+                'content': {
+                    'math_content': math_content,
+                    'math_type': in_els[0].get('type'),
+                    'by': in_els[0].get('by')
+                }
+            }
         else:
             raise ValueError(f'No ccmath element found in content: {parsed_content}')
 
+<<<<<<< HEAD
         
     def process_ccmath_html(self, cc_html: str, o_html: str, math_type: str, math_render: str) -> List[Tuple[str, str]]:
+=======
+    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
+>>>>>>> pp/dev
         """处理数学公式，将外层标签修改为 ccmath.
 
         Args:
@@ -102,8 +127,12 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
+<<<<<<< HEAD
         tree = parse_html(cc_html)
         
+=======
+        tree = self._build_html_tree(cc_html)
+>>>>>>> pp/dev
         if tree is None:
             raise ValueError(f'Failed to load html: {cc_html}')
         
@@ -111,55 +140,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # tree_opt.count_p_tags()
         # tree_opt.get_nodes_info()
 
+<<<<<<< HEAD
         for i, node in enumerate(tree.iter()):
             assert isinstance(node, etree._Element)
             original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
+=======
+        # 打印遍历node次数
+        # count = 0
+        for node in tree.iter():
+            assert isinstance(node, HtmlElement)
+            original_html = element_to_html(node)
+>>>>>>> pp/dev
             parent = node.getparent()
-
-            # TODO: 先保留原始latex格式不做格式替换
-            # # 1. 文本中有\\begin{align} 或 \\begin{equation}
-            # if node.tag not in ['script', 'style'] and text_strip(node.text):
-            #     regex = r'\\begin{align}(.*?)\\end{align}'
-            #     text = node.text
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     if matches:
-            #         node.text = text.replace('\\begin{align}', '').replace('\\end{align}', '')
-
-            # if node.tag not in ['script', 'style'] and text_strip(node.text):
-            #     regex = r'\\begin{equation}(.*?)\\end{equation}'
-            #     text = node.text
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     for match in matches:
-            #         match = match.replace('\\begin{equation}', '')
-            #         match = match.replace('\\end{equation}', '')
-            #         wrapped_text = wrap_math(match, display=True)
-            #         text = text.replace(match, wrapped_text)
-            #     if matches:
-            #         # Remove the \begin{equation} and \end{equation} tags
-            #         text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
-            #         node.text = text
-
-            # if node.tag not in ['script', 'style'] and text_strip(node.tail):
-            #     regex = r'\\begin{align}(.*?)\\end{align}'
-            #     text = node.tail
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     if matches:
-            #         node.tail = text.replace('\\begin{align}', '').replace('\\end{align}', '')
-
-            # if node.tag not in ['script', 'style'] and text_strip(node.tail):
-            #     regex = r'\\begin{equation}(.*?)\\end{equation}'
-            #     text = node.tail
-            #     matches = re.findall(regex, text, re.DOTALL)
-            #     for match in matches:
-            #         match = match.replace('\\begin{equation}', '')
-            #         match = match.replace('\\end{equation}', '')
-            #         wrapped_text = wrap_math(match, display=True)
-            #         text = text.replace(match, wrapped_text)
-            #     if matches:
-            #         # Remove the \begin{equation} and \end{equation} tags
-            #         text = text.replace('\\begin{equation}', '').replace('\\end{equation}', '')
-            #         node.tail = text
-
             # 3. img中的latex
             if node.tag == 'img':
                 pass
@@ -198,7 +190,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 12. math tags
             if node.tag == 'math':
-                tag_math.modify_tree(node, parent)
+                tag_math.modify_tree(cm, math_render, original_html, node, parent)
 
             # 13. class 为 mathjax
             if (node.tag == 'span' and node.get('class') and
@@ -219,7 +211,7 @@ if __name__ == '__main__':
             (
                 # '<p class="lt-math-15120">$h$</p>'
                 # '<p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}}{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p>'
-# '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
+                # '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
                 '<p class="lt-math-15120">What about <strong>division</strong>? Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
                 # '<div>beginning!!!<p class="lt-math-15120">first one\[\\begin{array} {ll} {5 \cdot 3 = 15} &{-5(3) = -15} \\ {5(-3) = -15} &{(-5)(-3) = 15} \end{array}\]</p><p>second one\[\\begin{array} {ll} {10 \cdot 10 = 10} &{-10(10) = -10} \\ {10(-10) = -10} &{(-10)(-10) = 10} \end{array}\]</p>ending!!!</div>'
                 # '<p>\( \newcommand{\vectorB}[1]{\overset { \scriptstyle \rightharpoonup} {\mathbf{#1}}&nbsp;}&nbsp;\)</p>'
@@ -240,7 +232,7 @@ if __name__ == '__main__':
             ),
             (
                 # '<p class="lt-math-15120">$h$</p>'
-# '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
+                # '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
                 '<p class="lt-math-15120">Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
 
                 # '<p class="lt-math-15120">first one\[\\begin{array} {ll} {5 \cdot 3 = 15} &{-5(3) = -15} \\ {5(-3) = -15} &{(-5)(-3) = 15} \end{array}\]second one\[\\begin{array} {ll} {10 \cdot 10 = 10} &{-10(10) = -10} \\ {10(-10) = -10} &{(-10)(-10) = 10} \end{array}\]ending!!!</p>'
@@ -264,6 +256,12 @@ if __name__ == '__main__':
                 # 'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
                 ''
             )
+            # ('<p>这是p的text<span class="mathjax_display">'
+            #     '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+            #     '这是b的tail</p>'),
+            # ('<p>这是p的text<span class="mathjax_display">'
+            #     '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+            #     '这是b的tail</p>')
         )
     ]
     raw_html = (
@@ -271,9 +269,7 @@ if __name__ == '__main__':
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
         '?config=TeX-MML-AM_CHTML"> </script> '
         '</head> '
-        '<ccmath type="mathml" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath>'
-        '<p>This is a test.</p> '
-        '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>'
+        '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
     print(math_recognizer.recognize(
         'https://www.baidu.com',
@@ -282,7 +278,8 @@ if __name__ == '__main__':
     ))
     # print(math_recognizer.to_content_list_node(
     #     'https://www.baidu.com',
-    #     '<ccmath type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath>',
+    #     '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
+    #     # raw_html,
     #     raw_html
     # ))
     # print(math_recognizer.html_split_by_tags(

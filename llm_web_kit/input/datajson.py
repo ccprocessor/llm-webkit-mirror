@@ -45,7 +45,11 @@ class StructureChecker(object):
         Args:
             json_obj (dict): _description_
         """
-        pass  # TODO: 实现这个方法, 根据不同的输入标准进行检查
+        if not isinstance(json_obj, dict):
+            raise ValueError('json_obj must be a dict type.')
+        if DataJsonKey.CONTENT_LIST in json_obj:
+            if not isinstance(json_obj[DataJsonKey.CONTENT_LIST], list):
+                raise ValueError('content_list must be a list type.')
 
 
 class ContentList(StructureMapper):
@@ -74,8 +78,10 @@ class DataJson(StructureMapper, StructureChecker):
         """
         self._validate(input_data)
         self.__json_data = input_data
-        if DataJsonKey.CONTENT_LIST not in self.__json_data:  # 保证content_list一定存在
-            self.__json_data[DataJsonKey.CONTENT_LIST] = []
+        if DataJsonKey.CONTENT_LIST in input_data:
+            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList(input_data[DataJsonKey.CONTENT_LIST])
+        if DataJsonKey.CONTENT_LIST not in self.__json_data:
+            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList([])
 
     def __getitem__(self, key):
         return self.__json_data[key]  # 提供读取功能
@@ -90,5 +96,8 @@ class DataJson(StructureMapper, StructureChecker):
         return self.__json_data[DataJsonKey.FILE_FORMAT]
 
     def get_content_list(self) -> ContentList:
-        cl = ContentList(self.__json_data[DataJsonKey.CONTENT_LIST])
+        cl = self.__json_data[DataJsonKey.CONTENT_LIST]
         return cl
+
+    def get(self, key:str, default=None):
+        return self.__json_data.get(key, default)
