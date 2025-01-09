@@ -3,7 +3,7 @@ from pathlib import Path
 import commentjson as json
 
 from llm_web_kit.exception.exception import PipelineInitExp
-from llm_web_kit.input.datajson import DataJsonKey
+from llm_web_kit.input.datajson import DataJson, DataJsonKey
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.pipeline import PipelineSimpleFactory
 
@@ -74,6 +74,18 @@ class PipelineSuit(object):
         Returns:
             _type_: _description_
         """
+        def validate_datajson(json_obj: DataJson):
+            """检验DataJson对象是否包含了dataset_name字段 类型是否是DataJson.
+
+            Args:
+                json_obj:
+
+            Returns:
+            """
+            if not isinstance(json_obj, DataJson):
+                raise PipelineInitExp('first arg must a instance of DataJson.')
+            if json_obj.get(DataJsonKey.DATASET_NAME) is None:
+                raise PipelineInitExp("DataJson must containing key: 'dataset_name'.")
 
         # 这个方法会在访问的属性在PipelineSuit中不存在时被调用
         def method(*args, **kwargs):
@@ -81,8 +93,7 @@ class PipelineSuit(object):
                 raise PipelineInitExp("First argument must be the JSON object containing 'dataset_name'.")
 
             json_obj = args[0]
-            if not isinstance(json_obj, dict) or DataJsonKey.DATASET_NAME not in json_obj:
-                raise PipelineInitExp("JSON object must be a dictionary containing 'dataset_name'.")
+            validate_datajson(json_obj)
 
             dataset_name = json_obj[DataJsonKey.DATASET_NAME]
             pipeline = self._PipelineSuit__pipelines.get(dataset_name)
