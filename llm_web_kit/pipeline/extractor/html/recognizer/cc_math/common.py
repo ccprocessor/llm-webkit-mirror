@@ -135,20 +135,20 @@ class CCMATH():
 
         return None
 
-    def get_equation_type(self, html: str) -> str:
+    def get_equation_type(self, html: str) -> Tuple[str, str]:
         """根据latex_config判断数学公式是行内还是行间公式.
 
         Args:
             html: 包含数学公式的HTML文本
 
         Returns:
-            str: EQUATION_INLINE 或 EQUATION_INTERLINE
+            Tuple[str, str]: (EQUATION_INLINE 或 EQUATION_INTERLINE, 公式类型)
 
         Examples:
             >>> get_equation_type("<span>这是行内公式 $x^2$ 测试</span>")
-            'equation-inline'
+            ('equation-inline', 'latex')
             >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
-            'equation-interline'
+            ('equation-interline', 'latex')
         """
         tree = html_to_element(html)
         if tree is None:
@@ -156,67 +156,39 @@ class CCMATH():
 
         for node in tree.iter():
             # 先检查mathml
-            math_elements = node.find('.//math')
-            if math_elements is not None:
-                if math_elements.get('display') == 'block':
-                    return EQUATION_INTERLINE
+            math_elements = node.xpath('//math')
+            if len(math_elements) > 0:
+                if math_elements[0].get('display') == 'block':
+                    return EQUATION_INTERLINE, MathType.MATHML
                 else:
-                    return EQUATION_INLINE
+                    return EQUATION_INLINE, MathType.MATHML
 
             # 再检查latex
-            if text_strip(node.text):
+            if text := text_strip(node.text):
                 def check_delimiters(delims_list):
                     for start, end in delims_list:
                         pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                        if re.search(pattern, text_strip(node.text), re.DOTALL):
+                        if re.search(pattern, text, re.DOTALL):
                             return True
                     return False
                 # 优先检查行间公式
                 if check_delimiters(latex_config['displayMath']):
-                    return EQUATION_INTERLINE
+                    return EQUATION_INTERLINE, MathType.LATEX
                 if check_delimiters(latex_config['inlineMath']):
-                    return EQUATION_INLINE
+                    return EQUATION_INLINE, MathType.LATEX
 
-        return None
-
-    def contains_math(self, html: str) -> Tuple[bool, str]:
-        """判断html中是否包含数学公式.并根据不同的公式类型返回对应的math_type.
-
-        Args:
-            html: 要检查的HTML字符串
-
-        Returns:
-            Tuple[bool, str]: (是否包含数学公式, 公式类型)
-
-        示例:
-            >>> contains_math('<span>$$x^2$$</span>')
-            (True, 'latex')
-        """
-        # 检查是否包含 LaTeX 格式的公式
-        for pattern in LATEX_PATTERNS:
-            if re.search(pattern, html, re.DOTALL):
-                return True, MathType.LATEX
-
-        # 检查是否包含 MathML 标签
-        tree = html_to_element(html)
-        if tree is not None:
-            math_elements = tree.xpath('.//math')
-            if math_elements and any(text_strip(elem.text) for elem in math_elements):
-                return True, MathType.MATHML
+                # 再检查asciimath，通常被包含在`...`中，TODO：行间和行内如何区分
+                if re.search(r'`[^`]+`', text):
+                    return EQUATION_INLINE, MathType.ASCIIMATH
 
             # 检查 HTML 数学标记（sub 和 sup）
-            sub_elements = tree.xpath('.//sub')
-            sup_elements = tree.xpath('.//sup')
+            sub_elements = tree.xpath('//sub')
+            sup_elements = tree.xpath('//sup')
             if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
                 (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
-                return True, MathType.HTMLMATH
+                return EQUATION_INLINE, MathType.HTMLMATH
 
-        # 检查是否包含 AsciiMath
-        # 通常 AsciiMath 被包含在 `...` 中
-        if re.search(r'`[^`]+`', html):
-            return True, MathType.ASCIIMATH
-
-        return False, None
+        return None, None
 
     def mml_to_latex(self, mml_code):
         # Remove any attributes from the math tag
@@ -240,7 +212,7 @@ class CCMATH():
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
 
-        mml_dom = etree.fromstring(mml_ns)
+        mml_dom = html_to_element(mml_ns)
         mmldom = transform(mml_dom)
         latex_code = str(mmldom)
         return latex_code

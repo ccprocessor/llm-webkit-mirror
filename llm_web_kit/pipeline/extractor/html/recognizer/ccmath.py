@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from lxml import etree
+from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -70,31 +70,31 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if tree is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
-        inter_ele = tree.find(f'.//{CCTag.CC_MATH_INTERLINE}')
-        in_els = tree.find(f'.//{CCTag.CC_MATH_INLINE}')
-        if inter_ele is not None:
+        inter_ele = tree.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
+        in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
+        if len(inter_ele) > 0:
             # 获取math_content
-            math_content = inter_ele.text  # TODO: 需要处理math_content两边的$符号
+            math_content = inter_ele[0].text  # TODO: 需要处理math_content两边的$符号
 
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': math_content,
-                    'math_type': inter_ele.get('type'),
-                    'by': inter_ele.get('by')
+                    'math_type': inter_ele[0].get('type'),
+                    'by': inter_ele[0].get('by')
                 }
             }
-        elif in_els is not None:
-            math_content = in_els.text  # TODO: 需要处理math_content两边的$符号
+        elif len(in_els) > 0:
+            math_content = in_els[0].text  # TODO: 需要处理math_content两边的$符号
 
             return {
                 'type': DocElementType.EQUATION_INLINE,
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': math_content,
-                    'math_type': in_els.get('type'),
-                    'by': in_els.get('by')
+                    'math_type': in_els[0].get('type'),
+                    'by': in_els[0].get('by')
                 }
             }
         else:
@@ -118,7 +118,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # 打印遍历node次数
         # count = 0
         for node in tree.iter():
-            assert isinstance(node, etree._Element)
+            assert isinstance(node, HtmlElement)
             original_html = element_to_html(node)
             parent = node.getparent()
             # 3. img中的latex
@@ -173,28 +173,12 @@ if __name__ == '__main__':
     math_recognizer = MathRecognizer()
     test_html = [
         (
-            (
-                '<p>I think I can now answer my own question, having come across some decent '
-                'references I hadn\'t found before asking it. I found the equation for the '
-                'gravitational strain <span class=\"math-container\">$h$</span> - the proportional '
-                'change in length of an object due to gravitational waves from a mass '
-                '<span class=\"math-container\">$M$</span>:</p>\n\n'
-                '<p><span class=\"math-container\">$$h \\approx {{GM} \\over c^2} \\times '
-                '{1 \\over r} \\times {v^2 \\over c^2}$$</span></p>\n\n'
-                '<p><a href=\"http://www.tapir.caltech.edu/~teviet/Waves/gwave.html\" '
-                'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
-            ),
-            (
-                '<p>I think I can now answer my own question, having come across some decent '
-                'references I hadn\'t found before asking it. I found the equation for the '
-                'gravitational strain <span class=\"math-container\">$h$</span> - the proportional '
-                'change in length of an object due to gravitational waves from a mass '
-                '<span class=\"math-container\">$M$</span>:</p>\n\n'
-                '<p><span class=\"math-container\">$$h \\approx {{GM} \\over c^2} \\times '
-                '{1 \\over r} \\times {v^2 \\over c^2}$$</span></p>\n\n'
-                '<p><a href=\"http://www.tapir.caltech.edu/~teviet/Waves/gwave.html\" '
-                'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
-            )
+            ('<p>这是p的text<span class="mathjax_display">'
+                '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+                '这是b的tail</p>'),
+            ('<p>这是p的text<span class="mathjax_display">'
+                '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+                '这是b的tail</p>')
         )
     ]
     raw_html = (
@@ -202,21 +186,19 @@ if __name__ == '__main__':
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
         '?config=TeX-MML-AM_CHTML"> </script> '
         '</head> '
-        '<ccmath-interline type="mathml" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath-interline>'
-        '<p>This is a test.</p> '
-        '<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>'
+        '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
     print(math_recognizer.recognize(
         'https://www.baidu.com',
         test_html,
         raw_html
     ))
-    print(math_recognizer.to_content_list_node(
-        'https://www.baidu.com',
-        '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
-        # raw_html,
-        raw_html
-    ))
+    # print(math_recognizer.to_content_list_node(
+    #     'https://www.baidu.com',
+    #     '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
+    #     # raw_html,
+    #     raw_html
+    # ))
     # print(math_recognizer.html_split_by_tags(
     #     raw_html,
     #     ['ccmath']
