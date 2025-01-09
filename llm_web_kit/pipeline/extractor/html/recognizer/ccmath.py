@@ -70,9 +70,13 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if tree is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
-        inter_ele = tree.find(f'.//{CCTag.CC_MATH_INTERLINE}')
-        in_els = tree.find(f'.//{CCTag.CC_MATH_INLINE}')
-        if inter_ele is not None:
+        # inter_ele = tree.find(f'.//{CCTag.CC_MATH_INTERLINE}')
+        # in_els = tree.find(f'.//{CCTag.CC_MATH_INLINE}')
+        inter_ele = tree.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
+        in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
+        if inter_ele:
+            inter_ele = inter_ele[0]
+
             # 获取math_content
             math_content = inter_ele.text  # TODO: 需要处理math_content两边的$符号
 
@@ -85,7 +89,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     'by': inter_ele.get('by')
                 }
             }
-        elif in_els is not None:
+        elif in_els:
+            in_els = in_els[0]
             math_content = in_els.text  # TODO: 需要处理math_content两边的$符号
 
             return {
