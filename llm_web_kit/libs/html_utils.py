@@ -1,11 +1,13 @@
 from lxml import etree
+from lxml import html as lhtml
+from lxml.etree import _Element as Element
 
 
-def build_html_tree(html:str) -> etree._Element:
+def build_html_tree(html:str) -> Element:
     """构建html树.
 
     Args:
-        html: str: html字符串
+        html: str: 完整的html源码
 
     Returns:
         etree._Element: html树
@@ -15,7 +17,19 @@ def build_html_tree(html:str) -> etree._Element:
     return root
 
 
-def element_to_html(element : etree._Element) -> str:
+def build_html_element_from_string(html:str) -> Element:
+    """构建html元素.
+
+    Args:
+        html: str: html字符串
+
+    Returns:
+        etree._Element: html元素
+    """
+    return lhtml.fromstring(html)
+
+
+def element_to_html(element : Element) -> str:
     """将element转换成html字符串.
 
     Args:
