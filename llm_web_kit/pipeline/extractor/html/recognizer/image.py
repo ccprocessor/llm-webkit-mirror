@@ -3,7 +3,7 @@ import html
 import json
 from typing import List, Tuple
 
-from lxml.html import HtmlElement, fromstring, tostring
+from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -14,6 +14,7 @@ from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
 
 class ImageRecognizer(BaseHTMLElementRecognizer):
     """解析图片元素."""
+    IMG_LABEL = ['.jpg', '.jpeg', '.png', '.gft', '.webp', '.bmp', '.svg']  # '.pdf'
 
     @override
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
@@ -41,7 +42,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         Returns:
             dict: content_list_node
         """
-        html_obj = fromstring(parsed_content)
+        html_obj = self._build_html_tree(parsed_content)
         if html_obj is None:
             raise ValueError(f'Failed to load html: {parsed_content}')
 
@@ -58,7 +59,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             # print(f"content: {result['content']}")
             return result
         else:
-            raise ValueError(f'No ccmath element found in content: {parsed_content}')
+            raise ValueError(f'No ccimage element found in content: {parsed_content}')
 
     @override
     def recognize(self, base_url: str, main_html_lst: List[Tuple[str, str]], raw_html: str) -> List[Tuple[str, str]]:
@@ -75,15 +76,17 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             raise ZeroDivisionError
         ccimg_html = list()
         for html_li in main_html_lst:
-            if self.is_cc_html(html_li[0]):
-                ccimg_html.append(html_li)
-            else:
-                new_html_li = self.__parse_html_img(html_li)
-                if new_html_li:
-                    # print(f'new_html_li: {len(new_html_li)}')
-                    ccimg_html.extend(new_html_li)
-                else:
+            try:
+                if self.is_cc_html(html_li[0]):
                     ccimg_html.append(html_li)
+                else:
+                    new_html_li = self.__parse_html_img(html_li)
+                    if new_html_li:
+                        ccimg_html.extend(new_html_li)
+                    else:
+                        ccimg_html.append(html_li)
+            except Exception as e:
+                mylogger.error(f'recognizer image failed: {e}')
         return ccimg_html
 
     def __parse_html_img(self, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
@@ -91,29 +94,28 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         html_obj = self._build_html_tree(html_str[0])
         image_related_selectors = [
             '//*[contains(@class, "image-embed") or contains(@id, "image-embed")]',  # 可能包含嵌入图片的自定义标签
-            '//iframe[not(ancestor::noscript)]',
-            '//embed',
+            '//*[starts-with(@src, "data:image/") and not(self::img)]',
+            # 带有内嵌base64图片的标签,data:image/png;base64,eg:img, svg/image
+            '//iframe[not(ancestor::noscript) and not(ancestor::iframe)]',
+            '//embed[not(ancestor::object)]',
             '//figure[not(ancestor::figure)]',
-            '//object',  # object标签，通常用于嵌入多媒体内容
+            '//object[not(ancestor::object)]',  # object标签，通常用于嵌入多媒体内容
             '//picture[not(ancestor::figure)]',
             '//canvas',  # canvas标签，可能用于绘制图形或展示图片
             '//svg',  # svg标签，用于矢量图形
             '//video',
             '//audio',
-            # '//img[not(ancestor::noscript) and not(ancestor::picture) and not(ancestor::figure)]',
-            '//img[not(ancestor::noscript) and not(ancestor::picture) and not(ancestor::figure) and not(ancestor::table)]',
+            '//img[not(ancestor::noscript) and not(ancestor::picture) and not(ancestor::figure) and not(ancestor::object) and not(ancestor::table)]',
         ]
         # 合并XPath表达式
         combined_xpath = '|'.join(image_related_selectors)
         # 使用XPath选择所有相关标签
         img_elements = html_obj.xpath(combined_xpath)
-        base_img = html_obj.xpath('//*[starts-with(@xlink:href, "data:image/") or starts-with(@src, "data:image/")]',
-                                  namespaces={
-                                      'xlink': 'http://www.w3.org/1999/xlink'})  # 带有内嵌base64图片的标签,data:image/png;base64,eg:img, svg/image,
+        base_img = html_obj.xpath('//*[starts-with(@xlink:href, "data:image/") and not(self::img)]', namespaces={
+            'xlink': 'http://www.w3.org/1999/xlink'})
         if base_img:
             img_elements.extend(base_img)
         if img_elements:
-            # print(f'img_elements size: {len(img_elements)}')
             update_html, img_tag = self.__parse_img_elements(img_elements, html_obj)
             if img_tag:
                 return self.html_split_by_tags(update_html, CCTag.CC_IMAGE)
@@ -124,69 +126,77 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         is_valid_img = False
         for elem in img_elements:
             tag = elem.tag
-            # raw_img_html = self._element_to_html(elem)
-            raw_img_html = tostring(elem).decode('utf-8')
+            raw_img_html = self._element_to_html(elem)
             # print(f'raw_img_html: {raw_img_html}')
-            if tag in ['embed', 'object', 'iframe', 'video', 'audio']:
-                # print(f'elem_tag is {tag}')
-                if not [img_elem for img_elem in ['.jpg', '.jpeg', '.png', '.webp'] if
-                        img_elem in raw_img_html] or not elem.get('src'):
-                    continue
-            elif tag == 'svg' and elem.xpath('.//path|.//image') is None:
-                continue
-
-            img_tag.append(CCTag.CC_IMAGE)
             attributes = {
                 'by': tag,
                 'html': raw_img_html,  # 保留原始 <img> 标签作为属性值
             }
-            if elem.text and elem.text.replace('\n', '').replace('\\n', '').strip():
+            if elem.text and elem.text.strip():
                 attributes['caption'] = elem.text.strip()
+            if tag in ['embed', 'object', 'iframe', 'video', 'audio', 'canvas']:
+                if not [img_elem for img_elem in self.IMG_LABEL if
+                        img_elem in raw_img_html.lower()]:
+                    continue
+                elif elem.xpath('.//img'):
+                    self.__parse_img_attr(elem.xpath('.//img')[-1], attributes)
+                else:
+                    self.__parse_img_attr(elem, attributes)
+            elif tag == 'svg':
+                if not elem.xpath('.//path|.//image|.//circle'):
+                    continue
+                elif elem.xpath('.//image|.//img'):
+                    self.__parse_img_attr(elem.xpath('.//image|.//img')[-1], attributes)
+                else:
+                    self.__parse_img_attr(elem, attributes)
             if tag in ['picture', 'figure']:
                 if elem.xpath('.//img'):
-                    attributes = self.__parse_img_attr(elem.xpath('.//img')[-1], attributes)
+                    self.__parse_img_attr(elem.xpath('.//img')[-1], attributes)
                 else:
-                    # print('picture & figure img tag but no img data')
-                    img_tag.pop()
                     continue
             elif tag == 'svg' and elem.xpath('.//image'):
-                attributes = self.__parse_img_attr(elem.xpath('.//image')[-1], attributes)
+                self.__parse_img_attr(elem.xpath('.//image')[-1], attributes)
             else:
-                attributes = self.__parse_img_attr(elem, attributes)
+                self.__parse_img_attr(elem, attributes)
 
+            img_tag.append(CCTag.CC_IMAGE)
             is_valid_img = True
-            attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
-            text, tail = self.__parse_text_tail(attributes)
-            new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, text, tail, **attributes)
+            # attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
+            img_text, img_tail = self.__parse_text_tail(attributes)
+            try:
+                new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
+            except Exception as e:
+                mylogger.error(f'build_cc_element failed: {e}')
             # print(f"new_ccimage:{tostring(new_ccimage, pretty_print=True, encoding='unicode')}")
             try:
                 self._replace_element(elem, new_ccimage)
             except Exception as e:
                 mylogger.error(f'replace img element fail: {e}')
-            # elem.getparent().replace(elem, new_ccimage)  # 替换原始 <img> 标签
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
-            # print(f'updated_html: {updated_html}')
             return (updated_html, img_tag)
         else:
             return (None, None)
 
-    def __parse_img_attr(self, elem: HtmlElement, attributes: dict) -> dict:
+    def __parse_img_attr(self, elem: HtmlElement, attributes: dict):
         """解析获取img标签属性值."""
-        src = elem.get('src')
-        if src:
-            attributes['src'] = src
-            attributes['text'] = src
+        elem_attributes = {k: v for k, v in elem.attrib.items() if v and v.strip()}
+        src = elem_attributes.get('src')
+        text = ''
+        if src and any(img_label for img_label in self.IMG_LABEL if img_label in src.lower()):
+            text = src
+        else:
+            for k, v in elem_attributes.items():
+                if any(img_label for img_label in self.IMG_LABEL if img_label in v.lower()):
+                    text = v
 
-        common_attributes = ['alt', 'title', 'width', 'height']  # 'style', 'data-src', 'srcset'
-        for attr in common_attributes:
-            if elem.get(attr) is not None:
-                attributes[attr] = elem.get(attr)
-        # if elem.tail:
-        #     attributes['tail'] = elem.tail
-
-        return attributes
+        common_attributes = ['alt', 'title', 'width', 'height', 'src']  # 'style', 'data-src', 'srcset'
+        attributes.update({attr: elem_attributes.get(attr) for attr in common_attributes if elem_attributes.get(attr)})
+        if text:
+            attributes['text'] = text
+        if elem.tail and elem.tail.strip():
+            attributes['tail'] = elem.tail.strip()
 
     def __clean_xml_string(self, s):
         """清洗html数据，统一标准的unicode编码，移除NULL字节和其他控制字符."""
@@ -216,53 +226,25 @@ def read_gz_and_parse_json_line_by_line(file_path):
 
 if __name__ == '__main__':
     img = ImageRecognizer()
-    path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_object_part-677b7b5416ee-000000.jsonl.gz'
+    path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_part-676e680976e0-000000.jsonl.gz'
+
     idx = 0
+    num = 1
     for html_d in read_gz_and_parse_json_line_by_line(path):
         idx += 1
-        if idx < 1:
+        if idx < num:
             continue
-        if idx > 1:
+        if idx > num:
             break
+        # if idx < num:
+        #     continue
+        # if idx > 1000:
+        #     break
         print(f"start analysis idx: {idx}, url: {html_d['url']}")
-        html_d['html'] = """
-        <html>
-            <head><title>Sample Page</title></head>
-            <body>
-               <!--  这里是HEAD 注释内容  -->
-                <p>Some text before an image.</p>
-                first span tail
-                <div>
-                    div 的TEXT内容
-                    <span>
-                        <img src="http://example.com/image1.jpg" />
-                        这是span
-                    </span>
-                    span的TAIL内容
-                </div>
-                这也是DIV的tail内容
-                <p>Some text in between images.</p>
-                这是P的tail内容
-                <img src="http://example.com/image2.jpg" />
-                hello
-                <img src="http://example.com/image3.jpg" />
-                这是img的tail内容
-                <p>Some text after the last image.</p>
-                这里是TAIL TEXT
-                <span>这是span的内容</span>
-                span的tail
-            </body>
-        </html>
-        """
         # print(html_d['html'])
-        print('-----\n' * 5)
         res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
         # parsed_content = """<ccimage by="img" html='&lt;img border="0" src="http://wpa.qq.com/pa?p=2:122405331:41" alt="qq" title="qq"&gt;' src="http://wpa.qq.com/pa?p=2:122405331:41" alt="qq" title="qq">http://wpa.qq.com/pa?p=2:122405331:41</ccimage>"""
         # res = img.to_content_list_node(html_d["url"], parsed_content, html_d["html"])
-        print('-----\n' * 5)
-        from pprint import pprint
 
-        pprint(res)
-        print('-----\n' * 5)
-        print(len(res))
+        print(f'res size: {len(res)}')
 # 43 svg, figure -- 21, 92 picture --53, 69 base64--186, 62 svg--26, table -- 1
