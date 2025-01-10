@@ -8,39 +8,7 @@ from llm_web_kit.pipeline.extractor.html.recognizer.code.common import \
 """
 
 
-# def __get_dist(node_paths: list[list[str]]) -> list[list[int]]:
-#     dist: list[list[int]] = []
-#     for i in range(len(node_paths)):
-#         dist.append([])
-#         for j in range(len(node_paths)):
-#             if i == j:
-#                 dist[i].append(0)
-#             elif i > j:
-#                 dist[i].append(dist[j][i])
-#             else:
-#                 common_node_idx = min(len(node_paths[i]), len(node_paths[j]))
-#                 for idx, (x, y) in enumerate(zip(node_paths[i], node_paths[j])):
-#                     if idx == 0:
-#                         # node_paths[x][0] is always 'body'
-#                         continue
-#                     if x != y:
-#                         common_node_idx = idx
-#                         break
-#                 d = len(node_paths[i]) + len(node_paths[j]) - common_node_idx * 2
-#                 dist[i].append(d)
-
-#     dist_counter = {}
-#     for i in range(len(node_paths)):
-#         for j in range(len(node_paths)):
-#             if dist[i][j] not in dist_counter:
-#                 dist_counter[dist[i][j]] = 0
-#             dist_counter[dist[i][j]] += 1
-#     dist_counter = dict(sorted(list(dist_counter.items())))
-
-#     return dist
-
-
-def __get_tree_roots(
+def __group_code_by_distance(
     root: HtmlElement,
     node_paths: list[list[str]],
     dist: list[list[int]],
@@ -111,58 +79,7 @@ def __get_tree_roots(
     return [x for x in root_paths_joined if x not in removed]
 
 
-# def __get_candidates(
-#     root: HtmlElement,
-#     node: HtmlElement,
-#     tree_roots: list[str],
-# ) -> list[HtmlElement]:
-#     node_path: str = root.getpath(node)
-#     hit = False
-#     prefix_hit = False
-#     for tree_root in tree_roots:
-#         if tree_root.startswith(node_path):
-#             prefix_hit = True
-#         if tree_root == node_path:
-#             hit = True
-
-#     if not prefix_hit:
-#         return []
-
-#     if hit:
-#         return [node]
-
-#     rtn = []
-#     for cnode in node.getchildren():
-#         assert isinstance(cnode, HtmlElement)
-#         rtn.extend(__get_candidates(root, cnode, tree_roots))
-#     return rtn
-
-
-# def __get_node_paths(tree: HtmlElement) -> list[list[str]]:
-#     node_set: set[str] = set()
-#     node_paths: list[list[str]] = []
-
-#     for code_node in body.iter('code'):
-#         assert isinstance(code_node, HtmlElement)
-#         node_path: str = tree.getpath(code_node)
-#         node_set.add(node_path)
-
-#     remove_node_set: set[str] = set()
-#     # 如果出现 code 嵌套 code，取最外层
-#     for maybe_parent in node_set:
-#         for maybe_child in node_set:
-#             if len(maybe_parent) < len(maybe_child):
-#                 if maybe_child.startswith(maybe_parent):
-#                     remove_node_set.add(maybe_child)
-
-#     node_set = {node_path for node_path in node_set if node_path not in remove_node_set}
-
-#     for node_path in node_set:
-#         node_paths.append(node_path.split('/'))
-
-#     return node_paths
-
-def __compute_dist_matrix(node_paths: list[list[str]]) -> list[list[int]]:
+def __compute_distance_matrix(node_paths: list[list[str]]) -> list[list[int]]:
     """
     计算节点路径的距离矩阵，具体步骤：
     1. 创建距离矩阵，计算每两个节点之间的距离
@@ -265,8 +182,8 @@ def modify_tree(root: HtmlElement) -> None:
         root: html 树的根节点
     """
     node_paths = __get_code_node_paths(root)  # 获取所有 code 标签的路径，不包含嵌套的子code 标签
-    dist_matrix = __compute_dist_matrix(node_paths)  # 计算距离矩阵
-    tree_roots = __get_tree_roots(root, node_paths, dist_matrix)  # 根据距离矩阵，对code标签进行分组
+    dist_matrix = __compute_distance_matrix(node_paths)  # 计算距离矩阵
+    tree_roots = __group_code_by_distance(root, node_paths, dist_matrix)  # 根据距离矩阵，对code标签进行分组
 
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:
