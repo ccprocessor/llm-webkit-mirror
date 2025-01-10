@@ -1,8 +1,9 @@
 from typing import List, Tuple
 
-from lxml import etree
+from lxml.html import HtmlElement
 from overrides import override
 
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.code import (tag_code,
                                                                  tag_pre_code)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
@@ -33,7 +34,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         assert main_html_lst[0][0] == main_html_lst[0][1]
 
         main_html = main_html_lst[0][0]
-        root: etree._Element = etree.fromstring(main_html, etree.HTMLParser())
+        root: HtmlElement = html_to_element(main_html)
 
         while True:
             # 最常见:
@@ -61,13 +62,13 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
             break
 
-        html_str: str = etree.tostring(root).decode()
+        html_str: str = element_to_html(root)
 
         return BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode')
 
     @override
     def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
-        code_node: etree._Element = etree.fromstring(parsed_content, None)
+        code_node: HtmlElement = html_to_element(parsed_content)
 
         d = {
             'type': 'code',

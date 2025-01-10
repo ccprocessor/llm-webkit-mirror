@@ -52,6 +52,19 @@ def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> Html
     return cc_element
 
 
+def get_element_text(element: HtmlElement) -> str:
+    """
+    获取这个节点下，包括子节点的所有文本.
+    Args:
+        element:
+
+    Returns:
+
+    """
+    text = ''.join(element.itertext())
+    return text
+
+
 def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
     """替换element为cc_element.
 
@@ -70,7 +83,7 @@ def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
             old_element.attrib[k] = v
         old_element.tail = new_element.tail
 
-        
+
 def iter_node(element: HtmlElement):
     """迭代html树.
 
