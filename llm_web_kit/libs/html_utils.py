@@ -72,7 +72,7 @@ def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
         old_element: HtmlElement: 要替换的元素
         new_element: HtmlElement: 替换的元素
     """
-    if old_element.getparent():
+    if old_element.getparent() is not None:
         old_element.getparent().replace(old_element, new_element)
     else:
         old_element.tag = new_element.tag
