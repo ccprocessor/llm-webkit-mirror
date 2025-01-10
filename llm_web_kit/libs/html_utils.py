@@ -1,4 +1,4 @@
-
+import html
 from copy import deepcopy
 
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
@@ -29,6 +29,15 @@ def element_to_html(element : HtmlElement) -> str:
         str: html字符串
     """
     s = tostring(element, encoding='utf-8').decode()
+    return s
+
+
+def element_to_html_s(element : HtmlElement) -> str:
+    """将element转换成html字符串并保持标签不被转义."""
+    s = element_to_html(element)
+
+    # 手动避免转义
+    s = s.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&')
     return s
 
 
@@ -82,6 +91,8 @@ def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
         for k, v in new_element.attrib.items():
             old_element.attrib[k] = v
         old_element.tail = new_element.tail
+        for child in new_element:
+            old_element.append(child)
 
 
 def iter_node(element: HtmlElement):
@@ -97,3 +108,82 @@ def iter_node(element: HtmlElement):
     for sub_element in element:
         if isinstance(sub_element, HtmlElement):
             yield from iter_node(sub_element)
+
+
+def html_to_markdown_table(table_html_source: str) -> str:
+    """把html代码片段转换成markdown表格.
+
+    Args:
+        table_html_source: 被<table>标签包裹的html代码片段(含<table>标签)
+
+    Returns: 如果这个表格内没有任何文字性内容，则返回空字符串
+    """
+    # 解析HTML
+    table_el = html_to_element(table_html_source)
+    rows = table_el.xpath('.//tr')
+    if not rows:
+        return ''
+
+    # 确定最大列数
+    max_cols = 0
+    for row in rows:
+        cols = row.xpath('.//th | .//td')
+        max_cols = max(max_cols, len(cols))
+
+    if max_cols == 0:
+        return ''
+    markdown_table = []
+
+    # 检查第一行是否是表头并获取表头内容
+    first_row_tags = rows[0].xpath('.//th | .//td')
+    headers = [tag.text_content().strip() for tag in first_row_tags]
+    # 如果表头存在，添加表头和分隔符，并保证表头与最大列数对齐
+    if headers:
+        while len(headers) < max_cols:
+            headers.append('')  # 补充空白表头
+        markdown_table.append('| ' + ' | '.join(headers) + ' |')
+        markdown_table.append('|---' * max_cols + '|')
+    else:
+        # 如果没有明确的表头，创建默认表头
+        default_headers = [''] * max_cols
+        markdown_table.append('| ' + ' | '.join(default_headers) + ' |')
+        markdown_table.append('|---' * max_cols + '|')
+
+    # 添加表格内容，跳过已被用作表头的第一行（如果有的话）
+    for row in rows[1:]:
+        columns = [td.text_content().strip() for td in row.xpath('.//td | .//th')]
+        # 如果这一行的列数少于最大列数，则补充空白单元格
+        while len(columns) < max_cols:
+            columns.append('')
+        markdown_table.append('| ' + ' | '.join(columns) + ' |')
+
+    md_str = '\n'.join(markdown_table)
+    return md_str.strip()
+
+
+def table_cells_count(table_html_source: str) -> int:
+    """获取表格的单元格数量.
+    当只有1个单元格时，这个table就要被当做普通的一个段落处理。
+    Args:
+        table_html_source: str: 被<table>标签包裹的html代码片段(含<table>标签)
+
+    Returns:
+        int: 单元格数量
+    """
+    table_el = html_to_element(table_html_source)
+    # 计算 <table> 中的 <td> 和 <th> 单元格数量
+    cells = table_el.xpath('.//td | .//th')
+    number_of_cells = len(cells)
+    return number_of_cells
+
+
+def convert_html_to_entity(html_source) -> str:
+    """html中的特殊字符转成实体标记."""
+    table_entity = html.escape(html_source)
+    return table_entity
+
+
+def convert_html_entity_to_str(html_str):
+    """将HTML实体转换回原始字符."""
+    result = html.unescape(html_str)
+    return result

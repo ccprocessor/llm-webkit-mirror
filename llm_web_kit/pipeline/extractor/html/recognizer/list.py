@@ -146,35 +146,41 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         return is_ordered, content_list, raw_html, tail_text
 
-    def __extract_list_item_text(self, item:HtmlElement) -> list[list]:
+    def __extract_list_item_text(self, root:HtmlElement) -> list[list]:
         """提取列表项的文本.
         列表项里的文本的分段策略采用最简单的方式：
         1. 遇到<br/>标签，则认为是一个段落结束。
 
         Args:
-            item:
+            item: 一个列表项。例如<li>
 
         Returns:
             list[dict]: 列表项的文本
         """
         text_paragraph = []
 
-        paragraph = []
-        if item.text:  # li标签的直接文本。
-            paragraph.append({'c': item.text, 't': ParagraphTextType.TEXT})
-
-        for child in item.iter():
-            if child.tag == CCTag.CC_MATH_INLINE:
-                paragraph.append({'c': child.text, 't': ParagraphTextType.EQUATION_INLINE})
-            elif child.tag == 'br':
+        def __extract_list_item_text_recusive(el: HtmlElement) -> list[list]:
+            paragraph = []
+            if el.tag == CCTag.CC_MATH_INLINE:
+                paragraph.append({'c': el.text, 't': ParagraphTextType.EQUATION_INLINE})
+            elif el.tag == CCTag.CC_CODE_INLINE:
+                paragraph.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
+            elif el.tag == 'br':
                 text_paragraph.append(paragraph)
                 paragraph = []
-                if child.tail:
-                    paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
             else:
-                paragraph.append({'c': child.text, 't': ParagraphTextType.TEXT})
+                if el.text and el.text.strip():
+                    paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
+                for child in el.getchildren():
+                    paragraph.extend(__extract_list_item_text_recusive(child))
 
-        if paragraph:
+            # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
+            if el.tag != 'li' and el.tail and el.tail.strip():
+                paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+
+            return paragraph
+
+        if paragraph := __extract_list_item_text_recusive(root):
             text_paragraph.append(paragraph)
 
         return text_paragraph
@@ -189,12 +195,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             Tuple[str]: 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
         ele = self._build_html_tree(html)
-        # 找到cctitle标签
-        cclist_eles = ele.find(CCTag.CC_LIST)
-        if cclist_eles:
-            ordered = bool(cclist_eles.attrib.get('ordered'))
-            content_list = json.loads(cclist_eles.text)
-            raw_html = cclist_eles.attrib.get('html')
+        if ele is not None and ele.tag == CCTag.CC_LIST:
+            ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
+            content_list = json.loads(ele.text)
+            raw_html = ele.attrib.get('html')
             return ordered, content_list, raw_html
         else:
             # TODO 抛出异常, 需要自定义

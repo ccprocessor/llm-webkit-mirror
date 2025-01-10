@@ -5,6 +5,7 @@ from overrides import override
 
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.class_loader import load_python_class_by_name
+from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import AbstractExtractor
 from llm_web_kit.pipeline.extractor.post_extractor import AbstractPostExtractor
 from llm_web_kit.pipeline.extractor.pre_extractor import AbstractPreExtractor
@@ -109,9 +110,14 @@ class ExtractorChain:
         self.__post_extractor_lst: List[AbstractPostExtractor] = []
 
         dataset_name = config.get('dataset_name', None)
-        is_extractor_enable = config.get('extractor_pipe', {}).get('enable', False)
+        is_extractor_enable = config.get('extractor_pipe', {}).get('enable', True)  # 默认校验格式标准
         if not is_extractor_enable:
             return
+
+        # #########################################################
+        # 记录一些配置值
+        # #########################################################
+        self.__validate_input_format = config.get('extractor_pipe', {}).get('validate_input_format', False)
 
         # #########################################################
         # 初始化pre_extractor
@@ -164,6 +170,11 @@ class ExtractorChain:
         Returns:
             DataJson: _description_
         """
+        if self.__validate_input_format:
+            self.__validate_input_data_format(data)
+        else:
+            mylogger.debug('skip validate input data format')
+
         for ext in self.__pre_extractor_lst:
             data = ext.pre_extract(data)
 
@@ -174,6 +185,18 @@ class ExtractorChain:
             data = ext.post_extract(data)
 
         return data
+
+    def __validate_input_data_format(self, data_json):
+        """
+        根据输入的数据里的data_source_category， 根据docs/specification/input_format里定义的数据格式标准，对数据格式进行校验，如果不符合则抛出异常。
+        Args:
+            data_json:
+
+        Returns:
+
+        """
+        #  TODO
+        pass
 
 
 class Pipeline(AbstractPipeline):

@@ -1,0 +1,2189 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="https://blog.csdn.net/moon_sky1999/article/details/52744845"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="report" content='{"pid": "blog", "spm":"1001.2101"}'>
+    <meta name="referrer" content="always">
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <meta name="applicable-device" content="pc">
+    <link  href="https://g.csdnimg.cn/static/logo/favicon32.ico"  rel="shortcut icon" type="image/x-icon" />
+    <title>Kruskal+LCA算法详解-CSDN博客</title>
+    <script>
+      (function(){
+        var el = document.createElement("script");
+        el.src = "https://s3a.pstatp.com/toutiao/push.js?1abfa13dfe74d72d41d83c86d240de427e7cac50c51ead53b2e79d40c7952a23ed7716d05b4a0f683a653eab3e214672511de2457e74e99286eb2c33f4428830";
+        el.id = "ttzz";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(el, s);
+      })(window)
+    </script>
+        <meta name="keywords" content="noip2013 运输">
+        <meta name="csdn-baidu-search"  content='{"autorun":true,"install":true,"keyword":"noip2013 运输"}'>
+    <meta name="description" content="文章浏览阅读545次。题目来源https://www.luogu.org/problem/show?pid=196760分Kruskal+SPFA先用Kruskal构造出最大生成树，再在树上跑SPFA，过掉60%的数据。#include #include #include #include #include #include #include #includ_noip2013 运输">
+        <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-a3d976e9c4.min.css">
+    <style>
+        #content_views pre{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        #content_views pre code{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script type="application/ld+json">{"@context":"https://ziyuan.baidu.com/contexts/cambrian.jsonld","@id":"https://blog.csdn.net/moon_sky1999/article/details/52744845","appid":"1638831770136827","pubDate":"2016-10-06T18:02:38","title":"NOIP2013货车运输_noip2013 运输-CSDN博客","upDate":"2016-10-06T18:02:38"}</script>
+        <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-blackboard/skin-blackboard-3adcc2c475.min.css">
+    <script src="https://g.csdnimg.cn/lib/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <script src="https://g.csdnimg.cn/lib/jquery-migrate/1.4.1/jquery-migrate.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var isCorporate = false;
+        var username =  "moon_sky1999";
+        var skinImg = "white";
+
+        var blog_address = "https://blog.csdn.net/moon_sky1999";
+        var currentUserName = "";
+        var isOwner = false;
+        var loginUrl = "http://passport.csdn.net/account/login?from=https://blog.csdn.net/moon_sky1999/article/details/52744845";
+        var blogUrl = "https://blog.csdn.net/";
+        var avatar = "https://profile-avatar.csdnimg.cn/6d890f83491a40b7968c40af243944b1_moon_sky1999.jpg!1";
+        var articleTitle = "NOIP2013货车运输";
+        var articleDesc = "文章浏览阅读545次。题目来源https://www.luogu.org/problem/show?pid=196760分Kruskal+SPFA先用Kruskal构造出最大生成树，再在树上跑SPFA，过掉60%的数据。#include #include #include #include #include #include #include #includ_noip2013 运输";
+        var articleTitles = "Kruskal+LCA算法详解-CSDN博客";
+        var nickName = "Xiao____Q";
+        var articleDetailUrl = "https://blog.csdn.net/moon_sky1999/article/details/52744845";
+        var vipUrlV = "https://mall.csdn.net/vip?vipSource=learningVip";
+        if(window.location.host.split('.').length == 3) {
+            blog_address = blogUrl + username;
+        }
+        var skinStatus = "White";
+        var blogStaticHost = "https://csdnimg.cn/release/blogv2/"
+          var payColumn = false
+    </script>
+        <meta name="toolbar" content='{"type":"0","fixModel":"1"}'>
+    <script src="https://g.csdnimg.cn/??fixed-sidebar/1.1.7/fixed-sidebar.js" type="text/javascript"></script>
+      <script src="https://cdn-static-devbit.csdn.net/ai100/chat/chat-search.js?v=2" type="text/javascript"></script>
+    <script src='//g.csdnimg.cn/common/csdn-report/report.js' type='text/javascript'></script>
+    <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css">
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+    <script src="https://dup.baidustatic.com/js/ds.js"></script>
+      <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "lgtpix6r85");
+      </script>
+    <script src="/cdn_cgi_bs_captcha/static/js/waf_captcha_embedded_bs.js"></script>
+</head>
+  <body class="nodata  " style="">
+    <div id="toolbarBox" style="min-height: 48px;"></div>
+        <script>
+            var toolbarSearchExt = '{"id":52744845,"landingWord":["noip2013 运输"],"queryWord":"","tag":["倍增","LCA","SPFA","最大生成树"],"title":"NOIP2013货车运输"}';
+        </script>
+    <script src="https://g.csdnimg.cn/common/csdn-toolbar/csdn-toolbar.js" type="text/javascript"></script>
+    <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+    <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css">
+    <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css" />
+    <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css" />
+    <script src="https://g.csdnimg.cn/lib/swiper/6.0.4/js/swiper.js" async></script>
+    <script>
+      var articleId = 52744845;
+        var privateEduData = ["函数","数组"];//高亮数组
+        var privateData = [];//高亮数组
+      var commentscount = 1;
+      var commentAuth = 2;
+      var curentUrl = "https://blog.csdn.net/moon_sky1999/article/details/52744845";
+      var myUrl = "https://my.csdn.net/";
+      var isGitCodeBlog = false;
+      var isOpenSourceBlog = false;
+        var highlight = ["noip2013","货车运输","spfa","生成树","运输","最大","倍增","ca"];//高亮数组
+        var isRecommendModule = true;
+          var isBaiduPre = true;
+          var baiduCount = 2;
+          var setBaiduJsCount = 10;
+        var viewCountFormat = 545;
+      var share_card_url = "https://app-blog.csdn.net/share?article_id=52744845&username=moon_sky1999"
+      var mallVipUrl = "https://mall.csdn.net/vip?vipSource=article"
+      var vipArticleAbStyle = "t_1"
+
+      var vipArticleCpStyle = "t_1"
+      var articleType = 1;
+      var baiduKey = "noip2013 运输";
+      var copyPopSwitch = true;
+      var needInsertBaidu = true;
+      var recommendRegularDomainArr = ["blog.csdn.net/.+/article/details/","download.csdn.net/download/","edu.csdn.net/course/detail/","ask.csdn.net/questions/","bbs.csdn.net/topics/","www.csdn.net/gather_.+/"]
+      var codeStyle = "github-gist";
+      var baiduSearchType = "baidulandingword";
+      var sharData = "{\"hot\":[{\"id\":1,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/a5f4260710904e538002a6ab337939b3.png\"},{\"id\":2,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/188b37199a2c4b74b1d9ffc39e0d52de.png\"},{\"id\":3,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/14ded358b631444581edd98a256bc5af.png\"},{\"id\":4,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/1470f23a770444d986ad551b9c33c5be.png\"},{\"id\":5,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/c329f5181dc74f6c9bd28c982bb9f91d.png\"},{\"id\":6,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/ccd8a3305e81460f9c505c95b432a65f.png\"},{\"id\":7,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/bc89d8283389440d97fc4d30e30f45e1.png\"},{\"id\":8,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/452d485b4a654f5592390550d2445edf.png\"},{\"id\":9,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/f8b9939db2ed474a8f43a643015fc8b7.png\"},{\"id\":10,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/6de8864187ab4ed3b1db0856369c36ff.png\"},{\"id\":11,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/673cc3470ff74072acba958dc0c46e2d.png\"},{\"id\":12,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/930c119760ac4491804db80f9c6d4e3f.png\"},{\"id\":13,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/15e6befb05a24233bc2b65e96aa8d972.png\"},{\"id\":14,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/2075fd6822184b95a41e214de4daec13.png\"},{\"id\":15,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/859b1552db244eb6891a809263a5c657.png\"},{\"id\":16,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/0be2f920f1f74290a98921974a9613fd.png\"},{\"id\":17,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/2e97e00b43f14afab494ea55ef3f4a6e.png\"},{\"id\":18,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/ff4ab252f46e444686f5135d6ebbfec0.png\"},{\"id\":19,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/ae029bbe99564e79911657912d36524f.png\"},{\"id\":20,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/b3ece39963de440388728e9e7b9bf427.png\"},{\"id\":21,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/6f14651a99ba486e926d63b6fa692997.png\"},{\"id\":22,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/83ceddf050084875a341e32dcceca721.png\"},{\"id\":23,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/b90368b8fd5d4c6c8c79a707d877cf7c.png\"},{\"id\":24,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/aeffae14ecf14e079b2616528c9a393b.png\"},{\"id\":25,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/c5a06b5a13d44d16bed868fc3384897a.png\"},{\"id\":26,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/08b697658b844b318cea3b119e9541ef.png\"},{\"id\":27,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/68ccb0b8d09346ac961d2b5c1a8c77bf.png\"},{\"id\":28,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/a2227a247e37418cbe0ea972ba6a859b.png\"},{\"id\":29,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/3a42825fede748f9993e5bb844ad350d.png\"},{\"id\":30,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/8882abc1dd484224b636966ea38555c3.png\"},{\"id\":31,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/4f6a5f636a3e444d83cf8cc06d87a159.png\"},{\"id\":32,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/1953ef79c56b4407b78d7181bdff11c3.png\"},{\"id\":33,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/c04a2a4f772948ed85b5b0380ed36287.png\"},{\"id\":34,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/5b4fecd05091405ea04d8c0f53e9f2c7.png\"},{\"id\":35,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/b89f576d700344e280d6ceb2a66c2420.png\"},{\"id\":36,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/1c65780e11804bbd9971ebadb3d78bcf.png\"},{\"id\":37,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/d590db2055f345db9706eb68a7ec151a.png\"},{\"id\":38,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/fe602f80700b4f6fb3c4a9e4c135510e.png\"},{\"id\":39,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/39ff2fcd31e04feba301a071976a0ba7.png\"},{\"id\":40,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/f9b61b3d113f436b828631837f89fb39.png\"},{\"id\":41,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/df1aca5f610c4ad48cd16da88c9c8499.png\"},{\"id\":42,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/d7acf73a1e6b41399a77a85040e10961.png\"},{\"id\":43,\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/b7f1b63542524b97962ff649ab4e7e23.png\"}],\"vip\":[{\"id\":1,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101150.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101154.png\"},{\"id\":2,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101204.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101208.png\"},{\"id\":3,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101211.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101215.png\"},{\"id\":4,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101218.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101220.png\"},{\"id\":5,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101223.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220920101226.png\"},{\"id\":6,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100635.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100639.png\"},{\"id\":7,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100642.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100644.png\"},{\"id\":8,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100647.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100649.png\"},{\"id\":9,\"vipUrl\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100652.png\",\"url\":\"https:\\/\\/img-home.csdnimg.cn\\/images\\/20220922100655.png\"},{\"id\":10,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/55de67481fde4b04b97ad78f11fe369a.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/bb2418fb537e4d78b10d8765ccd810c5.png\"},{\"id\":11,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/579c713394584d128104ef1044023954.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/f420d9fbcf5548079d31b5e809b6d6cd.png\"},{\"id\":12,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/75b7f3155ba642f5a4cc16b7baf44122.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/a9030f5877be401f8b340b80b0d91e64.png\"},{\"id\":13,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/0903d33cafa54934be3780aa54ae958d.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/2cd8c8929f5a42fca5da2a0aeb456203.png\"},{\"id\":14,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/949fd7c22884439fbfc3c0e9c3b8dee7.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/dafbea9bd9eb4f3b962b48dc41657f89.png\"},{\"id\":15,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/4119cfddd71d4e6a8a27a18dbb74d90e.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/c56310c8b6384d9e85388e4e342ce508.png\"},{\"id\":16,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/121575274da142bcbbbbc2e8243dd411.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/5013993de06542f881018bb9abe2edf7.png\"},{\"id\":17,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/4d97aa6dd4fe4f09a6bef5bdf8a6abcd.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/76f23877b6ad4066ad45ce8e31b4b977.png\"},{\"id\":18,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/fdb619daf21b4c829de63b9ebc78859d.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/a1abe5d27a5441f599adfe662f510243.png\"},{\"id\":19,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/676b7707bb11410f8f56bc0ed2b2345c.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/7ac5b467fbf24e1d8c2de3f3332c4f54.png\"},{\"id\":20,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/0becb8cc227e4723b765bdd69a20fd4a.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/fdec85b26091486b9a89d0b8d45c3749.png\"},{\"id\":21,\"vipUrl\":\"https:\\/\\/img-blog.csdnimg.cn\\/1a6c06235ad44941b38c54cbc25a370c.png\",\"url\":\"https:\\/\\/img-blog.csdnimg.cn\\/410a06cda2d44b0c84578f88275caf70.png\"}],\"map\":{\"hot\":\"热门\",\"vip\":\"VIP\"}}";
+
+      var canRead = true;
+      var blogMoveHomeArticle = false;
+      var showSearchText = "";
+      var sideToolbarResult = "exp";
+      var articleSource = 1;
+      var articleReport = '{"pid": "blog", "spm":"1001.2101"}';
+        var baiduSearchChannel = 'pc_relevant'
+        var baiduSearchIdentification = '.235^v43^pc_blog_bottom_relevance_base9'
+        var distRequestId = '1737521888203_65595'
+        var initRewardObject = {
+          giver: currentUserName,
+          anchor: username,
+          articleId: articleId,
+          sign: ''
+        }
+        var isLikeStatus = false;
+        var isUnLikeStatus = false;
+        var studyLearnWord = "";
+        var unUseCount = 0;
+        var codeMaxSize = 0;
+        var overCost = true;
+        var isCurrentUserVip = false;
+        var contentViewsHeight = 0;
+        var contentViewsCount = 0;
+        var contentViewsCountLimit = 5;
+        var isShowConcision = false;
+        var lastTime = 0
+        var postTime = "2016-10-06 18:02:38"
+      var isCookieConcision = false
+      var isHasDirectoryModel = false
+      var isShowSideModel = false
+      var isShowDirectoryModel = true
+      function getCookieConcision(sName){
+        var allCookie = document.cookie.split("; ");
+        for (var i=0; i < allCookie.length; i++){
+          var aCrumb = allCookie[i].split("=");
+          if (sName == aCrumb[0])
+            return aCrumb[1];
+        }
+        return null;
+      }
+      if (getCookieConcision('blog_details_concision') && getCookieConcision('blog_details_concision') == 0){
+        isCookieConcision = true
+        isShowSideModel = true
+        isShowDirectoryModel = false
+      }
+    </script>
+        <div class="main_father clearfix d-flex justify-content-center " style="height:100%;">
+          <div class="container clearfix " id="mainBox">
+          <script>
+          if (!isCookieConcision) {
+            $('.main_father').removeClass('mainfather-concision')
+            $('.main_father .container').removeClass('container-concision')
+          } else {
+            $('#mainBox').css('margin-right', '0')
+          }
+          </script>
+          <main>
+<script type="text/javascript">
+    var resourceId =  "";
+    function getQueryString(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+      if( r != null ) return decodeURIComponent( r[2] ); return '';
+    }
+    function stripscript(s){
+      var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%]")
+      var rs = "";
+      for (var i = 0; i < s.length; i++) {
+        rs = rs+s.substr(i, 1).replace(pattern, '');
+      }
+      return rs;
+    }
+    var blogHotWords = stripscript(getQueryString('utm_term')).length > 1 ? stripscript(getQueryString('utm_term')) : ''
+</script>
+<div class="blog-content-box">
+    <div class="article-header-box">
+        <div class="article-header">
+            <div class="article-title-box">
+                <h1 class="title-article" id="articleContentId">NOIP2013货车运输</h1>
+            </div>
+            <div class="article-info-box">
+                    <div class="up-time">最新推荐文章于&nbsp;2024-02-02 22:51:05&nbsp;发布</div>
+                <div class="article-bar-top">
+                    <img class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png" alt="">
+                    <div class="bar-content">
+                      <a class="follow-nickName " href="https://blog.csdn.net/moon_sky1999" target="_blank" rel="noopener" title="Xiao____Q">Xiao____Q</a>
+                    <img class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCurrentTime2.png" alt="">
+                          <span class="time blog-postTime" data-time="2016-10-06 18:02:38">最新推荐文章于&nbsp;2024-02-02 22:51:05&nbsp;发布</span>
+                   <div class="read-count-box">
+                      <img class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png" alt="">
+                      <span class="read-count">阅读量545</span>
+                      <a id="blog_detail_zk_collection" class="un-collection" data-report-click='{"mod":"popu_823","spm":"1001.2101.3001.4232","ab":"new"}'>
+                          <img class="article-collect-img article-heard-img un-collect-status isdefault" style="display:inline-block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" alt="">
+                          <img class="article-collect-img article-heard-img collect-status isactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" alt="">
+                          <span class="name">收藏</span>
+                          <span class="get-collection">
+                          </span>
+                      </a>
+                      <div class="read-count-box is-like">
+                        <img class="article-read-img article-heard-img" style="display:none" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" alt="">
+                        <img class="article-read-img article-heard-img" style="display:block" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" alt="">
+                        <span class="read-count" id="blog-digg-num">点赞数
+                            1
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="blog-tags-box">
+                    <div class="tags-box artic-tag-box">
+                            <span class="label">分类专栏：</span>
+                                <a class="tag-link" href="https://blog.csdn.net/moon_sky1999/category_9783075.html" target="_blank" rel="noopener"># 图论</a>
+                            <span class="label">文章标签：</span>
+                                <a rel="nofollow" data-report-query="spm=1001.2101.3001.4223" data-report-click='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"倍增","ab":"new","extra":"{\"searchword\":\"倍增\"}"}' data-report-view='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"倍增","ab":"new","extra":"{\"searchword\":\"倍增\"}"}' class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E5%80%8D%E5%A2%9E&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank" rel="noopener">倍增</a>
+                                <a rel="nofollow" data-report-query="spm=1001.2101.3001.4223" data-report-click='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"LCA","ab":"new","extra":"{\"searchword\":\"LCA\"}"}' data-report-view='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"LCA","ab":"new","extra":"{\"searchword\":\"LCA\"}"}' class="tag-link" href="https://so.csdn.net/so/search/s.do?q=LCA&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank" rel="noopener">LCA</a>
+                                <a rel="nofollow" data-report-query="spm=1001.2101.3001.4223" data-report-click='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"SPFA","ab":"new","extra":"{\"searchword\":\"SPFA\"}"}' data-report-view='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"SPFA","ab":"new","extra":"{\"searchword\":\"SPFA\"}"}' class="tag-link" href="https://so.csdn.net/so/search/s.do?q=SPFA&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank" rel="noopener">SPFA</a>
+                                <a rel="nofollow" data-report-query="spm=1001.2101.3001.4223" data-report-click='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"最大生成树","ab":"new","extra":"{\"searchword\":\"最大生成树\"}"}' data-report-view='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"最大生成树","ab":"new","extra":"{\"searchword\":\"最大生成树\"}"}' class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E6%9C%80%E5%A4%A7%E7%94%9F%E6%88%90%E6%A0%91&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank" rel="noopener">最大生成树</a>
+                    </div>
+                </div>
+                <div class="slide-content-box">
+                    <div class="article-copyright">
+                        <div class="creativecommons">
+                            版权声明：本文为博主原创文章，遵循<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。
+                        </div>
+                        <div class="article-source-link">
+                            本文链接：<a href="https://blog.csdn.net/moon_sky1999/article/details/52744845" target="_blank">https://blog.csdn.net/moon_sky1999/article/details/52744845</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="operating">
+                    <a class="href-article-edit slide-toggle">版权</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="blogHuaweiyunAdvert"></div>
+        <div id="blogColumnPayAdvert">
+            <div class="column-group">
+                <div class="column-group-item column-group0 column-group-item-one">
+                    <div class="item-l">
+                        <a class="item-target" href="https://blog.csdn.net/moon_sky1999/category_9783075.html" target="_blank" title="图论"
+                        data-report-view='{"spm":"1001.2101.3001.6332"}'
+                        data-report-click='{"spm":"1001.2101.3001.6332"}'>
+                            <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756930.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt="">
+                            <span class="title item-target">
+                                <span>
+                                <span class="tit">图论</span>
+                                    <span class="dec">专栏收录该内容</span>
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="item-m">
+                        <span>48 篇文章</span>
+                        <span>0 订阅</span>
+                    </div>
+                    <div class="item-r">
+                            <a class="item-target article-column-bt articleColumnFreeBt" data-id="9783075">订阅专栏</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <article class="baidu_pl">
+        <div id="article_content" class="article_content clearfix">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css">
+
+                <div id="content_views" class="htmledit_views">
+                    <p>题目来源https://www.luogu.org/problem/show?pid&#61;1967</p>
+<p> </p>
+<p>60分</p>
+<p>Kruskal&#43;SPFA</p>
+<p>先用Kruskal构造出最大生成树&#xff0c;再在树上跑SPFA&#xff0c;过掉60%的数据。</p>
+<p> </p>
+<pre><code class="language-cpp">#include &lt;bits/stdc&#43;&#43;.h&gt;
+
+using namespace std;
+const int maxn &#61; 50001;
+int r[maxn], p[maxn], u[maxn], v[maxn], w[maxn];
+
+bool cmp(const int i, const int j) { return w[i] &gt; w[j]; }
+
+int find(int x) {
+    if (p[x] &#61;&#61; x)return x;
+    return p[x] &#61; find(p[x]);
+}
+
+const int maxm &#61; 1001;
+struct edge {
+    int l, t;
+};
+vector &lt;edge&gt; a[maxn];
+bool inq[maxm];
+int dis[maxm][maxm];
+const int inf &#61; 1000000000;
+
+int main() {
+    ios::sync_with_stdio(false);
+    int n, m;
+    cin &gt;&gt; n &gt;&gt; m;
+    for (int i &#61; 1; i &lt;&#61; m; i&#43;&#43;) {
+        int x, y, z;
+        cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+        u[i] &#61; x;
+        v[i] &#61; y;
+        w[i] &#61; z;
+    }
+    for (int i &#61; 1; i &lt;&#61; n; i&#43;&#43;)p[i] &#61; i;
+    for (int i &#61; 1; i &lt;&#61; m; i&#43;&#43;)r[i] &#61; i;
+    sort(r &#43; 1, r &#43; 1 &#43; m, cmp);
+    for (int i &#61; 1; i &lt;&#61; m; i&#43;&#43;) {
+        int e &#61; r[i];
+        int x &#61; find(v[e]);
+        int y &#61; find(u[e]);
+        if (x !&#61; y) {
+            p[x] &#61; y;
+            edge r;
+            r.t &#61; y;
+            r.l &#61; w[e];
+            a[x].push_back(r);
+            r.t &#61; x;
+            a[y].push_back(r);
+        }
+    }
+    int q;
+    cin &gt;&gt; q;
+    for (int i &#61; 1; i &lt;&#61; n; i&#43;&#43;) {
+        for (int j &#61; 1; j &lt;&#61; n; j&#43;&#43;) {
+            dis[i][j] &#61; inf;
+        }
+    }
+    for (int k &#61; 1; k &lt;&#61; q; k&#43;&#43;) {
+        int x, y;
+        cin &gt;&gt; x &gt;&gt; y;
+        if (dis[x][y] &lt; inf) {
+            cout &lt;&lt; dis[x][y] &lt;&lt; endl;
+            continue;
+        }
+        if (dis[y][x] &lt; inf) {
+            cout &lt;&lt; dis[y][x] &lt;&lt; endl;
+            continue;
+        }
+        int dist[maxm];
+        for (int i &#61; 1; i &lt;&#61; n; i&#43;&#43;)dist[i] &#61; inf;
+        queue&lt;int&gt; Q;
+        memset(inq, 0, sizeof(inq));
+        Q.push(x);
+        inq[x] &#61; 1;
+        while (!Q.empty()) {
+            int e &#61; Q.front();
+            Q.pop();
+            for (int i &#61; 0; i &lt; a[e].size(); i&#43;&#43;) {
+                if (a[e][i].t &#61;&#61; x)continue;
+                if (dist[a[e][i].t] &#61;&#61; inf) {
+                    dist[a[e][i].t] &#61; min(dist[e], a[e][i].l);
+                    if (!inq[a[e][i].t]) {
+                        inq[a[e][i].t] &#61; 1;
+                        Q.push(a[e][i].t);
+                    }
+                } else if (dist[a[e][i].t] &lt; min(dist[e], a[e][i].l)) {
+                    dist[a[e][i].t] &#61; min(dist[e], a[e][i].l);
+                    if (!inq[a[e][i].t]) {
+                        inq[a[e][i].t] &#61; 1;
+                        Q.push(a[e][i].t);
+                    }
+                }
+            }
+            inq[e] &#61; 0;
+        }
+        for (int i &#61; 1; i &lt;&#61; n; i&#43;&#43;) {
+            if (dist[i] &#61;&#61; inf)dis[x][i] &#61; -1;
+            else dis[x][i] &#61; dist[i];
+        }
+        cout &lt;&lt; dis[x][y] &lt;&lt; endl;
+    }
+    return 0;
+}
+</code></pre>
+<p> </p>
+<p>100分</p>
+<p>Kruskal&#43;LCA</p>
+<p>倍增思想。</p>
+<p>anc[i][k] 表示从节点i向上走2^k步所到达的节点。</p>
+<p>更新&#xff1a;anc[x][i] &#61; anc[anc[x][i - 1]][i - 1]</p>
+<p>lcs[i][k] 表示从节点i向上走 2 ^ k 步的过程中经过的权值最小的边。</p>
+<p>更新&#xff1a;lcs[x][i] &#61; min(lcs[x][i - 1], lcs[anc[x][i - 1]][i - 1]);</p>
+<p>在dfs构造anc[i][k]的同时构造lcs[i][k]。</p>
+<p>在线查询节点x&#xff0c;y的lca的同时找出其经过的路径之中边权的最小值。</p>
+<p>dep数组表示节点的深度&#xff0c;swim函数是将两节点调到同一深度&#xff0c;并记录经过路径的最小权值。</p>
+<p> </p>
+<p>100分代码</p>
+<p> </p>
+<pre><code class="language-cpp">#include &lt;bits/stdc&#43;&#43;.h&gt;
+
+using namespace std;
+const int maxn &#61; 10001;
+const int maxm &#61; 50001;
+const int maxh &#61; 21;
+const int inf &#61; 1000000000;
+int r[maxm], p[maxm], u[maxm], v[maxm], w[maxm];
+struct edge {
+    int l, t;
+};
+vector&lt;edge&gt; a[maxn];
+int n, m;
+int dep[maxn];
+int s[maxn];      //stack&lt;int&gt; s;
+int anc[maxn][maxh];
+int lcs[maxn][maxh];
+int wr[maxn];
+
+bool cmp(const int i, const int j) { return w[i] &gt; w[j]; }
+
+int find(int x) {
+    if (p[x] &#61;&#61; x)return x;
+    return p[x] &#61; find(p[x]);
+}
+
+void dfs(int root) {
+    int top &#61; 0;
+    dep[root] &#61; 1;
+    for (int i &#61; 0; i &lt; maxh; i&#43;&#43;) {
+        anc[root][i] &#61; root;
+        lcs[root][i] &#61; inf;
+    }
+    s[&#43;&#43;top] &#61; root;
+    while (top) {
+        int x &#61; s[top--];
+        if (x !&#61; root)
+            for (int i &#61; 1; i &lt; maxh; i&#43;&#43;) {
+                anc[x][i] &#61; anc[anc[x][i - 1]][i - 1];
+                lcs[x][i] &#61; min(lcs[x][i - 1], lcs[anc[x][i - 1]][i - 1]);
+            }
+        for (int i &#61; 0; i &lt; a[x].size(); i&#43;&#43;) {
+            int y &#61; a[x][i].t;
+            if (y !&#61; anc[x][0]) {
+                dep[y] &#61; dep[x] &#43; 1;
+                anc[y][0] &#61; x;
+                lcs[y][0] &#61; a[x][i].l;
+                s[&#43;&#43;top] &#61; y;
+            }
+        }
+        while (top &amp;&amp; a[s[top]].size() &#61;&#61; 0)top--;
+    }
+    return;
+}
+
+int swim(int &amp;x, int h) {
+    int tot &#61; inf;
+    for (int i &#61; 0; h &gt; 0; i&#43;&#43;) {
+        if (h &amp; 1) {
+            tot &#61; min(tot, lcs[x][i]);
+            x &#61; anc[x][i];
+        }
+        h &#61; (h &gt;&gt; 1);
+    }
+    return tot;
+}
+
+int lca(int x, int y) {
+    int pos;
+    if (dep[x] &gt; dep[y])swap(x, y);
+    int tot &#61; swim(y, dep[y] - dep[x]);
+    if (x &#61;&#61; y)return tot;
+    while (1) {
+        for (pos &#61; 0; anc[x][pos] !&#61; anc[y][pos]; pos&#43;&#43;);
+        if (pos &#61;&#61; 0) {
+            tot &#61; min(lcs[y][0], tot);
+            tot &#61; min(lcs[x][0], tot);
+            return tot;
+        }
+        tot &#61; min(tot, lcs[x][pos - 1]);
+        x &#61; anc[x][pos - 1];
+        tot &#61; min(tot, lcs[y][pos - 1]);
+        y &#61; anc[y][pos - 1];
+    }
+    return -1;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin &gt;&gt; n &gt;&gt; m;
+    for (int i &#61; 1; i &lt;&#61; m; i&#43;&#43;) {
+        int x, y, z;
+        cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+        u[i] &#61; x;
+        v[i] &#61; y;
+        w[i] &#61; z;
+    }
+
+
+    for (int i &#61; 1; i &lt;&#61; n; i&#43;&#43;)p[i] &#61; i;
+    for (int i &#61; 1; i &lt;&#61; m; i&#43;&#43;)r[i] &#61; i;
+    sort(r &#43; 1, r &#43; 1 &#43; m, cmp);
+    for (int i &#61; 1; i &lt;&#61; m; i&#43;&#43;) {
+        int e &#61; r[i];
+        int x &#61; find(v[e]);
+        int y &#61; find(u[e]);
+        if (x !&#61; y) {
+            p[x] &#61; y;
+            edge r;
+            r.t &#61; v[e];
+            r.l &#61; w[e];
+            a[u[e]].push_back(r);
+            r.t &#61; u[e];
+            a[v[e]].push_back(r);
+        }
+    }
+    int q;
+    cin &gt;&gt; q;
+    for (int i &#61; 1; i &lt;&#61; q; i&#43;&#43;) {
+        int x, y;
+        cin &gt;&gt; x &gt;&gt; y;
+        int ax &#61; find(x);
+        int ay &#61; find(y);
+        if (anc[ax][0] &#61;&#61; 0)dfs(ax);
+        if (anc[ay][0] &#61;&#61; 0)dfs(ay);
+        if (ax !&#61; ay)cout &lt;&lt; -1 &lt;&lt; endl;
+        else cout &lt;&lt; lca(x, y) &lt;&lt; endl;
+    }
+    return 0;
+}
+</code></pre>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+                </div>
+        </div>
+    </article>
+  <script>
+    $(function() {
+      setTimeout(function () {
+        var mathcodeList = document.querySelectorAll('.htmledit_views img.mathcode');
+        if (mathcodeList.length > 0) {
+          for (let i = 0; i < mathcodeList.length; i++) {
+            if (mathcodeList[i].complete) {
+              if (mathcodeList[i].naturalWidth === 0 || mathcodeList[i].naturalHeight === 0) {
+                var alt = mathcodeList[i].alt;
+                alt = '\\(' + alt + '\\)';
+                var curSpan = $('<span class="img-codecogs"></span>');
+                curSpan.text(alt);
+                $(mathcodeList[i]).before(curSpan);
+                $(mathcodeList[i]).remove();
+              }
+            } else {
+              mathcodeList[i].onerror = function() {
+                var alt = mathcodeList[i].alt;
+                alt = '\\(' + alt + '\\)';
+                var curSpan = $('<span class="img-codecogs"></span>');
+                curSpan.text(alt);
+                $(mathcodeList[i]).before(curSpan);
+                $(mathcodeList[i]).remove();
+              };
+            }
+          }
+          MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }
+      }, 500)
+    });
+  </script>
+</div>
+<div class="directory-boxshadow-dialog" style="display:none;">
+  <div class="directory-boxshadow-dialog-box">
+  </div>
+   <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new">
+      <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png">
+      <div class="vip-limited-time-top">
+        确定要放弃本次机会？
+      </div>
+      <span class="vip-limited-time-text">福利倒计时</span>
+      <div class="limited-time-box-new">
+        <span class="time-hour"></span>
+        <i>:</i>
+        <span class="time-minite"></span>
+        <i>:</i>
+        <span class="time-second"></span>
+      </div>
+      <div class="limited-time-vip-box">
+        <p>
+          <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png">
+          <span class="def">立减 ¥</span>
+          <span class="active limited-num"></span>
+        </p>
+        <span class="">普通VIP年卡可用</span>
+      </div>
+      <a class="limited-time-btn-new" href="https://mall.csdn.net/vip" data-report-click='{"spm":"1001.2101.3001.9621"}' data-report-query='spm=1001.2101.3001.9621'>立即使用</a>
+  </div>
+</div>    <div class="more-toolbox-new more-toolbar" id="toolBarBox">
+      <div class="left-toolbox">
+        <div class="toolbox-left">
+            <div class="profile-box">
+              <a class="profile-href" target="_blank" href="https://blog.csdn.net/moon_sky1999"><img class="profile-img" src="https://profile-avatar.csdnimg.cn/6d890f83491a40b7968c40af243944b1_moon_sky1999.jpg!1">
+                <span class="profile-name">
+                  Xiao____Q
+                </span>
+              </a>
+            </div>
+            <div class="profile-attend">
+                <a class="tool-attend tool-bt-button tool-bt-attend" href="javascript:;" data-report-view='{"mod":"1592215036_002","spm":"1001.2101.3001.4232","extend1":"关注"}'>关注</a>
+              <a class="tool-item-follow active-animation" style="display:none;">关注</a>
+            </div>
+        </div>
+        <div class="toolbox-middle">
+          <ul class="toolbox-list">
+            <li class="tool-item tool-item-size tool-active is-like" id="is-like">
+              <a class="tool-item-href">
+                <img style="display:none;" id="is-like-imgactive-animation-like" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarThumbUpactive.png" alt="">
+                <img class="isactive" style="display:none" id="is-like-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like-active.png" alt="">
+                <img class="isdefault" style="display:block" id="is-like-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like.png" alt="">
+                <span id="spanCount" class="count ">
+                    1
+                </span>
+              </a>
+              <div class="tool-hover-tip"><span class="text space">点赞</span></div>
+            </li>
+            <li class="tool-item tool-item-size tool-active is-unlike" id="is-unlike">
+              <a class="tool-item-href">
+                <img class="isactive" style="margin-right:0px;display:none" id="is-unlike-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike-active.png" alt="">
+                <img class="isdefault" style="margin-right:0px;display:block" id="is-unlike-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike.png" alt="">
+                <span id="unlikeCount" class="count "></span>
+              </a>
+              <div class="tool-hover-tip"><span class="text space">踩</span></div>
+            </li>
+            <li class="tool-item tool-item-size tool-active is-collection ">
+              <a class="tool-item-href" href="javascript:;" data-report-click='{"mod":"popu_824","spm":"1001.2101.3001.4130","ab":"new"}'>
+                <img style="display:none" id="is-collection-img-collection" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect-active.png" alt="">
+                <img class="isdefault" id="is-collection-img" style="display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect.png" alt="">
+                <img class="isactive" id="is-collection-imgactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCollectActive.png" alt="">
+                <span class="count get-collection " data-num="0" id="get-collection">
+                    0
+                </span>
+              </a>
+              <div class="tool-hover-tip collect">
+                <div class="collect-operate-box">
+                  <span class="collect-text" id="is-collection">
+                    收藏
+                  </span>
+                </div>
+              </div>
+              <div class="tool-active-list">
+                <div class="text">
+                  觉得还不错?
+                  <span class="collect-text" id="tool-active-list-collection">
+                    一键收藏
+                  </span>
+                 <img id="tool-active-list-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/collectionCloseWhite.png" alt="">
+                </div>
+              </div>
+            </li>
+            <li class="tool-item tool-item-size tool-active tool-item-comment">
+              <div class="guide-rr-first">
+                <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward01.png" alt="">
+                <button class="btn-guide-known">知道了</button>
+              </div>
+                <a class="tool-item-href" href="#commentBox" data-report-click='{"spm":"1001.2101.3001.7009"}'>
+                <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/comment.png" alt="">
+                <span class="count">
+                    1
+                </span>
+              </a>
+              <div class="tool-hover-tip"><span class="text space">评论</span></div>
+            </li>
+            <li class="tool-item tool-item-size tool-active tool-QRcode" data-type="article" id="tool-share">
+              <a class="tool-item-href" href="javascript:;" data-report-view='{"spm":"3001.4129","extra":{"type":"blogdetail"}}'>
+                <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/share.png" alt="">
+                <span class="count">分享</span>
+              </a>
+                <div class="QRcode" id="tool-QRcode">
+                <div class="share-bg-box">
+                  <div class="share-content">
+                    <a id="copyPosterUrl" data-type="link" class="btn-share">复制链接</a>
+                  </div>
+                  <div class="share-content">
+                    <a class="btn-share" data-type="qq">分享到 QQ</a>
+                  </div>
+                  <div class="share-content">
+                    <a class="btn-share" data-type="weibo">分享到新浪微博</a>
+                  </div>
+                  <div class="share-code">
+                    <div class="share-code-box" id='shareCode'></div>
+                    <div class="share-code-text">
+                      <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/share/icon-wechat.png" alt="">扫一扫
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <li class="tool-item tool-item-size tool-active is-more" id="is-more">
+            <a class="tool-item-href">
+              <img class="isdefault" style="margin-right:0px;display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/more.png" alt="">
+              <span class="count"></span>
+            </a>
+            <div class="more-opt-box">
+              <div class="mini-box">
+                <a class="tool-item-href" id="toolReportBtnHide">
+                  <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt="">
+                  <span class="count">举报</span>
+                </a>
+              </div>
+              <div class="normal-box">
+                <a class="tool-item-href" id="toolReportBtnHideNormal">
+                  <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt="">
+                  <span class="count">举报</span>
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="toolbox-right">
+            <div class="tool-directory">
+                <a class="bt-columnlist-show"
+                  data-id="9783075"
+                  data-free="true"
+                  data-description="网络流 费用流 最短路 最小生成树 并查集 拓扑排序 欧拉回路"
+                  data-subscribe="false"
+                  data-title="图论"
+                  data-img="https://i-blog.csdnimg.cn/columns/default/20201014180756930.png?x-oss-process=image/resize,m_fixed,h_224,w_224"
+                  data-url="https://blog.csdn.net/moon_sky1999/category_9783075.html"
+                  data-sum="48"
+                  data-people="0"
+                  data-price="0"
+                  data-hotRank="0"
+                  data-status="true"
+                  data-oldprice="0"
+                  data-join="false"
+                  data-studyvip="false"
+                  data-studysubscribe="false"
+                  data-report-view='{"spm":"1001.2101.3001.6334","extend1":"专栏目录"}'
+                  data-report-click='{"spm":"1001.2101.3001.6334","extend1":"专栏目录"}'>专栏目录</a>
+          </div>
+</div>
+</div>
+</div>
+<script type=text/javascript crossorigin src="https://csdnimg.cn/release/phoenix/production/qrcode-7c90a92189.min.js"></script>
+<script type="text/javascript" crossorigin src="https://g.csdnimg.cn/common/csdn-login-box/csdn-login-box.js"></script>
+<script type="text/javascript" crossorigin src="https://g.csdnimg.cn/collection-box/2.1.2/collection-box.js"></script>                <div class="first-recommend-box recommend-box ">
+<div class="recommend-item-box type_download clearfix" data-url="https://download.csdn.net/download/why_always_china/9218445"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6661.1","mod":"popu_871","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant_t0.none-task-download-2~default~BlogCommendFromBaidu~Rate-1-9218445-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"1","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://download.csdn.net/download/why_always_china/9218445"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://download.csdn.net/download/why_always_china/9218445" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6661.1","mod":"popu_871","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant_t0.none-task-download-2~default~BlogCommendFromBaidu~Rate-1-9218445-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"1","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://download.csdn.net/download/why_always_china/9218445"}'  data-report-query='spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-download-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-9218445-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant_t0.none-task-download-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-9218445-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">[<em>NOIp2013</em>]<em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info display-flex">
+					<span class="info-block">10-27</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://download.csdn.net/download/why_always_china/9218445" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6661.1","mod":"popu_871","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant_t0.none-task-download-2~default~BlogCommendFromBaidu~Rate-1-9218445-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"1","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://download.csdn.net/download/why_always_china/9218445"}'  data-report-query='spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-download-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-9218445-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant_t0.none-task-download-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-9218445-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1"><em>NOIp2013</em>提高D1T3<em>货车运输</em>pas<em>ca</em>l版代码</div>
+			</a>
+		</div>
+	</div>
+</div>
+                </div>
+            <script src="https://csdnimg.cn/release/blogv2/dist/components/js/pc_wap_commontools-6edee71b71.min.js" type="text/javascript" async></script>
+              <div class="second-recommend-box recommend-box ">
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/weixin_34218579/article/details/94648292"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.1","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-1-94648292-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"1","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_34218579/article/details/94648292"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/weixin_34218579/article/details/94648292" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.1","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-1-94648292-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"1","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_34218579/article/details/94648292"}'  data-report-query='spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-94648292-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-94648292-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>NOIp2013</em>提高组Day1T3</div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/weixin_34218579" target="_blank"><span class="blog-title">weixin_34218579的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">08-03</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					212
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/weixin_34218579/article/details/94648292" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.1","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-1-94648292-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"1","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_34218579/article/details/94648292"}'  data-report-query='spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-94648292-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-1-94648292-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">传送门：https://www.smartoj.com/p/2511
+
+
+题目Problem
+
+
+[<em>NOIP2013</em>T3]<em>货车运输</em>
+Time Limit: 1000ms  Memory Limit: 131072KB
+描述Descript.
+
+
+
+
+
+A 国有 n 座城市，编号从 1 到 n，城市之间有 m 条双向道路。每一条道路对车辆都有重量限制，简称限重。现在...</div>
+			</a>
+		</div>
+	</div>
+</div>
+              </div>
+<a id="commentBox" name="commentBox"></a>
+  <div id="pcCommentBox" class="comment-box comment-box-new2 unlogin-comment-box-new" style="display:none">
+      <div class="unlogin-comment-model">
+          <span class="unlogin-comment-tit">1&nbsp;条评论</span>
+        <span class="unlogin-comment-text">您还未登录，请先</span>
+        <span class="unlogin-comment-bt">登录</span>
+        <span class="unlogin-comment-text">后发表或查看评论</span>
+      </div>
+  </div>
+              <div class="recommend-box insert-baidu-box recommend-box-style ">
+                <div class="recommend-item-box no-index" style="display:none"></div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/weixin_33778544/article/details/93951663"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.2","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-2-93951663-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"2","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_33778544/article/details/93951663"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/weixin_33778544/article/details/93951663" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.2","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-2-93951663-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"2","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_33778544/article/details/93951663"}'  data-report-query='spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2-93951663-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2-93951663-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">【<em>NOIP2013</em>】<em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/weixin_33778544" target="_blank"><span class="blog-title">weixin_33778544的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">09-23</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					155
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/weixin_33778544/article/details/93951663" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.2","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-2-93951663-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"2","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_33778544/article/details/93951663"}'  data-report-query='spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2-93951663-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2-93951663-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">感觉这题挺水的&hellip;&hellip;真的挺水的&hellip;&hellip;
+原题：
+A 国有 n 座城市，编号从 1 到 n，城市之间有 m 条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有 q 辆货车在<em>运输</em>货物，司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。
+0 &lt; n &lt; 10,000，0 &lt; m &lt; 50,000，0 &lt; q &lt; 30,000，0 &le; z &le; 10...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/m0_38083668/article/details/82820764"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.3","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-3-82820764-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"3","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/m0_38083668/article/details/82820764"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/m0_38083668/article/details/82820764" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.3","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-3-82820764-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"3","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/m0_38083668/article/details/82820764"}'  data-report-query='spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-3-82820764-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-3-82820764-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">【<em>NOIP2013</em>提高组】<em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/m0_38083668" target="_blank"><span class="blog-title">ETO的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">09-23</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					546
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/m0_38083668/article/details/82820764" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.3","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-3-82820764-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"3","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/m0_38083668/article/details/82820764"}'  data-report-query='spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-3-82820764-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-3-82820764-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">题目背景
+
+<em>NOIP2013</em>&nbsp;提高组&nbsp;Day1&nbsp;试题。
+
+题目描述
+
+A&nbsp;国有&nbsp;n&nbsp;座城市，编号从&nbsp;1&nbsp;到&nbsp;n，城市之间有&nbsp;m&nbsp;条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有&nbsp;q&nbsp;辆货车在<em>运输</em>货物，司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。
+
+输入格式
+
+第一行有两个用一个空格隔开的整数&nbsp;n&nbsp;，m，表示&nbsp;A&nbsp;国有&nbsp;n&nbsp;座城市和&nbsp;m&nbsp;条道路。&nbsp;
+接下来&nbsp;m&nbsp;行每行&nbsp;...</div>
+			</a>
+		</div>
+	</div>
+</div>
+		<dl id="recommend-item-box-tow" class="recommend-item-box type_blog clearfix">
+
+		</dl>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/weixin_30652491/article/details/95945337"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.4","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-4-95945337-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"4","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_30652491/article/details/95945337"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/weixin_30652491/article/details/95945337" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.4","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-4-95945337-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"4","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_30652491/article/details/95945337"}'  data-report-query='spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-4-95945337-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-4-95945337-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>倍增</em>L<em>CA</em> <em>NOIP2013</em> <em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/weixin_30652491" target="_blank"><span class="blog-title">weixin_30652491的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">05-25</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					114
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/weixin_30652491/article/details/95945337" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.4","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-4-95945337-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"4","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/weixin_30652491/article/details/95945337"}'  data-report-query='spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-4-95945337-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-4-95945337-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1"><em>货车运输</em>
+题目描述
+A 国有 n 座城市，编号从 1 到 n，城市之间有 m 条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有 q 辆货车在<em>运输</em>货物， 司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。
+输入输出格式
+输入格式：
+
+输入文件名为 truck.in。
+输入文件第一行有两个用一个空格隔开的整数 n，m，表示 A 国有 n 座城市和 m 条道
+路...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/weixin_44574444/article/details/100324569"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.5","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~VECTOR_COMMERCIAL~RRF-5-100324569-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"5","strategy":"2~default~VECTOR_COMMERCIAL~RRF","dest":"https://blog.csdn.net/weixin_44574444/article/details/100324569"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/weixin_44574444/article/details/100324569" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.5","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~VECTOR_COMMERCIAL~RRF-5-100324569-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"5","strategy":"2~default~VECTOR_COMMERCIAL~RRF","dest":"https://blog.csdn.net/weixin_44574444/article/details/100324569"}'  data-report-query='spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-5-100324569-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-5-100324569-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>noip2013</em><em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/weixin_44574444" target="_blank"><span class="blog-title">便当口袋</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">09-02</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					186
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/weixin_44574444/article/details/100324569" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.5","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~VECTOR_COMMERCIAL~RRF-5-100324569-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"5","strategy":"2~default~VECTOR_COMMERCIAL~RRF","dest":"https://blog.csdn.net/weixin_44574444/article/details/100324569"}'  data-report-query='spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-5-100324569-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-5-100324569-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">传送门（洛谷）
+树上<em>倍增</em>+<em>最大</em><em>生成树</em>
+跑一边KrusalKrusalKrusal求得<em>最大</em><em>生成树</em>。
+树上<em>倍增</em>的时候顺带维护出g[u][i]，g[u][i]表示u向上跳2i步的路径中的最小值g[u][i]，g[u][i]表示u向上跳2^i步的路径中的最小值g[u][i]，g[u][i]表示u向上跳2i步的路径中的最小值
+接下来常规操作
+rep(i,0,19) {
+		f[u][i+1]=f[f[u][...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_c_download clearfix" data-url="https://wenku.csdn.net/doc/avjqavth30"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.6","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-c_download-2~default~OPENSEARCH~RRF-6-avjqavth30-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"6","strategy":"2~default~OPENSEARCH~RRF","dest":"https://wenku.csdn.net/doc/avjqavth30"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://wenku.csdn.net/doc/avjqavth30" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.6","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-c_download-2~default~OPENSEARCH~RRF-6-avjqavth30-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"6","strategy":"2~default~OPENSEARCH~RRF","dest":"https://wenku.csdn.net/doc/avjqavth30"}'  data-report-query='spm=1001.2101.3001.6650.6&utm_medium=distribute.pc_relevant.none-task-c_download-2%7Edefault%7EOPENSEARCH%7ERRF-6-avjqavth30-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-c_download-2%7Edefault%7EOPENSEARCH%7ERRF-6-avjqavth30-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>NOIp2013</em><em>货车运输</em>优化算法与Pas<em>ca</em>l实现</div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info display-flex">
+					<span class="info-block"></span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://wenku.csdn.net/doc/avjqavth30" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.6","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-c_download-2~default~OPENSEARCH~RRF-6-avjqavth30-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"6","strategy":"2~default~OPENSEARCH~RRF","dest":"https://wenku.csdn.net/doc/avjqavth30"}'  data-report-query='spm=1001.2101.3001.6650.6&utm_medium=distribute.pc_relevant.none-task-c_download-2%7Edefault%7EOPENSEARCH%7ERRF-6-avjqavth30-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-c_download-2%7Edefault%7EOPENSEARCH%7ERRF-6-avjqavth30-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">在2013年的NOIP（全国青少年信息学奥林匹克联赛）中，一道题目涉及了<em>货车运输</em>的问题，该问题的编程挑战是关于Dijkstra算法的优化实现。题目要求使用Pas<em>ca</em>l语言编写代码，解决如何在有限的时间内优化货车的<em>运输</em>路径，...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/WhiStLenA/article/details/52253238"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.7","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~VECTOR_COMMERCIAL~RRF-7-52253238-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"7","strategy":"2~default~VECTOR_COMMERCIAL~RRF","dest":"https://blog.csdn.net/WhiStLenA/article/details/52253238"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/WhiStLenA/article/details/52253238" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.7","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~VECTOR_COMMERCIAL~RRF-7-52253238-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"7","strategy":"2~default~VECTOR_COMMERCIAL~RRF","dest":"https://blog.csdn.net/WhiStLenA/article/details/52253238"}'  data-report-query='spm=1001.2101.3001.6650.7&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-7-52253238-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-7-52253238-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>NOIP2013</em> <em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/WhiStLenA" target="_blank"><span class="blog-title">Follow My Heart</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">08-19</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					413
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/WhiStLenA/article/details/52253238" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.7","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~VECTOR_COMMERCIAL~RRF-7-52253238-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"7","strategy":"2~default~VECTOR_COMMERCIAL~RRF","dest":"https://blog.csdn.net/WhiStLenA/article/details/52253238"}'  data-report-query='spm=1001.2101.3001.6650.7&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-7-52253238-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EVECTOR_COMMERCIAL%7ERRF-7-52253238-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">题目描述A 国有 n 座城市，编号从 1 到 n，城市之间有 m 条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有 q 辆货车在<em>运输</em>货物， 司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。输入输出格式输入格式：输入文件名为 truck.in。
+输入文件第一行有两个用一个空格隔开的整数 n，m，表示 A 国有 n 座城市和 m 条道
+路。 接下来 m 行每行 3 个整数</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/qq_34493840/article/details/88111665"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.8","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-88111665-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"8","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/qq_34493840/article/details/88111665"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/qq_34493840/article/details/88111665" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.8","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-88111665-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"8","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/qq_34493840/article/details/88111665"}'  data-report-query='spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-8-88111665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-8-88111665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">[<em>noip2013</em>]<em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/qq_34493840" target="_blank"><span class="blog-title">MILLOPE的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">03-04</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					1181
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/qq_34493840/article/details/88111665" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.8","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-8-88111665-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"8","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/qq_34493840/article/details/88111665"}'  data-report-query='spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-8-88111665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-8-88111665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">题目
+
+描述 Description
+A 国有 n 座城市，编号从 1 到 n，城市之间有 m 条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有 q 辆货车在<em>运输</em>货物，司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。
+输入格式 Input Format
+第一行有两个用一个空格隔开的整数 n，m，表示 A 国有 n 座城市和 m 条道路。
+接下来 m 行每行 3 个整数...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/2301_77920554/article/details/136001469"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.9","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-9-136001469-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"9","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/2301_77920554/article/details/136001469"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/2301_77920554/article/details/136001469" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.9","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-9-136001469-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"9","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/2301_77920554/article/details/136001469"}'  data-report-query='spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-136001469-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-136001469-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">[<em>NOIP2013</em> 提高组] <em>货车运输</em></div>
+					<div class="tag">最新发布</div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/2301_77920554" target="_blank"><span class="blog-title">2301_77920554的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">02-02</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					1167
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/2301_77920554/article/details/136001469" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.9","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-9-136001469-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"9","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/2301_77920554/article/details/136001469"}'  data-report-query='spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-136001469-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-9-136001469-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1"><em>NOIP2013</em> 提高组 D1T3。</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/Monster__Yi/article/details/50950273"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.10","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-10-50950273-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"10","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/Monster__Yi/article/details/50950273"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/Monster__Yi/article/details/50950273" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.10","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-10-50950273-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"10","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/Monster__Yi/article/details/50950273"}'  data-report-query='spm=1001.2101.3001.6650.10&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-10-50950273-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-10-50950273-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">[<em>NOIp2013</em>] <em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/Monster__Yi" target="_blank"><span class="blog-title">Monster__Yi的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">03-21</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					1239
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/Monster__Yi/article/details/50950273" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.10","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-10-50950273-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"10","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/Monster__Yi/article/details/50950273"}'  data-report-query='spm=1001.2101.3001.6650.10&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-10-50950273-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-10-50950273-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">题目大意：给一个n(0&nbsp;
+
+分析：
+因为要求所有路径上最小边的<em>最大</em>值，所以先求一遍<em>最大</em><em>生成树</em>，通过<em>最大</em><em>生成树</em>的边求得的路径一定是<em>最大</em>的，求的过程中用邻接表建图，之后对于每个询问x, y，用st-l<em>ca</em>求x, y的最近公共祖先（L<em>CA</em>），求的过程中对经过的路程取min.
+那么，这里介绍一下st-l<em>ca</em>算法：
+用dep[i]表示结点i的深度，f[i][j]表示结点i的2^j祖先，minv[i</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/cqbzwja/article/details/47427389"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.11","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-11-47427389-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"11","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/cqbzwja/article/details/47427389"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/cqbzwja/article/details/47427389" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.11","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-11-47427389-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"11","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/cqbzwja/article/details/47427389"}'  data-report-query='spm=1001.2101.3001.6650.11&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-11-47427389-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-11-47427389-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>NOIP2013</em> <em>货车运输</em>(<em>最大</em><em>生成树</em>+L<em>CA</em>)</div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/cqbzwja" target="_blank"><span class="blog-title">ACMer_quack&amp;cheer</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">08-11</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					4258
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/cqbzwja/article/details/47427389" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.11","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-11-47427389-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"11","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/cqbzwja/article/details/47427389"}'  data-report-query='spm=1001.2101.3001.6650.11&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-11-47427389-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-11-47427389-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">模拟考试的时候暴搜，结果写丑了，分都不分
+下来啃了一下题解，发现要用到一个叫做<em>倍增</em>的东西，还没有学过。但是老师说的，没有那个东西，写暴力也有30~40分。。。
+我觉得<em>最大</em><em>生成树</em>还是很好理解的，因为我们要求的是图中任意两个点之间的路径上，使得边权的最小值尽量大。因此首先求<em>最大</em><em>生成树</em>。
+当我们得到<em>最大</em><em>生成树</em>后，要求两个点之间边权最小值，我们可以首先找到他们的公共祖先。这里有一篇写得很详细的代码，</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/dfssbqyrq96616258/article/details/101891408"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.12","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-12-101891408-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"12","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/dfssbqyrq96616258/article/details/101891408"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/dfssbqyrq96616258/article/details/101891408" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.12","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-12-101891408-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"12","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/dfssbqyrq96616258/article/details/101891408"}'  data-report-query='spm=1001.2101.3001.6650.12&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-12-101891408-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-12-101891408-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1"><em>noip2013</em> <em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/dfssbqyrq96616258" target="_blank"><span class="blog-title">dfssbqyrq96616258的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">10-10</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					218
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/dfssbqyrq96616258/article/details/101891408" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.12","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-12-101891408-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"12","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/dfssbqyrq96616258/article/details/101891408"}'  data-report-query='spm=1001.2101.3001.6650.12&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-12-101891408-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-12-101891408-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">题目描述
+A国有nn座城市，编号从11到nn，城市之间有mm条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有qq辆货车在<em>运输</em>货物， 司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。
+输入输出格式
+输入格式：
+
+第一行有两个用一个空格隔开的整数n,mn,m，表示AA国有nn座城市和mm条道路。
+接下来mm行每行33个整数x, ...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/YYHS_WSF/article/details/82752665"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.13","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-13-82752665-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"13","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/YYHS_WSF/article/details/82752665"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/YYHS_WSF/article/details/82752665" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.13","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-13-82752665-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"13","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/YYHS_WSF/article/details/82752665"}'  data-report-query='spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-82752665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-82752665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">LOJ #2610. 「<em>NOIP2013</em>」<em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/YYHS_WSF" target="_blank"><span class="blog-title">YYHS_WSF的博客</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">09-18</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					279
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/YYHS_WSF/article/details/82752665" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.13","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-13-82752665-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"13","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/YYHS_WSF/article/details/82752665"}'  data-report-query='spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-82752665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-82752665-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1">题目描述
+
+A 国有&nbsp;nnn&nbsp;座城市，编号从&nbsp;111&nbsp;到&nbsp;nnn，城市之间有&nbsp;mmm&nbsp;条双向道路。每一条道路对车辆都有重量限制，简称限重。现在有&nbsp;qqq&nbsp;辆货车在<em>运输</em>货物，司机们想知道每辆车在不超过车辆限重的情况下，最多能运多重的货物。
+
+输入格式
+
+输入文件第一行有两个用一个空格隔开的整数&nbsp;nnn，mmm，表示 A 国有&nbsp;nnn&nbsp;座城市和&nbsp;mmm&nbsp;条道路。
+
+接下来&nbsp;mmm&nbsp;行每行&nbsp;333&nbsp;个整...</div>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="recommend-item-box type_blog clearfix" data-url="https://blog.csdn.net/Horizon_SMZ/article/details/47426835"  data-report-view='{"ab":"new","spm":"1001.2101.3001.6650.14","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-14-47426835-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"14","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/Horizon_SMZ/article/details/47426835"}'>
+	<div class="content-box">
+		<div class="content-blog display-flex">
+			<div class="title-box">
+				<a href="https://blog.csdn.net/Horizon_SMZ/article/details/47426835" class="tit" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.14","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-14-47426835-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"14","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/Horizon_SMZ/article/details/47426835"}'  data-report-query='spm=1001.2101.3001.6650.14&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-14-47426835-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-14-47426835-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+					<div class="left ellipsis-online ellipsis-online-1">[NOIP 2013]<em>货车运输</em></div>
+				</a>
+			</div>
+			<div class="info-box display-flex">
+				<div class="info">
+					<a href="https://blog.csdn.net/Horizon_SMZ" target="_blank"><span class="blog-title">_Horizon</span></a>
+				</div>
+				<div class="info display-flex">
+					<span class="info-block time">08-11</span>
+					<span class="info-block read"><img class="read-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					1239
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="desc-box">
+			<a href="https://blog.csdn.net/Horizon_SMZ/article/details/47426835" target="_blank"  data-report-click='{"ab":"new","spm":"1001.2101.3001.6650.14","mod":"popu_387","extra":"{\"highlightScore\":0.0,\"utm_medium\":\"distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-14-47426835-blog-52744845.235^v43^pc_blog_bottom_relevance_base9\",\"dist_request_id\":\"1737521888203_65595\"}","dist_request_id":"1737521888203_65595","ab_strategy":"landingbge_opensearch_vector_rrf_v2","index":"14","strategy":"2~default~BlogCommendFromBaidu~Rate","dest":"https://blog.csdn.net/Horizon_SMZ/article/details/47426835"}'  data-report-query='spm=1001.2101.3001.6650.14&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-14-47426835-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-14-47426835-blog-52744845.235%5Ev43%5Epc_blog_bottom_relevance_base9'>
+				<div class="desc ellipsis-online ellipsis-online-1"><em>最大</em><em>生成树</em></div>
+			</a>
+		</div>
+	</div>
+</div>
+              </div>
+<div class="blog-footer-bottom" style="margin-top:10px;"></div>
+<script src="https://g.csdnimg.cn/common/csdn-footer/csdn-footer.js" data-isfootertrack="false" type="text/javascript"></script>
+<script type="text/javascript">
+    window.csdn.csdnFooter.options = {
+        el: '.blog-footer-bottom',
+        type: 2
+    }
+</script>          </main>
+<aside class="blog_container_aside">
+<div id="asideProfile" class="aside-box">
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/moon_sky1999" target="_blank" data-report-click='{"mod":"popu_379","spm":"1001.2101.3001.4121","dest":"https://blog.csdn.net/moon_sky1999","ab":"new"}'>
+                <img src="https://profile-avatar.csdnimg.cn/6d890f83491a40b7968c40af243944b1_moon_sky1999.jpg!1" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex flex-column profile-intro-name-box">
+            <div class="profile-intro-name-boxTop">
+                <a href="https://blog.csdn.net/moon_sky1999" target="_blank" class="" id="uid" title="Xiao____Q" data-report-click='{"mod":"popu_379","spm":"1001.2101.3001.4122","dest":"https://blog.csdn.net/moon_sky1999","ab":"new"}'>
+                    <span class="name " username="moon_sky1999">Xiao____Q</span>
+                </a>
+                <span>
+                </span>
+                <span class="flag expert-blog">
+                <span class="bubble">CSDN认证博客专家</span>
+                </span>
+                <span class="flag company-blog">
+                <span class="bubble">CSDN认证企业博客</span>
+                </span>
+            </div>
+            <div class="profile-intro-name-boxFooter">
+                <span class="personal-home-page personal-home-years" title="已加入 CSDN 9年">码龄9年</span>
+                    <span class="personal-home-page">
+                    <a class="personal-home-certification" href="https://i.csdn.net/#/uc/profile?utm_source=14998968" target="_blank" title="暂无认证">
+                    <img src="https://csdnimg.cn/identity/nocErtification.png" alt="">
+                    暂无认证
+                    </a>
+                    </span>
+            </div>
+        </div>
+    </div>
+    <div class="data-info d-flex item-tiling">
+        <dl class="text-center" title="217">
+            <a href="https://blog.csdn.net/moon_sky1999" data-report-click='{"mod":"1598321000_001","spm":"1001.2101.3001.4310"}' data-report-query="t=1">
+                <dt><span class="count">217</span></dt>
+                <dd class="font">原创</dd>
+            </a>
+        </dl>
+        <dl class="text-center" data-report-click='{"mod":"1598321000_002","spm":"1001.2101.3001.4311"}' title="56774">
+            <a href="https://blog.csdn.net/rank/list/weekly" target="_blank">
+                <dt><span class="count">5万+</span></dt>
+                <dd class="font">周排名</dd>
+            </a>
+        </dl>
+        <dl class="text-center" title="908538">
+            <a href="https://blog.csdn.net/rank/list/total" data-report-click='{"mod":"1598321000_003","spm":"1001.2101.3001.4312"}' target="_blank">
+                <dt><span class="count">90万+</span></dt>
+                <dd class="font">总排名</dd>
+            </a>
+        </dl>
+        <dl class="text-center" style="min-width:58px" title="84031">
+            <dt><span class="count">8万+</span></dt>
+            <dd>访问</dd>
+        </dl>
+        <dl class="text-center" title="5级,点击查看等级说明">
+            <dt><a href="https://blog.csdn.net/blogdevteam/article/details/103478461" target="_blank">
+                <img class="level" src="https://csdnimg.cn/identity/blog5.png">
+            </a>
+            </dt>
+            <dd>等级</dd>
+        </dl>
+    </div>
+    <div class="item-rank"></div>
+    <div class="data-info d-flex item-tiling">
+        <dl class="text-center" title="2741">
+            <dt><span class="count">2741</span></dt>
+            <dd>积分</dd>
+        </dl>
+         <dl class="text-center" id="fanBox" title="38">
+            <dt><span class="count" id="fan">38</span></dt>
+            <dd>粉丝</dd>
+        </dl>
+        <dl class="text-center" title="34">
+            <dt><span class="count">34</span></dt>
+            <dd>获赞</dd>
+        </dl>
+        <dl class="text-center" title="21">
+            <dt><span class="count">21</span></dt>
+            <dd>评论</dd>
+        </dl>
+        <dl class="text-center" title="129">
+            <dt><span class="count">129</span></dt>
+            <dd>收藏</dd>
+        </dl>
+    </div>
+    <div class="aside-box-footer" data-report-view='{"spm":"3001.4296"}'>
+        <div class="badge-box d-flex">
+            <div class="badge d-flex">
+                <div class="icon-badge" title="签到新秀">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/medal/qiandao1@240.png" alt="签到新秀">
+                    </div>
+                </div>
+                <div class="icon-badge" title="持续创作">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/medal/chizhiyiheng@240.png" alt="持续创作">
+                    </div>
+                </div>
+                <div class="icon-badge" title="GitHub">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/medal/github@240.png" alt="GitHub">
+                    </div>
+                </div>
+                <div class="icon-badge" title="笔耕不辍">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/afc91fe638a54ce9a2f50c5e3e09d46b.png" alt="笔耕不辍">
+                    </div>
+                </div>
+                <div class="icon-badge" title="创作能手">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/medal/qixiebiaobing4@240.png" alt="创作能手">
+                    </div>
+                </div>
+                <div class="icon-badge" title="学习力">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/medal/yuanli_xuexili@240.png" alt="学习力">
+                    </div>
+                </div>
+                <div class="icon-badge" title="原力新人">
+                    <div class="mouse-box">
+                        <img class="medal-img" data-report-click='{"spm":"3001.4296"}' src="https://csdnimg.cn/medal/yuanli_xinren@240.png" alt="原力新人">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="profile-intro-name-boxOpration">
+        <div class="opt-letter-watch-box">
+        <a rel="nofollow" class="bt-button personal-letter" href="https://im.csdn.net/chat/moon_sky1999" target="_blank" rel="noopener">私信</a>
+        </div>
+        <div class="opt-letter-watch-box">
+            <a class="personal-watch bt-button" id="btnAttent" >关注</a>
+        </div>
+    </div>
+</div>
+<a id="remuneration" data-report-click='{"spm":"1001.2101.3001.9809"}' rel="nofollow" href="" class="remuneration-box">
+  <img src="" alt="">
+</a>
+  <div id="asideWriteGuide" class="aside-box side-write-guide-box type-2" data-report-view='{"spm":"3001.9728"}'>
+    <div class="content-box">
+      <a rel="nofollow" href="https://www.csdn.net/blogstar2024?utm_source=1333680121" target="_blank" class="btn-go-write" data-report-query="spm=3001.9728" data-report-click='{"spm":"3001.9728"}'>
+        <img src="https://img-home.csdnimg.cn/images/20250107060517.png" alt="写文章">
+      </a>
+    </div>
+  </div>
+<div id="asideSearchArticle" class="aside-box">
+	<div class="aside-content search-comter">
+    <div class="aside-search aside-search-blog">
+        <input type="text" class="input-serch-blog" name="" autocomplete="off" value="" id="search-blog-words" placeholder="搜博主文章">
+        <a class="btn-search-blog" data-report-click='{"spm":"1001.2101.3001.9182"}'>
+            <img src="//csdnimg.cn/cdn/content-toolbar/csdn-sou.png?v=1587021042">
+        </a>
+    </div>
+    </div>
+</div>
+<div class="box-shadow mb8" data-pid="blog" style="min-height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+        <div id="kp_box_56" data-pid="56"><!-- 300x250_A -->
+<script defer type="text/javascript" id="interactive_js_adcode" src="https://kunpeng-render.csdnimg.cn/publisher/latest/truereachAdRender.js"></script>
+<div id="TR-4ac9702b-be84-11ee-a301-b7516d250593"></div><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=56&adId=1048397&adBlockFlag=0&a=1048397&c=0&k=NOIP2013货车运输&spm=1001.2101.3001.5000&articleId=52744845&d=1&t=3&u=c312868ab483478f930b93d1d705e2cc" style="display: block;width: 0px;height: 0px;"></div>
+    </div>
+</div>
+
+
+
+<div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list">
+			<li>
+				<a href="https://blog.csdn.net/moon_sky1999/article/details/106501841" target="_blank"  data-report-click='{"mod":"popu_541","spm":"1001.2101.3001.4139","dest":"https://blog.csdn.net/moon_sky1999/article/details/106501841","ab":"new"}'>
+				D3 - 动态图绘制（详解）（D3.v5）
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">2583</span>
+                </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/moon_sky1999/article/details/82148149" target="_blank"  data-report-click='{"mod":"popu_541","spm":"1001.2101.3001.4139","dest":"https://blog.csdn.net/moon_sky1999/article/details/82148149","ab":"new"}'>
+				ACM常用算法分类
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">2118</span>
+                </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/moon_sky1999/article/details/53047701" target="_blank"  data-report-click='{"mod":"popu_541","spm":"1001.2101.3001.4139","dest":"https://blog.csdn.net/moon_sky1999/article/details/53047701","ab":"new"}'>
+				NOIP2007矩阵取数游戏
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">2015</span>
+                </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/moon_sky1999/article/details/105974363" target="_blank"  data-report-click='{"mod":"popu_541","spm":"1001.2101.3001.4139","dest":"https://blog.csdn.net/moon_sky1999/article/details/105974363","ab":"new"}'>
+				D3 - 动态条形图制作
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">1601</span>
+                </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/moon_sky1999/article/details/104930205" target="_blank"  data-report-click='{"mod":"popu_541","spm":"1001.2101.3001.4139","dest":"https://blog.csdn.net/moon_sky1999/article/details/104930205","ab":"new"}'>
+				D3 - 平行坐标系
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">1483</span>
+                </a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="asideCategory" class="aside-box flexible-box">
+    <h3 class="aside-title">分类专栏</h3>
+    <div class="aside-content">
+        <ul>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_10746115.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_10746115.html","ab":"new"}'>
+                    <div class="special-column-bar "></div>
+                    <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756930.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        课程笔记
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_10746120.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_10746120.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/aaa80a1ecca4077942373e45fdb28722.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        《数据结构》课程笔记
+                    </span>
+                </a>
+                <span class="special-column-num">9篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9782748.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9782748.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/1291561d40db6b7ab0849b3188f8c180.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        可视化技术 - D3实现
+                    </span>
+                </a>
+                <span class="special-column-num">8篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_8520237.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_8520237.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/31f35a4612ceb27e53680155c6246021.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        Java学习
+                    </span>
+                </a>
+                <span class="special-column-num">4篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9782717.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9782717.html","ab":"new"}'>
+                    <div class="special-column-bar "></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/90a35ae621c65769a9a7d2ace5d65249.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        算法竞赛专栏
+                    </span>
+                </a>
+                <span class="special-column-num">6篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_7631591.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_7631591.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/90a35ae621c65769a9a7d2ace5d65249.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        ACM模板
+                    </span>
+                </a>
+                <span class="special-column-num">8篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_7794462.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_7794462.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/09d0fa4aa134358fcccdc0e54f7319e9.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        动态规划
+                    </span>
+                </a>
+                <span class="special-column-num">50篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783088.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783088.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/blog_column_migrate/e16359b55d293a6a8e60bc4f79e4c5e3.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        数学
+                    </span>
+                </a>
+                <span class="special-column-num">20篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783070.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783070.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756738.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        数据结构
+                    </span>
+                </a>
+                <span class="special-column-num">23篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783075.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783075.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756930.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        图论
+                    </span>
+                </a>
+                <span class="special-column-num">48篇</span>
+            </li>
+            <li>
+                <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783097.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783097.html","ab":"new"}'>
+                    <div class="special-column-bar special-column-bar-second"></div>
+                    <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                    <span class="title oneline">
+                        杂项算法
+                    </span>
+                </a>
+                <span class="special-column-num">35篇</span>
+            </li>
+        </ul>
+    </div>
+    <p class="text-center">
+        <a class="flexible-btn" data-fbox="aside-archive"><img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowDownWhite.png" alt=""></a>
+    </p>
+</div>
+<div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+            <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/moon_sky1999/article/details/99249304#comments_22824884" data-report-click='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/99249304#comments_22824884","ab":"new"}' data-report-view='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/99249304#comments_22824884","ab":"new"}'>HDU - 6239 Interview （古典概型）</a>
+                <p class="comment ellipsis">
+                    <a href="https://blog.csdn.net/SillyGOAT" class="user-name" target="_blank">Kmonosis: </a>
+                    <span class="code-comments">详细的推导，非常好理解，很有用！</span>
+                </p>
+            </li>
+            <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/moon_sky1999/article/details/105974363#comments_21974255" data-report-click='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105974363#comments_21974255","ab":"new"}' data-report-view='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105974363#comments_21974255","ab":"new"}'>D3 - 动态条形图制作</a>
+                <p class="comment ellipsis">
+                    <a href="https://blog.csdn.net/moon_sky1999" class="user-name" target="_blank">Xiao____Q: </a>
+                    <span class="code-comments">这个我也不是很了解，你可以自己找一下原因。我上传到github之后是可以正常访问的，显示也是正常的。</span>
+                </p>
+            </li>
+            <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/moon_sky1999/article/details/105974363#comments_21973136" data-report-click='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105974363#comments_21973136","ab":"new"}' data-report-view='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105974363#comments_21973136","ab":"new"}'>D3 - 动态条形图制作</a>
+                <p class="comment ellipsis">
+                    <a href="https://blog.csdn.net/weixin_51225792" class="user-name" target="_blank">XW.YAL: </a>
+                    <span class="code-comments">为什么保存到本地后电脑打开html文件那些动态就没有了，然后在那个hbuilderx 里打开才有动态</span>
+                </p>
+            </li>
+            <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/moon_sky1999/article/details/105200521#comments_18810940" data-report-click='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105200521#comments_18810940","ab":"new"}' data-report-view='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105200521#comments_18810940","ab":"new"}'>D3 -折线统计图</a>
+                <p class="comment ellipsis">
+                    <a href="https://blog.csdn.net/moon_sky1999" class="user-name" target="_blank">Xiao____Q: </a>
+                    <span class="code-comments">https://blog.csdn.net/moon_sky1999/article/details/105974363
+就是这一篇里面的那个</span>
+                </p>
+            </li>
+            <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/moon_sky1999/article/details/105200521#comments_18808969" data-report-click='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105200521#comments_18808969","ab":"new"}' data-report-view='{"mod":"popu_542","spm":"1001.2101.3001.4231","dest":"https://blog.csdn.net/moon_sky1999/article/details/105200521#comments_18808969","ab":"new"}'>D3 -折线统计图</a>
+                <p class="comment ellipsis">
+                    <a href="https://blog.csdn.net/weixin_52858713" class="user-name" target="_blank">仰望天空的破小孩: </a>
+                    <span class="code-comments">csv文件没给</span>
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
+<div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">大家在看</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list">
+			<li>
+				<a href="https://blog.csdn.net/famous_pengfei/article/details/145300073" target="_blank"  data-report-click='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/famous_pengfei/article/details/145300073","strategy":"202_1052723-2321791_RCMD","ab":"new"}' data-report-view='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/famous_pengfei/article/details/145300073","strategy":"202_1052723-2321791_RCMD","ab":"new"}'>
+				Windows11如何添加、删除输入法
+        </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/hay23455/article/details/145298799" target="_blank"  data-report-click='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/hay23455/article/details/145298799","strategy":"202_1052723-2321669_RCMD","ab":"new"}' data-report-view='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/hay23455/article/details/145298799","strategy":"202_1052723-2321669_RCMD","ab":"new"}'>
+				Kafka中bin目录下面kafka-run-class.sh脚本中的JAVA_HOME
+        </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/2302_79354434/article/details/145299441" target="_blank"  data-report-click='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/2302_79354434/article/details/145299441","strategy":"202_1052723-2321635_RCMD","ab":"new"}' data-report-view='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/2302_79354434/article/details/145299441","strategy":"202_1052723-2321635_RCMD","ab":"new"}'>
+				2025.1.21——1300
+        </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/weixin_51390582/article/details/145244433" target="_blank"  data-report-click='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/weixin_51390582/article/details/145244433","strategy":"202_1052723-2321746_RCMD","ab":"new"}' data-report-view='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/weixin_51390582/article/details/145244433","strategy":"202_1052723-2321746_RCMD","ab":"new"}'>
+				【2024 CSDN博客之星】大学四年，我如何在CSDN实现学业与事业的“双逆袭”？
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">1063</span>
+        </a>
+			</li>
+			<li>
+				<a href="https://blog.csdn.net/qq_62634009/article/details/145268725" target="_blank"  data-report-click='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/qq_62634009/article/details/145268725","strategy":"202_1052723-2322009_RCMD","ab":"new"}' data-report-view='{"spm":"1001.2101.3001.10093","dest":"https://blog.csdn.net/qq_62634009/article/details/145268725","strategy":"202_1052723-2322009_RCMD","ab":"new"}'>
+				基于MATLAB的智能海上救援信息采集飞行器系统设计与实现
+					<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt="">
+					<span class="read">445</span>
+        </a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="asideArchive" class="aside-box" style="display:block!important; width:300px;">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix">
+            <li class="clearfix">
+            <a href="https://blog.csdn.net/moon_sky1999/article/details/112756447" target="_blank" data-report-click='{"mod":"popu_382","spm":"1001.2101.3001.4136","dest":"https://blog.csdn.net/moon_sky1999/article/details/112756447","ab":"new"}' data-report-view='{"mod":"popu_382","dest":"https://blog.csdn.net/moon_sky1999/article/details/112756447","ab":"new"}'>各种内排序汇总</a>
+            </li>
+            <li class="clearfix">
+            <a href="https://blog.csdn.net/moon_sky1999/article/details/112756435" target="_blank" data-report-click='{"mod":"popu_382","spm":"1001.2101.3001.4136","dest":"https://blog.csdn.net/moon_sky1999/article/details/112756435","ab":"new"}' data-report-view='{"mod":"popu_382","dest":"https://blog.csdn.net/moon_sky1999/article/details/112756435","ab":"new"}'>查找（线性查找 B树 散列表）</a>
+            </li>
+            <li class="clearfix">
+            <a href="https://blog.csdn.net/moon_sky1999/article/details/112756426" target="_blank" data-report-click='{"mod":"popu_382","spm":"1001.2101.3001.4136","dest":"https://blog.csdn.net/moon_sky1999/article/details/112756426","ab":"new"}' data-report-view='{"mod":"popu_382","dest":"https://blog.csdn.net/moon_sky1999/article/details/112756426","ab":"new"}'>图（图的存储 图的遍历 图的应用 AOV网 AOE网）</a>
+            </li>
+        </ul>
+        <div class="archive-bar"></div>
+        <div class="archive-box">
+                <div class="archive-list-item"><a href="https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2021&amp;month=01" target="_blank" data-report-click='{"mod":"popu_538","spm":"1001.2101.3001.4138","ab":"new","dest":"https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2021&amp;month=01"}'><span class="year">2021年</span><span class="num">9篇</span></a></div>
+                <div class="archive-list-item"><a href="https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2020&amp;month=06" target="_blank" data-report-click='{"mod":"popu_538","spm":"1001.2101.3001.4138","ab":"new","dest":"https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2020&amp;month=06"}'><span class="year">2020年</span><span class="num">10篇</span></a></div>
+                <div class="archive-list-item"><a href="https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2019&amp;month=11" target="_blank" data-report-click='{"mod":"popu_538","spm":"1001.2101.3001.4138","ab":"new","dest":"https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2019&amp;month=11"}'><span class="year">2019年</span><span class="num">53篇</span></a></div>
+                <div class="archive-list-item"><a href="https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2018&amp;month=12" target="_blank" data-report-click='{"mod":"popu_538","spm":"1001.2101.3001.4138","ab":"new","dest":"https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2018&amp;month=12"}'><span class="year">2018年</span><span class="num">77篇</span></a></div>
+                <div class="archive-list-item"><a href="https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2017&amp;month=12" target="_blank" data-report-click='{"mod":"popu_538","spm":"1001.2101.3001.4138","ab":"new","dest":"https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2017&amp;month=12"}'><span class="year">2017年</span><span class="num">36篇</span></a></div>
+                <div class="archive-list-item"><a href="https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2016&amp;month=11" target="_blank" data-report-click='{"mod":"popu_538","spm":"1001.2101.3001.4138","ab":"new","dest":"https://blog.csdn.net/moon_sky1999?type=blog&amp;year=2016&amp;month=11"}'><span class="year">2016年</span><span class="num">36篇</span></a></div>
+        </div>
+    </div>
+</div>
+	<div id="footerRightAds" class="isShowFooterAds">
+		<div class="aside-box">
+			<div id="kp_box_57" data-pid="57"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1076724771190722"
+     crossorigin="anonymous"></script>
+<!-- PC-博客-详情页-左下视窗-0-49 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1076724771190722"
+     data-ad-slot="4787882818"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=57&adId=1048398&adBlockFlag=0&a=1048398&c=0&k=NOIP2013货车运输&spm=1001.2101.3001.5001&articleId=52744845&d=1&t=3&u=484303d40457491e9593665f9e8a029c" style="display: block;width: 0px;height: 0px;"></div>
+		</div>
+	</div>
+    <!-- 详情页显示目录 -->
+<!--文章目录-->
+<div id="asidedirectory" class="aside-box">
+    <div class='groupfile' id="directory">
+        <h3 class="aside-title">目录</h3>
+        <div class="align-items-stretch group_item">
+            <div class="pos-box">
+            <div class="scroll-box">
+                <div class="toc-box"></div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</aside>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).parents("p.text-center").remove();
+	})
+</script>
+<script type="text/javascript"  src="https://g.csdnimg.cn/user-tooltip/2.7/user-tooltip.js"></script>
+<script type="text/javascript"  src="https://g.csdnimg.cn/user-medal/2.0.0/user-medal.js"></script>        </div>
+<div class="recommend-right align-items-stretch clearfix" id="rightAside" data-type="recommend">
+    <aside class="recommend-right_aside">
+      <div class="rightside-fixed-hide">
+                       <div class="programmer1Box">
+                    <div id="kp_box_530" data-pid="530"><script defer type="text/javascript" id="interactive_js_adcode" src="https://kunpeng-render.csdnimg.cn/publisher/latest/truereachAdRender.js"></script>
+<div id="TR-780cc1b5-94d9-11ee-9cea-bf3fc95316dc"></div><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=530&adId=1057732&adBlockFlag=0&a=1057732&c=0&k=NOIP2013货车运输&spm=1001.2101.3001.4647&articleId=52744845&d=1&t=3&u=f49e3a93f0c44dcb9e3cfe9983564731" style="display: block;width: 0px;height: 0px;"></div>
+                </div>
+      </div>
+        <div id="recommend-right" >
+          <div class='flex-column aside-box groupfile' id="groupfile">
+              <div class="groupfile-div">
+              <h3 class="aside-title">目录</h3>
+              <div class="align-items-stretch group_item">
+                  <div class="pos-box">
+                      <div class="scroll-box">
+                          <div class="toc-box"></div>
+                      </div>
+                  </div>
+              </div>
+              </div>
+          </div>
+              <div id="recommendAdBox">
+                  <div id="kp_box_479" data-pid="479"><div class="wwads-cn wwads-vertical" data-id="149" style="max-width:300px;margin-top:10px;margin-bottom:10px;background-color: #fff;"></div>
+<style>.wwads-img img {width: 150px; margin-top:10px}</style>
+<script type="text/javascript" charset="UTF-8" src="https://cdn.wwads.cn/js/makemoney.js" async></script><img class="pre-img-lasy" data-src="https://kunyu.csdn.net/1.png?p=479&adId=1049278&adBlockFlag=0&a=1049278&c=0&k=NOIP2013货车运输&spm=1001.2101.3001.4834&articleId=52744845&d=1&t=3&u=d1a2ddc498884a3689c0673de6f9afcf" style="display: block;width: 0px;height: 0px;"></div>
+              </div>
+          <div class='aside-box kind_person d-flex flex-column'>
+                  <h3 class="aside-title">分类专栏</h3>
+                  <div class="align-items-stretch kindof_item" id="kind_person_column">
+                      <div class="aside-content">
+                          <ul>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_10746115.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_10746115.html","ab":"new"}'>
+                                      <div class="special-column-bar "></div>
+                                      <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756930.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          课程笔记
+                                      </span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_10746120.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_10746120.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/aaa80a1ecca4077942373e45fdb28722.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          《数据结构》课程笔记
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">9篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9782748.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9782748.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/1291561d40db6b7ab0849b3188f8c180.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          可视化技术 - D3实现
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">8篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_8520237.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_8520237.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/31f35a4612ceb27e53680155c6246021.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          Java学习
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">4篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9782717.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9782717.html","ab":"new"}'>
+                                      <div class="special-column-bar "></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/90a35ae621c65769a9a7d2ace5d65249.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          算法竞赛专栏
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">6篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_7631591.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_7631591.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/90a35ae621c65769a9a7d2ace5d65249.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          ACM模板
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">8篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_7794462.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_7794462.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/09d0fa4aa134358fcccdc0e54f7319e9.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          动态规划
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">50篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783088.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783088.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/blog_column_migrate/e16359b55d293a6a8e60bc4f79e4c5e3.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          数学
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">20篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783070.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783070.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756738.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          数据结构
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">23篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783075.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783075.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756930.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          图论
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">48篇</span>
+                              </li>
+                              <li>
+                                  <a class="clearfix special-column-name"  href="https://blog.csdn.net/moon_sky1999/category_9783097.html" data-report-click='{"mod":"popu_537","spm":"1001.2101.3001.4137","strategy":"pc付费专栏左侧入口","dest":"https://blog.csdn.net/moon_sky1999/category_9783097.html","ab":"new"}'>
+                                      <div class="special-column-bar special-column-bar-second"></div>
+                                      <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'">
+                                      <span class="">
+                                          杂项算法
+                                      </span>
+                                  </a>
+                                  <span class="special-column-num">35篇</span>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+          </div>
+        </div>
+    </aside>
+</div>
+
+<div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend">
+    <aside class="recommend-right_aside">
+        <div id="recommend-right-concision" >
+            <div class='flex-column aside-box groupfile' id="groupfileConcision">
+                <div class="groupfile-div1">
+                <h3 class="aside-title">目录</h3>
+                <div class="align-items-stretch group_item">
+                    <div class="pos-box">
+                        <div class="scroll-box">
+                            <div class="toc-box"></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+      </div>
+      <div class="mask-dark"></div>
+        <script type="text/javascript">
+        var timert = setInterval(function() {
+          sideToolbar = $(".csdn-side-toolbar");
+          if (sideToolbar.length > 0) {
+            sideToolbar.css('cssText', 'bottom:64px !important;')
+            clearInterval(timert);
+          }
+        }, 200);
+        </script>
+      <div class="skin-boxshadow"></div>
+      <div class="directory-boxshadow"></div>
+<div class="comment-side-box-shadow comment-side-tit-close" id="commentSideBoxshadow">
+<div class="comment-side-content">
+	<div class="comment-side-tit">
+		<div class="comment-side-tit-count">评论&nbsp;<span class="count">1</span></div>
+	<img class="comment-side-tit-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/closeBt.png"></div>
+	<div id="pcCommentSideBox" class="comment-box comment-box-new2 unlogin-comment-box-new" style="display:none">
+	</div>
+	<div id="pcFlodCommentSideBox" class="pc-flodcomment-sidebox">
+		<div class="comment-fold-tit"><span id="lookUnFlodComment" class="back"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowLeftWhite.png" alt=""></span>被折叠的&nbsp;<span class="count"></span>&nbsp;条评论
+		 <a href="https://blogdev.blog.csdn.net/article/details/122245662" class="tip" target="_blank">为什么被折叠?</a>
+		 <a href="https://bbs.csdn.net/forums/FreeZone" class="park" target="_blank">
+		 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/iconPark.png">到【灌水乐园】发言</a>
+		</div>
+		<div class="comment-fold-content"></div>
+		<div id="lookBadComment" class="look-bad-comment side-look-comment">
+			<a class="look-more-comment">查看更多评论<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowDownWhite.png" alt=""></a>
+		</div>
+	</div>
+</div>
+<div class="comment-rewarddialog-box">
+  <div class="form-box">
+    <div class="title-box">
+      添加红包
+      <a class="btn-form-close"></a>
+    </div>
+    <form id="commentRewardForm">
+      <div class="ipt-box">
+        <label for="txtName">祝福语</label>
+        <div class="ipt-btn-box">
+          <input type="text" name="name" id="txtName" autocomplete="off" maxlength="50">
+          <a class="btn-ipt btn-random"></a>
+        </div>
+        <p class="notice">请填写红包祝福语或标题</p>
+      </div>
+      <div class="ipt-box">
+        <label for="txtSendAmount">红包数量</label>
+        <div class="ipt-txt-box">
+          <input type="text" name="sendAmount" maxlength="4" id="txtSendAmount" placeholder="请填写红包数量(最小10个)" autocomplete="off">
+          <span class="after-txt">个</span>
+        </div>
+        <p class="notice">红包个数最小为10个</p>
+      </div>
+      <div class="ipt-box">
+        <label for="txtMoney">红包总金额</label>
+        <div class="ipt-txt-box error">
+          <input type="text" name="money" maxlength="5" id="txtMoney" placeholder="请填写总金额(最低5元)" autocomplete="off">
+          <span class="after-txt">元</span>
+        </div>
+        <p class="notice">红包金额最低5元</p>
+      </div>
+      <div class="balance-info-box">
+        <label>余额支付</label>
+        <div class="balance-info">
+          当前余额<span class="balance">3.43</span>元
+          <a href="https://i.csdn.net/#/wallet/balance/recharge" class="link-charge" target="_blank">前往充值 ></a>
+        </div>
+      </div>
+      <div class="opt-box">
+        <div class="pay-info">
+          需支付：<span class="price">10.00</span>元
+        </div>
+        <button type="button" class="ml-auto btn-cancel">取消</button>
+        <button type="button" class="ml8 btn-submit" disabled="true">确定</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="rr-guide-box">
+  <div class="rr-first-box">
+    <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward02.png" alt="">
+    <button class="btn-guide-known next">下一步</button>
+  </div>
+  <div class="rr-second-box">
+    <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward03.png" alt="">
+    <button class="btn-guide-known known">知道了</button>
+  </div>
+</div>
+</div>
+
+<div class="redEnvolope" id="redEnvolope">
+  <div class="env-box">
+    <div class="env-container">
+      <div class="pre-open" id="preOpen">
+        <div class="top">
+          <header>
+            <img class="clearTpaErr" :src="redpacketAuthor.avatar" alt="" />
+            <div class="author">成就一亿技术人!</div>
+          </header>
+          <div class="bot-icon"></div>
+        </div>
+        <footer>
+          <div class="red-openbtn open-start"></div>
+          <div class="tip">
+            领取后你会自动成为博主和红包主的粉丝
+            <a class="rule" target="_blank">规则</a>
+          </div>
+        </footer>
+      </div>
+      <div class="opened" id="opened">
+        <div class="bot-icon">
+          <header>
+            <a class="creatorUrl" href="" target="_blank">
+              <img class="clearTpaErr" src="https://profile-avatar.csdnimg.cn/default.jpg!2" alt="" />
+            </a>
+            <div class="author">
+              <div class="tt">hope_wisdom</div> 发出的红包
+            </div>
+          </header>
+        </div>
+        <div class="receive-box">
+          <header></header>
+          <div class="receive-list">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="close-btn"></div>
+  </div>
+</div>
+
+      <div class="pay-code">
+      <div class="pay-money">实付<span class="pay-money-span" data-nowprice='' data-oldprice=''>元</span></div>
+      <div class="content-blance"><a class="blance-bt" href="javascript:;">使用余额支付</a></div>
+      <div class="content-code">
+        <div id="payCode" data-id="">
+          <div class="renovate">
+            <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-time-out.png">
+            <span>点击重新获取</span>
+          </div>
+        </div>
+        <div class="pay-style"><span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/weixin.png"></span><span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/zhifubao.png"></span><span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/jingdong.png"></span><span class="text">扫码支付</span></div>
+      </div>
+      <div class="bt-close">
+        <svg t="1567152543821" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10924" xmlns:xlink="http://www.w3.org/1999/xlink" width="12" height="12">
+          <defs>
+            <style type="text/css"></style>
+          </defs>
+          <path d="M512 438.378667L806.506667 143.893333a52.032 52.032 0 1 1 73.6 73.621334L585.621333 512l294.485334 294.485333a52.074667 52.074667 0 0 1-73.6 73.642667L512 585.621333 217.514667 880.128a52.053333 52.053333 0 1 1-73.621334-73.642667L438.378667 512 143.893333 217.514667a52.053333 52.053333 0 1 1 73.621334-73.621334L512 438.378667z" fill="" p-id="10925"></path>
+        </svg>
+      </div>
+      <div class="pay-balance">
+        <input type="radio" class="pay-code-radio" data-type="details">
+        <span class="span">钱包余额</span>
+          <span class="balance" style="color:#FC5531;font-size:14px;">0</span>
+          <div class="pay-code-tile">
+            <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-help.png" alt="">
+            <div class="pay-code-content">
+              <div class="span">
+                <p class="title">抵扣说明：</p>
+                <p> 1.余额是钱包充值的虚拟货币，按照1:1的比例进行支付金额的抵扣。<br> 2.余额无法直接购买下载，可以购买VIP、付费专栏及课程。</p>
+              </div>
+            </div>
+          </div>
+      </div>
+      <a class="pay-balance-con" href="https://i.csdn.net/#/wallet/balance/recharge" target="_blank"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/recharge.png" alt=""><span>余额充值</span></a>
+    </div>
+    <div style="display:none;">
+      <img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+    </div>
+    <div class="keyword-dec-box" id="keywordDecBox"></div>
+  </body>
+    <!-- 富文本柱状图  -->
+    <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css" />
+    <script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/lib/chart.min.js"></script>
+    <script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/widget2chart.js"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/components/js/axios-83fa28cedf.min.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/components/js/pc_wap_highlight-8defd55d6e.min.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/components/js/pc_wap_common-3b5f0393dc.min.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/components/js/edit_copy_code-3d1af13f20.min.js" type="text/javascript"></script>
+  <script src="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css">
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/github-gist.css">
+  <script src="https://g.csdnimg.cn/user-accusation/1.0.6/user-accusation.js" type="text/javascript"></script>
+  <script>
+    // 全局声明
+    if (window.csdn === undefined) {
+      window.csdn = {};
+    }
+    var sideToolbarOpt = {}
+
+    $(function() {
+      $(document).on('click', "#toolReportBtnHideNormal,#toolReportBtnHide", function() {
+        window.csdn.loginBox.key({
+          biz: 'blog',
+          subBiz: 'other_service',
+          cb: function() {
+            window.csdn.feedback({
+              "type": 'blog',
+              "rtype": 'article',
+              "rid": articleId,
+              "reportedName": username,
+              "submitOptions": {
+                "title": articleTitle,
+                "contentUrl": articleDetailUrl
+              },
+              "callback": function() {
+                showToast({
+                  text: "感谢您的举报，我们会尽快审核！",
+                  bottom: '10%',
+                  zindex: 9000,
+                  speed: 500,
+                  time: 1500
+                })
+              }
+            })
+          }
+        })
+      });
+    })
+      window.csdn.sideToolbar = {
+        options: {
+          ...sideToolbarOpt,
+          theme: 'white',
+        }
+      }
+  </script>
+    <script src="https://g.csdnimg.cn/baidu-search/1.0.12/baidu-search.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/download/old_static/js/qrcode.js"></script>
+  <script src="https://g.csdnimg.cn/lib/qrcode/1.0.0/qrcode.min.js"></script>
+  <script src="https://g.csdnimg.cn/user-ordercart/3.0.1/user-ordercart.js" type="text/javascript"></script>
+  <script src="https://g.csdnimg.cn/user-ordertip/5.0.3/user-ordertip.js" type="text/javascript"></script>
+  <script src="https://g.csdnimg.cn/order-payment/4.0.5/order-payment.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/pc/js/common-9804c684a2.min.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/pc/js/detail-f2701b0988.min.js" type="text/javascript"></script>
+  <script src="https://csdnimg.cn/release/blogv2/dist/pc/js/column-1dae17f1f8.min.js" type="text/javascript"></script>
+    <script src="https://g.csdnimg.cn/side-toolbar/3.6/side-toolbar.js" type="text/javascript"></script>
+  <script src="https://g.csdnimg.cn/copyright/1.0.4/copyright.js" type="text/javascript"></script>
+  <script>
+    $(".MathJax").remove();
+    if ($('div.markdown_views pre.prettyprint code.hljs').length > 0) {
+      $('div.markdown_views')[0].className = 'markdown_views';
+    }
+  </script>
+  <script type="text/javascript" src="https://csdnimg.cn/release/blog_mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      "HTML-CSS": {
+        linebreaks: { automatic: true, width: "94%container" },
+        imageFont: null
+      },
+      tex2jax: {
+      preview: "none",
+      ignoreClass:"title-article"
+      },
+      mml2jax: {
+      preview: 'none'
+      }
+    });
+  </script>
+<script type="text/javascript" crossorigin src="https://g.csdnimg.cn/common/csdn-login-box/csdn-login-box.js"></script></html>

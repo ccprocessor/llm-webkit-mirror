@@ -114,16 +114,34 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         Returns:
             str: 标题的文本
         """
-        return ''.join(header_el.xpath('.//text()'))
+        def __extract_title_text_recusive(el: HtmlElement, with_tail: bool = True) -> list[str]:
+            blks = []
+
+            if el.tag == CCTag.CC_CODE_INLINE:
+                blks.append(f'`{el.text}`')
+            else:
+                blks.append((el.text or '').strip())
+
+            for child in el.getchildren():
+                blks.extend(__extract_title_text_recusive(child))
+
+            if with_tail:
+                blks.append((el.tail or '').strip())
+
+            return blks
+
+        # 根元素不保留结尾
+        blks = __extract_title_text_recusive(header_el, False)
+
+        return ' '.join(blk for blk in blks if blk)
 
     def __get_attribute(self, html:str) -> Tuple[int, str]:
         """获取element的属性."""
         ele = self._build_html_tree(html)
         # 找到cctitle标签
-        cctitle_ele = ele.find(CCTag.CC_TITLE)
-        if cctitle_ele:
-            level = cctitle_ele.attrib.get('level')
-            text = cctitle_ele.text
+        if ele is not None:
+            level = ele.attrib.get('level')
+            text = ele.text
             return level, text
         else:
             # TODO 抛出异常, 需要自定义

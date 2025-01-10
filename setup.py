@@ -10,6 +10,8 @@ def parse_requirements(filename):
     requires = []
 
     for line in lines:
+        if line and line.startswith('#'):
+            continue
         if 'http' in line:
             pkg_name_without_url = line.split('@')[0].strip()
             requires.append(pkg_name_without_url)
@@ -23,7 +25,7 @@ if __name__ == '__main__':
     setup(
         name='llm_web_kit',
         version=__version__,  # 版本号
-        description='LLM Web Kit for processing and managing web content',
+        description='LLM Web Kit for processing web content',
         packages=find_packages(exclude=['tests*']),
         install_requires=parse_requirements('requirements/runtime.txt'),  # 项目依赖的第三方库
         extras_require={

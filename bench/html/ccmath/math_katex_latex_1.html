@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<base href="https://uniteasy.com/">
+<title>Solve x^3+2x^2+8x+1=0 | Uniteasy.com</title>
+<meta name="description" content="The exact solution set is obtained for the equation x^3+2x^2+8x+1=0 by the method of cubic root formula. Since the discriminant is greater than 0, the cubic equation has one real root and two complex roots">
+<link href="https://uniteasy.com/solver/cubicequation/x%5E3%2B2x%5E2%2B8x%2B1%3D0/" rel="canonical" />
+<link href="assets/css/main0.css" rel="stylesheet" type="text/css">
+<link rel="image_src" href="assets/images/logo.png">
+<link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+<link href="assets/js/katex/0.15.3/dist/katex.min.css" rel="stylesheet" type="text/css">
+<script src="assets/js/katex/0.15.3/dist/katex.min.js"></script><script src="assets/js/main.js"></script>
+<script src="assets/js/jsxgraph/jsxgraphcore.min.js"></script>
+
+</head>
+<body>
+ <input type="checkbox" id="checkbox-menu" />
+<header class="event-header-scroll">
+	<div class="container">
+		<nav class="menu">
+			<ul class="clearfix">
+				<li>
+					<label class="icon-menuu" for="checkbox-menu"><i class="fas fa-bars"></i></label>
+				</li>
+
+			</ul>
+		</nav>
+				<aside class="sidebar">
+			<ul class="clearfix">
+
+			<li>	<div class="search">
+	<form action="https://uniteasy.com/search/?query=" method="get" class="event-search-form">
+		<input type="text" name="query" value="" />
+
+		<button  class="far fa-search"></button>
+	</form>
+
+
+
+
+
+</div>
+<script type="text/javascript">
+
+var ele = document.getElementsByClassName('event-search-form')[0];
+if(ele.addEventListener){
+    ele.addEventListener("submit", callback, false);
+}else if(ele.attachEvent){
+    ele.attachEvent('onsubmit', callback);
+}
+function callback(e){
+	var inp = document.querySelector("input[name='query']");
+	if (inp.value.length<2){
+		e.preventDefault();
+	}
+
+}
+</script>
+</li>
+
+							<li><a href="https://uniteasy.com/post/articles/" >Articles</a>	</li>
+
+							<li><a href="https://uniteasy.com/units.htm">Unit Conversion</a></li>
+							<li><a href="https://uniteasy.com/solver/cubicequation/">Cubic Equation Solver</a></li>
+							<li><a href="https://uniteasy.com/solver/quadraticequation/">Quadratic Equation Solver</a></li>
+							<li><a href="https://uniteasy.com/solver/biquadraticequation/">Biquadratic Equation Solver</a></li>
+							<li><a href="https://uniteasy.com/solver/quarticequation/">Quartic Equation Solver</a></li>
+							<li><a href="https://uniteasy.com/solver/longdivision/">Polynomial Long Division</a></li>
+
+						</ul>
+		</aside>
+						<ul class="logo">
+		<li ><a><img  src="assets/images/logo.png" /></a></li>
+		</ul>
+				<nav class="usermenu">
+			<ul class="clearfix">
+								<li><a title="Log In" class="login-event"><i class="far fa-user"></i></a></li>
+
+
+				<li>
+					<a href="javascript:;" class="icon icon-add"><i class="far fa-plus"></i></a>
+					<nav class="dropdown">
+						<div class="dropdown-wrapper arrow-up">
+							<ul class="addpin stronglinks">
+								<li>
+									<a href="https://uniteasy.com/post/submit/" >Latex Editor</a>
+								</li>
+																<li> <a class="qrcode-event" lang="" >QR Code Generator</a> </li>
+
+								<li>
+							<div>	<span class="theme-selector">
+					<input id="ts" type="checkbox" name="themeselector" value="1" />
+					<label for="ts"><span>&nbsp;</span></label></span>
+				</div>
+								</li>
+							</ul>
+						</div>
+					</nav>
+				</li>
+					<script>
+						let dt = document.documentElement.getAttribute("data-theme");
+						let checkbox = document.querySelector("input[name=themeselector]");
+						checkbox.checked = (dt=='dark') ? 0 : 1;
+
+						checkbox.addEventListener('change', e => {
+							let v = (e.target.checked) ? "light" : "dark";
+							document.documentElement.setAttribute("data-theme", v);
+							localStorage.setItem("data-theme", v)
+						});
+					</script>
+
+
+
+				</ul>
+		</nav>
+	</div>
+</header>
+
+<style>
+    article.wraper{
+        display: flex;
+        justify-content: space-between;
+    }
+    article .right{width: 400px;}
+    article .left{width:  calc(100% - 400px);
+    }
+    .sider{width:80%;margin:10px auto}
+    .sider>p,.sider>h2{text-align:center}
+    .left strong{font-size:1.3rem}
+    .longdiv{
+        width:300px;text-align:right
+    }
+    .longdiv td{padding-left:5px}
+    .longdiv tr>td:nth-child(2),
+    .longdiv tr>td:nth-child(3)
+    {
+        width:3px;
+    }
+    .longdiv tr:nth-child(2)>td:nth-child(3),
+    .longdiv tr:nth-child(2)>td:nth-child(4),
+    .longdiv tr:nth-child(2)>td:nth-child(5),
+    .longdiv tr:nth-child(2)>td:nth-child(6),
+    .longdiv tr:nth-child(4)>td:nth-child(3),
+    .longdiv tr:nth-child(4)>td:nth-child(4),
+    .longdiv tr:nth-child(6)>td:nth-child(4),
+    .longdiv tr:nth-child(6)>td:nth-child(5),
+    .longdiv tr:nth-child(8)>td:nth-child(5),
+    .longdiv tr:nth-child(8)>td:nth-child(6)
+    {
+        border-top: 1px solid var(--color-border-underline);
+    }
+    .longdiv tr:nth-child(2)>td:nth-child(2){
+        border-right: 1px solid var(--color-border-underline);
+        border-bottom: 1px solid var(--color-border-underline);
+
+    }
+  h4{
+    color:var(--color-text);
+    margin:10px 0}
+    #btnbk #box{
+        max-width:500px;
+        aspect-ratio:1
+    }
+  @media only screen and (max-width: 700px) {
+    article.wraper{
+        display: block;
+    }
+    article .right,article .left{width:100%;}
+
+    .sider{width:100%;margin:10px 0}
+  }
+</style>
+<section id="content">
+	<div class="container2">
+<article class="wraper">
+     <div class="left tex">
+     <h1>Solve the cubic equation:  </h1>
+     <h2>$$x^3+2x^2+8x+1=0 $$</h2>
+     <p><strong>Quick Answer</strong></p>
+    <p>Since the discriminant $$\Delta >0$$, the cubic equation has one real root and two conjugate complex roots.</p><p>$$ \Delta=14.472222222222$$</p><p>$$\begin{cases} x_1=\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}-\dfrac{2}{3}   \\  x_2=\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)+\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i-\dfrac{2}{3}  \\ x_3=\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)-\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i-\dfrac{2}{3}   \end{cases}$$</p><p>In decimals,</p><p>$$\begin{cases} x_1=-0.12888523007843   \\  x_2=-0.93555738496079+2.6236564793854i  \\ x_3=-0.93555738496079-2.6236564793854i   \end{cases}$$</p><p><strong>Detailed Steps on Solution  </strong></p><h2>1.  Convert to depressed cubic equation </h2><p>The idea is to convert general form of cubic equation</p><p>$$ax^3+bx^2+cx+d = 0$$ </p><p>to the form without quadratic term.</p><p>$$t^3+pt+q = 0$$ </p><p>By substituting $$x$$ with $$t - \dfrac{b}{3a}$$, the general cubic equation could be transformed to </p><p>$$t^3+\dfrac{3ac-b^2}{3a^2}t+\dfrac{2b^3-9abc+27a^2d}{27a^3} = 0  $$</p><p>Compare with the depressed cubic equation. Then,  </p><p>$$p = \dfrac{3ac-b^2}{3a^2}$$</p><p>$$q = \dfrac{2b^3-9abc+27a^2d}{27a^3} $$</p><p>Substitute the values of coefficients, $$p, q$$ is obtained as</p><p>$$p = \dfrac{3\cdot 1\cdot 8-2^2}{3\cdot 1^2}=\dfrac{20}{3}$$</p><p>$$q = \dfrac{2\cdot 2^3-9\cdot1\cdot 2\cdot 8+27\cdot 1^2\cdot1}{27\cdot 1^3}=-\dfrac{101}{27}$$</p><h3>Use the substitution to transform </h3><p>Let $$p$$ and $$q$$ being the coefficient of the linean and constant terms, the depressed cubic equation is expressed as.</p><p>$$t^3 +pt+q=0$$</p><p>Let $$x=t-\dfrac{2}{3}$$</p><p>The cubic equation $$x³ + 2x² + 8x + 1=0$$ is transformed to </p><p>$$t^3 +\dfrac{20}{3}t-\dfrac{101}{27}=0$$</p><h2>2. Cardano's solution</h2><p>Let $$t=u-v$$</p><p>Cube both sides and extract common factor from two middle terms after expanding the bracket.</p><p>$$\begin{aligned} \\t^3&=(u-v)^3\\ & =u^3-3u^2v+3uv^2-v^3\\ & =-3uv(u-v)+u^3-v^3\\ \end{aligned}$$</p><p>Since $$u-v=t$$, substitution gives a linear term for the equation.
+                Rearrange terms.  </p><p>  $$x^3+3uvx-u^3+v^3=0$$</p><p>Compare the cubic equation with the original one (1)</p><p>$$\begin{cases} 3uv=\dfrac{20}{3}\quad\text{or}\quad v=\dfrac{20}{9u}\\ v^3-u^3=-\dfrac{101}{27}\\ \end{cases}$$</p><p>$$v=\dfrac{20}{9u}$$ gives relationship between the two variables. Substitute the value of $$v$$ to the second equation</p><p>  $$\Big(\dfrac{20}{9u}\Big)^3-u^3=-\dfrac{101}{27}$$</p><p>Simplifying gives,</p><p>  $$u^3-\dfrac{8000}{729}\dfrac{1}{u^3}-\dfrac{101}{27}=0$$2</p><p>Let $$m=u^3$$, then the equation is transformed to a quadratic equation in terms of $$m$$.
+            Once the value of $$m$$ is determined, $$v^3$$ could be determined by  $$v^3=-\dfrac{101}{27}+u^3$$. </p><p>  $$m^2-\dfrac{101}{27}m-\dfrac{8000}{729}=0$$</p><p>Sovling the quadratic euqation will give two roots (some may be equal). Here we only cosider
+        one case with positive sign before the square root radical  since the negative case will produce the same result.</p><p>$$\begin{aligned} \\u^3=m&=\dfrac{101}{54}+\dfrac{1}{2}\sqrt{\Big(-\dfrac{101}{27}^2\Big)-4\cdot \Big(-\dfrac{8000}{729}\Big)}\\ & =\dfrac{101}{54}+\dfrac{1}{2}\sqrt{\dfrac{10201}{729}+\dfrac{32000}{729}}\\ & =\dfrac{101}{54}+\dfrac{1}{2}\sqrt{\dfrac{521}{9}}\\ & =\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}\\ \end{aligned}$$</p><p>$$v^3$$ can be determined by the equation we deduced $$v^3-u^3=-\dfrac{101}{27}$$. Then, </p><p>$$\begin{aligned} \\v^3&=-\dfrac{101}{27}+u^3\\ & =-\dfrac{101}{27}+\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}\\ & =-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}\\ \end{aligned}$$</p><p>Now we have, </p><p> $$u^3=\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}$$ and $$v^3=-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}$$</p><p>Evaluating the simplest cubic equation $$x^3-A=0$$,
+                it has 3 roots, in which the first root is a real number . The second and third are
+                expressed in the product of cubic root of unity and the first one. </p><p>If $$ω = \dfrac{-1+i\sqrt{3}}{2}$$, then its reciprocal is equal to its conjugate, $$\dfrac{1}{ω}=\overline{ω}$$.</p><p>$$\begin{cases} r_1=\sqrt[3]{A}\\ r_2=\dfrac{-1+i\sqrt{3}}{2}\cdot \sqrt[3]{A}\\ r_3=\dfrac{-1-i\sqrt{3}}{2}\cdot \sqrt[3]{A}\\ \end{cases}$$</p><p>Similary, taking cubic root for $$u^3$$ and $$v^3$$ also gives 3 roots. </p><p>$$\begin{cases} u_1=\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\\ u_2=\dfrac{-1+i\sqrt{3}}{2}\cdot \sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\\ u_3=\dfrac{-1-i\sqrt{3}}{2}\cdot \sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\\ \end{cases}$$</p><p>For $$v_2$$ and $$v_3$$, the complex numbers before radicals are the conjugates of
+                those for $$u_2$$ and $$u_3$$, which can be verified by the reciprocal property
+                of the cubic root of unity from the equation $$v=\dfrac{20}{9u}$$. The radicand can be taken as the
+                negative conjugate of that in $$u_1$$, $$u_2$$ and $$u_3$$, which is the same in value.</p><p>$$\begin{cases} v_1=\sqrt[3]{-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\\ v_2=\dfrac{-1-i\sqrt{3}}{2}\cdot \sqrt[3]{-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\\ v_3=\dfrac{-1+i\sqrt{3}}{2}\cdot \sqrt[3]{-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\\ \end{cases}$$</p><p>Verification for the redicand in $$v$$. </p><p>$$\begin{aligned} \\v_1&=\dfrac{20}{9u_1}\\ & =\dfrac{20}{9}\cdot \dfrac{1}{\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}}\\ & =\dfrac{20}{9}\cdot \dfrac{1}{\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}}\cdot \dfrac{\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}}{\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}}\\ & =\dfrac{20}{9}\cdot \dfrac{\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}}{\sqrt[3]{\Big(\dfrac{101}{54}\Big)^2-\Big(\dfrac{\sqrt{521}}{6}\Big)^2}}\\ & =\dfrac{20}{9}\cdot \dfrac{\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}}{\sqrt[3]{\dfrac{10201}{2916}-\dfrac{521}{36}}}\\ & =\dfrac{20}{9}\cdot \dfrac{\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}}{\sqrt[3]{\dfrac{-1\cdot 20^3}{9^3}}}\\ & =-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\\ \end{aligned}$$</p><p>Since $$x=u-v$$, combining the real and imaginary parts gives
+                    3 results for $$t$$ </p><p>$$\begin{aligned} \\t_1&=u_1-v_1\\ & =\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\\ \end{aligned}$$</p><p>$$\begin{aligned} \\t_2&=u_2-v_2\\ & =\dfrac{-1+i\sqrt{3}}{2}\cdot \sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\Big(\dfrac{-1-i\sqrt{3}}{2}\cdot \sqrt[3]{-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\Big)\\ & =\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)+\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i\\ \end{aligned}$$</p><p>$$\begin{aligned} \\t_3&=u_3-v_3\\ & =\dfrac{-1-i\sqrt{3}}{2}\cdot \sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\Big(\dfrac{-1+i\sqrt{3}}{2}\cdot \sqrt[3]{-\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}\Big)\\ & =\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)+\dfrac{\sqrt{3}}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i\\ \end{aligned}$$</p><h2>3. Vieta's Substitution</h2><p>In Cardano' solution, $$t$$ is defined as the difference of $$u$$ and
+        $$v$$. If we substitute the value of $$v$$ (4) into (2), we get the
+        equation. $$t=u-\dfrac{20}{9u}$$. And then substitute the equation to the cubic equation
+        $$t^3+\dfrac{20}{3}t-\dfrac{101}{27}=0$$. This method is called Vieta's Substitution
+        for solving a cubic equation, which simplied the Cardano' solution. The substitution
+        expression can be obtained by the following formula directly. </p><p>  $$t=u-\dfrac{p}{3u}$$</p><p>Substitute the expression $$t=u-\dfrac{20}{9u}$$ to the cubic equation</p><p> $$\Big(u-\dfrac{20}{9u}\Big)^3+\dfrac{20}{3}\Big(u-\dfrac{20}{9u}\Big)-\dfrac{101}{27}=0$$</p><p>Expand brackets and cancel the like terms</p><p>$$u^3-\cancel{\dfrac{20}{3}u^2\dfrac{1}{u}}+\cancel{\dfrac{400}{27}u\dfrac{1}{u^2}}-\dfrac{8000}{729}\dfrac{1}{u^3}+\cancel{\dfrac{20}{3}u}-\cancel{\dfrac{400}{27}\dfrac{1}{u}}-\dfrac{101}{27}=0$$</p><p>Then we get the same equation as (2)</p><p>$$u^3-\dfrac{8000}{729}\dfrac{1}{u^3}-\dfrac{101}{27}=0$$</p><p>The rest of the steps will be the same as those of Cardano's solution</p><h2>4. Euler's Solution</h2><h2>$$t^3+\dfrac{20}{3}t-\dfrac{101}{27}=0$$</h2><p>Move the linear term and constant of (1) to its right hand side.
+         We get the following form of the equation. </p><p>$$t^3=-\dfrac{20}{3}t+\dfrac{101}{27} $$3</p><p>Let the root of the cubic equation be the sum of two cubic roots</p><p>$$t=\sqrt[3]{r_1}+\sqrt[3]{r_2} $$4</p><p>in which $$r_1$$ and $$r_2$$ are two roots of a quadratic equation  </p><p>$$z^2-\alpha z+ β=0 $$5</p><p>Using Vieta's Formula, the following equations are established.</p><p>$$r_1+r_2 = \alpha \quad \text{and} \quad r_1r_2 = β $$</p><p>To determine $$\alpha$$, $$β$$, cube both sides of the equation (4)</p><p>$$t^3=3\sqrt[3]{r_1r_2}(\sqrt[3]{r_1}+\sqrt[3]{r_2})+r_1+r_2 $$</p><p>Substituting, the equation is simplified to</p><p>$$t^3=3\sqrt[3]{β}t+\alpha $$</p><p>Compare the cubic equation with (3), the following equations are established</p><p>$$\begin{cases} 3\sqrt[3]{β}=-\dfrac{20}{3}\\ \alpha=\dfrac{101}{27}\\ \end{cases}$$</p><p>Solving for $$β$$ gives</p><p>$$β=-\dfrac{8000}{729} $$</p><p>So the quadratic equation (5) is determined as </p><p>$$z^2-\dfrac{101}{27}z-\dfrac{8000}{729}=0$$6</p><p>Solving the quadratic equation yields</p><p>$$\begin{cases} r_1=\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}\approx5.6746077738748\\ r_2=\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}\approx-1.9338670331341\\ \end{cases}$$</p><p>Therefore, one of the roots of the cubic equation could be obtained from (4).</p><p>$$t_1=\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}} $$</p><p>in decimals,</p><p>$$t_1=0.53778143658824 $$</p><p>However, since the cube root of a quantity has triple values, </p><p>The other two roots could be determined as, </p><p>$$t_2=\dfrac{-1+i\sqrt{3}}{2}\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\dfrac{-1-i\sqrt{3}}{2}\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}} $$</p><p>$$t_3=\dfrac{-1-i\sqrt{3}}{2}\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\dfrac{-1+i\sqrt{3}}{2}\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}} $$</p><p>Combining the real and imaginary parts
+            results in the same result as that obtained by Cardano's solution.</p><p>For the equation $$t^3 +\dfrac{20}{3}t-\dfrac{101}{27}$$, we have $$p=\dfrac{20}{3}$$ and $$q = -\dfrac{101}{27}$$</p><h3>Calculate the discriminant </h3><p>The nature of the roots are determined by the sign of the discriminant. </p><p>$$\begin{aligned} \\\Delta&=\dfrac{q^2}{4}+\dfrac{p^3}{27}\\ & =\dfrac{\Big(-\dfrac{101}{27}\Big)^2}{4}+\dfrac{\Big(\dfrac{20}{3}\Big)^3}{27}\\ & =\dfrac{10201}{2916}+\dfrac{8000}{729}\\ & =\dfrac{10201\cdot 1+8000\cdot 4}{2916}\\ & =14.472222222222\\ \end{aligned}$$</p><h3>4.1 Use the root formula directly</h3><p> If the discriminant is greater than zero, we can use the root formula to determine the roots of the cubic equation. </p><p>$$t_{1,2,3} =\begin{cases}  \sqrt[3]{-\dfrac{q}{2}+\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27}    }   }  +\sqrt[3]{-\dfrac{q}{2}  -\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27}    }}& \\   ω\cdotp  \sqrt[3]{-\dfrac{q}{2}+\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27}    }   } + \overline{ω} \sqrt[3]{-\dfrac{q}{2}  -\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27}    }}&\  \\ \overline{ω}\cdotp \sqrt[3]{-\dfrac{q}{2}+\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27}    }   } + ω\cdotp  \sqrt[3]{-\dfrac{q}{2}  -\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27}    }} \end{cases}$$</p><p>in which, $$ ω = \dfrac{-1+i\sqrt{3}}{2} $$ and $$ \overline{ω} =\dfrac{-1-i\sqrt{3}}{2}$$</p><p>Substitute the values of $$p, q$$ and $$\Delta$$ which we have calculated. Then, </p><p>$$\begin{aligned} \\t_1&=\sqrt[3]{\dfrac{101}{54}+\sqrt{\dfrac{42201}{2916}}}+\sqrt[3]{\dfrac{101}{54}-\sqrt{\dfrac{42201}{2916}}}\\ & =\sqrt[3]{\dfrac{101}{54}+\sqrt{\dfrac{521\cdot\cancel{81}}{36\cdot\cancel{81}}}}+\sqrt[3]{\dfrac{101}{54}-\sqrt{\dfrac{521\cdot\cancel{81}}{36\cdot\cancel{81}}}}\\ & =\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\\ \end{aligned}$$</p><p>If we denote</p><p>$$R = -\dfrac{q}{2}+\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27} }$$</p><p>$$\overline{R} = -\dfrac{q}{2}  -\sqrt{\dfrac{q^2}{4}+\dfrac{p^3}{27} }$$</p><p>then,</p><p>$$\sqrt[3]{R} = \sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}$$,  $$\sqrt[3]{\overline{R}} =\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}$$</p><p>$$\begin{aligned} \\t_2&= ω\cdotp \sqrt[3]{R}+ \overline{ω}  \sqrt[3]{\overline{R}  }\\ & =\dfrac{-\sqrt[3]{R}-\sqrt[3]{\overline{R}  }}{2} +\dfrac{\sqrt{3}( \sqrt[3]{R}  - \sqrt[3]{\overline{R}  })  }{2}  i\\ & =\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)\\&+\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i\\ \end{aligned}$$</p><p>$$\begin{aligned} \\t_3&= \overline{ω}\cdotp \sqrt[3]{R}+ ω\cdotp \sqrt[3]{\overline{R}}\\ & =\dfrac{-\sqrt[3]{R}-\sqrt[3]{\overline{R}  }}{2} +\dfrac{\sqrt{3}(- \sqrt[3]{R}  + \sqrt[3]{\overline{R}  })  }{2}i \\ & =\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)\\&-\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i\\ \end{aligned}$$</p><h2>Roots of the general cubic equation</h2><p>Since $$x = t - \dfrac{b}{3a}$$, substituting the values of $$t$$, $$a$$ and $$b$$ gives</p><p>$$x_1 = t_1-\dfrac{2}{3}$$</p><p>$$x_2 = t_2-\dfrac{2}{3}$$</p><p>$$x_3 = t_3-\dfrac{2}{3}$$</p><h2>5. Summary </h2><p>In summary, we have tried the method of cubic root formula to explore the solutions of the equation. The cubic equation $$x³ + 2x² + 8x + 1=0$$ is found to have one real root and two complex roots. Exact values and approximations are given below.</p><p>$$\begin{cases} x_1=\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}+\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}-\dfrac{2}{3}   \\  x_2=\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)+\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i-\dfrac{2}{3}  \\ x_3=\dfrac{1}{2}\Big(-\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)-\dfrac{\sqrt{3}}{2}\Big(\sqrt[3]{\dfrac{101}{54}+\dfrac{\sqrt{521}}{6}}-\sqrt[3]{\dfrac{101}{54}-\dfrac{\sqrt{521}}{6}}\Big)i-\dfrac{2}{3}   \end{cases}$$</p><p>in decimal notation,</p><p>$$\begin{cases} x_1=-0.12888523007843   \\  x_2=-0.93555738496079+2.6236564793854i  \\ x_3=-0.93555738496079-2.6236564793854i   \end{cases}$$</p><h2>6. Graph for the function $$f(x) = x³ + 2x² + 8x + 1$$</h2><p>Since the discriminat is greater than zero, the curve of the cubic function $$f(x) = x³ + 2x² + 8x + 1$$ has   one intersection point with the x-axis. </p><script id="jxgcolors">
+
+	var style = getComputedStyle(document.body)
+    var colortext = style.getPropertyValue('--color-text')
+
+	JXG.Options = JXG.merge(JXG.Options, {
+		line: {
+			color: colortext,
+			highlightStrokeColor:colortext
+		},
+		curve: {
+			strokeColor: colortext,
+			highlightStrokeColor: colortext
+		},
+		label:{
+			color: colortext,
+			highlightStrokeColor: colortext
+		},
+		circle:{
+			strokeColor: colortext,
+			highlightStrokeColor: "red"
+		},
+		circumcircle:{
+			strokeColor: colortext,
+			highlightStrokeColor: "red"
+		},
+		text:{
+			color: colortext,
+			highlightStrokeColor: colortext
+		},
+
+ });
+  </script>
+<aside  class="shape">
+	<div id='btnbk' class='shapemove'>
+		<div class='jxgbox' >
+			<div id='box'>
+			<div id='btnn'></div>
+		</div>
+	</div>
+	</div>
+
+	</aside>
+
+
+<script  id="box">
+var box = {draw: function(){JXG.Options.axis.ticks.majorHeight = 10;JXG.Options.axis.ticks.insertTicks = true;JXG.Options.axis.ticks.ticksDistance = 120;var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-10, 200,10,-200],showNavigation:true, showcopyright: false, axis: true,});board.attr.pan.enabled = false;function p(x) { return a.Value()*x  };var a = board.create('slider',[[-9.5,0],[9.5,0],[1,20,20]],{name:'a',snapWidth:.01, strokeColor:'red'});a.on('drag', function(){ board.setBoundingBox([ -10,p(10), 10 ,-p(10)],  false, true ); });	var f1 = board.create('functiongraph',[function(x){ return x**3+2*x**2+8*x+1;}, -100,100],);}}; box.draw();</script>
+
+
+ </div>
+<div class="right">
+
+<div class="sider tex">
+<h2>More cubic equations </h2>
+
+</div>
+</div>
+</article>
+</div>
+</section>
+<script>
+function katexconvet(text) {
+
+var isTeXAddClass   =  " class=\"" + "editormd-tex" + "\"" ;
+var numbered = 1;
+var letter_low ='97';
+var letter_up ='65';
+var ret,tex, numbertext,texalign;
+
+// the fiest re match $$x^2$$ without containing single $ letter
+// The second re matches $$ a\raisebox{0.25em}{$b$}c  $$   with single $ letters
+text = text.replace(/\$\$([^$]*)\$\$([\dlnL]{0,2})(c)?/gm, function($1,$2,$3,$4){
+    if($3!=undefined&&$3!=""){
+
+        if(!/\d/.test($3)){
+            numbertext = ($3=="n") ? numbered++ : ($3=="l" ? letter_low++ : letter_up++);
+            numbertext = ($3=="n") ? numbertext : String.fromCharCode(numbertext);
+        }else{
+        //	alert("$1: "+$1+"\n"+"$2: "+$2+'\n'+"$3:"+$3+"\n"+/\d/.test($3));
+            numbertext = $3;
+        }
+    }
+
+    texalign = ($4=="c") ? " ncenter" : "";
+    nleft = $3=="" ? "" : " nleft ";
+    isTeXAddClass = " class='" + "editormd-tex"+ nleft+texalign+ "' ";
+    tex = $2.replace(/\n/g," ");
+
+    if($3!=undefined&&$3!=""){
+        ret = 	"<div class='nwrap'><div"+ isTeXAddClass+">"+tex+"</div>"+"<div class='nright'>("+numbertext+")</div></div><div class='nclear'></div>";
+    }else if($4=="c"){
+        ret =  "<div class='nwrap'><div"+ isTeXAddClass+">"+tex+"</div></div>" ;
+    } else
+    ret =    "<span tabindex='0' class=\"" + "editormd-tex" + "\">" + tex + "</span>";//inline math, 插在文字间的公式
+
+    return ret;
+
+});
+
+ return   text ;
+
+}
+let eles =   document.querySelector('.container2').querySelectorAll('h1,h2,h3,h4,p,li');
+
+
+for(var i=0;i<eles.length;i++){
+    ele = eles[i];
+
+    text = katexconvet(ele.innerHTML);
+    ele.innerHTML = text;
+
+}
+
+var texClass = document.getElementsByClassName('editormd-tex');
+for (let i=0; i < texClass.length; i++) {
+	elem = texClass[i];
+	katex.render(elem.textContent, elem, {
+    throwOnError: false
+	});
+}
+
+[...document.querySelectorAll('.longdiv td')].forEach(td=>{
+    katex.render(td.textContent, td, {
+    throwOnError: false
+	});
+
+});
+</script>
+<section>
+<a href="javascript:;" class="scrolltotop event-scrolltotop">Scroll to Top</a>
+<div class='clearfix'></div>
+<footer>
+
+    <div class="site-info"> © 2023 <a href="https://uniteasy.com/">Math Solution</a>. All Rights Reserved.
+    </div>
+    <div class="site-credit">
+    <a href="https://uniteasy.com/privacy.html">Privacy Policy</a>
+    </div>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-12109842-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-12109842-2');
+</script>
+</footer>
+</section>
+</body>
+</html>
