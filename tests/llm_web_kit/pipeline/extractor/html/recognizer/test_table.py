@@ -46,15 +46,14 @@ class TestTableRecognizer(unittest.TestCase):
             self.assertEqual(len(parts), 1)
 
     def test_only_involve_table(self):
-        """
-        只包含表格的Html解析
-        """
+        """只包含表格的Html解析."""
         for test_case in TEST_CASES:
             raw_html_path = base_dir.joinpath(test_case['input'][2])
             base_url = test_case['input'][1]
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             self.assertEqual(len(parts), 2)
+
 
 if __name__ == '__main__':
     r = TestTableRecognizer()

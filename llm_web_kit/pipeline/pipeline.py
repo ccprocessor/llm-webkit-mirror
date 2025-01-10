@@ -206,10 +206,7 @@ class Pipeline(AbstractPipeline):
         Returns:
             DataJson: _description_
         """
-        if isinstance(data_json, dict):
-            data_json = DataJson(data_json)
         self.__validate_format_input(data_json)
-
         data = self.__formatter_chain.format(data_json)
         return data
 
@@ -222,10 +219,7 @@ class Pipeline(AbstractPipeline):
         Returns:
             DataJson: DataJson对象
         """
-        if isinstance(data_json, dict):
-            data_json = DataJson(data_json)
         self.__validate_extract_input(data_json)
-
         data = self.__extractor_chain.extract(data_json)
         return data
 
@@ -235,7 +229,7 @@ class Pipeline(AbstractPipeline):
         Args:
             config (dict): _description_
         """
-        pass  # TODO: 实现这个方法
+        self.__validate_input_data_format(data_json)
 
     def __validate_extract_input(self, data_json: DataJson):
         """校验一下配置里必须满足的条件，否则抛出异常.
@@ -243,6 +237,16 @@ class Pipeline(AbstractPipeline):
         Args:
             config (dict): _description_
         """
+        self.__validate_input_data_format(data_json)
+
+    def __validate_input_data_format(self, data_json):
+        """校验一下输入的data_json对象是否是DataJson对象，否则抛出异常.
+
+        Args:
+            data_json (DataJson): _description_
+        """
+        if not isinstance(data_json, DataJson):
+            raise ValueError(f'input data is not DataJson object, data type is {type(data_json)}')  # TODO: 这里应该抛出一个自定义的异常
 
 
 ############################################################
