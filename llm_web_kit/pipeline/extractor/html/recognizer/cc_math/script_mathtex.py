@@ -29,12 +29,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: etree._Element,
         if text and text_strip(text):
             new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             parent.replace(node, new_span)
-            print('111111')
-        children = parent.getchildren()  # 获取所有子节点
-
-        # 打印子节点
-        for child in children:
-            print(etree.tostring(child, encoding='unicode'))
 
     except Exception as e:
         logger.error(f'Error processing p tag: {e}')

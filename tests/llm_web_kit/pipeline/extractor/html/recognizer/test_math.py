@@ -116,13 +116,13 @@ TEST_CASES_HTML = [
     #         'assets/ccmath/stackexchange_1_interline_2.html',
     #     ],
     # },
+
     {
         'input': ['/nvme/pzx/llm-webkit-mirror/tests/llm_web_kit/pipeline/extractor/html/recognizer/assets/ccmath/p_test.html'],
         'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         'expected_interline': expected_interline_files,
         'expected_inline': expected_inline_files
     },
-<<<<<<< HEAD
     
     # {
     #     'input': [
@@ -131,36 +131,35 @@ TEST_CASES_HTML = [
     #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
     #     'expected_interline': expected_interline_files,
     #     'expected_inline': expected_inline_files
+    # },
+
+    # {
+    #     'input': [
+    #         'assets/ccmath/libretexts_1_p_latex_mathjax.html',
+    #     ],
+    #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+    #     'expected': [
+    #         # 'assets/ccmath/libretexts_1_interline_1.html',
+    #     ],
+    # },
+    # {
+    #     'input': [
+    #         'assets/ccmath/wikipedia_1_math_annotation.html',
+    #     ],
+    #     'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
+    #     'expected': [
+    #         'assets/ccmath/wikipedia_1_interline_1.html',
+    #     ],
+    # },
+    # {
+    #     'input': [
+    #         'assets/ccmath/mathjax-mml-chtml.html',
+    #     ],
+    #     'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
+    #     'expected': [
+    #         'assets/ccmath/mathjax-mml-chtml_interline_1.html',
+    #     ],
     # }
-=======
-    {
-        'input': [
-            'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-        ],
-        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-        'expected': [
-            # 'assets/ccmath/libretexts_1_interline_1.html',
-        ],
-    },
-    {
-        'input': [
-            'assets/ccmath/wikipedia_1_math_annotation.html',
-        ],
-        'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
-        'expected': [
-            'assets/ccmath/wikipedia_1_interline_1.html',
-        ],
-    },
-    {
-        'input': [
-            'assets/ccmath/mathjax-mml-chtml.html',
-        ],
-        'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
-        'expected': [
-            'assets/ccmath/mathjax-mml-chtml_interline_1.html',
-        ],
-    }
->>>>>>> pp/dev
 ]
 
 TEST_EQUATION_TYPE = [
@@ -288,6 +287,7 @@ class TestMathRecognizer(unittest.TestCase):
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
             print('----------------------------------')
             print('total len(parts):', len(parts))
+            # print(parts)
             print('----------------------------------')
             # for i, part in enumerate(parts):
             #     if CCTag.CC_MATH_INTERLINE in part[0]:
@@ -301,17 +301,7 @@ class TestMathRecognizer(unittest.TestCase):
             print('post len(inline_parts):', len(inline_parts))
             # self.assertEqual(len(interline_parts), len(test_case['expected_interline']))
             # self.assertEqual(len(inline_parts), len(test_case['expected_inline']))
-            parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
-            # self.assertEqual(len(parts), len(test_case['expected']))
-            # for expect_path, part in zip(test_case['expected'], parts):
-            #     expect = base_dir.joinpath(expect_path).read_text().strip()
-            #     a_tree = etree.fromstring(part, None)
-            #     a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-            #     answer = a_result.text
-            #     print('part::::::::', part)
-            #     print('answer::::::::', answer)
-            #     # print('expect::::::::', expect)
-            #     self.assertEqual(expect, answer)
+
 
             for expect_path, part in zip(test_case['expected_interline'], interline_parts):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
@@ -321,7 +311,7 @@ class TestMathRecognizer(unittest.TestCase):
                 inter_tree = etree.HTML(interline_answers)
                 interline_answers = ''.join(inter_tree.itertext()).strip() # 去掉最外层p标签
 
-                print('answer::::::::', interline_answers)
+                print('answer::::::::interline_answers', interline_answers)
                 # print('expect::::::::', expect)
                 # self.assertStringsSimilar(expect, interline_answers, threshold=0.5)
                 # self.assertEqual(expect, answers)
@@ -336,7 +326,7 @@ class TestMathRecognizer(unittest.TestCase):
                 inner_tree = etree.HTML(inline_answers)
                 inline_answers = ''.join(inner_tree.itertext()).strip()
 
-                print('answer::::::::', inline_answers)
+                print('answer::::::::inline_answers', inline_answers)
                 # print('expect::::::::', expect)
                 # exit(0)
                 # self.assertStringsSimilar(expect, inline_answers, threshold=0.5)
@@ -406,7 +396,7 @@ class TestCCMATH(unittest.TestCase):
         for test_case in TEST_EQUATION_TYPE:
             with self.subTest(input=test_case['input']):
                 equation_type, math_type = self.ccmath.get_equation_type(test_case['input'])
-                print('input::::::::', test_case['input'])
+                # print('input::::::::', test_case['input'])
                 self.assertEqual(equation_type, test_case['expected'][0], msg=f'result is: {equation_type}, expected is: {test_case["expected"][0]}')
                 self.assertEqual(math_type, test_case['expected'][1], msg=f'result is: {math_type}, expected is: {test_case["expected"][1]}')
 

@@ -3,27 +3,16 @@ sys.path.append('/nvme/pzx/llm-webkit-mirror')
 
 from typing import List, Tuple
 
+from lxml import etree
 from lxml.html import HtmlElement
 from overrides import override
 
-<<<<<<< HEAD
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import tag_math, tag_span_mathjax, tag_span_mathcontainer, tag_p
-
-
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
-    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, parse_html)
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import BaseHTMLElementRecognizer
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.utils import TreeOpt
-=======
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_math, tag_span_mathcontainer, tag_span_mathjax)
-from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
-    CCMATH
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
-    BaseHTMLElementRecognizer, CCTag)
->>>>>>> pp/dev
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import tag_math, tag_span_mathcontainer, tag_span_mathjax, tag_p, script_mathtex
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import CCMATH
+from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.utils import TreeOpt
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import BaseHTMLElementRecognizer, CCTag
 
 cm = CCMATH()
 
@@ -111,12 +100,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         else:
             raise ValueError(f'No ccmath element found in content: {parsed_content}')
 
-<<<<<<< HEAD
-        
-    def process_ccmath_html(self, cc_html: str, o_html: str, math_type: str, math_render: str) -> List[Tuple[str, str]]:
-=======
     def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
->>>>>>> pp/dev
         """处理数学公式，将外层标签修改为 ccmath.
 
         Args:
@@ -127,12 +111,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
-<<<<<<< HEAD
-        tree = parse_html(cc_html)
-        
-=======
         tree = self._build_html_tree(cc_html)
->>>>>>> pp/dev
         if tree is None:
             raise ValueError(f'Failed to load html: {cc_html}')
         
@@ -140,17 +119,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # tree_opt.count_p_tags()
         # tree_opt.get_nodes_info()
 
-<<<<<<< HEAD
-        for i, node in enumerate(tree.iter()):
-            assert isinstance(node, etree._Element)
-            original_html = etree.tostring(node, encoding='utf-8', method='html').decode()
-=======
         # 打印遍历node次数
         # count = 0
         for node in tree.iter():
             assert isinstance(node, HtmlElement)
             original_html = element_to_html(node)
->>>>>>> pp/dev
             parent = node.getparent()
             # 3. img中的latex
             if node.tag == 'img':
@@ -166,7 +139,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 6. script[type="math/tex"]
             if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                pass
+                script_mathtex.modify_tree(cm, math_render, original_html, node, parent)
 
             # 7. script[type="math/asciimath"]
             if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
@@ -200,24 +173,25 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 14. <p>
             if node.tag == 'p':
                 tag_p.modify_tree(cm, math_render, original_html, node, parent)
-        
-        return self.html_split_by_tags(etree.tostring(tree, encoding='utf-8', method='html').decode(), [CCMATH_INTERLINE, CCMATH_INLINE])
+        tree_opt.get_nodes_info(tree)
+        return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
     test_html = [
         (
-            (
-                # '<p class="lt-math-15120">$h$</p>'
+            (   
+                # '<span class="opaccatti"><script type="math/tex">T_{c}</script> for heavy fermion superconductors linked with other physical properties at zero and applied pressure</span>'
+                '<p class="lt-math-15120">$h$</p>'
                 # '<p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}}{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p>'
                 # '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
-                '<p class="lt-math-15120">What about <strong>division</strong>? Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
+                # '<p class="lt-math-15120">What about <strong>division</strong>? Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
                 # '<div>beginning!!!<p class="lt-math-15120">first one\[\\begin{array} {ll} {5 \cdot 3 = 15} &{-5(3) = -15} \\ {5(-3) = -15} &{(-5)(-3) = 15} \end{array}\]</p><p>second one\[\\begin{array} {ll} {10 \cdot 10 = 10} &{-10(10) = -10} \\ {10(-10) = -10} &{(-10)(-10) = 10} \end{array}\]</p>ending!!!</div>'
                 # '<p>\( \newcommand{\vectorB}[1]{\overset { \scriptstyle \rightharpoonup} {\mathbf{#1}}&nbsp;}&nbsp;\)</p>'
-                # '<span class="opaccatti"><script type="math/tex">T_{c}</script> for heavy fermion superconductors linked with other physical properties at zero and applied pressure</span>'
-                
+                # '<span class="mathjax"><span class="math-inline">$\frac{1}{2}$</span>是一个分数</span>'
                 # '<p>I think I can now answer my own question, having come across some decent references I had found before asking it.' I found the equation for the gravitational strain <span class="math-container">$h$</span> - the proportional change in length of an object due to gravitational waves from a mass <span class="math-container">$M$</span>:</p>'
+                # '<span class="math-container">$$h \approx {{GM} \over c^2} \times {1 \over r} \times {v^2 \over c^2}$$</span>'
                 # '<span class=\ "math-container\">$h$</span>- the proportional change in length of an object due to gravitational waves from a mass'
                 # r'<p>$$this is p equation$$<span class="math-container">$$h \approx {{GM} \over c^2} \times {1 \over r} \times {v^2 \over c^2}$$</span></p>'
                 # '<p>I think I can now answer my own question, having come across some decent '
@@ -231,9 +205,12 @@ if __name__ == '__main__':
                 # 'rel=\"nofollow noreferrer\">(Source of formula)</a></p>\n\n<p>'
             ),
             (
-                # '<p class="lt-math-15120">$h$</p>'
+                # '<span class="math-container">$$h \approx {{GM} \over c^2} \times {1 \over r} \times {v^2 \over c^2}$$</span>'
+
+                # '<span class="opaccatti"><script type="math/tex">T_{c}</script> for heavy fermion superconductors linked with other physical properties at zero and applied pressure</span>'
+                '<p class="lt-math-15120">$h$</p>'
                 # '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
-                '<p class="lt-math-15120">Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
+                # '<p class="lt-math-15120">Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
 
                 # '<p class="lt-math-15120">first one\[\\begin{array} {ll} {5 \cdot 3 = 15} &{-5(3) = -15} \\ {5(-3) = -15} &{(-5)(-3) = 15} \end{array}\]second one\[\\begin{array} {ll} {10 \cdot 10 = 10} &{-10(10) = -10} \\ {10(-10) = -10} &{(-10)(-10) = 10} \end{array}\]ending!!!</p>'
                 # '<p>\( \newcommand{\vectorB}[1]{\overset { \scriptstyle \rightharpoonup} {\mathbf{#1}}&nbsp;}&nbsp;\)</p>'
