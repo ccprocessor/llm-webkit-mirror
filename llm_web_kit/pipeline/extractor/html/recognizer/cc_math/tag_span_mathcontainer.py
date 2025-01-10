@@ -1,6 +1,6 @@
 from lxml.html import HtmlElement
 
-from llm_web_kit.libs.html_utils import build_cc_element
+from llm_web_kit.libs.html_utils import build_cc_element, replace_element
 from llm_web_kit.libs.logger import logger
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
@@ -20,6 +20,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
 
         if text and text_strip(text):
             new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
-            parent.replace(node, new_span)
+            replace_element(node, new_span)
     except Exception as e:
         logger.error(f'Error processing math-container class: {e}')

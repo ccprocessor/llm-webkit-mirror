@@ -6,9 +6,9 @@ sys.path.append('/nvme/pzx/llm-webkit-mirror')
 import unittest
 from difflib import SequenceMatcher
 from pathlib import Path
-
 from lxml import etree
 
+from llm_web_kit.libs.html_utils import html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.ccmath import \
@@ -121,7 +121,8 @@ TEST_CASES_HTML = [
         'input': ['/nvme/pzx/llm-webkit-mirror/tests/llm_web_kit/pipeline/extractor/html/recognizer/assets/ccmath/p_test.html'],
         'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         'expected_interline': expected_interline_files,
-        'expected_inline': expected_inline_files
+        'expected_inline': expected_inline_files,
+        'expected': expected_inline_files,
     },
     
     # {
@@ -158,6 +159,31 @@ TEST_CASES_HTML = [
     #     'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
     #     'expected': [
     #         'assets/ccmath/mathjax-mml-chtml_interline_1.html',
+    #     ],
+    # }
+    # {
+    #     'input': [
+    #         'assets/ccmath/wikipedia_1_math_annotation.html',
+    #     ],
+    #     'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
+    #     'expected': [
+    #         # 'assets/ccmath/wikipedia_1_interline_1.html',
+    #     ],
+    # },
+    # {
+    #     'input': [
+    #         'assets/ccmath/mathjax-mml-chtml.html',
+    #     ],
+    #     'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
+    #     'expected': [
+    #         'assets/ccmath/mathjax-mml-chtml_interline_1.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_2.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_3.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_4.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_5.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_6.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_7.html',
+    #         'assets/ccmath/mathjax-mml-chtml_interline_8.html',
     #     ],
     # }
 ]
@@ -303,34 +329,34 @@ class TestMathRecognizer(unittest.TestCase):
             # self.assertEqual(len(inline_parts), len(test_case['expected_inline']))
 
 
-            for expect_path, part in zip(test_case['expected_interline'], interline_parts):
-                expect = base_dir.joinpath(expect_path).read_text().strip()
-                tree = etree.fromstring(part)
+            # for expect_path, part in zip(test_case['expected_interline'], interline_parts):
+            #     expect = base_dir.joinpath(expect_path).read_text().strip()
+            #     tree = etree.fromstring(part)
 
-                interline_answers = tree.xpath('//ccmath-interline/text()')[0].strip()
-                inter_tree = etree.HTML(interline_answers)
-                interline_answers = ''.join(inter_tree.itertext()).strip() # 去掉最外层p标签
+            #     interline_answers = tree.xpath('//ccmath-interline/text()')[0].strip()
+            #     inter_tree = etree.HTML(interline_answers)
+            #     interline_answers = ''.join(inter_tree.itertext()).strip() # 去掉最外层p标签
 
-                print('answer::::::::interline_answers', interline_answers)
-                # print('expect::::::::', expect)
-                # self.assertStringsSimilar(expect, interline_answers, threshold=0.5)
-                # self.assertEqual(expect, answers)
+            #     print('answer::::::::interline_answers\n', interline_answers)
+            #     # print('expect::::::::', expect)
+            #     # self.assertStringsSimilar(expect, interline_answers, threshold=0.5)
+            #     # self.assertEqual(expect, answers)
 
-            for expect_path, part in zip(test_case['expected_inline'], inline_parts):
-                # print(part)
-                # exit(0)
-                expect = base_dir.joinpath(expect_path).read_text().strip()
-                tree = etree.fromstring(part)
+            # for expect_path, part in zip(test_case['expected_inline'], inline_parts):
+            #     # print(part)
+            #     # exit(0)
+            #     expect = base_dir.joinpath(expect_path).read_text().strip()
+            #     tree = etree.fromstring(part)
 
-                inline_answers = tree.xpath('//ccmath-inline/text()')[0].strip()
-                inner_tree = etree.HTML(inline_answers)
-                inline_answers = ''.join(inner_tree.itertext()).strip()
+            #     inline_answers = tree.xpath('//ccmath-inline/text()')[0].strip()
+            #     inner_tree = etree.HTML(inline_answers)
+            #     inline_answers = ''.join(inner_tree.itertext()).strip()
 
-                print('answer::::::::inline_answers', inline_answers)
-                # print('expect::::::::', expect)
-                # exit(0)
-                # self.assertStringsSimilar(expect, inline_answers, threshold=0.5)
-                # self.assertEqual(expect, answers)
+            #     print('answer::::::::inline_answers\n', inline_answers)
+            #     # print('expect::::::::', expect)
+            #     # exit(0)
+            #     # self.assertStringsSimilar(expect, inline_answers, threshold=0.5)
+            #     # self.assertEqual(expect, answers)
 
     # def test_get_math_render(self):
     #     for test_case in TEST_GET_MATH_RENDER:
@@ -350,18 +376,18 @@ class TestMathRecognizer(unittest.TestCase):
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
-
-            # parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
-            # # self.assertEqual(len(parts), len(test_case['expected']))
-            # for expect_path, part in zip(test_case['expected'], parts):
-            #     expect = base_dir.joinpath(expect_path).read_text().strip()
-            #     a_tree = etree.fromstring(part, None)
-            #     a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-            #     answer = a_result.text
-            #     print('part::::::::', part)
-            #     print('answer::::::::', answer)
-            #     # print('expect::::::::', expect)
-            #     self.assertEqual(expect, answer)
+                
+            parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
+            # self.assertEqual(len(parts), len(test_case['expected']))
+            for expect_path, part in zip(test_case['expected'], parts):
+                expect = base_dir.joinpath(expect_path).read_text().strip()
+                a_tree = html_to_element(part)
+                a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
+                answer = a_result.text
+                # print('part::::::::', part)
+                print('answer::::::::', answer)
+                # print('expect::::::::', expect)
+                # self.assertEqual(expect, answer)
 
     def test_to_content_list_node(self):
         for test_case in TEST_CONTENT_LIST_NODE:
@@ -414,7 +440,7 @@ if __name__ == '__main__':
     r.test_math_recognizer_html()
     # r.test_to_content_list_node()
     # html = r'<p class="lt-math-15120">\[\begin{array} {ll} {5 \cdot 3 = 15} &amp;{-5(3) = -15} \\ {5(-3) = -15} &amp;{(-5)(-3) = 15} \end{array}\]</p>'
-    # tree = etree.fromstring(html, None)
+    # tree = html_to_element(html)
     # print(tree.text)
 
     # raw_html_path = base_dir.joinpath('assets/ccmath/mathjax-mml-chtml.html')
@@ -424,6 +450,6 @@ if __name__ == '__main__':
     # for node in tree.iter():
     #     print(node.tag)
 
-    c = TestCCMATH()
-    c.setUp()
-    c.test_get_equation_type()
+    # c = TestCCMATH()
+    # c.setUp()
+    # c.test_get_equation_type()

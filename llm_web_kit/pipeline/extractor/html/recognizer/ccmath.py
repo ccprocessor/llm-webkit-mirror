@@ -3,12 +3,11 @@ sys.path.append('/nvme/pzx/llm-webkit-mirror')
 
 from typing import List, Tuple
 
-from lxml import etree
 from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import element_to_html
+from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import tag_math, tag_span_mathcontainer, tag_span_mathjax, tag_p, script_mathtex
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.utils import TreeOpt
@@ -121,7 +120,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
         # 打印遍历node次数
         # count = 0
-        for node in tree.iter():
+
+        for node in iter_node(tree):
             assert isinstance(node, HtmlElement)
             original_html = element_to_html(node)
             parent = node.getparent()
@@ -173,7 +173,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 14. <p>
             if node.tag == 'p':
                 tag_p.modify_tree(cm, math_render, original_html, node, parent)
-        tree_opt.get_nodes_info(tree)
+
         return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
@@ -182,9 +182,9 @@ if __name__ == '__main__':
     test_html = [
         (
             (   
-                # '<span class="opaccatti"><script type="math/tex">T_{c}</script> for heavy fermion superconductors linked with other physical properties at zero and applied pressure</span>'
-                '<p class="lt-math-15120">$h$</p>'
-                # '<p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}}{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p>'
+                '<span class="opaccatti"><script type="math/tex">T_{c}</script> for heavy fermion superconductors linked with other physical properties at zero and applied pressure</span>'
+                # '<p class="lt-math-15120">$h$</p>'
+                '<p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}}{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p>'
                 # '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
                 # '<p class="lt-math-15120">What about <strong>division</strong>? Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
                 # '<div>beginning!!!<p class="lt-math-15120">first one\[\\begin{array} {ll} {5 \cdot 3 = 15} &{-5(3) = -15} \\ {5(-3) = -15} &{(-5)(-3) = 15} \end{array}\]</p><p>second one\[\\begin{array} {ll} {10 \cdot 10 = 10} &{-10(10) = -10} \\ {10(-10) = -10} &{(-10)(-10) = 10} \end{array}\]</p>ending!!!</div>'
@@ -208,7 +208,7 @@ if __name__ == '__main__':
                 # '<span class="math-container">$$h \approx {{GM} \over c^2} \times {1 \over r} \times {v^2 \over c^2}$$</span>'
 
                 # '<span class="opaccatti"><script type="math/tex">T_{c}</script> for heavy fermion superconductors linked with other physical properties at zero and applied pressure</span>'
-                '<p class="lt-math-15120">$h$</p>'
+                # '<p class="lt-math-15120">$h$</p>'
                 # '<div mt-section-origin="Bookshelves/Algebra/Elementary_Algebra_1e_(OpenStax)/01:_Foundations/1.05:_Multiply_and_Divide_Integers"class="mt-section"><span id="Example_.5C(.5CPageIndex.7B28.7D.5C)" /><h5 class="box-legend lt-math-15120"id="Example_.5C(.5CPageIndex.7B28.7D.5C)-15120"><spanclass="lt-icon-default">Example \\(\\PageIndex{28}\\)</span></h5><p class="lt-math-15120">Evaluate \\((x+y)^{2}\\) when \\(x = -18\\) and \\(y =24\\).</p><p><strong>Solution</strong></p><p class="lt-math-15120">\\[\\begin{array} {ll} {} &amp;{(x+y)^{2}} \\\\{\\text{Substitute }-18\\text{ for }x \\text{ and } 24 \\text{ for } y}&amp;{(-18 + 24)^{2}} \\\\ {\\text{Add inside parentheses}} &amp;{(6)^{2}}\\\\{\\text{Simplify.}} &amp;{36} \\end{array}\\]</p></div>'
                 # '<p class="lt-math-15120">Division is the inverse operation of multiplication. So, \(15\div 3=5\) because \(5 \cdot 3 = 15\). In words, this expression says that \(15\) can be divided into three groups of five each because adding five three times gives \(15\). Look at some examples of multiplying integers, to figure out the rules for dividing integers.</p>'
 

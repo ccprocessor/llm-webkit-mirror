@@ -3,7 +3,8 @@ import unittest
 
 from lxml.html import HtmlElement
 
-from llm_web_kit.libs.html_utils import element_to_html, html_to_element
+from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
+                                         replace_element)
 
 
 class TestHtmlUtils(unittest.TestCase):
@@ -54,3 +55,42 @@ class TestHtmlUtils(unittest.TestCase):
         tree = html_to_element(html)
         result = element_to_html(tree)
         self.assertIn('测试中文', result)
+
+    def test_replace_element_with_parent(self):
+        """Test replacing one element with another."""
+        # Create parent element containing old element
+        parent_html = '<main><div>Old content</div></main>'
+        parent_element = html_to_element(parent_html)
+        old_element = parent_element.find('div')
+
+        # Create new element
+        new_html = '<p>New content</p>'
+        new_element = html_to_element(new_html)
+
+        # Replace old with new
+        replace_element(old_element, new_element)
+
+        # Verify replacement
+        self.assertEqual(parent_element.find('p').text, 'New content')
+        self.assertIsNone(parent_element.find('div'))
+
+    def test_replace_element_without_parent(self):
+        """Test replacing root element (element with no parent)."""
+        # Create root element to replace
+        old_html = '<div>Old content</div>'
+        old_element = html_to_element(old_html)
+        self.assertEqual(old_element.tag, 'div')
+
+        # Create new element
+        new_html = '<p a="1" b="a">New content</p>'
+        new_element = html_to_element(new_html)
+        self.assertEqual(new_element.tag, 'p')
+
+        # Replace root element
+        replace_element(old_element, new_element)
+
+        # Verify replacement
+        self.assertEqual(old_element.tag, 'p')
+        self.assertEqual(old_element.text, 'New content')
+        self.assertEqual(old_element.get('a'), '1')
+        self.assertEqual(old_element.get('b'), 'a')
