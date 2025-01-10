@@ -329,34 +329,34 @@ class TestMathRecognizer(unittest.TestCase):
             # self.assertEqual(len(inline_parts), len(test_case['expected_inline']))
 
 
-            # for expect_path, part in zip(test_case['expected_interline'], interline_parts):
-            #     expect = base_dir.joinpath(expect_path).read_text().strip()
-            #     tree = etree.fromstring(part)
+            for expect_path, part in zip(test_case['expected_interline'], interline_parts):
+                expect = base_dir.joinpath(expect_path).read_text().strip()
+                tree = etree.fromstring(part)
 
-            #     interline_answers = tree.xpath('//ccmath-interline/text()')[0].strip()
-            #     inter_tree = etree.HTML(interline_answers)
-            #     interline_answers = ''.join(inter_tree.itertext()).strip() # 去掉最外层p标签
+                interline_answers = tree.xpath('//ccmath-interline/text()')[0].strip()
+                inter_tree = etree.HTML(interline_answers)
+                interline_answers = ''.join(inter_tree.itertext()).strip() # 去掉最外层p标签
 
-            #     print('answer::::::::interline_answers\n', interline_answers)
-            #     # print('expect::::::::', expect)
-            #     # self.assertStringsSimilar(expect, interline_answers, threshold=0.5)
-            #     # self.assertEqual(expect, answers)
+                print('answer::::::::interline_answers\n', interline_answers)
+                # print('expect::::::::', expect)
+                # self.assertStringsSimilar(expect, interline_answers, threshold=0.5)
+                # self.assertEqual(expect, answers)
 
-            # for expect_path, part in zip(test_case['expected_inline'], inline_parts):
-            #     # print(part)
-            #     # exit(0)
-            #     expect = base_dir.joinpath(expect_path).read_text().strip()
-            #     tree = etree.fromstring(part)
+            for expect_path, part in zip(test_case['expected_inline'], inline_parts):
+                # print(part)
+                # exit(0)
+                expect = base_dir.joinpath(expect_path).read_text().strip()
+                tree = etree.fromstring(part)
 
-            #     inline_answers = tree.xpath('//ccmath-inline/text()')[0].strip()
-            #     inner_tree = etree.HTML(inline_answers)
-            #     inline_answers = ''.join(inner_tree.itertext()).strip()
+                inline_answers = tree.xpath('//ccmath-inline/text()')[0].strip()
+                inner_tree = etree.HTML(inline_answers)
+                inline_answers = ''.join(inner_tree.itertext()).strip()
 
-            #     print('answer::::::::inline_answers\n', inline_answers)
-            #     # print('expect::::::::', expect)
-            #     # exit(0)
-            #     # self.assertStringsSimilar(expect, inline_answers, threshold=0.5)
-            #     # self.assertEqual(expect, answers)
+                print('answer::::::::inline_answers\n', inline_answers)
+                # print('expect::::::::', expect)
+                # exit(0)
+                # self.assertStringsSimilar(expect, inline_answers, threshold=0.5)
+                # self.assertEqual(expect, answers)
 
     # def test_get_math_render(self):
     #     for test_case in TEST_GET_MATH_RENDER:
