@@ -169,7 +169,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 14. <p>
             if node.tag == 'p':
                 tag_p.modify_tree(cm, math_render, original_html, node, parent)
-                
+
         return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
