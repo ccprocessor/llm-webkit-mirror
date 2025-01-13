@@ -1,8 +1,7 @@
 import unittest
 from pathlib import Path
 
-from lxml import etree
-
+from llm_web_kit.libs.html_utils import get_element_text, html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
     CodeRecognizer
 
@@ -111,9 +110,9 @@ class TestMathRecognizer(unittest.TestCase):
             self.assertEqual(len(parts), len(test_case['expected']))
             for expect_path, part in zip(test_case['expected'], parts):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
-                answer = (etree.fromstring(part, None).text or '').strip()
+                part_el = html_to_element(part)
+                answer = get_element_text(part_el).strip()
                 self.assertEqual(expect, answer)
-            print(base_url, 'ok')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from lxml.etree import _Element as HtmlElement
+from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType
