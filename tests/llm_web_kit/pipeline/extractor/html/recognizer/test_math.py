@@ -202,6 +202,24 @@ TEST_GET_MATH_RENDER = [
     }
 ]
 
+TEST_WRAP_MATH = [
+    {
+        'input': '$$a^2 + b^2 = c^2$$',
+        'display': True,
+        'expected': '$$a^2 + b^2 = c^2$$'
+    },
+    {
+        'input': r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}',
+        'display': False,
+        'expected': r'${\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}$',
+    },
+    {
+        'input': r'\begin{align}a^2 + b^2 = c^2\end{align}',
+        'display': True,
+        'expected': r'\begin{align}a^2 + b^2 = c^2\end{align}',
+    }
+]
+
 base_dir = Path(__file__).parent
 
 
@@ -289,6 +307,12 @@ class TestCCMATH(unittest.TestCase):
             raw_html = raw_html_path.read_text()
             output_render = self.ccmath.get_math_render(raw_html)
             self.assertEqual(output_render, test_case['expected'])
+
+    def test_wrap_math(self):
+        for test_case in TEST_WRAP_MATH:
+            with self.subTest(input=test_case['input']):
+                output_math = self.ccmath.wrap_math(test_case['input'], test_case['display'])
+                self.assertEqual(output_math, test_case['expected'])
 
 
 if __name__ == '__main__':

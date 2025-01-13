@@ -79,32 +79,29 @@ def text_strip(text):
     return text.strip() if text else text
 
 
-def wrap_math(s, display=False):
-    s = re.sub(r'\s+', ' ', s)
-    s = color_regex.sub('', s)
-    s = s.replace('$', '')
-    s = s.replace('\n', ' ').replace('\\n', '')
-    # 只移除开头和结尾的花括号，例如在wikipidia中：{\displaystyle d_{Y}(f(y),f(x))&lt;\epsilon } -> \displaystyle d_{Y}(f(y),f(x))&lt;\epsilon
-    s = s.strip()
-    if s.startswith('{') and s.endswith('}'):
-        s = s[1:-1]
-    s = s.strip()
-    if len(s) == 0:
-        return s
-    # Don't wrap if it's already in \align
-    if 'align' in s:
-        return s
-    if display:
-        return '$$' + s + '$$'
-    return '$' + s + '$'
-
-
 xsl_path = os.path.join(Path(__file__).parent, 'mmltex/mmltex.xsl')
 xslt = etree.parse(xsl_path)
 transform = etree.XSLT(xslt)
 
 
 class CCMATH():
+    def wrap_math(self, s, display=False):
+        s = re.sub(r'\s+', ' ', s)
+        s = color_regex.sub('', s)
+        s = s.replace('$', '')
+        s = s.replace('\n', ' ').replace('\\n', '')
+        s = s.strip()
+        if len(s) == 0:
+            return s
+        # Don't wrap if it's already in \align
+        if 'align' in s:
+            return s
+        if 'equation' in s:
+            return s
+        if display:
+            return '$$' + s + '$$'
+        return '$' + s + '$'
+
     def extract_asciimath(s: str) -> str:
         parsed = asciimath2tex.translate(s)
         return parsed
@@ -222,3 +219,4 @@ if __name__ == '__main__':
     print(cm.get_equation_type('<span>$$a^2 + b^2 = c^2$$</span>'))
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
+    print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
