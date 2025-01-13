@@ -14,39 +14,52 @@
 {
   "dataset_name": "CC",
   "data_source_type": "HTML",
-  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/"
+  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/YYYY.warc.gz",
+  "warc_idx": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
 }
 {
   "dataset_name": "CC",
   "data_source_type": "HTML",
-  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/"
+  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/",
+  "warc_idx": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
 }
 
 ```
 
 字段说明：
 
-| 字段             | 类型   | 描述                                                                            | 是否必须 |
-| ---------------- | ------ | ------------------------------------------------------------------------------- | -------- |
-| dataset_name     | string | 数据集的名字（全局唯一），这个名字是管理员输入的，然后做索引的时候带到index里来 | 可选     |
-| data_source_type | string | 这一行数据代表的是HTML、 PDF 、EBOOK 、AUDIO 、VIDEO、CC、labCC、TXT、MD类型    | 可选     |
-| path             | string | s3全路径，其中 /CC-MAIN-xxx/ 表示dump index                                     | 是       |
+| 字段             | 类型   | 描述                                                                                | 是否必须 |
+| ---------------- | ------ | ----------------------------------------------------------------------------------- | -------- |
+| dataset_name     | string | 数据集的名字（全局唯一），这个名字是管理员输入的，然后做索引的时候带到index里来     | 是       |
+| data_source_type | string | 这一行数据代表的是HTML、 PDF 、EBOOK 、AUDIO 、VIDEO、CC、labCC、TXT、MD类型        | 可选     |
+| path             | string | html源数据路径，其中 /CC-MAIN-xxx/ 表示dump index                                   | 是       |
+| warc_idx         | string | 分类染色结果路径，其中 /CC-MAIN-xxx/ 表示dump index，CC-MAIN-xxx.jsonl 表示warc路径 | 是       |
 
-## 流水线输出数据格式
+path 文件中的字段说明：
 
-样例：
+| 字段            | 类型   | 描述            | 是否必须 |
+| --------------- | ------ | --------------- | -------- |
+| track_id        | string | 唯一标识        | 是       |
+| url             | string | html页面url     | 是       |
+| html            | string | 网页html源码    | 是       |
+| status          | int    | 网页请求status  | 可选     |
+| response_header | dict   | 网页请求header  | 可选     |
+| date            | int    | 网页获取日期    | 可选     |
+| content_length  | int    | content_length  | 可选     |
+| content_charset | int    | content_charset | 可选     |
+| remark          | dict   | remark          | 可选     |
 
-```json lines
-{
-  "output_path": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
-}
-{
-  "output_path": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
-}
-```
+warc_idx 文件中的字段说明：
 
-字段说明：
-
-| 字段        | 类型   | 描述                                                                               | 是否必须 |
-| ----------- | ------ | ---------------------------------------------------------------------------------- | -------- |
-| output_path | string | 数据输出路径，其中 /CC-MAIN-xxx/ 表示dump index，/CC-MAIN-xxx.jsonl 表示warc index | 是       |
+| 字段               | 类型   | 描述                                            | 是否必须 |
+| ------------------ | ------ | ----------------------------------------------- | -------- |
+| track_id           | string | 唯一标识                                        | 是       |
+| page_class         | string | html分类结果(other, article, forum, e-commerce) | 是       |
+| url                | string | html页面url                                     | 可选     |
+| url_host_name      | string | html域名                                        | 可选     |
+| warc_filename      | string | html数据来源warc path                           | 可选     |
+| filename           | string | html数据来源详细路径                            | 可选     |
+| warc_record_offset | string | html数据 offset                                 | 可选     |
+| warc_record_length | string | html数据 length                                 | 可选     |
+| layout_id          | string | html layout({url_host_name}\_{layout_id})       | 可选     |
+| model_version      | string | html 产生的批次(0.0.1)                          | 可选     |
