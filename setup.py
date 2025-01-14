@@ -30,7 +30,7 @@ if __name__ == '__main__':
             'dev': parse_requirements('requirements/dev.txt'),
         },
         url='https://github.com/ccprocessor/llm_web_kit',
-        python_requires='>=3.10',
+        python_requires='>=3.10, <3.14',
         include_package_data=True,  # 是否包含非代码文件，如数据文件、配置文件等
         zip_safe=False,  # 是否使用 zip 文件格式打包，一般设为 False
     )
