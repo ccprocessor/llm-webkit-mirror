@@ -92,36 +92,39 @@ TEST_CASES = [
 TEST_CASES_HTML = [
     # math-container, latex + mathjax
     {
-        'input': ['assets/ccmath/p_test.html'],
+        'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
         'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
         'expected': [
             'assets/ccmath/stackexchange_1_interline_1.html',
             'assets/ccmath/stackexchange_1_interline_2.html',
-            'assets/ccmath/stackexchange_1_interline_1.html',
-            'assets/ccmath/stackexchange_1_interline_2.html',
-            'assets/ccmath/stackexchange_1_interline_1.html',
-            'assets/ccmath/stackexchange_1_interline_2.html',
-            'assets/ccmath/stackexchange_1_interline_1.html',
-            'assets/ccmath/stackexchange_1_interline_2.html',
         ],
     },
-    # {
-    #     'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
-    #     'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
-    #     'expected': [
-    #         'assets/ccmath/stackexchange_1_interline_1.html',
-    #         'assets/ccmath/stackexchange_1_interline_2.html',
-    #     ],
-    # },
     # {
     #     'input': [
     #         'assets/ccmath/libretexts_1_p_latex_mathjax.html',
     #     ],
     #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
     #     'expected': [
-    #         # 'assets/ccmath/libretexts_1_interline_1.html',
+    #         'assets/ccmath/libretexts_1_interline_1.html',
     #     ],
     # },
+    {
+        'input': [
+            'assets/ccmath/mathjax_tex_chtml.html',
+        ],
+        'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
+        'expected': [
+            'assets/ccmath/mathjax_tex_chtml_interline_1.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_2.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_3.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_4.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_5.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_6.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_7.html',
+            'assets/ccmath/mathjax_tex_chtml_interline_8.html',
+
+        ],
+    },
     # {
     #     'input': [
     #         'assets/ccmath/wikipedia_1_math_annotation.html',
@@ -131,22 +134,31 @@ TEST_CASES_HTML = [
     #         # 'assets/ccmath/wikipedia_1_interline_1.html',
     #     ],
     # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/mathjax-mml-chtml.html',
-    #     ],
-    #     'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
-    #     'expected': [
-    #         'assets/ccmath/mathjax-mml-chtml_interline_1.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_2.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_3.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_4.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_5.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_6.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_7.html',
-    #         'assets/ccmath/mathjax-mml-chtml_interline_8.html',
-    #     ],
-    # }
+    {
+        'input': [
+            'assets/ccmath/mathjax-mml-chtml.html',
+        ],
+        'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
+        'expected': [
+            'assets/ccmath/mathjax-mml-chtml_interline_1.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_2.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_3.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_4.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_5.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_6.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_7.html',
+            'assets/ccmath/mathjax-mml-chtml_interline_8.html',
+        ],
+    },
+    {
+        'input': [
+            'assets/ccmath/mathtex_script_type.html',
+        ],
+        'base_url': 'https://github.com/KaTeX/KaTeX/tree/main/contrib/mathtex-script-type',
+        'expected': [
+            'assets/ccmath/mathtex_script_type_interline_1.html',
+        ],
+    }
 ]
 
 TEST_EQUATION_TYPE = [
@@ -176,6 +188,10 @@ TEST_EQUATION_TYPE = [
     # },
     {
         'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> </p>',
+        'expected': (None, None)
+    },
+    {
+        'input': '<p>这是p的text</p>',
         'expected': (None, None)
     }
 ]
@@ -260,23 +276,26 @@ class TestMathRecognizer(unittest.TestCase):
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            print(len(parts))
             # 将parts列表中第一个元素拼接保存到文件，带随机数
             # import random
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
             parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
+            print(len(parts))
             self.assertEqual(len(parts), len(test_case['expected']))
             for expect_path, part in zip(test_case['expected'], parts):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
                 a_tree = html_to_element(part)
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-                answer = a_result.text
-                print('part::::::::', part)
+                answer = a_result.text.strip()
+                # print('part::::::::', part)
                 print('answer::::::::', answer)
+                # 将answer写到assets/ccmath/mathjax_tex_chtml_interline_{i}.html文件
+                # file_path = base_dir.joinpath(f'assets/ccmath/mathjax_tex_chtml_interline_{i}.html')
+                # file_path.write_text(answer)
                 # print('expect::::::::', expect)
-                # self.assertEqual(expect, answer)
+                self.assertEqual(expect, answer)
 
     def test_to_content_list_node(self):
         for test_case in TEST_CONTENT_LIST_NODE:
@@ -333,6 +352,7 @@ if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
     r.test_math_recognizer_html()
+    # r.test_math_recognizer()
     # r.test_to_content_list_node()
     # html = r'<p class="lt-math-15120">\[\begin{array} {ll} {5 \cdot 3 = 15} &amp;{-5(3) = -15} \\ {5(-3) = -15} &amp;{(-5)(-3) = 15} \end{array}\]</p>'
     # tree = html_to_element(html)
