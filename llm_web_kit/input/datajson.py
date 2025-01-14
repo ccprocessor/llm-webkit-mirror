@@ -2,10 +2,28 @@ import json
 
 
 class DataJsonKey(object):
-    """DataJson的键值常量定义."""
+    """DataJson的键值key常量定义."""
     DATASET_NAME = 'dataset_name'
-    FILE_FORMAT = 'file_format'
+    FILE_FORMAT = 'data_source_category'
     CONTENT_LIST = 'content_list'
+
+
+class DataSourceCategory(object):
+    """数据源类型常量定义.
+
+    这是对我们将要处理的数据的一种分类：
+    """
+    HTML = 'HTML'
+    CC = 'CC'
+    LAB_CC = 'LAB_CC'
+    EBOOK = 'EBOOK'
+    PDF = 'PDF'
+    # audio 和video目前没有做任何处理
+    AUDIO = 'AUDIO'
+    VIDEO = 'VIDEO'
+    # txt和md基本是从网上直接下载的开源数据
+    TXT = 'TXT'
+    MD = 'MD'
 
 
 class StructureMapper(object):
@@ -88,6 +106,9 @@ class DataJson(StructureMapper, StructureChecker):
 
     def __setitem__(self, key, value):
         self.__json_data[key] = value  # 提供设置功能
+
+    def __delitem__(self, key):
+        del self.__json_data[key]
 
     def get_dataset_name(self) -> str:
         return self.__json_data[DataJsonKey.DATASET_NAME]

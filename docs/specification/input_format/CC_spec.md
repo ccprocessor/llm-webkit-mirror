@@ -13,15 +13,13 @@
 ```json lines
 {
   "dataset_name": "CC",
-  "data_source_type": "HTML",
-  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/YYYY.warc.gz",
-  "warc_idx": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
+  "data_source_category": "CC",
+  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/"
 }
 {
   "dataset_name": "CC",
-  "data_source_type": "HTML",
-  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/",
-  "warc_idx": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
+  "data_source_category": "CC",
+  "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/"
 }
 
 ```
@@ -31,7 +29,7 @@
 | 字段             | 类型   | 描述                                                                                | 是否必须 |
 | ---------------- | ------ | ----------------------------------------------------------------------------------- | -------- |
 | dataset_name     | string | 数据集的名字（全局唯一），这个名字是管理员输入的，然后做索引的时候带到index里来     | 是       |
-| data_source_type | string | 这一行数据代表的是HTML、 PDF 、EBOOK 、AUDIO 、VIDEO、CC、labCC、TXT、MD类型        | 可选     |
+| data_source_category | string | 这一行数据代表的是HTML、 PDF 、EBOOK 、AUDIO 、VIDEO、CC、labCC、TXT、MD类型        | 可选     |
 | path             | string | html源数据路径，其中 /CC-MAIN-xxx/ 表示dump index                                   | 是       |
 | warc_idx         | string | 分类染色结果路径，其中 /CC-MAIN-xxx/ 表示dump index，CC-MAIN-xxx.jsonl 表示warc路径 | 是       |
 
