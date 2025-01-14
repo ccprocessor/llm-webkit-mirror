@@ -13,13 +13,13 @@
 ```json lines
 {
   "dataset_name": "CC",
-  "data_source_type": "HTML",
+  "data_source_category": "CC",
   "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/YYYY.warc.gz",
   "warc_idx": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
 }
 {
   "dataset_name": "CC",
-  "data_source_type": "HTML",
+  "data_source_category": "CC",
   "path": "s3://cc-raw/crawl-data/CC-MAIN-xxx/",
   "warc_idx": "s3://web-parse-huawei/CC/categorized_data/v001/CC-MAIN-xxx/CC-MAIN-xxx.jsonl"
 }
