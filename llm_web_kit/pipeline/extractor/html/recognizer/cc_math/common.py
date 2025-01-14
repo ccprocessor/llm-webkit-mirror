@@ -168,6 +168,13 @@ class CCMATH():
                         if re.search(pattern, text, re.DOTALL):
                             return True
                     return False
+                
+                if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
+                    if check_delimiters(latex_config['displayMath']):
+                        return EQUATION_INTERLINE, MathType.LATEX
+                    else:
+                        return EQUATION_INLINE, MathType.LATEX
+                    
                 # 优先检查行间公式
                 if check_delimiters(latex_config['displayMath']):
                     return EQUATION_INTERLINE, MathType.LATEX

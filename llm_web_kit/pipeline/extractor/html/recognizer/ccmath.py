@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_math, tag_span_mathcontainer, tag_span_mathjax)
+    tag_math, tag_span_mathcontainer, tag_span_mathjax, tag_p, script_mathtex)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -135,7 +135,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 6. script[type="math/tex"]
             if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                pass
+                script_mathtex.modify_tree(cm, math_render, original_html, node, parent)
 
             # 7. script[type="math/asciimath"]
             if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
@@ -165,6 +165,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
                 tag_span_mathjax.modify_tree(cm, math_render, original_html, node, parent)
+
+            # 14. <p>
+            if node.tag == 'p':
+                tag_p.modify_tree(cm, math_render, original_html, node, parent)
 
         return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
