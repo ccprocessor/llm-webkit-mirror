@@ -189,12 +189,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             Tuple[str]: 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
         ele = self._build_html_tree(html)
-        # 找到cctitle标签
-        cclist_eles = ele.find(CCTag.CC_LIST)
-        if cclist_eles:
-            ordered = bool(cclist_eles.attrib.get('ordered'))
-            content_list = json.loads(cclist_eles.text)
-            raw_html = cclist_eles.attrib.get('html')
+        if ele is not None and ele.tag == CCTag.CC_LIST:
+            ordered = bool(ele.attrib.get('ordered'))
+            content_list = json.loads(ele.text)
+            raw_html = ele.attrib.get('html')
             return ordered, content_list, raw_html
         else:
             # TODO 抛出异常, 需要自定义

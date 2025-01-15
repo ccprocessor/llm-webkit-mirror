@@ -28,8 +28,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
         Returns:
         """
-        if not main_html_lst:
-            raise ValueError(f'main_html_lst{main_html_lst}为空')
         final_result = list()
         for cc_html, o_html in main_html_lst:
             if self.__is_contain_cc_html(cc_html):
@@ -44,7 +42,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         if not parsed_content:
             raise ValueError(f'table parsed_content{parsed_content}为空')
         table_type, table_body = self.__get_attribute(parsed_content)
-        if not table_type or table_body:
+        if not table_type or not table_body:
             raise ValueError(f'get table attribute为空,table_body:{table_body},table_type:{table_type}')
         d = {
             'type': DocElementType.TABLE,
@@ -138,11 +136,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __get_attribute(self, html: str) -> Tuple[int, str]:
         """获取element的属性."""
         ele = self._build_html_tree(html)
-        # 找到cctable标签
-        cctable_ele = ele.find(CCTag.CC_TABLE)
-        if cctable_ele:
-            table_type = cctable_ele.attrib.get('table_type')
-            tale_body = cctable_ele.text
+        if ele is not None and ele.tag == CCTag.CC_TABLE:
+            table_type = ele.attrib.get('table_type')
+            tale_body = ele.text
             return table_type, tale_body
         else:
             raise ValueError(f'{html}中没有cctable标签')

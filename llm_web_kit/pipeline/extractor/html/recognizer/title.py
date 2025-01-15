@@ -120,10 +120,9 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         """获取element的属性."""
         ele = self._build_html_tree(html)
         # 找到cctitle标签
-        cctitle_ele = ele.find(CCTag.CC_TITLE)
-        if cctitle_ele:
-            level = cctitle_ele.attrib.get('level')
-            text = cctitle_ele.text
+        if ele is not None:
+            level = ele.attrib.get('level')
+            text = ele.text
             return level, text
         else:
             # TODO 抛出异常, 需要自定义

@@ -3,7 +3,7 @@ from typing import List, Tuple
 from overrides import override
 
 from llm_web_kit.input.datajson import ContentList, DataJson
-from llm_web_kit.libs.html_utils import html_to_element
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.extractor.extractor import BaseFileFormatExtractor
 from llm_web_kit.pipeline.extractor.html.magic_html import GeneralExtractor
@@ -88,7 +88,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         base_url:str = data_json['url']
 
         main_html, method = self._extract_main_html(raw_html, base_url)
-        parsed_html = [(main_html,main_html)]
+        parsed_html = [(main_html,raw_html)]
         for extract_func in [self._extract_table, self._extract_list, self._extract_code, self._extract_math,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
@@ -111,7 +111,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             str2: 获得内容的方式，可对质量进行评估
         """
         # TODO: 从html文本中提取主要的内容
-        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url)
+        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url, precision=False)
         return dict_result['html'], dict_result['xp_num']
 
     def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
@@ -253,10 +253,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         # 在这个地方，根据tuple中的第一个元素的类型，将其转换为content_list中的元素，转换之后如果还有剩余的元素，则证明解析出现问题，有内容缺失的风险。
         content_list = ContentList([])
         for parsed_html, raw_html in html_lst:
-            cc_tag = self.__get_root_tag_name(parsed_html)
+            ccnode_html, cc_tag = self.__get_cc_node(parsed_html)
             parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
-                node = parser.to_content_list_node(base_url, parsed_html, raw_html)
+                node = parser.to_content_list_node(base_url, ccnode_html, raw_html)
                 content_list.append(node)
             else:
                 mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
@@ -264,8 +264,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         return content_list
 
-    def __get_root_tag_name(self, html:str) -> str:
-        """获取html文本的根标签名.
+    def __get_cc_node(self, html:str) -> (str, str):
+        """获取html文本的根标签名。只获取一个，如果html文本中包含多个cc标签，则抛异常。
 
         Args:
             html (str): html文本
@@ -274,4 +274,13 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             str: 根标签名
         """
         el = html_to_element(html)
-        return el.tag
+        if el.tag in self.__to_content_list_mapper.keys():
+            return html, el.tag
+        else:
+            xpath_expr = ' | '.join(f'self::{tag} | .//{tag}' for tag in self.__to_content_list_mapper.keys())
+            nodes = el.xpath(xpath_expr)
+            if len(nodes) == 0:
+                raise ValueError(f'html文本中没有cc标签: {html}')  # TODO 异常处理
+            if len(nodes) > 1:
+                raise ValueError(f'html文本中包含多个cc标签: {html}')  # TODO 异常处理
+            return element_to_html(nodes[0]), nodes[0].tag

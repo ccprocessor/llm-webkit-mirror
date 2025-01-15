@@ -20,7 +20,7 @@
 | ------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | track_id                  | uuid                                 | 全局唯一的ID                                                                                          | 是                                     |
 | dataset_name              | str                                  | 数据集的名字（全局唯一），这个名字是管理员输入的，然后做索引的时候带到index里来                       | 是                                     |
-| data_source_type          | str                                  | 这一行数据代表的是HTML、 PDF 、EBOOK 、AUDIO 、VIDEO、CC、labCC、TXT、MD类型。                        | 是，此处是 PDF或EBOOK                  |
+| data_source_category      | str                                  | 这一行数据代表的是HTML、 PDF 、EBOOK 、AUDIO 、VIDEO、CC、labCC、TXT、MD类型。                        | 是，此处是 PDF或EBOOK                  |
 | raw_file_path             | 字符串                               | s3全路径                                                                                              | 否，如果文件没有发生格式转换，则非必填 |
 | path                      | 字符串                               | s3全路径                                                                                              | 是                                     |
 | file_bytes                | 整数                                 | 文件的大小，单位是byte                                                                                | 是                                     |

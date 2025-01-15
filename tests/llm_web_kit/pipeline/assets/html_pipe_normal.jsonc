@@ -20,6 +20,7 @@
 
     "extractor_pipe": { //每个子key里的处理器都是有序的，顺序执行
         "enable": true,
+        "validate_input_format": false, //是否校验输入格式,默认是true, 这里设置为false，这样非标准DataJson就可以传入
         "pre_extractor": [
             {
                 "enable": true,
