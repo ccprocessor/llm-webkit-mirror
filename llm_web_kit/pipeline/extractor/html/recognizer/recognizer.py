@@ -120,7 +120,7 @@ class BaseHTMLElementRecognizer(ABC):
             html_segment: str: 要分割的html源码
             split_tag_names: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
         """
-        copy_attri = False  # 是否copy 父节点的属性
+        copy_attri = True  # 是否copy 父节点的属性
         root = html_to_element(html_segment)
         if isinstance(split_tag_names, str):  # 如果参数是str，转换成list
             split_tag_names = [split_tag_names]
