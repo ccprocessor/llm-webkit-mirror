@@ -34,10 +34,12 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         # assert main_html_lst[0][0] == main_html_lst[0][1]
 
         rtn: List[Tuple[str, str]] = []
-        for html_chunk in main_html_lst:
-            main_html = html_chunk[0]
-            root: HtmlElement = html_to_element(main_html)
+        for html, raw_html in main_html_lst:
+            if self.is_cc_html(html):
+                rtn.append((html, raw_html))
+                continue
 
+            root: HtmlElement = html_to_element(html)
             while True:
                 # 最常见:
                 # <pre><code></code></pre>
