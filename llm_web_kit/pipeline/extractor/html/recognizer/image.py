@@ -284,7 +284,7 @@ if __name__ == '__main__':
         #     continue
         # if idx > 100:
         #     break
-        print(f'start analysis idx: {idx}, url: {html_d['url']}')
+        print(f"start analysis idx: {idx}, url: {html_d['url']}")
         # print(html_d['html'])
         res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
         # parsed_content = """<ccimage by="img" html='&lt;img style="margin:0;padding:0;border:0;" alt="Hosted by uCoz" src="http://s201.ucoz.net/img/cp/6.gif" width="80" height="15" title="Hosted by uCoz"&gt;' format="url" alt="Hosted by uCoz">http://s201.ucoz.net/img/cp/6.gif</ccimage>"""
