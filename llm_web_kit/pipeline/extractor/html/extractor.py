@@ -277,6 +277,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         if el.tag in self.__to_content_list_mapper.keys():
             return html, el.tag
         else:
+            # 查找子节点，包括节点自己。  self::tag | .//tag 这是xpath的写法，表示查找自己和子节点中的tag标签，如果只写./tag则只查找子节点中的tag标签
             xpath_expr = ' | '.join(f'self::{tag} | .//{tag}' for tag in self.__to_content_list_mapper.keys())
             nodes = el.xpath(xpath_expr)
             if len(nodes) == 0:
