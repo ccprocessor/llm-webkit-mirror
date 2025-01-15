@@ -4,7 +4,7 @@
     "enable": true, //是否跳过这个数据集
 
     "formatter_pipe": {
-        "enable": true, //是否启用raw_data_format这个步骤
+        "enable": false, //是否启用raw_data_format这个步骤
         "debug": false, //如果开启debug模式，则不会缓存任何数据，所有持久化操作都会被忽略
         "raw_input_data_path": [
             "s3://llm-raw-input/bbc/v001/",
@@ -26,7 +26,7 @@
                 "enable": true,
                 "python_class": "llm_web_kit.pipeline.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor",
                 "class_init_kwargs": {
-                    "html_parent_path": "tests/llm_web_kit/pipeline/assets/pipline_suit_input/good_data/html/"
+                    "html_parent_dir": "tests/llm_web_kit/pipeline/assets/pipline_suit_input/good_data/html/"
                 }
             }
         ],

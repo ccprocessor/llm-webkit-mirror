@@ -32,9 +32,15 @@ class TestHTMLFileFormatFilterPreExtractor(HTMLFileFormatFilterPreExtractor):
     """为了方便对测试数据进行测试，需要吧测试数据的格式转换为处理HTML数据的标准的DataJson格式
     也就是测试数据的html以文件放在磁盘路径下，但是标准的DataJson格式是html以字符串的形式存在于jsonl中的html字段里。
     这个类就是根据路径读取html文件，然后转换为DataJson格式。"""
-    def __init__(self, config: dict):
+    def __init__(self, config: dict, html_parent_dir:str):
+        """
+        初始化函数
+        Args:
+            config:
+            html_parent_dir:
+        """
         super().__init__(config)
-        self.__html_parent_path = config.get('html_parent_path')
+        self.__html_parent_path = html_parent_dir
 
     @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
