@@ -5,7 +5,7 @@ from lxml import etree
 from lxml.etree import _Element as HtmlElement
 from overrides import override
 
-from llm_web_kit.libs.doc_element_type import ParagraphTextType
+from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -16,7 +16,23 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
 
     @override
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
-        pass
+        """
+        把文本段落元素转换为content list node.
+        Args:
+            base_url:
+            parsed_content:
+            raw_html_segment:
+
+        Returns:
+
+        """
+        el = self._build_html_tree(parsed_content)
+        node = {
+            'type': DocElementType.PARAGRAPH,
+            'raw_content': el.attrib.get('html', ''),
+            'content': json.loads(el.text),
+        }
+        return node
 
     @override
     def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
