@@ -66,7 +66,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
             html_str: str = element_to_html(root)
 
-            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, "cccode"))
+            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode'))
 
         return rtn
 
