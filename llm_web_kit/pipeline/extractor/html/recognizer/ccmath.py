@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_common_modify, tag_math)
+    tag_common_modify, tag_math, tag_span_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -147,7 +147,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 9. span.katex
             if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
-                pass
+                tag_span_script.modify_tree(cm, math_render, original_html, node, parent)
 
             # 10. class 为 x-ck12-mathEditor
             if node.tag == 'span' and node.get('class') and 'x-ck12-mathEditor' in node.get('class'):

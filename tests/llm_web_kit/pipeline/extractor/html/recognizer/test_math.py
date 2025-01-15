@@ -94,71 +94,42 @@ TEST_CASES_HTML = [
     {
         'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
         'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
-        'expected': [
-            'assets/ccmath/stackexchange_1_interline_1.html',
-            'assets/ccmath/stackexchange_1_interline_2.html',
+        'expected': 'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/libretexts_1_p_latex_mathjax.html',
         ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/libretexts_1_p_latex_mathjax_1.html'
     },
     # {
     #     'input': [
-    #         'assets/ccmath/libretexts_1_p_latex_mathjax.html',
+    #         'assets/ccmath/mathjax_tex_chtml.html',
     #     ],
     #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-    #     'expected': [
-    #         'assets/ccmath/libretexts_1_interline_1.html',
-    #     ],
+    #     'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
     # },
     {
         'input': [
-            'assets/ccmath/mathjax_tex_chtml.html',
+            'assets/ccmath/wikipedia_1_math_annotation.html',
         ],
-        'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
-        'expected': [
-            'assets/ccmath/mathjax_tex_chtml_interline_1.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_2.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_3.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_4.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_5.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_6.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_7.html',
-            'assets/ccmath/mathjax_tex_chtml_interline_8.html',
-
-        ],
+        'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
+        'expected': 'assets/ccmath/wikipedia_1_math_annotation_1.html'
     },
-    # {
-    #     'input': [
-    #         'assets/ccmath/wikipedia_1_math_annotation.html',
-    #     ],
-    #     'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
-    #     'expected': [
-    #         # 'assets/ccmath/wikipedia_1_interline_1.html',
-    #     ],
-    # },
     {
         'input': [
             'assets/ccmath/mathjax-mml-chtml.html',
         ],
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
-        'expected': [
-            'assets/ccmath/mathjax-mml-chtml_interline_1.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_2.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_3.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_4.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_5.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_6.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_7.html',
-            'assets/ccmath/mathjax-mml-chtml_interline_8.html',
-        ],
+        'expected': 'assets/ccmath/mathjax-mml-chtml_1.html'
     },
+    # katex latex+katex
     {
-        'input': [
-            'assets/ccmath/mathtex_script_type.html',
-        ],
-        'base_url': 'https://github.com/KaTeX/KaTeX/tree/main/contrib/mathtex-script-type',
-        'expected': [
-            'assets/ccmath/mathtex_script_type_interline_1.html',
-        ],
-    }
+        'input': ['assets/ccmath/katex_mathjax.html'],
+        'base_url': '',
+        'expected': 'assets/ccmath/katex_mathjax_1.html'
+    },
 ]
 
 TEST_EQUATION_TYPE = [
@@ -266,9 +237,11 @@ class TestMathRecognizer(unittest.TestCase):
                     test_case['raw_html']
                 )
                 print(output_html)
-                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {len(test_case["expected"])}')
+                expect_len = len(test_case['expected'])
+                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
                 for i in range(len(output_html)):
-                    self.assertEqual(output_html[i], test_case['expected'][i], msg=f'result is: {output_html[i]}, expected is: {test_case["expected"][i]}')
+                    expect = test_case['expected'][i]
+                    self.assertEqual(output_html[i], test_case['expected'][i], msg=f'result is: {output_html[i]}, expected is: {expect}')
 
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
@@ -283,19 +256,24 @@ class TestMathRecognizer(unittest.TestCase):
             #         f.write(str(part[0]))
             parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
             print(len(parts))
-            self.assertEqual(len(parts), len(test_case['expected']))
-            for expect_path, part in zip(test_case['expected'], parts):
-                expect = base_dir.joinpath(expect_path).read_text().strip()
+            expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
+            expect_formulas = [formula for formula in expect_text.split('\n') if formula]
+            self.assertEqual(len(parts), len(expect_formulas))
+            for expect,part in zip(expect_formulas,parts):
                 a_tree = html_to_element(part)
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-                answer = a_result.text.strip()
+                answer = a_result.text
                 # print('part::::::::', part)
-                print('answer::::::::', answer)
-                # 将answer写到assets/ccmath/mathjax_tex_chtml_interline_{i}.html文件
-                # file_path = base_dir.joinpath(f'assets/ccmath/mathjax_tex_chtml_interline_{i}.html')
-                # file_path.write_text(answer)
+                # print('answer::::::::', answer)
                 # print('expect::::::::', expect)
                 self.assertEqual(expect, answer)
+            # self.write_to_html(answers,test_case['input'][0])
+
+    def write_to_html(self,answers,file_name):
+        file_name = file_name.split('.')[0]
+        with open(base_dir.joinpath(f'{file_name}_1.html'), 'w', encoding='utf-8') as file:
+            for formula in answers:
+                file.write(formula + '\n')
 
     def test_to_content_list_node(self):
         for test_case in TEST_CONTENT_LIST_NODE:
@@ -331,8 +309,10 @@ class TestCCMATH(unittest.TestCase):
             with self.subTest(input=test_case['input']):
                 equation_type, math_type = self.ccmath.get_equation_type(test_case['input'])
                 print('input::::::::', test_case['input'])
-                self.assertEqual(equation_type, test_case['expected'][0], msg=f'result is: {equation_type}, expected is: {test_case["expected"][0]}')
-                self.assertEqual(math_type, test_case['expected'][1], msg=f'result is: {math_type}, expected is: {test_case["expected"][1]}')
+                expect0 = test_case['expected'][0]
+                expect1 = test_case['expected'][1]
+                self.assertEqual(equation_type, test_case['expected'][0], msg=f'result is: {equation_type}, expected is: {expect0}')
+                self.assertEqual(math_type, test_case['expected'][1], msg=f'result is: {math_type}, expected is: {expect1}')
 
     def test_get_math_render(self):
         for test_case in TEST_GET_MATH_RENDER:
@@ -351,6 +331,7 @@ class TestCCMATH(unittest.TestCase):
 if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
+    # r.test_math_recognizer()
     r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()

@@ -164,10 +164,16 @@ class CCMATH():
             # 先检查mathml
             math_elements = node.xpath('//math')
             if len(math_elements) > 0:
+                # 检查math标签是否有display属性且值为block
                 if math_elements[0].get('display') == 'block':
                     return EQUATION_INTERLINE, MathType.MATHML
                 else:
-                    return EQUATION_INLINE, MathType.MATHML
+                    # 检查math下的mstyle标签
+                    math_mstyle_element = math_elements[0].xpath('.//mstyle')
+                    if math_mstyle_element and math_mstyle_element[0].get('displaystyle') == 'true':
+                        return EQUATION_INTERLINE, MathType.MATHML
+                    else:
+                        return EQUATION_INLINE, MathType.MATHML
 
             # 再检查latex
             if text := text_strip(node.text):
