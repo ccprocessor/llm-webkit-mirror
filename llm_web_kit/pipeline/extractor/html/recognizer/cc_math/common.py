@@ -68,7 +68,9 @@ latex_config = {
         ['\\[', '\\]'],
         ['$$', '$$'],
         ['\\begin{equation}', '\\end{equation}'],
-        ['\\begin{align}', '\\end{align}']
+        ['\\begin{align}', '\\end{align}'],
+        ['\\begin{alignat}', '\\end{alignat}'],
+        ['\\begin{array}', '\\end{array}'],
     ],
 }
 
@@ -147,6 +149,13 @@ class CCMATH():
             >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
             ('equation-interline', 'latex')
         """
+        def check_delimiters(delims_list, s):
+            for start, end in delims_list:
+                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                if re.search(pattern, s, re.DOTALL):
+                    return True
+            return False
+
         tree = html_to_element(html)
         if tree is None:
             raise ValueError(f'Failed to load html: {html}')
@@ -155,28 +164,38 @@ class CCMATH():
             # 先检查mathml
             math_elements = node.xpath('//math')
             if len(math_elements) > 0:
+                # 检查math标签是否有display属性且值为block
                 if math_elements[0].get('display') == 'block':
                     return EQUATION_INTERLINE, MathType.MATHML
                 else:
-                    return EQUATION_INLINE, MathType.MATHML
+                    # 检查math下的mstyle标签
+                    math_mstyle_element = math_elements[0].xpath('.//mstyle')
+                    if math_mstyle_element and math_mstyle_element[0].get('displaystyle') == 'true':
+                        return EQUATION_INTERLINE, MathType.MATHML
+                    else:
+                        return EQUATION_INLINE, MathType.MATHML
 
             # 再检查latex
             if text := text_strip(node.text):
-                def check_delimiters(delims_list):
-                    for start, end in delims_list:
-                        pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                        if re.search(pattern, text, re.DOTALL):
-                            return True
-                    return False
                 # 优先检查行间公式
-                if check_delimiters(latex_config['displayMath']):
+                if check_delimiters(latex_config['displayMath'], text):
                     return EQUATION_INTERLINE, MathType.LATEX
-                if check_delimiters(latex_config['inlineMath']):
+                if check_delimiters(latex_config['inlineMath'], text):
                     return EQUATION_INLINE, MathType.LATEX
 
                 # 再检查asciimath，通常被包含在`...`中，TODO：行间和行内如何区分
                 if re.search(r'`[^`]+`', text):
                     return EQUATION_INLINE, MathType.ASCIIMATH
+
+            # 检查script标签
+            script_elements = tree.xpath('//script')
+            if script_elements and any(text_strip(elem.text) for elem in script_elements):
+                # 判断type属性，如有包含 mode=display 则认为是行间公式
+                for script in script_elements:
+                    if 'mode=display' in script.get('type', ''):
+                        return EQUATION_INTERLINE, MathType.LATEX
+                    else:
+                        return EQUATION_INLINE, MathType.LATEX
 
             # 检查 HTML 数学标记（sub 和 sup）
             sub_elements = tree.xpath('//sub')
@@ -219,4 +238,5 @@ if __name__ == '__main__':
     print(cm.get_equation_type('<span>$$a^2 + b^2 = c^2$$</span>'))
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
+    print(cm.get_equation_type('<p>这是p的text</p>'))
     print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))

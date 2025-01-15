@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_math, tag_span_mathcontainer, tag_span_mathjax)
+    tag_common_modify, tag_math, tag_span_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -127,15 +127,15 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 4. class 为 math-container，默认为latex
             if node.tag == 'span' and node.get('class') and 'math-container' in node.get('class'):
-                tag_span_mathcontainer.modify_tree(cm, math_render, original_html, node, parent)
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # 5. class 为 wp-katex-eq
             if node.tag == 'span' and node.get('class') and 'wp-katex-eq' in node.get('class'):
                 pass
 
-            # 6. script[type="math/tex"]
+            # 6. script[type="math/tex"], TODO: 需要进行wrap_math
             if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                pass
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # 7. script[type="math/asciimath"]
             if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
@@ -147,7 +147,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 9. span.katex
             if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
-                pass
+                tag_span_script.modify_tree(cm, math_render, original_html, node, parent)
 
             # 10. class 为 x-ck12-mathEditor
             if node.tag == 'span' and node.get('class') and 'x-ck12-mathEditor' in node.get('class'):
@@ -164,7 +164,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 13. class 为 mathjax
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
-                tag_span_mathjax.modify_tree(cm, math_render, original_html, node, parent)
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+
+            # 14. 只处理只有一层的p标签
+            if node.tag == 'p' and len(node.getchildren()) == 0:
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
         return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
@@ -175,10 +179,13 @@ if __name__ == '__main__':
         (
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
-                '这是b的tail</p>'),
+                '这是b的tail</p>'
+                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'
+                '<script type="math/tex; mode=display">E=mc^2</script>'),
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
-                '这是b的tail</p>')
+                '这是b的tail</p>'
+                r'<script type="math/tex">x+\sqrt{1-x^2}</script>')
         )
     ]
     raw_html = (

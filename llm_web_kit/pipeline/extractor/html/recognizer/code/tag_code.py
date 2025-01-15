@@ -33,7 +33,7 @@ def __group_code_by_distance(
         for i in range(len(node_paths)):
             if i == get_father(i):
                 path = '/'.join(root_paths[i])
-                path = path.removeprefix('/html/')
+                path = '/'.join(path.removeprefix('/').split('/')[1:])
                 text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
                 # 替换之前的 magic number
                 # 如果出现一棵子树，其组成的内容不存在任何单词
