@@ -74,27 +74,27 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
         if len(inter_ele) > 0:
             # 获取math_content
-            math_content = inter_ele[0].text  # TODO: 需要处理math_content两边的$符号
+            math_content = inter_ele[0].text
 
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': math_content,
-                    'math_type': inter_ele[0].get('type'),
-                    'by': inter_ele[0].get('by')
+                    'math_type': inter_ele[0].get('type'),  # 数学语言类型
+                    'by': inter_ele[0].get('by')  # 数学语言渲染器
                 }
             }
         elif len(in_els) > 0:
-            math_content = in_els[0].text  # TODO: 需要处理math_content两边的$符号
+            math_content = in_els[0].text
 
             return {
                 'type': DocElementType.EQUATION_INLINE,
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': math_content,
-                    'math_type': in_els[0].get('type'),
-                    'by': in_els[0].get('by')
+                    'math_type': in_els[0].get('type'),  # 数学语言类型
+                    'by': in_els[0].get('by')  # 数学语言渲染器
                 }
             }
         else:
