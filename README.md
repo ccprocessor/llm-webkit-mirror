@@ -66,7 +66,7 @@
 
 ## Project Introduction
 
-llm-web-kit is a python library that ...
+llm-web-kit is a python library that ..
 
 ## Key Features
 
