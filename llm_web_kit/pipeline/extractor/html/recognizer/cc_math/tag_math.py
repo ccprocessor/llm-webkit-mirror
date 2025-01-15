@@ -18,30 +18,28 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         equation_type, math_type = cm.get_equation_type(o_html)
         if equation_type == EQUATION_INLINE:
             new_tag = CCMATH_INLINE
-            display = False
         elif equation_type == EQUATION_INTERLINE:
             new_tag = CCMATH_INTERLINE
-            display = True
         else:
             raise ValueError(f'Unknown equation type: {equation_type}')
 
         if len(annotation_tags) > 0:
             annotation_tag = annotation_tags[0]
             text = annotation_tag.text
-            wrapped_text = cm.wrap_math(r'{}'.format(text), display=display)
+            # wrapped_text = cm.wrap_math(r'{}'.format(text), display=display)
             style_value = parent.get('style')
             if style_value:
                 normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
                 if 'display: none' in normalized_style_value:
                     parent.style = ''
-            new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+            new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)
         elif text_strip(node.get('alttext')):
             # Get the alttext attribute
-            alttext = node.get('alttext')
-            if text_strip(alttext):
-                wrapped_text = cm.wrap_math(r'{}'.format(alttext), display=display)
-                new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+            text = node.get('alttext')
+            if text_strip(text):
+                # wrapped_text = cm.wrap_math(r'{}'.format(alttext), display=display)
+                new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
         else:
             # Try translating to LaTeX
@@ -58,9 +56,10 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             #     mathml = re.sub(r"xmlns='.*?'", '', mathml)
             # TODO: 这样转换方法有很多错误，见测试用例mathjax-mml-chtml.html，需要优化
             latex = cm.mml_to_latex(mathml)
-            wrapped_text = cm.wrap_math(r'{}'.format(latex), display=display)
+            latex = cm.wrap_math_md(latex)
+            # wrapped_text = cm.wrap_math(r'{}'.format(latex), display=display)
             # Set the html of the new span tag to the text
-            new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+            new_span = build_cc_element(html_tag_name=new_tag, text=latex, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)
     except Exception as e:
         logger.error(f'Error processing math tag: {e}')

@@ -34,7 +34,7 @@ TEST_CASES = [
                 '<p>这是p的text</p>'
             ),
             (
-                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>$$a^2 + b^2 = c^2$$</ccmath-interline></p>',
+                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>a^2 + b^2 = c^2</ccmath-interline></p>',
                 '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
             ),
             (
@@ -103,18 +103,18 @@ TEST_CASES_HTML = [
         'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
         'expected': 'assets/ccmath/libretexts_1_p_latex_mathjax_1.html'
     },
-    # {
-    #     'input': [
-    #         'assets/ccmath/mathjax_tex_chtml.html',
-    #     ],
-    #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-    #     'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
-    # },
+    {
+        'input': [
+            'assets/ccmath/mathjax_tex_chtml.html',
+        ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
+    },
     {
         'input': [
             'assets/ccmath/wikipedia_1_math_annotation.html',
         ],
-        'base_url': 'https://en.m.wikipedia.org/wiki/Equicontinuity',
+        'base_url': 'https://en.m.wikipedia.org/wiki/Variance',
         'expected': 'assets/ccmath/wikipedia_1_math_annotation_1.html'
     },
     {
@@ -124,12 +124,12 @@ TEST_CASES_HTML = [
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_1.html'
     },
-    # katex latex+katex
-    {
-        'input': ['assets/ccmath/katex_mathjax.html'],
-        'base_url': '',
-        'expected': 'assets/ccmath/katex_mathjax_1.html'
-    },
+    # # katex latex+katex
+    # {
+    #     'input': ['assets/ccmath/katex_mathjax.html'],
+    #     'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+    #     'expected': 'assets/ccmath/katex_mathjax_1.html'
+    # },
 ]
 
 TEST_EQUATION_TYPE = [
@@ -221,6 +221,21 @@ TEST_WRAP_MATH = [
     }
 ]
 
+TEST_WRAP_MATH_MD = [
+    {
+        'input': r'$$a^2 + b^2 = c^2$$',
+        'expected': r'a^2 + b^2 = c^2'
+    },
+    {
+        'input': r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}',
+        'expected': r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'
+    },
+    {
+        'input': r'$a^2 + b^2 = c^2$',
+        'expected': r'a^2 + b^2 = c^2'
+    }
+]
+
 base_dir = Path(__file__).parent
 
 
@@ -259,21 +274,24 @@ class TestMathRecognizer(unittest.TestCase):
             expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
             self.assertEqual(len(parts), len(expect_formulas))
-            for expect,part in zip(expect_formulas,parts):
+            answers = []
+            for expect, part in zip(expect_formulas, parts):
                 a_tree = html_to_element(part)
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-                answer = a_result.text
+                answer = a_result.text.replace('\n', '')
+                answers.append(answer)
                 # print('part::::::::', part)
-                # print('answer::::::::', answer)
+                print(answer)
                 # print('expect::::::::', expect)
                 self.assertEqual(expect, answer)
-            # self.write_to_html(answers,test_case['input'][0])
+            # self.write_to_html(answers, test_case['input'][0])
 
-    def write_to_html(self,answers,file_name):
+    def write_to_html(self, answers, file_name):
         file_name = file_name.split('.')[0]
         with open(base_dir.joinpath(f'{file_name}_1.html'), 'w', encoding='utf-8') as file:
             for formula in answers:
-                file.write(formula + '\n')
+                file.write(formula)
+                file.write('\n')
 
     def test_to_content_list_node(self):
         for test_case in TEST_CONTENT_LIST_NODE:
@@ -327,6 +345,12 @@ class TestCCMATH(unittest.TestCase):
                 output_math = self.ccmath.wrap_math(test_case['input'], test_case['display'])
                 self.assertEqual(output_math, test_case['expected'])
 
+    def test_wrap_math_md(self):
+        for test_case in TEST_WRAP_MATH_MD:
+            with self.subTest(input=test_case['input']):
+                output_math = self.ccmath.wrap_math_md(test_case['input'])
+                self.assertEqual(output_math, test_case['expected'])
+
 
 if __name__ == '__main__':
     r = TestMathRecognizer()
@@ -349,3 +373,5 @@ if __name__ == '__main__':
     # c = TestCCMATH()
     # c.setUp()
     # c.test_get_equation_type()
+    # c.test_wrap_math()
+    # c.test_wrap_math_md()

@@ -88,6 +88,7 @@ transform = etree.XSLT(xslt)
 
 class CCMATH():
     def wrap_math(self, s, display=False):
+        """根据行间行内公式加上$$或$"""
         s = re.sub(r'\s+', ' ', s)
         s = color_regex.sub('', s)
         s = s.replace('$', '')
@@ -96,13 +97,20 @@ class CCMATH():
         if len(s) == 0:
             return s
         # Don't wrap if it's already in \align
-        if 'align' in s:
-            return s
-        if 'equation' in s:
+        if '\\begin' in s:
             return s
         if display:
             return '$$' + s + '$$'
         return '$' + s + '$'
+
+    def wrap_math_md(self, s):
+        """去掉latex公式头尾的$$或$"""
+        s = s.strip()
+        if s.startswith('$$') and s.endswith('$$'):
+            return s.replace('$$', '')
+        if s.startswith('$') and s.endswith('$'):
+            return s.replace('$', '')
+        return s
 
     def extract_asciimath(s: str) -> str:
         parsed = asciimath2tex.translate(s)
@@ -164,16 +172,15 @@ class CCMATH():
             # 先检查mathml
             math_elements = node.xpath('//math')
             if len(math_elements) > 0:
-                # 检查math标签是否有display属性且值为block
+                # 检查math标签是否有display属性且值为block，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/math
                 if math_elements[0].get('display') == 'block':
                     return EQUATION_INTERLINE, MathType.MATHML
                 else:
-                    # 检查math下的mstyle标签
-                    math_mstyle_element = math_elements[0].xpath('.//mstyle')
-                    if math_mstyle_element and math_mstyle_element[0].get('displaystyle') == 'true':
-                        return EQUATION_INTERLINE, MathType.MATHML
-                    else:
-                        return EQUATION_INLINE, MathType.MATHML
+                    # 检查math下的mstyle标签，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/mstyle
+                    # math_mstyle_element = math_elements[0].xpath('.//mstyle')
+                    # if math_mstyle_element and math_mstyle_element[0].get('displaystyle') == 'true':
+                    #     return EQUATION_INTERLINE, MathType.MATHML
+                    return EQUATION_INLINE, MathType.MATHML
 
             # 再检查latex
             if text := text_strip(node.text):
@@ -240,3 +247,6 @@ if __name__ == '__main__':
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<p>这是p的text</p>'))
     print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
+    print(cm.wrap_math(r'$$a^2 + b^2 = c^2$$'))
+    print(cm.wrap_math_md(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
+    print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import commentjson as json
 
-from llm_web_kit.exception.exception import PipelineInitExp
+from llm_web_kit.exception.exception import PipeLineSuitBaseExp
 from llm_web_kit.input.datajson import DataJson, DataJsonKey
 from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.pipeline.pipeline import PipelineSimpleFactory
@@ -24,7 +24,7 @@ class PipelineSuit(object):
         if isinstance(config, str):
             pth = Path(config)
             if not pth.exists():
-                raise PipelineInitExp(f'Config file {config} does not exist.')
+                raise PipeLineSuitBaseExp(f'Config file {config} does not exist.')
             if pth.is_dir():
                 config_files = [str(p) for p in Path(config).rglob('*.json')]
             else:
@@ -34,17 +34,17 @@ class PipelineSuit(object):
                 cfg = self.load_config_file(config_file_path=config_file)
                 dataset_name = cfg.get(DataJsonKey.DATASET_NAME, None)
                 if not dataset_name:
-                    raise PipelineInitExp(f"JSON config object must be a dictionary containing '{DataJsonKey.DATASET_NAME}'.")
+                    raise PipeLineSuitBaseExp(f"JSON config object must be a dictionary containing '{DataJsonKey.DATASET_NAME}'.")
                 else:
                     self.__config[dataset_name] = cfg
         elif isinstance(config, dict):
             dataset_name = config.get(DataJsonKey.DATASET_NAME, None)
             if not dataset_name:
-                raise PipelineInitExp(f"JSON config object must be a dictionary containing '{DataJsonKey.DATASET_NAME}'.")
+                raise PipeLineSuitBaseExp(f"JSON config object must be a dictionary containing '{DataJsonKey.DATASET_NAME}'.")
             else:
                 self.__config[dataset_name] = config
         else:
-            raise PipelineInitExp('Config must be a path to a jsonc file or a dictionary.')
+            raise PipeLineSuitBaseExp('Config must be a path to a jsonc file or a dictionary.')
 
     @staticmethod
     def load_config_file(config_file_path: str):
@@ -83,14 +83,14 @@ class PipelineSuit(object):
             Returns:
             """
             if not isinstance(json_obj, DataJson):
-                raise PipelineInitExp('first arg must a instance of DataJson.')
+                raise PipeLineSuitBaseExp('first arg must a instance of DataJson.')
             if json_obj.get(DataJsonKey.DATASET_NAME) is None:
-                raise PipelineInitExp("DataJson must containing key: 'dataset_name'.")
+                raise PipeLineSuitBaseExp("DataJson must containing key: 'dataset_name'.")
 
         # 这个方法会在访问的属性在PipelineSuit中不存在时被调用
         def method(*args, **kwargs):
             if not args:
-                raise PipelineInitExp("First argument must be the JSON object containing 'dataset_name'.")
+                raise PipeLineSuitBaseExp("First argument must be the JSON object containing 'dataset_name'.")
 
             json_obj = args[0]
             validate_datajson(json_obj)
@@ -104,18 +104,18 @@ class PipelineSuit(object):
                     pipeline = PipelineSimpleFactory.create(pipeline_config)
                     self._PipelineSuit__pipelines[dataset_name] = pipeline
                 except KeyError:
-                    raise PipelineInitExp(f'Dataset name {dataset_name} is not found in the configuration file.')
+                    raise PipeLineSuitBaseExp(f'Dataset name {dataset_name} is not found in the configuration file.')
                 except ValueError as e:
                     mylogger.exception(e)
-                    raise PipelineInitExp(
+                    raise PipeLineSuitBaseExp(
                         f'Failed to initialize pipeline for dataset: {dataset_name}, check pipeline config file of this dataset.') from e
                 except Exception as e:
                     mylogger.exception(e)
-                    raise PipelineInitExp(f'Failed to initialize pipeline for dataset: {dataset_name}') from e
+                    raise PipeLineSuitBaseExp(f'Failed to initialize pipeline for dataset: {dataset_name}') from e
 
             # 检查Pipeline实例是否有这个方法
             if not hasattr(pipeline, method_name):
-                raise PipelineInitExp(f'The method {method_name} is not defined in the pipeline for dataset: {dataset_name}')
+                raise PipeLineSuitBaseExp(f'The method {method_name} is not defined in the pipeline for dataset: {dataset_name}')
 
             # 调用Pipeline实例的方法
             return getattr(pipeline, method_name)(*args, **kwargs)
