@@ -73,7 +73,10 @@ class TestPipelineSuitHTML(unittest.TestCase):
         # 然后是img
         html_content = html_content_list[2]
         self.assertEqual(html_content['type'], DocElementType.IMAGE)
-        # self.assertEqual(html_content['content']['src'], 'https://www.example.com/image.jpg')
+        self.assertEqual(html_content['content']['title'], 'image-title')
+        self.assertEqual(html_content['content']['alt'], 'image-alt')
+        self.assertEqual(html_content['content']['url'], 'https://www.test.com/test.png')
+        self.assertEqual(html_content['content']['caption'], None)
 
         # 然后是simple table
         html_content = html_content_list[4]
