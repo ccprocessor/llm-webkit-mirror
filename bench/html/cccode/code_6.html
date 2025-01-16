@@ -1,0 +1,604 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
+    <title>chef-arkserver Cookbook - Chef Supermarket</title>
+    <meta name="description" content="chef-arkserver Cookbook (0.1.0) debian, ubuntu">
+    <link rel="shortcut icon" href="https://supermarket.chef.io/assets/favicon-1de176982429b62ce155aa4f6e8b617f78fe12d214340b9e67480e96288b06d1.ico" type="image/x-icon">
+    <link rel="icon" href="https://supermarket.chef.io/assets/favicon-1de176982429b62ce155aa4f6e8b617f78fe12d214340b9e67480e96288b06d1.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://supermarket.chef.io/assets/apple-touch-icon-6f4e4f3faf5e32d0cdad7c2466f310dcbdf2c112945a0a5555ca71cffb67f56b.png"/>
+    <link rel="stylesheet" href="/assets/application-133c97d65c4949afa93578f49d21c0e72f8e6ea16ccebd80df2768d4b279bfd0.css" media="all" />
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700" media="screen" />
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="YT0Su3mPHUNvOIHhJENdHXxJAOOe9H9zyb05kWpN0dL/An05AhTZpR2oAS8Jd28snIezvkmaEvvOFdiqqBMe5A==" />
+        <script src="https://cdn.cookielaw.org/consent/e231efa5-3ed9-4b92-96bc-f4c0872ca486/otSDKStub.js" charset="UTF-8" data-domain-script="e231efa5-3ed9-4b92-96bc-f4c0872ca486" nonce="pvp7bkHzj2leyAtY/GtXEw=="></script>
+
+
+
+  <script nonce="pvp7bkHzj2leyAtY/GtXEw==">
+//<![CDATA[
+
+    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+    analytics.load("");
+    analytics.page();
+    }}();
+
+//]]>
+</script>
+  </head>
+  <body class="cookbook_versions">
+    <div class="off-canvas-wrap">
+      <div class="inner-wrap">
+        <!-- Chef Property Menu -->
+        <aside class="left-off-canvas-menu">
+          <ul class="off-canvas-list show-for-medium-down">
+            <li><a href="/cookbooks-directory">Cookbooks</a></li>
+              <li><a href="/tools">Tools &amp; Plugins</a></li>
+            <li class="more-info"><a>More Info</a></li>
+              <li><a rel="sign_in nofollow" data-method="post" href="/auth/chef_oauth2">Sign In</a></li>
+          </ul>
+          <ul class="off-canvas-list">
+            <li><a target="_blank" rel="noopener" href="https://www.chef.io">Get Chef</a></li>
+            <li><a target="_blank" rel="noopener" href="https://learn.chef.io">Learn Chef</a></li>
+            <li><a target="_blank" rel="noopener" href="https://docs.chef.io">Docs</a></li>
+            <li><a target="_blank" rel="noopener" href="https://www.chef.io/training">Training</a></li>
+          </ul>
+        </aside>
+
+        <header class="globalheader">
+          <a class="left-off-canvas-toggle"><i class="fa fa-bars"></i><span class="hide">Menu</span></a>
+          <div class="inner_wrap">
+            <div class="logo_and_nav_toggle">
+              <h2 class="logochef"><a href="/"><span>Chef Supermarket</span></a></h2>
+            </div>
+            <nav class="appnav">
+  <ul class="mainnav hide-for-medium-down">
+    <li><a data-hover="Cookbooks" rel="cookbooks" href="/cookbooks-directory">Cookbooks</a></li>
+      <li><a href="/tools-directory">Tools &amp; Plugins</a></li>
+    <li class="more-info"><a>More Info</a></li>
+  </ul>
+  <div class="usermenu">
+    <ul>
+      <li class="sign_in_create_account"><a href="https://manage.chef.io/signup?ref=community">Create Account</a></li>
+      <li class="sign_in_create_account"><a rel="sign_in nofollow" data-method="post" href="/auth/chef_oauth2">Sign In</a></li>
+    </ul>
+  </div>
+</nav>
+
+          </div>
+        </header>
+
+          <div class="announcement_banner">
+  <div class="announcement_banner_content">
+
+    <div class="announcement_info">
+      <h3>Adoptable Cookbooks List</h3>
+
+      <p>
+        Looking for a cookbook to adopt?  You can now see a list of cookbooks available for adoption!
+        <br />
+        <a href="/available_for_adoption">List of Adoptable Cookbooks</a>
+      </p>
+    </div>
+
+    <div class="announcement_info">
+      <h3>Supermarket Belongs to the Community</h3>
+
+      <p>Supermarket belongs to the community. While Chef has the responsibility to keep it running and be stewards of its functionality, what it does and how it works is driven by the community. The <a href="https://github.com/chef/supermarket">chef/supermarket</a> repository will continue to be where development of the Supermarket application takes place. Come be part of shaping the direction of Supermarket by opening issues and pull requests or by joining us on the <a href="https://discourse.chef.io/">Chef Mailing List</a>.</p>
+    </div>
+
+    <div class="announcement_info">
+      <h3><a href="/documentation">View our collection of guides, documentation, and articles</a></h3>
+    </div>
+  </div>
+</div>
+
+
+
+        <form class="search_form" action="/cookbooks" accept-charset="UTF-8" method="get">
+  <div class="search_bar">
+    <div class="quick_search">
+      <div class="search_toggle">
+        <a class="button expand large" data-dropdown="search-types" rel="toggle-search-types"><span>Cookbooks</span> <i class="fa fa-chevron-down"></i></a>
+
+        <ul id="search-types" data-dropdown-content class="f-dropdown">
+          <li><a href="#" data-url=/cookbooks rel="toggle-cookbook-search">Cookbooks</a></li>
+          <li><a href="#" data-url=/tools rel="toggle-tool-search">Tools</a></li>
+        </ul>
+      </div>
+
+      <div class="search_field">
+        <i class="fa fa-search"></i>
+        <input type="search" name="q" id="q" placeholder="Search" class="cookbook_search_textfield" />
+      </div>
+
+
+
+      <div class="search_button">
+        <button type="submit" class="cookbook_search_button">
+          GO
+</button>      </div>
+
+      <div class="advanced_search_toggle">
+        <span>Advanced Options <i class="fa fa-chevron-down" id="toggle-arrow"></i><span>
+      </div>
+    </div>
+  </div>
+
+  <div class="advanced_search_body">
+    <h4> Select Badges</h4>
+    <div class="advanced_search_badges" >
+
+        <div class="advanced_search_badge">
+            <label>
+              <input type="checkbox" name="badges[]" id="badges_partner" value="partner" />
+              partner
+            </label>
+        </div>
+    </div>
+
+    <h4> Select Supported Platforms </h4>
+    <div class = "advanced_search_platforms" >
+
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="aix" />
+              aix
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="amazon" />
+              amazon
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="centos" />
+              centos
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="debian" />
+              debian
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="fedora" />
+              fedora
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="freebsd" />
+              freebsd
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="mac_os_x" />
+              mac_os_x
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="opensuseleap" />
+              opensuseleap
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="oracle" />
+              oracle
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="redhat" />
+              redhat
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="ubuntu" />
+              ubuntu
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="scientific" />
+              scientific
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="smartos" />
+              smartos
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="solaris" />
+              solaris
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="suse" />
+              suse
+            </label>
+        </div>
+        <div class="advanced_search_platform">
+            <label>
+              <input type="checkbox" name="platforms[]" id="platforms_" value="windows" />
+              windows
+            </label>
+        </div>
+    </div>
+
+    <h4> Select Status </h4>
+    <div class = "advanced_search_statuses">
+      <div class = "advanced_search_status">
+        <label>
+          <input type="checkbox" name="deprecated" id="deprecated" value="true" />
+          Include deprecated cookbooks
+        </label>
+      </div>
+    </div>
+
+    <div class= "advanced_textfield">
+      <input type="search" name="platforms[]" id="platforms_" placeholder="You can write in a platform name here if it&#39;s not listed above" class="platform_search_textfield" />
+    </div>
+  </div>
+</form>
+
+        <div class="container">
+
+
+
+<div class="page resource cookbook_show" data-equalizer>
+  <div class="main">
+
+  <small class="rss">
+    <a class="rss_feed_link" href="/cookbooks/chef-arkserver.atom">
+      <i class="fa fa-rss"></i> RSS
+</a>  </small>
+  <h1 class="heading">
+    <span itemprop="name">chef-arkserver</span>
+    <small class="version_dropdown">
+      <a data-dropdown="versions" class="button radius tiny dropdown secondary" rel="cookbook_versions" href="#">
+        <span class="versions_count">
+          (15) Versions
+        </span>
+        0.1.0
+</a>      <ul id="versions" data-dropdown-content class="f-dropdown">
+        <li>
+        <ul>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.6.1">
+              0.6.1
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.6.0">
+              0.6.0
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.5.1">
+              0.5.1
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.5.0">
+              0.5.0
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.4.1">
+              0.4.1
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.4.0">
+              0.4.0
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.6">
+              0.2.6
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.5">
+              0.2.5
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.4">
+              0.2.4
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.3">
+              0.2.3
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.2">
+              0.2.2
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.1">
+              0.2.1
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.2.0">
+              0.2.0
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.1.5">
+              0.1.5
+
+</a>            </li>
+            <li>
+            <a rel="cookbook_version" href="/cookbooks/chef-arkserver/versions/0.1.0">
+              0.1.0
+              <i class="fa fa-check right"></i>
+</a>            </li>
+        </ul>
+        </li>
+      </ul>
+    </small>
+
+    <small class="followbutton">
+  <a rel="sign-in-to-follow nofollow" class="button radius tiny follow" title="You must be signed in to follow a cookbook." data-tooltip="true" data-method="put" href="/cookbooks/chef-arkserver/follow"><i class="fa fa-users"></i>Follow<span class="cookbook_follow_count">0</span></a>
+</small>
+
+  </h1>
+
+  <p itemprop="description">Installs and Configures Ark Survival Evolved Dedicated Server</p>
+
+  <div class="installs" data-update-url="https://supermarket.chef.io/profile/update_install_preference">
+  <dl data-tab data-options="deep_linking:true; scroll_to_content: false;" class="">
+      <dd class="active">
+        <a href="#policyfile" class="button tiny secondary">Policyfile</a>
+      </dd>
+
+      <dd>
+        <a href="#berkshelf" class="button tiny secondary">Berkshelf</a>
+      </dd>
+
+      <dd>
+        <a href="#knife" class="button tiny secondary">Knife</a>
+      </dd>
+  </dl>
+
+  <div class="tabs-content">
+      <div class="content active" id="policyfile">
+        <pre class="install">cookbook 'chef-arkserver', '= 0.1.0', :supermarket</pre>
+      </div>
+
+      <div class="content" id="berkshelf">
+        <pre class="install">cookbook 'chef-arkserver', '= 0.1.0'</pre>
+      </div>
+
+      <div class="content" id="knife">
+        <pre class="install">knife supermarket install chef-arkserver</pre>
+        <pre class="install">knife supermarket download chef-arkserver</pre>
+      </div>
+  </div>
+</div>
+
+
+  <dl class="tabs" data-tab data-options="deep_linking:true">
+    <dd class="active"><a href="#readme">README</a></dd>
+    <dd><a href="#dependencies" rel="cookbook_dependencies">Dependencies</a></dd>
+      <dd>
+      <a href="#quality" rel="quality">Quality
+      <span class="has-tip" title="the percentage of passing quality metrics">
+        <i class="fa fa-dashboard"></i> 43%</a>
+      </span>
+      </dd>
+  </dl>
+  <div class="tabs-content">
+    <div class="content active" id="readme">
+      <h1 id="ark-survival-evolved-chef-cookbook">Ark: Survival Evolved Chef Cookbook</h1>
+
+<p><a href="https://travis-ci.org/f0rkz/chef-arkserver" target="_blank" rel="noopener"><img src="//travis-ci.org/f0rkz/chef-arkserver.svg" alt="Build Status"></a></p>
+
+<p>This cookbook will install and configure an Ark: Survival Evolved dedicated<br>
+server. Utilize the following README for more information on how to utilize this<br>
+cookbook.</p>
+
+<h2 id="usage">Usage</h2>
+
+<p>Include <code>chef-arkserver</code> in your node's runlist</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>In order to properly utilize this cookbook, a suite of default configuration<br>
+options are included in the cookbook's <code>attributes/default.rb</code> file. You will<br>
+need to override the default options in your cookbook's node configuration.</p>
+
+<p>An example of overriding configuration options is structured as follows:</p>
+<div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">"</span><span>name</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my.ark.server.net</span><span style="color:#710">"</span></span>,
+  <span style="color:#606"><span style="color:#404">"</span><span>chef_environment</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">_default</span><span style="color:#710">"</span></span>,
+  <span style="color:#606"><span style="color:#404">"</span><span>normal</span><span style="color:#404">"</span></span>: {
+    <span style="color:#606"><span style="color:#404">"</span><span>ark</span><span style="color:#404">"</span></span>: {
+      <span style="color:#606"><span style="color:#404">"</span><span>gameserver</span><span style="color:#404">"</span></span>: {
+        <span style="color:#606"><span style="color:#404">"</span><span>configuration</span><span style="color:#404">"</span></span>: {
+          <span style="color:#606"><span style="color:#404">"</span><span>map</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ScorchedEarth_P</span><span style="color:#710">"</span></span>,
+          <span style="color:#606"><span style="color:#404">"</span><span>ServerSettings</span><span style="color:#404">"</span></span>: {
+            <span style="color:#606"><span style="color:#404">"</span><span>XPMultiplier</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">5.0000</span><span style="color:#710">"</span></span>,
+            <span style="color:#606"><span style="color:#404">"</span><span>TamingSpeedMultiplier</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">2.0000</span><span style="color:#710">"</span></span>,
+            <span style="color:#606"><span style="color:#404">"</span><span>RCONPort</span><span style="color:#404">"</span></span>: <span style="color:#00D">27025</span>
+          },
+          <span style="color:#606"><span style="color:#404">"</span><span>SessionSettings</span><span style="color:#404">"</span></span>: {
+            <span style="color:#606"><span style="color:#404">"</span><span>SessionName</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">My Ark Dedicated Server</span><span style="color:#710">"</span></span>
+          },
+          <span style="color:#606"><span style="color:#404">"</span><span>MessageOfTheDay</span><span style="color:#404">"</span></span>: {
+            <span style="color:#606"><span style="color:#404">"</span><span>Message</span><span style="color:#404">"</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Welcome to my ARK Server dot Net</span><span style="color:#b0b">\n</span><span style="color:#D20">Please enjoy your stay!</span><span style="color:#710">"</span></span>
+          }
+        }
+      }
+    },
+    <span style="color:#606"><span style="color:#404">"</span><span>tags</span><span style="color:#404">"</span></span>: [
+
+    ]
+  },
+  <span style="color:#606"><span style="color:#404">"</span><span>policy_name</span><span style="color:#404">"</span></span>: <span style="color:#088">null</span>,
+  <span style="color:#606"><span style="color:#404">"</span><span>policy_group</span><span style="color:#404">"</span></span>: <span style="color:#088">null</span>,
+  <span style="color:#606"><span style="color:#404">"</span><span>run_list</span><span style="color:#404">"</span></span>: [
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">role[base]</span><span style="color:#710">"</span></span>,
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">recipe[]</span><span style="color:#710">"</span></span>
+]
+
+}
+</pre></div>
+</div>
+
+<p>This configuration will build your <code>GameUserSettings.ini</code> file with the requested<br>
+overrided options defined above.</p>
+
+    </div>
+    <div class="content" id="dependencies">
+      <h3 class="dependent-header">Dependent cookbooks</h3>
+        <table>
+          <tbody>
+            <tr>
+  <td><a rel="cookbook_dependency" href="https://supermarket.chef.io/cookbooks/chef-steamcmd">chef-steamcmd &gt;= 0.0.0</a></td>
+</tr>
+
+          </tbody>
+        </table>
+
+      <h3 class="dependent-header">Contingent cookbooks</h3>
+        <p>There are no cookbooks that are contingent upon this one.</p>
+    </div>
+      <div class="content" id="quality">
+      <h1>Collaborator Number Metric
+        <pre>
+            <p>0.1.0 failed this metric</pre>
+            <pre>Failure: Cookbook has 0 collaborators. A cookbook must have at least 2 collaborators to pass this metric.</pre>
+        </pre>
+      <h1>Contributing File Metric
+        <pre>
+            <p>0.1.0 failed this metric</pre>
+            <pre>Failure: To pass this metric, your cookbook metadata must include a source url, the source url must be in the form of https://github.com/user/repo, and your repo must contain a CONTRIBUTING.md file</pre>
+        </pre>
+      <h1>Foodcritic Metric
+        <pre>
+            <p>0.1.0 passed this metric</pre>
+        </pre>
+      <h1>License Metric
+        <pre>
+            <p>0.1.0 passed this metric</pre>
+        </pre>
+      <h1>No Binaries Metric
+        <pre>
+            <p>0.1.0 passed this metric</pre>
+        </pre>
+      <h1>Testing File Metric
+        <pre>
+            <p>0.1.0 failed this metric</pre>
+            <pre>Failure: To pass this metric, your cookbook metadata must include a source url, the source url must be in the form of https://github.com/user/repo, and your repo must contain a TESTING.md file</pre>
+        </pre>
+      <h1>Version Tag Metric
+        <pre>
+            <p>0.1.0 failed this metric</pre>
+            <pre>Failure: To pass this metric, your cookbook metadata must include a source url, the source url must be in the form of https://github.com/user/repo, and your repo must include a tag that matches this cookbook version number</pre>
+        </pre>
+  <br />
+</div>
+
+  </div>
+</div>
+
+  <div class="sidebar" data-equalizer-watch>
+  <div class="owner_avatar">
+  <a href="/users/f0rkz">
+    <img alt="Nick Gray" class="gravatar" src="https://secure.gravatar.com/avatar/88fdabd9abac2a4a52034b955de3009f?s=144" />
+    <span itemprop="author">f0rkz</span>
+    <small>Nick Gray</small>
+</a></div>
+
+  <div class="collaborators_avatar">
+
+</div>
+
+
+
+
+  <h3 class="" rel="edit-cookbook-urls">
+    Details
+  </h3>
+
+  <div class="cookbook-details">
+
+    <div class="cookbook-urls">
+        <a class="button radius tiny source-url" itemprop="codeRepository" href="https://github.com/f0rkz/chef-arkserver">View Source</a>
+
+        <a class="button secondary radius tiny issues-url" itemprop="discussionUrl" href="https://github.com/f0rkz/chef-arkserver/issues">View Issues</a>
+    </div>
+
+    <h4>
+      <i class="fa fa-clock-o"></i> Updated <span itemprop="dateModified">September 8, 2017</span>
+      <small>Created on <span itemprop="datePublished">September 8, 2017</span></small>
+    </h4>
+
+    <h4><i class="fa fa-desktop"></i> Supported Platforms</h4>
+    <ul class="cookbook_platforms">
+          <li class="cookbook_platform_icon">
+            <img alt="debian &gt;= 0.0.0" title="debian &gt;= 0.0.0" height="16" width="16" class="fa" src="/assets/platform_debian-c347358e970fcd18e8a9289a3a2444f5ea81a92b0edfe808d96996449b53cb92.svg" />
+          </li>
+          <li class="cookbook_platform_icon">
+            <img alt="ubuntu &gt;= 0.0.0" title="ubuntu &gt;= 0.0.0" height="16" width="16" class="fa" src="/assets/platform_ubuntu-84e6bc812ff3f2a9139a612b72b7979fdd9c8ab5b3731ab2d8db8a63cf9f5122.svg" />
+          </li>
+    </ul>
+
+
+
+    <h4><i class="fa fa-key"></i> License</h4>
+    <p>Apache-2.0
+    </p>
+
+      <h4><i class="fa fa-key"></i> Required Chef Infra Client</h4>
+      <p>(&gt;= 12.1)</p>
+
+
+    <a class="button secondary radius expand button_download_cookbook" href="/cookbooks/chef-arkserver/download">Download Cookbook</a>
+  </div>
+</div>
+
+</div>
+
+        </div>
+        <footer class="footer">
+          &copy; 2008&thinsp;&ndash;&thinsp;2025 Chef Software, Inc. All Rights Reserved.
+          <br><br><a href="https://docs.chef.io/community_guidelines">Code of Conduct</a>
+          <a href="https://www.progress.com/legal/terms-of-use">Terms and Conditions of Use</a>
+          <a href="https://www.progress.com/legal/privacy-policy">Privacy Policy</a>
+          <a href="https://www.progress.com/legal/cookie-policy">Cookie Policy</a>
+          <a href="https://www.progress.com/legal/trademarks">Trademark Policy</a>
+          <a href="https://status.chef.io">Status</a>
+        </footer>
+
+        <a class="exit-off-canvas"></a>
+      </div>
+    </div>
+
+    <script src="/assets/application-dfd09a135ee7f606beb4acdc1ebb0557c9a4572b3c747e677064366cfa70c80c.js"></script>
+  </body>
+</html>

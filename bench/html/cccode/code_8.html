@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SQLScript Locate String Function for SAP HANA SQL Developer</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="SAP SQLScript developers use LOCATE SQL string function to find the position of a substring in an other given string value in SAP HANA development" />
+    <meta name="keywords" content="sqlscript, sql, locate, string function, substring, sap hana, string, function, sql console, sap" />
+
+    <link rel="stylesheet" href="/kodyazcss.css" type="text/css" media="screen" />
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+    <script data-ad-client="ca-pub-5941999004341432" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+
+    <table>
+        <tr>
+            <td>
+                <a href="/"><img src="/kodyaz.png" title="kodyaz" alt="SQL Server administration and T-SQL development, Web Programming with ASP.NET, HTML5 and Javascript, Windows Phone 8 app development, SAP Smartforms and ABAP Programming, Windows 7, Visual Studio and MS Office software" width="98" height="121" /></a>
+            </td>
+            <td class="c1">
+                <span class="logo">SAP ABAP Programming and HANA Database Tutorials</span>
+                <div class="desc">Development resources, articles, tutorials, code samples, tools and downloads for SAP HANA and ABAP, HANA Database, SQLScript, SAP UI5, Screen Personas, Web Dynpro, Workflow</div>
+            </td>
+        </tr>
+    </table>
+
+    <div class='nav-wrap'>
+        <div class="nav">
+            <ul id="menu">
+                <li><a class="navlink" href="/">Kodyaz.com</a></li>
+                <li><a class="navlink" href="/articles/default.aspx">Articles</a></li>
+                <li><a class="navlink" href="/content/SQLServerArticles.aspx">SQL Server</a></li>
+                <li><a class="navlink" href="/articles/sap-training-sap-tutorial-resources-and-articles.aspx">SAP HANA ABAP</a></li>
+                <li><a class="navlink" href="/aws/default.aspx">AWS</a></li>
+                <li><a class="navlink" href="/data-virtualization/default.aspx">Data Virtualization</a></li>
+                <li><a class="navlink" href="/content/JavaScriptArticles.aspx">Javascript</a></li>
+                <li><a class="navlink" href="/windows-10/windows-10-tutorial-and-guides.aspx">Windows</a></li>
+                <li><a class="navlink" href="/content/DotNETDevelopmentArticles.aspx">ASP.NET Visual Studio</a></li>
+                <li><a class="navlink" href="/exasol/default.aspx">Exasol</a></li>
+                <li><a class="navlink" href="/articles/download-purble-place-for-windows-10-play-windows7-games.aspx">Purble Place</a></li>
+            </ul>
+            <div class='clear'></div>
+        </div>
+    </div>
+
+    <div id="header"></div>
+    <div id="topbanner"></div>
+
+    <div id="container">
+        <div id="center" class="column">
+            <div id="maincontent">
+            <!-- **************************** TUTORIAL Start ******************************************************* -->
+
+
+<h1 class="h1title">SQLScript Locate String Function for SAP HANA SQL Developer</h1>
+<br />
+<p>
+SAP SQLScript developers use <b>LOCATE</b> SQL string function to find the position of a substring in an other given string value.
+SQL programmers can use the string function Locate to search for an explicit text within an other longer text variable or in a string type table column.
+An other use of Locate for SAP HANA developers is to split text objects to find the exact place of delimiter characters.
+</p>
+
+<div id="middlebanner"></div>
+
+
+<p>Here is sample SQL code where <b>Locate string function</b> is used with is basic form but with special string variables in SQLScript by SAP HANA developer</p>
+<figure>
+<div class="samplecode" >
+<code>
+SELECT<br />
+&nbsp;LOCATE('', null),<br />
+&nbsp;LOCATE(null, null),<br />
+&nbsp;LOCATE('', ''),<br />
+&nbsp;LOCATE(null, 'string'),<br />
+&nbsp;LOCATE('string', null)<br />
+FROM DUMMY;
+</code>
+</div>
+<figcaption class="caps">Code</figcaption>
+</figure>
+<p>As HANA developers will realize easily, whenever one of the arguments is NULL then the return value of the string function <b>Locate()</b> is NULL too.</p>
+<p>If the string to search is <b>empty string</b> '' then the Locate function returns the first character by its return value as 1</p>
+<p>Here is the outputs of the sample SQLScript code where string function <b>Locate</b> is used on SQL Console</p>
+<p><img alt="SQLScript Locate string function example" title="SQLScript Locate string function example" width="590" height="148" src="/images/sap-abap/sap-hana-sqlscript-locate-string-function.png" /></p>
+<p>In fact, the SAP HANA SQLScript Locate string function takes two optional arguments which provide more flexibility to SQL developers.</p>
+<figure>
+<div class="samplecode" >
+<code>
+-- SQL Locate string function syntax<br />
+LOCATE (&lt;haystack>, &lt;needle>, &lt;start_position>, &lt;occurrences>)
+</code>
+</div>
+<figcaption class="caps">Code</figcaption>
+</figure>
+<p>
+Locate function <b>haystack</b> argument is the main string object where the <b>needle</b> argument is being searched for.<br />
+<b>start_position</b> argument enables the developer to search the <b>needle</b> within <b>haystack</b> beginning from a certain numbers of characters from left to the end of the haystack<br />
+<b>occurrences</b> argument enables the search for the nth occurence of the <b>needle</b> within <b>haystack</b>
+</p>
+<p>
+Let's make a few more SQLScript examples to understand the Locate function arguments.<br />
+I executed below SQLScript code anonymous block on SQL Console using SAP HANA Web-based Development Workbench
+</p>
+<figure>
+<div class="samplecode" >
+<code>
+DO BEGIN<br />
+&nbsp;DECLARE v_haystack NVARCHAR(5000);<br />
+&nbsp;DECLARE v_needle CHAR(1) := ',';<br />
+&nbsp;DECLARE v_start_position INT;<br />
+&nbsp;DECLARE v_occurence INT;<br />
+<br />
+&nbsp;v_haystack := 'kodyaz,sqlscript,sap,hana,database,sql';<br />
+<br />
+&nbsp;-- returns first position of needle in haystack from the beginning<br />
+&nbsp;select<br />
+&nbsp;&nbsp;-- first needle position<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle) as firstPosition,<br />
+&nbsp;&nbsp;-- first string seperated with needle character<br />
+&nbsp;&nbsp;left(v_haystack, locate(v_haystack, v_needle) - 1) as firstString<br />
+&nbsp;from dummy;<br />
+<br />
+&nbsp;select<br />
+&nbsp;&nbsp;-- first needle position<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle) as firstPosition,<br />
+&nbsp;&nbsp;-- second needle position<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle,0,2) as secondPosition,<br />
+&nbsp;&nbsp;-- first string seperated with needle character<br />
+&nbsp;&nbsp;left(v_haystack, locate(v_haystack, v_needle) - 1) as firstString,<br />
+&nbsp;&nbsp;-- second string<br />
+&nbsp;&nbsp;substring(<br />
+&nbsp;&nbsp;&nbsp;v_haystack,<br />
+&nbsp;&nbsp;&nbsp;locate(v_haystack, v_needle) + 1,<br />
+&nbsp;&nbsp;&nbsp;locate(v_haystack, v_needle,0,2) - locate(v_haystack, v_needle) - 1<br />
+&nbsp;&nbsp;) as secondString<br />
+&nbsp;from dummy;<br />
+<br />
+&nbsp;select<br />
+&nbsp;&nbsp;-- third needle position<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle,0,3) as thirdPosition,<br />
+&nbsp;&nbsp;-- next needle position<br />
+&nbsp;&nbsp;locate(v_haystack,<br />
+&nbsp;&nbsp;&nbsp;v_needle,<br />
+&nbsp;&nbsp;&nbsp;locate(v_haystack, v_needle,0,3)+1, -- starting from 3rd needle pos<br />
+&nbsp;&nbsp;1) as nextPosition,<br />
+&nbsp;&nbsp;-- fourth string<br />
+&nbsp;&nbsp;substring(v_haystack,21+1,26-1-21) as fourthString<br />
+&nbsp;from dummy;<br />
+<br />
+END;
+</code>
+</div>
+<figcaption class="caps">Code</figcaption>
+</figure>
+<p>Let's check the outputs of each SQLScript Select statements executed on SQL Console</p>
+<figure>
+<div class="samplecode" >
+<code>
+select<br />
+&nbsp;-- first needle position<br />
+&nbsp;locate(v_haystack, v_needle) as firstPosition,<br />
+&nbsp;-- first string seperated with needle character<br />
+&nbsp;left(v_haystack, locate(v_haystack, v_needle) - 1) as firstString<br />
+from dummy;
+</code>
+</div>
+<figcaption class="caps">Code</figcaption>
+</figure>
+<p>First seperator position is found with SQL Locate() function and the string up to that position is fetched with <a href="/sap-abap/sqlscript-left-string-function-in-sap-hana.aspx" target="_blank">SQLScript Left() string function</a> as the first string piece</p>
+<p><img alt="SQLScript string functions Locate in SAP HANA" title="SQLScript string functions Locate in SAP HANA" width="517" height="69" src="/images/sap-abap/sql-locate-function-search-for-string-within-string.png" /></p>
+<p>
+Below SQL Select output is very similar with above one.<br />
+With one difference, SQLScript <b>SubString</b> function is used for fetching the second string.
+</p>
+<figure>
+<div class="samplecode" >
+<code>
+select<br />
+&nbsp;-- first needle position<br />
+&nbsp;locate(v_haystack, v_needle) as firstPosition,<br />
+&nbsp;-- second needle position<br />
+&nbsp;locate(v_haystack, v_needle,0,2) as secondPosition,<br />
+&nbsp;-- first string seperated with needle character<br />
+&nbsp;left(v_haystack, locate(v_haystack, v_needle) - 1) as firstString,<br />
+&nbsp;-- second string<br />
+&nbsp;substring(<br />
+&nbsp;&nbsp;v_haystack,<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle) + 1,<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle,0,2) - locate(v_haystack, v_needle) - 1<br />
+&nbsp;) as secondString<br />
+from dummy;
+</code>
+</div>
+<figcaption class="caps">Code</figcaption>
+</figure>
+<p><img alt="SAP HANA SQLScript string functions" title="SAP HANA SQLScript string functions" width="590" height="57" src="/images/sap-abap/sqlscript-seperator-search-in-string.png" /></p>
+<p>
+On the last SQL Select statement and its output is here.<br />
+SQLScript Locate() string function is used with <b>start_position</b> and <b>occurrences</b> input arguments.
+</p>
+<figure>
+<div class="samplecode" >
+<code>
+select<br />
+&nbsp;-- third needle position<br />
+&nbsp;locate(v_haystack, v_needle,0,3) as thirdPosition,<br />
+&nbsp;-- next needle position<br />
+&nbsp;locate(v_haystack,<br />
+&nbsp;&nbsp;v_needle,<br />
+&nbsp;&nbsp;locate(v_haystack, v_needle,0,3)+1, -- starting from 3rd needle pos<br />
+&nbsp;1) as nextPosition,<br />
+&nbsp;-- fourth string<br />
+&nbsp;substring(v_haystack,21+1,26-1-21) as fourthString<br />
+from dummy;
+</code>
+</div>
+<figcaption class="caps">Code</figcaption>
+</figure>
+<p><img alt="SQLScript Locate SQL string function" title="SQLScript Locate SQL string function" width="541" height="63" src="/images/sap-abap/sqlscript-sql-string-functions-locate.png" /></p>
+
+<p>SQLScript developers can refer to <a href="https://help.sap.com/saphelp_hanaplatform/helpdata/en/20/e3b6b77519101485e6bd62f7018f75/content.htm" target="_blank" rel="nofollow">SAP Help Portal</a> for more information on SQL string function <b>Locate</b> in SQLScript</p>
+<p>For the <a href="/sap-abap/sqlscript-left-string-function-in-sap-hana.aspx" target="_blank"><b>SQLScript Left string function</b></a> which I have used in these SQL scripts frequently, SAP HANA database developers can refer to given tutorial.</p>
+<br /><br />
+
+                <!-- **************************** TUTORIAL End ******************************************************* -->
+            </div>
+        </div>
+        <div id="left" class="column">
+            <!-- **************************** LEFT Start ******************************************************* -->
+            <p class="txt pb">SAP HANA and ABAP</p>
+<p>
+    <a href="/sap-abap/install-sap-free-trial-edition-on-opensuse-linux-on-virtualbox.aspx" target="_blank">Install SAP Free</a><br />
+    <a href="/crm-software/crm-companies-list.aspx" target="_blank">CRM Companies List</a><br />
+    <a href="/crm-software/web-based-crm-software.aspx" target="_blank">Web Based CRM Software</a><br />
+</p>
+
+            <!-- **************************** LEFT End ******************************************************* -->
+        </div>
+        <div id="right" class="column">
+            <!-- **************************** RIGHT Start ******************************************************* -->
+            <p class="txt pb">SAP Tutorials</p>
+<p>
+    <a href="/articles/sap-training-sap-tutorial-resources-and-articles.aspx">SAP Tutorials</a><br />
+    <a href="/articles/sap-tools-list.aspx">SAP Tools</a><br />
+    <a href="/articles/sap-transaction-codes-table.aspx">SAP Transaction Codes Table</a><br />
+    <a href="/sap-abap/SAP-HANA-SQLScript-Development-Meetup-Sunumu-Temeller.pptx">Meetup Sunumu</a> <img src="/images/meetup.svg" alt="meetup" title="meetup" width="40" height="14" /><br />
+</p>
+            <!-- **************************** RIGHT End ******************************************************* -->
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <div id="bottombanner"></div>
+
+    <hr />
+    <figure style="text-align: center">
+        <figcaption class="caps">Copyright © 2004 - 2021 Eralper YILMAZ. All rights reserved.</figcaption>
+    </figure>
+
+</body>
+</html>
