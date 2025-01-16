@@ -214,6 +214,8 @@
 | content.caption     | string | 图片的caption属性                | 可选     |
 | content.image_style | string | 图片的类型，qrcode\\table\\chart | 可选     |
 
+> `content.url`和`content.path`和`content.data`三者必须有一个，数据使用优先级是`data`>`path`。
+
 ### 音频段
 
 ```json

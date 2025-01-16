@@ -216,16 +216,18 @@ class BaseHTMLElementRecognizer(ABC):
 
     @staticmethod
     def is_cc_html(html: str, tag_name: str | list = None) -> bool:
-        """判断html片段是否是cc标签. 判断的时候由于自定义ccmath等标签可能会含有父标签，因此要逐层判断tagname. 含有父html
-        完整路径的如：<html><body><ccmath>...</ccmath></body></html>，这种情况也会被识别为cc标签.
+        """判断html片段是否是cc标签.
 
+        判断的时候由于自定义ccmath等标签可能会含有父标签，因此要逐层判断tagname. 含有父html
+        完整路径的如：<html><body><ccmath>...</ccmath></body></html>，这种情况也会被识别为cc标签.
+        TODO 保证进来的cc标签没有父标签，只有一个根标签。
         Args:
             html: str: html片段
             tag_name: str|list: cc标签，如ccmath, cccode, 如果指定了那么就只检查这几个标签是否在html里，否则检查所有cc标签
         """
         # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
-        tree = html_to_element(html)
-        if tree is None:
+        el = html_to_element(html)
+        if el is None:
             return False
 
         if tag_name:
@@ -237,6 +239,6 @@ class BaseHTMLElementRecognizer(ABC):
             tag_to_check = [CCTag.CC_CODE, CCTag.CC_MATH_INTERLINE, CCTag.CC_IMAGE, CCTag.CC_VIDEO, CCTag.CC_AUDIO, CCTag.CC_TABLE, CCTag.CC_LIST, CCTag.CC_TEXT, CCTag.CC_TITLE]
 
         for tag in tag_to_check:
-            if tree.xpath(f'.//{tag}'):
+            if el.tag == tag or el.xpath(f'.//{tag}') :
                 return True
         return False

@@ -124,6 +124,13 @@ TEST_CASES_HTML = [
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_1.html'
     },
+    {
+        'input': [
+            'assets/ccmath/geoenergymath_img.html',
+        ],
+        'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
+        'expected': 'assets/ccmath/geoenergymath_img_1.html'
+    },
     # # katex latex+katex
     # {
     #     'input': ['assets/ccmath/katex_mathjax.html'],

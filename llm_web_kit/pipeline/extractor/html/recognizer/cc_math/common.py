@@ -27,6 +27,15 @@ MATH_KEYWORDS = [
     "class='tex'",
 ]
 
+LATEX_IMAGE_CLASS_NAMES = [
+    'latexcenter',
+    'latex',
+    'tex',
+    'latexdisplay',
+    'latexblock',
+    'latexblockcenter',
+]
+
 # ccmath标签，区分行内行间公式
 CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
 CCMATH_INLINE = CCTag.CC_MATH_INLINE

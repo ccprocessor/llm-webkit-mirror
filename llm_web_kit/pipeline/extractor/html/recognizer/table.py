@@ -107,7 +107,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __get_table_type(self, child: HtmlElement) -> str:
         """获取table的类型."""
-        flag = self.__is_simple_table(child) and self.__is_table_nested(child) and self.__is_table_contain_img(child)
+        flag = self.__is_simple_table(child) or self.__is_table_nested(child) or self.__is_table_contain_img(child)
         if flag:
             table_type = 'simple'
         else:
