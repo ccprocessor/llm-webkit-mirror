@@ -2,6 +2,7 @@ import base64
 import gzip
 import html
 import json
+import re
 from typing import List, Tuple
 from urllib.parse import urljoin, urlparse
 
@@ -252,6 +253,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
 
     def __svg_to_base64(self, svg_content: str) -> str:
         try:
+            if not svg_content.strip().endswith('svg>'):
+                svg_content = re.search(r'(<svg.*svg>)', svg_content).group(1)
             image_data = cairosvg.svg2png(bytestring=svg_content)
             base64_data = base64.b64encode(image_data).decode('utf-8')
             mime_type = 'image/png'
@@ -263,7 +266,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             mylogger.info(f'value error, The SVG size is undefined: {svg_content}')
         except Exception as e:
             mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
-            # raise Exception(f'svg_to_base64 failed: {e}')
+            raise Exception(f'svg_to_base64 failed: {e}')
 
 
 def read_gz_and_parse_json_line_by_line(file_path):
