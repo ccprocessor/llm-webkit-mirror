@@ -8,7 +8,7 @@ TEST_CASES_HTML = [
     {
         'input': ['assets/ccimage/figure_iframe.html'],
         'base_url': 'http://15.demooo.pl/produkt/okulary-ochronne/',
-        'expected': 35,
+        'expected': 33,
     },
     {
         'input': ['assets/ccimage/picture_img.html'],
@@ -18,12 +18,12 @@ TEST_CASES_HTML = [
     {
         'input': ['assets/ccimage/svg_base64.html'],
         'base_url': 'https://www.terrasoleil.com/collections/bestsellers/products/luna-soleil-tarot-deck',
-        'expected': 215,
+        'expected': 179,
     },
     {
         'input': ['assets/ccimage/svg_img.html'],
         'base_url': 'https://villarichic.com/collections/dresses/products/dont-hang-up-faux-suede-shirt-dress1?variant=45860191863029',
-        'expected': 44,
+        'expected': 32,
     },
     {
         'input': ['assets/ccimage/table_img.html'],
@@ -38,7 +38,7 @@ TEST_CASES_HTML = [
     {
         'input': ['assets/ccimage/no_parent_img.html'],
         'base_url': 'https://orenburg.shtaketniki.ru/evroshtaketnik-uzkij.html',
-        'expected': 4,
+        'expected': 3,
     },
     {
         'input': ['assets/ccimage/object_pdf.html'],

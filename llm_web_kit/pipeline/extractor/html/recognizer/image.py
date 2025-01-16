@@ -94,7 +94,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             except Exception as e:
                 mylogger.exception(f'recognizer image failed: {e}')
                 raise Exception(f'recognizer image failed: {e}')
-        print(f'html size: {len(ccimg_html)}')
         return ccimg_html
 
     def __parse_html_img(self, base_url: str, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
@@ -159,6 +158,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             elif tag == 'svg':
                 if elem.xpath('.//path|.//circle'):
                     self.__parse_svg_img_attr(elem, attributes)
+                    if not attributes.get('text'):
+                        continue
                 elif elem.xpath('.//img|.//image'):
                     self.__parse_img_attr(base_url, elem.xpath('.//img')[-1], attributes)
                 else:
@@ -166,22 +167,21 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             else:
                 self.__parse_img_attr(base_url, elem, attributes)
 
-            if attributes:
-                img_tag.append(CCTag.CC_IMAGE)
-                is_valid_img = True
-                # attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
-                img_text, img_tail = self.__parse_text_tail(attributes)
-                try:
-                    new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
-                except Exception as e:
-                    mylogger.exception(f'build_cc_element failed: {e}')
-                    raise Exception(f'build_cc_element failed: {e}')
-                # print(f'new_ccimage:{self._element_to_html(new_ccimage)}')
-                try:
-                    self._replace_element(elem, new_ccimage)
-                except Exception as e:
-                    mylogger.exception(f'replace img element fail: {e}')
-                    raise Exception(f'replace img element fail: {e}')
+            img_tag.append(CCTag.CC_IMAGE)
+            is_valid_img = True
+            # attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
+            img_text, img_tail = self.__parse_text_tail(attributes)
+            try:
+                new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
+            except Exception as e:
+                mylogger.exception(f'build_cc_element failed: {e}')
+                raise Exception(f'build_cc_element failed: {e}')
+            # print(f'new_ccimage:{self._element_to_html(new_ccimage)}')
+            try:
+                self._replace_element(elem, new_ccimage)
+            except Exception as e:
+                mylogger.exception(f'replace img element fail: {e}')
+                raise Exception(f'replace img element fail: {e}')
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
@@ -223,8 +223,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             for attr in common_attributes:
                 if elem.get(attr) is not None:
                     attributes[attr] = elem.get(attr)
-        else:
-            attributes = {}
 
     def __clean_xml_string(self, s):
         """清洗html数据，统一标准的unicode编码，移除NULL字节和其他控制字符."""
@@ -262,10 +260,10 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 f'base64,{base64_data}'
             )
         except ValueError:
-            mylogger.exception(f'value error, The SVG size is undefined: {svg_content}')
+            mylogger.info(f'value error, The SVG size is undefined: {svg_content}')
         except Exception as e:
             mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
-            # raise Exception(f'svg_to_base64 failed: {e}')
+            raise Exception(f'svg_to_base64 failed: {e}')
 
 
 def read_gz_and_parse_json_line_by_line(file_path):
