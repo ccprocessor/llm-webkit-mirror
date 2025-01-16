@@ -5,7 +5,7 @@
 # 使用方法
 
 ```
-cd bench && python eval.py
+python eval.py
 ```
 
 # 评估指标
