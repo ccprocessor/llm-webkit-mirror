@@ -165,21 +165,22 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             else:
                 self.__parse_img_attr(base_url, elem, attributes)
 
-            img_tag.append(CCTag.CC_IMAGE)
-            is_valid_img = True
-            # attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
-            img_text, img_tail = self.__parse_text_tail(attributes)
-            try:
-                new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
-            except Exception as e:
-                mylogger.exception(f'build_cc_element failed: {e}')
-                raise Exception(f'build_cc_element failed: {e}')
-            # print(f'new_ccimage:{self._element_to_html(new_ccimage)}')
-            try:
-                self._replace_element(elem, new_ccimage)
-            except Exception as e:
-                mylogger.exception(f'replace img element fail: {e}')
-                raise Exception(f'replace img element fail: {e}')
+            if attributes:
+                img_tag.append(CCTag.CC_IMAGE)
+                is_valid_img = True
+                # attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
+                img_text, img_tail = self.__parse_text_tail(attributes)
+                try:
+                    new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
+                except Exception as e:
+                    mylogger.exception(f'build_cc_element failed: {e}')
+                    raise Exception(f'build_cc_element failed: {e}')
+                # print(f'new_ccimage:{self._element_to_html(new_ccimage)}')
+                try:
+                    self._replace_element(elem, new_ccimage)
+                except Exception as e:
+                    mylogger.exception(f'replace img element fail: {e}')
+                    raise Exception(f'replace img element fail: {e}')
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
@@ -211,14 +212,18 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             attributes['tail'] = elem.tail.strip()
 
     def __parse_svg_img_attr(self, elem: HtmlElement, attributes: dict):
-        attributes['text'] = self.__svg_to_base64(attributes['html'])
-        attributes['format'] = 'base64'
-        if elem.tail and elem.tail.strip():
-            attributes['tail'] = elem.tail.strip()
-        common_attributes = ['alt', 'title', 'width', 'height']
-        for attr in common_attributes:
-            if elem.get(attr) is not None:
-                attributes[attr] = elem.get(attr)
+        svg_img = self.__svg_to_base64(attributes['html'])
+        if svg_img:
+            attributes['text'] = svg_img
+            attributes['format'] = 'base64'
+            if elem.tail and elem.tail.strip():
+                attributes['tail'] = elem.tail.strip()
+            common_attributes = ['alt', 'title', 'width', 'height']
+            for attr in common_attributes:
+                if elem.get(attr) is not None:
+                    attributes[attr] = elem.get(attr)
+        else:
+            attributes = {}
 
     def __clean_xml_string(self, s):
         """清洗html数据，统一标准的unicode编码，移除NULL字节和其他控制字符."""
@@ -256,8 +261,11 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 f'base64,{base64_data}'
             )
         except Exception as e:
-            mylogger.exception(f'svg_to_base64 failed: {e}')
-            raise Exception(f'svg_to_base64 failed: {e}')
+            if 'The SVG size is undefined' in str(e):
+                mylogger.exception(f'The SVG size is undefined: {svg_content}')
+            else:
+                mylogger.exception(f'svg_to_base64 failed: {e}')
+                raise Exception(f'svg_to_base64 failed: {e}')
 
 
 def read_gz_and_parse_json_line_by_line(file_path):
