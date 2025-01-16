@@ -3,6 +3,7 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
+from llm_web_kit.exception.exception import HtmlTableRecognizerExp
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -40,10 +41,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     @override
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
         if not parsed_content:
-            raise ValueError(f'table parsed_content{parsed_content}为空')
+            raise HtmlTableRecognizerExp(f'table parsed_content{parsed_content}为空')
         table_type, table_body = self.__get_attribute(parsed_content)
-        if not table_type or not table_body:
-            raise ValueError(f'get table attribute为空,table_body:{table_body},table_type:{table_type}')
         d = {
             'type': DocElementType.TABLE,
             # "bbox": [],
@@ -63,7 +62,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
         cells = tree.xpath('//td | //th')
         if len(cells) == 0:
-            raise ValueError(f'table节点未通过xpath定位到td或者th标签, cell长度为{len(cells)}')
+            raise HtmlTableRecognizerExp(f'table节点未通过xpath定位到td或者th标签, cell长度为{len(cells)}')
         for cell in cells:
             colspan_str = cell.get('colspan', 1)
             rowspan_str = cell.get('rowspan', 1)
@@ -71,15 +70,15 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 # 尝试将属性值转换为整数
                 colspan = int(colspan_str)
                 rowspan = int(rowspan_str)
-            except ValueError:
-                raise ValueError(f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数')
+            except ValueError as e:
+                raise HtmlTableRecognizerExp(f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数') from e
             # 如果 colspan 或 rowspan 存在且大于1，则认为是合并单元格, 否则认为是简单格式的单元格
             if (colspan > 1) or (rowspan > 1):
                 return False
             elif (colspan == 1) and (rowspan == 1):
                 return True
             else:
-                raise ValueError(f'table的合并单元格属性值colspan:{colspan}和rowspan:{rowspan}异常')
+                raise HtmlTableRecognizerExp(f'table的合并单元格属性值colspan:{colspan}和rowspan:{rowspan}异常')
 
     def __is_table_contain_img(self, tree) -> bool:
         """判断table元素是否包含图片."""
@@ -138,25 +137,17 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         ele = self._build_html_tree(html)
         if ele is not None and ele.tag == CCTag.CC_TABLE:
             table_type = ele.attrib.get('table_type')
-            tale_body = ele.text
-            return table_type, tale_body
+            table_flag = self.__get_content_list_table_type(table_type)
+            tale_body = ele.attrib.get('html')
+            return table_flag, tale_body
         else:
-            raise ValueError(f'{html}中没有cctable标签')
+            raise HtmlTableRecognizerExp(f'{html}中没有cctable标签')
 
-
-if __name__ == '__main__':
-    recognizer = TableRecognizer()
-    base_url = 'https://www.baidu.com'
-    main_html_lst = [
-        ('<cccode>hello</cccode>',
-         '<code>hello</code>'),
-        (
-            """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>""",
-            """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>""",
-        )]
-    raw_html = (
-        """<div><p>段落2</p><table><tr><td rowspan='2'>1</td><td>2</td></tr>"""
-        """<tr><td>3</td></tr></table><p>段落2</p><table><tr>"""
-        """<td rowspan='2'>1</td><td>2</td></tr><tr><td>3</td></tr></table></div>"""
-    )
-    print(recognizer.recognize(base_url, main_html_lst, raw_html=''))
+    def __get_content_list_table_type(self, table_type):
+        """complex|simple 转为True|False."""
+        is_complex = False
+        if table_type == 'simple':
+            is_complex = False
+        elif table_type == 'complex':
+            is_complex = True
+        return is_complex
