@@ -263,7 +263,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             mylogger.info(f'value error, The SVG size is undefined: {svg_content}')
         except Exception as e:
             mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
-            raise Exception(f'svg_to_base64 failed: {e}')
+            # raise Exception(f'svg_to_base64 failed: {e}')
 
 
 def read_gz_and_parse_json_line_by_line(file_path):
