@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_common_modify, tag_math)
+    tag_common_modify, tag_img, tag_math)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -161,7 +161,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # img中的latex
             if node.tag == 'img':
-                pass
+                tag_img.modify_tree(cm, math_render, original_html, node, parent)
 
             # span.katex
             if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
@@ -182,11 +182,12 @@ if __name__ == '__main__':
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>'
-                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'
-                '<script type="math/tex; mode=display">E=mc^2</script>'),
+                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
+                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'),
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>'
+                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
                 r'<script type="math/tex">x+\sqrt{1-x^2}</script>')
         )
     ]
