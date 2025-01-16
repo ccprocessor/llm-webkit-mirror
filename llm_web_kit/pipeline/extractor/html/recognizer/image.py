@@ -94,6 +94,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             except Exception as e:
                 mylogger.exception(f'recognizer image failed: {e}')
                 raise Exception(f'recognizer image failed: {e}')
+        print(f'html size: {len(ccimg_html)}')
         return ccimg_html
 
     def __parse_html_img(self, base_url: str, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
@@ -260,12 +261,11 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 f'data:{mime_type};'
                 f'base64,{base64_data}'
             )
+        except ValueError:
+            mylogger.exception(f'value error, The SVG size is undefined: {svg_content}')
         except Exception as e:
-            if 'The SVG size is undefined' in str(e):
-                mylogger.exception(f'The SVG size is undefined: {svg_content}')
-            else:
-                mylogger.exception(f'svg_to_base64 failed: {e}')
-                raise Exception(f'svg_to_base64 failed: {e}')
+            mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
+            # raise Exception(f'svg_to_base64 failed: {e}')
 
 
 def read_gz_and_parse_json_line_by_line(file_path):
