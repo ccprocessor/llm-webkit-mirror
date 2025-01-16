@@ -169,7 +169,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 if child.tail:
                     paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
             else:
-                paragraph.append({'c': child.text, 't': ParagraphTextType.TEXT})
+                if child.text:
+                    paragraph.append({'c': child.text, 't': ParagraphTextType.TEXT})
 
         if paragraph:
             text_paragraph.append(paragraph)
