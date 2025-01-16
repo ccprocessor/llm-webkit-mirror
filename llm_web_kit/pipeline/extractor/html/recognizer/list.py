@@ -152,7 +152,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         1. 遇到<br/>标签，则认为是一个段落结束。
 
         Args:
-            item:
+            item: 一个列表项。例如<li>
 
         Returns:
             list[dict]: 列表项的文本
@@ -160,9 +160,6 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         text_paragraph = []
 
         paragraph = []
-        if item.text:  # li标签的直接文本。
-            paragraph.append({'c': item.text, 't': ParagraphTextType.TEXT})
-
         for child in item.iter():
             if child.tag == CCTag.CC_MATH_INLINE:
                 paragraph.append({'c': child.text, 't': ParagraphTextType.EQUATION_INLINE})
@@ -177,6 +174,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         if paragraph:
             text_paragraph.append(paragraph)
 
+        # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
         return text_paragraph
 
     def __get_attribute(self, html:str) -> Tuple[bool, dict, str]:
@@ -190,7 +188,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         """
         ele = self._build_html_tree(html)
         if ele is not None and ele.tag == CCTag.CC_LIST:
-            ordered = bool(ele.attrib.get('ordered'))
+            ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
             content_list = json.loads(ele.text)
             raw_html = ele.attrib.get('html')
             return ordered, content_list, raw_html
