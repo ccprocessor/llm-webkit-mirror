@@ -50,9 +50,11 @@ TEST_CASES_HTML = [
 TEST_CC_CASE = [
     {
         'url': 'xxx',
-        'parsed_content': """<ccimage by="img" html='&lt;img style="margin:0;padding:0;border:0;" alt="Hosted by uCoz" src="http://s201.ucoz.net/img/cp/6.gif" width="80" height="15" title="Hosted by uCoz"&gt;' format="url" alt="Hosted by uCoz">http://s201.ucoz.net/img/cp/6.gif</ccimage>""",
+        'parsed_content': """<ccimage by="img" html='&lt;img src="http://15.demooo.pl/wp-content/themes/starter/dist/images/logos/janser-logo.svg" alt="Janser Logo"&gt;' format="url" alt="Janser Logo">http://15.demooo.pl/wp-content/themes/starter/dist/images/logos/janser-logo.svg</ccimage>""",
         'html': '...',
-        'expected': {'type': 'image', 'raw_content': '...', 'content': {'image_content': 'http://s201.ucoz.net/img/cp/6.gif', 'language': 'python', 'by': 'img', 'format': 'url'}}
+        'expected': {'type': 'image', 'raw_content': '...', 'content': {
+            'url': 'http://15.demooo.pl/wp-content/themes/starter/dist/images/logos/janser-logo.svg', 'data': None,
+            'alt': 'Janser Logo', 'title': None, 'caption': None}}
     },
 
 ]

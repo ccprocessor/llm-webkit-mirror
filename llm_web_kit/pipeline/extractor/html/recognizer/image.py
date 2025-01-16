@@ -50,20 +50,24 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             raise ValueError(f'Failed to load html: {parsed_content}')
 
         if html_obj.tag == CCTag.CC_IMAGE:
-            result = {
-                'type': DocElementType.IMAGE,
-                'raw_content': raw_html_segment,
-                'content': {
-                    'image_content': html_obj.text,
-                    'language': 'python',
-                    'by': html_obj.get('by'),
-                    'format': html_obj.get('format')
-                }
-            }
-            # print(f'content: {result["content"]}')
-            return result
+            return self.__ccimg_to_content_list(raw_html_segment, html_obj)
         else:
             raise ValueError(f'No ccimage element found in content: {parsed_content}')
+
+    def __ccimg_to_content_list(self, raw_html_segment: str, html_obj: HtmlElement) -> dict:
+        result = {
+            'type': DocElementType.IMAGE,
+            'raw_content': raw_html_segment,
+            'content': {
+                'url': html_obj.text if html_obj.get('format') == 'url' else None,
+                'data': html_obj.text if html_obj.get('format') == 'base64' else None,
+                'alt': html_obj.get('alt'),
+                'title': html_obj.get('title'),
+                'caption': html_obj.get('caption')
+            }
+        }
+        # print(f'content: {result["content"]}')
+        return result
 
     @override
     def recognize(self, base_url: str, main_html_lst: List[Tuple[str, str]], raw_html: str) -> List[Tuple[str, str]]:
