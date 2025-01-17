@@ -251,17 +251,19 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
         # 在这个地方，根据tuple中的第一个元素的类型，将其转换为content_list中的元素，转换之后如果还有剩余的元素，则证明解析出现问题，有内容缺失的风险。
-        content_list = ContentList([])
+
+        one_page = []
         for parsed_html, raw_html in html_lst:
             ccnode_html, cc_tag = self.__get_cc_node(parsed_html)
             parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
                 node = parser.to_content_list_node(base_url, ccnode_html, raw_html)
-                content_list.append(node)
+                one_page.append(node)
             else:
                 mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
                 # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
 
+        content_list = ContentList([one_page])  # 对于网页来说仅有一页，如果多页，则剩下的每个都是一个论坛的回复
         return content_list
 
     def __get_cc_node(self, html:str) -> (str, str):
@@ -277,6 +279,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         if el.tag in self.__to_content_list_mapper.keys():
             return html, el.tag
         else:
+            # 查找子节点，包括节点自己。  self::tag | .//tag 这是xpath的写法，表示查找自己和子节点中的tag标签，如果只写./tag则只查找子节点中的tag标签
             xpath_expr = ' | '.join(f'self::{tag} | .//{tag}' for tag in self.__to_content_list_mapper.keys())
             nodes = el.xpath(xpath_expr)
             if len(nodes) == 0:

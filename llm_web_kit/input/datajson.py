@@ -84,6 +84,15 @@ class ContentList(StructureMapper):
     def append(self, content: dict):
         self.__content_list.append(content)
 
+    def __getitem__(self, key):
+        return self.__content_list[key]  # 提供读取功能
+
+    def __setitem__(self, key, value):
+        self.__content_list[key] = value  # 提供设置功能
+
+    def __delitem__(self, key):
+        del self.__content_list[key]
+
 
 class DataJson(StructureMapper, StructureChecker):
     """从json文件中读取数据."""

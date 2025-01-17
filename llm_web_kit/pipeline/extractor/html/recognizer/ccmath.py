@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_common_modify, tag_math, tag_span_script)
+    tag_common_modify, tag_img, tag_math)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -74,27 +74,27 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
         if len(inter_ele) > 0:
             # 获取math_content
-            math_content = inter_ele[0].text  # TODO: 需要处理math_content两边的$符号
+            math_content = inter_ele[0].text
 
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': math_content,
-                    'math_type': inter_ele[0].get('type'),
-                    'by': inter_ele[0].get('by')
+                    'math_type': inter_ele[0].get('type'),  # 数学语言类型
+                    'by': inter_ele[0].get('by')  # 数学语言渲染器
                 }
             }
         elif len(in_els) > 0:
-            math_content = in_els[0].text  # TODO: 需要处理math_content两边的$符号
+            math_content = in_els[0].text
 
             return {
                 'type': DocElementType.EQUATION_INLINE,
                 'raw_content': raw_html_segment,
                 'content': {
                     'math_content': math_content,
-                    'math_type': in_els[0].get('type'),
-                    'by': in_els[0].get('by')
+                    'math_type': in_els[0].get('type'),  # 数学语言类型
+                    'by': in_els[0].get('by')  # 数学语言渲染器
                 }
             }
         else:
@@ -121,50 +121,52 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             assert isinstance(node, HtmlElement)
             original_html = element_to_html(node)
             parent = node.getparent()
-            # 3. img中的latex
-            if node.tag == 'img':
-                pass
 
-            # 4. class 为 math-container，默认为latex
+            # class 为 math-container，默认为latex
             if node.tag == 'span' and node.get('class') and 'math-container' in node.get('class'):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
-            # 5. class 为 wp-katex-eq
-            if node.tag == 'span' and node.get('class') and 'wp-katex-eq' in node.get('class'):
-                pass
-
-            # 6. script[type="math/tex"], TODO: 需要进行wrap_math
-            if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
-
-            # 7. script[type="math/asciimath"]
-            if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
-                pass
-
-            # 8. class tex
-            if node.tag == 'span' and node.get('class') and 'tex' in node.get('class'):
-                pass
-
-            # 9. span.katex
-            if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
-                tag_span_script.modify_tree(cm, math_render, original_html, node, parent)
-
-            # 10. class 为 x-ck12-mathEditor
-            if node.tag == 'span' and node.get('class') and 'x-ck12-mathEditor' in node.get('class'):
-                pass
-
-            # 11. Remove any .MathJax_Preview spans
-            if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
-                self.remove_node(node)
-
-            # 12. math tags
-            if node.tag == 'math':
-                tag_math.modify_tree(cm, math_render, original_html, node, parent)
-
-            # 13. class 为 mathjax
+            # class 为 mathjax
             if (node.tag == 'span' and node.get('class') and
                any('mathjax' in cls.lower() for cls in node.get('class').split())):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+
+            # class 为 wp-katex-eq
+            if node.tag == 'span' and node.get('class') and 'wp-katex-eq' in node.get('class'):
+                pass
+
+            # script[type="math/tex"], TODO: 需要进行wrap_math
+            if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+
+            # math tags
+            if node.tag == 'math':
+                tag_math.modify_tree(cm, math_render, original_html, node, parent)
+
+            # script[type="math/asciimath"]
+            if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
+                pass
+
+            # class tex
+            if node.tag == 'span' and node.get('class') and 'tex' in node.get('class'):
+                pass
+
+            # class 为 x-ck12-mathEditor
+            if node.tag == 'span' and node.get('class') and 'x-ck12-mathEditor' in node.get('class'):
+                pass
+
+            # Remove any .MathJax_Preview spans
+            if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
+                pass
+
+            # img中的latex
+            if node.tag == 'img':
+                tag_img.modify_tree(cm, math_render, original_html, node, parent)
+
+            # span.katex
+            if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
+                # tag_span_script.modify_tree(cm, math_render, original_html, node, parent)
+                pass
 
             # 14. 只处理只有一层的p标签
             if node.tag == 'p' and len(node.getchildren()) == 0:
@@ -180,11 +182,12 @@ if __name__ == '__main__':
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>'
-                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'
-                '<script type="math/tex; mode=display">E=mc^2</script>'),
+                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
+                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'),
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>'
+                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
                 r'<script type="math/tex">x+\sqrt{1-x^2}</script>')
         )
     ]

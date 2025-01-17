@@ -1,26 +1,68 @@
 {
     // 兜底异常
-    "base":{
-        "UNCATCHED_ERROR": {"code": 1000, "message": "Uncatched error"}
+    "LlmWebKitBase":{
+        "LlmWebKitBase_Error": {"code": 1000, "message": "LlmWebKitBase error"}
     },
+
+    //输入异常
+    "PipeLineInput":{
+      "PipeLineInput_Error": {"code": 2000, "message": "PipeLine input data_json error"}
+    },
+
+    // pipeline初始化异常
+    "PipeLineSuit": {
+        "PipelineSuit_Error": {"code": 3000, "message": "pipeline suit init error"}
+    },
+
+    //pipeline 异常
+    "PipeLineBase": {
+        "PipeLineBase_Error": {"code": 4000, "message": "pipeline base error"}
+    },
+
+    //HTML类型异常
+    "HTML": {
+        "HTML_Error": {"code":5000 , "message": "HTML type error"}
+    },
+
+    //PDF类型异常
+    "PDF": {
+        "PDF_Error": {"code": 6000, "message": "PDF type error"}
+    },
+
+    //EBook类异常
+    "EBOOK": {
+        "EBOOK_Error": {"code": 7000, "message": "EBOOK type error"}
+    },
+
+    //Other 类型异常
+    "Other": {
+        "Other_type_Error": {"code": 8000, "message": "Other type error"}
+    },
+
 
     // 分模块的业务异常
-    "pre_extract":{
-        "UNCATCHED_ERROR": {"code": 2000, "message": "Uncatched error"},
-        "KEY_ERR": {"code": 2001, "message": "key error"}
+    "Format": {
+        "HtmlFormat_Error": {"code": 5001, "message": "HTML format error"}
     },
-
-    "extract":{
-        "UNCATCHED_ERROR": {"code": 3000, "message": "Uncatched error"}
+    "PreExtractor": {
+        "HtmlPreExtractor_Error": {"code": 5002, "message": "Html PreExtractor error"}
     },
-
-    "post_extract":{
-        "UNCATCHED_ERROR": {"code": 4000, "message": "Uncatched error"}
+    "Recognizer": {
+        "HtmlRecognizer_Error": {"code": 5003, "message": "Html recognizer error"},
+        "HtmlMathRecognizer_Error": {"code": 5005, "message": "Html math recognize error"},
+        "HtmlCodeRecognizer_Error": {"code": 5006, "message": "Html code recognizer error"},
+        "HtmlTableRecognizer_Error": {"code": 5007, "message": "Html table recognizer error"},
+        "HtmlImageRecognizer_Error": {"code": 5008, "message": "Html image recognizer error"},
+        "HtmlListRecognizer_Error": {"code": 5009, "message": "Html list recognizer error"},
+        "HtmlAudioRecognizer_Error": {"code": 5010, "message": "Html audio recognizer error"},
+        "HtmlVideoRecognizer_Error": {"code": 5011, "message": "Html video recognizer error"},
+        "HtmlTitleRecognizer_Error": {"code": 5012, "message": "Html title recognizer error"},
+        "HtmlTextRecognizer_Error": {"code": 5013, "message": "Html text recognizer error"}
     },
-
-    "pipeline":{
-        "UNCATCHED_ERROR": {"code": 5000, "message": "Uncatched error"},
-        "INIT_ERROR": {"code": 5001, "message": "pipeline init error"}
+    "MagicHtmlExtractor": {
+        "MagicHtmlExtractor_Error": {"code": 5004, "message": "magic-html extrac error"}
+    },
+    "PostExtractor": {
+        "HtmlPostExtractor_Error": {"code": 5014, "message": "html post extractor error"}
     }
-
 }

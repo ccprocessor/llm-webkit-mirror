@@ -19,7 +19,7 @@ class TestPipelineSuite(unittest.TestCase):
         assert data.get_dataset_name() == 'news'
         assert data.get_file_format() == 'html'
         data_e: DataJson = pipesuit.extract(input_data)
-        assert data_e.get_content_list().length() == 0
+        assert data_e.get_content_list().length() == 1
         assert data_e.get_dataset_name() == 'news'
         assert data_e.get_file_format() == 'html'
 
