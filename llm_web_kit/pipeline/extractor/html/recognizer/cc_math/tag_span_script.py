@@ -86,3 +86,15 @@ def get_render_content(node: HtmlElement, parent: HtmlElement) -> str:
                     return formula_content
         return ''
     return ''
+
+
+def find_containing_block_element(node: HtmlElement) -> HtmlElement:
+    """查找包含给定元素的第一个块级标签。"""
+    block_element = node.xpath(
+        'ancestor::*[self::div or self::p][1]'
+    )
+
+    if block_element:
+        return block_element[0]
+
+    return None
