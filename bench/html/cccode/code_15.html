@@ -1,0 +1,1460 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+        <title>Karmada跨集群优雅故障迁移特性解析_华为云开发者社区的技术博客_51CTO博客</title>
+    <meta name="keywords" content="Karmada跨集群优雅故障迁移特性解析,博客,51CTO博客">
+<meta name="description" content="Karmada跨集群优雅故障迁移特性解析，在Karmada最新版本v1.3中，跨集群故障迁移特性支持优雅故障迁移，确保迁移过程足够平滑。">    <meta name="applicable-device" content="pc">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="msvalidate.01" content="91C5324FE68C0A46FA65F3FEC225EA65" />
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="preconnect" href="https://cdn.51cto.com/">
+<link rel="dns-prefetch" href="https://cdn.51cto.com/">
+<link rel="preconnect" href="https://static2.51cto.com/edu/">
+<link rel="dns-prefetch" href="https://static2.51cto.com/edu/">
+<link rel="preconnect" href="https://s2.51cto.com">
+<link rel="dns-prefetch" href="https://s2.51cto.com">
+<link rel="preload" as="image" href="https://s2.51cto.com/images/100/base/empty.png?x-oss-process=image/format,webp/ignore-error,1">
+    <link rel="canonical" href="https://blog.51cto.com/u_15214399/5880761">
+    <link type="favicon" rel="shortcut icon" href="/favicon.ico" />
+        <script type="application/ld+json">{"@context":"https://ziyuan.baidu.com/contexts/cambrian.jsonld","@id":"https://blog.51cto.com/u_15214399/5880761","appid":"1576672126670053","title":"Karmada跨集群优雅故障迁移特性解析_华为云开发者社区的技术博客_51CTO博客","images":["https://s2.51cto.com/images/blog/202211/23112142_637d91c6bda7956688.png"],"description":"在 Karmada 最新版本 v1.3中，跨集群故障迁移特性支持优雅故障迁移，确保迁移过程足够平滑。","pubDate":"2022-11-23T11:30:33","upDate":"2022-11-23T11:30:33"}</script>
+                                <link href="https://static2.51cto.com/edu/blog/blog-static/static/css/pc_detailinline.min.css?v=a83f01f8c9" rel="stylesheet">             </head>
+<body class="webp">
+<img src="https://s2.51cto.com/images/100/blog/share_default.jpeg?x-oss-process=image/format,webp/ignore-error,1"  border="0" style="width:0; height:0; position:absolute;">
+<div class="Content-box">
+    <div class="Content detail-content-new">
+    <!--关注-->
+    <div class="fixtitle">
+        <div class="clearfix Page">
+            <h3 class="fl title">Karmada跨集群优雅故障迁移特性解析</h3>
+            <div class="messbox fr">
+                                                            <a id="checkFollow1_15204399" class="follow-1 checkFollow on">关注</a>
+                                                    <a href="https://blog.51cto.com/u_15214399" class="name" target="_blank" title="华为云开发者联盟">华为云开发者联盟</a>
+                <strong>
+                    <a href="https://blog.51cto.com/u_15214399" class="avatar" target="_blank">
+                        <img class="is-vip-img is-vip-img-4" data-uid="15204399" src="https://s2.51cto.com/images/100/ucenter/noavatar_middle.gif">
+                    </a>
+                </strong>
+            </div>
+        </div>
+    </div>
+    <!--大模块引入-->
+    <div class="clearfix Page" id="page_center" style="position:relative;">
+                <aside class="detail-content-directory common-content-directory">
+     <!-- 文章目录 -->
+     <section class="common-section common-spacing table-contents"  style="background:none">
+        <div class="clearfix common-sub-title">
+            <strong title="文章目录">文章目录</strong>
+            <i class="iconblog blogquxiao18" id="closeDirectory"></i>
+        </div>
+        <div class="directory" id="directory-parent2" >
+            <ul class="directory-list directory-list-left" id="directory-left">
+                                                                   <li                             class="lv1"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h0">
+                                                                        ▍回顾：单集群故障迁移                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv1"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h1">
+                                                                        ▍集群故障判定                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h2">
+                                                                        集群状态收集                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h3">
+                                                                        集群 Lease 对象更新                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h4">
+                                                                        检查集群状态                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv1"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h5">
+                                                                        ▍故障迁移过程                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h6">
+                                                                        集群污点添加                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h7">
+                                                                        容忍集群污点                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h8">
+                                                                        故障迁移                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h9">
+                                                                        -复制 Duplicated 调度类型                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv3"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h10">
+                                                                        -分发 Divided 调度类型                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv1"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h11">
+                                                                        ▍优雅故障迁移                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv1"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h12">
+                                                                        ▍总结                                </span>
+                            </div>
+                        </li>
+                                                                                            <li                             class="lv4"
+                                                    >
+                            <div class="title">
+                                <span data-id="#h13">
+                                                                        附：Karmada社区技术交流地址                                </span>
+                            </div>
+                        </li>
+                                                        </ul>
+        </div>
+    </section>
+</aside>
+                <article class="detail-content-left">
+    <div class="common-section common-spacing mb30 article-detail">
+    <div class="title">
+        <h1>Karmada跨集群优雅故障迁移特性解析</h1>
+
+                <span class="original">原创</span>
+
+    </div>
+    <div class="messbox">
+        <p class="clearfix mess-line1">
+            <a class="fl" href="https://blog.51cto.com/u_15214399" rel="nofollow">华为云开发者联盟</a>
+            <time class="fl" pubdate="2022-11-23 11:30:33">2022-11-23 11:30:33</time>
+                            <span class="fl">博主文章分类：<a href="https://blog.51cto.com/u_15214399/category1" target="_blank">程序员之家</a></span>
+                                        <span class="fr" id="copyright-btn">©著作权</span>
+                    </p>
+        <p class="clearfix mess-tag">
+                            <strong class="fl">
+                    <em class="fl">文章标签</em>
+                                            <a href="https://blog.51cto.com/topic/renwuduilie.html" class="fl shence_tag" target="_blank" >任务队列</a>
+                                            <a href="https://blog.51cto.com/topic/karmada.html" class="fl shence_tag" target="_blank" >Karmada</a>
+                                            <a href="https://blog.51cto.com/topic/guzhangjiqun.html" class="fl shence_tag" target="_blank" >故障集群</a>
+                                            <a href="https://blog.51cto.com/topic/kubernetes.html" class="fl shence_tag" target="_blank" >Kubernetes</a>
+                                            <a href="https://blog.51cto.com/topic/guzhangqianyi.html" class="fl shence_tag" target="_blank" >故障迁移</a>
+                                    </strong>
+                                        <strong class="fl">
+                    <em class="fl">文章分类</em>
+                                                                                                                    <a href="https://blog.51cto.com/nav/ops" class="fl shence_cate" target="_blank" rel="nofollow">运维</a>
+                                                            </strong>
+                                </p>
+    </div>
+                <div class="copytext" id="copytext">
+             ©著作权归作者所有：来自51CTO博客作者华为云开发者联盟的原创作品，如需转载，请与作者联系，否则将追究法律责任        </div>
+            <div class="article-content-wrap" >
+                    <div class="artical-content-bak main-content editor-side-new">
+                <div class="con editor-preview-side" id="result"  data-version="0"><div class="editor-container container am-engine" id="container" data-element="root"><blockquote style="margin-top: 5px; margin-bottom: 5px; padding-left: 1em; margin-left: 0px; border-left: 3px solid rgb(238, 238, 238); opacity: 0.6;"><p><strong>摘要：</strong>在 Karmada 最新版本 v1.3中，跨集群故障迁移特性支持优雅故障迁移，确保迁移过程足够平滑。</p></blockquote><p>本文分享自华为云社区《​<a rel="nofollow" target="_blank" href="https://bbs.huaweicloud.com/blogs/383614?utm_source=51cto&amp;utm_medium=bbs-ex&amp;utm_campaign=other&amp;utm_content=content">​Karmada跨集群优雅故障迁移特性解析​</a>​》，作者：Karmada社区。</p><p>在多云多集群应用场景中，为了提高业务的高可用性，用户的工作负载可能会被部署在多个集群中。然而当某个集群发生故障时，为保证业务的可用性与连续性，用户希望故障集群上的工作负载被自动的迁移到其他条件适合的集群中去，从而达成故障迁移的目的。</p><p style="text-align:center;"><img  src='https://s2.51cto.com/images/blog/202211/23112142_637d91c6bda7956688.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=,x-oss-process=image/resize,m_fixed,w_1184/format,webp' alt='Karmada跨集群优雅故障迁移特性解析_故障迁移' style="visibility: visible; width: 289px;"></p><p>Karmada 在 v1.0 版本发布之前便已支持跨集群故障迁移能力，经历过社区多个版本的开发迭代，跨集群故障迁移能力不断完善。在 Karmada 最新版本 v1.3 <span style="color: #252b3a;">（https://github.com/karmada-io/karmada/tree/release-1.3）中，</span>跨集群故障迁移特性支持优雅故障迁移，确保迁移过程足够平滑。</p><p>下面我们对该特性展开解析。</p><h2 id="h0" style="line-height: 1.5;">▍回顾：单集群故障迁移</h2><p>在 Kubernetes 的架构中，Node 作为运行 Pod 实例的单元，不可避免地面临出现故障的可能性，故障来源不限于自身资源短缺、与 Kubernetes 控制面失去连接等。提供服务的可靠性、在节点故障发生后保持服务的稳定一直是 Kubernetes 关注的重点之一。在 Kubernetes 管理面，当节点出现故障或是用户不希望在节点上运行 Pod 时，节点状态将被标记为不可用的状态，node-controller 会为节点打上污点，以避免新的实例调度到当前节点上、以及将已有的 Pod 实例迁移到其他节点上。</p><h2 id="h1" style="line-height: 1.5;">▍集群故障判定</h2><p>相较于单集群故障迁移，Karmada 的跨集群故障迁移单位由节点变为了集群。Karmada 支持Push 和 Pull 两种模式来管理成员集群，有关集群注册的信息可以参考Cluster Registration<span style="color: #252b3a;">（http://karmada.io/docs/next/userguide/clustermanager/cluster-registration/）。</span>Karmada 根据集群的心跳来判定集群当前的状态。集群心跳探测有两种方式：1.集群状态收集，更新集群的 .status 字段（包括 Push 和 Pull 两种模式）；2.控制面中 karmada-cluster 命名空间下的 Lease 对象，每个 Pull 集群都有一个关联的 Lease 对象。</p><h3 id="h2" style="line-height: 1.5;">集群状态收集</h3><p>对于 Push 集群，Karmada 控制面中的 clusterStatus-controller 将定期执行集群状态的收集任务；对于 Pull 集群，集群中部署的 karmada-agent 组件负责创建并定期更新集群的 .status 字段。集群状态的定期更新任务可以通过 --cluster-status-update-frequency 标签进行配置（默认值为10秒）。集群的 Ready 条件在满足以下条件时将会被设置为 False ：· 集群持续一段时间无法访问；· 集群健康检查响应持续一段时间不正常。上述持续时间间隔可以通过 --cluster-failure-threshold 标签进行配置（默认值为30秒）。</p><h3 id="h3" style="line-height: 1.5;">集群 Lease 对象更新</h3><p>每当有 Pull 集群加入时，Karmada将为该集群创建一个 Lease 对象和一个 lease-controller。每个 lease-controller 负责更新对应的 Lease 对象，续租时间可以通过 --cluster-lease-duration 和 --cluster-lease-renew-interval-fraction 标签进行配置（默认值为10秒）。由于集群的状态更新由 clusterStatus-controller 负责维护，因此 Lease 对象的更新过程与集群状态的更新过程相互独立。Karmada 控制面中的 cluster-controller 将每隔 --cluster-monitor-period 时间（默认值为5秒）检查 Pull 集群的状态，当 cluster-controller 在 --cluster-monitor-grace-period 时间段（默认值为40秒）内没有收到来着集群的消息时，集群的 Ready 条件将被更改为 Unknown 。</p><h3 id="h4" style="line-height: 1.5;">检查集群状态</h3><p>你可以使用 kubectl 命令来检查集群的状态细节：kubectl describe cluster</p><h2 id="h5" style="line-height: 1.5;">▍故障迁移过程</h2><p style="text-align:center;"><img  src='https://s2.51cto.com/images/blog/202211/23112142_637d91c69609b98737.webp?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=,x-oss-process=image/resize,m_fixed,w_1184/format,webp' alt='Karmada跨集群优雅故障迁移特性解析_Kubernetes_02' style="visibility: visible; width: 741px;"></p><h3 id="h6" style="line-height: 1.5;">集群污点添加</h3><p>当集群被判定为不健康之后，集群将会被添加上Effect值为NoSchedule的污点，具体情况为：&nbsp;</p><p>· 当集群 Ready 状态为 False 时，将被添加如下污点：​<code style="background-color: rgb(231, 243, 237); padding: 0px 3px; border-radius: 4px; overflow-wrap: break-word; text-indent: 0px;">​key: cluster.karmada.io/not-ready effect: NoSchedule​</code>​· 当集群 Ready 状态为 Unknown 时，将被添加如下污点：key: cluster.karmada.io/unreachable effect: NoSchedule 如果集群的不健康状态持续一段时间（该时间可以通过 --failover-eviction-timeout 标签进行配置，默认值为5分钟）仍未恢复，集群将会被添加上Effect值为NoExecute的污点，具体情况为：</p><p>· 当集群 Ready 状态为 False 时，将被添加如下污点：key: cluster.karmada.io/not-ready effect: NoExecute</p><p>· 当集群 Ready 状态为 Unknown 时，将被添加如下污点：key: cluster.karmada.io/unreachable effect: NoExecute</p><h3 id="h7" style="line-height: 1.5;">容忍集群污点</h3><p>当用户创建 PropagationPolicy/ClusterPropagationPolicy 资源后，Karmada 会通过 webhook 为它们自动增加如下集群污点容忍（以 PropagationPolicy 为例）：</p><div data-card-editable="false" data-syntax="plain"><div class="" style="border: 1px solid rgb(232, 232, 232); background: rgb(249, 249, 249);"><div style="font-family: monospace;font-size: 13px; line-height: 21px; color: #595959; direction: ltr; height: auto; overflow: hidden;background: transparent;"><pre style="color: rgb(89, 89, 89); margin: 0px; padding: 0px; background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0);">apiVersion: policy.karmada.io/v1alpha1<br>kind: PropagationPolicy<br>metadata:<br>  name: nginx-propagation<br>  namespace: default<br>spec:<br>  placement:<br> clusterTolerations:<br>    - effect: NoExecute<br>      key: cluster.karmada.io/not-ready<br>      operator: Exists<br> tolerationSeconds: 600<br>    - effect: NoExecute<br>      key: cluster.karmada.io/unreachable<br>      operator: Exists<br> tolerationSeconds: 600<br>  ...</pre></div></div></div><p>其中，tolerationSeconds 值可以通过 --default-not-ready-toleration-seconds 与--default-unreachable-toleration-seconds 标签进行配置，这两个标签的默认值均为600。</p><h3 id="h8" style="line-height: 1.5;">故障迁移</h3><p>当 Karmada 检测到故障群集不再被 PropagationPolicy/ClusterPropagationPolicy 容忍时，该集群将被从资源调度结果中移除，随后，karmada-scheduler 重调度相关工作负载。重调度的过程有以下几个限制：·对于每个重调度的工作负载，其仍然需要满足PropagationPolicy/ClusterPropagationPolicy 的约束，如 ClusterAffinity 或 SpreadConstraints 。· 应用初始调度结果中健康的集群在重调度过程中仍将被保留。</p><h3 id="h9" style="line-height: 1.5;">-复制 Duplicated 调度类型</h3><p>对于 Duplicated 调度类型，当满足分发策略限制的候选集群数量不小于故障集群数量时，将根据故障集群数量将工作负载重新调度到候选集群；否则，不进行重调度。</p><div data-card-editable="false" data-syntax="plain"><div class="" style="border: 1px solid rgb(232, 232, 232); background: rgb(249, 249, 249);"><div style="font-family: monospace;font-size: 13px; line-height: 21px; color: #595959; direction: ltr; height: auto; overflow: hidden;background: transparent;"><pre style="color: rgb(89, 89, 89); margin: 0px; padding: 0px; background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0);">...<br>  placement:<br> clusterAffinity:<br> clusterNames:<br>        - member1<br>        - member2<br>        - member3<br>        - member5<br> spreadConstraints:<br>      - maxGroups: 2<br> minGroups: 2<br> replicaScheduling:<br> replicaSchedulingType: Duplicated<br>  ...</pre></div></div></div><p>假设有5个成员集群，初始调度结果在 member1和 member2 集群中。当 member2 集群发生故障，触发 karmada-scheduler 重调度。</p><p>需要注意的是，重调度不会删除原本状态为 Ready 的集群 member1 上的工作负载。在其余3个集群中，只有 member3 和 member5 匹配 clusterAffinity 策略。由于传播约束的限制，最后应用调度的结果将会是 [member1, member3] 或 [member1, member5] 。</p><h3 id="h10" style="line-height: 1.5;">-分发 Divided 调度类型</h3><p>对于 Divided 调度类型，karmada-scheduler 将尝试将应用副本迁移到其他健康的集群中去。</p><div data-card-editable="false" data-syntax="plain"><div class="" style="border: 1px solid rgb(232, 232, 232); background: rgb(249, 249, 249);"><div style="font-family: monospace;font-size: 13px; line-height: 21px; color: #595959; direction: ltr; height: auto; overflow: hidden;background: transparent;"><pre style="color: rgb(89, 89, 89); margin: 0px; padding: 0px; background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0);">...<br>  placement:<br> clusterAffinity:<br> clusterNames:<br>        - member1<br>        - member2<br> replicaScheduling:<br> replicaDivisionPreference: Weighted<br> replicaSchedulingType: Divided<br> weightPreference:<br> staticWeightList:<br>          - targetCluster:<br> clusterNames:<br>                - member1<br>            weight: 1<br>          - targetCluster:<br> clusterNames:<br>                - member2<br>            weight: 2<br>  ...</pre></div></div></div><p>Karmada-scheduler 将根据权重表 weightPreference 来划分应用副本数。初始调度结果中， member1 集群上有1个副本，member2 集群上有2个副本。当 member1 集群故障之后，触发重调度，最后的调度结果是 member2 集群上有3个副本。</p><h2 id="h11" style="line-height: 1.5;">▍优雅故障迁移</h2><p>为了防止集群故障迁移过程中服务发生中断，Karmada 需要确保故障集群中应用副本的删除动作延迟到应用副本在新集群上可用之后才执行。ResourceBinding/ClusterResourceBinding 中增加了 GracefulEvictionTasks 字段来表示优雅驱逐任务队列：</p><div data-card-editable="false" data-syntax="plain"><div class="" style="border: 1px solid rgb(232, 232, 232); background: rgb(249, 249, 249);"><div style="font-family: monospace;font-size: 13px; line-height: 21px; color: #595959; direction: ltr; height: auto; overflow: hidden;background: transparent;"><pre style="color: rgb(89, 89, 89); margin: 0px; padding: 0px; background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0);">// GracefulEvictionTasks holds the eviction tasks that are expected to perform<br> // the eviction in a graceful way.<br> // The intended workflow is:<br> // 1. Once the controller(such as 'taint-manager') decided to evict the resource that<br> //    is referenced by current ResourceBinding or ClusterResourceBinding from a target<br> //    cluster, it removes(or scale down the replicas) the target from Clusters(.spec.Clusters)<br> //    and builds a graceful eviction task.<br> // 2. The scheduler may perform a re-scheduler and probably select a substitute cluster<br> //    to take over the evicting workload(resource).<br> // 3. The graceful eviction controller takes care of the graceful eviction tasks and<br> //    performs the final removal after the workload(resource) is available on the substitute<br> //    cluster or exceed the grace termination period(defaults to 10 minutes).<br> //<br> // +optional<br> GracefulEvictionTasks []GracefulEvictionTask `json:"gracefulEvictionTasks,omitempty"`</pre></div></div></div><p>当故障集群被 taint-manager 从资源调度结果中删除时，它将被添加到优雅驱逐任务队列中。gracefulEvction-controller 负责处理优雅驱逐任务队列中的任务。在处理过程中，gracefulEvction-controller 逐个评估优雅驱逐任务队列中的任务是否可以从队列中移除。判断条件如下：</p><ul><li>检查当前资源调度结果中资源的健康状态。如果资源健康状态为健康，则满足条件。</li><li>检查当前任务的等待时长是否超过超时时间，超时时间可以通过graceful-evction-timeout 标签进行配置（默认为10分钟）。如果超过，则满足条件。</li></ul><h2 id="h12" style="line-height: 1.5;">▍总结</h2><p>Karmada 跨集群优雅故障迁移特性提升了集群故障后业务的平滑迁移能力，希望通过上述分析过程能帮大家更好的理解和使用Karmada 跨集群故障迁移能力。有关该特性的更多详细信息可以参考 Karmada 官网。大家也可以查看 Karmada release <span style="color: #252b3a;">（https://github.com/karmada-io/karmada/releases）来跟进 Karmada 最新版本动态。</span>如果大家对 Karmada 跨集群故障迁移特性有更多兴趣与见解，或是对其他特性和功能感兴趣，也欢迎大家积极参与到 Karmada 社区中来，参与社区讨论与开发。</p><h4 id="h13">附：Karmada社区技术交流地址</h4><p style="line-height: 1.5;">项目地址：​<a rel="nofollow" target="_blank" href="https://github.com/karmada-io/karmada">​<span style="color: #1191ea;">​https://github.com/karmada-io/karmada</span>​</a>​</p><p>Slack地址：​<a rel="nofollow" target="_blank" href="https://slack.cncf.io/">​<span style="color: #1191ea;">​https://slack.cncf.io/</span>​</a>​</p><p><br></p><p>​<a rel="nofollow" target="_blank" href="https://bbs.huaweicloud.com/blogs?utm_source=51cto&amp;utm_medium=bbs-ex&amp;utm_campaign=other&amp;utm_content=content">​<strong>点击关注，第一时间了解华为云新鲜技术~</strong>​</a>​</p></div></div>
+            </div>
+
+        <div id="asideoffset"></div>
+        <div class="clearfix label-list">
+
+            <!--            <span>本文包含：</span>-->
+            <!--          -->
+            <!--            <a href="" target="_blank"></a>-->
+
+        </div>
+            </div>
+    <div class="action-box">
+        <ul>
+                        <li>
+                <strong class="is-praise  " type="1" blog_id="5880761" userid='15204399'>
+                    <a href="javascript:;"><i></i></a>
+                    <span><b class="praise-num"></b>赞</span>
+                </strong>
+            </li>
+            <li>
+                <strong class="favorites-opt">
+                    <a href="javascript:;"><i></i></a>
+                    <span><b class="favorites-num"></b>收藏</span>
+                </strong>
+            </li>
+            <li>
+                <strong class="Topraise">
+                    <a href="javascript:;"><i class="iconblog blogpinglun"></i></a>
+                    <span><b class="comments_num"></b>评论</span>
+                </strong>
+            </li>
+            <li class="share">
+                <strong class="">
+                    <a href="javascript:;"><i class="iconblog blogfen"></i></a>
+                    <span>分享</span>
+                </strong>
+            </li>
+                            <li>
+                    <strong class="article-report">
+                        <a href="javascript:;"><i class="iconblog blogjubaobeifen report-icon" style="font-size: 23px"></i></a>
+                        <span>举报</span>
+                    </strong>
+                </li>
+                    </ul>
+    </div>
+    <div class="clearfix lists">
+                    <p class="fl"><span>上一篇：</span><a href="https://blog.51cto.com/u_15214399/5880341">学会二阶思维，你就能像巴菲特一样思考了</a></p>
+                            <p class="fr"><span>下一篇：</span><a href="https://blog.51cto.com/u_15214399/5880762">Karmada跨集群优雅故障迁移特性解析</a></p>
+            </div>
+    <div class="text-aticle">
+
+    </div>
+</div>
+
+
+<div class="common-section common-spacing mb30 comment-box" id="comment">
+    <div class="comment-textarea clearfix">
+        <div class="avatar">
+            <a href="https://blog.51cto.com/" class="header-img" target="_blank">
+                <img  src="https://ucenter.51cto.com/images/noavatar_middle.gif"/>
+            </a>
+        </div>
+        <div class="textarea-box">
+            <div class="textarea-show clearfix">
+                <span>提问和评论都可以，用心的回复会被更多人看到</span>
+                <strong>评论</strong>
+            </div>
+            <div class="textarea-hide">
+                <div class="top">
+                    <textarea class="textareadiv textareadiv-publish" name="" id="textareadiv-publish" placeholder="提问和评论都可以，用心的回复会被更多人看到和认可" maxlength="500"></textarea>
+                </div>
+                <div class="bot clearfix">
+                    <strong class="fr publish-btn" flag="1" id="publish-btn">发布评论</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="comment-num"  style="display:none;">
+        <strong>全部评论</strong>
+        <span>(<b id="CommentNum"></b>)</span>
+        <span class="fr sort" type="up_num" order="0"><i class="iconblog blogzuire"></i>最热</span>
+        <span class="fr sort on" type="create_time" order="0"><i class="iconblog blogzuixinblogzuixin"></i>最新</span>
+    </div>
+    <div class="comment-List-box">
+        </div>
+</div>
+
+    <section class="common-section common-spacing mb30">
+        <div class="clearfix common-sub-title">
+            <strong>相关文章</strong>
+        </div>
+        <ul class="recommend-about">
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15214399/12090673"
+                           data-report-query="xiangguantuijian&01" target="_blank" class="title">
+                            <div class="tit">Karmada新版本发布，支持联邦应用跨集群滚动升级</div>
+                            <p> 本次升级支持联邦应用跨集群滚动升级，使用户版本发布流程更加灵活可控；透明同事karmadactl 新增了多项运维能力，提供独特的多集群运维体验。</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         Karmada                                    </span>
+                                                                    <span class="tag-item">
+                                         Kubernetes                                    </span>
+                                                                    <span class="tag-item">
+                                         容器                                    </span>
+                                                                    <span class="tag-item">
+                                         云原生                                    </span>
+                                                                    <span class="tag-item">
+                                         开源                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16536309/9472718"
+                           data-report-query="xiangguantuijian&02" target="_blank" class="title">
+                            <div class="tit">鸿蒙OS 跨设备迁移</div>
+                            <p> 跨设备迁移（下文简称“迁移”）支持将 Page 在同一用户的不同设备间迁移，以便支持用户无缝切换的诉求。以 Page 从设备 A 迁移到设备 B 为例，迁移动作主要步骤如下：设备 A 上的 Page 请求迁移。HarmonyOS 处理迁移任务，并回调设备 A 上 Page 的保存数据方法，用于保存迁移必须的数据。HarmonyOS 在设备 B 上启动同一个 Page，并回调其恢复数据方法。开发者</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         鸿蒙开发                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_13943105/11739897"
+                           data-report-query="xiangguantuijian&03" target="_blank" class="title">
+                            <div class="tit">AWS Route53 跨账号迁移</div>
+                            <p> 授权iam创建一个AK , route53全部权限建两个用户useradd old-awsuseradd new-aws给两个账号添加不同aksu - old-awsaws configure导出脚本import boto3import jsonimport argparse# 创建命令行参数解析器parser = argparse.ArgumentParser(descriptio</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         boto3                                    </span>
+                                                                    <span class="tag-item">
+                                         route53                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/muzinan110/6990877"
+                           data-report-query="xiangguantuijian&04" target="_blank" class="title">
+                            <div class="tit">karmada跨集群服务治理</div>
+                            <p> 多集群服务发现 ：使用ServiceExport和ServiceImport，实现跨集群的服务发现。多集群网络支持 ：使用Submariner打通集群间容器网络。使用 ErieCanal 实现跨集群的服务治理与 ErieCanal 集成支持跨集群的服务治理。&nbsp;</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         服务治理                                    </span>
+                                                                    <span class="tag-item">
+                                         服务发现                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15214399/5424660"
+                           data-report-query="xiangguantuijian&05" target="_blank" class="title">
+                            <div class="tit">使用Karmada实现Helm应用的跨集群部署</div>
+                            <p> 借助Karmada原生API的支持能力，Karmada可以借助Flux轻松实现Helm应用的跨集群部署。</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         ide                                    </span>
+                                                                    <span class="tag-item">
+                                         集群部署                                    </span>
+                                                                    <span class="tag-item">
+                                         Karmada                                    </span>
+                                                                    <span class="tag-item">
+                                         Helm应用                                    </span>
+                                                                    <span class="tag-item">
+                                         Flux                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15214399/6763504"
+                           data-report-query="xiangguantuijian&06" target="_blank" class="title">
+                            <div class="tit">Karmada：让跨集群弹性伸缩FederatedHPA突破新边界</div>
+                            <p> 为了解决多云多集群下的成本难题，Karmada 率先提出并实现了支持多指标，多策略的全新跨集群HPA（即 FederatedHPA），实现业务跨集群弹性伸缩，为多云架构提供了新的玩法。</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         nginx                                    </span>
+                                                                    <span class="tag-item">
+                                         群组                                    </span>
+                                                                    <span class="tag-item">
+                                         公有云                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16175452/10774848"
+                           data-report-query="xiangguantuijian&07" target="_blank" class="title">
+                            <div class="tit">openstack 跨集群迁移方式</div>
+                            <p> # 实现OpenStack跨集群迁移方式的教程## 概述在实现OpenStack跨集群迁移的过程中，我们需要进行一系列步骤来完成这个任务。首先，我们将会介绍整个流程的步骤，然后逐步说明每一步需要做什么以及需要使用的代码。### 流程图```mermaidflowchart TD;    A(准备工作);    B(创建备份);    C(传输备份);    D(恢复备份);</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         目标集                                    </span>
+                                                                    <span class="tag-item">
+                                         备份文件                                    </span>
+                                                                    <span class="tag-item">
+                                         创建虚拟机                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16175450/10759654"
+                           data-report-query="xiangguantuijian&08" target="_blank" class="title">
+                            <div class="tit">openstack nfs跨集群迁移</div>
+                            <p> # 实现OpenStack NFS跨集群迁移指南## 引言对于刚入行的开发者来说，学习如何实现OpenStack NFS跨集群迁移可能会有些困难。本篇文章将会给你提供一份详细的指南，帮助你完成这一任务。首先我们将介绍整个迁移的流程，然后针对每一步具体说明需要做什么以及相应的代码示例。## 迁移流程```mermaidflowchart TD    A(准备源集群) --&gt; B(创</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         目标集                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                                    <span class="tag-item">
+                                         代码示例                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15620612/10992671"
+                           data-report-query="xiangguantuijian&09" target="_blank" class="title">
+                            <div class="tit">hive跨集群数据迁移</div>
+                            <p> 在Kubernetes（K8S）环境下，进行hive跨集群数据迁移是一项常见的操作。本文将逐步介绍如何实现这一过程，并向初学者展示详细的步骤和代码示例。### 第一步：准备工作在进行hive跨集群数据迁移之前，需要确保源集群和目标集群的连接配置正确。确保在K8S集群中安装了必要的工具和插件，如Hive、Hadoop等。### 第二步：数据导出1. 在源集群中使用Sqoop将数据导出到本</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         Hive                                    </span>
+                                                                    <span class="tag-item">
+                                         数据迁移                                    </span>
+                                                                    <span class="tag-item">
+                                         目标集                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15369237/10708229"
+                           data-report-query="xiangguantuijian&10" target="_blank" class="title">
+                            <div class="tit">es跨集群数据迁移</div>
+                            <p> 为了实现es跨集群数据迁移，我们需要按照以下步骤进行操作：| 步骤 | 操作内容                               ||------|----------------------------------------|| 1    | 将源集群中的数据导出到本地             || 2    | 将本地数据导入到目标集群               |</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         目标集                                    </span>
+                                                                    <span class="tag-item">
+                                         json                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_8901540/12118306"
+                           data-report-query="xiangguantuijian&11" target="_blank" class="title">
+                            <div class="tit">HDFS数据(跨集群)迁移</div>
+                            <p> 一、数据迁移使用场景 1.冷热集群数据同步、分类存储 2.整体数据整体搬迁 3.数据准实时同步(备份) 二、考量因素 1.网络传输带宽及</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         hdfs                                    </span>
+                                                                    <span class="tag-item">
+                                         hadoop                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15812686/5739574"
+                           data-report-query="xiangguantuijian&12" target="_blank" class="title">
+                            <div class="tit">elasticsearch 跨集群数据迁移</div>
+                            <p> 1、问题引出ES中文社区中，有如下问题：	问题1：存储数据，data目录从一个</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         elasticsearch                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                                    <span class="tag-item">
+                                         elastic                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_15214399/7273261"
+                           data-report-query="xiangguantuijian&13" target="_blank" class="title">
+                            <div class="tit">Karmada 结合 coreDNS 插件实现跨集群统一域名访问</div>
+                            <p> 本文基于Karmada v1.6.1版本，探索使用一致域名跨集群访问服务的方法。</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         TCP                                    </span>
+                                                                    <span class="tag-item">
+                                         github                                    </span>
+                                                                    <span class="tag-item">
+                                         DNS                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_19261/6696340"
+                           data-report-query="xiangguantuijian&14" target="_blank" class="title">
+                            <div class="tit">hbase跨集群迁移 hbase集群数据迁移</div>
+                            <p> 　　HBase全量与增量数据迁移的方法　　1.背景　　在HBase使用过程中，使用的HBase集群经常会因为某些原因需要数据迁移。大多数情况下，可以用离线的方式进行迁移，迁移离线数据的方式就比较容易了，将整个hbase的data存储目录进行搬迁就行，但是当集群数据量比较多的时候，文件拷贝的时间很长，对业务影响时间也比较长，往往在设计的时间窗口无法完成，本文给出一种迁移思路，可以利用HBase自身的</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         hbase跨集群迁移                                    </span>
+                                                                    <span class="tag-item">
+                                         日志文件                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                                    <span class="tag-item">
+                                         数据迁移                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16099196/8696552"
+                           data-report-query="xiangguantuijian&15" target="_blank" class="title">
+                            <div class="tit">hbase集群迁移 hbase跨集群数据迁移</div>
+                            <p> 一、概述：      Hbase(Phoenix)数据迁移方案主要分为 Hadoop层面(distcp)、及Hbase层面(copyTable、export/import、snapshot)         二、以下针对distcp方案详细说明(以亲测阿里EMR为例)：     step1：        首先打通两个集群网络(建议内网)，新建一个tmp安全组，将两个集群的所有ECS都</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         hbase集群迁移                                    </span>
+                                                                    <span class="tag-item">
+                                         大数据                                    </span>
+                                                                    <span class="tag-item">
+                                         shell                                    </span>
+                                                                    <span class="tag-item">
+                                         python                                    </span>
+                                                                    <span class="tag-item">
+                                         hdfs                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_13424/10841079"
+                           data-report-query="xiangguantuijian&16" target="_blank" class="title">
+                            <div class="tit">跨集群弹性扩展容器 跨集群迁移</div>
+                            <p> 摘要：在 Karmada 最新版本 v1.3中，跨集群故障迁移特性支持优雅故障迁移，确保迁移过程足够平滑。 作者：Karmada社区。在多云多集群应用场景中，为了提高业务的高可用性，用户的工作负载可能会被部署在多个集群中。然而当某个集群发生故障时，为保证业务的可用性与连续性，用户希望故障集群上的工作负载被自动的迁移到其他条件适合的集群中去，从而达成故障迁移的目的。Karmada 在 v1.</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         跨集群弹性扩展容器                                    </span>
+                                                                    <span class="tag-item">
+                                         kubernetes                                    </span>
+                                                                    <span class="tag-item">
+                                         java                                    </span>
+                                                                    <span class="tag-item">
+                                         Karmada                                    </span>
+                                                                    <span class="tag-item">
+                                         集群故障                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16099200/10742518"
+                           data-report-query="xiangguantuijian&17" target="_blank" class="title">
+                            <div class="tit">istio 跨集群追踪 hdfs跨集群数据迁移</div>
+                            <p> es 备份存储方式支持以下几种方式:fs 文件挂载url 网络协议存储 (http,https,ftp)s3 亚马逊hdfsazure 微软gcs 谷歌本篇文章采用hdfs方式存储1.repository(仓库)     es集群中,想要备份数据,必须创建仓库,用来存储快照,一个集群可以创建多个仓库2.snapshot (快照)     创建仓库后,我们可以创建快照,创建快照</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         istio 跨集群追踪                                    </span>
+                                                                    <span class="tag-item">
+                                         hdfs                                    </span>
+                                                                    <span class="tag-item">
+                                         目标集                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16213689/8696521"
+                           data-report-query="xiangguantuijian&18" target="_blank" class="title">
+                            <div class="tit">hive跨集群数据迁移 跨集群复制hive</div>
+                            <p> 一、需要在hbase集群停掉的情况下迁移步骤：(1)执行Hadoop distcp -f filelist &quot;hdfs://new cluster ip:9000/hbasetest&quot;(2)在new cluster执行./hbase org.jruby.Main add_table.rb /hbase/table20111222，将拷贝来的表加入到.MEAT.中（会出现region的数目不一致的问</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         hive跨集群数据迁移                                    </span>
+                                                                    <span class="tag-item">
+                                         hdfs                                    </span>
+                                                                    <span class="tag-item">
+                                         oracle                                    </span>
+                                                                    <span class="tag-item">
+                                         hadoop                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16099327/6282950"
+                           data-report-query="xiangguantuijian&19" target="_blank" class="title">
+                            <div class="tit">openstack热迁移 openstack跨集群迁移</div>
+                            <p> 1、面板或者后台修改网络类型为共享网络openstack network set xxxxxxx --share2、备份数据库docker exec -it -u root mariadb mysqldump -uroot -pxxxxxxxxxxx nova instances  &gt; nova_instances.sqldocker exec -it -u root mariadb m</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         mysql                                    </span>
+                                                                    <span class="tag-item">
+                                         sql                                    </span>
+                                                                    <span class="tag-item">
+                                         docker                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16213606/12377007"
+                           data-report-query="xiangguantuijian&20" target="_blank" class="title">
+                            <div class="tit">hdfs 跨集群迁移 目录</div>
+                            <p> 搭建Hadoop集群Hadoop集群 史上最详细对您有用就点点关注 有问题jarvan_mr@163.com新的改变环境部署大数据 一、 简介 步骤：1.jdk安装 2.配置SSH免密登录 3.配置hadoop核心文件 4.搭建hadoop生态 5.软件包备注说明 4.格式化namenode 注：1.lsy@gbase2为主机群T，lsy@gbase1、lsy@gbase3为S。 2.不要在/xx</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         hdfs 跨集群迁移 目录                                    </span>
+                                                                    <span class="tag-item">
+                                         hadoop                                    </span>
+                                                                    <span class="tag-item">
+                                         大数据                                    </span>
+                                                                    <span class="tag-item">
+                                         zookeeper                                    </span>
+                                                                    <span class="tag-item">
+                                         hdfs                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16213656/13102542"
+                           data-report-query="xiangguantuijian&21" target="_blank" class="title">
+                            <div class="tit">蓝牙generic access和generic attribute</div>
+                            <p> 根据TI BLE1.4.0的介绍，Indicate是有ACK的。Q1：那么如果我用Notify，是否可能会丢数据呢？比如我用一个charisticrist 连续notify100个数据，中间是否有可能丢数据？我实验了很多次，也没有发现有丢数据。Q2：Indicate怎么使用呢？我看了thermometer的例子，但是感觉他仅仅是在定义static gattAttribute_t thermomet</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         蓝牙                                    </span>
+                                                                    <span class="tag-item">
+                                         数据                                    </span>
+                                                                    <span class="tag-item">
+                                         数据处理                                    </span>
+                                                                    <span class="tag-item">
+                                         应用层                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16213698/13104287"
+                           data-report-query="xiangguantuijian&22" target="_blank" class="title">
+                            <div class="tit">python的staticmethod如何返回自己</div>
+                            <p> 众所周知，类是创建实例的模板，而实例是一个个具体的对象，各个实例拥有的数据相互独立、互不影响。在类中定义的函数称为方法，主要有三种：实例方法、类方法、静态方法class A:
+
+    def instance_method(self, n):
+        print('self', self)
+
+    @classmethod
+    def class_method(cls, n):
+ </p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         实例方法                                    </span>
+                                                                    <span class="tag-item">
+                                         类方法                                    </span>
+                                                                    <span class="tag-item">
+                                         静态方法                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16099232/13105470"
+                           data-report-query="xiangguantuijian&23" target="_blank" class="title">
+                            <div class="tit">qemu虚拟机搭建鲲鹏系统</div>
+                            <p>  一）qemu linux 1.制作启动img1)dd if=/dev/zero of=./busybox.img bs=1M count=32（这个可以自己设定）
+2)mkfs.ext3 busybox.img
+3)下载busybox，http://www.busybox.net/downloads/
+#tar jxvf busybox-1.18.0.tar.bz2 (解压busybox压缩包)</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         qemu虚拟机搭建鲲鹏系统                                    </span>
+                                                                    <span class="tag-item">
+                                         linux                                    </span>
+                                                                    <span class="tag-item">
+                                         加载                                    </span>
+                                                                    <span class="tag-item">
+                                         文件系统                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16213571/13105562"
+                           data-report-query="xiangguantuijian&24" target="_blank" class="title">
+                            <div class="tit">mysql 授权指定用户查看指定数据库</div>
+                            <p> 东财《MySQL数据库系统及应用》在线作业二(随机). }&nbsp;&nbsp;A. D% W# |) R# W% ^一、单选题:【15道,总分:60分】! \&amp; g0 @; M&amp; N) E+ ?8 h无忧答案网提供大工、南开、东财、东北大学、北航、川大等在线作业答案，转载作业答案请注明出处2 I8 Y&amp; N( c' [( T0 |0 [; j1.授予用户权限时ON子句中</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         mysql 授权指定用户查看指定数据库                                    </span>
+                                                                    <span class="tag-item">
+                                         mysql可以授予的权限包括多选题                                    </span>
+                                                                    <span class="tag-item">
+                                         MySQL                                    </span>
+                                                                    <span class="tag-item">
+                                         数据库                                    </span>
+                                                                    <span class="tag-item">
+                                         Apple                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                            <li>
+                    <div class="about-aticle-list">
+                        <a href="https://blog.51cto.com/u_16099355/13106278"
+                           data-report-query="" target="_blank" class="title">
+                            <div class="tit">zabbix appliance扩展硬盘</div>
+                            <p> &nbsp;&nbsp; &nbsp; &nbsp;（1）首先在虚拟机里面关闭Ubuntu系统，如下图所示。&nbsp;（2）在VMware里点击菜单虚拟机——&gt;设置...，如下图所示。&nbsp;（3）然后弹出“虚拟机设置”对话框，如下图所示。&nbsp;（4）在上图的&quot;硬件&quot;里面单击底下的添加按钮，如下图所示。&nbsp;（5）将会弹出“添加硬件向导”对话框，如下图所示。&nbsp;（6</p>
+                        </a>
+                        <!-- 标签页 -->
+                                                    <div class="tag-box">
+                                                                    <span class="tag-item">
+                                         ubuntu                                    </span>
+                                                                    <span class="tag-item">
+                                         vmware                                    </span>
+                                                                    <span class="tag-item">
+                                         Ubuntu                                    </span>
+                                                                    <span class="tag-item">
+                                         超级终端                                    </span>
+                                                                    <span class="tag-item">
+                                         自动挂载                                    </span>
+                                                            </div>
+                                                                    </div>
+
+                </li>
+                    </ul>
+    </section>
+
+</article>
+
+<aside class="detail-content-right">
+    <!--右上角统计-->
+    <section class="common-section common-spacing mb24 user-intr">
+        <div class="user-content">
+            <div class="top">
+                <div class="avatar">
+                    <div class="avatar-img">
+                        <a href="https://blog.51cto.com/u_15214399" target="_blank" rel="nofollow">
+                            <img class="is-vip-img is-vip-img-4" data-uid="15204399" src="https://ucenter.51cto.com/images/noavatar_middle.gif">
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix username">
+                    <a href="https://blog.51cto.com/u_15214399" target="_blank"><span class="blog-user" title="华为云开发者联盟">华为云开发者联盟</span></a>
+                    <div class="icon">
+                        <ul class="clearfix detail-list"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="identify-list"></div>
+            <div class="bottom" id="userStat"></div>
+            <div id="medalListBox" class="medal-list"></div>
+            <div class="operating clearfix ">
+                                                            <a id="checkFollow2_15204399" class="follow-1 checkFollow on" rel="nofollow">关注</a>
+                                                    <button class="sx" data="https://home.51cto.com/space?uid=15204399" id="ToSx"><a href="javascript:;" rel="nofollow"><i class="iconblog blogsixin"></i>私信</a></button>
+            </div>
+        </div>
+    </section>
+    <section class="mb24 blogger-ranking">
+    </section>
+    <!-- 分类列表 -->
+            <section class="common-section common-spacing mb24">
+            <div class="clearfix common-sub-title">
+                <strong title="分类列表">分类列表</strong>
+                                    <a href="https://blog.51cto.com/u_15214399/classify" target="_blank" class="fr more">更多</a>
+                            </div>
+            <ul class="common-list" id="classification-list">
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15214399/category1.html" target="_blank" title="#  程序员之家"><span># 程序员之家</span><span>2618篇</span></a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15214399/category2.html" target="_blank" title="#  云图说—复杂技术简单学"><span># 云图说—复杂技术简单学</span><span>47篇</span></a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15214399/category3.html" target="_blank" title="#  玩转鲲鹏DevKit系列"><span># 玩转鲲鹏DevKit系列</span><span>4篇</span></a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15214399/category4.html" target="_blank" title="#  数据库"><span># 数据库</span><span>123篇</span></a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15214399/category5.html" target="_blank" title="#  人工智能"><span># 人工智能</span><span>61篇</span></a>
+                    </li>
+                            </ul>
+        </section>
+        <div class="zcht">
+    <div class="zcht-title-box">
+        <div class="zcht-title">精品课程<img class="jpkc-hot" src="https://s2.51cto.com/blog/rk/title@2x.png?x-oss-process=image/format,webp/ignore-error,1" alt="领资料" /></div>
+        <a class="more" href="https://rk.51cto.com/download?pid=4&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank">免费资料></a>
+    </div>
+    <div class="zcht-con detatil-right-box">
+        <div class="lines fline">
+            <div class="zcht-item">
+                <a class="links" href="https://e.51cto.com/training_1198.html?utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank">
+                    <i class="zchticon zchticon1"></i>
+                    <p class="zcht-txt">2024软考</p>
+                </a>
+                <div class="other-links">
+                    <a href="https://e.51cto.com/wejob/list?pid=4&cid=32&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>高级</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=4&cid=120&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>中级</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=4&cid=121&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>初级</span></a>
+                </div>
+            </div>
+            <div class="zcht-item">
+                <a class="links" href="https://e.51cto.com/training_1249.html?utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank">
+                    <i class="zchticon zchticon2"></i>
+                    <p class="zcht-txt">华为认证</p>
+                </a>
+                <div class="other-links">
+                    <a href="https://e.51cto.com/wejob/list?pid=184&cid=185&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>数通</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=184&cid=186&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>云计算</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=184&cid=187&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>安全</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="lines sline">
+            <div class="zcht-item">
+                <a class="links" href="https://e.51cto.com/training_1446.html?utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank">
+                    <i class="zchticon zchticon3"></i>
+                    <p class="zcht-txt">厂商认证</p>
+                </a>
+                <div class="other-links">
+                    <a href="https://e.51cto.com/wejob/list?pid=5&cid=182&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>K8s</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=5&cid=115&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>Oracle</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=5&cid=35&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>红帽</span></a>
+                </div>
+            </div>
+            <div class="zcht-item">
+                <a class="links" href="https://e.51cto.com/training_131.html?utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank">
+                    <i class="zchticon zchticon4"></i>
+                    <p class="zcht-txt">IT技术</p>
+                </a>
+                <div class="other-links">
+                    <a href="https://e.51cto.com/wejob/list?pid=1&cid=22&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>数据库</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=1&cid=45&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>网络安全</span></a>
+                    <b></b>
+                    <a href="https://e.51cto.com/wejob/list?pid=1&cid=217&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=wzxqyyczcht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank"><span>AIGC</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    <!-- 近期文章 -->
+            <section class="common-section common-spacing mb24">
+            <div class="clearfix common-sub-title">
+                <strong title="近期文章">近期文章</strong>
+            </div>
+            <ul class="common-list" id="updatelist">
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15962038/13113138" target="_blank" title="水稻穗检测数据集VOC+YOLO格式6038张1类别">1.水稻穗检测数据集VOC+YOLO格式6038张1类别</a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_15600198/13113539" target="_blank" title="迅为RK3576开发板Android 多屏显示">2.迅为RK3576开发板Android 多屏显示</a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_17122245/13113907" target="_blank" title="如何利用tiktok外贸专线提升品牌曝光率">3.如何利用tiktok外贸专线提升品牌曝光率</a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_16776161/13113817" target="_blank" title="天润融通智能运营工具：让AI客服机器人回答更精准">4.天润融通智能运营工具：让AI客服机器人回答更精准</a>
+                    </li>
+                                    <li>
+                        <a href="https://blog.51cto.com/u_17245259/13113015" target="_blank" title="JavaScript 基础">5.JavaScript 基础</a>
+                    </li>
+                            </ul>
+        </section>
+        <section class="common-fix">
+        <!-- 新人活动 -->
+        <a href="https://blog.51cto.com/activity-first-publish#xiang" target="_blank" class="ac-box mb24">
+            <img ps-lazy="https://s2.51cto.com/blog/activity/bride/DetailsBride.gif?x-oss-process=image/ignore-error,1" src="https://s2.51cto.com/images/100/base/empty.png?x-oss-process=image/format,webp/ignore-error,1" alt="新人福利">
+        </a>
+
+        <!-- 文章目录 -->
+                    <div class="common-section common-spacing table-contents common-content-directory">
+                <div class="clearfix common-sub-title">
+                    <strong title="文章目录">文章目录</strong>
+                </div>
+                <div class="directory" id="directory-parent1">
+                    <ul class="directory-list" id="directory-right">
+                                                                                    <li  class="lv1" >
+                                    <div class="title">
+                                        <span data-id="#h0">
+                                                                                        ▍回顾：单集群故障迁移                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv1" >
+                                    <div class="title">
+                                        <span data-id="#h1">
+                                                                                        ▍集群故障判定                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h2">
+                                                                                        集群状态收集                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h3">
+                                                                                        集群 Lease 对象更新                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h4">
+                                                                                        检查集群状态                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv1" >
+                                    <div class="title">
+                                        <span data-id="#h5">
+                                                                                        ▍故障迁移过程                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h6">
+                                                                                        集群污点添加                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h7">
+                                                                                        容忍集群污点                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h8">
+                                                                                        故障迁移                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h9">
+                                                                                        -复制 Duplicated 调度类型                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv3" >
+                                    <div class="title">
+                                        <span data-id="#h10">
+                                                                                        -分发 Divided 调度类型                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv1" >
+                                    <div class="title">
+                                        <span data-id="#h11">
+                                                                                        ▍优雅故障迁移                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv1" >
+                                    <div class="title">
+                                        <span data-id="#h12">
+                                                                                        ▍总结                                        </span>
+                                    </div>
+                                </li>
+                                                                                                                <li  class="lv4" >
+                                    <div class="title">
+                                        <span data-id="#h13">
+                                                                                        附：Karmada社区技术交流地址                                        </span>
+                                    </div>
+                                </li>
+                                                                        </ul>
+                </div>
+                <div class="table-contents"></div>
+            </div>
+            </section>
+
+
+
+</aside>
+    </div>
+    <!--悬浮小菜单-->
+        <aside class="minmenu">
+        <ul>
+            <li class="signIn" signId="2">
+                <button id="signIn">  每日签到</button>
+            </li>
+            <li class="editArticle" editId="2">
+                <!-- <div class="new_bloger ">新人福利</div> -->
+                 <button id="editArticle"><i class="iconblog blogxiewz"></i></button>
+            </li>
+            <li class="feedback">
+              <a href="https://blog.51cto.com/feedback?utm_medium=rightsuspension" target="_blank">意见<br />反馈</a>
+            </li>
+            <li class="live"><a href="https://e.51cto.com/ncamp/list?plan=xly998&path_id=998&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=blogycdht&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=&succeed=true" target="_blank"><img class="live-hot" src="https://s2.51cto.com/blog/rk/lzl-right@2x.png?x-oss-process=image/format,webp/ignore-error,1" alt="训练营" />训练营</a></li>
+            <li class="scrollToTop">
+              <i class="iconblog bloggengduo1"></i>
+            </li>
+        </ul>
+    </aside>
+</div>
+<!-- 蒙层 -->
+<div class="Mask"></div>
+
+<div class="report-dialog-root">
+    <div class="report-dialog-container">
+        <p class="report-dialog-title">举报文章</p>
+        <div class="report-type-container model-split_top" data-type="0" id="report-specific-type">
+            <p class="report-type-tit">请选择举报类型</p>
+            <div class="report-type-enmu">
+                <span class="report-type-item type-item_first" data-type="1">内容侵权</span>
+                <span class="report-type-item type-item_first item-split" data-type="2">涉嫌营销</span>
+                <span class="report-type-item type-item_first item-split" data-type="3">内容抄袭</span>
+                <span class="report-type-item type-item_first item-split" data-type="4">违法信息</span>
+                <span class="report-type-item type-item_first item-split" data-type="5">其他</span>
+            </div>
+        </div>
+        <div class="report-type-container model-split_top report-hide-model" id="report-specific-reasons" data-type="0">
+            <p class="report-type-tit">具体原因</p>
+            <div class="report-type-enmu">
+                <span class="report-type-item type-item_second" data-type="1">包含不真实信息</span>
+                <span class="report-type-item type-item_second item-split" data-type="2">涉及个人隐私</span>
+            </div>
+        </div>
+        <div class="report-type-container model-split_top report-hide-model" id="report-original-link">
+            <p class="report-type-tit">原文链接（必填）</p>
+            <input type="text" placeholder="请输入被侵权的原文链接" class="report-orgin_input"/>
+        </div>
+        <div class="report-type-container model-split_top textarea-content">
+            <p class="report-type-tit">补充说明</p>
+            <textarea maxlength="200" class="report-reason_textarea" placeholder="请详细描述您的举报内容" id="report-more-info"></textarea>
+            <p class="report-textarea-tip"><span class="tip-left">0</span><span>/200</span></p>
+        </div>
+        <div class="report-type-container">
+            <p class="report-type-tit">上传截图</p>
+            <div class="report-img-container">
+                <i class="iconblog blogtianjiabeifen report-add-icon"></i>
+                <input type="file" accept="image/jpg,image/jpeg,image/png" name="file" class="repot-btn-select" onchange="selectImg(this)" />
+            </div>
+            <p class="report-img_rule">格式支持JPEG/PNG/JPG，图片不超过1.9M</p>
+            <div class="report-img-show" >
+                <img src="" alt="" id="report-img">
+                <div class="report-img-close">
+                    <i class="iconblog bloga-shanchutupian report-close-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="report-btn-container">
+            <button class="report-btn-cancel">取消</button>
+            <button class="report-btn-concert">确认</button>
+        </div>
+        <div class="report-warm-tip report-hide-model">
+            已经收到您得举报信息，我们会尽快审核
+        </div>
+    </div>
+</div>
+<div class="imgViewDom disnone" style="display: none;">
+    <div class="img-content"></div>
+</div>
+<!--左边悬浮操作项-->
+<aside class="action-aside action-aside-left">
+    <div class="inner">
+        <ul>
+                        <li>
+                <strong class="is-praise  " type="1" blog_id="5880761" userid='15204399'>
+                    <a href="javascript:;"><i></i></a>
+                    <span><b class="praise-num"></b>赞</span>
+                </strong>
+            </li>
+            <li>
+                <strong class="favorites-opt">
+                    <a href="javascript:;"><i></i></a>
+                    <span><b class="favorites-num"></b>收藏</span>
+                </strong>
+            </li>
+            <li>
+                <strong class="Topraise">
+                    <a href="javascript:;"><i class="iconblog blogpinglun"></i></a>
+                    <span><b class="comments_num"></b>评论</span>
+                </strong>
+            </li>
+            <li class="share">
+                <strong class="">
+                    <a href="javascript:;"><i class="iconblog blogfen"></i></a>
+                    <span>分享</span>
+                </strong>
+            </li>
+        </ul>
+    </div>
+</aside>
+    <div class="modal-bg">
+         <div class="modal">
+            <i class="iconblog blogquxiao18 close-btn"></i>
+            <div class="content " ></div>
+            <div class="tip-box">如有误判或任何疑问，可联系 <a  href="javascript:;" class="zhiCustomBtn">「小助手微信：cto51cto」</a><span class="appeal_text">申诉及反馈</span>。</div>
+             <div class="know-box">
+                <span class="know-btn">我知道了</span>
+             </div>
+
+         </div>
+    </div>
+<div class="dialog-box">
+    <div class="mask"></div>
+    <div class="body">
+        <div id="close" class="close"></div>
+        <div id="medalListBox2"></div>
+    </div>
+</div>
+<div class="dialog-box-small">
+    <div class="mask"></div>
+    <div class="body">
+        <div id="close" class="close"></div>
+        <div id="medalBox2" class="medal-list">
+        </div>
+    </div>
+</div></div>
+  <header class="home-top">
+    <div class="Page">
+        <div class="top_box">
+            <div class="left_nav">
+                               <div class="item-lf "><a class="top"  href="https://www.51cto.com" target="_blank" rel="nofollow"   data-id="1"   target="_blank"> 51CTO首页                                </a></div>
+                               <div class="item-lf "><a class="top"  href="https://www.51cto.com/aigc/" target="_blank" rel="nofollow"   data-id="2"   target="_blank"> AI.x社区                                </a></div>
+                               <div class="item-lf "><a class="top"  href="https://blog.51cto.com/" target="_blank" rel="nofollow"   data-id="3"   target="_blank"> 博客                                </a></div>
+                               <div class="item-lf "><a class="subweb"  href="https://edu.51cto.com/courselist/index.html?utm_platform=mb&utm_medium=51cto&utm_source=zhuzhan&utm_content=dh" target="_blank" rel="nofollow"   data-id="4"   target="_blank"> 学堂                                </a></div>
+                               <div class="item-lf "><a class="subweb"  href="https://edu.51cto.com/surl=Z0is82" target="_blank" rel="nofollow"   data-id="5"   target="_blank"> 精品班                                </a></div>
+                               <div class="item-lf "><a class="top"  href="https://rk.51cto.com/?utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&utm_content=sy_topbar" target="_blank" rel="nofollow"   data-id="36"   target="_blank"> 软考社区                                </a></div>
+                               <div class="item-lf "><a class="top"  href="https://edu.51cto.com/surl=o0bwJ2" target="_blank" rel="nofollow"   data-id="33"   target="_blank"> 免费课                                </a></div>
+                               <div class="item-lf "><a class="subweb"  href="https://b.51cto.com/index?utm_source=hometop" target="_blank" rel="nofollow"   data-id="6"   target="_blank"> 企业培训                                </a></div>
+                               <div class="item-lf "><a class="subweb"  href="https://ost.51cto.com/?utm_source=hometop" target="_blank" rel="nofollow"   data-id="9"   target="_blank"> 鸿蒙开发者社区                                </a></div>
+                               <div class="item-lf "><a class="top"  href="https://51cto.com/wot/?utm_source=dhl" target="_blank" rel="nofollow"   data-id="10"   target="_blank"> WOT技术大会                                </a></div>
+                               <div class="item-lf "><a class="top"  href="https://edu.51cto.com/cert/?utm_platform=pc&utm_medium=51cto&utm_source=edu&utm_content=dh" target="_blank" rel="nofollow"   data-id="35"   target="_blank"> IT证书                                </a></div>
+                           </div>
+            <div class="top_right">
+                <div class="item-rt"><a href="http://so.51cto.com/?keywords=&amp;sort=time" target="_blank" class="search-top" rel="nofollow"><i class="iconblog blogsou blog-search"></i></a></div>
+                <div class="item-rt"><span class="wechatlist" data-id="wechatImageList">公众号矩阵</span></div>
+                <div class="item-rt"><span class="applist" data-id="appImageList">移动端</span></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="nav-more-container "  >
+        <div class="Page nav-contant-box" >
+                                                                                                                                   <div class="nav-contant " data-id="4" >
+                                           <a href="https://edu.51cto.com/videolist/index.html?utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&utm_content=dh" target="_blank">短视频</a>
+                                              <a href="https://edu.51cto.com/courselist/index-zh5.html?utm_source=hometop" target="_blank">免费课程</a>
+                                              <a href="https://edu.51cto.com/ranking/index.html?utm_source=hometop" target="_blank">课程排行</a>
+                                              <a href="https://e.51cto.com/ncamp/list?utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&utm_content=sy_topbar&rtm_frd=13" target="_blank">直播课</a>
+                                              <a href="https://e.51cto.com/rk/?utm_platform=pc&utm_medi-um=51cto&utm_source=zhuzhan&utm_content=sy_topbar&rtm_frd=14" target="_blank">软考学堂</a>
+                                            </div>
+                                                                  <div class="nav-contant " data-id="5" >
+                                           <a href="https://e.51cto.com/wejob/list?utm_platform=pc&utm_medi-um=51cto&utm_source=zhuzhan&utm_content=sy_topbar" target="_blank">全部课程</a>
+                                              <a href="https://e.51cto.com/wejob/list?pid=5&utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&utm_content=sy_topbar&rtm_frd=41" target="_blank">厂商认证</a>
+                                              <a href="https://e.51cto.com/wejob/list?pid=1&utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&utm_content=sy_topbar&rtm_frd=42" target="_blank">IT技术</a>
+                                              <a href="https://rk.51cto.com/?utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&rtm_frd=07&utm_content=sy_topbar&rtm_frd=43" target="_blank">25年5月软考</a>
+                                              <a href="https://e.51cto.com/wejob/list?pid=33&utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&utm_content=sy_topbar&rtm_frd=44" target="_blank">PMP项目管理</a>
+                                              <a href="https://t.51cto.com/?utm_platform=pc&utm_medium=51cto&utm_source=zhuzhan&rtm_frd=07&utm_content=sy_topbar&rtm_frd=43" target="_blank">免费题库</a>
+                                            </div>
+                                                                                                                          <div class="nav-contant " data-id="6" >
+                                           <a href="https://b.51cto.com/index?utm_source=hometop" target="_blank">在线学习</a>
+                                            </div>
+                                                                  <div class="nav-contant " data-id="9" >
+                                           <a href="https://ost.51cto.com/postlist" target="_blank">文章</a>
+                                              <a href="https://ost.51cto.com/resource" target="_blank">资源</a>
+                                              <a href="https://ost.51cto.com/answerlist" target="_blank">问答</a>
+                                              <a href="https://ost.51cto.com/study" target="_blank">课堂</a>
+                                              <a href="https://ost.51cto.com/column" target="_blank">专栏</a>
+                                              <a href="https://ost.51cto.com/activity" target="_blank">直播</a>
+                                            </div>
+                                                                                                                        <div class="nav-contant wechatImageList" data-id="wechatImageList" >
+                                           <div class="ewmbox"><div class="imgbox"><img src="https://s5.51cto.com/oss/202302/07/862966771f540df82857144db74b27ee5b4b23.jpeg"/></div><span class="txt">51CTO</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s4.51cto.com/oss/202302/07/d53d67c771f5cc42bac359bceb138c4cb1713b.jpg"/></div><span class="txt">鸿蒙开发者社区</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s6.51cto.com/oss/202302/07/58786f9973e5e929ef521783e1ee40413b04de.jpeg"/></div><span class="txt">51CTO技术栈</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s3.51cto.com/oss/202302/07/c77c03983d48589b1af789dfc284acb6a7c529.jpeg"/></div><span class="txt">51CTO官微</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s4.51cto.com/oss/202302/07/544d71641d983430fc9955636e625e6bb21ff9.jpeg"/></div><span class="txt">51CTO学堂</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s3.51cto.com/oss/202302/07/f1bd61e720bf669483d941a8486c124f32c451.jpeg"/></div><span class="txt">51CTO博客</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s9.51cto.com/oss/202302/07/4719e7b27bae3af5e33552481b6cb913288b01.jpeg"/></div><span class="txt">CTO训练营</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s5.51cto.com/oss/202302/07/61a991f484307eed2fe9356cc215c4d8f2dc0f.jpg"/></div><span class="txt">鸿蒙开发者社区订阅号</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s5.51cto.com/oss/202408/30/a7a3092691d8f3fdb3322730c0fba80fd82f85.png"/></div><span class="txt">51CTO软考</span></div>
+                                            </div>
+                                                        <div class="nav-contant appImageList" data-id="appImageList" >
+                                           <div class="ewmbox"><div class="imgbox"><img src="https://s8.51cto.com/oss/202302/07/24febb8152cc24e264e642f8cb8bb515efea26.jpeg"/></div><span class="txt">51CTO学堂APP</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s9.51cto.com/oss/202302/07/43cca7d0489cc5d1f70060be760bde17d552e2.jpeg"/></div><span class="txt">51CTO学堂企业版APP</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s5.51cto.com/oss/202302/07/c4d2220826890472539671d7c428f0c0ee9451.jpg"/></div><span class="txt">鸿蒙开发者社区视频号</span></div>
+                                              <div class="ewmbox"><div class="imgbox"><img src="https://s2.51cto.com/oss/202408/30/b5977c058d1e72d034549101bcef232c9fe32a.png"/></div><span class="txt">51CTO软考题库</span></div>
+                                            </div>
+                        </div>
+    </div>
+</header>
+<div class="Header  " style="height:70px;">
+     <div class="header-content">
+        <div class="header-left">
+                            <div class="Logo"><a href="https://blog.51cto.com/"><img src="https://s2.51cto.com/media/2024/blog/logo.png?x-oss-process=image/format,webp/ignore-error,1" alt="51CTO博客" width="100" title="51CTO博客">
+                    <h2>51CTO博客</h2>
+                </a></div>
+                  <ul class="Navigates  commonhide">
+            <li ><a href="https://blog.51cto.com/">首页</a>
+                <div class="spam-classifications" style="display:none;">
+                    <div class="spam-classifications-content">
+                        <div class="classification-ipc" id="classification-ipc"></div>
+                        <div class="classification-primary-list-box" id="classification-primary-list-box"></div>
+
+                    </div>
+                </div>
+            </li>
+            <li ><a href="https://blog.51cto.com/nav/following">关注</a></li>
+            <li ><a href="https://blog.51cto.com/ranking/hot/aigc">排行榜</a></li>
+            <li class="jingpinke"><a href="https://e.51cto.com/?utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=topbar&rtm_frd=" target="_blank">精品课程<img class="hot-jiaxin" src="https://s2.51cto.com/blog/jiaxin@3x.png?x-oss-process=image/format,webp/ignore-error,1" alt="升职加薪" /><i class="iconblog blogunfold"></i></a></li>
+            <li><a href="https://rk.51cto.com/download?pid=4&utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=sywzdhl&rtm_frd=&rtm_plan=&rtm_unit=&rtm_keyword=" target="_blank">免费资料<img class="hot-lzl" src="https://s2.51cto.com/blog/rk/lzl@2x.png?x-oss-process=image/format,webp/ignore-error,1" alt="领资料" /></a></li>
+            <li class="tiku">
+                <a href="https://rk.51cto.com/?utm_platform=pc&utm_medium=51cto&utm_source=blog&utm_content=shouye" target="_blank">软考题库</a><img class="hot-img" src="https://s2.51cto.com/blog/hot@2x.png?x-oss-process=image/format,webp/ignore-error,1" alt="软考题库" />
+                <div class="tiku-box">
+                    <img src="https://s2.51cto.com/blog/ewm_rktk.png?x-oss-process=image/format,webp/ignore-error,1" alt="软考题库" />
+                    <div class="ewm-txt">科目全、试题精、讲解专业，扫码免费刷</div>
+                </div>
+            </li>
+            </ul>
+     </div>
+        <ul class="header-right">
+                <li class="search">
+                    <form class=" form-search" method='get' action="https://blog.51cto.com/search/result" target="_blank" novalidate>
+                        <input type="text" name="q" placeholder="搜索文章、作者" id="TopSearchInput" autocomplete="off" required>
+                         <i class="iconblog  bloga-shanchutupian" ></i>
+                        <button class="iconblog blogsou" id="TopSearchBtn" ></button>
+                    </form>
+                    <div class="focusSelect focusSelect_his">
+
+                        <div class="searchHistoryList">
+                            <div class="clearfix hishead">搜索历史
+                                <span class="clearhis"><i class="iconblog blogshanchu18 "></i>清空</span>
+                            </div>
+                            <div class="hisitem-wrap"></div>
+                        </div>
+
+                        <div class="hotList">
+                            <div class="clearfix hishead">热门搜索</div>
+                            <div class="hot-wrap"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="focusSelect focusSelect_key">
+                        <div class="keyitem-wrap">
+
+                        </div>
+                        <div class="clearfix checkSearchResult">
+                            <span>查看【</span>
+                            <span class="checkKey"></span>
+                            <span>】的结果</span>
+                        </div>
+                    </div>
+                </li>
+                                      <li class="write commonhide">
+
+                        <a href="javascript:;" id="toPublish" onClick="Login({scene:'write1'})" rel="nofollow"> <i class="iconblog  blogxiewenzhang"></i>写文章</a></li>
+                      <li class="creative"><a href="/creative-center/index">创作中心</a><a href="/creative-center/task" class="task"></a></li>
+                                                         <li class="logins">
+                    <a href="https://home.51cto.com/index?from_service=blog&scene=login1&reback=https://blog.51cto.com/u_15214399/5880761" target="_self" class="clearfix" rel="nofollow"><span class="fl">登录</span><b class="fgline fl"></b><span class="fl">注册</span></a>
+                </li>
+                    </ul>
+
+    </div>
+</div>
+    <!-- if publish show -->
+    <div class="Footer">
+        <div class="Page ">
+            <div class="fl">
+                <a href="https://blog.51cto.com/" class="Logo"><img src="https://s2.51cto.com/images/100/blog/logo4.png?x-oss-process=image/format,webp/ignore-error,1" alt="51CTO博客" width="214" title="51CTO博客"></a>
+                <p class="copy">Copyright &copy; 2005-2025 <a href="https://www.51CTO.com" target="_blank">51CTO.COM</a>
+                    版权所有 京ICP证060544号</p>
+            </div>
+
+            <dl class="foot_ab fr">
+                <dt>关于我们</dt>
+                <dd>
+                    <table class="aboutList">
+                        <tr>
+                            <td><a href="https://blog.51cto.com/51ctoblog" target="_blank">官方博客</a></td>
+                            <td><a href="https://blog.51cto.com/nav" target="_blank">全部文章</a></td>
+                            <td><a href="https://blog.51cto.com/topic/all" target="_blank">热门标签</a></td>
+                            <td ><a href="https://blog.51cto.com/class-blog/index" target="_blank" data-v-6e9e21b4="">班级博客</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.51cto.com/about/aboutus.html" target="_blank">了解我们</a></td>
+                            <td><a href="https://www.51cto.com/about/map.html" target="_blank">网站地图</a></td>
+                            <td><a href="https://blog.51cto.com/feedback?utm_medium=aboutus2" target="_blank">意见反馈</a></td>
+
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+
+
+            <dl class="foot_link fr">
+                <dt>友情链接</dt>
+                <dd>
+                    <table class="aboutList-2">
+                        <tr>
+                            <td><a href="https://ost.51cto.com/?utm_source=blogsitemap" target="_blank">鸿蒙开发者社区</a></td>
+                            <td><a href="https://edu.51cto.com/" target="_blank">51CTO学堂</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.51cto.com" target="_blank">51CTO</a></td>
+                            <td><a href="https://edu.51cto.com/rk/" target="_blank">软考资讯</a></td>
+                        </tr>
+                    </table>
+                </dd>
+            </dl>
+
+        </div>
+    </div>
+
+
+<script>
+    var userId="";
+var uid="";
+var user_id=15204399;
+var isLogin=0;
+var imgpath="https://s2.51cto.com/";
+var BLOG_URL="https://blog.51cto.com/";
+var HOME_URL="https://home.51cto.com/";
+var STATICPATH="https://static2.51cto.com/edu/";
+var SA_SERVER_URL_YM="https://sc.51cto.com/sa?project=production";
+var cururl="https://blog.51cto.com/u_15214399/5880761";
+var login_url="https://home.51cto.com/mobile/client-login?reback=https://blog.51cto.com/u_15214399/5880761";
+var praise_url="https://blog.51cto.com/praise/praise";
+var qrcodeSid="";
+var qr_code="";
+var router="blog/index";
+var csrfParam="_csrf";
+var csrfToken="2eXHxIWk83tLNjuVq3eqPURCqMrb1hfgCZLKL7cRjRjjpXQhQPpm1cGXFJV10gWUEkaAm69lmwywnAtqCtrDkQ==";
+var is_load=0;
+var uc_url="https://ucenter.51cto.com/";
+var blog_url="https://blog.51cto.com/";
+var isBuy=1;
+var isPc=0;
+var writeMessage="©著作权归作者所有：来自51CTO博客作者华为云开发者联盟的原创作品，如需转载，请与作者联系，否则将追究法律责任\r\nKarmada跨集群优雅故障迁移特性解析\r\nhttps:\/\/blog.51cto.com\/u_15214399\/5880761";
+var isCodeCopy=0;
+var cid="";
+var fid=0;
+var commentListPage="";
+var originalUrl="https://blog.51cto.com/u_15214399/original";
+var followersUrl="https://blog.51cto.com/u_15214399/followers";
+var translateUrl="https://blog.51cto.com/u_15214399/translate";
+var reproduceUrl="https://blog.51cto.com/u_15214399/reproduce";
+var followingUrl="https://blog.51cto.com/u_15214399/following";
+var page="detail";
+var tipStatus=1;
+var addReply_url="https://blog.51cto.com/addBlogComment";
+var removeUrl="https://blog.51cto.com/delBlogComment";
+var blog_id=5880761;
+var is_comment=0;
+var comment_list="https://blog.51cto.com/getBlogCommentList";
+var index_url="https://blog.51cto.com/u_15214399";
+var img_url="https://static2.51cto.com/edu/blog/";
+var i_user_id="";
+var c_user_id=15204399;
+var collect_url="https://blog.51cto.com/addUserCollect";
+var is_old=2;
+var nicknameurl="https://blog.51cto.com/u_15214399";
+var nickname="华为云开发者联盟";
+var shareimgUrl="/qr/qr-url?url=https%3A%2F%2Fblog.51cto.com%2Fu_15214399%2F5880761";
+var checkFollow=1;
+var seoTitle="";
+var articleABtest=0;
+var blog_source=0;
+var blog_source_video=0;
+var blog_add_time=1669174233;
+var word_type=0;
+var custom_id=1;
+var firstTwoCate=27;
+var webTitle="Karmada\u8de8\u96c6\u7fa4\u4f18\u96c5\u6545\u969c\u8fc1\u79fb\u7279\u6027\u89e3\u6790";
+var cateId=27;
+var recommendCourse="";
+var recommendLesson={"lesson_id":979247,"title":"MySQL\u9694\u79bb\u7ea7\u522b\u4e0e\u7d22\u5f15\u7c7b\u578b\u5bf9\u52a0\u9501\u5f71\u54cd\u89e3\u6790","describe":"\u672c\u8bfe\u7a0b\u6df1\u5165\u63a2\u8ba8\u4e86MySQL\u6570\u636e\u5e93\u4e2d\u4e0d\u540c\u9694\u79bb\u7ea7\u522b\u548c\u7d22\u5f15\u7c7b\u578b\u5bf9\u884c\u9501\u52a0\u9501\u65b9\u5f0f\u7684\u5f71\u54cd\u3002\u901a\u8fc7\u56fe\u793a\u548c\u5b9e\u4f8b\u5206\u6790\uff0c\u8be6\u7ec6\u89e3\u91ca\u4e86\u5728RC\u548cR\u9694\u79bb\u7ea7\u522b\u4e0b\uff0c\u4e3b\u952e\u3001\u552f\u4e00\u7d22\u5f15\u3001\u975e\u552f\u4e00\u7d22\u5f15\u4ee5\u53ca\u65e0\u7d22\u5f15\u6761\u4ef6\u4e0b\u7684\u52a0\u9501\u673a\u5236\u3002\u8bfe\u7a0b\u91cd\u70b9\u8ba8\u8bba\u4e86\u95f4\u9699\u9501\u548c\u8bb0\u5f55\u9501\u7684\u7ec4\u5408\u4f7f\u7528\uff0c\u4ee5\u53ca\u5b83\u4eec\u5982\u4f55\u5f71\u54cd\u6570\u636e\u5e93\u5e76\u53d1\u6027\u80fd\u3002\u901a\u8fc7\u5bf9\u6bd4RC\u548cR\u9694\u79bb\u7ea7\u522b\u4e0b\u7684\u52a0\u9501\u5dee\u5f02\uff0c\u63ed\u793a\u4e86\u5e7b\u8bfb\u95ee\u9898\u53ca\u5176\u89e3\u51b3\u65b9\u6848\uff0c\u5e2e\u52a9\u5b66\u5458\u6df1\u523b\u7406\u89e3MySQL\u9501\u673a\u5236\u5728\u5b9e\u9645\u4e1a\u52a1\u4e2d\u7684\u5e94\u7528\u3002","tags":"MySQL,\u9694\u79bb\u7ea7\u522b,\u7d22\u5f15\u7c7b\u578b,\u884c\u9501,\u95f4\u9699\u9501","url":"https:\/\/edu.51cto.com\/lesson\/979247.html?utm_platform=pc&utm_medium=51cto&utm_source=shequ&utm_content=bk_article_tuijian"};
+var searchLesson="";
+var blog_type=1;
+var tagLesson="";
+var switchLesson="";
+            !function(f,p){"use strict";var h=new RegExp("\\.css"),y=p.head||p.getElementsByTagName("head")[0],r=+navigator.userAgent.replace(/.*(?:AppleWebKit|AndroidWebKit)\/?(\d+).*/i,"$1")<536;function s(e){return"complete"===e.readyState||"loaded"===e.readyState}function v(e,t,n){var o="onload"in e;function a(){e.onload=e.onreadystatechange=null,e=null,t()}"css"!==n||!r&&o?o?(e.onload=a,e.onerror=function(){e.onerror=null}):e.onreadystatechange=function(){s(e)&&a()}:setTimeout(function(){!function e(t,n){var o;t.sheet&&(o=!0),setTimeout(function(){o?n():e(t,n)},20)}(e,t)},1)}function u(t,n,e,o){if(t)if(h.test(t)){var a=t,r=e,c=u,i=p.createElement("link");if(r.attrs)for(var l in r.attrs)i.setAttribute(l,r.attrs[l]);r.prefetch?(i.href=a,i.rel="prefetch",c&&c()):(i.rel="stylesheet",v(i,c,"css"),i.href=a),y.appendChild(i)}else{var c=t,d=e,a=u,f=d.prefetch?p.createElement("link"):p.createElement("script");if(d.attrs)for(var s in d.attrs)f.setAttribute(s,d.attrs[s]);d.prefetch?(f.href=c,f.rel="prefetch",a&&a()):(f.charset="utf-8",v(f,a,"js"),f.async=!1,f.src=c),y.appendChild(f)}else setTimeout(function(){u()});function u(){var e=n.indexOf(t);-1<e&&n.splice(e,1),0===n.length&&o()}}function c(e="load",t){var n="object"==typeof t.option?t.option:{},t="function"==typeof t.callback?t.callback:null;return n.attrs="object"==typeof n.attrs?n.attrs:{},n.loaded="boolean"==typeof n.loaded&&n.loaded,n[e]=!0,{option:n,cb:t}}function i(c,e,t="load"){var n,o,a,r,i,l;function d(){var e=c,t=i,n=l;function o(){n&&n()}if(0===(e=Array.prototype.slice.call(e||[])).length)o();else for(var a=0,r=e.length;a<r;a++)u(e[a],e,t,o)}c&&c.length&&(i=e.option,l=e.cb,e=p,n=function(){"load"===t&&i.loaded?setTimeout(d,2e3):d()},("ready"===(o=t)?"loading"!==e.readyState:s(e))?n():(a=!1,r=function(){a||(n(),a=!0)},"load"===o?f.addEventListener("load",r):"ready"===o&&p.addEventListener("DOMContentLoaded",r),setTimeout(function(){r()},1500)))}f.PsLoader={ready:function(e,t,n={}){var o=[],a=[];e.forEach(function(e){(h.test(e)?o:a).push(e)}),n.loaded=!1,i(o,c("ready",{option:n,callback:function(){t(o)}}),"ready"),i(a,c("load",{option:n,callback:function(){t(a)}}))},load:function(e,t,n={}){i(e,c("load",{option:n,callback:t}))},prefetch:function(e,t,n={}){i(e,c("prefetch",{option:n,callback:t}))}}}(window,document);        !function(m,g){var t=["scroll","wheel","mousewheel","resize","animationend","transitionend","touchmove"];function n(e){if("object"!=typeof e)throw new Error("CLazy option is not Object");var f={defaultImg:e.defaultImg||"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",preLoad:e.preLoad||1.3,preLoadTop:e.preLoadTop||0,complete:e.complete||null,events:e.events||t,capture:e.capture||!1},v=0,p={},h={},i={},A=this;function l(e){var t=e;if("object"!=typeof t)return!1;if(!t.el)for(var r in p)if(e===p[r].el){t=p[r];break}return t}function c(e){var e=e.getBoundingClientRect(),t=f.preLoad,r=f.preLoadTop;return e.top<m.innerHeight*t&&e.bottom>r&&e.left<m.innerWidth*t&&0<e.right}function u(e,t){var r,n=e.bindType,o=e.el;switch(t){case"loading":case"error":r=f.defaultImg;break;default:r=e.src}n?e.src&&(o.style[n]='url("'+r+'")'):o.getAttribute("src")!==r&&o.setAttribute("src",r),o.setAttribute("lazy",t)}this.add=function(e,t){var r=function(e){var t,r=!1;for(t in p)if(p[t].el===e){r=p[t];break}return r}(e);if(r)return this.check(r),!1;r="e_"+ ++v;if(p[r])return this.check(p[r]),!1;for(var n,o={id:r,el:e,bindType:"IMG"===e.tagName?null:"background-image",src:(n=e,(t=t)?t.value:n.getAttribute("ps-lazy")),$parent:function(e){if(!(e instanceof HTMLElement))return m;var t=e;for(;t&&t!==g.body&&t!==g.documentElement&&t.parentNode;){if(/(scroll|auto)/.test(function(e){return y(e,"overflow")+y(e,"overflow-y")+y(e,"overflow-x")}(t)))return t;t=t.parentNode}return m}(e)},a=(h[r]=function(e){A.check(o)},p[r]=o),i=h[r],c=0;c<f.events.length;c++){s=d=u=l=void 0;var[l,u,d,s=!1]=[a.$parent,f.events[c],i,f.capture];l&&l.addEventListener(u,d,s),m!==l&&m.addEventListener(u,d,s)}this.check(o)},this.remove=function(e){for(var e=l(e),t=(e.el&&e.el.removeAttribute("ps-lazy"),e),r=h[e.id],n=0;n<f.events.length;n++){c=i=a=o=void 0;var[o,a,i,c=!1]=[t.$parent,f.events[n],r,f.capture];o&&o.removeEventListener(a,i,c),m!==o&&m.removeEventListener(a,i,c)}delete h[e.id],delete p[e.id]},this.check=function(e){var t,r,n,o,a=l(e);c(a.el)&&(m===a.$parent||c(a.$parent))?(e=function(e){u(a,e),A.remove(a),f.complete&&f.complete({el:a.el,src:a.src,state:e})},a.src?(t=a.src,r=e,n=encodeURIComponent(t),i[n]?r(i[n]):((o=new Image).onload=function(){i[n]="loaded",r(i[n])},o.onerror=function(){i[n]="error",r(i[n])},o.src=t)):e("loaded")):u(a,"loading")},this.checkAll=function(){for(var e in p)A.check(p[e])}}function y(e,t){return"undefined"!=typeof getComputedStyle?getComputedStyle(e,null).getPropertyValue(t):e.style[t]}m.PsLazy=function(e={}){function t(e){for(var t=e.path||event.composedPath&&event.composedPath()||e._getPath&&e._getPath(),r=0;r<t.length;r++){var n=t[r];if(n&&"hasAttribute"in n&&n.hasAttribute("ps-lazy-check")){o.format();break}}}function r(){var e=g.querySelector("img[data-share]");e&&!e.getAttribute("src")&&e.setAttribute("src",e.getAttribute("data-share"))}var o=this;n.call(o,e),g.addEventListener("click",t),g.addEventListener("mouseover",t),this.format=function(){var e=g.querySelectorAll("[ps-lazy]");if(!e.length)return!1;for(var t=0;t<e.length;t++)o.add(e[t])},this.format();"complete"===(e=g).readyState||"loaded"===e.readyState?r():m.addEventListener("load",r,!1)}}(window,document);        PsLoader.load(["https://static2.51cto.com/edu/blog/blog-static/static/css/pc_detailinline.min.css?v=a83f01f8c9","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_detail.min.css?v=5e372a4fd7","https://cdn.51cto.com/jquery/jquery-2.2.4.min.js","https://static2.51cto.com/edu/center/js/interaction_iframe.js","https://cdn.51cto.com/jquery/swiper-4.5.3.js","https://cdn.51cto.com/svga/2.3.1/svga.min.js","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_base.min.js?v=e5a90e1db6","https://static2.51cto.com/edu/blog/blog-static/js/mprime.js?v=2cb70144db","https://cdn.51cto.com/lingjing-agent/1.0.7/js/index.global.js","https://static2.51cto.com/edu/blog/blog-static/js/lingjing-agent/lingjing.js?v=9c85312fef","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_detail.min.js?v=126aa49881"], function() {
+                    articleCopy();
+            })
+    PsLoader.prefetch(["https://static2.51cto.com/edu/blog/blog-static/static/css/pc_base.min.css?v=b9fe6f5060","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_indexinline.min.css?v=6a6bc0d6f9","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_newIndexinline.min.css?v=996c6a9e07","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_listinline.min.css?v=e1c6125a54","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_newListinline.min.css?v=798cda321f","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_topicinline.min.css?v=75b4285197","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_topicdetailinline.min.css?v=755e483db8","https://static2.51cto.com/edu/blog/blog-static/static/css/pc_bloggerinline.min.css?v=a1bbfa0e6f","https://static2.51cto.com/edu/blog/blog-static/markdown/dist/js/main.js?v=12e5a1a2fe","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_index_js.min.js?v=a5b73e4b15","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_list_js.min.js?v=eab52af915","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_topic.min.js?v=873da4210c","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_topic_static.min.js?v=8533cb9e02","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_topicdetail.min.js?v=901345e7d5","https://static2.51cto.com/edu/blog/blog-static/static/js/pc_blogger_js.min.js?v=25c5d3e873"]);
+    var Lazy = new PsLazy({
+        defaultImg: "https://s2.51cto.com/images/100/base/empty.png?x-oss-process=image/format,webp/ignore-error,1",
+        preLoad: 1.3,
+        complete: function(opt) {},
+    })
+</script>
+</body>
+</html>
