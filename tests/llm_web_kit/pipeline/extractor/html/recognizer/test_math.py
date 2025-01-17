@@ -91,46 +91,46 @@ TEST_CASES = [
 
 TEST_CASES_HTML = [
     # math-container, latex + mathjax
-    # {
-    #     'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
-    #     'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
-    #     'expected': 'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-    #     ],
-    #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-    #     'expected': 'assets/ccmath/libretexts_1_p_latex_mathjax_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/mathjax_tex_chtml.html',
-    #     ],
-    #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-    #     'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/wikipedia_1_math_annotation.html',
-    #     ],
-    #     'base_url': 'https://en.m.wikipedia.org/wiki/Variance',
-    #     'expected': 'assets/ccmath/wikipedia_1_math_annotation_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/mathjax-mml-chtml.html',
-    #     ],
-    #     'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
-    #     'expected': 'assets/ccmath/mathjax-mml-chtml_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/geoenergymath_img.html',
-    #     ],
-    #     'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
-    #     'expected': 'assets/ccmath/geoenergymath_img_1.html'
-    # },
+    {
+        'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
+        'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
+        'expected': 'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/libretexts_1_p_latex_mathjax.html',
+        ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/libretexts_1_p_latex_mathjax_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/mathjax_tex_chtml.html',
+        ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/wikipedia_1_math_annotation.html',
+        ],
+        'base_url': 'https://en.m.wikipedia.org/wiki/Variance',
+        'expected': 'assets/ccmath/wikipedia_1_math_annotation_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/mathjax-mml-chtml.html',
+        ],
+        'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
+        'expected': 'assets/ccmath/mathjax-mml-chtml_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/geoenergymath_img.html',
+        ],
+        'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
+        'expected': 'assets/ccmath/geoenergymath_img_1.html'
+    },
     # # katex latex+katex
     {
         'input': ['assets/ccmath/katex_mathjax.html'],
@@ -278,18 +278,16 @@ class TestMathRecognizer(unittest.TestCase):
             #         f.write(str(part[0]))
             parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
             print(len(parts))
-            # expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
-            # expect_formulas = [formula for formula in expect_text.split('\n') if formula]
-            # self.assertEqual(len(parts), len(expect_formulas))
-            # for expect, part in zip(expect_formulas, parts):
-            for part in parts:
+            expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
+            expect_formulas = [formula for formula in expect_text.split('\n') if formula]
+            self.assertEqual(len(parts), len(expect_formulas))
+            for expect, part in zip(expect_formulas, parts):
                 a_tree = html_to_element(part)
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
                 answer = a_result.text.replace('\n', '')
                 # print('part::::::::', part)
-                print(answer)
                 # print('expect::::::::', expect)
-                # self.assertEqual(expect, answer)
+                self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
 
     def write_to_html(self, answers, file_name):
