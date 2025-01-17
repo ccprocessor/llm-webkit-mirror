@@ -34,7 +34,10 @@ def __group_code_by_distance(
             if i == get_father(i):
                 path = '/'.join(root_paths[i])
                 path = '/'.join(path.removeprefix('/').split('/')[1:])
-                text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
+                if not path:
+                    text = ''.join(root.itertext())
+                else:
+                    text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
                 # 替换之前的 magic number
                 # 如果出现一棵子树，其组成的内容不存在任何单词
                 # 那么认为它是用于代码格式化的空白换行结构，或是 { } 等格式符号
@@ -190,4 +193,4 @@ def modify_tree(root: HtmlElement) -> None:
 
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:
-        replace_node_by_cccode(node, 'tag_code')
+        replace_node_by_cccode(node, 'tag_code', False)
