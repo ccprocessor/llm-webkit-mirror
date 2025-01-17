@@ -190,4 +190,4 @@ def modify_tree(root: HtmlElement) -> None:
 
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:
-        replace_node_by_cccode(node, 'tag_code')
+        replace_node_by_cccode(node, 'tag_code', False)
