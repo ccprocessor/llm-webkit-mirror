@@ -41,6 +41,15 @@ def remove_html_newline_and_spaces(s: str) -> str:
     return _RE_COMBINE_WHITESPACE.sub(' ', s.replace('\n', '').replace('\r', ''))
 
 
+def hit_last_leaf(ele: HtmlElement, block_eles: list[str]) -> bool:
+    children = ele.getchildren()
+    if len(children) == 0:
+        return False
+    if children[-1].tag in block_eles:
+        return True
+    return hit_last_leaf(children[-1], block_eles)
+
+
 def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True) -> None:
     """将 node 替换为 cccode 标签.
 
@@ -62,6 +71,7 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True) 
                 sub_node.tail = remove_html_newline_and_spaces(sub_node.tail)
 
     block_eles = [
+        'br',
         'address',
         'article',
         'aside',
@@ -98,9 +108,14 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True) 
         'video',
     ]
     for block_ele in block_eles:
-        x = f'//{block_ele}'
+        x = f'.//{block_ele}'
         for ele in node.xpath(x):
             assert isinstance(ele, HtmlElement)
+
+            # 如果树最右链的一个子元素是分块元素,那分块就没有必要换行
+            if hit_last_leaf(ele, block_eles):
+                continue
+
             ele.tail = ('\n' + ele.tail) if ele.tail else ('\n')  # type: ignore
 
     full_text = ''.join(node.itertext(None))
