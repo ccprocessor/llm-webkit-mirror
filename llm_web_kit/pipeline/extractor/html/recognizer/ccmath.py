@@ -75,6 +75,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if len(inter_ele) > 0:
             # 获取math_content
             math_content = inter_ele[0].text
+            math_content = cm.wrap_math_md(math_content)
 
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
