@@ -177,9 +177,10 @@ if __name__ == '__main__':
     math_recognizer = MathRecognizer()
     test_html = [
         (
-            ('<p>这是p的text<span class="mathjax_display">'
-                '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
-                '这是b的tail</p>'),
+            ('<p>In the statement of the Lemma it seems that the first occurence of <script type="math/tex">X_{pro-étale}</script> should be replaced by <script type="math/tex">$$Y_{pro-étale}$$</script>.</p>'),
+            # ('<p>这是p的text<span class="mathjax_display">'
+            #     '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
+            #     '这是b的tail</p>'),
             ('<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>')
