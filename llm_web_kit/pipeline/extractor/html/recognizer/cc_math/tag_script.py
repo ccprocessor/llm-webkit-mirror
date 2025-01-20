@@ -44,7 +44,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 new_tag = CCMATH_INLINE
             elif equation_type == EQUATION_INTERLINE:
                 new_tag = CCMATH_INTERLINE
-            # 没有获取到公式类型，则不处理
             else:
                 return
 
