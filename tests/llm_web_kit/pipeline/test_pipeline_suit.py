@@ -130,3 +130,15 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.assertEqual(html_content['content']['items'][0][0][0]['t'], ParagraphTextType.TEXT)
         self.assertEqual(html_content['content']['items'][1][0][0]['c'], '200')
         self.assertEqual(html_content['content']['items'][1][0][0]['t'], ParagraphTextType.TEXT)
+
+        # 带链接的code
+        html_content = html_content_list[11]
+        self.assertEqual(html_content['type'], DocElementType.CODE)
+        self.assertEqual(html_content['content']['code_content'], '#include<xxxx.hpp>')
+        self.assertEqual(html_content['content']['by'], 'tag_code')
+
+        # txt格式
+        txt_content = result.get_content_list().to_txt()
+        self.assertEqual(len(txt_content), 727)
+        self.assertNotEquals(txt_content[-2], '\n')
+        self.assertEqual(txt_content[-1], '\n')
