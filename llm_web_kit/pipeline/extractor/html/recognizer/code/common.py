@@ -121,9 +121,9 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True) 
     full_text = ''.join(node.itertext(None))
     chunks = [sub_text.replace(' ', ' ').rstrip() for sub_text in full_text.split('\n')]
 
-    while not chunks[0]:
+    while len(chunks) > 0 and not chunks[0]:
         chunks = chunks[1:]
-    while not chunks[len(chunks) - 1]:
+    while len(chunks) > 0 and not chunks[len(chunks) - 1]:
         chunks = chunks[:-1]
 
     full_text = '\n'.join(chunks)
