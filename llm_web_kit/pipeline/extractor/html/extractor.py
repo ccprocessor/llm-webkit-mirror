@@ -89,7 +89,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         main_html, method = self._extract_main_html(raw_html, base_url)
         parsed_html = [(main_html,raw_html)]
-        for extract_func in [self._extract_table, self._extract_list, self._extract_code, self._extract_math,
+        for extract_func in [self._extract_code, self._extract_table, self._extract_list, self._extract_math,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
