@@ -152,7 +152,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         1. 遇到<br/>标签，则认为是一个段落结束。
 
         Args:
-            item:
+            item: 一个列表项。例如<li>
 
         Returns:
             list[dict]: 列表项的文本
@@ -160,9 +160,6 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         text_paragraph = []
 
         paragraph = []
-        if item.text:  # li标签的直接文本。
-            paragraph.append({'c': item.text, 't': ParagraphTextType.TEXT})
-
         for child in item.iter():
             if child.tag == CCTag.CC_MATH_INLINE:
                 paragraph.append({'c': child.text, 't': ParagraphTextType.EQUATION_INLINE})
@@ -172,11 +169,13 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 if child.tail:
                     paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
             else:
-                paragraph.append({'c': child.text, 't': ParagraphTextType.TEXT})
+                if child.text:
+                    paragraph.append({'c': child.text, 't': ParagraphTextType.TEXT})
 
         if paragraph:
             text_paragraph.append(paragraph)
 
+        # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
         return text_paragraph
 
     def __get_attribute(self, html:str) -> Tuple[bool, dict, str]:
@@ -189,12 +188,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             Tuple[str]: 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
         ele = self._build_html_tree(html)
-        # 找到cctitle标签
-        cclist_eles = ele.find(CCTag.CC_LIST)
-        if cclist_eles:
-            ordered = bool(cclist_eles.attrib.get('ordered'))
-            content_list = json.loads(cclist_eles.text)
-            raw_html = cclist_eles.attrib.get('html')
+        if ele is not None and ele.tag == CCTag.CC_LIST:
+            ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
+            content_list = json.loads(ele.text)
+            raw_html = ele.attrib.get('html')
             return ordered, content_list, raw_html
         else:
             # TODO 抛出异常, 需要自定义

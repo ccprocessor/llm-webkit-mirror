@@ -93,14 +93,18 @@
             "content": {
                 "items": [ //列表里只考虑文本和公式，如果有其他类型元素，列表就转为若干个段落，否则结构太复杂了
                     [
+                      [
                         {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
                         {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
                         {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
+                      ]
                     ],
                     [
+                      [
                         {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
                         {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
                         {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
+                      ]
                     ]
                 ],
                 "ordered": true
@@ -179,8 +183,8 @@
 | bbox                 | array  | \[x1, y1, x2, y2\]                                              | 可选     |
 | raw_content          | string | 原始文本内容                                                    | 可选     |
 | content.math_content | string | 干净的，格式化过的公式内容。无论是行内还是行间公式两边都不能有$ | 是       |
-| content.math_type    | string | 公式类型，kelatex\\mathml\\asciimath                            | 可选     |
-| content.by           | string | 哪种检测方法检测出来的                                          | 可选     |
+| content.math_type    | string | 公式语言类型，kelatex\\mathml\\asciimath                        | 可选     |
+| content.by           | string | 原html中使用公式渲染器                                          | 可选     |
 
 ### 图片段
 
@@ -213,6 +217,8 @@
 | content.title       | string | 图片的title属性                  | 可选     |
 | content.caption     | string | 图片的caption属性                | 可选     |
 | content.image_style | string | 图片的类型，qrcode\\table\\chart | 可选     |
+
+> `content.url`和`content.path`和`content.data`三者必须有一个，数据使用优先级是`data`>`path`。
 
 ### 音频段
 
@@ -301,15 +307,19 @@
     "raw_content": null,
     "content": {
         "items": [ //列表里只考虑文本和公式，如果有其他类型元素，列表就转为若干个段落，否则结构太复杂了
-            [
+            [ //这是第一个item,每个item是个数组，数组里是段落，下面只有一个段落
+              [
                 {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0,0,10,10]},
                 {"c": "E=mc^2", "t": "equation-inline", "bbox": [10,0,10,10]},
                 {"c": "，其中E是能量，m是质量，c是光速 ","t": "text", "bbox": [20,0,10,10]}
+              ]
            ],
-           [
-                {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0,0,10,10]},
-                {"c": "E=mc^2", "t": "equation-inline", "bbox": [10,0,10,10]},
-                {"c": "，其中E是能量，m是质量，c是光速 ","t": "text", "bbox": [20,0,10,10]}
+           [//这是第二个item
+             [
+               {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0,0,10,10]},
+               {"c": "E=mc^2", "t": "equation-inline", "bbox": [10,0,10,10]},
+               {"c": "，其中E是能量，m是质量，c是光速 ","t": "text", "bbox": [20,0,10,10]}
+             ]
            ]
         ],
         "ordered": true
@@ -317,13 +327,13 @@
 }
 ```
 
-| 字段            | 类型    | 描述                                                 | 是否必须 |
-| --------------- | ------- | ---------------------------------------------------- | -------- |
-| type            | string  | 值固定为list                                         | 是       |
-| bbox            | array   | \[x1, y1, x2, y2\]                                   | 可选     |
-| raw_content     | string  | 原始文本内容                                         | 可选     |
-| content.items   | array   | 列表项，每个元素是一个段落，段落里的元素是文本或公式 | 是       |
-| content.ordered | boolean | 是否是有序列表                                       | 可选     |
+| 字段            | 类型    | 描述                                                | 是否必须 |
+| --------------- | ------- | --------------------------------------------------- | -------- |
+| type            | string  | 值固定为list                                        | 是       |
+| bbox            | array   | \[x1, y1, x2, y2\]                                  | 可选     |
+| raw_content     | string  | 原始文本内容                                        | 可选     |
+| content.items   | array   | 列表项，每个元素是N个段落，段落里的元素是文本或公式 | 是       |
+| content.ordered | boolean | 是否是有序列表                                      | 可选     |
 
 <b>items字段说明</b>
 

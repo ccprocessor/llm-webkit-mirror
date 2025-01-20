@@ -20,6 +20,7 @@
 
     "extractor_pipe": { //每个子key里的处理器都是有序的，顺序执行
         "enable": true,
+        "validate_input_format": true, //如果不写，默认就是true
         "pre_extractor": [
             {
                 "enable": false,

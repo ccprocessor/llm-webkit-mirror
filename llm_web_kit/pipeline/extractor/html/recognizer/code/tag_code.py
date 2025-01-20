@@ -33,8 +33,11 @@ def __group_code_by_distance(
         for i in range(len(node_paths)):
             if i == get_father(i):
                 path = '/'.join(root_paths[i])
-                path = path.removeprefix('/html/')
-                text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
+                path = '/'.join(path.removeprefix('/').split('/')[1:])
+                if not path:
+                    text = ''.join(root.itertext())
+                else:
+                    text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
                 # 替换之前的 magic number
                 # 如果出现一棵子树，其组成的内容不存在任何单词
                 # 那么认为它是用于代码格式化的空白换行结构，或是 { } 等格式符号
@@ -181,10 +184,13 @@ def modify_tree(root: HtmlElement) -> None:
     Args:
         root: html 树的根节点
     """
-    node_paths = __get_code_node_paths(root)  # 获取所有 code 标签的路径，不包含嵌套的子code 标签
-    dist_matrix = __compute_distance_matrix(node_paths)  # 计算距离矩阵
-    tree_roots = __group_code_by_distance(root, node_paths, dist_matrix)  # 根据距离矩阵，对code标签进行分组
+    node_paths = __get_code_node_paths(root)  # 获取所有 code 标签的路径，不包含嵌套的子 code 标签
+    if len(node_paths) == 1:
+        tree_roots = ['/'.join(node_paths[0])]
+    else:
+        dist_matrix = __compute_distance_matrix(node_paths)  # 计算距离矩阵
+        tree_roots = __group_code_by_distance(root, node_paths, dist_matrix)  # 根据距离矩阵，对code标签进行分组
 
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:
-        replace_node_by_cccode(node, 'tag_code')
+        replace_node_by_cccode(node, 'tag_code', False)

@@ -30,41 +30,47 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         Returns:
         """
 
-        assert len(main_html_lst) == 1
-        assert main_html_lst[0][0] == main_html_lst[0][1]
+        # assert len(main_html_lst) == 1
+        # assert main_html_lst[0][0] == main_html_lst[0][1]
 
-        main_html = main_html_lst[0][0]
-        root: HtmlElement = html_to_element(main_html)
+        rtn: List[Tuple[str, str]] = []
+        for html, raw_html in main_html_lst:
+            if self.is_cc_html(html):
+                rtn.append((html, raw_html))
+                continue
 
-        while True:
-            # 最常见:
-            # <pre><code></code></pre>
-            # 使用 pre 来保证 code 内部格式
-            # 所以每一个 code 就是一段代码，只需要切分出code，合并text
-            if tag_pre_code.detect(root):
-                tag_pre_code.modify_tree(root)
+            root: HtmlElement = html_to_element(html)
+            while True:
+                # 最常见:
+                # <pre><code></code></pre>
+                # 使用 pre 来保证 code 内部格式
+                # 所以每一个 code 就是一段代码，只需要切分出code，合并text
+                if tag_pre_code.detect(root):
+                    tag_pre_code.modify_tree(root)
+                    break
+
+                # 次常见:
+                # 只有 code 没有 pre
+                # 网站使用一些 div\span\p\br 来自己控制格式，每个 code 块只有一个单词或者符号。
+                # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
+                if tag_code.detect(root):
+                    tag_code.modify_tree(root)
+                    break
+
+                # 最后手段：用fasttext看看又没有可能是代码的
+                # TODO:
+
+                # 现在已知两种情况无法处理：
+                # 1. 在线代码编辑器里的代码 (react testcase)
+                # 2. 使用 table 模拟的代码展示 (telerik testcase)
+
                 break
 
-            # 次常见:
-            # 只有 code 没有 pre
-            # 网站使用一些 div\span\p\br 来自己控制格式，每个 code 块只有一个单词或者符号。
-            # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
-            if tag_code.detect(root):
-                tag_code.modify_tree(root)
-                break
+            html_str: str = element_to_html(root)
 
-            # 最后手段：用fasttext看看又没有可能是代码的
-            # TODO:
+            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode'))
 
-            # 现在已知两种情况无法处理：
-            # 1. 在线代码编辑器里的代码 (react testcase)
-            # 2. 使用 table 模拟的代码展示 (telerik testcase)
-
-            break
-
-        html_str: str = element_to_html(root)
-
-        return BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode')
+        return rtn
 
     @override
     def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:

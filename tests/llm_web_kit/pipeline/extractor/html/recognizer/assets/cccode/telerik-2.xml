@@ -8,7 +8,6 @@
                             <StackPanel Orientation="Vertical">
                                 <TextBlock x:Name="txbImageName"
 
-
                                     Text="{Binding RelativeSource={RelativeSource TemplatedParent},  Path=ImageName}"    />
                                 <Image x:Name="StructureImage"
                                        Source="{Binding RelativeSource={RelativeSource TemplatedParent},
