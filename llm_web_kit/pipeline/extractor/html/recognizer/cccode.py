@@ -81,7 +81,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             # "bbox": [],
             'raw_content': raw_html_segment,
             'content': {
-                'code_content': code_node.text,
+                'code_content': code_node.text or '',
             },
         }
 
