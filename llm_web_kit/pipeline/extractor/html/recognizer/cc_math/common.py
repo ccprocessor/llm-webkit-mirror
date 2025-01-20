@@ -36,6 +36,14 @@ LATEX_IMAGE_CLASS_NAMES = [
     'latexblockcenter',
 ]
 
+LATEX_IMAGE_SRC_NAMES = [
+    'codecogs.com', 
+    'latex.php', 
+    '/images/math/codecogs', 
+    'mimetex.cgi', 
+    'mathtex.cgi',
+]
+
 # ccmath标签，区分行内行间公式
 CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
 CCMATH_INLINE = CCTag.CC_MATH_INLINE

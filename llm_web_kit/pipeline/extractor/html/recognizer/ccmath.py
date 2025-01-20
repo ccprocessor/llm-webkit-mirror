@@ -178,16 +178,24 @@ if __name__ == '__main__':
     math_recognizer = MathRecognizer()
     test_html = [
         (
-            ('<p>这是p的text<span class="mathjax_display">'
+            (
+                r'<img src="/cgi-bin/mimetex.cgi?\alpha(f(x) ) = \alpha(x)+1" align="middle" />'
+                '<img decoding="async"src="//latex.codecogs.com/gif.latex?IQR&amp;space;=&amp;space;Q_{3}-Q_{1}" alt="IQR = Q_{3}-Q_{1}"align="absmiddle"data-lazy-src="https://latex.codecogs.com/gif.latex?IQR&amp;space;&amp;space;Q_3-Q_1&amp;is-pending-load=1"srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP/yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "class=" jetpack-lazy-image">'
+                '<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>'
-                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
-                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'),
-            ('<p>这是p的text<span class="mathjax_display">'
+                '<img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br />'
+                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'
+                ),
+            (
+                r'<img src="/cgi-bin/mimetex.cgi?\alpha(f(x) ) = \alpha(x)+1" align="middle" />'
+                '<img decoding="async"src="//latex.codecogs.com/gif.latex?IQR&amp;space;=&amp;space;Q_{3}-Q_{1}" alt="IQR = Q_{3}-Q_{1}"align="absmiddle"data-lazy-src="https://latex.codecogs.com/gif.latex?IQR&amp;space;&amp;space;Q_3-Q_1&amp;is-pending-load=1"srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP/yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "class=" jetpack-lazy-image">'
+                '<p>这是p的text<span class="mathjax_display">'
                 '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
                 '这是b的tail</p>'
-                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
-                r'<script type="math/tex">x+\sqrt{1-x^2}</script>')
+                '<img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br />'
+                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'
+                )
         )
     ]
     raw_html = (
