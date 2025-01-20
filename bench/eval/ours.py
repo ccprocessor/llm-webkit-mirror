@@ -18,4 +18,4 @@ def eval_ours_extract_html(pipeline_config, html_data_path, filePath) -> str:
 
     # Test extraction
     result = pipeline.extract(input_data)
-    return result.to_html()
+    return result.to_txt()

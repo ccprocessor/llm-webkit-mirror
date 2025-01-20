@@ -80,6 +80,14 @@ class TestMathRecognizer(unittest.TestCase):
     def setUp(self):
         self.rec = CodeRecognizer()
 
+    def compare_code(self, expect: str, answer: str) -> None:
+        self.assertEqual(expect, answer)
+        # expect_lines = [line for line in expect.split('\n') if line]
+        # answer_lines = [line for line in answer.split('\n') if line]
+        # self.assertEqual(len(expect_lines), len(answer_lines))
+        # for x, y in zip(expect_lines, answer_lines):
+        #     self.assertEqual(x, y)
+
     def test_code_rec(self):
         for test_case in TEST_CASES:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
@@ -94,7 +102,7 @@ class TestMathRecognizer(unittest.TestCase):
                 expect = base_dir.joinpath(expect_path).read_text().strip()
                 part_el = html_to_element(part)
                 answer = get_element_text(part_el).strip()
-                self.assertEqual(expect, answer)
+                self.compare_code(expect, answer)
 
 
 if __name__ == '__main__':

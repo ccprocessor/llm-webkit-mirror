@@ -6,7 +6,8 @@ from eval.magic_html import eval_magic_html
 from eval.ours import eval_ours_extract_html
 from eval.unstructured_eval import eval_unstructured
 
-from llm_web_kit.data.filebase import FileBasedDataReader, FileBasedDataWriter
+from llm_web_kit.data.rw.filebase import (FileBasedDataReader,
+                                          FileBasedDataWriter)
 
 # 选项参数
 parser = argparse.ArgumentParser()
@@ -18,8 +19,8 @@ args = parser.parse_args()
 
 sourcePath = os.path.join(Path(__file__).parent, 'html')
 outputPath = os.path.join(Path(__file__).parent, 'output')
-pipelineConfigPath = os.path.join(Path(__file__).parent, 'ours_config.jsonc')
-html_data_path = os.path.join(Path(__file__).parent, 'ours_data_config.jsonl')
+pipelineConfigPath = os.path.join(Path(__file__).parent, 'config/ours_config.jsonc')
+html_data_path = os.path.join(Path(__file__).parent, 'config/ours_data_config.jsonl')
 
 
 reader = FileBasedDataReader('')

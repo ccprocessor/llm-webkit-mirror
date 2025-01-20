@@ -1,6 +1,6 @@
 import os
 
-from llm_web_kit.data.base import DataReader, DataWriter
+from llm_web_kit.data.rw.base import DataReader, DataWriter
 
 
 class FileBasedDataReader(DataReader):
