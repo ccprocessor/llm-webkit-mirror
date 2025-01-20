@@ -135,7 +135,7 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.VIDEO:
             return ''
         elif node_type == DocElementType.TITLE:
-            title_content = content_lst_node['content']['title_content']
+            title_content = content_lst_node['content']['title_content'] or ''
             title_content = title_content.strip()
             return title_content
         elif node_type == DocElementType.PARAGRAPH:
