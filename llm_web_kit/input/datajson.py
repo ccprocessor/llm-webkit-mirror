@@ -98,9 +98,12 @@ class StructureMapper(ABC):
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
             code = content_lst_node['content']['code_content']
-            code = code.strip()
+            code = (code or '').strip()
             language = content_lst_node['content'].get('language', '')
-            code = f'```{language}\n{code}\n```'
+            if content_lst_node.get('inline', False):
+                code = f'`{code}`'
+            else:
+                code = f'```{language}\n{code}\n```'
             return code
         elif node_type == DocElementType.EQUATION_INTERLINE:
             math_content = content_lst_node['content']['math_content']

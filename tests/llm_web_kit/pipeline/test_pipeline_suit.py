@@ -120,6 +120,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.assertEqual(html_content['type'], DocElementType.CODE)
         self.assertEqual(len(html_content['content']['code_content']), 251)
         self.assertEqual(html_content['content']['by'], 'tag_pre_code')
+        self.assertEqual(html_content['inline'], False)
 
         # 有序列表
         html_content = html_content_list[10]
@@ -131,14 +132,22 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.assertEqual(html_content['content']['items'][1][0][0]['c'], '200')
         self.assertEqual(html_content['content']['items'][1][0][0]['t'], ParagraphTextType.TEXT)
 
-        # 带链接的code
+        # code 前的文本
         html_content = html_content_list[11]
+        self.assertEqual(html_content['type'], DocElementType.PARAGRAPH)
+        self.assertEqual(len(html_content['content']), 1)
+        self.assertEqual(html_content['content'][0]['c'], 'reference: ')
+        self.assertEqual(html_content['content'][0]['t'], ParagraphTextType.TEXT)
+
+        # 带链接的inline code
+        html_content = html_content_list[12]
         self.assertEqual(html_content['type'], DocElementType.CODE)
         self.assertEqual(html_content['content']['code_content'], '#include<xxxx.hpp>')
         self.assertEqual(html_content['content']['by'], 'tag_code')
-
+        self.assertEqual(html_content['inline'], True)
         # txt格式
         txt_content = result.get_content_list().to_txt()
-        self.assertEqual(len(txt_content), 727)
+        self.assertTrue('reference:\n`#include<xxxx.hpp>`' in txt_content)
+        self.assertEqual(len(txt_content), 582)
         self.assertNotEquals(txt_content[-2], '\n')
         self.assertEqual(txt_content[-1], '\n')

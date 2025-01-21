@@ -47,7 +47,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                 # 所以每一个 code 就是一段代码，只需要切分出code，合并text
                 if tag_pre_code.detect(root):
                     tag_pre_code.modify_tree(root)
-                    break
+                    # break
 
                 # 次常见:
                 # 只有 code 没有 pre
@@ -55,7 +55,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                 # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
                 if tag_code.detect(root):
                     tag_code.modify_tree(root)
-                    break
+                    # break
 
                 # 最后手段：用fasttext看看又没有可能是代码的
                 # TODO:
@@ -80,6 +80,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             'type': 'code',
             # "bbox": [],
             'raw_content': raw_html_segment,
+            'inline': code_node.get('inline', 'false') == 'true',
             'content': {
                 'code_content': code_node.text,
             },

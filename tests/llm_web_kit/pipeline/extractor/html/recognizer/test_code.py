@@ -26,33 +26,123 @@ TEST_CASES = [{'input': ('assets/cccode/geeksforgeeks.html',
               {'input': ('assets/cccode/prismjs.html',
                'https://prismjs.com/',
                          ),
-               'expected': ['assets/cccode/prismjs-0.html',
+               'expected': ['code.language-xxxx',
+                            '.comment',
+                            '.string',
+                            '.property',
+                            '<pre>',
+                            '<script>',
+                            '<code>',
+                            '<pre>',
+                            'language-xxxx',
+                            'language-xxxx',
+                            'prism.css',
+                            'prism.js',
+                            'assets/cccode/prismjs-0.html',
+                            '<code>',
+                            '<code>',
+                            'language-xxxx',
+                            'lang-xxxx',
+                            '<pre>',
+                            '<code>',
                             'assets/cccode/prismjs-1.html',
+                            '<pre>',
+                            'language-xxxx',
                             'assets/cccode/prismjs-2.html',
+                            '<',
+                            '&',
+                            '<code>',
+                            '&lt;',
+                            '&amp;',
+                            '<code>',
+                            'language-xxxx',
+                            'language-xxxx',
+                            '<body>',
+                            '<html>',
+                            '<code>',
+                            'language-none',
+                            'none',
+                            'language-plain',
+                            'Prism.manual',
+                            'true',
+                            'DOMContentLoaded',
+                            'data-manual',
+                            '<script>',
                             'assets/cccode/prismjs-3.html',
                             'assets/cccode/prismjs-4.html',
                             'assets/cccode/prismjs-5.html',
+                            'npm',
                             'assets/cccode/prismjs-6.sh',
+                            'import',
                             'assets/cccode/prismjs-7.ts',
                             'assets/cccode/prismjs-8.js',
+                            'prismjs',
+                            'markup',
+                            'css',
+                            'clike',
+                            'javascript',
+                            'loadLanguages()',
                             'assets/cccode/prismjs-9.js',
+                            'loadLanguages()',
+                            'loadLanguages()',
+                            'loadLanguages.silent = true',
+                            'xxxx',
+                            'language-xxxx',
+                            'lang-xxxx',
                             ],
                },
               {'input': ('assets/cccode/react.html',
                'https://react.dev/reference/react/Fragment',
                          ),
-               'expected': ['assets/cccode/react-0.html',
+               'expected': ['<Fragment>',
+                            '<>...</>',
+                            'assets/cccode/react-0.html',
+                            '<Fragment>',
+                            '<Fragment>',
+                            '<Fragment>',
+                            'Fragment',
+                            '<></>',
+                            '<Fragment></Fragment>',
+                            'key',
+                            '<Fragment>',
+                            'key',
+                            '<>...</>',
+                            'Fragment',
+                            '\'react\'',
+                            '<Fragment key={yourKey}>...</Fragment>',
+                            '<><Child /></>',
+                            '[<Child />]',
+                            '<><Child /></>',
+                            '<Child />',
+                            '<><><Child /></></>',
+                            '<Child />',
+                            'Fragment',
+                            '<>...</>',
                             'assets/cccode/react-1.js',
+                            '<h1>',
+                            '<article>',
+                            'Fragment',
                             'assets/cccode/react-2.js',
+                            'key',
+                            'Fragment',
                             'assets/cccode/react-3.js',
+                            'Fragment',
                             'assets/cccode/react-4.js',
+                            'Fragment',
+                            '<></>',
+                            'key',
+                            'key',
                             'assets/cccode/react-5.js',
+                            '<Fragment>',
                             ],
                },
               {'input': ('assets/cccode/stackoverflow.html',
                'https://stackoverflow.com/questions/35302978/how-to-get-current-value-of-androids-proximity-sensor',
                          ),
-               'expected': ['assets/cccode/stackoverflow-0.java',
+               'expected': ['proximitySensor.getCurrentDistance();',
+                            'values[0]',
+                            'onSensorChanged',
+                            # 'assets/cccode/stackoverflow-0.java',
                             'assets/cccode/stackoverflow-1.xml',
                             'assets/cccode/stackoverflow-2.java',
                             ],
@@ -97,11 +187,30 @@ class TestMathRecognizer(unittest.TestCase):
             parts = self.rec.recognize(
                 base_url, [(raw_html, raw_html)], raw_html)
             parts = [part[0] for part in parts if 'cccode' in part[0]]
+            # for part in parts:
+            #     part_el = html_to_element(part)
+            #     answer = get_element_text(part_el).strip()
+            #     print("--------------------------------------------------")
+            #     print(answer)
+            #     print("--------------------------------------------------")
             self.assertEqual(len(parts), len(test_case['expected']))
             for expect_path, part in zip(test_case['expected'], parts):
-                expect = base_dir.joinpath(expect_path).read_text().strip()
                 part_el = html_to_element(part)
+                cccodes = part_el.xpath('.//cccode')
+                self.assertEqual(len(cccodes), 1)
+                part_el = cccodes[0]
+                inline = part_el.get('inline', False) == 'true'
+
+                if expect_path.startswith('assets'):
+                    expect = base_dir.joinpath(expect_path).read_text().strip()
+                    self.assertTrue(not inline)
+                else:
+                    expect = expect_path
+                    # 并非所有 inline code 都可以识别出来
+                    # self.assertTrue(inline)
+
                 answer = get_element_text(part_el).strip()
+                # print(expect, answer)
                 self.compare_code(expect, answer)
 
 

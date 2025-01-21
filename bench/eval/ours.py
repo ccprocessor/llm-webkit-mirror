@@ -1,10 +1,11 @@
 import json
+from typing import Dict, List, Tuple
 
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.pipeline.pipeline_suit import PipelineSuit
 
 
-def eval_ours_extract_html(pipeline_config, html_data_path, filePath) -> str:
+def eval_ours_extract_html(pipeline_config, html_data_path, filePath) -> Tuple[str, List[Dict]]:
     pipeline = PipelineSuit(pipeline_config)
     assert pipeline is not None
 
@@ -20,4 +21,4 @@ def eval_ours_extract_html(pipeline_config, html_data_path, filePath) -> str:
     result = pipeline.extract(input_data)
     content_list = result.get_content_list()
     content = content_list.to_txt()
-    return content
+    return content, content_list._get_data()
