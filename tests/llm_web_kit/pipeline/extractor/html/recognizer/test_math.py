@@ -141,6 +141,11 @@ TEST_CASES_HTML = [
         'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
         'expected': 'assets/ccmath/asciimath_1.html'
     },
+    {
+        'input': ['assets/ccmath/mathtex_script_type.html'],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'assets/ccmath/mathtex_script_type_1.html'
+    },
 ]
 
 TEST_EQUATION_TYPE = [
