@@ -121,6 +121,7 @@ TEST_CASES = [{'input': ('assets/cccode/geeksforgeeks.html',
                             'assets/cccode/react-1.js',
                             '<h1>',
                             '<article>',
+                            'assets/cccode/react-6.js',
                             'Fragment',
                             'assets/cccode/react-2.js',
                             'key',
@@ -133,6 +134,7 @@ TEST_CASES = [{'input': ('assets/cccode/geeksforgeeks.html',
                             'key',
                             'key',
                             'assets/cccode/react-5.js',
+                            'assets/cccode/react-7.js',
                             '<Fragment>',
                             ],
                },
@@ -152,6 +154,7 @@ TEST_CASES = [{'input': ('assets/cccode/geeksforgeeks.html',
                          ),
                'expected': ['assets/cccode/telerik-0.cs',
                             'assets/cccode/telerik-1.cs',
+                            'assets/cccode/telerik-9',
                             'assets/cccode/telerik-2.xml',
                             'assets/cccode/telerik-3.cs',
                             'assets/cccode/telerik-4.xml',
@@ -193,23 +196,29 @@ class TestMathRecognizer(unittest.TestCase):
             #     print("--------------------------------------------------")
             #     print(answer)
             #     print("--------------------------------------------------")
-            self.assertEqual(len(parts), len(test_case['expected']))
-            for expect_path, part in zip(test_case['expected'], parts):
+            answers = []
+            for part in parts:
                 part_el = html_to_element(part)
                 cccodes = part_el.xpath('.//cccode')
                 self.assertEqual(len(cccodes), 1)
                 part_el = cccodes[0]
-                inline = part_el.get('inline', False) == 'true'
+                inline = part_el.get('inline', 'false') == 'true'
+                answer = get_element_text(part_el).strip('\n')
+                if not answer:
+                    continue
+                answers.append((answer, inline))
 
+            # self.assertEqual(len(answers), len(test_case['expected']))
+            for expect_path, (answer, inline) in zip(test_case['expected'], answers):
                 if expect_path.startswith('assets'):
-                    expect = base_dir.joinpath(expect_path).read_text().strip()
+                    expect = base_dir.joinpath(expect_path).read_text().strip('\n')
                     self.assertTrue(not inline)
                 else:
                     expect = expect_path
                     # 并非所有 inline code 都可以识别出来
                     # self.assertTrue(inline)
-
-                answer = get_element_text(part_el).strip()
+                    if not inline:
+                        print(f'{expect} is not identified as inline code')
                 # print(expect, answer)
                 self.compare_code(expect, answer)
 

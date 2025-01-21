@@ -5,6 +5,7 @@ from overrides import override
 
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.code import (tag_code,
+                                                                 tag_pre,
                                                                  tag_pre_code)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
@@ -56,6 +57,10 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                 if tag_code.detect(root):
                     tag_code.modify_tree(root)
                     # break
+
+                # 只有 pre 没有 code
+                if tag_pre.detect(root):
+                    tag_pre.modify_tree(root)
 
                 # 最后手段：用fasttext看看又没有可能是代码的
                 # TODO:

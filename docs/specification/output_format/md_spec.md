@@ -23,6 +23,10 @@
 print("Hello, World!")
 ```
 
+如果是行内的代码块，则使用一个反引号包裹，包含语言字段，如：
+
+Wrap elements in `<Fragment>` to group them together in situations where you need a single element.
+
 **细节**
 
 - 代码块中的内容会保持原样输出，包括空格、换行等
