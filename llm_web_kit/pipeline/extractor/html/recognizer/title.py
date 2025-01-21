@@ -28,7 +28,7 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             'type': DocElementType.TITLE,
             'raw_content': raw_html_segment,
             'content': {
-                'title_content': text or '',
+                'title_content': text,
                 'level': level
             }
         }

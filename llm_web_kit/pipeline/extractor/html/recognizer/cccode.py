@@ -80,8 +80,9 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             'type': 'code',
             # "bbox": [],
             'raw_content': raw_html_segment,
+            'inline': code_node.get('inline', 'false') == 'true',
             'content': {
-                'code_content': code_node.text or '',
+                'code_content': code_node.text,
             },
         }
 

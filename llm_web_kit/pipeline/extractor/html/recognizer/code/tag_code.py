@@ -1,11 +1,21 @@
 from lxml.html import HtmlElement
 
-from llm_web_kit.pipeline.extractor.html.recognizer.code.common import \
-    replace_node_by_cccode
+from llm_web_kit.pipeline.extractor.html.recognizer.code.common import (
+    _BLOCK_ELES, replace_node_by_cccode)
 
 """
 处理仅由<code>标签组成的代码块
 """
+
+
+def __get_html_element(root: HtmlElement, node_path: list[str]) -> HtmlElement:
+    path = '/'.join(node_path)
+    path = '/'.join(path.removeprefix('/').split('/')[1:])
+    if not path:
+        return root
+    node = root.find(path, {'og': 'http://ogp.me/ns'})
+    assert node is not None
+    return node
 
 
 def __group_code_by_distance(
@@ -32,12 +42,9 @@ def __group_code_by_distance(
     def check_trees_done(length: int) -> bool:
         for i in range(len(node_paths)):
             if i == get_father(i):
-                path = '/'.join(root_paths[i])
-                path = '/'.join(path.removeprefix('/').split('/')[1:])
-                if not path:
-                    text = ''.join(root.itertext())
-                else:
-                    text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
+                node = __get_html_element(root, root_paths[i])
+                text: str = ''.join(node.itertext())
+
                 # 替换之前的 magic number
                 # 如果出现一棵子树，其组成的内容不存在任何单词
                 # 那么认为它是用于代码格式化的空白换行结构，或是 { } 等格式符号
@@ -178,6 +185,28 @@ def detect(body: HtmlElement) -> bool:
     return False
 
 
+def __detect_inline_code(root: HtmlElement, node_paths: list[list[str]]) -> tuple[list[list[str]], list[HtmlElement]]:
+    new_node_paths = []
+    inline_code = []
+
+    for node_path in node_paths:
+        ele = __get_html_element(root, node_path)
+
+        parent = ele
+        while parent.tag not in _BLOCK_ELES and parent.getparent() is not None:
+            parent = parent.getparent()
+
+        full_text = ''.join([x for x in ''.join(parent.itertext(None)) if x.isalnum()])
+        code_text = ''.join([x for x in ''.join(parent.itertext('code')) if x.isalnum()])
+        if full_text != code_text:
+            inline_code.append(ele)
+            continue
+
+        new_node_paths.append(node_path)
+
+    return new_node_paths, inline_code
+
+
 def modify_tree(root: HtmlElement) -> None:
     """将 html 树中所有 code 标签转换为代码块.
 
@@ -185,7 +214,11 @@ def modify_tree(root: HtmlElement) -> None:
         root: html 树的根节点
     """
     node_paths = __get_code_node_paths(root)  # 获取所有 code 标签的路径，不包含嵌套的子 code 标签
-    if len(node_paths) == 1:
+    node_paths, inline_code = __detect_inline_code(root, node_paths)
+
+    if len(node_paths) == 0:
+        tree_roots = []
+    elif len(node_paths) == 1:
         tree_roots = ['/'.join(node_paths[0])]
     else:
         dist_matrix = __compute_distance_matrix(node_paths)  # 计算距离矩阵
@@ -194,3 +227,5 @@ def modify_tree(root: HtmlElement) -> None:
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:
         replace_node_by_cccode(node, 'tag_code', False)
+    for node in inline_code:
+        replace_node_by_cccode(node, 'tag_code', False, True)
