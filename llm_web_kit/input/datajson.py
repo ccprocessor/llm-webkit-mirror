@@ -136,7 +136,7 @@ class StructureMapper(ABC):
             return ''
         elif node_type == DocElementType.TITLE:
             title_content = content_lst_node['content']['title_content']
-            title_content = title_content.strip()
+            title_content = (title_content or '').strip()
             return title_content
         elif node_type == DocElementType.PARAGRAPH:
             paragraph_el_lst = content_lst_node['content']
