@@ -3,8 +3,9 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
+from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import element_to_html, iter_node
+from llm_web_kit.libs.html_utils import iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
     tag_common_modify, tag_img, tag_math, tag_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
@@ -68,7 +69,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         """
         tree = self._build_html_tree(parsed_content)
         if tree is None:
-            raise ValueError(f'Failed to load html: {parsed_content}')
+            raise HtmlMathRecognizerExp(f'Failed to load html: {parsed_content}')
 
         inter_ele = tree.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
         in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
@@ -99,7 +100,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 }
             }
         else:
-            raise ValueError(f'No ccmath element found in content: {parsed_content}')
+            raise HtmlMathRecognizerExp(f'No ccmath element found in content: {parsed_content}')
 
     def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
@@ -114,27 +115,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # node是从cc_html中解析出来的lxml节点
         tree = self._build_html_tree(cc_html)
         if tree is None:
-            raise ValueError(f'Failed to load html: {cc_html}')
+            raise HtmlMathRecognizerExp(f'Failed to load html: {cc_html}')
 
         # 打印遍历node次数
         # count = 0
         for node in iter_node(tree):
             assert isinstance(node, HtmlElement)
-            original_html = element_to_html(node)
+            original_html = self._element_to_html(node)
             parent = node.getparent()
 
-            # class 为 math-container，默认为latex
-            if node.tag == 'span' and node.get('class') and 'math-container' in node.get('class'):
+            # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
+            if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
-
-            # class 为 mathjax
-            if (node.tag == 'span' and node.get('class') and
-               any('mathjax' in cls.lower() for cls in node.get('class').split())):
-                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
-
-            # class 为 wp-katex-eq
-            if node.tag == 'span' and node.get('class') and 'wp-katex-eq' in node.get('class'):
-                pass
 
             # script[type="math/tex"], TODO: 需要进行wrap_math
             if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
@@ -146,14 +138,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # script[type="math/asciimath"]
             if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
-                pass
-
-            # class tex
-            if node.tag == 'span' and node.get('class') and 'tex' in node.get('class'):
-                pass
-
-            # class 为 x-ck12-mathEditor
-            if node.tag == 'span' and node.get('class') and 'x-ck12-mathEditor' in node.get('class'):
                 pass
 
             # Remove any .MathJax_Preview spans
@@ -171,8 +155,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 14. 只处理只有一层的p标签
             if node.tag == 'p' and len(node.getchildren()) == 0:
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+        # 打印处理后的html
+        # print(self._element_to_html(tree))
 
-        return self.html_split_by_tags(element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
+        return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
 if __name__ == '__main__':
