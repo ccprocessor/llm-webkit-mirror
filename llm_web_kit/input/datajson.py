@@ -100,8 +100,8 @@ class StructureMapper(ABC):
             code = content_lst_node['content']['code_content']
             code = (code or '').strip()
             language = content_lst_node['content'].get('language', '')
-            if content_lst_node.get('inline', 'false') == 'true':
-                code = f'`{code}\n`'
+            if content_lst_node.get('inline', False):
+                code = f'`{code}`'
             else:
                 code = f'```{language}\n{code}\n```'
             return code
