@@ -55,6 +55,7 @@ def replace_asciimath(cm: CCMATH,text):
                 asciimath_text = match.group(0)
                 asciimath_text = text_strip(asciimath_text.replace('`','').replace('\\',''))
                 if asciimath_text:
+                    # asciimath -> latex
                     wrapped_text = cm.wrap_math(extract_asciimath(asciimath_text))
                 else:
                     wrapped_text = ''
