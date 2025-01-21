@@ -1,0 +1,975 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>中華民國112年全國中等學校運動會-112全中運</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="113全中運;運動會;新竹;全國;中等">
+	<meta name="og:title" content="中華民國112年全國中等學校運動會-決賽成績報告表">
+	<meta name="og:description" content="風起竹縣 贏向未來">
+	<meta property="og:image" content="https://112sport.hcc.edu.tw/Upfile/Skin/FBpic.jpg?v5"/>
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<!--上選單-->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+<link href="/css/hover.css?v100" rel="stylesheet" type="text/css">
+<link href="/css/animate.min.css?v100" rel="stylesheet" type="text/css">
+<link href="/Js/navbar/bootstrap.min.css?v100" rel="stylesheet" type="text/css">
+<link href="/Js/navbar/jquery.smartmenus.bootstrap.css?v100" rel="stylesheet">
+<link href="/Js/navbar/style.css?v100" rel="stylesheet" type="text/css">
+<link href="/Js/navbar/style_rwd.css?v104" rel="stylesheet" type="text/css">
+<script src="/Js/navbar/jquery-3.6.0.min.js"></script>
+<script src="/Js/wow.js"></script>
+<script type="text/javascript">new WOW().init();</script>
+<script src="/Js/navbar/classie.js"></script>
+<script>
+//隱藏選單列，滾動一定距離後顯示
+function HideMenu() {
+  window.addEventListener('scroll', function(e){
+	  var HeightY = window.pageYOffset || document.documentElement.scrollTop,
+		  scrollHeight = 800, //滾動距離
+		  header = document.querySelector(".menu");
+	  if (HeightY > scrollHeight) {
+		  classie.add(header,"HideMenu");
+	  } else {
+		  if (classie.has(header,"HideMenu")) {  classie.remove(header,"HideMenu"); }
+	  }
+  });
+}
+var EventWindowWidth = window.matchMedia("(max-width: 768px)");
+EventWindowWidth.addListener(resizeWidth);
+resizeWidth(EventWindowWidth);
+function resizeWidth(CheckMatchMedia){
+  if (CheckMatchMedia.matches) {
+
+  }else {
+    window.onload = HideMenu();//768以上
+  }
+}
+</script>
+<link href="/Js/navbar/menustyle.css?v100" rel="stylesheet" type="text/css" />
+<link href="/Css/Reset.css?v100" rel="stylesheet" type="text/css">
+<link href="/Css/Style.css?v201" rel="stylesheet" type="text/css">
+<link href="/Tools/fontawesome-free-5.2.0-web/css/all.css?v100" rel="stylesheet"> <!--load all styles -->
+<script type="text/javascript">
+    /*判斷瀏覽器版本*/
+    var IE7 = navigator.userAgent.search("MSIE 7") > -1;
+	var IE8 = navigator.userAgent.search("MSIE 8") > -1;
+	var IE9 = navigator.userAgent.search("MSIE 9") > -1;
+
+    if (IE7 || IE8 || IE9) {
+        alert('您目前使用的瀏覽器版本過舊，可能導致部分功能無法正常運作，建議使用Google Chrome、Firefox、或IE升級至版本10以上');
+    }
+
+</script>
+<!--[if IE]>
+    <script src = "/Js/fixIePlaceholder.js"></script>
+<![endif]-->
+
+<style type="text/css">
+body .full_box.bread{
+    background-color: #b52e31;/*RWD選單列底色*/
+}
+body .menu.HideMenu {
+	/* background-color: #d23346;
+    background-color: #b52e31;*/
+}
+body .menu.HideMenu .navbar-default .navbar-nav>li>a {
+    color: #000000;
+}
+body .menu.HideMenu .navbar-default .navbar-nav>li>a:hover {
+    color: #333333;
+}
+
+@media (min-width: 768px) {
+body .navbar-default {
+    background-color: transparent;/*選單底色*/
+}
+body .navbar-default .navbar-nav>li>a {
+    color: #000000;
+}
+}
+body .navbar-default .navbar-nav>.open>a:hover,  {
+    /*color: #b52e31;
+    background-color: #6a737b; L1選單底色滑過*/
+}
+body .dropdown-menu {
+	background-color: #727171; /*L2選單底色*/
+}
+
+body .dropdown-menu ul {
+    background-color: #b52e31;/*L3選單底色*/
+}
+body .nav .open>a:hover{
+	background-color: #6a737b;/*L2選單滑過底色*/
+	color:#b52e31;
+	}
+body .dropdown-menu ul>li>a:focus,
+body .dropdown-menu ul>li>a:hover
+{
+	background-color: #6a737b;/*選單L3滑過底色*/
+	color:#b52e31;
+}
+@media (max-width: 768px) {
+	body .navbar-default .navbar-nav>li>a {
+   		 color: #000000;
+	}
+	body .nav.navbar-nav{
+		background-color: #ffffff;/*RWD選單列L1底色*/
+	}
+	body .navbar-default .navbar-toggle{
+		margin-top:5px;
+		/*padding-top:12px;*/
+	    background-color:transparent !important;/*RWD選單列按鈕底色*/
+	    border-radius:10px;
+	}
+	body .menur .navbar-default .navbar-toggle:focus, body .menu .navbar-default .navbar-toggle:hover {
+    	/*background-color: #f39b33 !important;RWD選單列按鈕滑過底色*/
+	}
+
+}
+
+.Navi_Use {
+	/*
+	background-color:#f39d39;
+	background-color:#b52e31;*/
+}
+
+
+</style>
+<!--全選OP-->
+<script type="text/javascript">
+	checked = true;
+	function AllCheckbox(theElement,theCheckBoxClass) {
+		var checks = document.querySelectorAll('.' + theCheckBoxClass);
+		for (var i = 0; i < checks.length; i++) {
+			var check = checks[i];
+			if (!check.disabled) {
+				check.checked = checked;
+			}
+		}
+		//checked = !checked;
+	}
+	function CancelCheckbox(theElement,theCheckBoxClass) {
+		var checks = document.querySelectorAll('.' + theCheckBoxClass);
+		for (var i = 0; i < checks.length; i++) {
+			var check = checks[i];
+			if (!check.disabled) {
+				check.checked = !checked;
+			}
+		}
+		//checked = !checked;
+	}
+</script>
+<!--全選ED-->  <link rel="stylesheet" type="text/css" href="/Tools/slick-1.8.1/slick/slick.css?v100"/>
+<link rel="stylesheet" type="text/css" href="/Tools/slick-1.8.1/slick/slick-theme.css?v100">
+<script type="text/javascript" src="/Tools/slick-1.8.1/slick/slick.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">	<script src="../../Js/Table_Odd.js?v3" type="text/javascript"></script>
+    </head>
+<body topmargin="0" rightmargin="0" leftmargin="0" bottommargin="0">
+      <a id="here"></a>
+<!--前台無左選單版最外層-->
+<div id="_WebBlockDiv" align="center" class="_WebBlock"  style="background-repeat:no-repeat; background-position:center top; background-color:#ffffff;background-size:contain;">
+
+<div class="menu" style="position:relative;z-index:1001;">
+
+
+
+<div class="navbar navbar-default" role="navigation">
+
+  <div class="navbar-header" align="center">
+
+    				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+
+    				  <div align="center" class="HiddenMenuTitle">選單 <i class="fas fa-chevron-down"></i></div>
+				    </button>
+  </div>
+
+  <div class="navbar-collapse collapse _animated fadeInDown">
+
+	<div class="BarTop" style="background-color: #ffff;" ><a href="#main_content" id="gotocenter" title="跳到主要內容" tabindex="1" class="sr-only sr-only-focusable">跳到主要內容</a>
+		<ol class="top_list">
+			<li >
+				<a href="#top_menu" title="右上方功能區塊" accesskey="N" class="ACNaviKey">:::</a>
+				<a href="../Home/Sitemap.php" title="網站導覽" class="NaviLink_Func">網站導覽</a>
+			</li>
+			<li ><a href="../Home/Login_page.php" title="系統登入" class="NaviLink_Func">系統登入</a></li>
+		</ol>
+	<div class="Logo_new" id="top" style="background-color: #ffff;"><h1><a href="https://112sport.hcc.edu.tw/" title="回首頁"><img src="/Upfile/Skin/logo.png?v20230113" alt="中華民國112年全國中等學校運動會"></a></h1></div>
+
+
+	</div>
+
+      <ul class="nav navbar-nav"  >
+
+					                              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="運動禁藥" class="has-submenu" aria-haspopup="true" aria-expanded="false">運動禁藥</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../DopingBulletin/Index.php" target="" title="運動禁藥管制" class="has-submenu" aria-haspopup="true" aria-expanded="false">運動禁藥管制</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="大會資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會資訊</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Calendar/Index.php" target="" title="大會行事曆" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會行事曆</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=117" target="" title="大會組織" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會組織</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=3" target="" title="大會標誌" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會標誌</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=262" target="" title="大會會旗" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會會旗</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=263" target="" title="大會會歌" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會會歌</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=379" target="" title="大會主題曲" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會主題曲</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=4" target="" title="大會吉祥物" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會吉祥物</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=375" target="" title="聖火傳遞" class="has-submenu" aria-haspopup="true" aria-expanded="false">聖火傳遞</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../CheckArea/API.php" target="" title="聖火追蹤" class="has-submenu" aria-haspopup="true" aria-expanded="false">聖火追蹤</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="大會公告" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會公告</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Bulletin/Index.php" target="" title="最新消息" class="has-submenu" aria-haspopup="true" aria-expanded="false">最新消息</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../News/Index.php" target="" title="大會新聞" class="has-submenu" aria-haspopup="true" aria-expanded="false">大會新聞</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Report/Index.php" target="" title="媒體專區" class="has-submenu" aria-haspopup="true" aria-expanded="false">媒體專區</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Album/Index.php" target="" title="賽會花絮" class="has-submenu" aria-haspopup="true" aria-expanded="false">賽會花絮</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Video/Index.php?CateID=1" target="" title="宣傳短片" class="has-submenu" aria-haspopup="true" aria-expanded="false">宣傳短片</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=261" target="" title="性平專區公告欄" class="has-submenu" aria-haspopup="true" aria-expanded="false">性平專區公告欄</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="競賽資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">競賽資訊</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../CompNews/Index.php" target="" title="賽事消息" class="has-submenu" aria-haspopup="true" aria-expanded="false">賽事消息</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=11" target="" title="競賽規程" class="has-submenu" aria-haspopup="true" aria-expanded="false">競賽規程</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=116" target="" title="技術手冊" class="has-submenu" aria-haspopup="true" aria-expanded="false">技術手冊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=370" target="" title="秩序冊" class="has-submenu" aria-haspopup="true" aria-expanded="false">秩序冊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=85" target="" title="賽程規劃資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">賽程規劃資訊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=369" target="" title="請假&申訴" class="has-submenu" aria-haspopup="true" aria-expanded="false">請假&申訴</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=371" target="" title="補證流程" class="has-submenu" aria-haspopup="true" aria-expanded="false">補證流程</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="場館資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">場館資訊</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=98" target="" title="交通資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">交通資訊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=33" target="" title="場地平面圖" class="has-submenu" aria-haspopup="true" aria-expanded="false">場地平面圖</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=34" target="" title="場地照片" class="has-submenu" aria-haspopup="true" aria-expanded="false">場地照片</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="註冊系統" class="has-submenu" aria-haspopup="true" aria-expanded="false">註冊系統</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="https://regsport.utaipei.edu.tw/default/SignIn?cid=1003" target="_blank" title="報名作業" class="has-submenu" aria-haspopup="true" aria-expanded="false">報名作業</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Unit_Peoples_List.php" target="" title="報名資料綜合查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">報名資料綜合查詢</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_TP_Peoples_Sum.php" target="" title="各項目人隊數統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">各項目人隊數統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Unit_Peoples.php" target="" title="縣市參賽人次統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">縣市參賽人次統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Job_Peoples.php" target="" title="職員選手參賽人次統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">職員選手參賽人次統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Unit_Project_PSS.php" target="" title="各縣市分項人數統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">各縣市分項人數統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Real_Peoples_Sum.php" target="" title="實際人數統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">實際人數統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Unit_Real_Peoples.php" target="" title="各縣市參賽人數統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">各縣市參賽人數統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Unit_Group_List.php" target="" title="縣市組別種類查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">縣市組別種類查詢</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../QualifCheck/BoubtList.php" target="" title="資格審查結果查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">資格審查結果查詢</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Sigunp/Sta_Unit_Peoples_Promote.php" target="" title="資格賽晉級名單查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">資格賽晉級名單查詢</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="競賽成績" class="has-submenu" aria-haspopup="true" aria-expanded="false">競賽成績</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Score/Instant.php" target="" title="賽程成績" class="has-submenu" aria-haspopup="true" aria-expanded="false">賽程成績</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Score/Final_Query.php" target="" title="決賽成績綜合查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">決賽成績綜合查詢</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="https://112sport.hcc.edu.tw/Module/RaceProof/Login.php" target="" title="成績證明列印" class="has-submenu" aria-haspopup="true" aria-expanded="false">成績證明列印</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Score/FinalsReport.php" target="" title="決賽成績報告表" class="has-submenu" aria-haspopup="true" aria-expanded="false">決賽成績報告表</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Score/Award_Data.php" target="" title="應(已)頒獎牌" class="has-submenu" aria-haspopup="true" aria-expanded="false">應(已)頒獎牌</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Score/Award_Query.php" target="" title="獎牌統計" class="has-submenu" aria-haspopup="true" aria-expanded="false">獎牌統計</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Score/Record.php" target="" title="破紀錄查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">破紀錄查詢</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Score/Trophy.php" target="" title="競賽種類錦標" class="has-submenu" aria-haspopup="true" aria-expanded="false">競賽種類錦標</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="/Module/ScoreHistory/Index.php" target="" title="歷年成績查詢" class="has-submenu" aria-haspopup="true" aria-expanded="false">歷年成績查詢</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="服務資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">服務資訊</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../../Upload/files/112全中運服務手冊V0427.pdf" target="_blank" title="服務手冊" class="has-submenu" aria-haspopup="true" aria-expanded="false">服務手冊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=378" target="" title="團本部專車" class="has-submenu" aria-haspopup="true" aria-expanded="false">團本部專車</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=381" target="" title="接駁資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">接駁資訊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="https://travel.hsinchu.gov.tw/HsinChu/ArticleCollectionIndex?colname=%E4%BD%8F%E5%AE%BF%E7%89%B9%E6%90%9C&appopen" target="_blank" title="住宿特搜" class="has-submenu" aria-haspopup="true" aria-expanded="false">住宿特搜</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=101" target="" title="醫護資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">醫護資訊</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="https://travel.hsinchu.gov.tw/HsinChu/VillageCollection?colname=13%E9%84%89%E9%8E%AE&actiontype=%E5%A5%BD%E5%A5%BD%E7%8E%A9&typename=13%E9%84%89%E9%8E%AE" target="_blank" title="旅遊景點" class="has-submenu" aria-haspopup="true" aria-expanded="false">旅遊景點</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=272" target="" title="遊程推薦" class="has-submenu" aria-haspopup="true" aria-expanded="false">遊程推薦</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=231" target="" title="藝文活動" class="has-submenu" aria-haspopup="true" aria-expanded="false">藝文活動</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=105" target="" title="保險資訊" class="has-submenu" aria-haspopup="true" aria-expanded="false">保險資訊</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="相關連結" class="has-submenu" aria-haspopup="true" aria-expanded="false">相關連結</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=111" target="" title="單項協會網站" class="has-submenu" aria-haspopup="true" aria-expanded="false">單項協會網站</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Links/Index.php" target="" title="贊助廠商" class="has-submenu" aria-haspopup="true" aria-expanded="false">贊助廠商</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=376" target="" title="贊助者行銷" class="has-submenu" aria-haspopup="true" aria-expanded="false">贊助者行銷</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="開閉幕典禮" class="has-submenu" aria-haspopup="true" aria-expanded="false">開閉幕典禮</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=51" target="" title="典禮須知" class="has-submenu" aria-haspopup="true" aria-expanded="false">典禮須知</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=52" target="" title="開幕典禮流程" class="has-submenu" aria-haspopup="true" aria-expanded="false">開幕典禮流程</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=384" target="" title="開幕典禮接駁" class="has-submenu" aria-haspopup="true" aria-expanded="false">開幕典禮接駁</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=53" target="" title="閉幕典禮流程" class="has-submenu" aria-haspopup="true" aria-expanded="false">閉幕典禮流程</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=383" target="" title="選手之夜" class="has-submenu" aria-haspopup="true" aria-expanded="false">選手之夜</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=372" target="" title="開幕典禮交通" class="has-submenu" aria-haspopup="true" aria-expanded="false">開幕典禮交通</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=373" target="" title="閉幕典禮交通" class="has-submenu" aria-haspopup="true" aria-expanded="false">閉幕典禮交通</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="社會資源募資贊助" class="has-submenu" aria-haspopup="true" aria-expanded="false">社會資源募資贊助</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=58" target="" title="贊助專案" class="has-submenu" aria-haspopup="true" aria-expanded="false">贊助專案</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=363" target="" title="贊助計畫說明DM" class="has-submenu" aria-haspopup="true" aria-expanded="false">贊助計畫說明DM</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../PaymentNameList/Index.php" target="" title="芳名錄" class="has-submenu" aria-haspopup="true" aria-expanded="false">芳名錄</a>
+				                             		  			                </ul></li>              <li style="display:inline;" class="_hvr-sink"><a href="javascript:void(0);" target="" title="LIVE" class="has-submenu" aria-haspopup="true" aria-expanded="false">LIVE</a>
+              <ul class="dropdown-menu animated fadeInFast" role="group" aria-hidden="true" aria-expanded="false">
+              				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=43" target="" title="開幕直播" class="has-submenu" aria-haspopup="true" aria-expanded="false">開幕直播</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=385" target="" title="閉幕直播" class="has-submenu" aria-haspopup="true" aria-expanded="false">閉幕直播</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/Index.php?ID=227" target="" title="選手之夜" class="has-submenu" aria-haspopup="true" aria-expanded="false">選手之夜</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/LiveComp.php?ID=44&Mode=2" target="" title="比賽即時轉播" class="has-submenu" aria-haspopup="true" aria-expanded="false">比賽即時轉播</a>
+				                             		  			  				                    <li style="z-index:100 !important;"><a  href="../Pages/LiveComp.php?ID=45&Mode=1" target="" title="已完賽轉播" class="has-submenu" aria-haspopup="true" aria-expanded="false">已完賽轉播</a>
+				                             		          		      </ul>
+    </div>
+    </div>
+</div>
+<div class="head_hr"></div>
+<div class="full_box bread">
+</div>
+<script src="/Js/navbar/bootstrap.min.js"></script>
+<script type="text/javascript" src="/Js/navbar/jquery.smartmenus.js"></script>
+<script type="text/javascript" src="/Js/navbar/jquery.smartmenus.bootstrap.js"></script>
+<script>
+$(document).ready(function () {
+    /*------上方選單-------------*/
+    if(document.getElementsByClassName("nav-collapse").length>0){
+
+	    var navigation = responsiveNav(".nav-collapse", {
+	    animate: true,                    // Boolean: Use CSS3 transitions, true or false
+	    transition: 284,                  // Integer: Speed of the transition, in milliseconds
+	    label: "Menu",                    // String: Label for the navigation toggle
+	    insert: "after",                  // String: Insert the toggle before or after the navigation
+	    customToggle: "",                 // Selector: Specify the ID of a custom toggle
+	    closeOnNavClick: false,           // Boolean: Close the navigation when one of the links are clicked
+	    openPos: "relative",              // String: Position of the opened nav, relative or static
+	    navClass: "nav-collapse",         // String: Default CSS class. If changed, you need to edit the CSS too!
+	    navActiveClass: "js-nav-active",  // String: Class that is added to <html> element when nav is active
+	    jsClass: "js",                    // String: 'JS enabled' class which is added to <html> element
+	    init: function(){},               // Function: Init callback
+	    open: function(){},               // Function: Open callback
+	    close: function(){}               // Function: Close callback
+	  });
+  }
+  /*--------------------------------------------------*/
+});
+</script><style type="text/css">
+    .slider {
+        width: 100%;
+        margin: 0px auto;
+    }
+    .slick-slide {
+      margin: 0px 0px;
+    }
+    .slick-slide img {
+      width: 100%;
+    }
+    .slick-prev:before,
+    .slick-next:before {
+      color: #ffffff;
+    }
+    .slick-slide {
+      transition: all ease-in-out .3s;
+      opacity: .2;
+    }
+    .slick-active {
+      opacity: .5;
+    }
+    .slick-current {
+      opacity: 1;
+    }
+  </style>
+  <div id="BannerBlockJQ">
+			<div id="PCBanner" style="display:none;">
+				<section id="PCslider" class="slider">
+
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/pchome.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner4_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="https://travel.hsinchu.gov.tw/" title="點選連結至新竹旅遊網"><img src="/Upfile/Banner/Banner10_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner9_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner2_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner7_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner8_pc.png?v6" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner3_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner5_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner6_pc.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+
+      </section>
+			</div>
+			<div id="PhoneBanner" style="display:none;">
+				<section id="Phoneslider" class="slider">
+
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/112全中運.png?v3" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner4_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="https://travel.hsinchu.gov.tw/" title="點選連結至新竹旅遊網"><img src="/Upfile/Banner/Banner10_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner9_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner2_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner7_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner8_ph.png?v6" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner3_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner5_ph.png?v6" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+        <div align="center"><a href="/Module/Home/Index.php" title="點選連結至首頁"><img src="/Upfile/Banner/Banner6_ph.png?v5" alt=""id="_WebBannerImg" class="LOGO" style="width:100%;"/></a></div>
+
+
+      </section>
+			</div>
+	</div>
+  <div style="clear:both;"></div>
+	<script src="/Tools/slick-1.8.1/slick/slick.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/Tools/slick-1.8.1/slick/devicechange.js" type="text/javascript" charset="utf-8"></script>
+	<a name="AfterBanner" style="float:left;margin-top:-90px;"></a></div>
+<div style="clear:both;"></div>
+<div id="_WebContent" align="center" style="background-color:#ffffff;min-height:1100px;padding-bottom:0px;" class="_WebContentBG">
+	<div style="max-width:1400px;" align="center">
+	<a name="Midcontent" style="float:left;margin-top:-20px;"></a>      <script>
+//<![CDATA[
+(function($){$.fn.basictable=function(options){var setup=function(table,data){var headings=[];if(data.tableWrap){table.wrap('<div class="bt-wrapper"></div>')}var format="";if(table.find("thead tr th").length){format="thead th"}else if(table.find("tbody tr th").length){format="tbody tr th"}else if(table.find("th").length){format="tr:first th"}else{format="tr:first td"}$.each(table.find(format),function(){var $heading=$(this);var colspan=parseInt($heading.attr("colspan"),10)||1;var row=$heading.closest("tr").index();if(!headings[row]){headings[row]=[]}for(var i=0;i<colspan;i++){headings[row].push($heading)}});$.each(table.find("tbody tr"),function(){setupRow($(this),headings,data)});$.each(table.find("tfoot tr"),function(){setupRow($(this),headings,data)})};var setupRow=function($row,headings,data){$row.children().each(function(){var $cell=$(this);if(($cell.html()===""||$cell.html()==="&nbsp;")&&!data.showEmptyCells){$cell.addClass("bt-hide")}else{var cellIndex=$cell.index();var headingText="";for(var j=0;j<headings.length;j++){if(j!=0){headingText+=": "}var $heading=headings[j][cellIndex];headingText+=$heading.text()}$cell.attr("data-th",headingText);if(data.contentWrap&&!$cell.children().hasClass("bt-content")){$cell.wrapInner('<span class="bt-content" />')}}})};var unwrap=function(table){$.each(table.find("td"),function(){var $cell=$(this);var content=$cell.children(".bt-content").html();$cell.html(content)})};var check=function(table,data){if(!data.forceResponsive){if(table.removeClass("bt").outerWidth()>table.parent().width()){start(table,data)}else{end(table,data)}}else{if(data.breakpoint!==null&&$(window).width()<=data.breakpoint||data.containerBreakpoint!==null&&table.parent().width()<=data.containerBreakpoint){start(table,data)}else{end(table,data)}}};var start=function(table,data){table.addClass("bt");if(data.tableWrap){table.parent(".bt-wrapper").addClass("active")}};var end=function(table,data){table.removeClass("bt");if(data.tableWrap){table.parent(".bt-wrapper").removeClass("active")}};var destroy=function(table,data){table.find("td").removeAttr("data-th");if(data.tableWrap){table.unwrap()}if(data.contentWrap){unwrap(table)}table.removeData("basictable")};var resize=function(table){if(table.data("basictable")){check(table,table.data("basictable"))}};this.each(function(){var table=$(this);if(table.length===0||table.data("basictable")){if(table.data("basictable")){if(options=="destroy"){destroy(table,table.data("basictable"))}else if(options==="start"){start(table,table.data("basictable"))}else if(options==="stop"){end(table,table.data("basictable"))}else{check(table,table.data("basictable"))}}return false}var settings=$.extend({},$.fn.basictable.defaults,options);var vars={breakpoint:settings.breakpoint,containerBreakpoint:settings.containerBreakpoint,contentWrap:settings.contentWrap,forceResponsive:settings.forceResponsive,noResize:settings.noResize,tableWrap:settings.tableWrap,showEmptyCells:settings.showEmptyCells};if(vars.breakpoint===null&&vars.containerBreakpoint===null){vars.breakpoint=768}table.data("basictable",vars);setup(table,table.data("basictable"));if(!vars.noResize){check(table,table.data("basictable"));$(window).bind("resize.basictable",function(){resize(table)})}})};$.fn.basictable.defaults={breakpoint:null,containerBreakpoint:null,contentWrap:true,forceResponsive:true,noResize:false,tableWrap:false,showEmptyCells:false}})(jQuery);
+//]]>
+</script>    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="_table_move">
+      <tr>
+                <td width="20%" class="LeftMenuBg LowerInfor">
+        <!--左選單OP-->
+         <div class="LeftMenuBlock LowerInfor" align="center">
+			<div class="LeftMenuTitle">競賽成績</div>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/Instant.php" target="" title="">賽程成績</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/Final_Query.php" target="" title="">決賽成績綜合查詢</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="https://112sport.hcc.edu.tw/Module/RaceProof/Login.php" target="" title="">成績證明列印</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/FinalsReport.php" target="" title="">決賽成績報告表</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/Award_Data.php" target="" title="">應(已)頒獎牌</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/Award_Query.php" target="" title="">獎牌統計</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/Record.php" target="" title="">破紀錄查詢</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="../Score/Trophy.php" target="" title="">競賽種類錦標</a></td>
+			  </tr>
+			  			  <tr>
+			    <td class="LeftMenuSubItem hvr-sweep-to-right"><a href="/Module/ScoreHistory/Index.php" target="" title="">歷年成績查詢</a></td>
+			  </tr>
+			  			</table>
+		</div>
+		<!--左選單ED-->
+        </td>
+                <td class="_td_color"  width="80%" style="padding-bottom:30px;">
+        <!--子標題OP-->
+        <div class="SubPageTitleBg" align="left">
+    <ol class="BlockTitle" style="padding-left: 0px;">
+
+        <li nowrap class="BlockTitle_item">
+            <img src="../../Upfile/Skin/Title_icon.png" alt="" style="width: 50px;margin-right: 10px;">
+            <h2 class="BlockTitle_h2">決賽成績報告表            </h2>
+        </li>
+        <li></li>
+    </ol>
+</div>
+        <div align="center">
+        <div align="center" style="width:98%;min-height:800px;">
+        <!--內容OP-->        <!--最新消息--><a name="BlockContent" style="margin-top:-120px;float:left;"></a>
+          <table border="0" width="98%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td>
+
+          <form ACTION="/Module/Score/FinalsReport_List.php#BlockContent" name="form_search"  method="GET">
+            <div class="AppSearch" align="left">
+              <select name="MID" id="MID" onchange="this.form.submit();" style="min-width:100px;">
+                <option value="">---日期---</option>
+                				    <option value="310" >3/10~3/31</option>
+				    				    <option value="401" >4/1~4/20</option>
+				    				    <option value="421" >4月21日</option>
+				    				    <option value="422" >4月22日</option>
+				    				    <option value="423" >4月23日</option>
+				    				    <option value="424" >4月24日</option>
+				    				    <option value="425" >4月25日</option>
+				    				    <option value="426" >4月26日</option>
+				    				    <option value="427" >4月27日</option>
+				                  </select>
+                            <select name="LID" id="LID" onchange="this.form.submit();" style="min-width:100px;">
+                <option value="">---競賽種類---</option>
+                                <option value="101" >田徑</option>
+                                <option value="102" >游泳</option>
+                                <option value="103" >跆拳道品勢</option>
+                                <option value="104" >跆拳道對打</option>
+                                <option value="105" >柔道</option>
+                                <option value="106" >空手道</option>
+                                <option value="107" >角力</option>
+                                <option value="108" >射箭</option>
+                                <option value="109" >射擊</option>
+                                <option value="110" >拳擊</option>
+                                <option value="112" >舉重</option>
+                                <option value="114" >擊劍</option>
+                                <option value="116" >划船</option>
+                                <option value="117" >自由車</option>
+                                <option value="118" >輕艇</option>
+                                <option value="201" >桌球</option>
+                                <option value="202" >羽球</option>
+                                <option value="203" selected>網球</option>
+                                <option value="204" >軟式網球</option>
+                                <option value="205" >木球</option>
+                                <option value="301" >韻律體操</option>
+                                <option value="302" >競技體操</option>
+                                <option value="303" >滑輪溜冰</option>
+                              </select>              <select name="GID" id="GID" onchange="this.form.submit();" style="min-width:100px;">
+                <option value="">---組別---</option>
+                                                <option value="國中組" >國中組</option>
+                                <option value="國女組" >國女組</option>
+                                <option value="國男組" >國男組</option>
+                                <option value="高中組" >高中組</option>
+                                <option value="高女組" >高女組</option>
+                                <option value="高男組" >高男組</option>
+                                              </select>
+                  <input type="submit" value="查詢"> <input type="button" value="清除查詢"  onClick="location.href='/Module/Score/FinalsReport_List.php'"  onKeyPress="location.href='/Module/Score/FinalsReport_List.php'" >
+
+	            <div align="center" class="ScoreTitle">
+          		          		<i class="fas fa-circle"></i> <a href="#CompDate4月15日">4月15日</a>
+          		          		<i class="fas fa-circle"></i> <a href="#CompDate4月16日">4月16日</a>
+          		          		<i class="fas fa-circle"></i> <a href="#CompDate4月18日">4月18日</a>
+          		          		<i class="fas fa-circle"></i> <a href="#CompDate4月19日">4月19日</a>
+          		          		<i class="fas fa-circle"></i> <a href="#CompDate4月20日">4月20日</a>
+          		</div>
+          		            </div>
+            </form>
+
+
+
+
+
+
+    		    		    <a name="CompKinD203" style="margin-top:-200px;float:left;"></a>
+			<div align="left" style="margin-top:15px;"><img src="../Sport/images/L203.png?v4" width="30%" style="max-width:80px;float:left;" alt="網球" /><div align="center" class="ScoreCompTitle">網球</div></div>
+										<a name="CompDate4月15日" style="margin-top:-200px;float:left;"></a>
+				<div align="center" class="ScoreDateTitle"><i class="far fa-calendar-alt"></i> 4月15日</div>
+
+		           <div  align="right">
+
+		                   <table width="100%" border="1" cellpadding="0" cellspacing="0" class="RWDtableBorder">
+		                   	<thead>
+                     <tr>
+                       <th class="middle center">比賽項目</th>
+                       <th class="middle center">第一名</th>
+                       <th class="middle center">第二名</th>
+                       <th class="middle center">第三名</th>
+                       <th class="middle center">第四名</th>
+                       <th class="middle center">第五名</th>
+                       <th class="middle center">第六名</th>
+                       <th class="middle center">第七名</th>
+                       <th class="middle center">第八名</th>
+                       </tr>
+                     </thead>
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高男組網球<br>團體賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市新莊高中</font><br>方靖緯<br>李昱賢<br>周文毅<br>周曉風<br>洪可浩<br>徐晨揚<br>蔡右承<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市建國中學</font><br>周順德<br>侯傑恩<br>索南喬柏<br>楊凱恩<br>劉子誠<br>賴禹舜<br>蘇禹丞<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>余冠憲<br>吳伯宇<br>吳晉岱<br>陳孟謙<br>黃政閔<br>蔡和諺<br>蔡承祐<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>王照錡<br>邱靖璋<br>唐郡<br>曹閔翔<br>陳泓諭<br>陳語綸<br>湯燊<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>花蓮縣花蓮高中</font><br>方宏愷<br>田濬瑋<br>呂李欽翔<br>葉佳偉<br>潘立軒<br><font style=font-weight:bold;color:#954327;>屏東縣大同高中</font><br>柯博閔<br>高士凱<br>郭紘睿<br>陳坤佑<br>劉強森<br>鄭伍洋<br>盧宇潔<br><font style=font-weight:bold;color:#954327;>臺北市南港高工</font><br>李晉源<br>林承進<br>張中睿<br>黃韋綸<br>蔡佳修<br><font style=font-weight:bold;color:#954327;>新北市三民高中</font><br>吳昇樺<br>杜坤晉<br>陳以軒<br>陳昀瑋<br>廖浩廷<br>歐傑文<br>謝心諾<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高女組網球<br>團體賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市三民高中</font><br>李予薰<br>李科緣<br>林芳安<br>張天馨<br>梁宸弋<br>陳鈺蕓<br>萬奕彣<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市南港高工</font><br>温俞榛<br>巴喬登<br>呂佳穎<br>林立心<br>黃奕晴<br>劉孝慈<br>鄭潔栭<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新北市三重高中</font><br>陳昱希<br>陳雅君<br>曾睦潔<br>黃淵儀<br>黃靖淳<br>劉妍希<br>謝雨恩<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>古逸婷<br>李欣婷<br>林立絃<br>陳瑋喬<br>曾子穎<br>劉郁芳<br>謝佳恩<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市大直高中</font><br>卓懿瑄<br>張巧涵<br>黃婉妮<br>黃姵妮<br>劉奕萱<br>謝元薰<br>蘇玟昕<br><font style=font-weight:bold;color:#954327;>新北市三民高中</font><br>王佳偃<br>何倩佩<br>杜依純<br>陳寗臻<br>黃爰蓁<br>蘇怡寧<br><font style=font-weight:bold;color:#954327;>臺北市北一女中</font><br>王婕芸<br>余婕琳<br>李宜蓁<br>林育萱<br>陳于涵<br>黃郁琪<br>劉曈璟<br><font style=font-weight:bold;color:#954327;>新北市新北高中</font><br>王紫芸<br>李宜薰<br>林冠妤<br>陳思齊<br>蔡悅<br>蔡憐憫<br>賴珮蓁<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國男組網球<br>團體賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>毛冠淮<br>李峻亦<br>林郁敏<br>莊學濂<br>莊淯翔<br>歐子毅<br>謝秉宸<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新竹市三民國中</font><br>李家穎<br>林豪鈺<br>徐皓霆<br>袁俊睿<br>楊昕義<br>鄭友恩<br>龔昱承<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺中市黎明國中</font><br>林文詰<br>林羽軒<br>楊承翰<br>葉錦丞<br>廖大鈞<br>趙光宥<br>撒璐．伊斯卡卡夫特<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>屏東縣至正國中</font><br>王暉廷<br>余梓勤<br>吳晟槐<br>許家程<br>陳宏軒<br>陳極語<br>黃冠瑋<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市新民國中</font><br>吳文旭<br>李光啟<br>卓正傑<br>林謝安<br>許爾威<br>黃文宥<br>賴晉寬<br><font style=font-weight:bold;color:#954327;>花蓮縣宜昌國中</font><br>王柏鈞<br>胡俊祥<br>高宇衡<br>黃品堯<br><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>方韋喬<br>王彥珺<br>王啟安<br>梅峪懷<br>歐陽伯彥<br>鄭上馭<br>鄭翔云<br><font style=font-weight:bold;color:#954327;>臺南市安定國中</font><br>王宥鈞<br>吳岳澤<br>陳宥霖<br>曾子淵<br>黃子儀<br>楊庭禾<br>簡兆宏<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國女組網球<br>團體賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市至善國中</font><br>花苡恩<br>高芷涵<br>許芸貞<br>陳又維<br>黃永嘉<br>鄧睎喬<br>賴家陞<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市新興國中</font><br>金巧倫<br>紀蓓宣<br>曹嘉凌<br>黃珉臻<br>黃姿嘉<br>薛子儀<br>謝秉樺<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>李沛緹<br>邱鈺喬<br>柯雨岑<br>崔悅容<br>莊妍鈴<br>雷如宣<br>鄭安潔<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市忠孝國中</font><br>林奕彤<br>陳宥錡<br>黃可昕<br>黃品瑜<br>楊湘苓<br>潘巧淳<br>蔡詠帆<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新竹市三民國中</font><br>林家甄<br>張岑琳<br>郭蓁<br>楊欣亭<br><font style=font-weight:bold;color:#954327;>臺南市安定國中</font><br>王品瑀<br>陳歆喬<br>劉郁麗<br>蘇宥蓁<br><font style=font-weight:bold;color:#954327;>臺北市大直高中</font><br>陳盈穎<br>陳劭庭<br>黃子芸<br>蔡家瑞<br>蔡沄蓒<br><font style=font-weight:bold;color:#954327;>新北市三重高中</font><br>陳芷芸<br>陳芊壬<br>曾妍蓉<br>葉俐伶<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+      		    			</table>				<a name="CompDate4月16日" style="margin-top:-200px;float:left;"></a>
+				<div align="center" class="ScoreDateTitle"><i class="far fa-calendar-alt"></i> 4月16日</div>
+
+		           <div  align="right">
+
+		                   <table width="100%" border="1" cellpadding="0" cellspacing="0" class="RWDtableBorder">
+		                   	<thead>
+                     <tr>
+                       <th class="middle center">比賽項目</th>
+                       <th class="middle center">第一名</th>
+                       <th class="middle center">第二名</th>
+                       <th class="middle center">第三名</th>
+                       <th class="middle center">第四名</th>
+                       <th class="middle center">第五名</th>
+                       <th class="middle center">第六名</th>
+                       <th class="middle center">第七名</th>
+                       <th class="middle center">第八名</th>
+                       </tr>
+                     </thead>
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高男組網球<br>雙打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市建國中學</font><br>侯傑恩<br>賴禹舜<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>吳伯宇<br>黃政閔<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市長榮中學</font><br>何宸輝<br>羅莛凱<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺中市東山高中</font><br>安雅利<br>楊芃凱<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>邱靖璋<br>湯燊<br><font style=font-weight:bold;color:#954327;>高雄市新莊高中</font><br>朱竑瑄<br>梁鎧麟<br><font style=font-weight:bold;color:#954327;>新北市三民高中</font><br>陳以軒<br>謝心諾<br><font style=font-weight:bold;color:#954327;>高雄市新莊高中</font><br>徐晨揚<br>蔡右承<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高女組網球<br>雙打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市三民高中</font><br>林芳安<br>張天馨<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市三民高中</font><br>梁宸弋<br>萬奕彣<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市南港高工</font><br>林立心<br>鄭潔栭<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市北一女中</font><br>李宜蓁<br>劉曈璟<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>陳瑋喬<br>謝佳恩<br><font style=font-weight:bold;color:#954327;>臺中市東山高中</font><br>徐葳<br>陳名馥<br><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>李欣婷<br>劉郁芳<br><font style=font-weight:bold;color:#954327;>新北市三重高中</font><br>陳雅君<br>劉妍希<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+      		    			</table>				<a name="CompDate4月18日" style="margin-top:-200px;float:left;"></a>
+				<div align="center" class="ScoreDateTitle"><i class="far fa-calendar-alt"></i> 4月18日</div>
+
+		           <div  align="right">
+
+		                   <table width="100%" border="1" cellpadding="0" cellspacing="0" class="RWDtableBorder">
+		                   	<thead>
+                     <tr>
+                       <th class="middle center">比賽項目</th>
+                       <th class="middle center">第一名</th>
+                       <th class="middle center">第二名</th>
+                       <th class="middle center">第三名</th>
+                       <th class="middle center">第四名</th>
+                       <th class="middle center">第五名</th>
+                       <th class="middle center">第六名</th>
+                       <th class="middle center">第七名</th>
+                       <th class="middle center">第八名</th>
+                       </tr>
+                     </thead>
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高男組網球<br>單打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市新莊高中</font><br>洪可浩<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新北市三民高中</font><br>歐傑文<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市陽明高中</font><br>侯醇謙<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市新莊高中</font><br>周曉風<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>花蓮縣花蓮高中</font><br>方宏愷<br><font style=font-weight:bold;color:#954327;>臺北市建國中學</font><br>吳鎧安<br><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>唐郡<br><font style=font-weight:bold;color:#954327;>高雄市新莊高中</font><br>周文毅<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高女組網球<br>單打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市三民高中</font><br>陳鈺蕓<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市南港高工</font><br>呂佳穎<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新北市三重高中</font><br>曾睦潔<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新北市新北高中</font><br>林冠妤<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市三民高中</font><br>吳翊寧<br><font style=font-weight:bold;color:#954327;>臺中市東山高中</font><br>徐葳<br><font style=font-weight:bold;color:#954327;>臺南市大灣高中</font><br>陳亭汝<br><font style=font-weight:bold;color:#954327;>新北市新北高中</font><br>蔡憐憫<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>高中組網球<br>男女混合雙打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>吳晉岱<br>曾子穎<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>余冠憲<br>古逸婷<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新北市三重高中</font><br>周威辰<br>黃靖淳<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市善化高中</font><br>蔡和諺<br>林立絃<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市南港高工</font><br>李晉源<br>黃奕晴<br><font style=font-weight:bold;color:#954327;>新北市三民高中</font><br>廖浩廷<br>王佳偃<br><font style=font-weight:bold;color:#954327;>屏東縣大同高中</font><br>劉強森<br>許佳琪<br><font style=font-weight:bold;color:#954327;>南投縣南投高中</font><br>陳莊博翔<br>賴妙梓<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國中組網球<br>男女混合雙打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市至善國中</font><br>盧宥廷<br>花苡恩<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>彰化縣大同國中</font><br>李祐澄<br>張庭甄<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市新興國中</font><br>黃智寬<br>曹嘉凌<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>王啟安<br>黛夢娜·阿古雅納<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市新興國中</font><br>陳冠廷<br>黃珉臻<br><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>謝秉宸<br>雷如宣<br><font style=font-weight:bold;color:#954327;>臺南市安定國中</font><br>陳宥霖<br>王品瑀<br><font style=font-weight:bold;color:#954327;>臺南市安定國中</font><br>王宥鈞<br>陳歆喬<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+      		    			</table>				<a name="CompDate4月19日" style="margin-top:-200px;float:left;"></a>
+				<div align="center" class="ScoreDateTitle"><i class="far fa-calendar-alt"></i> 4月19日</div>
+
+		           <div  align="right">
+
+		                   <table width="100%" border="1" cellpadding="0" cellspacing="0" class="RWDtableBorder">
+		                   	<thead>
+                     <tr>
+                       <th class="middle center">比賽項目</th>
+                       <th class="middle center">第一名</th>
+                       <th class="middle center">第二名</th>
+                       <th class="middle center">第三名</th>
+                       <th class="middle center">第四名</th>
+                       <th class="middle center">第五名</th>
+                       <th class="middle center">第六名</th>
+                       <th class="middle center">第七名</th>
+                       <th class="middle center">第八名</th>
+                       </tr>
+                     </thead>
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國男組網球<br>雙打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>毛冠淮<br>歐子毅<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市安定國中</font><br>曾子淵<br>楊庭禾<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>新竹市三民國中</font><br>李家穎<br>林豪鈺<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>屏東縣至正國中</font><br>余梓勤<br>陳極語<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺中市黎明國中</font><br>楊承翰<br>撒璐．伊斯卡卡夫特<br><font style=font-weight:bold;color:#954327;>臺北市新興國中</font><br>温俞叡<br>陳冠勳<br><font style=font-weight:bold;color:#954327;>花蓮縣國風國中</font><br>柯辰澔<br>楊豐源<br><font style=font-weight:bold;color:#954327;>臺北市新民國中</font><br>卓正傑<br>賴晉寬<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國女組網球<br>雙打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市陽明高中</font><br>黃琳鈴<br>蔡宇甯<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>謝語晴<br>黛夢娜·阿古雅納<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市至善國中</font><br>高芷涵<br>陳又維<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>柯雨岑<br>莊妍鈴<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>彰化縣大同國中</font><br>張庭甄<br>賴璇<br><font style=font-weight:bold;color:#954327;>花蓮縣宜昌國中</font><br>黃訢容<br>詹心禾<br><font style=font-weight:bold;color:#954327;>臺北市新興國中</font><br>紀蓓宣<br>薛子儀<br><font style=font-weight:bold;color:#954327;>桃園市慈文國中</font><br>呂家甯<br>林郁晨<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+      		    			</table>				<a name="CompDate4月20日" style="margin-top:-200px;float:left;"></a>
+				<div align="center" class="ScoreDateTitle"><i class="far fa-calendar-alt"></i> 4月20日</div>
+
+		           <div  align="right">
+
+		                   <table width="100%" border="1" cellpadding="0" cellspacing="0" class="RWDtableBorder">
+		                   	<thead>
+                     <tr>
+                       <th class="middle center">比賽項目</th>
+                       <th class="middle center">第一名</th>
+                       <th class="middle center">第二名</th>
+                       <th class="middle center">第三名</th>
+                       <th class="middle center">第四名</th>
+                       <th class="middle center">第五名</th>
+                       <th class="middle center">第六名</th>
+                       <th class="middle center">第七名</th>
+                       <th class="middle center">第八名</th>
+                       </tr>
+                     </thead>
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國男組網球<br>單打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市大灣高中</font><br>陳冠守<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺南市南科高中</font><br>王彥珺<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺中市黎明國中</font><br>林文詰<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>莊學濂<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>花蓮縣玉里國中</font><br>彭楷程<br><font style=font-weight:bold;color:#954327;>新北市新泰國中</font><br>沈康廷<br><font style=font-weight:bold;color:#954327;>屏東縣長治國中</font><br>戴奕富<br><font style=font-weight:bold;color:#954327;>彰化縣花壇國中</font><br>許德宥<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+
+                       <tr>
+                         <td class="center" style="vertical-align:top;" nowrap>國女組網球<br>單打賽</td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市陽明高中</font><br>蔡宇甯<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>高雄市正興國中</font><br>鄭安潔<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>桃園市慈文國中</font><br>林郁晨<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>屏東縣長治國中</font><br>鄭若妤<br></td>
+                         <td class="center" style="vertical-align:top;"><font style=font-weight:bold;color:#954327;>臺北市西湖國中</font><br>汪予晴<br><font style=font-weight:bold;color:#954327;>臺北市陽明高中</font><br>黃琳鈴<br><font style=font-weight:bold;color:#954327;>彰化縣大同國中</font><br>鄭鈺臻<br><font style=font-weight:bold;color:#954327;>新北市新泰國中</font><br>何珮綺<br></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         <td class="center" style="vertical-align:top;"></td>
+                         </tr>
+
+
+
+
+
+
+                     <tr>
+                       <th class="middle center">比賽項目</th>
+                       <th class="middle center">第一名</th>
+                       <th class="middle center">第二名</th>
+                       <th class="middle center">第三名</th>
+                       <th class="middle center">第四名</th>
+                       <th class="middle center">第五名</th>
+                       <th class="middle center">第六名</th>
+                       <th class="middle center">第七名</th>
+                       <th class="middle center">第八名</th>
+                       </tr>
+
+      	 </table>
+<script>
+$(".RWDtableBorder").basictable();
+</script>
+            <br>
+
+
+
+            </div>
+                   <div align="left"><a href="javascript:history.back()" class="FunctionALink"><i class="fas fa-list"></i>回上一頁</a></div>
+            </td></tr>
+            </table>
+
+</div></div>
+</td>
+  </tr>
+</table><br>
+</div>
+</div>
+</div>
+
+<div align="center" style="float:right;">
+<div style="position:fixed;float:right;right:0;bottom:0;" class="Footer_Top" id="Button_Top"><a href="#" title="回頂端"  id="top"><i class="fas fa-chevron-up" style="color:#ffffff;"></i></a></div>
+</div>
+</div>
+<div class="BodyBot wow fadeIn" align="center">
+<div  align="center" style="max-width:1400px;padding-top:0px;">
+<div align="center">
+	<div align="center" class="UnitAreaBlockDIV" >
+	<ul class="UnitAreaBlockS">
+	    <li class="MainUnitName">
+			<span >主辦機關：</span>
+			<img src="/Upfile/Skin/Edu_station.png" class="MainUnitNameLogo" style="max-width:250px;" title="教育部">
+		</li>
+	    <li class="MainUnitName">
+			<span >承辦單位：</span>
+			<img src="/Upfile/Skin/Unit2_s.png?v1" class="MainUnitNameLogo" style="max-width:250px;" title="新竹縣政府"></li>
+	</ul>
+	<ul class="UnitAreaBlock">
+		<li>112全中運執委會</li>
+		<li>地址：30210新竹縣竹北市光明六路10號B棟6樓</li>
+		<li>辦公時間：週一至週五上午8:00至下午16:00</li>
+		<li>電話：03-5518101分機2862</li>
+		<li>信箱：20058475@hchg.gov.tw</li>
+		<li>﻿瀏覽人數：3393435
+</li>
+	</ul>
+
+	<ul class="UnitAreaInfoLink">
+	    <li ><a   href="../Home/Policy_Webs_security.php">網站安全政策</a><a style=" background-color: #3c3c3c !important; color:#f1f1f1;"> | </a><a  href="../Home/Policy_Privacy.php">隱私權政策</a><a style=" background-color: #3c3c3c !important; color:#f1f1f1;"> | </a><a  href="../Home/Policy_Open.php">政府網站資料開放宣告</a></li>
+	</ul>
+
+	</div>
+	<div style="clear:both;"></div>
+</div>
+
+<div style="clear:both;"></div>
+</div>
+</div>
+<script>
+$('#top').click(function(){ $('html,body').animate({scrollTop:$('#here').offset().top}, 500); }); //代表一個完整的執行區塊
+$('#Button_Top').hide();
+$(window).scroll(function() {
+    if ( $(this).scrollTop() > 300){
+        $('#Button_Top').fadeIn("slow");
+    } else {
+        $('#Button_Top').stop().fadeOut("slow");
+    }
+});
+</script>
+
+<style>
+.position{margin-left:22%;/*padding-bottom:30px;*/}
+@media (max-width:1000px){
+.position{padding-right:19%;}}
+@media (max-width:600px){
+.position{margin-left:10%;margin-right:10%;}}
+</style>
+  </body>
+</html><script language=javascript>
+function newin(width,height,url,name)
+{msgWindow=window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width='+width+',height='+height);}
+</script>

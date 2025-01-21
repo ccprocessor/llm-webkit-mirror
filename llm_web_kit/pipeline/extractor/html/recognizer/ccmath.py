@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_common_modify, tag_img, tag_math)
+    tag_common_modify, tag_img, tag_math, tag_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -75,6 +75,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if len(inter_ele) > 0:
             # 获取math_content
             math_content = inter_ele[0].text
+            math_content = cm.wrap_math_md(math_content)
 
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
@@ -164,9 +165,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_img.modify_tree(cm, math_render, original_html, node, parent)
 
             # span.katex
-            if node.tag == 'span' and node.get('class') and 'katex' in node.get('class'):
-                # tag_span_script.modify_tree(cm, math_render, original_html, node, parent)
-                pass
+            if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
+                tag_script.modify_tree(cm, math_render, original_html, node, parent)
 
             # 14. 只处理只有一层的p标签
             if node.tag == 'p' and len(node.getchildren()) == 0:

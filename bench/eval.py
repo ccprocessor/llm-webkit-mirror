@@ -1,9 +1,14 @@
 import argparse
+import json
 import os
 from pathlib import Path
 
 from eval.magic_html import eval_magic_html
+from eval.ours import eval_ours_extract_html
 from eval.unstructured_eval import eval_unstructured
+
+from llm_web_kit.dataio.filebase import (FileBasedDataReader,
+                                         FileBasedDataWriter)
 
 # 选项参数
 parser = argparse.ArgumentParser()
@@ -13,52 +18,45 @@ parser.add_argument('--tool', type=str, help='抽取工具', default='magic_html
 args = parser.parse_args()
 
 
-sourcePath = os.path.join(Path(__file__).parent, './html')
-outputPath = os.path.join(Path(__file__).parent, './output')
+root = Path(__file__).parent
+sourcePath = os.path.join(root, 'html/all.json')
+outputPath = os.path.join(root, 'output')
+pipelineConfigPath = os.path.join(root, 'config/ours_config.jsonc')
+pipeline_data_path = os.path.join(root, 'config/ours_data_config.jsonl')
+
+
+reader = FileBasedDataReader('')
+writer = FileBasedDataWriter('')
 
 
 def main():
-    htmls: list[tuple[str, str]] = []
-    outputs: list[tuple[str, str]] = []
+    out = {}
     # 读取html文件
-    if args.input:
-        with open(args.input, 'r') as f:
-            html = f.read()
-            htmls.append((args.input, html))
-    else:
-        # 流式读取bench/html目录以及下面所有目录
-        for root, dirs, files in os.walk(sourcePath):
-            for file in files:
-                with open(f'{root}/{file}', 'r') as f:
-                    # 获取文件名
-                    fileName = file.split('.')[0]
-                    html = f.read()
-                    htmls.append((fileName, html))
+    with open(sourcePath, 'r') as f:
+        files = json.load(f)
+        # files结构是{"filename":{"url":"","filepath":""}}，获取filepath
+        for fileName in files:
+            url = files[fileName]['url']
+            filepath = files[fileName]['filepath']
+            html = reader.read(f'{root}/html/{filepath}').decode('utf-8')
 
-    # 评估
-    if args.tool == 'magic_html':
-        for html in htmls:
-            output = eval_magic_html(html[1], html[0])
-            outputs.append((html[0], output))
-    elif args.tool == 'unstructured':
-        for html in htmls:
-            output = eval_unstructured(html[1], html[0])
-            outputs.append((html[0], output))
-    else:
-        raise ValueError(f'Invalid tool: {args.tool}')
+            # 评估
+            if args.tool == 'magic_html':
+                output = eval_magic_html(html, fileName)
+            elif args.tool == 'unstructured':
+                output = eval_unstructured(html, fileName)
+            elif args.tool == 'ours':
+                print(pipelineConfigPath)
+                print(pipeline_data_path)
+                print(f'{root}/html/{filepath}')
+                output = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/html/{filepath}')
+            else:
+                raise ValueError(f'Invalid tool: {args.tool}')
 
-    # 输出
-    if args.output:
-        with open(args.output, 'w') as f:
-            for output in outputs:
-                f.write(output[1])
-    else:
-        for output in outputs:
-            # 如果目录不存在就创建
-            if not os.path.exists(f'{outputPath}/{args.tool}'):
-                os.makedirs(f'{outputPath}/{args.tool}')
-            with open(f'{outputPath}/{args.tool}/{output[0]}.html', 'w') as f:
-                f.write(output[1])
+            out['url'] = url
+            out['content'] = output
+            out['html'] = html
+            writer.write(f'{outputPath}/{args.tool}/{fileName}.jsonl', json.dumps(out).encode('utf-8') + b'\n')
 
 
 if __name__ == '__main__':

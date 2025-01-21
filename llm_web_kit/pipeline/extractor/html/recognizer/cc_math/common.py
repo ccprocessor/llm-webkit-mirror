@@ -168,7 +168,7 @@ class CCMATH():
         """
         def check_delimiters(delims_list, s):
             for start, end in delims_list:
-                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                pattern = f'^{re.escape(start)}.*?{re.escape(end)}$'
                 if re.search(pattern, s, re.DOTALL):
                     return True
             return False
