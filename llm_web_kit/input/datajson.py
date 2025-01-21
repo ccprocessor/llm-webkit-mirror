@@ -45,6 +45,7 @@ class StructureMapper(ABC):
         self.__text_end = '\n'
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
+        self.__md_special_chars = ['$', '#', '`', ]
 
     def to_html(self):
         raise NotImplementedError('This method must be implemented by the subclass.')
@@ -122,7 +123,8 @@ class StructureMapper(ABC):
         if node_type == DocElementType.CODE:
             code = content_lst_node['content']['code_content']
             code = code.strip()
-            code = f'```{code}\n```'
+            language = content_lst_node['content'].get('language', '')
+            code = f'```{language}\n{code}\n```'
             return code
         elif node_type == DocElementType.EQUATION_INTERLINE:
             math_content = content_lst_node['content']['math_content']
@@ -159,7 +161,7 @@ class StructureMapper(ABC):
             title_content = content_lst_node['content']['title_content']
             title_content = title_content.strip()
             level = content_lst_node['content']['level']
-            md_title_level = '#' * level
+            md_title_level = '#' * int(level)
             md_title = f'{md_title_level} {title_content}'
             return md_title
         elif node_type == DocElementType.PARAGRAPH:
@@ -168,13 +170,15 @@ class StructureMapper(ABC):
             return one_para
         elif node_type == DocElementType.LIST:
             items_paras = []
-            for item in content_lst_node['content']['items']:
+            is_ordered = content_lst_node['content']['ordered']
+            for item_idx, item in enumerate(content_lst_node['content']['items']):
                 paras_of_item = []
                 for para in item:
                     one_para = self.__join_one_para(para)
                     paras_of_item.append(one_para)
                 # 由于markdown的列表项里可以有多个段落，这里拼装成md列表段落格式
-                item_paras_md = self.__para_2_md_list_item(paras_of_item)
+                list_prefix = f'{item_idx + 1}.' if is_ordered else self.__list_item_start  # 有序列表和无需列表前缀
+                item_paras_md = self.__para_2_md_list_item(paras_of_item, list_prefix)
                 items_paras.append(item_paras_md)
             md_list = '\n'.join(items_paras)
             return md_list
@@ -191,11 +195,24 @@ class StructureMapper(ABC):
         else:
             raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
 
-    def __para_2_md_list_item(self, paras_of_item: list) -> str:
+    def __escape_md_special_chars(self, txt: str) -> str:
+        """转义markdown特殊字符.
+
+        Args:
+            txt (str): 需要转义的文本
+        Returns:
+            str: 转义后的文本
+        """
+        for char in self.__md_special_chars:
+            txt = txt.replace(char, f'\\{char}')
+        return txt
+
+    def __para_2_md_list_item(self, paras_of_item: list, list_prefix: str) -> str:
         """把一个列表项的多个段落连接起来.
 
         Args:
             paras_of_item (list): 一个列表项的多个段落
+            list_prefix (str): 列表项的前缀, 数字或者固定`-`字符串
         Returns:
             str: 连接后的字符串，如（只看第一个item， 写2个是为了举例)：
             - 段落1
@@ -208,7 +225,7 @@ class StructureMapper(ABC):
         md_list_item = ''
         for i, para in enumerate(paras_of_item):
             if i == 0:
-                md_list_item += f'{self.__list_item_start} {para}'
+                md_list_item += f'{list_prefix} {para}'
             else:
                 md_list_item += f'\n{self.__list_para_prefix} {para}'
 
@@ -303,7 +320,9 @@ class StructureMapper(ABC):
         one_para = []
         for el in para:
             if el['t'] == ParagraphTextType.TEXT:
-                one_para.append(el['c'].strip())
+                c = el['c'].strip()
+                new_c = self.__escape_md_special_chars(c)  # 转义特殊字符
+                one_para.append(new_c)
             elif el['t'] == ParagraphTextType.EQUATION_INLINE:
                 one_para.append(f" ${el['c'].strip()}$ ")
             else:
