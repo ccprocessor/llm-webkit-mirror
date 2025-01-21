@@ -45,7 +45,7 @@ class StructureMapper(ABC):
         self.__text_end = '\n'
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
-        self.__md_special_chars = ['$', '#', '`', ]
+        self.__md_special_chars = ['#', '`', ]  # TODO: 先去掉$，会影响行内公式，后面再处理
 
     def to_html(self):
         raise NotImplementedError('This method must be implemented by the subclass.')
