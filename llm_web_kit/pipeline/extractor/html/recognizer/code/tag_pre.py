@@ -8,9 +8,6 @@ def modify_tree(root: HtmlElement) -> None:
     for pre_node in root.iter('pre'):
         assert isinstance(pre_node, HtmlElement)
         hit = False
-        for _ in pre_node.iter('code'):
-            hit = True
-            break
         for _ in pre_node.iter('cccode'):
             hit = True
             break
@@ -30,9 +27,6 @@ def detect(root: HtmlElement) -> bool:
     for pre_node in root.iter('pre'):
         assert isinstance(pre_node, HtmlElement)
         hit = False
-        for _ in pre_node.iter('code'):
-            hit = True
-            break
         for _ in pre_node.iter('cccode'):
             hit = True
             break
