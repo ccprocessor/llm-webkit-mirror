@@ -14,7 +14,7 @@ from llm_web_kit.dataio.filebase import (FileBasedDataReader,
 parser = argparse.ArgumentParser()
 parser.add_argument('--input', type=str, help='html文件路径')
 parser.add_argument('--output', type=str, help='输出文件路径')
-parser.add_argument('--tool', type=str, help='抽取工具', default='magic_html')
+parser.add_argument('--tool', type=str, help='抽取工具', default='ours')
 args = parser.parse_args()
 
 
@@ -49,8 +49,9 @@ def main():
                 print(pipelineConfigPath)
                 print(pipeline_data_path)
                 print(f'{root}/html/{filepath}')
-                output, content_list = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/html/{filepath}')
+                output, content_list, main_html = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/html/{filepath}')
                 out['content_list'] = content_list
+                out['main_html'] = main_html
             else:
                 raise ValueError(f'Invalid tool: {args.tool}')
 
