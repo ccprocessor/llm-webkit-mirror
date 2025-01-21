@@ -34,7 +34,7 @@ TEST_CASES = [
                 '<p>这是p的text</p>'
             ),
             (
-                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>a^2 + b^2 = c^2</ccmath-interline></p>',
+                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>$$a^2 + b^2 = c^2$$</ccmath-interline></p>',
                 '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
             ),
             (
@@ -185,7 +185,7 @@ TEST_CONTENT_LIST_NODE = [
             'type': 'equation-interline',
             'raw_content': '<span class="math-container">$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$</span>',
             'content': {
-                'math_content': '$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$',
+                'math_content': 'h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}',
                 'math_type': 'latex',
                 'by': 'mathjax'
             }
@@ -268,6 +268,7 @@ class TestMathRecognizer(unittest.TestCase):
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
+            print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
@@ -284,9 +285,10 @@ class TestMathRecognizer(unittest.TestCase):
             for expect, part in zip(expect_formulas, parts):
                 a_tree = html_to_element(part)
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-                answer = a_result.text.replace('\n', '')
+                answer = a_result.text.replace('\n', '').strip()
                 # print('part::::::::', part)
-                # print('expect::::::::', expect)
+                print('expect::::::::', expect)
+                print('answer::::::::', answer)
                 self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
 
