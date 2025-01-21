@@ -100,12 +100,30 @@ class StructureMapper(ABC):
         md = self.__to_md()
         return md
 
-    def to_x_format(self, exclude_nodes=[], include_nodes=[]):
-        raise NotImplementedError('This method must be implemented by the subclass.')
+    def to_main_html(self) -> str:
+        """拼接和每个content_list_node对应的html内容，返回一个完整的html文档.
 
-    def to_json(self) -> str:
+        Args:
+            content_lst_node (dict): content_list里定义的每种元素块
+        Returns:
+            str: html格式
+        """
         content_lst = self._get_data()
-        return json.dumps(content_lst, ensure_ascii=False)
+        html = ''
+        for page in content_lst:
+            for content_lst_node in page:
+                raw_html = content_lst_node['raw_content']
+                if raw_html:
+                    html += raw_html
+
+        return html
+
+    def to_json(self, pretty=False) -> str:
+        content_lst = self._get_data()
+        if pretty:
+            return json.dumps(content_lst, ensure_ascii=False, indent=4)
+        else:
+            return json.dumps(content_lst, ensure_ascii=False)
 
     @abstractmethod
     def _get_data(self) -> List[Dict]:
