@@ -64,15 +64,24 @@ def __group_code_by_distance(
                 if check_trees_done(l):
                     break
                 edge_len = l
-            used_edge += 1
-            father[j] = i
             for idx, (x, y) in enumerate(zip(root_paths[i], root_paths[j])):
                 if idx == 0:
                     continue
                 if x != y:
                     common_node_idx = idx
                     break
+            maybe_tree_root = __get_html_element(root, root_paths[i][:common_node_idx])
+
+            """
+            并非所有 inline code 都可以识别出来
+            让根结点无法包含已经识别出来的 inline code，避免过度合并
+            """
+            if len(maybe_tree_root.xpath('.//cccode')) > 0:
+                break
+
             root_paths[i] = root_paths[i][:common_node_idx]
+            used_edge += 1
+            father[j] = i
 
     root_paths = [
         root_path for i, root_path in enumerate(root_paths) if i == get_father(i)
@@ -196,8 +205,16 @@ def __detect_inline_code(root: HtmlElement, node_paths: list[list[str]]) -> tupl
         while parent.tag not in _BLOCK_ELES and parent.getparent() is not None:
             parent = parent.getparent()
 
+        """
+        并非所有 inline code 都可以识别出来
+        """
         full_text = ''.join([x for x in ''.join(parent.itertext(None)) if x.isalnum()])
-        code_text = ''.join([x for x in ''.join(parent.itertext('code')) if x.isalnum()])
+        code_text = ''
+        for x in parent.iter('code'):
+            for a in x.itertext():
+                for c in a:
+                    if c.isalnum():
+                        code_text += c
         if full_text != code_text:
             inline_code.append(ele)
             continue
@@ -215,6 +232,8 @@ def modify_tree(root: HtmlElement) -> None:
     """
     node_paths = __get_code_node_paths(root)  # 获取所有 code 标签的路径，不包含嵌套的子 code 标签
     node_paths, inline_code = __detect_inline_code(root, node_paths)
+    for node in inline_code:
+        replace_node_by_cccode(node, 'tag_code', False, True)
 
     if len(node_paths) == 0:
         tree_roots = []
@@ -227,5 +246,3 @@ def modify_tree(root: HtmlElement) -> None:
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:
         replace_node_by_cccode(node, 'tag_code', False)
-    for node in inline_code:
-        replace_node_by_cccode(node, 'tag_code', False, True)
