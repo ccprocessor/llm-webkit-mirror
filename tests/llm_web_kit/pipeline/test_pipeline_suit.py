@@ -154,7 +154,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
 
         # md格式
         md_content = result.get_content_list().to_nlp_md()
-        self.assertEqual(len(md_content), 615)  # TODO, 逐个元素检查，不用数字
+        self.assertEqual(len(md_content), 609)  # TODO, 逐个元素检查，不用数字
         self.assertNotEqual(md_content[-2], '\n')
         self.assertEqual(md_content[-1], '\n')
 

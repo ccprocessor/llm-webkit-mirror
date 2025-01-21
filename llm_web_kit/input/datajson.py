@@ -5,7 +5,9 @@ from typing import Dict, List
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import html_to_markdown_table
+from llm_web_kit.libs.html_utils import (get_element_text, html_to_element,
+                                         html_to_markdown_table,
+                                         table_cells_count)
 
 
 class DataJsonKey(object):
@@ -139,10 +141,15 @@ class StructureMapper(ABC):
         """
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
-            code = content_lst_node['content']['code_content']
-            code = code.strip()
+            code = content_lst_node['content'].get('code_content', '')
+            code = (code or '').strip()
+            if not code:
+                return ''
             language = content_lst_node['content'].get('language', '')
-            code = f'```{language}\n{code}\n```'
+            if content_lst_node.get('inline', False):
+                code = f'`{code}`'
+            else:
+                code = f'```{language}\n{code}\n```'
             return code
         elif node_type == DocElementType.EQUATION_INTERLINE:
             math_content = content_lst_node['content']['math_content']
@@ -176,8 +183,10 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.VIDEO:
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
-            title_content = content_lst_node['content']['title_content']
-            title_content = (title_content or '').strip()
+            title_content = content_lst_node['content'].get('title_content', '')
+            title_content = title_content.strip()
+            if not title_content:
+                return ''
             level = content_lst_node['content']['level']
             md_title_level = '#' * int(level)
             md_title = f'{md_title_level} {title_content}'
@@ -204,6 +213,10 @@ class StructureMapper(ABC):
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
             html_table = html_table.strip()
+            cells_count = table_cells_count(html_table)
+            if cells_count == 1:  # 单个单元格的表格，直接返回文本
+                text = get_element_text(html_to_element(html_table)).strip()
+                return text
             is_complex = content_lst_node['content']['is_complex']
             if is_complex:
                 return html_table
@@ -341,7 +354,10 @@ class StructureMapper(ABC):
         one_para = []
         for el in para:
             if el['t'] == ParagraphTextType.TEXT:
-                c = el['c'].strip()
+                c = el['c']
+                if not c or not c.strip():
+                    continue
+                c = c.strip()
                 new_c = self.__escape_md_special_chars(c)  # 转义特殊字符
                 one_para.append(new_c)
             elif el['t'] == ParagraphTextType.EQUATION_INLINE:

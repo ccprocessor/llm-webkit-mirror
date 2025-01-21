@@ -258,7 +258,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
                 node = parser.to_content_list_node(base_url, ccnode_html, raw_html)
-                one_page.append(node)
+                if node:
+                    one_page.append(node)
             else:
                 mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
                 # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
