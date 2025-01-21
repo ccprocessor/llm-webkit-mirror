@@ -149,5 +149,11 @@ class TestPipelineSuitHTML(unittest.TestCase):
         txt_content = result.get_content_list().to_txt()
         self.assertTrue('reference:\n`#include<xxxx.hpp>`' in txt_content)
         self.assertEqual(len(txt_content), 582)
-        self.assertNotEquals(txt_content[-2], '\n')
+        self.assertNotEqual(txt_content[-2], '\n')
         self.assertEqual(txt_content[-1], '\n')
+
+        # md格式
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertEqual(len(md_content), 753)  # TODO, 逐个元素检查，不用数字
+        self.assertNotEqual(md_content[-2], '\n')
+        self.assertEqual(md_content[-1], '\n')
