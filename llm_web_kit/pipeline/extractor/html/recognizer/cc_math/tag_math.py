@@ -32,7 +32,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
                 if 'display: none' in normalized_style_value:
                     parent.style = ''
-            print('math text: ', r'{}'.format(text))
             new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)
         elif text_strip(node.get('alttext')):
