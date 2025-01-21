@@ -296,8 +296,8 @@ class TestMathRecognizer(unittest.TestCase):
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
                 answer = a_result.text.replace('\n', '').strip()
                 # print('part::::::::', part)
-                # print('expect::::::::', expect)
-                # print('answer::::::::', answer)
+                print('expect::::::::', expect)
+                print('answer::::::::', answer)
                 self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
 
