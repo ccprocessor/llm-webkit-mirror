@@ -6,7 +6,7 @@ from overrides import override
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_common_modify, tag_img, tag_math, tag_script)
+    tag_asciimath, tag_common_modify, tag_img, tag_math, tag_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -144,8 +144,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_math.modify_tree(cm, math_render, original_html, node, parent)
 
             # script[type="math/asciimath"]
-            if node.tag == 'script' and node.get('type') and 'math/asciimath' in node.get('type'):
-                pass
+            if node.tag == 'script' and node.get('type') == 'math/asciimath':
+                tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
 
             # class tex
             if node.tag == 'span' and node.get('class') and 'tex' in node.get('class'):

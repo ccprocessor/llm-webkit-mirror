@@ -131,11 +131,16 @@ TEST_CASES_HTML = [
         'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
         'expected': 'assets/ccmath/geoenergymath_img_1.html'
     },
-    # # katex latex+katex
+    # # # katex latex+katex
     {
         'input': ['assets/ccmath/katex_mathjax.html'],
         'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
         'expected': 'assets/ccmath/katex_mathjax_1.html'
+    },
+    {
+        'input': ['assets/ccmath/asciimath.html'],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'assets/ccmath/asciimath_1.html'
     },
 ]
 
