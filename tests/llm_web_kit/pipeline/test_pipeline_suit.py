@@ -157,3 +157,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.assertEqual(len(md_content), 615)  # TODO, 逐个元素检查，不用数字
         self.assertNotEqual(md_content[-2], '\n')
         self.assertEqual(md_content[-1], '\n')
+
+        # main_html
+        main_html = result.get_content_list().to_main_html()  # 获取main_html内容
+        assert len(main_html) == 1205
