@@ -77,3 +77,11 @@ https://aicarrier.feishu.cn/wiki/PyMEwtTguiPtALkb5XDcYH20nYd
         </td>
     </tr>
 </table>
+
+## 已知问题
+
+**关于元素的解析顺序**<br>
+理论上table, list里可以放图片、代码、公式、段落。由于关系复杂，标准不明。现在决定采取的解析策略如下：
+
+1. 优先保证code, 因为目前发现有代码独占一个table的情况，因此code第一个解析。
+2. 表格里的公式、图片、列表不做考虑。只考虑表格里的文字。对于图片直接丢弃，对于公式当成文本处理。

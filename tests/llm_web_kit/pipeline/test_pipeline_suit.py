@@ -140,5 +140,5 @@ class TestPipelineSuitHTML(unittest.TestCase):
         # txt格式
         txt_content = result.get_content_list().to_txt()
         self.assertEqual(len(txt_content), 727)
-        self.assertNotEquals(txt_content[-2], '\n')
+        self.assertNotEqual(txt_content[-2], '\n')
         self.assertEqual(txt_content[-1], '\n')
