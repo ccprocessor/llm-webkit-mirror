@@ -49,7 +49,8 @@ def main():
                 print(pipelineConfigPath)
                 print(pipeline_data_path)
                 print(f'{root}/html/{filepath}')
-                output = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/html/{filepath}')
+                output, content_list = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/html/{filepath}')
+                out['content_list'] = content_list
             else:
                 raise ValueError(f'Invalid tool: {args.tool}')
 
