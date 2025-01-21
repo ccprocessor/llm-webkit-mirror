@@ -141,6 +141,12 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.assertEqual(html_content['content'][1]['c'], '#include<xxxx.hpp>')
         self.assertEqual(html_content['content'][1]['t'], ParagraphTextType.CODE_INLINE)
 
+        # 带链接的inline code
+        html_content = html_content_list[12]
+        self.assertEqual(html_content['type'], DocElementType.CODE)
+        self.assertEqual(html_content['content']['code_content'], '#include<xxxx.hpp>')
+        self.assertEqual(html_content['content']['by'], 'tag_code')
+        self.assertEqual(html_content['inline'], True)
         # txt格式
         txt_content = result.get_content_list().to_txt()
         self.assertTrue('reference: `#include<xxxx.hpp>`' in txt_content)
