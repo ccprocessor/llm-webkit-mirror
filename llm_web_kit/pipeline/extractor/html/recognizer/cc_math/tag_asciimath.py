@@ -1,3 +1,5 @@
+import re
+
 from lxml.html import HtmlElement
 
 from llm_web_kit.libs.html_utils import build_cc_element, replace_element
@@ -26,17 +28,39 @@ def extract_asciimath(s):
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
     try:
         text = node.text
-
-        equation_type, math_type = cm.get_equation_type(o_html)
-        if equation_type == EQUATION_INLINE:
-            new_tag = CCMATH_INLINE
-        elif equation_type == EQUATION_INTERLINE:
-            new_tag = CCMATH_INTERLINE
+        pattern = r'\\?`[^`]*`'
+        if re.search(pattern, text):
+            equation_type, math_type = cm.get_equation_type(o_html)
+            if equation_type == EQUATION_INLINE:
+                new_tag = CCMATH_INLINE
+            elif equation_type == EQUATION_INTERLINE:
+                new_tag = CCMATH_INTERLINE
+            else:
+                return
+            if text and text_strip(text):
+                text = text_strip(text)
+                wrapped_asciimath = replace_asciimath(cm,text)
+                new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_asciimath, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+                replace_element(node, new_span)
         else:
             return
-        if text_strip(text):
-            wrapped_asciimath = cm.wrap_math(extract_asciimath(text))
-            new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_asciimath, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
-            replace_element(node, new_span)
     except Exception as e:
-        raise ValueError(f'Error processing script asciimath: {e}')
+        raise ValueError(f'Error processing asciimath: {e}')
+
+
+def replace_asciimath(cm: CCMATH,text):
+    def process_match(match):
+        try:
+            if match:
+                asciimath_text = match.group(0)
+                asciimath_text = text_strip(asciimath_text.replace('`','').replace('\\',''))
+                if asciimath_text:
+                    wrapped_text = cm.wrap_math(extract_asciimath(asciimath_text))
+                else:
+                    wrapped_text = ''
+                return wrapped_text
+        except Exception:
+            return ''
+    pattern = r'\\?`[^`]*`'
+    result = re.sub(pattern, process_match, text)
+    return result

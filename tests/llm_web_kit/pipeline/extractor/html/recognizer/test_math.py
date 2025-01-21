@@ -131,7 +131,6 @@ TEST_CASES_HTML = [
         'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
         'expected': 'assets/ccmath/geoenergymath_img_1.html'
     },
-    # # # katex latex+katex
     {
         'input': ['assets/ccmath/katex_mathjax.html'],
         'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
@@ -292,8 +291,8 @@ class TestMathRecognizer(unittest.TestCase):
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
                 answer = a_result.text.replace('\n', '').strip()
                 # print('part::::::::', part)
-                print('expect::::::::', expect)
-                print('answer::::::::', answer)
+                # print('expect::::::::', expect)
+                # print('answer::::::::', answer)
                 self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
 

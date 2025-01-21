@@ -145,7 +145,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_math.modify_tree(cm, math_render, original_html, node, parent)
 
             # script[type="math/asciimath"]
-            if node.tag == 'script' and node.get('type') == 'math/asciimath':
+            # if node.tag == 'script' and node.get('type') == 'math/asciimath':
+            if node.tag in ('p','div') and node.text and '`' in node.text:
                 tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
 
             # class tex
