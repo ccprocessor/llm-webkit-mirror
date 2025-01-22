@@ -61,7 +61,7 @@ def replace_asciimath(cm: CCMATH,text):
                     wrapped_text = ''
                 return wrapped_text
         except Exception:
-            return ''
+            return
     pattern = r'\\?`[^`]*`'
     result = re.sub(pattern, process_match, text)
     return result
