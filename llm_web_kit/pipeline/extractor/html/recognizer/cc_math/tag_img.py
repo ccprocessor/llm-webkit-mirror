@@ -1,6 +1,5 @@
 from lxml.html import HtmlElement
 from urllib.parse import unquote
-from html import unescape
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.html_utils import build_cc_element, replace_element
