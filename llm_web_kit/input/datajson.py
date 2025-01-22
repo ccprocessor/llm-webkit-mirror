@@ -69,19 +69,17 @@ class StructureMapper(ABC):
             meet_inline = False
 
             for content_lst_node in page:
-                txt_content = self.__content_lst_node_2_txt(content_lst_node)
-
                 if prev_node is not None and content_lst_node.get('inline', False):
                     if content_lst_node['type'] not in exclude_nodes:
-                        text_blocks[-1] += txt_content
+                        text_blocks[-1] += self.__content_lst_node_2_txt(content_lst_node)
                     meet_inline = True
                 else:
                     if meet_inline and prev_node['type'] == content_lst_node['type']:
                         if content_lst_node['type'] not in exclude_nodes:
-                            text_blocks[-1] += txt_content
+                            text_blocks[-1] += self.__content_lst_node_2_txt(content_lst_node)
                     else:
                         if content_lst_node['type'] not in exclude_nodes:
-                            text_blocks.append(txt_content)
+                            text_blocks.append(self.__content_lst_node_2_txt(content_lst_node))
 
                     prev_node = content_lst_node
                     meet_inline = False
@@ -106,19 +104,17 @@ class StructureMapper(ABC):
             meet_inline = False
 
             for content_lst_node in page:
-                txt_content = self.__content_lst_node_2_md(content_lst_node)
-
                 if prev_node is not None and content_lst_node.get('inline', False):
                     if content_lst_node['type'] not in exclude_nodes:
-                        md_blocks[-1] += txt_content
+                        md_blocks[-1] += self.__content_lst_node_2_md(content_lst_node)
                     meet_inline = True
                 else:
                     if meet_inline and prev_node['type'] == content_lst_node['type']:
                         if content_lst_node['type'] not in exclude_nodes:
-                            md_blocks[-1] += txt_content
+                            md_blocks[-1] += self.__content_lst_node_2_md(content_lst_node)
                     else:
                         if content_lst_node['type'] not in exclude_nodes:
-                            md_blocks.append(txt_content)
+                            md_blocks.append(self.__content_lst_node_2_md(content_lst_node))
 
                     prev_node = copy.deepcopy(content_lst_node)
                     meet_inline = False
