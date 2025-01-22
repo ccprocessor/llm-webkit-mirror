@@ -138,7 +138,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # script[type="math/asciimath"]
             # if node.tag == 'script' and node.get('type') == 'math/asciimath':
-            if node.tag in ('p','div','textarea') and node.text and '`' in node.text:
+            if node.tag in ('p','div') and node.text and '`' in node.text:
                 tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
 
             # Remove any .MathJax_Preview spans
