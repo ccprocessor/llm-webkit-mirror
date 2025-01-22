@@ -5,6 +5,7 @@ from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.html_utils import get_element_text, html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cccode import \
     CodeRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.pipeline.pipeline_suit import PipelineSuit
 
 TEST_CASES = [
@@ -226,7 +227,7 @@ class TestMathRecognizer(unittest.TestCase):
         expect = base_dir.joinpath('assets/cccode/mathworks.md').read_text().strip('\n')
         self.assertEqual(expect, answer)
         answer = resp.get_content_list().to_txt().strip('\n')
-        # print(answer)
+        print(answer)
         expect = base_dir.joinpath('assets/cccode/mathworks.txt').read_text().strip('\n')
         self.assertEqual(expect, answer)
 
@@ -237,7 +238,7 @@ class TestMathRecognizer(unittest.TestCase):
             print(base_url)
             raw_html = raw_html_path.read_text()
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            parts = [part[0] for part in parts if 'cccode' in part[0]]
+            parts = [part[0] for part in parts if CCTag.CC_CODE in part[0] or CCTag.CC_CODE_INLINE in part[0]]
             # for part in parts:
             #     part_el = html_to_element(part)
             #     answer = get_element_text(part_el).strip()
@@ -247,16 +248,16 @@ class TestMathRecognizer(unittest.TestCase):
             answers = []
             for part in parts:
                 part_el = html_to_element(part)
-                cccodes = part_el.xpath('.//cccode')
-                self.assertEqual(len(cccodes), 1)
-                part_el = cccodes[0]
-                inline = part_el.get('inline', 'false') == 'true'
-                answer = get_element_text(part_el).strip('\n')
-                if not answer:
-                    continue
-                answers.append((answer, inline))
+                cccodes = part_el.xpath(f'.//{CCTag.CC_CODE}') + part_el.xpath(f'.//{CCTag.CC_CODE_INLINE}')
+                # self.assertEqual(len(cccodes), 1)
+                for part_el in cccodes:
+                    inline = part_el.get('inline', 'false') == 'true'
+                    answer = get_element_text(part_el).strip('\n')
+                    if not answer:
+                        continue
+                    answers.append((answer, inline))
 
-            # self.assertEqual(len(answers), len(test_case['expected']))
+            self.assertEqual(len(answers), len(test_case['expected']))
             for expect_path, (answer, inline) in zip(test_case['expected'], answers):
                 if expect_path.startswith('assets'):
                     expect = base_dir.joinpath(expect_path).read_text().strip('\n')

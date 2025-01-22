@@ -14,7 +14,6 @@ to test the type of a variable. For example, do not use
 ```
 assert(isa(a, 'double'))
 ```
-
 Initialize MATLAB Class Properties in Constructor
 Do not initialize MATLAB class properties in the `properties` block.
 Instead, use the constructor to initialize the class properties.
