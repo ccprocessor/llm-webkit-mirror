@@ -184,7 +184,7 @@ class StructureMapper(ABC):
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
             title_content = content_lst_node['content'].get('title_content', '')
-            title_content = title_content.strip()
+            title_content = (title_content or '').strip()
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
