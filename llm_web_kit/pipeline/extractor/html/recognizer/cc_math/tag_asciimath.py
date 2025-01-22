@@ -2,11 +2,10 @@ import re
 
 from lxml.html import HtmlElement
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.html_utils import build_cc_element, replace_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
-    EQUATION_INTERLINE, MathType, text_strip)
+    EQUATION_INTERLINE, text_strip)
 
 
 def _translator():
@@ -29,8 +28,9 @@ def extract_asciimath(s):
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
     try:
         text = node.text
-        equation_type, math_type = cm.get_equation_type(o_html)
-        if math_type == MathType.ASCIIMATH:
+        pattern = r'\\?`[^`]*`'
+        if re.search(pattern, text):
+            equation_type, math_type = cm.get_equation_type(o_html)
             if equation_type == EQUATION_INLINE:
                 new_tag = CCMATH_INLINE
             elif equation_type == EQUATION_INTERLINE:
@@ -45,7 +45,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         else:
             return
     except Exception as e:
-        raise HtmlMathRecognizerExp(f'Error processing asciimath: {e}')
+        raise ValueError(f'Error processing asciimath: {e}')
 
 
 def replace_asciimath(cm: CCMATH,text):
@@ -56,13 +56,12 @@ def replace_asciimath(cm: CCMATH,text):
                 asciimath_text = text_strip(asciimath_text.replace('`','').replace('\\',''))
                 if asciimath_text:
                     # asciimath -> latex
-                    wrapped_text = extract_asciimath(asciimath_text)
-                    wrapped_text = cm.wrap_math_md(wrapped_text)
+                    wrapped_text = cm.wrap_math(extract_asciimath(asciimath_text))
                 else:
                     wrapped_text = ''
                 return wrapped_text
         except Exception:
-            return
+            return ''
     pattern = r'\\?`[^`]*`'
     result = re.sub(pattern, process_match, text)
     return result
