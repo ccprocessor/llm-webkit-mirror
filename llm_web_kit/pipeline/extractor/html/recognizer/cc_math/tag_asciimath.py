@@ -3,7 +3,7 @@ import re
 from lxml.html import HtmlElement
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerExp
-from llm_web_kit.libs.html_utils import build_cc_element, replace_element
+from llm_web_kit.libs.html_utils import build_cc_element, element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
     EQUATION_INTERLINE, MathType, text_strip)
@@ -38,17 +38,16 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             else:
                 return
             if text and text_strip(text):
-                text = text_strip(text)
-                wrapped_asciimath = replace_asciimath(cm,text)
-                new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_asciimath, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
-                replace_element(node, new_span)
+                node.text = replace_asciimath(new_tag,math_type,math_render,node)
+
+                print(element_to_html(node))
         else:
             return
     except Exception as e:
         raise HtmlMathRecognizerExp(f'Error processing asciimath: {e}')
 
 
-def replace_asciimath(cm: CCMATH,text):
+def replace_asciimath(new_tag: str,math_type: str,math_render: str,node: HtmlElement):
     def process_match(match):
         try:
             if match:
@@ -57,12 +56,11 @@ def replace_asciimath(cm: CCMATH,text):
                 if asciimath_text:
                     # asciimath -> latex
                     wrapped_text = extract_asciimath(asciimath_text)
-                    wrapped_text = cm.wrap_math_md(wrapped_text)
-                else:
-                    wrapped_text = ''
-                return wrapped_text
+                    new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_text, tail='', type=math_type, by=math_render, html=wrapped_text)
+                    node.append(new_span)
+                return ''
         except Exception:
             return
     pattern = r'\\?`[^`]*`'
-    result = re.sub(pattern, process_match, text)
+    result = re.sub(pattern, process_match, node.text)
     return result
