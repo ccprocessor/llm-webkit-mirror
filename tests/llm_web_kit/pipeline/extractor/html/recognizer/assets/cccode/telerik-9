@@ -1,0 +1,22 @@
+         * This test application illustrates a problem which we are experiencing with our Telerik Silverlight GridView.
+         * The GridView has three columns which display images. The first image column contains a standard Silverlight
+         * Image Control.  The second column contains a Silverlight User Control which in turn contains a Silverlight
+         * Image Control.  The third column shows a Silverlight Image Control hosted in a Silverlight Custom Control.
+         *
+         * As can be seen from running this application, the first two columns display the correct images when
+         * scrolling but the third column does not.  As you scroll, the images in the third column come from
+         * other rows as the Telerik virtualization process reuses some grid components to improve performance.
+         * If you set the  EnableRowVirtualization property to False, this problem goes away. However, our data
+         * sets are often very large and setting this property to False results in an unacceptable degradation
+         * in performance.
+         *
+         * The third image column also contains a textblock which displays the Identifier Name.  As can be
+         * seen, this value is correct even though the wrong image is usually displayed.
+         *
+         * We have tried both the User Control and Custom Control approaches in our application and both
+         * exhibit this scrolling problem.  Of course, our actual controls are much more complex than this
+         * sample application.
+         *
+         * This problem did not occur with the initial release of the Telerik controls from 2010 Q3.
+         * We first noticed this problem after applying SP1 to the Q3 release.  This test application
+         * as requested by Telerik support uses the Q1 2011 release.

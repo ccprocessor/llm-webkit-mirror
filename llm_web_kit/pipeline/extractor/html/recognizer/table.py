@@ -60,19 +60,17 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __is_simple_table(self, tree) -> bool:
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
-        cells = tree.xpath('//td | //th')
+        cells = tree.xpath('.//td') + tree.xpath('.//th')
         if len(cells) == 0:
             raise HtmlTableRecognizerExp(f'table节点未通过xpath定位到td或者th标签, cell长度为{len(cells)}')
         for cell in cells:
-            colspan_str = cell.get('colspan', 1)
-            rowspan_str = cell.get('rowspan', 1)
+            colspan_str = cell.get('colspan', '1')
+            rowspan_str = cell.get('rowspan', '1')
             try:
-                # 尝试将属性值转换为整数
                 colspan = int(colspan_str)
                 rowspan = int(rowspan_str)
             except ValueError as e:
                 raise HtmlTableRecognizerExp(f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数') from e
-            # 如果 colspan 或 rowspan 存在且大于1，则认为是合并单元格, 否则认为是简单格式的单元格
             if (colspan > 1) or (rowspan > 1):
                 return False
             elif (colspan == 1) and (rowspan == 1):
@@ -84,17 +82,17 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         """判断table元素是否包含图片."""
         imgs = tree.xpath('//table//img')
         if len(imgs) == 0:
-            return False
-        else:
             return True
+        else:
+            return False
 
     def __is_table_nested(self, tree) -> bool:
         """判断table元素是否嵌套."""
         nested_tables = tree.xpath('//table//table')
         if len(nested_tables) == 0:
-            return False
-        else:
             return True
+        else:
+            return False
 
     def __extract_tables(self, ele: HtmlElement) -> List[str]:
         """提取html中的table元素."""
@@ -106,7 +104,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __get_table_type(self, child: HtmlElement) -> str:
         """获取table的类型."""
-        flag = self.__is_simple_table(child) or self.__is_table_nested(child) or self.__is_table_contain_img(child)
+        flag = self.__is_simple_table(child) and self.__is_table_nested(child) and self.__is_table_contain_img(child)
         if flag:
             table_type = 'simple'
         else:
@@ -118,13 +116,43 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for item in ele.iterchildren():
             return self._element_to_html(item)
 
+    def __simplify_td_th_content(self, elem):
+        """简化 <td> 和 <th> 内容，仅保留文本内容."""
+        if elem.tag in ['td', 'th'] and len(elem.xpath('.//table')) == 0:
+            text = '<br>'.join([text for text in elem.itertext()]).strip()
+            for child in list(elem):
+                elem.remove(child)
+            elem.text = text
+        elif elem.tag in ['td', 'th'] and len(elem.xpath('.//table')) > 0:
+            for item in elem.iterchildren():
+                self.__simplify_td_th_content(item)
+
+    def __get_table_body(self, table_root):
+        """获取并处理table body，返回处理后的HTML字符串。"""
+        allowed_attributes = ['colspan', 'rowspan']
+        for child in list(table_root.iterchildren()):
+            if child.tag is not None:
+                self.__get_table_body(child)
+        for ele in table_root.iter('td', 'th'):
+            self.__simplify_td_th_content(ele)
+        if len(table_root.attrib) > 0:
+            cleaned_attrs = {k: v for k, v in table_root.attrib.items() if k in allowed_attributes}
+            table_root.attrib.clear()
+            table_root.attrib.update(cleaned_attrs)
+        if table_root.text is not None:
+            table_root.text = table_root.text.strip()
+        for elem in table_root.iter():
+            if elem.tail is not None:
+                elem.tail = elem.tail.strip()
+        return self._element_to_html(table_root)
+
     def __do_extract_tables(self, root: HtmlElement) -> None:
         """递归处理所有子标签."""
         if root.tag in ['table']:
             table_raw_html = self._element_to_html(root)
             table_type = self.__get_table_type(root)
             tail_text = root.tail
-            table_body = self.__extract_table_element(root)
+            table_body = self.__get_table_body(root)
             cc_element = self._build_cc_element(
                 CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, html=table_raw_html)
             self._replace_element(root, cc_element)
@@ -138,8 +166,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         if ele is not None and ele.tag == CCTag.CC_TABLE:
             table_type = ele.attrib.get('table_type')
             table_flag = self.__get_content_list_table_type(table_type)
-            tale_body = ele.attrib.get('html')
-            return table_flag, tale_body
+            table_body = ele.text
+            return table_flag, table_body
         else:
             raise HtmlTableRecognizerExp(f'{html}中没有cctable标签')
 

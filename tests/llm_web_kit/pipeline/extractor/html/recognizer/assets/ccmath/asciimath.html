@@ -1,0 +1,428 @@
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML">
+<head>
+    <object id="mathplayer" classid="clsid:32F66A20-7614-11D4-BD11-00104BD3F987">
+    </object>
+    <?import namespace="mml" implementation="#mathplayer"?> <title>ASCIIMath Tutorial</title>
+
+    <script type="text/javascript" src="javascript/ASCIIMathMLwFallback.js"></script>
+
+    <script type="text/javascript" src="javascript/ASCIIMathMLeditor.js"></script>
+
+    <script type="text/javascript" src="javascript/customisations.js"></script>
+
+    <link href="ASCIIMathTutorialStyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="mainContent">
+        <div class="headerBox">
+            <div class="headerFooterContent">
+                <h1 align="center">
+                    ASCIIMath Tutorial</h1>
+                <h3 align="center">
+                    James Gray - The Open University</h3>
+                <p>
+                    This tutorial and accompanying <a href="SymbolList.html">symbol list</a> introduce
+                    the ASCIIMath notation and some points of good practice in writing mathematics.
+                    To display the mathematics correctly, this page requires Internet Explorer 6 with
+                    <a href="http://www.dessci.com/en/products/mathplayer">MathPlayer</a> installed,
+                    or Mozilla/Firefox/Netscape 7+ with MathML fonts installed (e.g. download the <a
+                        href="http://web.mit.edu/is/topics/webpublishing/mathml/">MIT MathML font packages</a>).
+                    If you have these installed you should see a familiar formula here:</p>
+                <p align="center">
+                    `x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>
+            </div>
+        </div>
+        <div class="sectionHeader">
+            <h2>
+                1. Words and Equations</h2>
+        </div>
+        <div class="tutorialText">
+            <p>
+                ASCIIMath works by transforming the text you type into mathematics. To see how it
+                works, type this text</p>
+        </div>
+        <div class="mpar">
+            Note:
+            <br />
+            The \` key is normally next to the 1 key on the keyboard.</div>
+        <div class="tutorialText">
+            <pre>
+    The area of a triangle with base `b`
+    and height `h` is `1/2 bh`. The area
+    of a circle with radius `r` is `pi r^2`.</pre>
+            <p>
+                into this text box:</p>
+	<br />
+        </div>
+        <div class="answer" id="student_answer1_output">
+        </div>
+        <textarea class="entrybox" id="student_answer1" onkeyup="AMdisplay('student_answer1','student_answer1_output',true)">[Type here]</textarea>
+        <br />
+        <div class="mpar">
+            It is also possible to put the mathematics between dollar signs like this: \$E=mc^2\$.
+            There is no difference in the output.</div>
+        <div class="tutorialText">
+            <p>
+                As you type, the output appears in the grey coloured area next to the text entry
+                box. We want to type mathematics and text, so to indicate mathematics we enclose
+                it between left-quotes, like this: \`E=mc^2\`. Because you type the mathematics
+                directly, it is quick and easy to include a lot of mathematics in your text.
+            </p>
+            <p>
+                It is easier to read longer formulae if you put them on a separate line, as you
+                can see in the text box below (and the output to the right). Take a look at any
+                standard mathematics book to see the use of mathematics in the text and on separate
+                lines.
+            </p>
+        </div>
+        <div class="answer" id="student_answer2_output">
+            Einstein's famous formula is
+            <p>
+            </p>
+            `E=mc^2`,
+            <p>
+            </p>
+            where `E` is energy, `m` is mass and `c` is the speed of light.
+        </div>
+        <textarea id="student_answer2" class="entryboxMedium" onkeyup="AMdisplay('student_answer2','student_answer2_output',true)">
+Einstein's famous formula is
+
+`E=mc^2`,
+
+where `E` is energy, `m` is mass and `c` is the speed of light.</textarea>
+        <br />
+        <!-- This break and all others below are included so that bizzare behavouir of the floating boxes doesn't occur. -->
+        <div class="tutorialText">
+            <p>
+                Try removing the blank lines above and below the equation in the text box above.
+                After doing this, the equation will no longer appear on a separate line in the output.
+                This is intentional, as sometimes you will want to type an equation on a separate
+                line (for easy editing) without that occurring in the output.
+            </p>
+        </div>
+        <h2>
+            2. Symbols</h2>
+        <div class="tutorialText">
+            <p>
+                If you need to use a mathematical symbol, look it up in the <a href="SymbolList.html">
+                    symbol list</a>. ASCIIMath has standard functions predefined, so to get `sin
+                x` just type \`sin x\` and `ln x` type \`ln x\`.</p>
+        </div>
+        <div class="mpar">
+            Remember left-quotes (i.e. \`) are used to indicate mathematics.</div>
+        <div class="tutorialText">
+            <p>
+                Greek letters are produced by typing the name of the letter, e.g. \`alpha\` gives
+                `alpha` and \`beta\` gives `beta`. To get capital Greek letters, capitalise the
+                first letter of the name, e.g. \`Sigma\` gives `Sigma`, whereas \`sigma\` gives
+                `sigma`.</p>
+            <p>
+                For addition and subtraction, just use the symbols on the keyboard. For division,
+                type \`3 -: 4\` to get `3-: 4` or \`3//4\` to get `3//4`. There are several symbols
+                for multiplication and these are shown in the box below.</p>
+        </div>
+        <div class="answer" id="student_answer3_output">
+            Typing `2xx7 = 14` and `2 times 7 =14` gives the same output.
+            <p></p>
+            You might also want
+            to write this as `2*7=14` or even `2**7=14`.</div>
+        <textarea class="entryboxMedium" id="student_answer3" onkeyup="AMdisplay('student_answer3','student_answer3_output',true)">
+Typing `2xx7 = 14` and `2 times 7 =14` gives the same output.
+
+You might also want to write this as `2*7=14` or even `2**7=14`.</textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                Type the following expressions, referring to the <a href="SymbolList.html">symbol list</a>
+                if necessary.
+            </p>
+            <p>
+                `\ \ \ \ \ ` `int cos x dx` `\ \ \ \ \ \ \ \ ` `f @ g (x)` `\ \ \ \ \ \ \ \ ` `x in RR` `\ \
+                \ \ \ \ \ \ ` `phi: A -> B`
+            </p>
+        </div>
+        <div class="answer" id="student_answer4_output">
+        </div>
+        <textarea class="entrybox" id="student_answer4" onkeyup="AMdisplay('student_answer4','student_answer4_output',true)"></textarea>
+        <br />
+        <div class="tutorialText">
+            To check your answers, hang the mouse pointer over one of the expressions above.
+            After a couple of seconds a box will appear showing the ASCIIMath used to type the
+            expression. You can always use this to see the ASCIIMath.</div>
+        <h2>
+            3. Indices, subscripts, fractions and brackets</h2>
+        <div class="mpar" style="margin-top: 0px">
+            Notice the brackets in \`e^(2x)\` don't appear in the output `e^(2x)`. In the expression
+            `f^((3)) (x)` for the third derivative of `f`, we want the brackets to appear so
+            we type \`f^((3))(x)\`.</div>
+        <div class="tutorialText">
+            <p>
+                To get an index we use the symbol ^, so for example \`x^2\` gives `x^2`. An index
+                that is anything other than a number or a single letter requires brackets. So to
+                get `e^(2x)` we type \`e^(2x)\`, because \`e^2x\` gives `e^2x`. However \`p^32\`
+                gives `p^32` and \`x^alpha\` gives `x^alpha`.
+            </p>
+            <p>
+                The symbol _ is used for subscripts and they work in the same way as indices. So
+                \`x_10\` gives `x_10` and it is necessary to use brackets in \`x_(ij)\` to get `x_(ij)`.
+            </p>
+        </div>
+	<br />
+        <div class="mpar">
+            Remember you can check your answers by hanging the mouse over the expression.</div>
+        <div class="tutorialText">
+            <p>
+                Use the text box to type the expressions below.
+            </p>
+            <p>
+                `\ \ \ \ ` `e^x` `\ \ \ \ ` `pi^2` `\ \ \ \ ` `(x + 1)^2` `\ \ \ \ ` `x^3 + 4x^2
+                - 5` `\ \ \ \ ` `a_(nm)` `\ \ \ \ ` `x_2^3`
+            </p>
+        </div>
+	<br />
+        <div class="answer" id="student_answer5_output">
+        </div>
+        <textarea class="entrybox" id="student_answer5" onkeyup="AMdisplay('student_answer5','student_answer5_output',true)"></textarea>
+        <div class="tutorialText">
+            <p>
+                The index and subscript notation is used to put the upper and lower limits on integrals
+                and sums, as in the examples below.</p>
+        </div>
+        <div class="answer" id="student_answer6_output">
+            `sum_(k=1)^n k = 1+2+ cdots +n=(n(n+1))/2`
+            <p>
+            </p>
+            `int_0^1 x^2 dx`</div>
+        <textarea class="entryboxMedium" id="student_answer6" onkeyup="AMdisplay('student_answer6','student_answer6_output',true)">
+`sum_(k=1)^n k = 1+2+ cdots +n=(n(n+1))/2`
+
+
+
+`int_0^1 x^2 dx`</textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                As you can see above, the symbol \`/\` is used for fractions. Unless they are very
+                simple expressions, the denominator and numerator must be enclosed in brackets (which
+                don't appear in the output). So, for example
+            </p>
+            <p>
+                `\ \ \ \ ` `1/(x+1)`
+            </p>
+            <p>
+                is achieved by typing \`1/(x+1)\`. What do you think would be produced by typing
+                \`1/x+1\`?
+            </p>
+            <p>
+                Both \`x_n/10\` and \`(x_n)/(10)\` give the same output, so sometimes it is not
+                necessary to use brackets. Try typing the following expressions and experiment with
+                using/missing out brackets to produce the same output.
+            </p>
+            <p>
+                `\ \ \ \ ` `(x+1)/(x+1)` `\ \ \ \ ` `(x+1)/x^2` `\ \ \ \ ` `1/3245` `\ \ \ \ ` `dy/dx`
+                `\ \ \ \ ` `(ab)/(cd)`
+            </p>
+        </div>
+        <div class="answer" id="student_answer7_output">
+        </div>
+        <textarea class="entrybox" id="student_answer7" onkeyup="AMdisplay('student_answer7','student_answer7_output',true)"></textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                Remember that we can get a one line fraction by using //.</p>
+        </div>
+        <div class="answer" id="student_answer8_output">
+            You may wish to use this for fractions that appear as indices, because it is easier
+            to read `e^(x//2)` than `e^(x/2)`.</div>
+        <textarea class="entryboxMedium" id="student_answer8" onkeyup="AMdisplay('student_answer8','student_answer8_output',true)">
+You may wish to use this for fractions that appear as indices, because it is easier to read `e^(x//2)` than `e^(x/2)`.</textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                Finally, use \`sqrt(x)\` for `\sqrt(x)` and \`root(x)(y)\` for `root(x)(y)`. Use
+                the box below to type the formula for the solutions of the equation `ax^2+bx+c=0`,
+                where `a !=0`.</p>
+        </div>
+        <div class="answer" id="student_answer9_output">
+        </div>
+        <textarea class="entrybox" id="student_answer9" onkeyup="AMdisplay('student_answer9','student_answer9_output',true)"></textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                [Hint: the formula appears at the top of this page and you may need to use the symbol
+                list.]</p>
+        </div>
+        <h2>
+            4. Spaces, multiple lines and text</h2>
+        <div style="margin-top: 0px;" class="mpar">
+            In some browsers, the words quad and qquad will produce longer spaces than a backslash
+            and a space.</div>
+        <div class="tutorialText">
+            <p>
+                ASCIIMath should generate spaces that are about right in the output, but if you
+                want to get an extra space in the mathematics you can use a backslash and a space
+                i.e. \`\ \`. Extra spaces are especially useful when you want to put more than one
+                expression on a line, as in the example below.
+            </p>
+        </div>
+        <div class="answer" id="student_answer10_output">
+            We set
+            <p>
+            </p>
+            `a=3, \ \ \ b=-3,\ \ ` and `\ \ c=2`.
+            <p>
+            </p>
+            Thus `(a+b)(c+b)=0`.</div>
+        <textarea class="entryboxMedium" id="student_answer10" onkeyup="AMdisplay('student_answer10','student_answer10_output',true)">
+We set
+
+`a=3, \ \ \ b=-3,\ \ ` and `\ \ c=2`.
+
+Thus `(a+b)(c+b)=0`.</textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                Notice that the punctuation of the sentence appears in the middle line even though
+                it is mainly mathematical formulae. When beginning to type mathematics it might
+                feel strange to include punctuation, but it is important to do so.
+            </p>
+            <p>
+                When answering questions that require several lines of working you may like to follow
+                the format of the example below. Because the second, third and fourth lines have been indented
+                it makes it clear that all lines are equal to `x`.
+            </p>
+        </div>
+        <div class="answer" id="student_answer11_output">
+            Using the quadratic formula, the roots of `x^2-6x+4=0` are
+            <p></p>
+            `x = (-6 +- sqrt((-6)^2 - 4 (1)(4)))/(2 xx 1)`
+            <p></p>
+            `\ \ = (-6 +- sqrt(36 - 16))/2`
+            <p></p>
+            `\ \ =(-6 +- sqrt(20))/2`
+            <p></p>
+            `\ \ = -0.8 or 2.2 \ \ \ `to 1 decimal place.</div>
+        <textarea class="entryboxLarge" id="student_answer11" onkeyup="AMdisplay('student_answer11','student_answer11_output',true)">
+Using the quadratic formula, the roots of `x^2-6x+4=0` are
+
+`x = (-6 +- sqrt((-6)^2 - 4 (1)(4)))/(2 xx 1)`
+
+`\ \ = (-6 +- sqrt(36 - 16))/2`
+
+`\ \ =(-6 +- sqrt(20))/2`
+
+`\ \ = -0.8 or 2.2 \ \ \ `to 1 decimal place.</textarea>
+        <br />
+        <div class="mpar" style="margin-top: -30px">
+                There is a full stop at the end of the last line in this example because
+                it is at the end of a sentence, albeit a sentence with a lot of mathematics in it.
+        </div>
+        <div class="tutorialText">
+        <p>
+            On the last line in the example above we have used the word "or".  ASCIIMath recognises the words
+            "or", "and" and "if".  Any other words need to be enclosed in inverted commas or using \`text(some words)\`.
+            Try removing the inverted commas in the example below to see their effect.</p></div>
+        <br />
+	<div class="answer" id="student_answer11a_output">`sin = "opp"/"hyp" \ \ \  and \ \ \ cos = text(adj)/text(hyp)`.</div>
+        <textarea class="entrybox" id="student_answer11a"  onkeyup="AMdisplay('student_answer11a','student_answer11a_output',true)">`sin = "opp"/"hyp"
+\ \ \  and \ \ \
+cos = text(adj)/text(hyp)`.</textarea>
+	<br />
+        <h2>
+            5. Matrices and advanced alignment</h2>
+        <div class="tutorialText">
+            <p>
+                The ASCIIMath notation for matrices is demonstrated below.
+            </p>
+        </div>
+        <div class="answer" id="student_answer12_output">
+            A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.
+            <p>
+            </p>
+            The outer brackets determine the delimiters e.g. `|(a,b),(c,d)|=ad-bc`.
+            <p>
+            </p>
+            A general `m xx n` matrix `((a_(11), cdots , a_(1n)),(vdots, ddots, vdots),(a_(m1),
+            cdots , a_(mn)))`
+        </div>
+        <textarea class="entryboxLarge" id="student_answer12" onkeyup="AMdisplay('student_answer12','student_answer12_output',true)">
+A `3xx3` matrix,
+`((1,2,3),(4,5,6),(7,8,9))`,
+and a `2xx1` matrix, or vector, `((1),(0))`.
+
+The outer brackets determine the delimiters e.g.
+`|(a,b),(c,d)|=ad-bc`.
+
+A general `m xx n` matrix
+`((a_(11), cdots , a_(1n)),(vdots, ddots, vdots),(a_(m1), cdots , a_(mn)))`</textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                Alter the text in the box above so that it starts with
+            </p>
+            <p>
+                `\ \ \ \ \ `A `3 xx 2` matrix ,`((1,2),(3,4),(5,6))`,...
+            </p>
+            <p>
+                In the general `m xx n` matrix, we used \`cdots\` for centred dots. This can be
+                useful when writing infinite series, for example
+            </p>
+        </div>
+        <div class="answer" id="student_answer13_output">
+            `e^x = 1+x+1/(2!)x^2 + 1/(3!)x^3 + cdots `.</div>
+        <textarea class="entrybox" id="student_answer13" onkeyup="AMdisplay('student_answer13','student_answer13_output',true)">
+`e^x = 1+x+1/(2!)x^2 + 1/(3!)x^3 + cdots `.</textarea>
+        <div class="tutorialText">
+            <p>
+                Similarly, for low dots, as in `1, ldots, n` use \`...\` or \`ldots\`.
+            </p>
+            <p>
+                The matrix notation can be used for aligning material. When doing this, we will
+                want to draw matrices without delimiters. For this purpose, we can type \`{:\` and
+                \`:}\` to get invisible brackets. This is necessary when defining a function by
+                cases.
+            </p>
+        </div>
+        <div class="answer" id="student_answer14_output">
+            `|x|= {(x , if x ge 0 text(,)),(-x , if x <0.):}`</div>
+        <textarea class="entrybox" id="student_answer14" onkeyup="AMdisplay('student_answer14','student_answer14_output',true)">
+`|x|= {(x , if x ge 0 text(,)),(-x , if x <0.):}`</textarea>
+        <br />
+        <div class="tutorialText">
+            <p>
+                Notice the use of \`text( )\` round
+                the comma after `x ge 0` to indicate that it really is a comma and not part of the
+                matrix syntax. Try to write the matrix below and then try to write the function
+                definition using a matrix with two invisible brackets.
+            </p>
+        </div>
+        <div class="mpar">
+            You can look up symbols in the <a href="SymbolList.html">symbol list</a>.</div>
+        <div class="tutorialText">
+            <p style="text-align: center;">
+                `((1,2,3,4),(a,b,c,d))` `\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ` `{:(f:,[0,6],
+                ->, RR),( ,x ,|->, x^2+1):}`
+            </p>
+        </div>
+        <br />
+        <div class="answer" id="student_answer15_output">
+        </div>
+        <textarea class="entrybox" id="student_answer15" onkeyup="AMdisplay('student_answer15','student_answer15_output',true)"></textarea>
+        <div class="footerBox">
+            <div class="headerFooterContent">
+                <h3>
+                    Acknowledgements</h3>
+                <p>
+                    The ASCIIMath syntax and javascripts were developed by Peter Jipsen (Chapman University).
+                    Further information can be found at the <a href="http://www1.chapman.edu/~jipsen/mathml/asciimath.html">
+                        ASCIIMath Homepage</a>.
+                </p>
+                <p>
+                    The javascripts for this page were adapted from Peter Jipsen's <a href="http://math.chapman.edu/email/">
+                        ASCIIMath email editor</a> by Keith Brunton at Edinburgh University.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

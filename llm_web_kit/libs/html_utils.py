@@ -127,3 +127,19 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
     md_str = '\n'.join(markdown_table)
     return md_str.strip()
+
+
+def table_cells_count(table_html_source: str) -> int:
+    """获取表格的单元格数量.
+    当只有1个单元格时，这个table就要被当做普通的一个段落处理。
+    Args:
+        table_html_source: str: 表格的html源码
+
+    Returns:
+        int: 单元格数量
+    """
+    table_el = html_to_element(table_html_source)
+    # 计算 <table> 中的 <td> 和 <th> 单元格数量
+    cells = table_el.xpath('.//td | .//th')
+    number_of_cells = len(cells)
+    return number_of_cells

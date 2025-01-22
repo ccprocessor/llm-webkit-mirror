@@ -1,11 +1,21 @@
 from lxml.html import HtmlElement
 
-from llm_web_kit.pipeline.extractor.html.recognizer.code.common import \
-    replace_node_by_cccode
+from llm_web_kit.pipeline.extractor.html.recognizer.code.common import (
+    _BLOCK_ELES, replace_node_by_cccode)
 
 """
 处理仅由<code>标签组成的代码块
 """
+
+
+def __get_html_element(root: HtmlElement, node_path: list[str]) -> HtmlElement:
+    path = '/'.join(node_path)
+    path = '/'.join(path.removeprefix('/').split('/')[1:])
+    if not path:
+        return root
+    node = root.find(path, {'og': 'http://ogp.me/ns'})
+    assert node is not None
+    return node
 
 
 def __group_code_by_distance(
@@ -32,12 +42,9 @@ def __group_code_by_distance(
     def check_trees_done(length: int) -> bool:
         for i in range(len(node_paths)):
             if i == get_father(i):
-                path = '/'.join(root_paths[i])
-                path = '/'.join(path.removeprefix('/').split('/')[1:])
-                if not path:
-                    text = ''.join(root.itertext())
-                else:
-                    text = ''.join(root.find(path, {'og': 'http://ogp.me/ns'}).itertext())
+                node = __get_html_element(root, root_paths[i])
+                text: str = ''.join(node.itertext())
+
                 # 替换之前的 magic number
                 # 如果出现一棵子树，其组成的内容不存在任何单词
                 # 那么认为它是用于代码格式化的空白换行结构，或是 { } 等格式符号
@@ -57,15 +64,24 @@ def __group_code_by_distance(
                 if check_trees_done(l):
                     break
                 edge_len = l
-            used_edge += 1
-            father[j] = i
             for idx, (x, y) in enumerate(zip(root_paths[i], root_paths[j])):
                 if idx == 0:
                     continue
                 if x != y:
                     common_node_idx = idx
                     break
+            maybe_tree_root = __get_html_element(root, root_paths[i][:common_node_idx])
+
+            """
+            并非所有 inline code 都可以识别出来
+            让根结点无法包含已经识别出来的 inline code，避免过度合并
+            """
+            if len(maybe_tree_root.xpath('.//cccode')) > 0:
+                break
+
             root_paths[i] = root_paths[i][:common_node_idx]
+            used_edge += 1
+            father[j] = i
 
     root_paths = [
         root_path for i, root_path in enumerate(root_paths) if i == get_father(i)
@@ -178,6 +194,36 @@ def detect(body: HtmlElement) -> bool:
     return False
 
 
+def __detect_inline_code(root: HtmlElement, node_paths: list[list[str]]) -> tuple[list[list[str]], list[HtmlElement]]:
+    new_node_paths = []
+    inline_code = []
+
+    for node_path in node_paths:
+        ele = __get_html_element(root, node_path)
+
+        parent = ele
+        while parent.tag not in _BLOCK_ELES and parent.getparent() is not None:
+            parent = parent.getparent()
+
+        """
+        并非所有 inline code 都可以识别出来
+        """
+        full_text = ''.join([x for x in ''.join(parent.itertext(None)) if x.isalnum()])
+        code_text = ''
+        for x in parent.iter('code'):
+            for a in x.itertext():
+                for c in a:
+                    if c.isalnum():
+                        code_text += c
+        if full_text != code_text:
+            inline_code.append(ele)
+            continue
+
+        new_node_paths.append(node_path)
+
+    return new_node_paths, inline_code
+
+
 def modify_tree(root: HtmlElement) -> None:
     """将 html 树中所有 code 标签转换为代码块.
 
@@ -185,7 +231,13 @@ def modify_tree(root: HtmlElement) -> None:
         root: html 树的根节点
     """
     node_paths = __get_code_node_paths(root)  # 获取所有 code 标签的路径，不包含嵌套的子 code 标签
-    if len(node_paths) == 1:
+    node_paths, inline_code = __detect_inline_code(root, node_paths)
+    for node in inline_code:
+        replace_node_by_cccode(node, 'tag_code', False, True)
+
+    if len(node_paths) == 0:
+        tree_roots = []
+    elif len(node_paths) == 1:
         tree_roots = ['/'.join(node_paths[0])]
     else:
         dist_matrix = __compute_distance_matrix(node_paths)  # 计算距离矩阵

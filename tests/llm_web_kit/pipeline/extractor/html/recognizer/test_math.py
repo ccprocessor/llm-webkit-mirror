@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 
+from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.html_utils import html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
@@ -126,9 +127,9 @@ TEST_CASES_HTML = [
     },
     # img latex.php
     {
-        'input': ['assets/ccmath/img_latex_php.html'],
+        'input': ['assets/ccmath/geoenergymath_img.html'],
         'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
-        'expected': 'assets/ccmath/img_latex_php_1.html'
+        'expected': 'assets/ccmath/geoenergymath_img_1.html'
     },
     # # img codecogs.com
     {
@@ -142,13 +143,21 @@ TEST_CASES_HTML = [
         'base_url': 'https://math.eretrandre.org/tetrationforum/showthread.php?tid=965',
         'expected': 'assets/ccmath/img_mimetex_cgi_1.html'
     },
-    # katex latex+katex
     {
         'input': ['assets/ccmath/katex_mathjax.html'],
         'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
         'expected': 'assets/ccmath/katex_mathjax_1.html'
     },
-    
+    {
+        'input': ['assets/ccmath/asciimath.html'],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'assets/ccmath/asciimath_1.html'
+    },
+    {
+        'input': ['assets/ccmath/mathtex_script_type.html'],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'assets/ccmath/mathtex_script_type_1.html'
+    },
 ]
 
 TEST_EQUATION_TYPE = [
@@ -219,6 +228,13 @@ TEST_GET_MATH_RENDER = [
         ],
         'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
         'expected': 'mathjax',
+    },
+    {
+        'input': [
+            'assets/ccmath/math_katex_latex_2.html',
+        ],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'katex',
     }
 ]
 
@@ -327,7 +343,7 @@ class TestMathRecognizer(unittest.TestCase):
             '<div>Some math content</div>',
             '<div>Some math content</div>'
         )
-        with self.assertRaises(ValueError) as exc_info:
+        with self.assertRaises(HtmlMathRecognizerExp) as exc_info:
             self.math_recognizer.to_content_list_node(
                 invalid_content[0],
                 invalid_content[1],
