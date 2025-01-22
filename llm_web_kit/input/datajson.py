@@ -214,7 +214,7 @@ class StructureMapper(ABC):
             html_table = content_lst_node['content']['html']
             html_table = html_table.strip()
             cells_count = table_cells_count(html_table)
-            if cells_count == 1:  # 单个单元格的表格，直接返回文本
+            if cells_count <= 1:  # 单个单元格、只有行灭有单元格的表格，直接返回文本
                 text = get_element_text(html_to_element(html_table)).strip()
                 return text
             is_complex = content_lst_node['content']['is_complex']
