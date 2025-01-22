@@ -4,7 +4,8 @@ import unittest
 from lxml.html import HtmlElement
 
 from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
-                                         replace_element)
+                                         html_to_markdown_table,
+                                         replace_element, table_cells_count)
 
 
 class TestHtmlUtils(unittest.TestCase):
@@ -94,3 +95,53 @@ class TestHtmlUtils(unittest.TestCase):
         self.assertEqual(old_element.text, 'New content')
         self.assertEqual(old_element.get('a'), '1')
         self.assertEqual(old_element.get('b'), 'a')
+
+    def test_table_cells_count(self):
+        """测试表格单元格数量."""
+        html = '<table><tr><td>1</td><td>2</td></tr></table>'
+        self.assertEqual(table_cells_count(html), 2)
+
+    def test_table_cells_count_2(self):
+        """测试表格单元格数量."""
+        html = '<table><tr><td>1</td></tr></table>'
+        self.assertEqual(table_cells_count(html), 1)
+
+    def test_table_cells_count_3(self):
+        """测试表格单元格数量."""
+        html = '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>'
+        self.assertEqual(table_cells_count(html), 4)
+
+    def test_table_cells_count_4(self):
+        """测试表格单元格数量."""
+        html = '<table><tr><th>1</th><td>2</td></tr><tr><th>3</th><td>4</td></tr></table>'
+        self.assertEqual(table_cells_count(html), 4)
+
+    def test_html_to_markdown_table(self):
+        """测试html转换成markdown表格."""
+        html = '<table><tr><th>1</th><td>2</td></tr></table>'
+        self.assertEqual(html_to_markdown_table(html), '| 1 | 2 |\n|---|---|')
+
+    def test_html_to_markdown_table2(self):
+        """测试html转换成markdown表格."""
+        html = '<table><tr><th>1</th><th>2</th></tr><tr><td>3</td><td>4</td></tr></table>'
+        self.assertEqual(html_to_markdown_table(html), '| 1 | 2 |\n|---|---|\n| 3 | 4 |')
+
+    def test_html_to_markdown_table3(self):
+        """测试html转换成markdown表格."""
+        html = '<table><tr><th>1</th><th>2</th></tr><tr><td>3</td><td>4</td></tr><tr><td>5</td><td>6</td></tr></table>'
+        self.assertEqual(html_to_markdown_table(html), '| 1 | 2 |\n|---|---|\n| 3 | 4 |\n| 5 | 6 |')
+
+    def test_table4(self):
+        """测试html转换成markdown表格.测试空表格."""
+        html = """
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:3px">
+    <tr valign="bottom">
+
+    \t
+
+        </tr>
+        </table>
+        """
+        cell_count = table_cells_count(html)
+        self.assertEqual(cell_count, 0)
+        self.assertEqual(html_to_markdown_table(html), '')

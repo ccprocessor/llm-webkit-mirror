@@ -103,7 +103,7 @@ def html_to_markdown_table(table_html_source: str) -> str:
     """把html代码片段转换成markdown表格.
 
     Args:
-        table_html_source:
+        table_html_source: 被<table>标签包裹的html代码片段(含<table>标签)
 
     Returns:  如果这个表格内没有任何文字性内容，则返回空字符串
     """
@@ -112,17 +112,18 @@ def html_to_markdown_table(table_html_source: str) -> str:
     markdown_table = []
 
     # 检查第一行是否是表头
-    first_row_tags = rows[0].xpath('.//th') or rows[0].xpath('.//td')
+    first_row_tags = rows[0].xpath('.//th | .//td')  # 2个数组合并，防止有人<td><th>混用
     headers = [tag.text_content().strip() for tag in first_row_tags]
-
+    if not any(headers):
+        return ''
     # 添加表头
     markdown_table.append('| ' + ' | '.join(headers) + ' |')
     # 添加表头下的分隔符
     markdown_table.append('|' + '|'.join(['---'] * len(headers)) + '|')
 
     # 添加表格内容，跳过第一行如果它被当作表头
-    for row in rows[1 if first_row_tags[0].tag == 'th' else 0:]:
-        columns = [td.text_content().strip() for td in row.xpath('.//td')]
+    for row in rows[1:]:
+        columns = [td.text_content().strip() for td in row.xpath('.//td | .//th')]
         markdown_table.append('| ' + ' | '.join(columns) + ' |')
 
     md_str = '\n'.join(markdown_table)

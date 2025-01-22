@@ -4,6 +4,7 @@ from typing import Optional
 from lxml.html import HtmlElement
 
 from llm_web_kit.libs.html_utils import element_to_html
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 _RE_COMBINE_WHITESPACE = re.compile(r'\s+')
 _BLOCK_ELES = [
@@ -134,5 +135,5 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, 
     node.set('by', by)
     node.set('html', origin_html)
     node.set('inline', 'true' if inline else 'false')
-    node.tag = 'cccode'  # type: ignore
+    node.tag = CCTag.CC_CODE_INLINE if inline else CCTag.CC_CODE  # type: ignore
     node.text = full_text  # type: ignore

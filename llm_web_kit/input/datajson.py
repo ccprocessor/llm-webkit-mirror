@@ -60,7 +60,7 @@ class StructureMapper(ABC):
         Returns:
             str: txt格式的文本内容
         """
-        text_blocks = []  # 每个是个DocElementType规定的元素块之一转换成的文本
+        text_blocks: list[str] = []  # 每个是个DocElementType规定的元素块之一转换成的文本
         content_lst = self._get_data()
         for page in content_lst:
             for content_lst_node in page:
@@ -183,8 +183,7 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.VIDEO:
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
-            title_content = content_lst_node['content'].get('title_content', '')
-            title_content = title_content.strip()
+            title_content = content_lst_node['content'].get('title_content', '').strip()
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
@@ -214,7 +213,7 @@ class StructureMapper(ABC):
             html_table = content_lst_node['content']['html']
             html_table = html_table.strip()
             cells_count = table_cells_count(html_table)
-            if cells_count == 1:  # 单个单元格的表格，直接返回文本
+            if cells_count <= 1:  # 单个单元格的表格，直接返回文本
                 text = get_element_text(html_to_element(html_table)).strip()
                 return text
             is_complex = content_lst_node['content']['is_complex']
@@ -361,11 +360,13 @@ class StructureMapper(ABC):
                 new_c = self.__escape_md_special_chars(c)  # 转义特殊字符
                 one_para.append(new_c)
             elif el['t'] == ParagraphTextType.EQUATION_INLINE:
-                one_para.append(f" ${el['c'].strip()}$ ")
+                one_para.append(f"${el['c'].strip()}$")
+            elif el['t'] == ParagraphTextType.CODE_INLINE:
+                one_para.append(f"`{el['c'].strip()}`")
             else:
                 raise ValueError(f'paragraph_el_lst contains invalid element type: {el["t"]}')
 
-        return ''.join(one_para)
+        return ' '.join(one_para)
 
 
 class StructureChecker(object):
