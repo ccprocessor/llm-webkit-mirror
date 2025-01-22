@@ -37,10 +37,10 @@ LATEX_IMAGE_CLASS_NAMES = [
 ]
 
 LATEX_IMAGE_SRC_NAMES = [
-    'codecogs.com', 
-    'latex.php', 
-    '/images/math/codecogs', 
-    'mimetex.cgi', 
+    'codecogs.com',
+    'latex.php',
+    '/images/math/codecogs',
+    'mimetex.cgi',
     'mathtex.cgi',
 ]
 
