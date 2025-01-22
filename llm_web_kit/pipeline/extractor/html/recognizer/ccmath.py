@@ -128,7 +128,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
-            # script[type="math/tex"], TODO: 需要进行wrap_math
+            # script[type="math/tex"]
             if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
