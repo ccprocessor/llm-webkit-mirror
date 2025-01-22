@@ -39,7 +39,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 return
             if text and text_strip(text):
                 text = text_strip(text)
-                wrapped_asciimath = replace_asciimath(text)
+                wrapped_asciimath = replace_asciimath(cm,text)
                 new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_asciimath, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
         else:
@@ -48,7 +48,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         raise HtmlMathRecognizerExp(f'Error processing asciimath: {e}')
 
 
-def replace_asciimath(text):
+def replace_asciimath(cm: CCMATH,text):
     def process_match(match):
         try:
             if match:
@@ -57,7 +57,7 @@ def replace_asciimath(text):
                 if asciimath_text:
                     # asciimath -> latex
                     wrapped_text = extract_asciimath(asciimath_text)
-                    wrapped_text = wrapped_text.replace('$','')
+                    wrapped_text = cm.wrap_math_md(wrapped_text)
                 else:
                     wrapped_text = ''
                 return wrapped_text
