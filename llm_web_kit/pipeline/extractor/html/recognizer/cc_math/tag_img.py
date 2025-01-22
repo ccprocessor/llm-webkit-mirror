@@ -14,9 +14,9 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         new_tag = CCMATH_INTERLINE
         math_type = MathType.LATEX
 
-        class_name = node.get('class')
+        class_name = node.get("class")
         if class_name and class_name in LATEX_IMAGE_CLASS_NAMES:
-            text = node.get('alt')
+            text = node.get("alt")
             if text and text_strip(text):
                 text = cm.wrap_math_md(text)
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
@@ -29,11 +29,11 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
 
-        src_name = node.get('src')
+        src_name = node.get("src")
         if src_name:
             if any(s in src_name for s in LATEX_IMAGE_SRC_NAMES):
                 if any(src in src_name for src in ["latex.php", "/images/math/codecogs"]):
-                    text = node.get('alt')
+                    text = node.get("alt")
                     if text and text_strip(text):
                         text = unquote(text)
                         text = cm.wrap_math_md(text)
@@ -48,4 +48,4 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                     replace_element(node, new_span)
 
     except Exception as e:
-        raise HtmlMathRecognizerExp(f'Error processing img tag: {e}')
+        raise HtmlMathRecognizerExp(f"Error processing img tag: {e}")
