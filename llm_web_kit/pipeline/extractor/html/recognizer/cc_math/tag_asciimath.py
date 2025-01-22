@@ -6,7 +6,7 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.html_utils import build_cc_element, element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
-    EQUATION_INTERLINE, MathType, text_strip)
+    EQUATION_INTERLINE, MathRender, MathType, text_strip)
 
 
 def _translator():
@@ -30,7 +30,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
     try:
         text = node.text
         equation_type, math_type = cm.get_equation_type(o_html)
-        if math_type == MathType.ASCIIMATH:
+        if math_type == MathType.ASCIIMATH and math_render and math_render == MathRender.ASCIIMath:
             if equation_type == EQUATION_INLINE:
                 new_tag = CCMATH_INLINE
             elif equation_type == EQUATION_INTERLINE:

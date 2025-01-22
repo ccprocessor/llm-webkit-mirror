@@ -63,6 +63,7 @@ class MathType:
 class MathRender:
     MATHJAX = 'mathjax'
     KATEX = 'katex'
+    ASCIIMath = 'asciimath'
 
 
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
@@ -148,6 +149,10 @@ class CCMATH():
         for link in tree.iter('link'):
             if link.get('href') and 'katex' in link.get('href', '').lower():
                 return MathRender.KATEX
+
+        for script in tree.iter('script'):
+            if script.get('src') and 'asciimath' in script.get('src', '').lower():
+                return MathRender.ASCIIMath
 
         return None
 
