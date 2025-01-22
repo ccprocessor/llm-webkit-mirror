@@ -10,7 +10,7 @@ if the code does not use integers for index variables, when possible `convertToS
 the index variables and select `int32` types for
 them.
 
-### Limit Use of  `assert`  Statements
+### Limit Use of `assert` Statements
 
 - Do not use `assert` statements
 to define the properties of input arguments.
@@ -58,7 +58,7 @@ are not supported for code generation. See Check Code Using the MATLAB Code Anal
 the app screens your code for code generation readiness. At the function
 line, you can use the Code Generation Readiness Tool. See Check Code Using the Code Generation Readiness Tool.
 
-### Use the  `-args`  Option to Specify Input Properties
+### Use the `-args` Option to Specify Input Properties
 
 When you generate single-precision MATLAB code, if you
 specify a test file, you do not have to specify argument properties

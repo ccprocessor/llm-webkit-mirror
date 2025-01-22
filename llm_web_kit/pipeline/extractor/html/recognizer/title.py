@@ -114,16 +114,17 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         Returns:
             str: 标题的文本
         """
-        text = ''
+        blks = []
         for child in header_el.iter(None):
             if child.tag == CCTag.CC_CODE_INLINE:
-                text += f' `{child.text}` '
-                text += child.tail or ''
+                blks.append(f'`{child.text}`')
+                blks.append((child.tail or '').strip())
             else:
-                text += child.text or ''
-                text += child.tail or ''
+                blks.append((child.text or '').strip())
+                blks.append((child.tail or '').strip())
 
-        return text
+        blks = [blk for blk in blks if blk]
+        return ' '.join(blks)
 
     def __get_attribute(self, html:str) -> Tuple[int, str]:
         """获取element的属性."""

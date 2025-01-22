@@ -2,13 +2,14 @@ from lxml.html import HtmlElement
 
 from llm_web_kit.pipeline.extractor.html.recognizer.code.common import \
     replace_node_by_cccode
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 
 def modify_tree(root: HtmlElement) -> None:
     for pre_node in root.iter('pre'):
         assert isinstance(pre_node, HtmlElement)
         hit = False
-        for _ in pre_node.iter('cccode'):
+        for _ in pre_node.iter(CCTag.CC_CODE):
             hit = True
             break
         if not hit:
@@ -27,7 +28,7 @@ def detect(root: HtmlElement) -> bool:
     for pre_node in root.iter('pre'):
         assert isinstance(pre_node, HtmlElement)
         hit = False
-        for _ in pre_node.iter('cccode'):
+        for _ in pre_node.iter(CCTag.CC_CODE):
             hit = True
             break
         if not hit:
