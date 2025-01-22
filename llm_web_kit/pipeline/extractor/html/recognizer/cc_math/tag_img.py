@@ -1,5 +1,6 @@
 from lxml.html import HtmlElement
 
+from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.html_utils import build_cc_element, replace_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INTERLINE, LATEX_IMAGE_CLASS_NAMES, MathType, text_strip)
@@ -18,4 +19,4 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 replace_element(node, new_span)
 
     except Exception as e:
-        raise ValueError(f'Error processing script mathtex: {e}')
+        raise HtmlMathRecognizerExp(f'Error processing script mathtex: {e}')

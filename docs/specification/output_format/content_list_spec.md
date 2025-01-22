@@ -144,7 +144,8 @@
 {
     "type": "code",
     "bbox": [0, 0, 50, 50],
-    "raw_content": "<code>def add(a, b):\n    return a + b</code>"
+    "raw_content": "<code>def add(a, b):\n    return a + b</code>",
+    "inline": false,
     "content": {
           "code_content": "def add(a, b):\n    return a + b",
           "language": "python",
@@ -158,6 +159,7 @@
 | type                 | string | 值固定为code                  | 是       |
 | bbox                 | array  | \[x1, y1, x2, y2\]            | 可选     |
 | raw_content          | string | 原始文本内容                  | 可选     |
+| inline               | bool   | 是否为行内代码                | 是       |
 | content.code_content | string | 干净的，格式化过的代码内容    | 是       |
 | content.language     | string | 代码语言，python\\cpp\\php... | 可选     |
 | content.by           | string | 哪种代码高亮工具 、自定义规则 | 是       |
