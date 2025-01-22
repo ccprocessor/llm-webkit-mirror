@@ -97,6 +97,13 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     para_text.append({'c':text, 't':type_text})
                     text = ''
                 para_text.append({'c':child.text, 't':type_equation_inline})
+            elif child.tag == CCTag.CC_CODE_INLINE:
+                if text:
+                    para_text.append({'c':text, 't':type_text})
+                    text = ''
+                para_text.append({'c':child.text, 't':ParagraphTextType.CODE_INLINE})
+                if child.tail:
+                    para_text.append({'c':child.tail, 't':ParagraphTextType.TEXT})
             else:
                 text += child.text or ''
                 text += child.tail or ''

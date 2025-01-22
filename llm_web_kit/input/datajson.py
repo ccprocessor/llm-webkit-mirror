@@ -1,4 +1,3 @@
-import copy
 import json
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -64,25 +63,11 @@ class StructureMapper(ABC):
         text_blocks: list[str] = []  # 每个是个DocElementType规定的元素块之一转换成的文本
         content_lst = self._get_data()
         for page in content_lst:
-
-            prev_node = None
-            meet_inline = False
-
             for content_lst_node in page:
-                if prev_node is not None and content_lst_node.get('inline', False):
-                    if content_lst_node['type'] not in exclude_nodes:
-                        text_blocks[-1] += self.__content_lst_node_2_txt(content_lst_node)
-                    meet_inline = True
-                else:
-                    if meet_inline and prev_node['type'] == content_lst_node['type']:
-                        if content_lst_node['type'] not in exclude_nodes:
-                            text_blocks[-1] += self.__content_lst_node_2_txt(content_lst_node)
-                    else:
-                        if content_lst_node['type'] not in exclude_nodes:
-                            text_blocks.append(self.__content_lst_node_2_txt(content_lst_node))
-
-                    prev_node = content_lst_node
-                    meet_inline = False
+                if content_lst_node['type'] not in exclude_nodes:
+                    txt_content = self.__content_lst_node_2_txt(content_lst_node)
+                    if txt_content and len(txt_content) > 0:
+                        text_blocks.append(txt_content)
 
         txt = self.__txt_para_splitter.join(text_blocks)
         txt = txt.strip() + self.__text_end  # 加上结尾换行符
@@ -99,27 +84,12 @@ class StructureMapper(ABC):
         md_blocks = []  # 每个是个DocElementType规定的元素块之一转换成的文本
         content_lst = self._get_data()
         for page in content_lst:
-
-            prev_node = None
-            meet_inline = False
-
             for content_lst_node in page:
-                if prev_node is not None and content_lst_node.get('inline', False):
-                    if content_lst_node['type'] not in exclude_nodes:
-                        md_blocks[-1] += self.__content_lst_node_2_md(content_lst_node)
-                    meet_inline = True
-                else:
-                    if meet_inline and prev_node['type'] == content_lst_node['type']:
-                        if content_lst_node['type'] not in exclude_nodes:
-                            md_blocks[-1] += self.__content_lst_node_2_md(content_lst_node)
-                    else:
-                        if content_lst_node['type'] not in exclude_nodes:
-                            md_blocks.append(self.__content_lst_node_2_md(content_lst_node))
+                if content_lst_node['type'] not in exclude_nodes:
+                    txt_content = self.__content_lst_node_2_md(content_lst_node)
+                    if txt_content and len(txt_content) > 0:
+                        md_blocks.append(txt_content)
 
-                    prev_node = copy.deepcopy(content_lst_node)
-                    meet_inline = False
-
-        # TODO: inline 内容将 title 和 list 截断，需要由 title 和 list 抽取时才有的信息才能合并
         md = self.__md_para_splitter.join(md_blocks)
         md = md.strip() + self.__text_end  # 加上结尾换行符
         return md
@@ -171,7 +141,8 @@ class StructureMapper(ABC):
         """
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
-            code = content_lst_node['content'].get('code_content', '').strip()
+            code = content_lst_node['content'].get('code_content', '')
+            code = (code or '').strip()
             if not code:
                 return ''
             language = content_lst_node['content'].get('language', '')
@@ -390,11 +361,13 @@ class StructureMapper(ABC):
                 new_c = self.__escape_md_special_chars(c)  # 转义特殊字符
                 one_para.append(new_c)
             elif el['t'] == ParagraphTextType.EQUATION_INLINE:
-                one_para.append(f" ${el['c'].strip()}$ ")
+                one_para.append(f"${el['c'].strip()}$")
+            elif el['t'] == ParagraphTextType.CODE_INLINE:
+                one_para.append(f"`{el['c'].strip()}`")
             else:
                 raise ValueError(f'paragraph_el_lst contains invalid element type: {el["t"]}')
 
-        return ''.join(one_para)
+        return ' '.join(one_para)
 
 
 class StructureChecker(object):
