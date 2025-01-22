@@ -147,7 +147,7 @@ class StructureMapper(ABC):
                 return ''
             language = content_lst_node['content'].get('language', '')
             if content_lst_node.get('inline', False):
-                code = f' `{code}` '
+                code = f'`{code}`'
             else:
                 code = f'```{language}\n{code}\n```'
             return code
@@ -183,8 +183,7 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.VIDEO:
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
-            title_content = content_lst_node['content'].get('title_content', '')
-            title_content = (title_content or '').strip()
+            title_content = content_lst_node['content'].get('title_content', '').strip()
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
@@ -214,7 +213,7 @@ class StructureMapper(ABC):
             html_table = content_lst_node['content']['html']
             html_table = html_table.strip()
             cells_count = table_cells_count(html_table)
-            if cells_count == 1:  # 单个单元格的表格，直接返回文本
+            if cells_count <= 1:  # 单个单元格的表格，直接返回文本
                 text = get_element_text(html_to_element(html_table)).strip()
                 return text
             is_complex = content_lst_node['content']['is_complex']
@@ -276,7 +275,7 @@ class StructureMapper(ABC):
             code = (code or '').strip()
             language = content_lst_node['content'].get('language', '')
             if content_lst_node.get('inline', False):
-                code = f' `{code}` '
+                code = f'`{code}`'
             else:
                 code = f'```{language}\n{code}\n```'
             return code
