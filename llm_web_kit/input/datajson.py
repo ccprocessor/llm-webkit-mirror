@@ -1,3 +1,4 @@
+import copy
 import json
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -60,14 +61,28 @@ class StructureMapper(ABC):
         Returns:
             str: txt格式的文本内容
         """
-        text_blocks = []  # 每个是个DocElementType规定的元素块之一转换成的文本
+        text_blocks: list[str] = []  # 每个是个DocElementType规定的元素块之一转换成的文本
         content_lst = self._get_data()
         for page in content_lst:
+
+            prev_node = None
+            meet_inline = False
+
             for content_lst_node in page:
-                if content_lst_node['type'] not in exclude_nodes:
-                    txt_content = self.__content_lst_node_2_txt(content_lst_node)
-                    if txt_content and len(txt_content) > 0:
-                        text_blocks.append(txt_content)
+                if prev_node is not None and content_lst_node.get('inline', False):
+                    if content_lst_node['type'] not in exclude_nodes:
+                        text_blocks[-1] += self.__content_lst_node_2_txt(content_lst_node)
+                    meet_inline = True
+                else:
+                    if meet_inline and prev_node['type'] == content_lst_node['type']:
+                        if content_lst_node['type'] not in exclude_nodes:
+                            text_blocks[-1] += self.__content_lst_node_2_txt(content_lst_node)
+                    else:
+                        if content_lst_node['type'] not in exclude_nodes:
+                            text_blocks.append(self.__content_lst_node_2_txt(content_lst_node))
+
+                    prev_node = content_lst_node
+                    meet_inline = False
 
         txt = self.__txt_para_splitter.join(text_blocks)
         txt = txt.strip() + self.__text_end  # 加上结尾换行符
@@ -84,12 +99,27 @@ class StructureMapper(ABC):
         md_blocks = []  # 每个是个DocElementType规定的元素块之一转换成的文本
         content_lst = self._get_data()
         for page in content_lst:
-            for content_lst_node in page:
-                if content_lst_node['type'] not in exclude_nodes:
-                    txt_content = self.__content_lst_node_2_md(content_lst_node)
-                    if txt_content and len(txt_content) > 0:
-                        md_blocks.append(txt_content)
 
+            prev_node = None
+            meet_inline = False
+
+            for content_lst_node in page:
+                if prev_node is not None and content_lst_node.get('inline', False):
+                    if content_lst_node['type'] not in exclude_nodes:
+                        md_blocks[-1] += self.__content_lst_node_2_md(content_lst_node)
+                    meet_inline = True
+                else:
+                    if meet_inline and prev_node['type'] == content_lst_node['type']:
+                        if content_lst_node['type'] not in exclude_nodes:
+                            md_blocks[-1] += self.__content_lst_node_2_md(content_lst_node)
+                    else:
+                        if content_lst_node['type'] not in exclude_nodes:
+                            md_blocks.append(self.__content_lst_node_2_md(content_lst_node))
+
+                    prev_node = copy.deepcopy(content_lst_node)
+                    meet_inline = False
+
+        # TODO: inline 内容将 title 和 list 截断，需要由 title 和 list 抽取时才有的信息才能合并
         md = self.__md_para_splitter.join(md_blocks)
         md = md.strip() + self.__text_end  # 加上结尾换行符
         return md
@@ -141,13 +171,12 @@ class StructureMapper(ABC):
         """
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
-            code = content_lst_node['content'].get('code_content', '')
-            code = (code or '').strip()
+            code = content_lst_node['content'].get('code_content', '').strip()
             if not code:
                 return ''
             language = content_lst_node['content'].get('language', '')
             if content_lst_node.get('inline', False):
-                code = f'`{code}`'
+                code = f' `{code}` '
             else:
                 code = f'```{language}\n{code}\n```'
             return code
@@ -184,7 +213,7 @@ class StructureMapper(ABC):
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
             title_content = content_lst_node['content'].get('title_content', '')
-            title_content = title_content.strip()
+            title_content = (title_content or '').strip()
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
@@ -276,7 +305,7 @@ class StructureMapper(ABC):
             code = (code or '').strip()
             language = content_lst_node['content'].get('language', '')
             if content_lst_node.get('inline', False):
-                code = f'`{code}`'
+                code = f' `{code}` '
             else:
                 code = f'```{language}\n{code}\n```'
             return code
