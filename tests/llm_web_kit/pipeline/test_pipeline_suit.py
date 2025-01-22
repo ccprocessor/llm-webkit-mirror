@@ -135,29 +135,25 @@ class TestPipelineSuitHTML(unittest.TestCase):
         # code 前的文本
         html_content = html_content_list[11]
         self.assertEqual(html_content['type'], DocElementType.PARAGRAPH)
-        self.assertEqual(len(html_content['content']), 1)
+        self.assertEqual(len(html_content['content']), 2)
         self.assertEqual(html_content['content'][0]['c'], 'reference: ')
         self.assertEqual(html_content['content'][0]['t'], ParagraphTextType.TEXT)
+        self.assertEqual(html_content['content'][1]['c'], '#include<xxxx.hpp>')
+        self.assertEqual(html_content['content'][1]['t'], ParagraphTextType.CODE_INLINE)
 
-        # 带链接的inline code
-        html_content = html_content_list[12]
-        self.assertEqual(html_content['type'], DocElementType.CODE)
-        self.assertEqual(html_content['content']['code_content'], '#include<xxxx.hpp>')
-        self.assertEqual(html_content['content']['by'], 'tag_code')
-        self.assertEqual(html_content['inline'], True)
         # txt格式
         txt_content = result.get_content_list().to_txt()
         self.assertTrue('reference: `#include<xxxx.hpp>`' in txt_content)
-        self.assertEqual(len(txt_content), 582)  # TODO, 逐个元素检查，不用数字
+        self.assertEqual(len(txt_content), 586)  # TODO, 逐个元素检查，不用数字
         self.assertNotEqual(txt_content[-2], '\n')
         self.assertEqual(txt_content[-1], '\n')
 
         # md格式
         md_content = result.get_content_list().to_nlp_md()
-        self.assertEqual(len(md_content), 608)  # TODO, 逐个元素检查，不用数字
+        self.assertEqual(len(md_content), 612)  # TODO, 逐个元素检查，不用数字
         self.assertNotEqual(md_content[-2], '\n')
         self.assertEqual(md_content[-1], '\n')
 
         # main_html
         main_html = result.get_content_list().to_main_html()  # 获取main_html内容
-        assert len(main_html) == 1205
+        assert len(main_html) == 1328

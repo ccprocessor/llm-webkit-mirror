@@ -2,6 +2,7 @@ class ParagraphTextType(object):
     TEXT = 'text'
     MARKDOWN = 'md'
     EQUATION_INLINE = 'equation-inline'
+    CODE_INLINE = 'code-inline'
 
 
 class DocElementType(object):

@@ -21,4 +21,4 @@ def test_title_recognizer(title_recognizer):
     assert result[0][0] == """<html><body><cctitle level="1" html="&lt;h1&gt;大模型好，大模型棒1&lt;/h1&gt;
         ">大模型好，大模型棒1</cctitle></body></html>"""
     assert result[6][0] == """<html><body><cctitle level="3" html="&lt;h3&gt;大模型好，大模型棒5&lt;span&gt;大模型很棒&lt;/span&gt;&lt;/h3&gt;
-        ">大模型好，大模型棒5大模型很棒</cctitle></body></html>"""
+        ">大模型好，大模型棒5 大模型很棒</cctitle></body></html>"""

@@ -7,8 +7,8 @@ from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.code import (tag_code,
                                                                  tag_pre,
                                                                  tag_pre_code)
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
-    BaseHTMLElementRecognizer
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
+    BaseHTMLElementRecognizer, CCTag)
 
 
 class CodeRecognizer(BaseHTMLElementRecognizer):
@@ -73,7 +73,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
             html_str: str = element_to_html(root)
 
-            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, 'cccode'))
+            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, CCTag.CC_CODE))
 
         return rtn
 
