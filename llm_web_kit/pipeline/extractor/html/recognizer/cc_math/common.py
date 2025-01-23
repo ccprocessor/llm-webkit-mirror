@@ -113,12 +113,16 @@ class CCMATH():
         return '$' + s + '$'
 
     def wrap_math_md(self, s):
-        """去掉latex公式头尾的$$或$"""
+        """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
         s = s.strip()
         if s.startswith('$$') and s.endswith('$$'):
             return s.replace('$$', '')
         if s.startswith('$') and s.endswith('$'):
             return s.replace('$', '')
+        if s.startswith('\\(') and s.endswith('\\)'):
+            return s.replace('\\(', '').replace('\\)', '')
+        if s.startswith('\\[') and s.endswith('\\]'):
+            return s.replace('\\[', '').replace('\\]', '')
         return s
 
     def wrap_math_space(self, s):
@@ -266,3 +270,4 @@ if __name__ == '__main__':
     print(cm.wrap_math(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
+    print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))
