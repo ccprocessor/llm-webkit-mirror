@@ -117,7 +117,7 @@ TEST_CASES_HTML = [
     },
     {
         'input': ['assets/ccmath/asciimath.html'],
-        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'base_url': 'https://www.wjagray.co.uk/maths/ASCIIMathTutorial.html',
         'expected': 'assets/ccmath/asciimath_1.html'
     },
     {
@@ -148,10 +148,10 @@ TEST_EQUATION_TYPE = [
         'input': '<span>x<sub>1</sub> + x<sup>2</sup></span>',
         'expected': ('equation-inline', 'htmlmath')
     },
-    # {
-    #     'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> yields to `[[a,b],[c,d]]`</p>',
-    #     'expected': ('equation-inline', 'asciimath')
-    # },
+    {
+        'input': '<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>',
+        'expected': ('equation-interline', 'asciimath')
+    },
     {
         'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> </p>',
         'expected': (None, None)
