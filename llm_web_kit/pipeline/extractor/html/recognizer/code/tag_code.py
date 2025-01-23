@@ -2,6 +2,7 @@ from lxml.html import HtmlElement
 
 from llm_web_kit.pipeline.extractor.html.recognizer.code.common import (
     _BLOCK_ELES, replace_node_by_cccode)
+from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 """
 处理仅由<code>标签组成的代码块
@@ -16,6 +17,16 @@ def __get_html_element(root: HtmlElement, node_path: list[str]) -> HtmlElement:
     node = root.find(path, {'og': 'http://ogp.me/ns'})
     assert node is not None
     return node
+
+
+def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
+    full_text = ''.join([x for x in ''.join(node.itertext(None)) if not x.isspace()])
+    code_text = ''
+    for s in node.xpath('.//code//text()'):
+        for c in s:
+            if not c.isspace():
+                code_text += c
+    return full_text == code_text
 
 
 def __group_code_by_distance(
@@ -39,31 +50,14 @@ def __group_code_by_distance(
             edges.append((dist[i][j], i, j))
     edges = sorted(edges)
 
-    def check_trees_done(length: int) -> bool:
-        for i in range(len(node_paths)):
-            if i == get_father(i):
-                node = __get_html_element(root, root_paths[i])
-                text: str = ''.join(node.itertext())
-
-                # 替换之前的 magic number
-                # 如果出现一棵子树，其组成的内容不存在任何单词
-                # 那么认为它是用于代码格式化的空白换行结构，或是 { } 等格式符号
-                # 即：代码的树依旧不完整
-                if not any(c.isalpha() for c in text):
-                    return False
-        return True
-
     used_edge = 0
-    edge_len = edges[0][0]
+    meet = set()
     for edge in edges:
-        l, i, j = edge
+        _, i, j = edge
         i = get_father(i)
         j = get_father(j)
-        if i != j:
-            if l > edge_len:
-                if check_trees_done(l):
-                    break
-                edge_len = l
+        if i != j and (i, j) not in meet:
+            common_node_idx = min(len(root_paths[i]), len(root_paths[j]))
             for idx, (x, y) in enumerate(zip(root_paths[i], root_paths[j])):
                 if idx == 0:
                     continue
@@ -72,12 +66,13 @@ def __group_code_by_distance(
                     break
             maybe_tree_root = __get_html_element(root, root_paths[i][:common_node_idx])
 
-            """
-            并非所有 inline code 都可以识别出来
-            让根结点无法包含已经识别出来的 inline code，避免过度合并
-            """
-            if len(maybe_tree_root.xpath('.//cccode')) > 0:
-                break
+            if len(maybe_tree_root.xpath(f'.//{CCTag.CC_CODE}|.//{CCTag.CC_CODE_INLINE}')) > 0:
+                meet.add((i, j))
+                continue
+
+            if not __is_all_chars_in_code_element(maybe_tree_root):
+                meet.add((i, j))
+                continue
 
             root_paths[i] = root_paths[i][:common_node_idx]
             used_edge += 1
@@ -208,14 +203,7 @@ def __detect_inline_code(root: HtmlElement, node_paths: list[list[str]]) -> tupl
         """
         并非所有 inline code 都可以识别出来
         """
-        full_text = ''.join([x for x in ''.join(parent.itertext(None)) if x.isalnum()])
-        code_text = ''
-        for x in parent.iter('code'):
-            for a in x.itertext():
-                for c in a:
-                    if c.isalnum():
-                        code_text += c
-        if full_text != code_text:
+        if not __is_all_chars_in_code_element(parent):
             inline_code.append(ele)
             continue
 

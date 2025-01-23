@@ -269,9 +269,34 @@ class TestMathRecognizer(unittest.TestCase):
                 # print(expect, answer)
                 self.compare_code(expect, answer)
 
+    def test_inclusion(self):
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        raw_html = base_dir.joinpath('assets/cccode/telerik-case-2.html').read_text()
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': raw_html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list()
+        count = 0
+        for page in answer:
+            for item in page:
+                if item['type'] == 'code':
+                    count += 1
+        self.assertEqual(count, 1)
+
 
 if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
     r.test_code_rec()
     r.test_inline_code_output()
+    r.test_inclusion()

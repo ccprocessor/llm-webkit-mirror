@@ -66,7 +66,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 2
+        assert len(self.data_json) == 4
 
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
@@ -200,3 +200,30 @@ class TestPipelineSuitHTML(unittest.TestCase):
 
         html_content_list = result.get_content_list()[0]
         assert len(html_content_list) == 22
+
+    def test_mathlab_html_to_md(self):
+        """测试第二个数据：这个数据会丢失一些文本信息."""
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[2]  # matlab网页
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+
+        # Verify basic properties
+        self.assertEqual(result['track_id'], 'mathlab_code')
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn('### Use Integers for Index Variables', md_content)
+        self.assertIn('### Limit Use of `assert` Statements', md_content)
+
+    def test_list_to_md(self):
+        """测试第三个数据：这个数据会丢失一些文本信息."""
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[3]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        self.assertEqual(result['track_id'], 'educba_com_list')
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn('- Exception: All exceptions base class', md_content)
