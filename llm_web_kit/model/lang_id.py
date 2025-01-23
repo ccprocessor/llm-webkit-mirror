@@ -39,7 +39,7 @@ class LanguageIdentification:
     """Language Identification model using fasttext."""
 
     def __init__(self, model_path: str = None):
-        """Initialize LanguageIdentification model Will download the 176.bin
+        """Initialize LanguageIdentification model Will download the 218.bin
         model if model_path is not provided.
 
         Args:
@@ -51,15 +51,15 @@ class LanguageIdentification:
         self.model = fasttext.load_model(model_path)
 
     def auto_download(self):
-        """Default download the 176.bin model."""
-        resource_name = 'lang-id-176'
+        """Default download the 218.bin model."""
+        resource_name = 'lang-id-218'
         resource_config = load_config()['resources']
-        lang_id_176_config: dict = resource_config[resource_name]
-        lang_id_176_url = lang_id_176_config['download_path']
-        lang_id_176_md5 = lang_id_176_config.get('md5', '')
+        lang_id_218_config: dict = resource_config[resource_name]
+        lang_id_218_url = lang_id_218_config['download_path']
+        lang_id_218_sha256 = lang_id_218_config.get('sha256', '')
         target_path = os.path.join(CACHE_DIR, resource_name, 'model.bin')
         logger.info(f'try to make target_path: {target_path} exist')
-        target_path = download_auto_file(lang_id_176_url, target_path, lang_id_176_md5)
+        target_path = download_auto_file(lang_id_218_url, target_path, lang_id_218_sha256)
         logger.info(f'target_path: {target_path} exist')
         return target_path
 
@@ -116,7 +116,6 @@ def get_singleton_lang_detect(model_path: str = None) -> LanguageIdentification:
     Returns:
         LanguageIdentification: The language identification model
     """
-    # 基于 model_path 生成唯一的单例名称
     singleton_name = f'lang_detect_{model_path}' if model_path else 'lang_detect_default'
     
     if not singleton_resource_manager.has_name(singleton_name):
@@ -202,7 +201,7 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
         ValueError: Unsupported version.
             The prediction str is different for different versions of fasttext model.
             So the version should be specified.
-            Now only support version "176.bin"
+            Now only support version "176.bin" and "218.bin".
 
     Warning:
         The too long content string may be truncated.
@@ -253,32 +252,35 @@ def decide_lang_by_str(content_str: str, model_path: str = None) -> str:
 def decide_lang_by_str_v218(content_str: str, model_path: str = None) -> str:
     """Decide language based on the content string, displayed in the format of the fasttext218 model"""
     lang_detect = get_singleton_lang_detect(model_path)
-    return {'language_detail': lang_detect.predict(content_str)[0][0].replace("__label__", "")}
+    return lang_detect.predict(content_str)[0][0].replace("__label__", "")
 
 def update_language_by_str(content_str: str, model_path: str = None) -> str:
     """Decide language based on the content string."""
     return {'language': decide_lang_by_str(content_str,model_path)}
 
+def update_language_by_str_v218(content_str: str, model_path: str = None) -> str:
+    """Decide language based on the content string, displayed in the format of the fasttext218 model"""
+    return {'language': decide_lang_by_str_v218(content_str,model_path)}
 
 if __name__ == '__main__':
-    model_path = '/home/huyucheng/Downloads/lid218e.bin'
-    li = LanguageIdentification(model_path)
+    li = LanguageIdentification()
     print(li.version)
     text = 'hello world, this is a test. the language is english'
     predictions, probabilities = li.predict(text)
     
     print(predictions, probabilities)
     
-    print(update_language_by_str(text,model_path))
-    print(decide_lang_by_str_v218(text,model_path))
+    print(update_language_by_str(text))
+    print(update_language_by_str_v218(text))
+
     text = '你好，这是一个测试。这个语言是中文'
-    print(update_language_by_str(text,model_path))
+    print(update_language_by_str(text))
 
     text = "```python\nprint('hello world')\n``` 这是一个中文的文档，包含了一些代码"
-    print(update_language_by_str(text,model_path))
+    print(update_language_by_str(text))
 
     text = '$$x^2 + y^2 = 1$$ これは数式を含むテストドキュメントです'
-    print(update_language_by_str(text,model_path))
+    print(update_language_by_str(text))
 
     text = '\\begin{equation}\n x^2 + y^2 = 1 \n\\end{equation} This is a test document, including some math equations'
-    print(update_language_by_str(text,model_path))
+    print(update_language_by_str(text))
