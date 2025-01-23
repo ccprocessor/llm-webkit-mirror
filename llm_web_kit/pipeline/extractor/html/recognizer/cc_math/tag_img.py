@@ -19,6 +19,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             text = node.get('alt')
             if text and text_strip(text):
                 text = cm.wrap_math_md(text)
+                text = cm.wrap_math_space(text)
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
 
@@ -26,6 +27,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             if text_strip(text):
                 text = unquote(text)
                 text = cm.wrap_math_md(text)
+                text = cm.wrap_math_space(text)
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
 
@@ -37,6 +39,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                     if text and text_strip(text):
                         text = unquote(text)
                         text = cm.wrap_math_md(text)
+                        text = cm.wrap_math_space(text)
                         new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                         replace_element(node, new_span)
                 else:
@@ -44,6 +47,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                     text = '?'.join(text)
                     text = unquote(text)
                     text = cm.wrap_math_md(text)
+                    text = cm.wrap_math_space(text)
                     new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                     replace_element(node, new_span)
 
