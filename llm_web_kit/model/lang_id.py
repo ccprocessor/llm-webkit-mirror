@@ -35,6 +35,8 @@ language_dict = {
     'sat': 'sat', 'jpn': 'ja', 'shn': 'shn', 'grn': 'gn', 'fao': 'fo', 'zho': 'zh', 'awa': 'awa', 'aka': 'ak', 'ewo': 'ewo', 'srd': 'sc',
     'ady': 'ady'
 }
+
+
 class LanguageIdentification:
     """Language Identification model using fasttext."""
 
@@ -117,7 +119,7 @@ def get_singleton_lang_detect(model_path: str = None) -> LanguageIdentification:
         LanguageIdentification: The language identification model
     """
     singleton_name = f'lang_detect_{model_path}' if model_path else 'lang_detect_default'
-    
+
     if not singleton_resource_manager.has_name(singleton_name):
         singleton_resource_manager.set_resource(singleton_name, LanguageIdentification(model_path))
     return singleton_resource_manager.get_resource(singleton_name)
@@ -125,8 +127,9 @@ def get_singleton_lang_detect(model_path: str = None) -> LanguageIdentification:
 
 def decide_language_by_prob_v176(predictions: Tuple[str], probabilities: Tuple[float]) -> str:
     """Decide language based on probabilities The rules are tuned by Some
-    sepciific data sources.Now the function supports the lid218 model and outputs the language code of lid176
-    
+    sepciific data sources.Now the function supports the lid218 model and
+    outputs the language code of lid176.
+
     Args:
         predictions (Tuple[str]): the predicted languages labels by 176.bin model (__label__zh, __label__en, etc)
         probabilities (Tuple[float]): the probabilities of the predicted languages
@@ -140,10 +143,10 @@ def decide_language_by_prob_v176(predictions: Tuple[str], probabilities: Tuple[f
     pattern_218 = re.compile(r'^__label__([a-z]+)_[A-Za-z]+$')  # Matches __label__eng__Latn
     for lang_key, lang_prob in zip(predictions, probabilities):
         if pattern_176.match(lang_key):
-            lang = lang_key.replace("__label__", "")
+            lang = lang_key.replace('__label__', '')
         elif pattern_218.match(lang_key):
-            label_without_prefix = lang_key.replace("__label__", "")
-            lang_code = label_without_prefix.split("_")[0]
+            label_without_prefix = lang_key.replace('__label__', '')
+            lang_code = label_without_prefix.split('_')[0]
             lang = language_dict.get(lang_code, lang_code)
         else:
             raise ValueError(f'Unsupported prediction format: {lang_key}')
@@ -170,6 +173,7 @@ def decide_language_by_prob_v176(predictions: Tuple[str], probabilities: Tuple[f
         else:
             final_lang = 'mix'
     return final_lang
+
 
 LANG_ID_SUPPORTED_VERSIONS = ['176.bin', '218.bin']
 
@@ -249,27 +253,33 @@ def decide_lang_by_str(content_str: str, model_path: str = None) -> str:
 
     return decide_language_func(content_str, lang_detect)
 
+
 def decide_lang_by_str_v218(content_str: str, model_path: str = None) -> str:
-    """Decide language based on the content string, displayed in the format of the fasttext218 model"""
+    """Decide language based on the content string, displayed in the format of
+    the fasttext218 model."""
     lang_detect = get_singleton_lang_detect(model_path)
-    return lang_detect.predict(content_str)[0][0].replace("__label__", "")
+    return lang_detect.predict(content_str)[0][0].replace('__label__', '')
+
 
 def update_language_by_str(content_str: str, model_path: str = None) -> str:
     """Decide language based on the content string."""
     return {'language': decide_lang_by_str(content_str,model_path)}
 
+
 def update_language_by_str_v218(content_str: str, model_path: str = None) -> str:
-    """Decide language based on the content string, displayed in the format of the fasttext218 model"""
+    """Decide language based on the content string, displayed in the format of
+    the fasttext218 model."""
     return {'language': decide_lang_by_str_v218(content_str,model_path)}
+
 
 if __name__ == '__main__':
     li = LanguageIdentification()
     print(li.version)
     text = 'hello world, this is a test. the language is english'
     predictions, probabilities = li.predict(text)
-    
+
     print(predictions, probabilities)
-    
+
     print(update_language_by_str(text))
     print(update_language_by_str_v218(text))
 
