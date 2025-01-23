@@ -57,6 +57,7 @@ def __group_code_by_distance(
         i = get_father(i)
         j = get_father(j)
         if i != j and (i, j) not in meet:
+            common_node_idx = min(len(root_paths[i]), len(root_paths[j]))
             for idx, (x, y) in enumerate(zip(root_paths[i], root_paths[j])):
                 if idx == 0:
                     continue
