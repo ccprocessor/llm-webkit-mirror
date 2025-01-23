@@ -134,7 +134,7 @@ def table_cells_count(table_html_source: str) -> int:
     """获取表格的单元格数量.
     当只有1个单元格时，这个table就要被当做普通的一个段落处理。
     Args:
-        table_html_source: str: 表格的html源码
+        table_html_source: str: 被<table>标签包裹的html代码片段(含<table>标签)
 
     Returns:
         int: 单元格数量
