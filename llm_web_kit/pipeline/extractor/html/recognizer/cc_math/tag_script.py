@@ -32,6 +32,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                             new_tag = CCMATH_INTERLINE
                         else:
                             return
+                        formula_content = cm.wrap_math_md(formula_content)
                         new_span = build_cc_element(html_tag_name=new_tag, text=formula_content, tail=text_strip(target_element.tail), type=math_type, by=math_render, html=o_html)
                         replace_element(target_element, new_span)
             else:
@@ -44,6 +45,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 else:
                     return
                 if text and text_strip(text):
+                    text = cm.wrap_math_md(text)
                     new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                     replace_element(node, new_span)
         else:
@@ -60,6 +62,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 return
 
             if text and text_strip(text):
+                text = cm.wrap_math_md(text)
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
     except Exception as e:
