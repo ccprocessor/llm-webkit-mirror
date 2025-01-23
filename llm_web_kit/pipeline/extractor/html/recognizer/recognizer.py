@@ -11,6 +11,7 @@ from llm_web_kit.libs.logger import mylogger
 
 class CCTag:
     CC_CODE = 'cccode'
+    CC_CODE_INLINE = 'cccode-inline'
     CC_MATH_INLINE = 'ccmath-inline'
     CC_MATH_INTERLINE = 'ccmath-interline'
     CC_IMAGE = 'ccimage'

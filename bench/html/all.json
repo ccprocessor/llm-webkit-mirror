@@ -63,6 +63,14 @@
         "url": "https://www.cnblogs.com/xu-tao/p/16324793.html",
         "filepath":"cccode/code_16.html"
     },
+    "code_17_csdn":{
+        "url": "https://blog.csdn.net/moon_sky1999/article/details/52744845",
+        "filepath":"cccode/code_17_csdn.html"
+    },
+    "code_18_csdn":{
+        "url": "https://wenku.csdn.net/answer/4e4a79149fc949aa9b2550c138ecce92#buttons",
+        "filepath":"cccode/code_18_csdn.html"
+    },
     "img_1":{
         "url": "http://15.demooo.pl/produkt/okulary-ochronne/",
         "filepath":"ccimage/img_1.html"
@@ -140,11 +148,19 @@
         "filepath":"ccmath/math_none_mathml_1.html"
     },
     "table_1":{
-        "url": "https://10bestreviewz.com/automotive/best-underbody-underglow-kits",
+        "url": "https://grondwerken-overzicht.nl/noordwolde/gwy",
         "filepath":"cctable/table_1.html"
     },
     "table_2":{
-        "url": "https://112sport.hcc.edu.tw/Module/Score/FinalsReport_List.php?LID=203",
+        "url": "https://10bestreviewz.com/automotive/best-underbody-underglow-kits",
         "filepath":"cctable/table_2.html"
+    },
+    "table_3":{
+        "url": "https://cavaliers.co.uk/results/judges/Mrs%20S%20Hindle.htm",
+        "filepath":"cctable/table_3.html"
+    },
+    "table_4":{
+        "url": "https://112sport.hcc.edu.tw/Module/Score/FinalsReport_List.php?LID=203",
+        "filepath":"cctable/table_4.html"
     }
 }

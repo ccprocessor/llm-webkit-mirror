@@ -37,7 +37,7 @@ class TestTextParagraphRecognizer(unittest.TestCase):
         second_para = result[1][0]
         text = html_to_element(second_para).text
         jso = json.loads(text)
-        self.assertEqual(jso[0]['c'], '\n    爱因斯坦的方程\n    ')
+        self.assertEqual(jso[0]['c'], '爱因斯坦的方程')
         self.assertEqual(jso[0]['t'], 'text')
         self.assertEqual(jso[1]['c'], 'E=MC^2')
         self.assertEqual(jso[1]['t'], 'equation-inline')

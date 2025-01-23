@@ -89,7 +89,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         main_html, method = self._extract_main_html(raw_html, base_url)
         parsed_html = [(main_html,raw_html)]
-        for extract_func in [self._extract_code, self._extract_table, self._extract_list, self._extract_math,
+        for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
@@ -258,7 +258,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
                 node = parser.to_content_list_node(base_url, ccnode_html, raw_html)
-                one_page.append(node)
+                if node:
+                    one_page.append(node)
             else:
                 mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
                 # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进

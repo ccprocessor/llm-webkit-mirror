@@ -163,6 +163,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         for child in item.iter():
             if child.tag == CCTag.CC_MATH_INLINE:
                 paragraph.append({'c': child.text, 't': ParagraphTextType.EQUATION_INLINE})
+            elif child.tag == CCTag.CC_CODE_INLINE:
+                paragraph.append({'c': child.text, 't': ParagraphTextType.CODE_INLINE})
+                if child.tail:
+                    paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
             elif child.tag == 'br':
                 text_paragraph.append(paragraph)
                 paragraph = []
