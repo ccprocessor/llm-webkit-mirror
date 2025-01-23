@@ -1,14 +1,41 @@
 import json
+import string
 from typing import List, Tuple
 
 from lxml import etree
-from lxml.etree import _Element as HtmlElement
+from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
+
+special_symbols = [  # TODO 从文件读取
+    '®',  # 注册商标符号
+    '™',  # 商标符号
+    '©',  # 版权符号
+    '$',   # 美元符号
+    '€',   # 欧元符号
+    '£',   # 英镑符号
+    '¥',   # 日元符号
+    '₹',   # 印度卢比符号
+    '∑',   # 求和符号
+    '∞',   # 无穷大符号
+    '√',   # 平方根符号
+    '≠',   # 不等于符号
+    '≤',   # 小于等于符号
+    '•',   # 项目符号
+    '¶',   # 段落符号
+    '†',   # 匕首符号
+    '‡',   # 双匕首符号
+    '—',   # 长破折号
+    '–',   # 短破折号
+    '♥',   # 爱心符号
+    '★',   # 星星符号
+    '☀',   # 太阳符号
+    '☁'    # 云符号
+]
 
 
 class TextParagraphRecognizer(BaseHTMLElementRecognizer):
@@ -73,6 +100,23 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
 
         return new_lst
 
+    def __combine_text(self, text1:str, text2:str, lang='en') -> str:
+        """将两段文本合并，中间加空格.
+
+        Args:
+            text1: str: 第一段文本
+            text2: str: 第二段文本
+            lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊斧蛤开头的连接不加空格。
+        """
+        text1 = text1.strip() if text1 else ''
+        text2 = text2.strip() if text2 else ''
+        if lang == 'zh':
+            return text1.strip() + text2.strip()
+        else:
+            words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
+            txt = text1 + words_sep + text2
+            return txt.strip()
+
     def __get_paragraph_text(self, el: HtmlElement) -> List[dict]:
         """
         获取段落全部的文本.
@@ -97,16 +141,20 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     para_text.append({'c':text, 't':type_text})
                     text = ''
                 para_text.append({'c':child.text, 't':type_equation_inline})
+                if child.tail:
+                    text = self.__combine_text(text, child.tail.strip())
             elif child.tag == CCTag.CC_CODE_INLINE:
                 if text:
                     para_text.append({'c':text, 't':type_text})
                     text = ''
                 para_text.append({'c':child.text, 't':ParagraphTextType.CODE_INLINE})
                 if child.tail:
-                    para_text.append({'c':child.tail, 't':ParagraphTextType.TEXT})
+                    text = self.__combine_text(text, child.tail.strip())
             else:
-                text += child.text or ''
-                text += child.tail or ''
+                if child.text and child.text.strip():
+                    text = self.__combine_text(text, child.text.strip())
+                if child.tail and child.tail.strip():
+                    text = self.__combine_text(text, child.tail.strip())
 
         if text:
             para_text.append({'c':text, 't':type_text})

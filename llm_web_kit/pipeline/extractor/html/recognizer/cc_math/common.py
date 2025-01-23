@@ -48,16 +48,6 @@ LATEX_IMAGE_SRC_NAMES = [
 CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
 CCMATH_INLINE = CCTag.CC_MATH_INLINE
 
-# 数学公式的正则表达式模式
-LATEX_PATTERNS = [
-    r'\$\$(.*?)\$\$',  # 匹配 $$...$$
-    r'\$(.*?)\$',      # 匹配 $...$
-    r'\\begin{equation}(.*?)\\end{equation}',  # 匹配 equation 环境
-    r'\\begin{align}(.*?)\\end{align}',        # 匹配 align 环境
-    r'\\[(.*?)\\]',    # 匹配 \[...\]
-    r'\\((.*?)\\)',    # 匹配 \(...\)
-]
-
 
 # 数学标记语言
 class MathType:
@@ -88,6 +78,8 @@ latex_config = {
         ['\\begin{align}', '\\end{align}'],
         ['\\begin{alignat}', '\\end{alignat}'],
         ['\\begin{array}', '\\end{array}'],
+        # 添加通用的begin/end匹配
+        ['\\begin{.*?}', '\\end{.*?}'],
     ],
 }
 
@@ -268,6 +260,8 @@ if __name__ == '__main__':
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<p>这是p的text</p>'))
+    print(cm.get_equation_type(r'<p>\begin{align} a^2+b=c\end{align}</p>'))
+    print(cm.get_equation_type(r'<p>\begin{abc} a^2+b=c\end{abc}</p>'))
     print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
     print(cm.wrap_math(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))

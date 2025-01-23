@@ -35,7 +35,7 @@ TEST_CASES = [
                 '<p>这是p的text</p>'
             ),
             (
-                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>$$a^2 + b^2 = c^2$$</ccmath-interline></p>',
+                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>a^2 + b^2 = c^2</ccmath-interline></p>',
                 '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
             ),
             (
@@ -192,6 +192,10 @@ TEST_EQUATION_TYPE = [
     {
         'input': '<p>这是p的text</p>',
         'expected': (None, None)
+    },
+    {
+        'input': r'<p>\begin{align} a^2+b=c\end{align}</p>',
+        'expected': ('equation-interline', 'latex')
     }
 ]
 
@@ -310,6 +314,7 @@ class TestMathRecognizer(unittest.TestCase):
             expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
             self.assertEqual(len(parts), len(expect_formulas))
+            # answers = []
             for expect, part in zip(expect_formulas, parts):
                 a_tree = html_to_element(part)
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
@@ -317,6 +322,7 @@ class TestMathRecognizer(unittest.TestCase):
                 # print('part::::::::', part)
                 print('expect::::::::', expect)
                 print('answer::::::::', answer)
+                # answers.append(answer)
                 self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
 

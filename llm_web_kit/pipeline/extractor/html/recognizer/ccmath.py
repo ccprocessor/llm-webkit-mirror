@@ -7,7 +7,7 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_asciimath, tag_common_modify, tag_img, tag_math, tag_script)
+    tag_common_modify, tag_img, tag_math, tag_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -139,7 +139,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # script[type="math/asciimath"]
             # if node.tag == 'script' and node.get('type') == 'math/asciimath':
             if node.tag in ('p','div') and node.text and '`' in node.text:
-                tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
+                # tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
+                pass
 
             # Remove any .MathJax_Preview spans
             if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):

@@ -223,11 +223,9 @@ class TestMathRecognizer(unittest.TestCase):
 
         resp = pipeline.extract(input_data)
         answer = resp.get_content_list().to_mm_md().strip('\n')
-        print(answer)
         expect = base_dir.joinpath('assets/cccode/mathworks.md').read_text().strip('\n')
         self.assertEqual(expect, answer)
         answer = resp.get_content_list().to_txt().strip('\n')
-        print(answer)
         expect = base_dir.joinpath('assets/cccode/mathworks.txt').read_text().strip('\n')
         self.assertEqual(expect, answer)
 
