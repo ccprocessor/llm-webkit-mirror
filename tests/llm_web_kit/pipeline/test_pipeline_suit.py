@@ -164,11 +164,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
         html_content = html_content_list[11]
         self.assertEqual(html_content['type'], DocElementType.PARAGRAPH)
         self.assertEqual(len(html_content['content']), 2)
-<<<<<<< HEAD
-        self.assertEqual(html_content['content'][0]['c'], 'reference: ')
-=======
         self.assertEqual(html_content['content'][0]['c'], 'reference:')
->>>>>>> 86c11a4a24665071621482b5f55454b1e33c3605
         self.assertEqual(html_content['content'][0]['t'], ParagraphTextType.TEXT)
         self.assertEqual(html_content['content'][1]['c'], '#include<xxxx.hpp>')
         self.assertEqual(html_content['content'][1]['t'], ParagraphTextType.CODE_INLINE)
@@ -187,9 +183,6 @@ class TestPipelineSuitHTML(unittest.TestCase):
 
         # main_html
         main_html = result.get_content_list().to_main_html()  # 获取main_html内容
-<<<<<<< HEAD
-        self.assertEqual(main_html, self.main_html_expected_content)  # 如果遇到嵌套的html, 则返回原始html的时候还是应当拼接替换一下 TODO
-=======
         self.assertEqual(normalize_html(main_html), normalize_html(self.main_html_expected_content))  # 如果遇到嵌套的html, 则返回原始html的时候还是应当拼接替换一下 TODO
 
     def test_html_pipeline_suit_2(self):
@@ -207,4 +200,3 @@ class TestPipelineSuitHTML(unittest.TestCase):
 
         html_content_list = result.get_content_list()[0]
         assert len(html_content_list) == 22
->>>>>>> 86c11a4a24665071621482b5f55454b1e33c3605
