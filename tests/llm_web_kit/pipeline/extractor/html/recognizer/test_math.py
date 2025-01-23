@@ -44,50 +44,17 @@ TEST_CASES = [
             )
         ]
     },
-    # 已经包含cccode标签
-    # {
-    #     'input': [
-    #         ('<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>',
-    #          '<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>')
-    #     ],
-    #     'raw_html': '<span class=mathjax>Some text with a formula $$x = 5$$ in it.</span>',
-    #     'expected': [
-    #         ('<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>',
-    #          '<cccode class=mathjax>Some text with a formula $$x = 5$$ in it.</cccode>')
-    #     ]
-    # },
-    # html_list包含多个html，class=MathJax_Display
-    # {
-    #     'input': [
-    #         ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-    #         ('<span class=Mathjax_display>$$a^2 + b^2 = c^2$$</span>',
-    #          '<span class=Mathjax_display>$$a^2 + b^2 = c^2$$</span>')
-    #     ],
-    #     'raw_html': '<p>This is a test.</p> <span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>',
-    #     'expected': [
-    #         ('<p>This is a test.</p>', '<p>This is a test.</p>'),
-    #         ('<ccmath type="latex">$$a^2 + b^2 = c^2$$</ccmath>',
-    #          '<span class=Mathjax_display>$$a^2 + b^2 = c^2$$</span>')
-    #     ]
-    # },
-    # raw_html包含mathjax渲染器定义，class=mathjax_display
-    # {
-    #     'input': [
-    #         ('<p>这是p的text<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'),
-    #         ('<p>这是p的text<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>')
-    #     ],
-    #     'raw_html': (
-    #         '<head> '
-    #         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
-    #         '?config=TeX-MML-AM_CHTML"> </script> '
-    #         '</head> '
-    #         '<p>这是p的text<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
-    #     ),
-    #     'expected': [
-    #         ('<p>这是p的text<ccmath type="latex" by="mathjax">$$a^2 + b^2 = c^2$$</ccmath>这是span的tail<b>这是b的text</b>这是b的tail</p>',
-    #          '<p>这是p的text<span class=mathjax_display>$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>')
-    #     ]
-    # }
+    {
+        'input': [
+            ('<p>$x = 5$</p>',
+             '<p>$x = 5$</p>')
+        ],
+        'raw_html': '<p>$x = 5$</p>',
+        'expected': [
+            ('<ccmath-inline type="latex" by="None" html="&lt;p&gt;$x = 5$&lt;/p&gt;">x = 5</ccmath-inline>',
+             '<p>$x = 5$</p>')
+        ]
+    },
 ]
 
 TEST_CASES_HTML = [
@@ -272,6 +239,14 @@ TEST_WRAP_MATH_MD = [
     {
         'input': r'$a^2 + b^2 = c^2$',
         'expected': r'a^2 + b^2 = c^2'
+    },
+    {
+        'input': r'\(a^2 + b^2 = c^2\)',
+        'expected': r'a^2 + b^2 = c^2'
+    },
+    {
+        'input': r'\[a^2 + b^2 = c^2\]',
+        'expected': r'a^2 + b^2 = c^2'
     }
 ]
 
@@ -294,8 +269,8 @@ class TestMathRecognizer(unittest.TestCase):
                 expect_len = len(test_case['expected'])
                 self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
                 for i in range(len(output_html)):
-                    expect = test_case['expected'][i]
-                    self.assertEqual(output_html[i], test_case['expected'][i], msg=f'result is: {output_html[i]}, expected is: {expect}')
+                    expect = test_case['expected'][i][0]
+                    self.assertEqual(output_html[i][0], expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
 
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:

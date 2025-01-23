@@ -119,10 +119,10 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __simplify_td_th_content(self, elem):
         """简化 <td> 和 <th> 内容，仅保留文本内容."""
         if elem.tag in ['td', 'th'] and len(elem.xpath('.//table')) == 0:
-            text = '<br>'.join([text for text in elem.itertext()]).strip()
+            result = '<br>'.join([text for text in elem.itertext() if text.strip()])
             for child in list(elem):
                 elem.remove(child)
-            elem.text = text
+            elem.text = result
         elif elem.tag in ['td', 'th'] and len(elem.xpath('.//table')) > 0:
             for item in elem.iterchildren():
                 self.__simplify_td_th_content(item)

@@ -146,6 +146,18 @@ class TestHtmlUtils(unittest.TestCase):
         self.assertEqual(cell_count, 0)
         self.assertEqual(html_to_markdown_table(html), '')
 
+    def test_html_to_markdown_table_table5(self):
+        """测试tr一行只有一个单元格，补充空列."""
+        table_html = '<table><tr><td>Mrs S Hindle</td></tr><tr><td>Show</td><td>CC</td><td>RCC</td></tr><tr><td>Driffield 5th October 2006</td><td>CH. Ricksbury Royal Hero</td><td>CH. Keyingham Branwell</td></tr><tr><td>Manchester 16th January 2008</td><td>CH. Lochbuie Geordie</td><td>Merryoth Maeve</td></tr><tr><td>Darlington 20th September 2009</td><td>CH. Maibee Make Believe</td><td>CH. Loranka Just Like Heaven JW</td></tr><tr><td>Blackpool 22nd June 2012</td><td>CH. Loranka Sherrie Baby</td><td>Dear Magic Touch De La Fi Au Songeur</td></tr><tr><td>Welsh Kennel Club 2014</td><td>Brymarden Carolina Sunrise</td><td>Ch. Wandris Evan Elp Us</td></tr><tr><td>Welsh Kennel Club 2014</td><td>Ch. Charnell Clematis of Salegreen</td><td>CH. Byermoor Queens Maid</td></tr></table>'
+        result = html_to_markdown_table(table_html)
+        assert result == '| Mrs S Hindle |  |  |\n|---|---|---|\n| Show | CC | RCC |\n| Driffield 5th October 2006 | CH. Ricksbury Royal Hero | CH. Keyingham Branwell |\n| Manchester 16th January 2008 | CH. Lochbuie Geordie | Merryoth Maeve |\n| Darlington 20th September 2009 | CH. Maibee Make Believe | CH. Loranka Just Like Heaven JW |\n| Blackpool 22nd June 2012 | CH. Loranka Sherrie Baby | Dear Magic Touch De La Fi Au Songeur |\n| Welsh Kennel Club 2014 | Brymarden Carolina Sunrise | Ch. Wandris Evan Elp Us |\n| Welsh Kennel Club 2014 | Ch. Charnell Clematis of Salegreen | CH. Byermoor Queens Maid |'
+
+    def test_html_to_markdown_table6(self):
+        """没有表头的table转md."""
+        table_html = '<table><tr></tr><tr><td>4</td></tr></table>'
+        result = html_to_markdown_table(table_html)
+        assert result == '|  |\n|---|\n| 4 |'
+
     def test_table5(self):
         """测试html转换成markdown表格.测试空表格."""
         html = """
