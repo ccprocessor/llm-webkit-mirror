@@ -145,3 +145,11 @@ class TestHtmlUtils(unittest.TestCase):
         cell_count = table_cells_count(html)
         self.assertEqual(cell_count, 0)
         self.assertEqual(html_to_markdown_table(html), '')
+
+    def test_table5(self):
+        """测试html转换成markdown表格.测试空表格."""
+        html = """
+        <table><tr><th>Rank</th><th>Product Name</th><th>Score</th></tr><tr><td>1</td><td>Car Underglow Lights,EJ's SUPER CAR Underglow Underbody System Neon Strip Lights Kit,8 Color</td><td>9.7</td></tr><tr><td>2</td><td>4pcs 8 Colors LED Strip Under Car Tube Underglow Underbody System Neon Accent</td><td>9.5</td></tr><tr><td>3</td><td>Xprite Car Underglow Neon Accent Strip Lights Kit 8 Color Sound Active Function</td><td>9.1</td></tr><tr><td>4</td><td>Car Underglow Lights, Bluetooth Dream Color Chasing Strip Lights Kit, 6 PCS Waterproof</td><td>8.8</td></tr><tr><td>5</td><td>GOODRUN Underglow Underbody Lighting Kit, Multicolored LED Strip Light with Light Bulbs,Neon Accent</td><td>8.6</td></tr><tr><td>6</td><td>OPT7 Aura 4pc Pickup Truck Underglow LED Lighting Kit w/remote - Soundsync</td><td>8.3</td></tr><tr><td>7</td><td>Xprite Car Underglow RGB Dancing Light Kit with Wireless Remote Control 6PC Underbody</td><td>8.1</td></tr><tr><td>8</td><td>LEDGlow 4pc Multi-Color Slimline LED Underbody Underglow Accent Neon Lighting Kit for Cars</td><td>7.8</td></tr><tr><td>9</td><td>KORJO Car Underglow Lights, 6 Pcs Bluetooth Led Strip Lights with Dream Color</td><td>7.5</td></tr><tr><td>10</td><td>XTAUTO 4Pcs Car 72 LED Neon Undercar Underglow Glow Atmosphere Decorative Bar Light</td><td>7.2</td></tr></table>
+        """
+        cell_count = table_cells_count(html)
+        self.assertEqual(cell_count, 33)

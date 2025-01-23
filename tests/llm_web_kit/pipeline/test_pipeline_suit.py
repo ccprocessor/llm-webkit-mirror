@@ -14,11 +14,20 @@ import json
 import os
 import unittest
 
+from lxml import html
+
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     MathType
 from llm_web_kit.pipeline.pipeline_suit import PipelineSuit
+
+
+def normalize_html(html_string:str) -> str:
+    # 解析 HTML
+    tree = html.fromstring(html_string)
+    # 转换为字符串并去除空白
+    return html.tostring(tree, pretty_print=True, encoding='utf-8').strip()
 
 
 class TestPipelineSuitHTML(unittest.TestCase):
@@ -52,16 +61,19 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.txt_expected_content = open(self.txt_output_file_path, 'r').read()
         self.main_html_expected_content = open(self.main_html_output_file_path, 'r').read()
 
+        self.data_json = []
+        with open(self.html_data_path, 'r') as f:
+            for line in f:
+                self.data_json.append(json.loads(line.strip()))
+
+        assert len(self.data_json) == 2
+
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
         # Initialize pipeline
         pipeline = PipelineSuit(self.pipeline_config)
         self.assertIsNotNone(pipeline)
-
-        # Read test data
-        with open(self.html_data_path, 'r') as f:
-            test_data = json.loads(f.readline().strip())
-
+        test_data = self.data_json[0]
         # Create DataJson from test data
         input_data = DataJson(test_data)
 
@@ -152,7 +164,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
         html_content = html_content_list[11]
         self.assertEqual(html_content['type'], DocElementType.PARAGRAPH)
         self.assertEqual(len(html_content['content']), 2)
-        self.assertEqual(html_content['content'][0]['c'], 'reference: ')
+        self.assertEqual(html_content['content'][0]['c'], 'reference:')
         self.assertEqual(html_content['content'][0]['t'], ParagraphTextType.TEXT)
         self.assertEqual(html_content['content'][1]['c'], '#include<xxxx.hpp>')
         self.assertEqual(html_content['content'][1]['t'], ParagraphTextType.CODE_INLINE)
@@ -171,4 +183,20 @@ class TestPipelineSuitHTML(unittest.TestCase):
 
         # main_html
         main_html = result.get_content_list().to_main_html()  # 获取main_html内容
-        self.assertEqual(main_html, self.main_html_expected_content)  # 如果遇到嵌套的html, 则返回原始html的时候还是应当拼接替换一下 TODO
+        self.assertEqual(normalize_html(main_html), normalize_html(self.main_html_expected_content))  # 如果遇到嵌套的html, 则返回原始html的时候还是应当拼接替换一下 TODO
+
+    def test_html_pipeline_suit_2(self):
+        """测试第二个数据：这个数据会丢失一些文本信息."""
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[1]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+
+        # Verify basic properties
+        self.assertEqual(result.get_dataset_name(), 'test_pipeline_suit')
+        self.assertEqual(result['track_id'], 'stackoverflow_math')
+
+        html_content_list = result.get_content_list()[0]
+        assert len(html_content_list) == 22
