@@ -120,9 +120,9 @@ class CCMATH():
         if s.startswith('$') and s.endswith('$'):
             return s.replace('$', '')
         return s
-    
+
     def wrap_math_space(self, s):
-        """转义空格"""
+        """转义空格."""
         s = s.strip()
         return s.replace('&space;', ' ')
 
