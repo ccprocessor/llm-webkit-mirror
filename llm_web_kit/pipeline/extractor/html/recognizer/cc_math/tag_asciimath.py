@@ -40,7 +40,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             if text and text_strip(text):
                 text = text_strip(text)
                 wrapped_asciimath = replace_asciimath(cm,text)
-                new_span = build_cc_element(html_tag_name=new_tag, text=wrapped_asciimath, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+                new_span = build_cc_element(html_tag_name=new_tag, text=cm.wrap_math_md(wrapped_asciimath), tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
         else:
             return

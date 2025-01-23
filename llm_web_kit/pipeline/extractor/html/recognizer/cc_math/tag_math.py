@@ -32,15 +32,14 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
                 if 'display: none' in normalized_style_value:
                     parent.style = ''
-            text = cm.wrap_math_md(text)
-            new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+            new_span = build_cc_element(html_tag_name=new_tag, text=cm.wrap_math_md(text), tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)
         elif text_strip(node.get('alttext')):
             # Get the alttext attribute
             text = node.get('alttext')
             if text_strip(text):
                 text = cm.wrap_math_md(text)
-                new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+                new_span = build_cc_element(html_tag_name=new_tag, text=cm.wrap_math_md(text), tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
         else:
             # Try translating to LaTeX
@@ -58,9 +57,8 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             # TODO: 这样转换方法有很多错误，见测试用例mathjax-mml-chtml.html，需要优化
             latex = cm.mml_to_latex(mathml)
             latex = cm.wrap_math_md(latex)
-            text = cm.wrap_math_md(latex)
             # Set the html of the new span tag to the text
-            new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
+            new_span = build_cc_element(html_tag_name=new_tag, text=cm.wrap_math_md(latex), tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)
     except Exception as e:
         raise HtmlMathRecognizerExp(f'Error processing math tag: {e}')
