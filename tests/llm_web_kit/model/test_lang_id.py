@@ -9,8 +9,7 @@ from llm_web_kit.model.lang_id import (LanguageIdentification,
                                        detect_inline_equation,
                                        detect_latex_env,
                                        get_singleton_lang_detect,
-                                       update_language_by_str,
-                                       update_language_by_str_v218)
+                                       update_language_by_str)
 
 
 class TestLanguageIdentification:
@@ -117,9 +116,24 @@ def test_decide_lang_by_str():
 
 
 def test_update_language_by_str():
-    with patch('llm_web_kit.model.lang_id.decide_lang_by_str') as mock_decide_lang_by_str:
+    # 模拟 decide_lang_by_str 和 decide_lang_by_str_v218 的行为
+    with patch('llm_web_kit.model.lang_id.decide_lang_by_str') as mock_decide_lang_by_str, \
+         patch('llm_web_kit.model.lang_id.decide_lang_by_str_v218') as mock_decide_lang_by_str_v218:
+
+        # 设置模拟函数的返回值
         mock_decide_lang_by_str.return_value = 'en'
-        assert update_language_by_str('test text') == {'language': 'en'}
+        mock_decide_lang_by_str_v218.return_value = 'en_v218'
+
+        # 调用被测函数
+        result = update_language_by_str('test text')
+
+        # 验证返回结果
+        expected_result = {
+            'language': 'en',
+            'language_details': 'en_v218'
+        }
+        assert result == expected_result, f"Expected {expected_result}, but got {result}"
+        print('Test passed!')
 
 
 class TestDecideLangByStrV218(unittest.TestCase):
@@ -143,22 +157,3 @@ class TestDecideLangByStrV218(unittest.TestCase):
         content_str = 'Este es un texto en español.'
         result = decide_lang_by_str_v218(content_str, 'custom_model_path')
         self.assertEqual(result, 'es')
-
-
-class TestUpdateLanguageByStrV218(unittest.TestCase):
-
-    @patch('llm_web_kit.model.lang_id.decide_lang_by_str_v218')
-    def test_update_language_by_str_v218(self, mock_decide_lang_by_str_v218):
-        mock_decide_lang_by_str_v218.return_value = 'en'
-
-        content_str = 'This is an English text.'
-        result = update_language_by_str_v218(content_str, 'model_path')
-        self.assertEqual(result, {'language': 'en'})
-
-    @patch('llm_web_kit.model.lang_id.decide_lang_by_str_v218')
-    def test_update_language_by_str_v218_custom_model_path(self, mock_decide_lang_by_str_v218):
-        mock_decide_lang_by_str_v218.return_value = 'es'
-
-        content_str = 'Este es un texto en español.'
-        result = update_language_by_str_v218(content_str, 'custom_model_path')
-        self.assertEqual(result, {'language': 'es'})

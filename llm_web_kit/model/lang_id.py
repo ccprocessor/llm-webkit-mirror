@@ -258,18 +258,18 @@ def decide_lang_by_str_v218(content_str: str, model_path: str = None) -> str:
     """Decide language based on the content string, displayed in the format of
     the fasttext218 model."""
     lang_detect = get_singleton_lang_detect(model_path)
-    return lang_detect.predict(content_str)[0][0].replace('__label__', '')
+    if lang_detect.version == '176.bin':
+        return None
+    else:
+        return lang_detect.predict(content_str)[0][0].replace('__label__', '')
 
 
 def update_language_by_str(content_str: str, model_path: str = None) -> str:
     """Decide language based on the content string."""
-    return {'language': decide_lang_by_str(content_str,model_path)}
-
-
-def update_language_by_str_v218(content_str: str, model_path: str = None) -> str:
-    """Decide language based on the content string, displayed in the format of
-    the fasttext218 model."""
-    return {'language': decide_lang_by_str_v218(content_str,model_path)}
+    return {
+        'language': decide_lang_by_str(content_str, model_path),
+        'language_details': decide_lang_by_str_v218(content_str, model_path)
+    }
 
 
 if __name__ == '__main__':
@@ -281,7 +281,6 @@ if __name__ == '__main__':
     print(predictions, probabilities)
 
     print(update_language_by_str(text))
-    print(update_language_by_str_v218(text))
 
     text = '你好，这是一个测试。这个语言是中文'
     print(update_language_by_str(text))
