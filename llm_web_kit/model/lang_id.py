@@ -61,7 +61,7 @@ class LanguageIdentification:
         lang_id_218_sha256 = lang_id_218_config.get('sha256', '')
         target_path = os.path.join(CACHE_DIR, resource_name, 'model.bin')
         logger.info(f'try to make target_path: {target_path} exist')
-        target_path = download_auto_file(lang_id_218_url, target_path, lang_id_218_sha256)
+        target_path = download_auto_file(lang_id_218_url, target_path, sha256_sum=lang_id_218_sha256)
         logger.info(f'target_path: {target_path} exist')
         return target_path
 

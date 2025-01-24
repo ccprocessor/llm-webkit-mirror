@@ -5,8 +5,8 @@ from typing import Tuple
 from unittest.mock import MagicMock, patch
 
 from llm_web_kit.model.resource_utils.download_assets import (
-    HttpConnection, S3Connection, calc_file_md5, decide_cache_dir,
-    download_auto_file)
+    HttpConnection, S3Connection, calc_file_md5, calc_file_sha256,
+    decide_cache_dir, download_auto_file)
 
 
 class Test_decide_cache_dir:
@@ -48,6 +48,18 @@ class Test_calc_file_md5:
             f.write(test_bytes)
             f.flush()
             assert calc_file_md5(f.name) == hashlib.md5(test_bytes).hexdigest()
+
+
+class Test_calc_file_sha256:
+
+    def test_calc_file_sha256(self):
+        import hashlib
+
+        with tempfile.NamedTemporaryFile() as f:
+            test_bytes = b'hello world' * 10000
+            f.write(test_bytes)
+            f.flush()
+            assert calc_file_sha256(f.name) == hashlib.sha256(test_bytes).hexdigest()
 
 
 def read_mockio_size(mock_io: io.BytesIO, size: int):
