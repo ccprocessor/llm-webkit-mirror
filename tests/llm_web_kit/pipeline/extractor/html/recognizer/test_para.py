@@ -41,3 +41,7 @@ class TestTextParagraphRecognizer(unittest.TestCase):
         self.assertEqual(jso[0]['t'], 'text')
         self.assertEqual(jso[1]['c'], 'E=MC^2')
         self.assertEqual(jso[1]['t'], 'equation-inline')
+        self.assertTrue(jso[2]['c'].endswith('请访问'))
+        self.assertEqual(jso[3]['c'], 'https://abc.com')
+        self.assertEqual(jso[3]['t'], 'code-inline')
+        self.assertEqual(jso[4]['c'], '.')

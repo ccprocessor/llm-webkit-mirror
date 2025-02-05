@@ -149,7 +149,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 for child in el.getchildren():
                     text = __get_paragraph_text_recusive(child, text)
 
-            if el.tail:
+            if el.tail and el.tail.strip():
                 text = self.__combine_text(text, el.tail.strip())
 
             return text
