@@ -331,12 +331,3 @@ class TestMathRecognizer(unittest.TestCase):
 ```
 """,
         )
-
-
-if __name__ == '__main__':
-    r = TestMathRecognizer()
-    r.setUp()
-    r.test_code_rec()
-    r.test_inline_code_output()
-    r.test_inclusion()
-    r.test_to_md_first_line_spaces()
