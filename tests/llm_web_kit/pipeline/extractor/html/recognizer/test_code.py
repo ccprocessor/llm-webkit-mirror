@@ -191,7 +191,7 @@ TEST_CASES = [
 base_dir = Path(__file__).parent
 
 
-class TestMathRecognizer(unittest.TestCase):
+class TestCodeRecognizer(unittest.TestCase):
     def setUp(self):
         self.rec = CodeRecognizer()
         self.pipeline_config = base_dir.parent.parent.parent.joinpath(
