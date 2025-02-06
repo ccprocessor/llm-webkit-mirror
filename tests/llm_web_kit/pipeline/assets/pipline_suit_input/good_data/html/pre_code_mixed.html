@@ -1,0 +1,237 @@
+<html>
+
+<head>
+    <title>ClientNetworkWrapper.java (Example JavaDoc)</title>
+    <link href="/css/source.css" rel="stylesheet" type="text/css" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="description" content="Java source code">
+    <meta name="keywords" content="Java, source code">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-6307150886235032",
+            enable_page_level_ads: true
+        });
+    </script>
+</head>
+
+<body>
+
+    <table class=container>
+        <tr>
+            <td align=left valign=top>
+                <p>
+                <table class=results>
+                    <tr>
+                        <th>File</th>
+                        <th>Doc</th>
+                        <th>Category</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th>Package</th>
+                    </tr>
+                    <tr>
+                        <td><a href=/jcs/2389_ClientNetworkWrapper.java>ClientNetworkWrapper.java</a></td>
+                        <td><a href=/jcs/2389_ClientNetworkWrapper.html>API Doc</a></td>
+                        <td>Example</td>
+                        <td>2389</td>
+                        <td>Thu Nov 08 00:23:44 GMT 2001</td>
+                        <td><a href=/jcs/s/package%3Acom.ora.rmibook.chapter3>com.ora.rmibook.chapter3</td>
+                    </tr>
+                </table>
+                <h1>ClientNetworkWrapper</h1>
+                <ul>
+                    <li><a href=/jcs/s/java.lang.Object>java.lang.Object</a>
+                        <ul>
+                            <li><a href=/jcs/s/NetworkBaseClass>NetworkBaseClass</a>
+                        </ul>
+                </ul><span class=name>public class ClientNetworkWrapper extends NetworkBaseClass implements
+                    PrinterConstants</span>
+                <table class=introduction>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+                <table class=tags>
+                    <tr>
+                        <td>
+                            <dl></dl>
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    <script>
+                        document.write('(<a hr' + 'ef=java' + 'script:go("/j' + 'cs/2389_ClientNetworkWrapper.html2")>Omit source code</a>)<p>');
+                    </script>
+                <table class=fields>
+                    <tr>
+                        <th colspan=2>Fields Summary</th>
+                    </tr>
+                    <tr>
+                        <td id=m1>private String</td>
+                        <td>
+                            <dt><span id=field>_serverMachine</span></dt>
+                            <dd></dd>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id=m1>private int</td>
+                        <td>
+                            <dt><span id=field>_serverPort</span></dt>
+                            <dd></dd>
+                        </td>
+                    </tr>
+                </table>
+                <table class=constructors>
+                    <tr>
+                        <th colspan=1>Constructors Summary</th>
+                    </tr>
+                    <tr>
+                        <td id=c1><span class=cst>public ClientNetworkWrapper</span>()<blockquote>
+                                <p>
+                                <table class=tags>
+                                    <tr>
+                                        <td>
+                                            <dl></dl>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><code><pre>
+        this (DEFAULT_SERVER_NAME, DEFAULT_SERVER_PORT);
+    </pre> Test Test Test <pre>ABC
+DEF</pre> TEST TEST TEST </code>
+                            </blockquote>
+                    </tr>
+                    <tr>
+                        <td id=c1><span class=cst>public ClientNetworkWrapper</span>(<a href=/jcs/s/String>String</a>
+                            serverMachine, <a href=/jcs/s/int>int</a> serverPort)</span>
+                            <blockquote>
+                                <p>
+                                <table class=tags>
+                                    <tr>
+                                        <td>
+                                            <dl></dl>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><code><pre>
+        _serverMachine = serverMachine;
+        _serverPort = serverPort;
+    </pre></code>
+                            </blockquote>
+                    </tr>
+                </table>
+                <table class=methods>
+                    <tr>
+                        <th colspan=2>Methods Summary</th>
+                    </tr>
+                    <tr>
+                        <td id=m1>private void</td>
+                        <td><span class=method>readStatusFromSocket</span>(<a href=/jcs/s/Socket>java.net.Socket</a>
+                            connection)</dt>
+                            <blockquote>
+                                <p>
+                                <table class=tags>
+                                    <tr>
+                                        <td>
+                                            <dl></dl>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><code><pre>
+        InputStream inputStream = connection.getInputStream();
+        DataInputStream dataInputStream = new DataInputStream(inputStream);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        boolean response = dataInputStream.readBoolean();
+
+        if (response) {
+            return;
+        }
+        PrinterException error = new PrinterException(inputStream);
+
+        throw error;
+    </pre></code>
+                            </blockquote>
+                    </tr>
+                    <tr>
+                        <td id=m1>public void</td>
+                        <td><span class=method>sendDocumentToPrinter</span>(<a
+                                href=/jcs/s/InputStream>java.io.InputStream</a> actualDocument)</dt>
+                            <blockquote>
+                                <p>
+                                <table class=tags>
+                                    <tr>
+                                        <td>
+                                            <dl></dl>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><code><pre>
+        sendDocumentToPrinter(actualDocument, DEFAULT_DOCUMENT_TYPE,
+            DEFAULT_PRINT_TWO_SIDED, DEFAULT_PRINT_QUALITY);
+    </pre></code>
+                            </blockquote>
+                    </tr>
+                    <tr>
+                        <td id=m1>public void</td>
+                        <td><span class=method>sendDocumentToPrinter</span>(<a
+                                href=/jcs/s/InputStream>java.io.InputStream</a> actualDocument, <a
+                                href=/jcs/s/int>int</a> documentType, <a href=/jcs/s/boolean>boolean</a> printTwoSided,
+                            <a href=/jcs/s/int>int</a> printQuality)</dt>
+                            <blockquote>
+                                <p>
+                                <table class=tags>
+                                    <tr>
+                                        <td>
+                                            <dl></dl>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><code><pre>
+        DocumentDescription documentToSend;
+
+        try {
+            documentToSend = new DocumentDescription(actualDocument, documentType, printTwoSided, printQuality);
+        } catch (IOException e) {
+            throw new ConnectionException();
+        }
+        sendDocumentToPrinter(documentToSend);
+    </pre></code>
+                            </blockquote>
+                    </tr>
+                    <tr>
+                        <td id=m1>public void</td>
+                        <td><span class=method>sendDocumentToPrinter</span>(<a
+                                href=/jcs/s/DocumentDescription>DocumentDescription</a> documentDescription)</dt>
+                            <blockquote>
+                                <p>
+                                <table class=tags>
+                                    <tr>
+                                        <td>
+                                            <dl></dl>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p><code><pre>
+        Socket connection = null;
+
+        try {
+            connection = new Socket(_serverMachine, _serverPort);
+            documentDescription.writeToStream(connection.getOutputStream());
+            readStatusFromSocket(connection);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ConnectionException();
+        }
+        closeSocket(connection);
+    </pre></code>
+                            </blockquote>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
