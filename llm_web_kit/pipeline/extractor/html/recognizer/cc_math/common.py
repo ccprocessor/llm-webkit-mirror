@@ -4,10 +4,11 @@ from pathlib import Path
 from typing import Tuple
 
 from lxml import etree
+from lxml.html import HtmlElement
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import html_to_element
+from llm_web_kit.libs.html_utils import build_cc_element, html_to_element
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -269,6 +270,40 @@ class CCMATH():
         mmldom = transform(mml_dom)
         latex_code = str(mmldom)
         return latex_code
+
+    def replace_math(self, math_type: str, math_render: str, pattern: str, node: HtmlElement, func):
+        # pattern re数学公式匹配 func 公式预处理 默认不处理
+        original_text = node.text or ''
+        parts = re.split(f'({pattern})', original_text)
+        new_tag = CCMATH_INTERLINE if len(parts) == 2 and not parts[0] else CCMATH_INLINE
+        node.text = None
+        prev_element = None
+        for i, part in enumerate(parts):
+            try:
+                if i % 2 == 0:
+                    if prev_element is None:
+                        node.text = part
+                    else:
+                        prev_element.tail = part
+                else:
+                    math_text = part
+                    math_text = text_strip(math_text.replace('`', '').replace('\\', ''))
+                    if not math_text:
+                        continue
+                    wrapped_text = func(math_text) if func else math_text
+                    new_span = build_cc_element(
+                        html_tag_name=new_tag,
+                        text=wrapped_text,
+                        tail='',
+                        type=math_type,
+                        by=math_render,
+                        html=wrapped_text
+                    )
+                    node.append(new_span)
+                    prev_element = new_span
+            except Exception:
+                continue
+        return
 
 
 if __name__ == '__main__':
