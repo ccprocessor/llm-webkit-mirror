@@ -119,7 +119,7 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, 
 
             ele.tail = ('\n' + ele.tail) if ele.tail else ('\n')  # type: ignore
 
-    full_text = ''.join(node.itertext(None))
+    full_text = ''.join(node.itertext(None)).replace('\r\n', '\n').replace('\r', '\n')
     chunks = [sub_text.replace(' ', ' ').rstrip() for sub_text in full_text.split('\n')]
 
     while len(chunks) > 0 and not chunks[0]:
