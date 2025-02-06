@@ -44,11 +44,11 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             while True:
                 # 最常见:
                 # <pre><code></code></pre>
+                # <code><pre></pre></code>
                 # 使用 pre 来保证 code 内部格式
                 # 所以每一个 code 就是一段代码，只需要切分出code，合并text
                 if tag_pre_code.detect(root):
                     tag_pre_code.modify_tree(root)
-                    # break
 
                 # 次常见:
                 # 只有 code 没有 pre
@@ -56,7 +56,6 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                 # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
                 if tag_code.detect(root):
                     tag_code.modify_tree(root)
-                    # break
 
                 # 只有 pre 没有 code
                 if tag_pre.detect(root):
