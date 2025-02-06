@@ -159,7 +159,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
         # 打印处理后的html
         # print(self._element_to_html(tree))
-
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
