@@ -146,6 +146,12 @@ def __get_code_node_paths(html_el: HtmlElement) -> list[list[str]]:
     node_paths: list[list[str]] = []
     for code_node in html_el.iterchildren():
         if code_node.tag == 'code':
+            hit = False
+            for _ in code_node.iter('cccode'):
+                hit = True
+                break
+            if hit:
+                continue
             node_path = code_node.getroottree().getpath(code_node)
             node_paths.append(node_path.split('/'))
         else:
@@ -184,8 +190,13 @@ def __get_code_blocks_nodes(node: HtmlElement, tree_roots: list[str]) -> list[Ht
 
 
 def detect(body: HtmlElement) -> bool:
-    for _ in body.iter('code'):
-        return True
+    for code_node in body.iter('code'):
+        hit = False
+        for _ in code_node.iter('cccode'):
+            hit = True
+            break
+        if not hit:
+            return True
     return False
 
 
