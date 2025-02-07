@@ -131,7 +131,9 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             return blks
 
         # 根元素不保留结尾
-        return ' '.join(__extract_title_text_recusive(header_el, False))
+        blks = __extract_title_text_recusive(header_el, False)
+
+        return ' '.join(blk for blk in blks if blk)
 
     def __get_attribute(self, html:str) -> Tuple[int, str]:
         """获取element的属性."""
