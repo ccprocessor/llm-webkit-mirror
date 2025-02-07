@@ -66,6 +66,13 @@ class MathRender:
     ASCIIMath = 'asciimath'
 
 
+# node.text匹配结果：
+class MathMatchRes:
+    ALLMATCH = 'all_match'
+    PARTIALMATCH = 'partial_match'
+    NOMATCH = 'no_match'
+
+
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
@@ -90,6 +97,11 @@ asciiMath_config = {
     'displayMath': [
         [r'`', r'`'],
     ],
+}
+
+MATH_TYPE_TO_DISPLAY = {
+    MathType.LATEX: latex_config,
+    MathType.ASCIIMATH: asciiMath_config
 }
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -192,10 +204,13 @@ class CCMATH():
         """
         def check_delimiters(delims_list, s):
             for start, end in delims_list:
-                pattern = f'^{re.escape(start)}.*?{re.escape(end)}$'
-                if re.search(pattern, s, re.DOTALL):
-                    return True
-            return False
+                all_pattern = f'^{re.escape(start)}.*?{re.escape(end)}$'
+                partial_pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                if re.search(all_pattern, s, re.DOTALL):
+                    return MathMatchRes.ALLMATCH
+                if re.search(partial_pattern, s, re.DOTALL):
+                    return MathMatchRes.PARTIALMATCH
+            return MathMatchRes.NOMATCH
 
         tree = html_to_element(html)
         if tree is None:
@@ -218,14 +233,16 @@ class CCMATH():
             # 再检查latex
             if text := text_strip(node.text):
                 # 优先检查行间公式
-                if check_delimiters(latex_config['displayMath'], text):
+                if check_delimiters(latex_config['displayMath'], text) == MathMatchRes.ALLMATCH:
                     return EQUATION_INTERLINE, MathType.LATEX
-                if check_delimiters(latex_config['inlineMath'], text):
+                if check_delimiters(latex_config['inlineMath'], text) == MathMatchRes.ALLMATCH:
                     return EQUATION_INLINE, MathType.LATEX
 
                 # 再检查asciimath，通常被包含在`...`中，TODO：先只支持行间公式
-                if check_delimiters(asciiMath_config['displayMath'], text):
+                if check_delimiters(asciiMath_config['displayMath'], text) == MathMatchRes.ALLMATCH:
                     return EQUATION_INTERLINE, MathType.ASCIIMATH
+                if check_delimiters(asciiMath_config['displayMath'], text) == MathMatchRes.PARTIALMATCH:
+                    return EQUATION_INLINE, MathType.ASCIIMATH
 
             # 检查script标签
             script_elements = tree.xpath('//script')
@@ -272,39 +289,40 @@ class CCMATH():
         latex_code = str(mmldom)
         return latex_code
 
-    def replace_math(self, math_type: str, math_render: str, pattern: str, node: HtmlElement, func, asciimath_wrap: bool = False):
+    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False):
         # pattern re数学公式匹配 func 公式预处理 默认不处理
-        regex = re.compile(pattern)
-        original_text = node.text or ''
-        parts = regex.split(original_text)
-        new_tag = CCMATH_INTERLINE if len(parts) == 2 and not parts[0] else CCMATH_INLINE
-        node.text = None
-        prev_element = None
-        for i, part in enumerate(parts):
-            try:
-                if i % 2 == 0:
-                    if prev_element is None:
-                        node.text = part
+        for start, end in MATH_TYPE_TO_DISPLAY[math_type]['displayMath']:
+            pattern = f'({re.escape(start)}[^{re.escape(end)}]*{re.escape(end)})'
+            regex = re.compile(pattern)
+            original_text = node.text or ''
+            parts = regex.split(original_text)
+            node.text = None
+            prev_element = None
+            for i, part in enumerate(parts):
+                try:
+                    if i % 2 == 0:
+                        if prev_element is None:
+                            node.text = part
+                        else:
+                            prev_element.tail = part
                     else:
-                        prev_element.tail = part
-                else:
-                    math_text = part.strip('`\\')
-                    if not math_text:
-                        continue
-                    math_text = self.extract_asciimath(math_text) if asciimath_wrap else math_text
-                    wrapped_text = func(math_text) if func else math_text
-                    new_span = build_cc_element(
-                        html_tag_name=new_tag,
-                        text=wrapped_text,
-                        tail='',
-                        type=math_type,
-                        by=math_render,
-                        html=wrapped_text
-                    )
-                    node.append(new_span)
-                    prev_element = new_span
-            except Exception:
-                continue
+                        math_text = part.strip('`\\')
+                        if not math_text:
+                            continue
+                        math_text = self.extract_asciimath(math_text) if asciimath_wrap else math_text
+                        wrapped_text = func(math_text) if func else math_text
+                        new_span = build_cc_element(
+                            html_tag_name=new_tag,
+                            text=wrapped_text,
+                            tail='',
+                            type=math_type,
+                            by=math_render,
+                            html=wrapped_text
+                        )
+                        node.append(new_span)
+                        prev_element = new_span
+                except Exception:
+                    continue
         return node
 
 
@@ -322,7 +340,8 @@ if __name__ == '__main__':
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))
     print(cm.extract_asciimath('x=(-b +- sqrt(b^2 - 4ac))/(2a)'))
-    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),None,True)))
-    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>like this: \`E=mc^2\`</p>'),None,True)))
-    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True)))
-    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True)))
+    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),None,True)))
+    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>like this: \`E=mc^2\`</p>'),None,True)))
+    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True)))
+    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True)))
+    print(element_to_html(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False)))
