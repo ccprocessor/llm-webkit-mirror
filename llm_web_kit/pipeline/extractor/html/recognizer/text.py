@@ -106,7 +106,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         Args:
             text1: str: 第一段文本
             text2: str: 第二段文本
-            lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊斧蛤开头的连接不加空格。
+            lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊符号开头的连接不加空格。
         """
         text1 = text1.strip() if text1 else ''
         text2 = text2.strip() if text2 else ''
@@ -117,7 +117,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             txt = text1 + words_sep + text2
             return txt.strip()
 
-    def __get_paragraph_text(self, el: HtmlElement) -> List[dict]:
+    def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
         """
         获取段落全部的文本.
         对于段落里的行内公式<equation-inline>需要特定处理，转换为段落格式：
@@ -130,34 +130,32 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         Args:
             el: 代表一个段落的html元素
         """
-        type_text = ParagraphTextType.TEXT
-        type_equation_inline = ParagraphTextType.EQUATION_INLINE
-
         para_text = []
-        text = ''
-        for child in el.iter():
-            if child.tag == CCTag.CC_MATH_INLINE:
-                if text:
-                    para_text.append({'c':text, 't':type_text})
-                    text = ''
-                para_text.append({'c':child.text, 't':type_equation_inline})
-                if child.tail:
-                    text = self.__combine_text(text, child.tail.strip())
-            elif child.tag == CCTag.CC_CODE_INLINE:
-                if text:
-                    para_text.append({'c':text, 't':type_text})
-                    text = ''
-                para_text.append({'c':child.text, 't':ParagraphTextType.CODE_INLINE})
-                if child.tail:
-                    text = self.__combine_text(text, child.tail.strip())
-            else:
-                if child.text and child.text.strip():
-                    text = self.__combine_text(text, child.text.strip())
-                if child.tail and child.tail.strip():
-                    text = self.__combine_text(text, child.tail.strip())
 
-        if text:
-            para_text.append({'c':text, 't':type_text})
+        def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
+            if el.tag == CCTag.CC_MATH_INLINE:
+                if text:
+                    para_text.append({'c':text, 't':ParagraphTextType.TEXT})
+                    text = ''
+                para_text.append({'c':el.text, 't':ParagraphTextType.EQUATION_INLINE})
+            elif el.tag == CCTag.CC_CODE_INLINE:
+                if text:
+                    para_text.append({'c':text, 't':ParagraphTextType.TEXT})
+                    text = ''
+                para_text.append({'c':el.text, 't':ParagraphTextType.CODE_INLINE})
+            else:
+                if el.text and el.text.strip():
+                    text = self.__combine_text(text, el.text.strip())
+                for child in el.getchildren():
+                    text = __get_paragraph_text_recusive(child, text)
+
+            if el.tail and el.tail.strip():
+                text = self.__combine_text(text, el.tail.strip())
+
+            return text
+
+        if final := __get_paragraph_text_recusive(root, ''):
+            para_text.append({'c':final, 't':ParagraphTextType.TEXT})
 
         return para_text
 

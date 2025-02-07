@@ -142,7 +142,8 @@ class StructureMapper(ABC):
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
             code = content_lst_node['content'].get('code_content', '')
-            code = (code or '').strip()
+            # 代码不可以 strip，因为首行可能有缩进，只能 rstrip
+            code = (code or '').rstrip()
             if not code:
                 return ''
             language = content_lst_node['content'].get('language', '')

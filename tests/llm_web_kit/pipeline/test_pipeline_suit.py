@@ -66,7 +66,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 4
+        assert len(self.data_json) == 6
 
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
@@ -227,3 +227,31 @@ class TestPipelineSuitHTML(unittest.TestCase):
         self.assertEqual(result['track_id'], 'educba_com_list')
         md_content = result.get_content_list().to_nlp_md()
         self.assertIn('- Exception: All exceptions base class', md_content)
+
+    def test_code_mix_in_list(self):
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[4]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn('The descendant of `StandardizerActionRunner` interface has to provide', md_content)
+
+    def test_code_pre_mixed(self):
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[5]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        self.assertIn("""```
+        this (DEFAULT_SERVER_NAME, DEFAULT_SERVER_PORT);
+```
+
+Test Test Test
+
+```
+ABC
+DEF
+```""", result.get_content_list().to_mm_md())

@@ -83,6 +83,12 @@ latex_config = {
     ],
 }
 
+asciiMath_config = {
+    'displayMath': [
+        [r'`', r'`'],
+    ],
+}
+
 asciimath2tex = ASCIIMath2Tex(log=False)
 
 
@@ -123,6 +129,8 @@ class CCMATH():
             return s.replace('\\(', '').replace('\\)', '')
         if s.startswith('\\[') and s.endswith('\\]'):
             return s.replace('\\[', '').replace('\\]', '')
+        if s.startswith('`') and s.endswith('`'):
+            return s.replace('`', '')
         return s
 
     def wrap_math_space(self, s):
@@ -130,7 +138,7 @@ class CCMATH():
         s = s.strip()
         return s.replace('&space;', ' ')
 
-    def extract_asciimath(s: str) -> str:
+    def extract_asciimath(self, s: str) -> str:
         parsed = asciimath2tex.translate(s)
         return parsed
 
@@ -208,9 +216,9 @@ class CCMATH():
                 if check_delimiters(latex_config['inlineMath'], text):
                     return EQUATION_INLINE, MathType.LATEX
 
-                # 再检查asciimath，通常被包含在`...`中，TODO：行间和行内如何区分
-                if re.search(r'`[^`]+`', text):
-                    return EQUATION_INLINE, MathType.ASCIIMATH
+                # 再检查asciimath，通常被包含在`...`中，TODO：先只支持行间公式
+                if check_delimiters(asciiMath_config['displayMath'], text):
+                    return EQUATION_INTERLINE, MathType.ASCIIMATH
 
             # 检查script标签
             script_elements = tree.xpath('//script')
@@ -271,3 +279,4 @@ if __name__ == '__main__':
     print(cm.wrap_math_md(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))
+    print(cm.extract_asciimath('x=(-b +- sqrt(b^2 - 4ac))/(2a)'))

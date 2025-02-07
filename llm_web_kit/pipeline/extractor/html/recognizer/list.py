@@ -146,7 +146,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         return is_ordered, content_list, raw_html, tail_text
 
-    def __extract_list_item_text(self, item:HtmlElement) -> list[list]:
+    def __extract_list_item_text(self, root:HtmlElement) -> list[list]:
         """提取列表项的文本.
         列表项里的文本的分段策略采用最简单的方式：
         1. 遇到<br/>标签，则认为是一个段落结束。
@@ -159,29 +159,30 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         """
         text_paragraph = []
 
-        paragraph = []
-        for child in item.iter():
-            if child.tag == CCTag.CC_MATH_INLINE:
-                paragraph.append({'c': child.text, 't': ParagraphTextType.EQUATION_INLINE})
-            elif child.tag == CCTag.CC_CODE_INLINE:
-                paragraph.append({'c': child.text, 't': ParagraphTextType.CODE_INLINE})
-                if child.tail:
-                    paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
-            elif child.tag == 'br':
+        def __extract_list_item_text_recusive(el: HtmlElement) -> list[list]:
+            paragraph = []
+            if el.tag == CCTag.CC_MATH_INLINE:
+                paragraph.append({'c': el.text, 't': ParagraphTextType.EQUATION_INLINE})
+            elif el.tag == CCTag.CC_CODE_INLINE:
+                paragraph.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
+            elif el.tag == 'br':
                 text_paragraph.append(paragraph)
                 paragraph = []
-                if child.tail:
-                    paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
             else:
-                if child.text and child.text.strip():
-                    paragraph.append({'c': child.text, 't': ParagraphTextType.TEXT})
-                if child.tail and child.tail.strip():
-                    paragraph.append({'c': child.tail, 't': ParagraphTextType.TEXT})
+                if el.text and el.text.strip():
+                    paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
+                for child in el.getchildren():
+                    paragraph.extend(__extract_list_item_text_recusive(child))
 
-        if paragraph:
+            # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
+            if el.tag != 'li' and el.tail and el.tail.strip():
+                paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+
+            return paragraph
+
+        if paragraph := __extract_list_item_text_recusive(root):
             text_paragraph.append(paragraph)
 
-        # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
         return text_paragraph
 
     def __get_attribute(self, html:str) -> Tuple[bool, dict, str]:

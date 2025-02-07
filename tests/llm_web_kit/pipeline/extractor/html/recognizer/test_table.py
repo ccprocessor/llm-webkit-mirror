@@ -74,7 +74,7 @@ class TestTableRecognizer(unittest.TestCase):
             assert len(parts) == 3
             simple_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')[0]
             simple_table_type = simple_table_tag.attrib
-            assert simple_table_type['table_type'] == 'complex'
+            assert simple_table_type['table_type'] == 'simple'
 
     def test_cc_simple_table(self):
         """cc中简单表格."""
