@@ -104,13 +104,13 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             '//*[contains(@class, "image-embed") or contains(@id, "image-embed")]',  # 可能包含嵌入图片的自定义标签
             '//*[starts-with(@src, "data:image/") and not(self::img)]',
             # 带有内嵌base64图片的标签,data:image/png;base64,eg:img, svg/image
-            '//iframe[not(ancestor::noscript) and not(ancestor::iframe)]',
+            '//iframe[not(ancestor::noscript) and not(ancestor::iframe) and not(ancestor::object)]',
             '//embed[not(ancestor::object)]',
             '//figure[not(ancestor::figure)]',
             '//object[not(ancestor::object)]',  # object标签，通常用于嵌入多媒体内容
-            '//picture[not(ancestor::figure)]',
+            '//picture[not(ancestor::figure) and not(ancestor::object)]',
             '//canvas',  # canvas标签，可能用于绘制图形或展示图片
-            '//svg',  # svg标签，用于矢量图形
+            '//svg[not(ancestor::figure)]',  # svg标签，用于矢量图形
             '//video',
             '//audio',
             '//img[not(ancestor::noscript) and not(ancestor::picture) and not(ancestor::figure) and not(ancestor::object) and not(ancestor::table)]',
@@ -135,7 +135,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         for elem in img_elements:
             tag = elem.tag
             raw_img_html = self._element_to_html(elem)
-            # print(f'raw_img_html: {raw_img_html}')
+            # mylogger.info(f'raw_img_html: {raw_img_html}')
             attributes = {
                 'by': tag,
                 'html': raw_img_html,  # 保留原始 <img> 标签作为属性值
@@ -147,26 +147,29 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 if not [img_elem for img_elem in self.IMG_LABEL if
                         img_elem in raw_img_html.lower()]:
                     continue
-                elif elem.xpath('.//img'):
-                    self.__parse_img_attr(base_url, elem.xpath('.//img')[-1], attributes)
+                elif elem.xpath('.//img|.//image'):
+                    if len(elem.xpath('.//img|.//image')) == 1:
+                        self.__parse_img_attr(base_url, elem.xpath('.//img|.//image')[0], attributes)
+                    else:
+                        continue
                 else:
                     self.__parse_img_attr(base_url, elem, attributes)
             elif tag in ['picture', 'figure']:
                 if elem.xpath('.//img|.//image'):
-                    self.__parse_img_attr(base_url, elem.xpath('.//img|.//image')[-1], attributes)
+                    self.__parse_img_attr(base_url, elem.xpath('.//img|.//image')[0], attributes)
                 else:
                     continue
             elif tag == 'svg':
                 if elem.xpath('.//path|.//circle'):
                     self.__parse_svg_img_attr(elem, attributes)
-                    if not attributes.get('text'):
-                        continue
                 elif elem.xpath('.//img|.//image'):
-                    self.__parse_img_attr(base_url, elem.xpath('.//img')[-1], attributes)
+                    self.__parse_img_attr(base_url, elem.xpath('.//img|.//image')[0], attributes)
                 else:
                     continue
             else:
                 self.__parse_img_attr(base_url, elem, attributes)
+            if not attributes.get('text'):
+                continue
 
             img_tag.append(CCTag.CC_IMAGE)
             is_valid_img = True
@@ -177,7 +180,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             except Exception as e:
                 mylogger.exception(f'build_cc_element failed: {e}')
                 raise Exception(f'build_cc_element failed: {e}')
-            # print(f'new_ccimage:{self._element_to_html(new_ccimage)}')
+            # mylogger.info(f'new_ccimage:{self._element_to_html(new_ccimage)}')
             try:
                 self._replace_element(elem, new_ccimage)
             except Exception as e:
@@ -193,14 +196,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
     def __parse_img_attr(self, base_url: str, elem: HtmlElement, attributes: dict):
         """解析获取img标签属性值."""
         elem_attributes = {k: v for k, v in elem.attrib.items() if v and v.strip()}
-        src = elem_attributes.get('src')
-        text = ''
-        if src and any(img_label for img_label in self.IMG_LABEL if img_label in src.lower()):
-            text = src
-        else:
-            for k, v in elem_attributes.items():
-                if any(img_label for img_label in self.IMG_LABEL if img_label in v.lower()):
-                    text = v
+        text = self.__parse_img_text(elem_attributes)
         if text:
             if text.startswith('data:image'):
                 attributes['text'] = text
@@ -212,6 +208,22 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         attributes.update({attr: elem_attributes.get(attr) for attr in common_attributes if elem_attributes.get(attr)})
         if elem.tail and elem.tail.strip():
             attributes['tail'] = elem.tail.strip()
+
+    def __parse_img_text(self, elem_attributes: dict):
+        text = ''
+        src = elem_attributes.get('src')
+        data_src = [v.split(' ')[0] for k, v in elem_attributes.items() if k.startswith('data')]
+        if src and data_src:
+            src = src if not src.startswith('data:image') else data_src[0]
+        if src and any(img_label for img_label in self.IMG_LABEL if img_label in src.lower()):
+            text = src
+        else:
+            for k, v in elem_attributes.items():
+                if any(img_label for img_label in self.IMG_LABEL if img_label in v.lower().split('?')[0]):
+                    if 'http' in v.strip()[1:-1]:
+                        continue
+                    text = v
+        return text
 
     def __parse_svg_img_attr(self, elem: HtmlElement, attributes: dict):
         svg_img = self.__svg_to_base64(attributes['html'])
@@ -283,25 +295,24 @@ def read_gz_and_parse_json_line_by_line(file_path):
 
 if __name__ == '__main__':
     img = ImageRecognizer()
-    path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_embed_part-677b7add5f8f-000000.jsonl.gz'
+    path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_part-676e680976e0-000000.jsonl.gz'
 
     idx = 0
-    num = 15
+    num = 0
     for html_d in read_gz_and_parse_json_line_by_line(path):
         idx += 1
-        if idx < num:
-            continue
-        if idx > num:
-            break
         # if idx < num:
         #     continue
-        # if idx > 100:
+        # if idx > num:
         #     break
+        if idx < num:
+            continue
+        if idx > 5000:
+            break
         print(f"start analysis idx: {idx}, url: {html_d['url']}")
         # print(html_d['html'])
         res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
         # parsed_content = """<ccimage by="img" html='&lt;img style="margin:0;padding:0;border:0;" alt="Hosted by uCoz" src="http://s201.ucoz.net/img/cp/6.gif" width="80" height="15" title="Hosted by uCoz"&gt;' format="url" alt="Hosted by uCoz">http://s201.ucoz.net/img/cp/6.gif</ccimage>"""
         # res = img.to_content_list_node(html_d["url"], parsed_content, html_d["html"])
-
         print(f'res size: {len(res)}')
 # 43 svg, figure -- 21, 92 picture --53, 69 base64--186, 62 svg--26, table -- 1
