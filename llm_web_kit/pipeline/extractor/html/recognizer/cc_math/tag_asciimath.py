@@ -13,7 +13,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         if math_render and math_render == MathRender.ASCIIMath:
             if text and text_strip(text):
                 # node.text = cm.replace_math(new_tag, math_type, math_render, r'\\?`[^`]*`', node, extract_asciimath)
-                cm.replace_math(math_type, math_render, r'\\?`[^`]*`', node, None,True)
+                cm.replace_math(math_type, math_render, r'(\\?`[^`]*`)', node, None,True)
                 print(element_to_html(node))
         else:
             return

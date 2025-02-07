@@ -273,8 +273,9 @@ class CCMATH():
 
     def replace_math(self, math_type: str, math_render: str, pattern: str, node: HtmlElement, func, asciimath_wrap: bool = False):
         # pattern re数学公式匹配 func 公式预处理 默认不处理
+        regex = re.compile(pattern)
         original_text = node.text or ''
-        parts = re.split(f'({pattern})', original_text)
+        parts = regex.split(original_text)
         new_tag = CCMATH_INTERLINE if len(parts) == 2 and not parts[0] else CCMATH_INLINE
         node.text = None
         prev_element = None
@@ -286,8 +287,7 @@ class CCMATH():
                     else:
                         prev_element.tail = part
                 else:
-                    math_text = part
-                    math_text = text_strip(math_text.replace('`', '').replace('\\', ''))
+                    math_text = part.strip('`\\')
                     if not math_text:
                         continue
                     math_text = self.extract_asciimath(math_text) if asciimath_wrap else math_text
