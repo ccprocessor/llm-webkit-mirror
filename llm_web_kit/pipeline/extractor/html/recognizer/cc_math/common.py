@@ -8,7 +8,8 @@ from lxml.html import HtmlElement
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import build_cc_element, html_to_element
+from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
+                                         html_to_element)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -304,7 +305,7 @@ class CCMATH():
                     prev_element = new_span
             except Exception:
                 continue
-        return
+        return node
 
 
 if __name__ == '__main__':
@@ -321,3 +322,7 @@ if __name__ == '__main__':
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))
     print(cm.extract_asciimath('x=(-b +- sqrt(b^2 - 4ac))/(2a)'))
+    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),None,True)))
+    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>like this: \`E=mc^2\`</p>'),None,True)))
+    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True)))
+    print(element_to_html(cm.replace_math('','',r'(\\?`[^`]*`)',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True)))
