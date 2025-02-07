@@ -271,7 +271,7 @@ class CCMATH():
         latex_code = str(mmldom)
         return latex_code
 
-    def replace_math(self, math_type: str, math_render: str, pattern: str, node: HtmlElement, func):
+    def replace_math(self, math_type: str, math_render: str, pattern: str, node: HtmlElement, func, asciimath_wrap: bool = False):
         # pattern re数学公式匹配 func 公式预处理 默认不处理
         original_text = node.text or ''
         parts = re.split(f'({pattern})', original_text)
@@ -290,6 +290,7 @@ class CCMATH():
                     math_text = text_strip(math_text.replace('`', '').replace('\\', ''))
                     if not math_text:
                         continue
+                    math_text = self.extract_asciimath(math_text) if asciimath_wrap else math_text
                     wrapped_text = func(math_text) if func else math_text
                     new_span = build_cc_element(
                         html_tag_name=new_tag,

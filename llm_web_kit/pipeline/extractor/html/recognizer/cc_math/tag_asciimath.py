@@ -6,23 +6,6 @@ from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, MathRender, text_strip)
 
 
-def _translator():
-    import py_asciimath.translator.translator as _translator
-    return _translator
-
-
-def ASCIIMath2Tex(*args, **kwargs):
-    return _translator().ASCIIMath2Tex(*args, **kwargs)
-
-
-asciimath2tex = ASCIIMath2Tex(log=False)
-
-
-def extract_asciimath(s):
-    parsed = asciimath2tex.translate(s)
-    return parsed
-
-
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
     try:
         text = node.text
@@ -30,7 +13,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         if math_render and math_render == MathRender.ASCIIMath:
             if text and text_strip(text):
                 # node.text = cm.replace_math(new_tag, math_type, math_render, r'\\?`[^`]*`', node, extract_asciimath)
-                cm.replace_math(math_type, math_render, r'\\?`[^`]*`', node, extract_asciimath)
+                cm.replace_math(math_type, math_render, r'\\?`[^`]*`', node, None,True)
                 print(element_to_html(node))
         else:
             return
