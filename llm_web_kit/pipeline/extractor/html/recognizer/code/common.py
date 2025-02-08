@@ -99,10 +99,11 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, 
 
     language = __detect_language(node)
 
+    # 如果不是由 pre 保护格式，那么把空白字符和换行都去掉
     if not in_pre_tag:
         if node.text:
             node.text = remove_html_newline_and_spaces(node.text)
-        for sub_node in node:
+        for sub_node in node.iter(None):
             if sub_node.text:
                 sub_node.text = remove_html_newline_and_spaces(sub_node.text)
             if sub_node.tail:
