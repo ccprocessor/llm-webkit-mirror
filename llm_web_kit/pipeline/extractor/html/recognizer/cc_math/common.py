@@ -73,6 +73,10 @@ class MathMatchRes:
     NOMATCH = 'no_match'
 
 
+class MATH_TYPE_PATTERN:
+    INLINEMATH = 'inlineMath'
+    DISPLAYMATH = 'displayMath'
+
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
@@ -94,7 +98,10 @@ latex_config = {
 }
 
 asciiMath_config = {
-    'displayMath': [
+    MATH_TYPE_PATTERN.INLINEMATH: [
+        [r'`', r'`'],
+    ],
+    MATH_TYPE_PATTERN.DISPLAYMATH: [
         [r'`', r'`'],
     ],
 }
@@ -103,6 +110,7 @@ MATH_TYPE_TO_DISPLAY = {
     MathType.LATEX: latex_config,
     MathType.ASCIIMATH: asciiMath_config
 }
+
 
 asciimath2tex = ASCIIMath2Tex(log=False)
 
@@ -291,38 +299,42 @@ class CCMATH():
 
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False):
         # pattern re数学公式匹配 func 公式预处理 默认不处理
-        for start, end in MATH_TYPE_TO_DISPLAY[math_type]['displayMath']:
-            pattern = f'({re.escape(start)}[^{re.escape(end)}]*{re.escape(end)})'
-            regex = re.compile(pattern)
-            original_text = node.text or ''
-            parts = regex.split(original_text)
-            node.text = None
-            prev_element = None
-            for i, part in enumerate(parts):
-                try:
-                    if i % 2 == 0:
-                        if prev_element is None:
-                            node.text = part
-                        else:
-                            prev_element.tail = part
-                    else:
-                        math_text = part.strip('`\\')
-                        if not math_text:
-                            continue
-                        math_text = self.extract_asciimath(math_text) if asciimath_wrap else math_text
-                        wrapped_text = func(math_text) if func else math_text
-                        new_span = build_cc_element(
-                            html_tag_name=new_tag,
-                            text=wrapped_text,
-                            tail='',
-                            type=math_type,
-                            by=math_render,
-                            html=wrapped_text
-                        )
-                        node.append(new_span)
-                        prev_element = new_span
-                except Exception:
+        try:
+            pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
+            for start, end in MATH_TYPE_TO_DISPLAY[math_type][pattern_type]:
+                # pattern = f'({re.escape(start)}[^{re.escape(end)}]*{re.escape(end)})'
+                pattern = f'({re.escape(start)}.*?{re.escape(end)})'
+                regex = re.compile(pattern, re.DOTALL)
+                original_text = node.text or ''
+                parts = regex.split(original_text)
+                if len(parts)==1:
                     continue
+                node.text = None
+                prev_element = None
+                for i, part in enumerate(parts):
+                        if i % 2 == 0:
+                            if prev_element is None:
+                                node.text = part
+                            else:
+                                prev_element.tail = part
+                        else:
+                            if not part:
+                                continue
+                            math_text = self.extract_asciimath(part.strip('`').replace('\\','')) if asciimath_wrap else part
+                            wrapped_text = func(math_text) if func else math_text
+                            wrapped_text = self.wrap_math_md(wrapped_text)
+                            new_span = build_cc_element(
+                                html_tag_name=new_tag,
+                                text=wrapped_text,
+                                tail='',
+                                type=math_type,
+                                by=math_render,
+                                html=wrapped_text
+                            )
+                            node.append(new_span)
+                            prev_element = new_span
+        except Exception:
+            return node
         return node
 
 
@@ -345,3 +357,5 @@ if __name__ == '__main__':
     print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True)))
     print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True)))
     print(element_to_html(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False)))
+    print(element_to_html(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>start $f(a,b,c) = (a^2+b^2+c^2)^3$end</p>'),None,False)))
+    print(element_to_html(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False)))

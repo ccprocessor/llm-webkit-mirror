@@ -22,7 +22,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 # node.text = cm.replace_math(new_tag, math_type, math_render, r'\\?`[^`]*`', node, extract_asciimath)
                 new_span = cm.replace_math(new_tag, math_type, math_render, node, None,True)
                 replace_element(node,new_span)
-                print(element_to_html(node))
         else:
             return
     except Exception as e:
