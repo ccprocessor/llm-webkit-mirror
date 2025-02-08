@@ -1,15 +1,6 @@
-
-
      .
-
-
      .
-
-
      .
-
-
-
 
 int i = 0;
 foreach (var col in ColumnsCollection)
@@ -22,12 +13,8 @@ foreach (var col in ColumnsCollection)
     GridView.Columns.Add(column);
     i++;
 }
-
      .
-
-
      .
-
      .
 
      public DataTemplate GetDataboundTemplate(int columnIndex)

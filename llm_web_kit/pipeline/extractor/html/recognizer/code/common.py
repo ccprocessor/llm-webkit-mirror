@@ -6,7 +6,7 @@ from lxml.html import HtmlElement
 from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
-_RE_COMBINE_WHITESPACE = re.compile(r'\s+')
+_RE_COMBINE_WHITESPACE = re.compile(r' +')
 _BLOCK_ELES = [
     'br',
     'address',
@@ -104,6 +104,8 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, 
         if node.text:
             node.text = remove_html_newline_and_spaces(node.text)
         for sub_node in node.iter(None):
+            if sub_node == node:
+                continue
             if sub_node.text:
                 sub_node.text = remove_html_newline_and_spaces(sub_node.text)
             if sub_node.tail:
