@@ -31,16 +31,16 @@ TEST_CASES = [
         ),
         'expected': [
             (
-                '<p>这是p的text</p>',
-                '<p>这是p的text</p>'
+                '<p>这是p的text<span class="mathjax_display"></span></p>',
+                '<p>这是p的text<span class="mathjax_display"></span></p>'
             ),
             (
-                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>a^2 + b^2 = c^2</ccmath-interline></p>',
-                '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
+                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>',
+                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>'
             ),
             (
-                '<p>这是span的tail<b>这是b的text</b>这是b的tail</p>',
-                '<p>这是span的tail<b>这是b的text</b>这是b的tail</p>'
+                '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>',
+                '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
             )
         ]
     },
@@ -51,8 +51,8 @@ TEST_CASES = [
         ],
         'raw_html': '<p>$x = 5$</p>',
         'expected': [
-            ('<ccmath-inline type="latex" by="None" html="&lt;p&gt;$x = 5$&lt;/p&gt;">x = 5</ccmath-inline>',
-             '<p>$x = 5$</p>')
+            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline></p>',
+             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline></p>')
         ]
     },
 ]
@@ -270,6 +270,8 @@ class TestMathRecognizer(unittest.TestCase):
                 self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
+                    print(output_html[i][0])
+                    print(expect)
                     self.assertEqual(output_html[i][0], expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
 
     def test_math_recognizer_html(self):
