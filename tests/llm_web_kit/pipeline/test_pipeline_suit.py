@@ -263,4 +263,4 @@ DEF
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = pipeline.extract(input_data)
-        result.get_content_list().to_mm_md()
+        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
