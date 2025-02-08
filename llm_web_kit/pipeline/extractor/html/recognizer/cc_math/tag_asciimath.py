@@ -1,7 +1,7 @@
 from lxml.html import HtmlElement
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerExp
-from llm_web_kit.libs.html_utils import element_to_html, replace_element
+from llm_web_kit.libs.html_utils import replace_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
     EQUATION_INTERLINE, MathRender, text_strip)
