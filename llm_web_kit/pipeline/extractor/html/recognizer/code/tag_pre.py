@@ -1,6 +1,6 @@
 from lxml.html import HtmlElement
 
-from llm_web_kit.model.code_detector import decide_code_by_str
+# from llm_web_kit.model.code_detector import decide_code_by_str
 from llm_web_kit.pipeline.extractor.html.recognizer.code.common import \
     replace_node_by_cccode
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
