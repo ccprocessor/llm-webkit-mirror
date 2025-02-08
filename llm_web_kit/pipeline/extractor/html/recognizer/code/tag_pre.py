@@ -14,8 +14,8 @@ def modify_tree(root: HtmlElement) -> None:
             hit = True
             break
         if not hit:
-            if decide_code_by_str(''.join(pre_node.itertext(None))) > 0.6:
-                replace_node_by_cccode(pre_node, 'tag_pre')
+            # if decide_code_by_str(''.join(pre_node.itertext(None))) > 0.6:
+            replace_node_by_cccode(pre_node, 'tag_pre')
 
 
 def detect(root: HtmlElement) -> bool:
