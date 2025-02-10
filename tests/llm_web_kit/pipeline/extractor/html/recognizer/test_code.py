@@ -486,7 +486,3 @@ import javax.servlet.http.HttpServletResponse;
 import com.dao.UsersDao;
 ```
 """)
-
-a = TestCodeRecognizer()
-a.setUp()
-a.test_lineno_3()
