@@ -45,7 +45,7 @@ TEST_CASES_HTML = [
         'input': 'assets/ccimage/no_parent_img.html',
         'base_url': 'https://orenburg.shtaketniki.ru/evroshtaketnik-uzkij.html',
         'expected': 2,
-        'ccimg_html': """<html lang="ru"><body><ccimage by="img" html='&lt;img class="lazyload" data-src="/work/img/Screenshot_608.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" title="Видео за>боров и з металлоштакетника" alt="Видео заборов из металлоштакетни>ка"&gt;\n' format="url" alt="Видео заборов из металлоштакетника" title="Видео заборов из металлоштакетника">https://orenburg.shtaketniki.ru/work/img/Screenshot_608.png</ccimage></body></html>"""
+        'ccimg_html': """<htmllang="ru"><body><ccimageby="img"html=\'&lt;imgclass="lazyload"data-src="/work/img/Screenshot_608.png"src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="title="Видеозаборовизметаллоштакетника"alt="Видеозаборовизметаллоштакетника"&gt;\'format="url"alt="В идеозаборовизметаллоштакетника"title="Видеозаборовизметаллоштакетника">https://orenburg.shtaketniki.ru/work/img/Screenshot_608.png</ccimage></body></html>"""
     },
     {
         'input': 'assets/ccimage/object_pdf.html',
