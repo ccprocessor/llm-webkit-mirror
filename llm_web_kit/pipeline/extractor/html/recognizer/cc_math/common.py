@@ -63,7 +63,6 @@ class MathType:
 class MathRender:
     MATHJAX = 'mathjax'
     KATEX = 'katex'
-    ASCIIMath = 'asciimath'
 
 
 # node.text匹配结果：
@@ -82,11 +81,11 @@ class MATH_TYPE_PATTERN:
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
 latex_config = {
-    'inlineMath': [
+    MATH_TYPE_PATTERN.INLINEMATH: [
         ['$', '$'],
         ['\\(', '\\)']
     ],
-    'displayMath': [
+    MATH_TYPE_PATTERN.DISPLAYMATH: [
         ['\\[', '\\]'],
         ['$$', '$$'],
         ['\\begin{equation}', '\\end{equation}'],
@@ -182,17 +181,14 @@ class CCMATH():
         # if head is not None:
         # 检查 MathJax
         for script in tree.iter('script'):
-            if script.get('src') and 'mathjax' in script.get('src', '').lower():
+            src = script.get('src', '').lower()
+            if src and ('mathjax' in src or 'asciimath' in src):
                 return MathRender.MATHJAX
 
         # 检查 KaTeX
         for link in tree.iter('link'):
             if link.get('href') and 'katex' in link.get('href', '').lower():
                 return MathRender.KATEX
-
-        for script in tree.iter('script'):
-            if script.get('src') and 'asciimath' in script.get('src', '').lower():
-                return MathRender.ASCIIMath
 
         return None
 
@@ -242,15 +238,15 @@ class CCMATH():
             # 再检查latex
             if text := text_strip(node.text):
                 # 优先检查行间公式
-                if check_delimiters(latex_config['displayMath'], text) == MathMatchRes.ALLMATCH:
+                if check_delimiters(latex_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.ALLMATCH:
                     return EQUATION_INTERLINE, MathType.LATEX
-                if check_delimiters(latex_config['inlineMath'], text) == MathMatchRes.ALLMATCH:
+                if check_delimiters(latex_config[MATH_TYPE_PATTERN.INLINEMATH], text) == MathMatchRes.ALLMATCH:
                     return EQUATION_INLINE, MathType.LATEX
 
                 # 再检查asciimath，通常被包含在`...`中，TODO：先只支持行间公式
-                if check_delimiters(asciiMath_config['displayMath'], text) == MathMatchRes.ALLMATCH:
+                if check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.ALLMATCH:
                     return EQUATION_INTERLINE, MathType.ASCIIMATH
-                if check_delimiters(asciiMath_config['displayMath'], text) == MathMatchRes.PARTIALMATCH:
+                if check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.PARTIALMATCH:
                     return EQUATION_INLINE, MathType.ASCIIMATH
 
             # 检查script标签
