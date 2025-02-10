@@ -66,7 +66,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 6
+        assert len(self.data_json) == 7
 
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
@@ -255,3 +255,13 @@ Test Test Test
 ABC
 DEF
 ```""", result.get_content_list().to_mm_md())
+
+    def test_image_without_path(self):
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[6]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
+        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt([]))
