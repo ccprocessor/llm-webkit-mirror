@@ -333,19 +333,21 @@ class TestCodeRecognizer(unittest.TestCase):
         )
 
     def test_lineno(self):
-        html = """<pre>  41 package com.servlet;
-  42
-  43 import java.io.IOException;
-  44 import java.io.PrintWriter;
-
-  46 import javax.servlet.ServletException;
-  47 import javax.servlet.http.HttpServlet;
-  48 import javax.servlet.http.HttpServletRequest;
-  49 import javax.servlet.http.HttpServletResponse;
-  50
-import com.dao.UsersDao;
-  52
-  53 public class servlet3 extends HttpServlet {</pre>
+        html = """<pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="hll"><span class="linenos"> 2</span><span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ZOO"</span><span class="p">,</span>
+</span><span class="linenos"> 3</span><span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A zoo of Australian animals."</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">   </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">      </span><span class="nt">"koala"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">         </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"grey"</span><span class="p">,</span>
+<span class="linenos"> 7</span><span class="w">         </span><span class="nt">"legs"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+<span class="linenos"> 8</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos"> 9</span><span class="w">      </span><span class="nt">"kangaroo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">10</span><span class="w">         </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"brown"</span><span class="p">,</span>
+<span class="linenos">11</span><span class="w">         </span><span class="nt">"legs"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="linenos">12</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">13</span><span class="w">   </span><span class="p">}</span>
+<span class="linenos">14</span><span class="p">}</span>
+</pre>
 """
         pipeline = PipelineSuit(self.pipeline_config.as_posix())
         input_data = DataJson(
@@ -364,19 +366,20 @@ import com.dao.UsersDao;
         answer = resp.get_content_list().to_mm_md()
 
         self.assertEqual(answer, """```
-package com.servlet;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.dao.UsersDao;
-
-public class servlet3 extends HttpServlet {
+{
+   "type": "ZOO",
+   "description": "A zoo of Australian animals.",
+   "animals": {
+      "koala": {
+         "color": "grey",
+         "legs": 4
+      },
+      "kangaroo": {
+         "color": "brown",
+         "legs": 2
+      }
+   }
+}
 ```
 """)
 

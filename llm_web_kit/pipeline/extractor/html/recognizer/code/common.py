@@ -117,11 +117,12 @@ def _detect_lineno(s: str) -> tuple[bool, list[int]]:
 
 
 def _remove_linenos(s: str, line_indents: list[int]) -> str:
+    line_indent = min([x for x in line_indents if x])
     lines = s.split('\n')
     new_lines = []
     for line, pos in zip(lines, line_indents):
         if pos:
-            new_lines.append(line[pos:])
+            new_lines.append(line[line_indent:])
         else:
             new_lines.append(line)
     return '\n'.join(new_lines)
