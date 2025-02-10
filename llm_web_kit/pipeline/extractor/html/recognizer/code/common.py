@@ -132,14 +132,18 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
         return
 
     found = False
+    # 认为只有代码元素左侧的元素可能是行号
+    ele_before = None
     for child in node.getparent():
         if child == node:
-            continue
-
-        has_lineno, _ = _detect_lineno('\n'.join(child.itertext()))
-        if has_lineno:
-            child.clear()
-            found = True
+            if ele_before is None:
+                break
+            has_lineno, _ = _detect_lineno('\n'.join(ele_before.itertext()))
+            if has_lineno:
+                node.getparent().remove(ele_before)
+                found = True
+            break
+        ele_before = child
 
     if not found:
         _detect_and_remove_subling_lineno(node.getparent(), depth - 1)
