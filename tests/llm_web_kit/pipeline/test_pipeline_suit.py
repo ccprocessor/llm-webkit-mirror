@@ -56,17 +56,22 @@ class TestPipelineSuitHTML(unittest.TestCase):
             self.base_path,
             'assets/pipline_suit_input/good_data/output_expected/1.main_html.html'
         )
+        self.csdn_lineno_output_file_path = os.path.join(
+            self.base_path,
+            'assets/pipline_suit_input/good_data/output_expected/csdn_lineno.md'
+        )
 
         self.md_expected_content = open(self.md_output_file_path, 'r').read()
         self.txt_expected_content = open(self.txt_output_file_path, 'r').read()
         self.main_html_expected_content = open(self.main_html_output_file_path, 'r').read()
+        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r').read()
 
         self.data_json = []
         with open(self.html_data_path, 'r') as f:
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 7
+        assert len(self.data_json) == 8
 
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
@@ -265,3 +270,12 @@ DEF
         result = pipeline.extract(input_data)
         self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
         self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt([]))
+
+    def test_lineno_detect(self):
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[7]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        self.assertEqual(result.get_content_list().to_mm_md(), self.csdn_lineno_expected_content)

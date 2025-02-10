@@ -331,3 +331,98 @@ class TestCodeRecognizer(unittest.TestCase):
 ```
 """,
         )
+
+    def test_lineno(self):
+        html = """<pre>  41 package com.servlet;
+  42
+  43 import java.io.IOException;
+  44 import java.io.PrintWriter;
+
+  46 import javax.servlet.ServletException;
+  47 import javax.servlet.http.HttpServlet;
+  48 import javax.servlet.http.HttpServletRequest;
+  49 import javax.servlet.http.HttpServletResponse;
+  50
+import com.dao.UsersDao;
+  52
+  53 public class servlet3 extends HttpServlet {</pre>
+"""
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list().to_mm_md()
+
+        self.assertEqual(answer, """```
+package com.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.dao.UsersDao;
+
+public class servlet3 extends HttpServlet {
+```
+""")
+
+    def test_lineno_2(self):
+        html = """
+<div>
+<div class="linenumber index41"><code>&emsp;41&emsp;</code><code>package</code><code>&nbsp;</code><code>com.servlet;</code></div>
+<div class="linenumber index42"><code>&emsp;42&emsp;</code></div>
+<div class="linenumber index43"><code>&emsp;43&emsp;</code><code>import</code><code>&nbsp;</code><code>java.io.IOException;</code></div>
+<div class="linenumber index44"><code>&emsp;44&emsp;</code><code>import</code><code>&nbsp;</code><code>java.io.PrintWriter;</code></div>
+<div class="linenumber index45"><code>&emsp;45&emsp;</code></div>
+<div class="linenumber index46"><code>&emsp;46&emsp;</code><code>import</code><code>&nbsp;</code><code>javax.servlet.ServletException;</code></div>
+<div class="linenumber index47"><code>&emsp;47&emsp;</code><code>import</code><code>&nbsp;</code><code>javax.servlet.http.HttpServlet;</code></div>
+<div class="linenumber index48"><code>&emsp;48&emsp;</code><code>import</code><code>&nbsp;</code><code>javax.servlet.http.HttpServletRequest;</code></div>
+<div class="linenumber index49"><code>&emsp;49&emsp;</code><code>import</code><code>&nbsp;</code><code>javax.servlet.http.HttpServletResponse;</code></div>
+<div class="linenumber index51"><code>&emsp;50&emsp;</code></div>
+<div class="linenumber index50"><code>&emsp;51&emsp;</code><code>import</code><code>&nbsp;</code><code>com.dao.UsersDao;</code></div>
+</div>
+"""
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list().to_mm_md()
+
+        self.assertEqual(answer, """```
+package com.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.dao.UsersDao;
+```
+""")
