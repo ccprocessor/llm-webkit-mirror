@@ -426,3 +426,67 @@ import javax.servlet.http.HttpServletResponse;
 import com.dao.UsersDao;
 ```
 """)
+
+    def test_lineno_3(self):
+        html = """<div>
+<div style="display: inline-block">
+<div class="linenumber index41" style="height: 2em;">7</div>
+<div class="linenumber index42" style="height: 2em;">8</div>
+<div class="linenumber index43" style="height: 2em;">9</div>
+<div class="linenumber index44" style="height: 2em;">10</div>
+<div class="linenumber index45" style="height: 2em;">11</div>
+<div class="linenumber index46" style="height: 2em;">12</div>
+<div class="linenumber index47" style="height: 2em;">13</div>
+<div class="linenumber index48" style="height: 2em;">14</div>
+<div class="linenumber index49" style="height: 2em;">15</div>
+<div class="linenumber index51" style="height: 2em;">16</div>
+<div class="linenumber index50" style="height: 2em;">100</div>
+</div>
+<div style="display: inline-block">
+<div class="linenumber index41" style="height: 2em;"><code>package</code>&nbsp;<code>com.servlet;</code><br></div>
+<div class="linenumber index42" style="height: 2em;"><br></div>
+<div class="linenumber index43" style="height: 2em;"><code>import</code>&nbsp;<code>java.io.IOException;</code><br></div>
+<div class="linenumber index44" style="height: 2em;"><code>import</code>&nbsp;<code>java.io.PrintWriter;</code><br></div>
+<div class="linenumber index45" style="height: 2em;"><br></div>
+<div class="linenumber index46" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.ServletException;</code><br></div>
+<div class="linenumber index47" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.http.HttpServlet;</code><br></div>
+<div class="linenumber index48" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.http.HttpServletRequest;</code><br></div>
+<div class="linenumber index49" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.http.HttpServletResponse;</code><br></div>
+<div class="linenumber index51" style="height: 2em;"><br></div>
+<div class="linenumber index50" style="height: 2em;"><code>import</code>&nbsp;<code>com.dao.UsersDao;</code><br></div>
+</div>
+</div>"""
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list().to_mm_md()
+
+        self.assertEqual(answer, """```
+package com.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.dao.UsersDao;
+```
+""")
+
+a = TestCodeRecognizer()
+a.setUp()
+a.test_lineno_3()
