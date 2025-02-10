@@ -158,11 +158,11 @@ class StructureMapper(ABC):
             math_content = f'$$\n{math_content}\n$$'
             return math_content
         elif node_type == DocElementType.IMAGE:
-            image_path = content_lst_node['content']['path']
-            image_data = content_lst_node['content']['data']
-            image_alt = content_lst_node['content']['alt']
-            image_title = content_lst_node['content']['title']
-            image_caption = content_lst_node['content']['caption']
+            image_path = content_lst_node['content'].get('path', '')
+            image_data = content_lst_node['content'].get('data', '')
+            image_alt = content_lst_node['content'].get('alt', '')
+            image_title = content_lst_node['content'].get('title', '')
+            image_caption = content_lst_node['content'].get('caption', '')
 
             if image_alt:
                 image_alt = image_alt.strip()
@@ -286,11 +286,11 @@ class StructureMapper(ABC):
             math_content = f'$$\n{math_content}\n$$'
             return math_content
         elif node_type == DocElementType.IMAGE:
-            image_path = content_lst_node['content']['path']
-            image_data = content_lst_node['content']['data']
-            image_alt = content_lst_node['content']['alt']
-            image_title = content_lst_node['content']['title']
-            image_caption = content_lst_node['content']['caption']
+            image_path = content_lst_node['content'].get('path', '')
+            image_data = content_lst_node['content'].get('data', '')
+            image_alt = content_lst_node['content'].get('alt', '')
+            image_title = content_lst_node['content'].get('title', '')
+            image_caption = content_lst_node['content'].get('caption', '')
 
             if image_alt:
                 image_alt = image_alt.strip()

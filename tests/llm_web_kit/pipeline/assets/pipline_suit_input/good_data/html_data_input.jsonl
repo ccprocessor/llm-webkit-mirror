@@ -4,3 +4,4 @@
 {"track_id": "educba_com_list", "dataset_name": "test_pipeline_suit", "url": "https://www.test.com","data_source_category": "HTML",  "path":"list_parse.html", "file_bytes": 1000, "meta_info": {"input_datetime": "2020-01-01 00:00:00"}}
 {"track_id": "chemaxon", "dataset_name": "test_pipeline_suit", "url": "https://www.test.com","data_source_category": "HTML",  "path":"code_mix_in_list.html", "file_bytes": 1000, "meta_info": {"input_datetime": "2020-01-01 00:00:00"}}
 {"track_id": "mobile-utopia", "dataset_name": "test_pipeline_suit", "url": "https://www.test.com","data_source_category": "HTML",  "path":"pre_code_mixed.html", "file_bytes": 1000, "meta_info": {"input_datetime": "2020-01-01 00:00:00"}}
+{"track_id": "image-without-path", "dataset_name": "test_pipeline_suit", "url": "https://www.test.com","data_source_category": "HTML",  "path":"image_without_path.html", "file_bytes": 1000, "meta_info": {"input_datetime": "2020-01-01 00:00:00"}}
