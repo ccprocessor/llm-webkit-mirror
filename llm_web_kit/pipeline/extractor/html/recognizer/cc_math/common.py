@@ -1,7 +1,7 @@
 import os
 import re
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 from lxml import etree
 from lxml.html import HtmlElement
@@ -9,7 +9,7 @@ from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         html_to_element)
+                                         element_to_html_s, html_to_element)
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -192,7 +192,7 @@ class CCMATH():
 
         return None
 
-    def get_equation_type(self, html: str) -> Tuple[str, str]:
+    def get_equation_type(self, html: str) -> List[Tuple[str, str]]:
         """根据latex_config判断数学公式是行内还是行间公式.
 
         Args:
@@ -220,34 +220,34 @@ class CCMATH():
         tree = html_to_element(html)
         if tree is None:
             raise ValueError(f'Failed to load html: {html}')
-
+        result = []
         for node in tree.iter():
             # 先检查mathml
             math_elements = node.xpath('//math')
             if len(math_elements) > 0:
                 # 检查math标签是否有display属性且值为block，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/math
                 if math_elements[0].get('display') == 'block':
-                    return EQUATION_INTERLINE, MathType.MATHML
+                    result.append((EQUATION_INTERLINE, MathType.MATHML))
                 else:
                     # 检查math下的mstyle标签，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/mstyle
                     # math_mstyle_element = math_elements[0].xpath('.//mstyle')
                     # if math_mstyle_element and math_mstyle_element[0].get('displaystyle') == 'true':
                     #     return EQUATION_INTERLINE, MathType.MATHML
-                    return EQUATION_INLINE, MathType.MATHML
+                    result.append((EQUATION_INLINE, MathType.MATHML))
 
             # 再检查latex
             if text := text_strip(node.text):
                 # 优先检查行间公式
-                if check_delimiters(latex_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.ALLMATCH:
-                    return EQUATION_INTERLINE, MathType.LATEX
-                if check_delimiters(latex_config[MATH_TYPE_PATTERN.INLINEMATH], text) == MathMatchRes.ALLMATCH:
-                    return EQUATION_INLINE, MathType.LATEX
+                if check_delimiters(latex_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) != MathMatchRes.NOMATCH:
+                    result.append((EQUATION_INTERLINE, MathType.LATEX))
+                if check_delimiters(latex_config[MATH_TYPE_PATTERN.INLINEMATH], text) != MathMatchRes.NOMATCH:
+                    result.append((EQUATION_INLINE, MathType.LATEX))
 
                 # 再检查asciimath，通常被包含在`...`中，TODO：先只支持行间公式
                 if check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.ALLMATCH:
-                    return EQUATION_INTERLINE, MathType.ASCIIMATH
+                    result.append((EQUATION_INTERLINE, MathType.ASCIIMATH))
                 if check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.PARTIALMATCH:
-                    return EQUATION_INLINE, MathType.ASCIIMATH
+                    result.append((EQUATION_INLINE, MathType.ASCIIMATH))
 
             # 检查script标签
             script_elements = tree.xpath('//script')
@@ -255,18 +255,26 @@ class CCMATH():
                 # 判断type属性，如有包含 mode=display 则认为是行间公式
                 for script in script_elements:
                     if 'mode=display' in script.get('type', ''):
-                        return EQUATION_INTERLINE, MathType.LATEX
+                        result.append((EQUATION_INTERLINE, MathType.LATEX))
                     else:
-                        return EQUATION_INLINE, MathType.LATEX
+                        result.append((EQUATION_INLINE, MathType.LATEX))
 
             # 检查 HTML 数学标记（sub 和 sup）
             sub_elements = tree.xpath('//sub')
             sup_elements = tree.xpath('//sup')
             if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
                 (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
-                return EQUATION_INLINE, MathType.HTMLMATH
+                result.append((EQUATION_INLINE, MathType.HTMLMATH))
+        return self.equation_type_to_tag(result)
 
-        return None, None
+    def equation_type_to_tag(self, type_math_type: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
+        result = []
+        for eq_type, math_type in type_math_type:
+            if eq_type == EQUATION_INLINE:
+                result.append((CCMATH_INLINE, math_type))
+            elif eq_type == EQUATION_INTERLINE:
+                result.append((CCMATH_INTERLINE, math_type))
+        return result
 
     def mml_to_latex(self, mml_code):
         # Remove any attributes from the math tag
@@ -296,43 +304,44 @@ class CCMATH():
 
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False):
         # pattern re数学公式匹配 func 公式预处理 默认不处理
+        def replacement(match_text):
+            try:
+                match = match_text.group(0)
+                math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
+                wrapped_text = func(math_text) if func else math_text
+                wrapped_text = self.wrap_math_md(wrapped_text)
+                new_span = build_cc_element(
+                    html_tag_name=new_tag,
+                    text=wrapped_text,
+                    tail='',
+                    type=math_type,
+                    by=math_render,
+                    html=wrapped_text
+                )
+            except Exception:
+                return ''
+            return element_to_html(new_span)
         try:
             pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
+            original_text = node.text or ''
             for start, end in MATH_TYPE_TO_DISPLAY[math_type][pattern_type]:
-                # pattern = f'({re.escape(start)}[^{re.escape(end)}]*{re.escape(end)})'
-                pattern = f'({re.escape(start)}.*?{re.escape(end)})'
+                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
                 regex = re.compile(pattern, re.DOTALL)
-                original_text = node.text or ''
-                parts = regex.split(original_text)
-                if len(parts) == 1:
-                    continue
-                node.text = None
-                prev_element = None
-                for i, part in enumerate(parts):
-                    if i % 2 == 0:
-                        if prev_element is None:
-                            node.text = part
-                        else:
-                            prev_element.tail = part
-                    else:
-                        if not part:
-                            continue
-                        math_text = self.extract_asciimath(part.strip('`').replace('\\','')) if asciimath_wrap else part
-                        wrapped_text = func(math_text) if func else math_text
-                        wrapped_text = self.wrap_math_md(wrapped_text)
-                        new_span = build_cc_element(
-                            html_tag_name=new_tag,
-                            text=wrapped_text,
-                            tail='',
-                            type=math_type,
-                            by=math_render,
-                            html=wrapped_text
-                        )
-                        node.append(new_span)
-                        prev_element = new_span
+                original_text = re.sub(regex, replacement, original_text)
+            node.text = original_text
         except Exception:
-            return node
-        return node
+            return element_to_html_s(self.build_cc_exception_tag())
+        return element_to_html_s(node)
+
+    def build_cc_exception_tag(self):
+        return build_cc_element(
+            html_tag_name='cc-failed',
+            text='xxxx',
+            tail='',
+            type='ccmath-failed',
+            by='ccmath',
+            html='ccmath-failed'
+        )
 
 
 if __name__ == '__main__':
@@ -349,9 +358,9 @@ if __name__ == '__main__':
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))
     print(cm.extract_asciimath('x=(-b +- sqrt(b^2 - 4ac))/(2a)'))
-    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),None,True)))
-    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>like this: \`E=mc^2\`</p>'),None,True)))
-    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True)))
-    print(element_to_html(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True)))
-    print(element_to_html(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False)))
-    print(element_to_html(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False)))
+    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),None,True))
+    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>like this: \`E=mc^2\`</p>'),None,True))
+    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True))
+    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True))
+    print(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False))
+    print(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False))

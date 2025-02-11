@@ -1,27 +1,23 @@
 from lxml.html import HtmlElement
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerExp
-from llm_web_kit.libs.html_utils import replace_element
+from llm_web_kit.libs.html_utils import html_to_element, replace_element
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
-    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
-    EQUATION_INTERLINE, MathType, text_strip)
+    CCMATH, MathType, text_strip)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
     try:
         text = node.text
 
-        equation_type, math_type = cm.get_equation_type(o_html)
-        if equation_type == EQUATION_INLINE:
-            new_tag = CCMATH_INLINE
-        elif equation_type == EQUATION_INTERLINE:
-            new_tag = CCMATH_INTERLINE
-        # 没有获取到公式类型，则不处理
-        else:
+        tag_math_type_list = cm.get_equation_type(o_html)
+        if not tag_math_type_list:
             return
         if text and text_strip(text):
-            asciimath_wrap = True if math_type == MathType.ASCIIMATH else False
-            new_span = cm.replace_math(new_tag, math_type, math_render, node, None,asciimath_wrap)
+            new_span = node
+            for new_tag, math_type in tag_math_type_list:
+                asciimath_wrap = True if math_type == MathType.ASCIIMATH else False
+                new_span = html_to_element(cm.replace_math(new_tag, math_type, math_render, new_span, None,asciimath_wrap))
             replace_element(node,new_span)
             # if math_type == MathType.ASCIIMATH:
             #     text = cm.wrap_math_md(text)

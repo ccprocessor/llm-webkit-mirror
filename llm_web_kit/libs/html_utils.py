@@ -32,6 +32,15 @@ def element_to_html(element : HtmlElement) -> str:
     return s
 
 
+def element_to_html_s(element : HtmlElement) -> str:
+    """将element转换成html字符串并保持标签不被转义."""
+    s = element_to_html(element)
+
+    # 手动避免转义
+    s = s.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&')
+    return s
+
+
 def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> HtmlElement:
     """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
 
