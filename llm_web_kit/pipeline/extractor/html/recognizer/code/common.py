@@ -76,8 +76,6 @@ def __detect_language(node: HtmlElement) -> Optional[str]:
 
 
 def remove_html_newline_and_spaces(s: str) -> str:
-    if not s:
-        return s
     return _RE_COMBINE_WHITESPACE.sub(' ', s.replace('\n', '').replace('\r', ''))
 
 
@@ -134,20 +132,20 @@ def _detect_lineno(s: str, is_code_after_lineno: bool = True) -> tuple[bool, lis
     post_lineno_indent = min([pos_lineno for _, _, pos_lineno, _ in maybe_linenos])
     # 认为存在有三个连续数字就是行号
     # （发现了只有一行行号的 bad case，但是没办法）
-    return max_count > 2, [
-        pre_lineno + lineno + post_lineno_indent
-        for pre_lineno, lineno, _, _ in maybe_linenos
-    ]
+    indents = []
+    for pre_lineno, lineno_len, _, lineno in maybe_linenos:
+        if lineno is not None:
+            indents.append(pre_lineno + lineno_len + post_lineno_indent)
+        else:
+            indents.append(0)
+    return max_count > 2, indents
 
 
 def _remove_linenos(s: str, line_indents: list[int]) -> str:
     lines = s.split('\n')
     new_lines = []
     for line, pos in zip(lines, line_indents):
-        if pos:
-            new_lines.append(line[pos:])
-        else:
-            new_lines.append(line)
+        new_lines.append(line[pos:])
     return '\n'.join(new_lines)
 
 
@@ -162,7 +160,7 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
         if child == node:
             if ele_before is None:
                 break
-            has_lineno, _ = _detect_lineno('\n'.join(ele_before.itertext()))
+            has_lineno, _ = _detect_lineno('\n'.join(ele_before.itertext()), False)
             if has_lineno:
                 node.getparent().remove(ele_before)
                 found = True
