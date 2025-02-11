@@ -6,7 +6,7 @@ from lxml.html import HtmlElement
 from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
-_RE_NUMBER = re.compile(r'^\s*([0-9]+)\s*')
+_RE_NUMBER = re.compile(r'^(\s*)([0-9]+)(\s*)')
 _RE_COMBINE_WHITESPACE = re.compile(r' +')
 _BLOCK_ELES = [
     'br',
@@ -91,14 +91,22 @@ def hit_last_leaf(ele: HtmlElement) -> bool:
 
 def _detect_lineno(s: str) -> tuple[bool, list[int]]:
     lines = s.split('\n')
-    maybe_linenos: list[tuple[int, int | None]] = []
+    maybe_linenos: list[tuple[int, int, int, int | None]] = []
     for line in lines:
         if match := _RE_NUMBER.match(line):
-            maybe_linenos.append((match.span()[1],int(match.groups()[0])))
+            groups = match.groups()
+            maybe_linenos.append(
+                (
+                    len(groups[0]),
+                    len(groups[1]),
+                    len(groups[2]),
+                    int(groups[1]),
+                )
+            )
         else:
-            maybe_linenos.append((0, None))
+            maybe_linenos.append((0, 0, 0, None))
 
-    linenos = [maybe_lineno for _, maybe_lineno in maybe_linenos if maybe_lineno]
+    linenos = [maybe_lineno for _, _, _, maybe_lineno in maybe_linenos if maybe_lineno]
     last = None
     idx = 0
     count = 0
@@ -113,16 +121,19 @@ def _detect_lineno(s: str) -> tuple[bool, list[int]]:
         max_count = max(max_count, count)
         idx += 1
 
-    return max_count > 2, [pos for pos, _ in maybe_linenos]
+    post_lineno_indent = min([pos_lineno for _, _, pos_lineno, _ in maybe_linenos])
+    return max_count > 2, [
+        pre_lineno + lineno + post_lineno_indent
+        for pre_lineno, lineno, _, _ in maybe_linenos
+    ]
 
 
 def _remove_linenos(s: str, line_indents: list[int]) -> str:
-    line_indent = min([x for x in line_indents if x])
     lines = s.split('\n')
     new_lines = []
     for line, pos in zip(lines, line_indents):
         if pos:
-            new_lines.append(line[line_indent:])
+            new_lines.append(line[pos:])
         else:
             new_lines.append(line)
     return '\n'.join(new_lines)
@@ -150,7 +161,9 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
         _detect_and_remove_subling_lineno(node.getparent(), depth - 1)
 
 
-def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, inline: bool = False) -> None:
+def replace_node_by_cccode(
+    node: HtmlElement, by: str, in_pre_tag: bool = True, inline: bool = False
+) -> None:
     """将 node 替换为 cccode 标签.
 
     Args:
