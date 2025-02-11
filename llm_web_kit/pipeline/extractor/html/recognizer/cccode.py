@@ -70,9 +70,15 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
                 break
 
-            for maybe_code in root.iter(CCTag.CC_CODE, CCTag.CC_CODE_INLINE):
-                if not maybe_code.text:
-                    root.remove(maybe_code)
+            def remove_empty_code(r: HtmlElement):
+                for x in r:
+                    if x.tag == CCTag.CC_CODE or x.tag == CCTag.CC_CODE_INLINE:
+                        if not x.text:
+                            r.remove(x)
+                    else:
+                        remove_empty_code(x)
+
+            remove_empty_code(root)
 
             html_str: str = element_to_html(root)
 
