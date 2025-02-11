@@ -71,7 +71,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 8
+        assert len(self.data_json) == 9
 
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
@@ -279,3 +279,12 @@ DEF
         input_data = DataJson(test_data)
         result = pipeline.extract(input_data)
         self.assertEqual(result.get_content_list().to_mm_md(), self.csdn_lineno_expected_content)
+
+    def test_lineno_detect_2(self):
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[8]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        self.assertIn('12.1.  Normative References', result.get_content_list().to_mm_md())
