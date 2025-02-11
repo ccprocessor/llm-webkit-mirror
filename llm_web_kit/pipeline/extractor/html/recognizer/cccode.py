@@ -70,6 +70,10 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
                 break
 
+            for maybe_code in root.iter(CCTag.CC_CODE, CCTag.CC_CODE_INLINE):
+                if not maybe_code.text:
+                    root.remove(maybe_code)
+
             html_str: str = element_to_html(root)
 
             rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, CCTag.CC_CODE))
