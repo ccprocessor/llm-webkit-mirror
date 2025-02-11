@@ -7,6 +7,7 @@ from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
 _RE_NUMBER = re.compile(r'^(\s*)([0-9]+)(\s*)')
+_RE_NUMBER_NO_CODE = re.compile(r'^(\s*)([0-9]+)(\s*)$')
 _RE_COMBINE_WHITESPACE = re.compile(r' +')
 _BLOCK_ELES = [
     'br',
@@ -89,23 +90,31 @@ def hit_last_leaf(ele: HtmlElement) -> bool:
     return hit_last_leaf(children[-1])
 
 
-def _detect_lineno(s: str) -> tuple[bool, list[int]]:
+def _detect_lineno(s: str, is_code_after_lineno: bool = True) -> tuple[bool, list[int]]:
+    """
+    is_code_after_lineno: 行号后是否有代码正文
+    """
     lines = s.split('\n')
     maybe_linenos: list[tuple[int, int, int, int | None]] = []
     for line in lines:
-        if match := _RE_NUMBER.match(line):
+        if is_code_after_lineno:
+            match = _RE_NUMBER.match(line)
+        else:
+            match = _RE_NUMBER_NO_CODE.match(line)
+        if match:
             groups = match.groups()
             maybe_linenos.append(
                 (
-                    len(groups[0]),
-                    len(groups[1]),
-                    len(groups[2]),
+                    len(groups[0]),  # 行号前的空白符号
+                    len(groups[1]),  # 行号
+                    len(groups[2]),  # 行号后的空白符号
                     int(groups[1]),
                 )
             )
         else:
             maybe_linenos.append((0, 0, 0, None))
 
+    # 允许行号断裂，计算连续数字最大出现的次数
     linenos = [maybe_lineno for _, _, _, maybe_lineno in maybe_linenos if maybe_lineno]
     last = None
     idx = 0
@@ -121,7 +130,10 @@ def _detect_lineno(s: str) -> tuple[bool, list[int]]:
         max_count = max(max_count, count)
         idx += 1
 
+    # 行号到代码的空白符长度
     post_lineno_indent = min([pos_lineno for _, _, pos_lineno, _ in maybe_linenos])
+    # 认为存在有三个连续数字就是行号
+    # （发现了只有一行行号的 bad case，但是没办法）
     return max_count > 2, [
         pre_lineno + lineno + post_lineno_indent
         for pre_lineno, lineno, _, _ in maybe_linenos
@@ -144,7 +156,7 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
         return
 
     found = False
-    # 认为只有代码元素左侧的元素可能是行号
+    # 认为只有代码元素左侧的元素可能是行号，避免对无关的表格进行损坏
     ele_before = None
     for child in node.getparent():
         if child == node:
