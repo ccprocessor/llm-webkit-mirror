@@ -94,7 +94,10 @@ def _detect_lineno(s: str, is_code_after_lineno: bool = True) -> tuple[bool, lis
     """
     lines = s.split('\n')
     maybe_linenos: list[tuple[int, int, int, int | None]] = []
+    empty_lines = 0
     for line in lines:
+        if not line:
+            empty_lines += 1
         if is_code_after_lineno:
             match = _RE_NUMBER.match(line)
         else:
@@ -114,6 +117,10 @@ def _detect_lineno(s: str, is_code_after_lineno: bool = True) -> tuple[bool, lis
 
     # 允许行号断裂，计算连续数字最大出现的次数
     linenos = [maybe_lineno for _, _, _, maybe_lineno in maybe_linenos if maybe_lineno]
+    # 至少七成有行号
+    if len(linenos) < (len(maybe_linenos) - empty_lines) * 0.7:
+        return False, []
+
     last = None
     idx = 0
     count = 0
