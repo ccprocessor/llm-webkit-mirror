@@ -46,13 +46,15 @@ TEST_CASES = [
     },
     {
         'input': [
-            ('<p>$x = 5$</p>',
-             '<p>$x = 5$</p>')
+            ('<p>$x = 5$,$$x=6$$</p>',
+             '<p>$x = 5$,$$x=6$$</p>')
         ],
-        'raw_html': '<p>$x = 5$</p>',
+        'raw_html': '<p>$x = 5$,$$x=6$$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline></p>',
-             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline></p>')
+            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>')
         ]
     },
 ]

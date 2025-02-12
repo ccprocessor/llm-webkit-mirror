@@ -209,8 +209,15 @@ class CCMATH():
         """
         def check_delimiters(delims_list, s):
             for start, end in delims_list:
-                all_pattern = f'^{re.escape(start)}.*?{re.escape(end)}$'
-                partial_pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                escaped_start = re.escape(start)
+                if start == '$':
+                    escaped_start = r'(?<!\$)' + escaped_start + r'(?!\$)'
+                # 处理end的特殊情况：如果是$，同样添加环视断言
+                escaped_end = re.escape(end)
+                if end == '$':
+                    escaped_end = r'(?<!\$)' + escaped_end + r'(?!\$)'
+                all_pattern = f'^{escaped_start}.*?{escaped_end}$'
+                partial_pattern = f'{escaped_start}.*?{escaped_end}'
                 if re.search(all_pattern, s, re.DOTALL):
                     return MathMatchRes.ALLMATCH
                 if re.search(partial_pattern, s, re.DOTALL):
@@ -302,7 +309,7 @@ class CCMATH():
         latex_code = str(mmldom)
         return latex_code
 
-    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False):
+    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:
         # pattern re数学公式匹配 func 公式预处理 默认不处理
         def replacement(match_text):
             try:
@@ -330,8 +337,8 @@ class CCMATH():
                 original_text = re.sub(regex, replacement, original_text)
             node.text = original_text
         except Exception:
-            return element_to_html_s(self.build_cc_exception_tag())
-        return element_to_html_s(node)
+            return self.build_cc_exception_tag()
+        return html_to_element(element_to_html_s(node))
 
     def build_cc_exception_tag(self):
         return build_cc_element(

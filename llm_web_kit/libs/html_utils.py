@@ -91,6 +91,8 @@ def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
         for k, v in new_element.attrib.items():
             old_element.attrib[k] = v
         old_element.tail = new_element.tail
+        for child in new_element:
+            old_element.append(child)
 
 
 def iter_node(element: HtmlElement):
