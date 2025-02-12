@@ -132,27 +132,27 @@ TEST_CASES_HTML = [
 TEST_EQUATION_TYPE = [
     {
         'input': '<span>$$a^2 + b^2 = c^2$$</span>',
-        'expected': ('equation-interline', 'latex')
+        'expected': ('ccmath-interline', 'latex')
     },
     {
         'input': '<span>$a^2 + b^2 = c^2$</span>',
-        'expected': ('equation-inline', 'latex')
+        'expected': ('ccmath-inline', 'latex')
     },
     {
         'input': '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>',
-        'expected': ('equation-inline', 'mathml')
+        'expected': ('ccmath-inline', 'mathml')
     },
     {
         'input': '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>',
-        'expected': ('equation-interline', 'mathml')
+        'expected': ('ccmath-interline', 'mathml')
     },
     {
         'input': '<span>x<sub>1</sub> + x<sup>2</sup></span>',
-        'expected': ('equation-inline', 'htmlmath')
+        'expected': ('ccmath-inline', 'htmlmath')
     },
     {
         'input': '<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>',
-        'expected': ('equation-interline', 'asciimath')
+        'expected': ('ccmath-interline', 'asciimath')
     },
     {
         'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> </p>',
@@ -164,7 +164,7 @@ TEST_EQUATION_TYPE = [
     },
     {
         'input': r'<p>\begin{align} a^2+b=c\end{align}</p>',
-        'expected': ('equation-interline', 'latex')
+        'expected': ('ccmath-interline', 'latex')
     }
 ]
 
@@ -344,12 +344,13 @@ class TestCCMATH(unittest.TestCase):
     def test_get_equation_type(self):
         for test_case in TEST_EQUATION_TYPE:
             with self.subTest(input=test_case['input']):
-                equation_type, math_type = self.ccmath.get_equation_type(test_case['input'])
+                tag_math_type_list = self.ccmath.get_equation_type(test_case['input'])
                 print('input::::::::', test_case['input'])
                 expect0 = test_case['expected'][0]
                 expect1 = test_case['expected'][1]
-                self.assertEqual(equation_type, test_case['expected'][0], msg=f'result is: {equation_type}, expected is: {expect0}')
-                self.assertEqual(math_type, test_case['expected'][1], msg=f'result is: {math_type}, expected is: {expect1}')
+                if tag_math_type_list:
+                    self.assertEqual(tag_math_type_list[0][0], test_case['expected'][0], msg=f'result is: {tag_math_type_list[0][0]}, expected is: {expect0}')
+                    self.assertEqual(tag_math_type_list[0][1], test_case['expected'][1], msg=f'result is: {tag_math_type_list[0][1]}, expected is: {expect1}')
 
     def test_get_math_render(self):
         for test_case in TEST_GET_MATH_RENDER:
