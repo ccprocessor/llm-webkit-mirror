@@ -251,7 +251,7 @@ class TestPipelineSuitHTML(unittest.TestCase):
         input_data = DataJson(test_data)
         result = pipeline.extract(input_data)
         self.assertIn("""```
-        this (DEFAULT_SERVER_NAME, DEFAULT_SERVER_PORT);
+this (DEFAULT_SERVER_NAME, DEFAULT_SERVER_PORT);
 ```
 
 Test Test Test

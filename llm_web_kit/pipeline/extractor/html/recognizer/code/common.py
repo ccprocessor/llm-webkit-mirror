@@ -11,6 +11,7 @@ _RE_NUMBER_NO_CODE = re.compile(r'^(\s*)([0-9]+)(\s*)$')
 _RE_COMBINE_WHITESPACE = re.compile(r' +')
 _BLOCK_ELES = [
     'br',
+    'tr',
     'address',
     'article',
     'aside',
@@ -228,6 +229,31 @@ def replace_node_by_cccode(
     has_lineno, line_indents = _detect_lineno(full_text)
     if has_lineno:
         full_text = _remove_linenos(full_text, line_indents)
+
+    chunks = full_text.split('\n')
+    common_space = 0
+    add_space = True
+    while add_space:
+        add_space = False
+        first_space = None
+        for chunk in chunks:
+            if len(chunk) <= common_space:
+                continue
+            if chunk[common_space].isspace():
+                if first_space is None:
+                    add_space = True
+                    first_space = chunk[common_space]
+                elif first_space != chunk[common_space]:
+                    add_space = False
+                    break
+            else:
+                add_space = False
+                break
+        if add_space:
+            common_space += 1
+
+    chunks = [chunk[common_space:] for chunk in chunks]
+    full_text = '\n'.join(chunks)
 
     node.clear(keep_tail=True)
     if language:

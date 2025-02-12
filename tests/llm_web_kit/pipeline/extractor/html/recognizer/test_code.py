@@ -186,6 +186,15 @@ TEST_CASES = [
             'assets/cccode/telerik-8.cs',
         ],
     },
+    {
+        'input': (
+            'assets/cccode/table-code.html',
+            'https://git.znc.in/Dessa/gentoo/src/commit/d8bae05997012bacefdf65cb1f273a437c448129/sys-process/audit/audit-2.6.4.ebuild',
+        ),
+        'expected': [
+            'assets/cccode/table-code-1.sh',
+        ],
+    }
 ]
 
 base_dir = Path(__file__).parent
@@ -325,9 +334,9 @@ class TestCodeRecognizer(unittest.TestCase):
         self.assertEqual(
             answer,
             """```
-  •\tReview your business objectives
-  •\tUncover your challenges and problems
-  •\tVisualize solutions to help move your organization forward
+•\tReview your business objectives
+•\tUncover your challenges and problems
+•\tVisualize solutions to help move your organization forward
 ```
 """,
         )
