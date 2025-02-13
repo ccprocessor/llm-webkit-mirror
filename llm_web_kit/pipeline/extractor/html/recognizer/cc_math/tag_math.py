@@ -46,17 +46,16 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             tmp_node = deepcopy(node)
             tmp_node.tail = None
             mathml = element_to_html(tmp_node)
-            print(mathml)
-            print('--------------------------------')
+
             if 'xmlns:' in mathml or re.search(r'<\w+:', mathml):
-                print('1111111111111111111111111')
                 mathml = re.sub(r'xmlns:\w+="([^"]*)"', r'xmlns="\1"', mathml)  # remove any xmlns:prefix
                 mathml = re.sub(r'<(\w+):', '<', mathml) # remove any prefix:mi
                 mathml = re.sub(r'</(\w+):', '</', mathml) # remove any /prefix:mi
                 mathml = re.sub(r'([^\s])\s+([^\s])', r'\1 \2', mathml) # remove extra spaces
-            
+
             latex = cm.mml_to_latex(mathml)
             latex = cm.wrap_math_md(latex)
+
             # Set the html of the new span tag to the text
             new_span = build_cc_element(html_tag_name=new_tag, text=cm.wrap_math_md(latex), tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)

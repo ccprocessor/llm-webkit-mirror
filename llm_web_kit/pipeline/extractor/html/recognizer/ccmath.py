@@ -133,7 +133,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # math tags
-            if node.tag == 'math':
+            if node.tag == 'math' or node.tag.endswith(':math'):
                 tag_math.modify_tree(cm, math_render, original_html, node, parent)
 
             # script[type="math/asciimath"]

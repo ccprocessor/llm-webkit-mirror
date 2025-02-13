@@ -59,32 +59,32 @@ TEST_CASES = [
 
 TEST_CASES_HTML = [
     # math-container, latex + mathjax
-    # {
-    #     'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
-    #     'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
-    #     'expected': 'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-    #     ],
-    #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-    #     'expected': 'assets/ccmath/libretexts_1_p_latex_mathjax_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/mathjax_tex_chtml.html',
-    #     ],
-    #     'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-    #     'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
-    # },
-    # {
-    #     'input': [
-    #         'assets/ccmath/wikipedia_1_math_annotation.html',
-    #     ],
-    #     'base_url': 'https://en.m.wikipedia.org/wiki/Variance',
-    #     'expected': 'assets/ccmath/wikipedia_1_math_annotation_1.html'
-    # },
+    {
+        'input': ['assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'],
+        'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
+        'expected': 'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/libretexts_1_p_latex_mathjax.html',
+        ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/libretexts_1_p_latex_mathjax_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/mathjax_tex_chtml.html',
+        ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/mathjax_tex_chtml_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/wikipedia_1_math_annotation.html',
+        ],
+        'base_url': 'https://en.m.wikipedia.org/wiki/Variance',
+        'expected': 'assets/ccmath/wikipedia_1_math_annotation_1.html'
+    },
     {
         'input': [
             'assets/ccmath/mathjax-mml-chtml.html',
@@ -92,39 +92,39 @@ TEST_CASES_HTML = [
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_1.html'
     },
-    # # img latex.php
-    # {
-    #     'input': ['assets/ccmath/geoenergymath_img.html'],
-    #     'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
-    #     'expected': 'assets/ccmath/geoenergymath_img_1.html'
-    # },
-    # # # img codecogs.com
-    # {
-    #     'input': ['assets/ccmath/img_codecogs_com.html'],
-    #     'base_url': 'https://up-skill.me/math/find-interquartile-range.html',
-    #     'expected': 'assets/ccmath/img_codecogs_com_1.html'
-    # },
-    # # img mimetex.cgi
-    # {
-    #     'input': ['assets/ccmath/img_mimetex_cgi.html'],
-    #     'base_url': 'https://math.eretrandre.org/tetrationforum/showthread.php?tid=965',
-    #     'expected': 'assets/ccmath/img_mimetex_cgi_1.html'
-    # },
-    # {
-    #     'input': ['assets/ccmath/katex_mathjax.html'],
-    #     'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
-    #     'expected': 'assets/ccmath/katex_mathjax_1.html'
-    # },
-    # {
-    #     'input': ['assets/ccmath/asciimath.html'],
-    #     'base_url': 'https://www.wjagray.co.uk/maths/ASCIIMathTutorial.html',
-    #     'expected': 'assets/ccmath/asciimath_1.html'
-    # },
-    # {
-    #     'input': ['assets/ccmath/mathtex_script_type.html'],
-    #     'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
-    #     'expected': 'assets/ccmath/mathtex_script_type_1.html'
-    # },
+    # img latex.php
+    {
+        'input': ['assets/ccmath/geoenergymath_img.html'],
+        'base_url': 'https://geoenergymath.com/2017/03/04/the-chandler-wobble-challenge/',
+        'expected': 'assets/ccmath/geoenergymath_img_1.html'
+    },
+    # # img codecogs.com
+    {
+        'input': ['assets/ccmath/img_codecogs_com.html'],
+        'base_url': 'https://up-skill.me/math/find-interquartile-range.html',
+        'expected': 'assets/ccmath/img_codecogs_com_1.html'
+    },
+    # img mimetex.cgi
+    {
+        'input': ['assets/ccmath/img_mimetex_cgi.html'],
+        'base_url': 'https://math.eretrandre.org/tetrationforum/showthread.php?tid=965',
+        'expected': 'assets/ccmath/img_mimetex_cgi_1.html'
+    },
+    {
+        'input': ['assets/ccmath/katex_mathjax.html'],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'assets/ccmath/katex_mathjax_1.html'
+    },
+    {
+        'input': ['assets/ccmath/asciimath.html'],
+        'base_url': 'https://www.wjagray.co.uk/maths/ASCIIMathTutorial.html',
+        'expected': 'assets/ccmath/asciimath_1.html'
+    },
+    {
+        'input': ['assets/ccmath/mathtex_script_type.html'],
+        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
+        'expected': 'assets/ccmath/mathtex_script_type_1.html'
+    },
     {
         'input': [
             'assets/ccmath/mathjax-mml-chtml_prefix.html',
@@ -295,7 +295,7 @@ class TestMathRecognizer(unittest.TestCase):
             print(len(parts))
             expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
-            # self.assertEqual(len(parts), len(expect_formulas))
+            self.assertEqual(len(parts), len(expect_formulas))
             # answers = []
             for expect, part in zip(expect_formulas, parts):
                 a_tree = html_to_element(part)
@@ -305,7 +305,7 @@ class TestMathRecognizer(unittest.TestCase):
                 print('expect::::::::', expect)
                 print('answer::::::::', answer)
                 # answers.append(answer)
-                # self.assertEqual(expect, answer)
+                self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
 
     def write_to_html(self, answers, file_name):
