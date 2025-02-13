@@ -46,7 +46,8 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             tmp_node = deepcopy(node)
             tmp_node.tail = None
             mathml = element_to_html(tmp_node)
-
+            print(mathml)
+            print('--------------------------------')
             if 'xmlns:' in mathml or re.search(r'<\w+:', mathml):
                 print('1111111111111111111111111')
                 mathml = re.sub(r'xmlns:\w+="([^"]*)"', r'xmlns="\1"', mathml)  # remove any xmlns:prefix

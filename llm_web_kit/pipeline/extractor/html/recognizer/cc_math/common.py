@@ -196,7 +196,7 @@ class CCMATH():
 
         for node in tree.iter():
             # 先检查mathml
-            math_elements = node.xpath('//math')
+            math_elements = node.xpath('//math | //*[contains(local-name(), ":math")]')
             if len(math_elements) > 0:
                 # 检查math标签是否有display属性且值为block，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/math
                 if math_elements[0].get('display') == 'block':
