@@ -1,32 +1,25 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns:m="http://www.w3.org/1998/Math/MathML">
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width">
-    <title>MathJax v3 with MathML input and HTML output</title>
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-            },
-            options: {
-                enableMathMLSpacing: true
-            },
-            mml: {
-                parseAs: 'xml',
-                forceReparse: true
-            },
-            loader: {
-                load: ['input/tex', 'input/mml', 'output/chtml']  // 加载 TeX 和 MathML 输入处理器
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js"></script></head>
-
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width">
+  <title>MathJax v3 with TeX input and HTML output</title>
+  <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
 <body>
     <h1>MathJax v3 beta: TeX input, HTML output test</h1>
+
+    <p>
+    When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+    </p>
 
     <h2>The Lorenz Equations</h2>
 
@@ -45,50 +38,55 @@
      \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
     \]</p>
 
-    <h2>This is an example of math tag with prefix: </h2>
+    <h2>A Cross Product Formula</h2>
 
-    <m:math xmlns:m="http://www.w3.org/1998/Math/MathML" display="block">
-            <m:mi>P</m:mi>
-            <m:mo stretchy="false">(</m:mo>
-            <m:mi>E</m:mi>
-            <m:mo stretchy="false">)</m:mo>
-            <m:mo>=</m:mo>
-            <m:mrow class="MJX-TeXAtom-ORD">
-                <m:mrow>
-                    <m:mrow class="MJX-TeXAtom-OPEN">
-                        <m:mo maxsize="2.047em" minsize="2.047em">(</m:mo>
-                    </m:mrow>
-                    <m:mfrac linethickness="0">
-                        <m:mi>n</m:mi>
-                        <m:mi>k</m:mi>
-                    </m:mfrac>
-                    <m:mrow class="MJX-TeXAtom-CLOSE">
-                        <m:mo maxsize="2.047em" minsize="2.047em">)</m:mo>
-                    </m:mrow>
-                </m:mrow>
-            </m:mrow>
-            <m:msup>
-                <m:mi>p</m:mi>
-                <m:mi>k</m:mi>
-            </m:msup>
-            <m:mo stretchy="false">(</m:mo>
-            <m:mn>1</m:mn>
-            <m:mo>&#x2212;
-                <!-- − -->
-            </m:mo>
-            <m:mi>p</m:mi>
-            <m:msup>
-                <m:mo stretchy="false">)</m:mo>
-                <m:mrow class="MJX-TeXAtom-ORD">
-                    <m:mi>n</m:mi>
-                    <m:mo>&#x2212;
-                        <!-- − -->
-                    </m:mo>
-                    <m:mi>k</m:mi>
-                </m:mrow>
-            </m:msup>
-        </m:math>
+    <p>\[
+      \mathbf{V}_1 \times \mathbf{V}_2 =
+       \begin{vmatrix}
+        \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+        \frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \\
+        \frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \\
+       \end{vmatrix}
+    \]</p>
+
+    <h2>The probability of getting \(k\) heads when flipping \(n\) coins is:</h2>
+
+    <p>\[P(E) = {n \choose k} p^k (1-p)^{ n-k} \]</p>
+
+    <h2>An Identity of Ramanujan</h2>
+
+    <p>\[
+       \frac{1}{(\sqrt{\phi \sqrt{5}}-\phi) e^{\frac25 \pi}} =
+         1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
+          {1+\frac{e^{-8\pi}} {1+\ldots} } } }
+    \]</p>
+
+    <h2>A Rogers-Ramanujan Identity</h2>
+
+    <p>\[
+      1 +  \frac{q^2}{(1-q)}+\frac{q^6}{(1-q)(1-q^2)}+\cdots =
+        \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},
+         \quad\quad \text{for $|q| &lt; 1$}.
+    \]</p>
+
+    <h2>Maxwell's Equations</h2>
+
+    <p>
+    \begin{align}
+      \nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &amp; = \frac{4\pi}{c}\vec{\mathbf{j}} \\
+      \nabla \cdot \vec{\mathbf{E}} &amp; = 4 \pi \rho \\
+      \nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} &amp; = \vec{\mathbf{0}} \\
+      \nabla \cdot \vec{\mathbf{B}} &amp; = 0
+    \end{align}
+    </p>
+
+    <h2>In-line Mathematics</h2>
+
+    <p>Finally, while display equations look good for a page of samples, the
+    ability to mix math and text in a paragraph is also important.  This
+    expression $\sqrt{3x-1}+(1+x)^2$ is an example of an inline equation.  As
+    you see, MathJax equations can be used this way as well, without unduly
+    disturbing the spacing between lines.</p>
 
 </body>
-
 </html>
