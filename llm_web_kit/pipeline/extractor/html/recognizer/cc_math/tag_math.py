@@ -13,7 +13,7 @@ from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
     try:
-        annotation_tags = node.xpath('.//annotation[@encoding="application/x-tex"]')
+        annotation_tags = node.xpath('.//*[local-name()="annotation"][@encoding="application/x-tex"]')
         math_type = MathType.MATHML
         equation_type, math_type = cm.get_equation_type(o_html)
         if equation_type == EQUATION_INLINE:
@@ -46,15 +46,13 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             tmp_node = deepcopy(node)
             tmp_node.tail = None
             mathml = element_to_html(tmp_node)
-            # If this includes xmlns:mml, then we need to replace all
-            # instances of mml: with nothing
-            if 'xmlns:mml' in mathml:
-                mathml = mathml.replace('mml:', '')
-                # replace xmlns:mml="..." with nothing
-                mathml = re.sub(r'xmlns:mml=".*?"', '', mathml)
-            # if 'xmlns=' in mathml:
-            #     mathml = re.sub(r"xmlns='.*?'", '', mathml)
-            # TODO: 这样转换方法有很多错误，见测试用例mathjax-mml-chtml.html，需要优化
+
+            if 'xmlns:' in mathml or re.search(r'<\w+:', mathml):
+                mathml = re.sub(r'xmlns:\w+="([^"]*)"', r'xmlns="\1"', mathml)  # remove any xmlns:prefix
+                mathml = re.sub(r'<(\w+):', '<', mathml) # remove any prefix:mi
+                mathml = re.sub(r'</(\w+):', '</', mathml) # remove any /prefix:mi
+                mathml = re.sub(r'([^\s])\s+([^\s])', r'\1 \2', mathml) # remove extra spaces
+            
             latex = cm.mml_to_latex(mathml)
             latex = cm.wrap_math_md(latex)
             # Set the html of the new span tag to the text
