@@ -49,9 +49,9 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
 
             if 'xmlns:' in mathml or re.search(r'<\w+:', mathml):
                 mathml = re.sub(r'xmlns:\w+="([^"]*)"', r'xmlns="\1"', mathml)  # remove any xmlns:prefix
-                mathml = re.sub(r'<(\w+):', '<', mathml) # remove any prefix:mi
-                mathml = re.sub(r'</(\w+):', '</', mathml) # remove any /prefix:mi
-                mathml = re.sub(r'([^\s])\s+([^\s])', r'\1 \2', mathml) # remove extra spaces
+                mathml = re.sub(r'<(\w+):', '<', mathml)  # remove any prefix:mi
+                mathml = re.sub(r'</(\w+):', '</', mathml)  # remove any /prefix:mi
+                mathml = re.sub(r'([^\s])\s+([^\s])', r'\1 \2', mathml)  # remove extra spaces
 
             latex = cm.mml_to_latex(mathml)
             latex = cm.wrap_math_md(latex)
@@ -68,4 +68,3 @@ if __name__ == '__main__':
     element = html_to_element(html)
     cm = CCMATH()
     modify_tree(cm, 'mathjax', html, element, element)
-
