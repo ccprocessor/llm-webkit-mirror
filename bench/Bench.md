@@ -1,10 +1,11 @@
 # 概要
 
-`bench`目录是用于评估不同网页抽取仓库的抽取效果，比如`llm-webkit-mirror`，`unstructured`，`magic_html`等。评测对象最小粒度是单个网页数据。
+`bench`目录是用于评估不同网页抽取仓库的抽取效果，比如`llm-webkit-mirror`，[unstructured](https://github.com/Unstructured-IO/unstructured)，[magic_html](https://github.com/opendatalab/magic-html)等。评测对象最小粒度是单个网页数据。
 
 # 目录结构
 
-原始网页在`bench/html`目录下，按数学公式(`ccmath`)，代码图片(`cccode`)，表格(`cctable`)等分类。抽取结果默认保存在`bench/output`目录下。
+数据集：原始网页数据在`bench/data/origin`目录下，GT默认保存在`bench/data/groundtruth`目录下。
+评测结果：评测结果默认保存在`bench/output`目录下日期+随机数的文件夹中，如`20250212_113509_5bbf75c0`。
 
 # 使用方法
 
@@ -14,7 +15,7 @@ python eval.py
 
 # 评估报告及评估指标
 
-评估报告默认保存在`bench/output`目录下日期+随机数的文件夹中，如`20250212_113509_5bbf75c0`。每一个评测结果包含`summary.json`和`detail.json`两个文件，`summary.json`是评估指标的汇总，`detail.json`是评估指标的详细结果。
+每一个评测结果包含`summary.json`和`detail.json`两个文件，`summary.json`是评估指标的汇总，`detail.json`是评估指标的详细结果。
 
 # 评估报告示例
 
