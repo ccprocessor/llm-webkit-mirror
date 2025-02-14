@@ -6,6 +6,7 @@ from pathlib import Path
 from eval.magic_html import eval_magic_html
 from eval.ours import eval_ours_extract_html
 from eval.unstructured_eval import eval_unstructured
+from utils.statics import Statics
 
 from llm_web_kit.dataio.filebase import (FileBasedDataReader,
                                          FileBasedDataWriter)
@@ -19,11 +20,11 @@ args = parser.parse_args()
 
 
 root = Path(__file__).parent
-sourcePath = os.path.join(root, 'html/all.json')
+sourcePath = os.path.join(root, 'data/all.json')
 outputPath = os.path.join(root, 'output')
 pipelineConfigPath = os.path.join(root, 'config/ours_config.jsonc')
 pipeline_data_path = os.path.join(root, 'config/ours_data_config.jsonl')
-
+statics_obj = Statics()
 
 reader = FileBasedDataReader('')
 writer = FileBasedDataWriter('')
@@ -37,8 +38,8 @@ def main():
         # files结构是{"filename":{"url":"","filepath":""}}，获取filepath
         for fileName in files:
             url = files[fileName]['url']
-            filepath = files[fileName]['filepath']
-            html = reader.read(f'{root}/html/{filepath}').decode('utf-8')
+            filepath = files[fileName]['origin_filepath']
+            html = reader.read(f'{root}/data/{filepath}').decode('utf-8')
 
             # 评估
             if args.tool == 'magic_html':
@@ -48,10 +49,12 @@ def main():
             elif args.tool == 'ours':
                 print(pipelineConfigPath)
                 print(pipeline_data_path)
-                print(f'{root}/html/{filepath}')
-                output, content_list, main_html = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/html/{filepath}')
+                print(f'{root}/data/{filepath}')
+                output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{filepath}', statics_obj)
                 out['content_list'] = content_list
                 out['main_html'] = main_html
+                out['statics'] = statics
+                statics_obj.print()
             else:
                 raise ValueError(f'Invalid tool: {args.tool}')
 

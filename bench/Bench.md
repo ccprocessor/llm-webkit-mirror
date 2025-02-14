@@ -1,6 +1,10 @@
 # 概要
 
-`bench`目录是用于评估不同网页抽取仓库的抽取效果，比如`llm-webkit-mirror`，`unstructured`，`magic_html`等。原始网页在`bench/html`目录下，按数学公式(`ccmath`)，代码图片(`cccode`)，表格(`cctable`)等分类。抽取结果默认保存在`bench/output`目录下。
+`bench`目录是用于评估不同网页抽取仓库的抽取效果，比如`llm-webkit-mirror`，`unstructured`，`magic_html`等。评测对象最小粒度是单个网页数据。
+
+# 目录结构
+
+原始网页在`bench/html`目录下，按数学公式(`ccmath`)，代码图片(`cccode`)，表格(`cctable`)等分类。抽取结果默认保存在`bench/output`目录下。
 
 # 使用方法
 
@@ -8,4 +12,90 @@
 python eval.py
 ```
 
-# 评估指标
+# 评估报告及评估指标
+
+评估报告默认保存在`bench/output`目录下日期+随机数的文件夹中，如`20250212_113509_5bbf75c0`。每一个评测结果包含`summary.json`和`detail.json`两个文件，`summary.json`是评估指标的汇总，`detail.json`是评估指标的详细结果。
+
+# 评估报告示例
+
+`summary.json`主要展示所有评测数据“评测指标”，“评测耗时”的整体和元素级别的结果：
+
+```json
+{
+    "task_id": "5bbf7c8c-e8f2-11ef-a5a8-acde48001122",  # 评测任务唯一id
+    "output_path": "outputs/20250212_113509_5bbf75c0",  # 评测结果保存路径
+    "create_time": "20250212_113509",  # 评测任务创建时间
+    "finish_time": "20250212_113632",  # 评测任务完成时间
+    "total": 52002,  # 总评测文件数量
+    "result": { # 评测结果
+        "Overall": {
+            "count": 52000, # 元素数量
+            "type_acc": 0.9997, # 元素类型识别准确性
+            "content_acc": 0.9997 # 元素内容识别准确性
+        },
+        "Math": {
+            "count": 52, # 元素数量
+            "type_acc": 0.9997, # 元素类型识别准确性
+            "content_acc": 0.9997 # 元素内容识别准确性
+        },
+        "Code": {
+            "count": 5, # 元素数量
+            "type_acc": 0.9997, # 元素类型识别准确性
+            "content_acc": 0.9997 # 元素内容识别准确性
+        },
+        ...
+        "error": {
+            "count": 2, # 错误数量
+        }
+    }
+}
+```
+
+`detail.json`主要展示每个评测数据“评测指标”，“评测耗时”等元素级别的结果详情，方便分析哪一个网页的哪一个元素抽取效果不好：
+
+```json
+{
+    "task_id": "5bbf7c8c-e8f2-11ef-a5a8-acde48001122",  # 评测任务唯一id
+    "output_path": "outputs/20250212_113509_5bbf75c0",  # 评测结果保存路径
+    "create_time": "20250212_113509",  # 评测任务创建时间
+    "finish_time": "20250212_113632",  # 评测任务完成时间
+    "detail": {
+        "success": [
+            {
+                "file_path": "html/ccmath/1.html",  # 评测文件路径
+                "result": { # 评测结果
+                    "Overall": {
+                        "count": 52000, # 元素数量
+                        "type_acc": 0.9997, # 元素类型识别准确性
+                        "content_acc": 0.9997 # 元素内容识别准确性
+                    },
+                    "Math": {
+                        "count": 52, # 元素数量
+                        "type_acc": 0.9997, # 元素类型识别准确性
+                        "content_acc": 0.9997 # 元素内容识别准确性
+                    },
+                    "Code": {
+                        "count": 5, # 元素数量
+                        "type_acc": 0.9997, # 元素类型识别准确性
+                        "content_acc": 0.9997 # 元素内容识别准确性
+                    },
+                    ...
+                }
+            },
+            ...
+        ],
+        "error": [
+            {
+                "file_path": "html/ccmath/1.html", # 评测文件路径
+                "error_reason": "type_error", # 错误原因
+                "error_detail": "type_error" # 错误详情
+            },
+            ...
+        ]
+    }
+}
+```
+
+# 如何新增评估数据
+
+评测数据集会根据`pipeline`的功能迭代新增数据，如何快速构建新增数据的`groundtruth`按照下面方法：
