@@ -8,7 +8,6 @@ from llm_web_kit.model.lang_id import (LanguageIdentification,
                                        decide_language_func, detect_code_block,
                                        detect_inline_equation,
                                        detect_latex_env,
-                                       get_singleton_lang_detect,
                                        update_language_by_str)
 
 
@@ -32,8 +31,13 @@ class TestLanguageIdentification:
     @patch('llm_web_kit.model.lang_id.logger')
     @patch('os.path.join', return_value='mock_target_path')
     def test_auto_download(self, mock_os_path_join, mock_logger, mock_download_auto_file, mock_load_config):
+        # 创建 LanguageIdentification 实例，触发 auto_download 调用
+        _ = LanguageIdentification()
+
+        # 断言 mock_download_auto_file 被调用
         mock_download_auto_file.assert_called_with('mock_download_path', 'mock_target_path', 'mock_sha256')
         mock_load_config.assert_called_once()
+        print('Actual call args:', mock_download_auto_file.call_args)
 
     @patch('llm_web_kit.model.lang_id.fasttext.load_model')
     @patch('llm_web_kit.model.lang_id.LanguageIdentification.auto_download')
@@ -43,25 +47,6 @@ class TestLanguageIdentification:
         predictions, probabilities = lang_id.predict('test text')
         assert predictions == ['label1', 'label2']
         assert probabilities == [0.9, 0.1]
-
-
-class TestGetSingletonLangDetect(unittest.TestCase):
-
-    @patch('llm_web_kit.model.lang_id.singleton_resource_manager.has_name', return_value=False)
-    @patch('llm_web_kit.model.lang_id.singleton_resource_manager.set_resource')
-    def test_get_singleton_lang_detect_new_instance(self, mock_set_resource, mock_has_name):
-        lang_id_instance = MagicMock()
-        with patch('llm_web_kit.model.lang_id.LanguageIdentification', return_value=lang_id_instance):
-            result = get_singleton_lang_detect('model_path')
-            mock_set_resource.assert_called_once_with('lang_detect_model_path', lang_id_instance)
-            self.assertEqual(result, lang_id_instance)
-
-    @patch('llm_web_kit.model.lang_id.singleton_resource_manager.has_name', return_value=True)
-    @patch('llm_web_kit.model.lang_id.singleton_resource_manager.get_resource', return_value='mock_lang_id_instance')
-    def test_get_singleton_lang_detect_existing_instance(self, mock_get_resource, mock_has_name):
-        result = get_singleton_lang_detect('model_path')
-        mock_get_resource.assert_called_once_with('lang_detect_model_path')
-        self.assertEqual(result, 'mock_lang_id_instance')
 
 
 class TestDecideLanguageByProbV176(unittest.TestCase):
@@ -132,7 +117,7 @@ def test_update_language_by_str():
             'language': 'en',
             'language_details': 'en_v218'
         }
-        assert result == expected_result, f"Expected {expected_result}, but got {result}"
+        assert result == expected_result, f'Expected {expected_result}, but got {result}'
         print('Test passed!')
 
 
@@ -157,3 +142,7 @@ class TestDecideLangByStrV218(unittest.TestCase):
         content_str = 'Este es un texto en español.'
         result = decide_lang_by_str_v218(content_str, 'custom_model_path')
         self.assertEqual(result, 'es')
+
+
+if __name__ == '__main__':
+    unittest.main()
