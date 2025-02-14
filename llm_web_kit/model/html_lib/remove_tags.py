@@ -47,8 +47,7 @@ def all_tag_list_to_remove() -> list[str]:
 
 
 def remove_tags(root: html.HtmlElement, tag_type_list: list[str]) -> html.HtmlElement:
-    """
-    Remove all tags of a certain type from the html page
+    """Remove all tags of a certain type from the html page.
 
     Args:
         root (etree.ElementTree): The root of the html page
@@ -68,8 +67,7 @@ def remove_tags(root: html.HtmlElement, tag_type_list: list[str]) -> html.HtmlEl
 
 
 def remove_all_tags(root: html.HtmlElement) -> html.HtmlElement:
-    """
-    Remove all tags from the html page
+    """Remove all tags from the html page.
 
     Args:
         root (etree.ElementTree): The root of the html page
@@ -99,9 +97,8 @@ def remove_invisible_tags(root: html.HtmlElement) -> html.HtmlElement:
 
 
 def is_blank_tag(root: html.HtmlElement) -> bool:
-    """
-    Check if a tag is nonblank
-    None blank tags if this is an image or if it has text or if it has children with tail text
+    """Check if a tag is nonblank None blank tags if this is an image or if it
+    has text or if it has children with tail text.
 
     Args:
         tag (html.HtmlElement): The tag to check

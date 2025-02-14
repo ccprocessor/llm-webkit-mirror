@@ -1,10 +1,10 @@
-from lxml import html
 import re
+
+from lxml import html
 
 
 def extract_tag_text(element: html.HtmlElement) -> str:
-    """
-    Extract text from an html element
+    """Extract text from an html element.
 
     Args:
         element (html.HtmlElement): The element to extract text from
@@ -39,8 +39,7 @@ def extract_tag_text(element: html.HtmlElement) -> str:
 
 
 def get_title(root: html.HtmlElement) -> str:
-    """
-    Get the title of the html page
+    """Get the title of the html page.
 
     Args:
         root (html.HtmlElement): The root of the html page
@@ -54,16 +53,14 @@ def get_title(root: html.HtmlElement) -> str:
 
 
 def remove_blank_text(root: html.HtmlElement):
-    """
-    Remove blank text in html element.
-    Skip <pre> tag and <code> tag and there children.
+    """Remove blank text in html element. Skip <pre> tag and <code> tag and
+    there children.
 
     Args:
         root (html.HtmlElement): The root of the html page
 
     Returns:
         html.HtmlElement: The root of the html page after removing blank text
-
     """
 
     skip_elements = set()
@@ -83,9 +80,8 @@ def remove_blank_text(root: html.HtmlElement):
 
 
 def document_fromstring(html_str: str):
-    """
-    Parse html string to lxml.html.HtmlElement
-    default remove blank text, comments, processing instructions
+    """Parse html string to lxml.html.HtmlElement default remove blank text,
+    comments, processing instructions.
 
     Args:
         html_str (str): The html string to parse
