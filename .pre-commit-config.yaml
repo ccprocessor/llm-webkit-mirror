@@ -10,6 +10,7 @@ repos:
     rev: 5.11.5
     hooks:
       - id: isort
+        args: [ "--profile", "black" ]
   - repo: https://github.com/pre-commit/mirrors-yapf
     rev: v0.32.0
     hooks:
@@ -52,3 +53,7 @@ repos:
     hooks:
       - id: docformatter
         args: [ "--in-place", "--wrap-descriptions", "119" ]
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
