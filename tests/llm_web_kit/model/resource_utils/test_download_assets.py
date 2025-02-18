@@ -60,7 +60,7 @@ class Test_calc_file_sha256:
             test_bytes = b'hello world' * 10000
             f.write(test_bytes)
             f.flush()
-            assert calc_file_sha256(f.name) == hashlib.md5(test_bytes).hexdigest()
+            assert calc_file_sha256(f.name) == hashlib.sha256(test_bytes).hexdigest()
 
 
 def read_mockio_size(mock_io: io.BytesIO, size: int):
