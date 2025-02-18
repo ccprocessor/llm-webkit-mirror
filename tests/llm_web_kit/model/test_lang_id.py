@@ -51,25 +51,60 @@ class TestLanguageIdentification(unittest.TestCase):
         assert probabilities == [0.9, 0.1]
 
 
+language_dict = {
+    'eng': 'en',
+    'zho': 'zh',
+    'hrv': 'hr',
+    'srp': 'sr',
+    'eng__Latn': 'en',  # 添加对 __label__eng__Latn 的支持
+    # 添加其他映射
+}
+
+
 class TestDecideLanguageByProbV176(unittest.TestCase):
+    def test_pattern_218(self):
+        # 使用符合 pattern_218 的输入
+        predictions = ('__label__eng_Latn', '__label__zho_Hans')
+        probabilities = (0.7, 0.3)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'en')
 
-    def test_decide_language_by_prob_v176(self):
-        predictions = ('__label__en', '__label__zh', '__label__es')
-        probabilities = (0.6, 0.3, 0.1)
-        result = decide_language_by_prob_v176(predictions, probabilities)
-        self.assertEqual(result, 'en')
+    def test_unsupported_prediction_format(self):
+        # 测试不符合任何模式的输入
+        predictions = ('__label__invalid___format', '__label_____en')
+        probabilities = (0.5, 0.5)
+        with self.assertRaises(ValueError):
+            decide_language_by_prob_v176(predictions, probabilities)
 
-    def test_decide_language_by_prob_v176_mix(self):
-        predictions = ('__label__en', '__label__zh', '__label__es')
-        probabilities = (0.2, 0.3, 0.5)
-        result = decide_language_by_prob_v176(predictions, probabilities)
-        self.assertEqual(result, 'mix')
+    def test_lang_prob_dict_accumulation(self):
+        # 测试概率累加逻辑
+        predictions = ('__label__en', '__label__en')
+        probabilities = (0.3, 0.4)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'en')
 
-    def test_decide_language_by_prob_v176_sr(self):
-        predictions = ('__label__sr', '__label__hr', '__label__es')
-        probabilities = (0.7, 0.2, 0.1)
-        result = decide_language_by_prob_v176(predictions, probabilities)
-        self.assertEqual(result, 'sr')
+    def test_zh_en_prob_logic(self):
+        # 测试 zh 和 en 的概率逻辑
+        predictions = ('__label__zh', '__label__en')
+        probabilities = (0.6, 0.4)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'zh')
+
+        predictions = ('__label__zh', '__label__en')
+        probabilities = (0.3, 0.7)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'en')
+
+    def test_max_prob_logic(self):
+        # 测试 hr 和 sr 的逻辑
+        predictions = ('__label__hr', '__label__sr')
+        probabilities = (0.7, 0.3)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'sr')
+
+        predictions = ('__label__hr', '__label__sr')
+        probabilities = (0.3, 0.7)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'sr')
+
+        # 测试 mix 的逻辑
+        predictions = ('__label__de', '__label__fr')
+        probabilities = (0.4, 0.4)
+        self.assertEqual(decide_language_by_prob_v176(predictions, probabilities), 'mix')
 
 
 def test_detect_code_block():
@@ -144,7 +179,3 @@ class TestDecideLangByStrV218(unittest.TestCase):
         content_str = 'Este es un texto en español.'
         result = decide_lang_by_str_v218(content_str, 'custom_model_path')
         self.assertEqual(result, 'es')
-
-
-if __name__ == '__main__':
-    unittest.main()
