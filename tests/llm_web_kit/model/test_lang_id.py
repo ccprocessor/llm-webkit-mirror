@@ -179,3 +179,7 @@ class TestDecideLangByStrV218(unittest.TestCase):
         content_str = 'Este es un texto en español.'
         result = decide_lang_by_str_v218(content_str, 'custom_model_path')
         self.assertEqual(result, 'es')
+
+
+if __name__ == '__main__':
+    unittest.main()
