@@ -7,8 +7,8 @@ from llm_web_kit.pipeline.extractor.html.magic_html import GeneralExtractor
 
 def test_general_extractor():
     """Test GeneralExtractor."""
-    general_extractor = GeneralExtractor(
-        custom_rule_path=f'{os.path.dirname(os.path.abspath(__file__))}/assets/custom_config.json')
+    custom_rule = open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/custom_config.json', 'r', encoding='utf-8').read()
+    general_extractor = GeneralExtractor(custom_rule=custom_rule)
 
     # custom
     with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/custom.html', 'r', encoding='utf-8') as f:

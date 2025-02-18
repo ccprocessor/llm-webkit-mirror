@@ -19,5 +19,6 @@
 | html                      | 字符串                         | 以UTF-8为编码的HTML文件全文                                                                                         | 是              |
 | url                       | 字符串                         | 这个文件的来源网址                                                                                                  | 是              |
 | file_bytes                | 整数                           | 文件的size, 单位是byte                                                                                              | 是              |
+| page_layout_type          | 字符串                         | 网页的layout分类：Article,QA,其他                                                                                   | 否              |
 | meta_info                 | 字典                           | 存放关于文件的元信息:如果能从文件里获取到作者，制作日期等信息。或者数据本身就带有一些其他的信息都放入到这个字段里。 | 是              |
 | meta_info->input_datetime | 其格式为 `yyyy-mm-dd HH:MM:SS` | 生成这个json索引文件这一条数据的时间，可以不用那么精确                                                              | 是              |

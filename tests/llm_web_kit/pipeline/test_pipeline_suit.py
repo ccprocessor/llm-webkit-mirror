@@ -60,18 +60,23 @@ class TestPipelineSuitHTML(unittest.TestCase):
             self.base_path,
             'assets/pipline_suit_input/good_data/output_expected/csdn_lineno.md'
         )
+        self.oracle_doc_main_html_path = os.path.join(
+            self.base_path,
+            'assets/pipline_suit_input/good_data/output_expected/oracle_doc.main_html.html'
+        )
 
         self.md_expected_content = open(self.md_output_file_path, 'r').read()
         self.txt_expected_content = open(self.txt_output_file_path, 'r').read()
         self.main_html_expected_content = open(self.main_html_output_file_path, 'r').read()
         self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r').read()
+        self.oracle_doc_main_html_content = open(self.oracle_doc_main_html_path, 'r').read()
 
         self.data_json = []
         with open(self.html_data_path, 'r') as f:
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 9
+        assert len(self.data_json) == 11
 
     def test_html_pipeline(self):
         """Test HTML pipeline with sample data."""
@@ -288,3 +293,33 @@ DEF
         input_data = DataJson(test_data)
         result = pipeline.extract(input_data)
         self.assertIn('12.1.  Normative References', result.get_content_list().to_mm_md())
+
+    def test_legato_docs_code_with_comment(self):
+        """
+        magic-html 抽代码时候把注释抽没了
+        Returns:
+
+        """
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[9]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        assert result is not None
+        # TODO magic-html修改完毕后，再来完善断言
+
+    def test_oracle_doc_comment(self):
+        """
+        把末尾部分抽没了
+        Returns:
+
+        """
+        pipeline = PipelineSuit(self.pipeline_config)
+        self.assertIsNotNone(pipeline)
+        test_data = self.data_json[10]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = pipeline.extract(input_data)
+        main_html = result.get_content_list().to_main_html()
+        assert 'public int hashCode()' in main_html

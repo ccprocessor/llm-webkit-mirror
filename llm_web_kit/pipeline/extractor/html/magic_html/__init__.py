@@ -1,4 +1,3 @@
-import json
 from urllib.parse import urlparse
 
 from llm_web_kit.pipeline.extractor.html.magic_html.extractors.article_extractor import \
@@ -19,12 +18,15 @@ class GeneralExtractor:
         rule: 自定规则
     """
 
-    def __init__(self, custom_rule_path: str = ''):
-        self.custom_rule_path = custom_rule_path
-        self.rule = {}
-        if custom_rule_path:
-            with open(custom_rule_path, 'r', encoding='utf-8') as f:
-                self.rule = json.loads(f.read())
+    def __init__(self, custom_rule=None):
+        """初始化通用抽取器.
+
+        Args:
+            custom_rule:
+        """
+        if custom_rule is None:
+            custom_rule = {}
+        self.rule = custom_rule
 
     def extract(self, html='', **kwargs) -> dict:
         """聚合抽取内容方法.
