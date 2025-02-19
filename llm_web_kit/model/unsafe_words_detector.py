@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 from typing import Any, Dict
 
 from llm_web_kit.config.cfg_reader import load_config
@@ -10,8 +9,35 @@ from llm_web_kit.model.resource_utils.download_assets import (
     download_auto_file,
 )
 from llm_web_kit.model.basic_functions.format_check import *
+from llm_web_kit.exception.exception import CleanLangTypeExp
 
-xyz_language_lst = ["ar", "cs", "hu", "sr", "ru", "ko", "vi", "th"]
+xyz_language_lst = [
+    "ar",
+    "cs",
+    "hu",
+    "sr",
+    "ru",
+    "ko",
+    "vi",
+    "th",
+    "arb",
+    "arb_Arab",
+    "arb_Latn",
+    "ces",
+    "ces_Latn",
+    "hun",
+    "hun_Latn",
+    "srp",
+    "srp_Cyrl",
+    "rus",
+    "rus_Cyrl",
+    "kor",
+    "kor_Hang",
+    "vie",
+    "vie_Latn",
+    "tha",
+    "tha_Thai",
+]
 level_score_map = {
     "L1": 100,
     "L2": 10,
@@ -29,9 +55,7 @@ def auto_download(language="zh-en"):
     elif language == "xyz":
         resource_name = "xyz_internal_unsafe_words.jsonl"
     else:
-        raise ValueError(
-            f"Unsupported language: {language}"
-        )  # todo : 换成llm_web_kit/exception/exception.py里面的异常
+        raise CleanLangTypeExp(f"Unsupported language: {language}")
     language_unsafe_words_config: Dict = resource_config[resource_name]
     download_path = language_unsafe_words_config["download_path"]
     md5 = language_unsafe_words_config["md5"]
@@ -89,7 +113,7 @@ def get_ac(language="zh-en"):
     return ac
 
 
-def get_unsafe_words(ac, content: str, data_source: Optional[str]) -> list:
+def get_unsafe_words(ac, content: str) -> list:
     content = content.lower()
 
     def is_word_standalone(sub_word, end_pos):
@@ -105,8 +129,8 @@ def get_unsafe_words(ac, content: str, data_source: Optional[str]) -> list:
                 return False
         return True  # 子词是独立的
 
-    all_sub_words = set()   # 记录所有独立出现的子词
-    all_w_info_lst = []     # 记录所有子词的详细信息
+    all_sub_words = set()  # 记录所有独立出现的子词
+    all_w_info_lst = []  # 记录所有子词的详细信息
     # 遍历所有匹配的子词及其结束位置pos
     for pos, w_info_lst in ac.iter(content):
         for w_info in w_info_lst:
@@ -117,13 +141,8 @@ def get_unsafe_words(ac, content: str, data_source: Optional[str]) -> list:
 
     unsafe_words = {}
     for w_info in all_w_info_lst:
-        # 检查该词的所有子词是否均被匹配到  
+        # 检查该词的所有子词是否均被匹配到
         if all_sub_words.issuperset(w_info["sub_words"]):
-            if data_source is not None:
-                if w_info["applicable"] and data_source not in w_info["applicable"]:
-                    continue
-                if w_info["unapplicable"] and data_source in w_info["unapplicable"]:
-                    continue
             if w_info["word"] not in unsafe_words:
                 unsafe_words[w_info["word"]] = {
                     "word": w_info["word"],
@@ -136,69 +155,12 @@ def get_unsafe_words(ac, content: str, data_source: Optional[str]) -> list:
     return list(unsafe_words.values())
 
 
-def get_unsafe_words_metric(
-    unsafe_words: list, token_len: int
-):  # todo：是否还要保留该功能
-    """
-    根据一段文本命中的敏感词及文本长度，计算敏感词的指标
-    :param unsafe_words: 命中的敏感词列表
-    :param token_len: 文本长度
-    :return: 敏感词指标
-    """
-    d = {}
-    unsafe_word_words = []
-    unsafe_word_levels = []
-    unsafe_word_l1_words = []
-    unsafe_word_l2_words = []
-    unsafe_word_l3_words = []
-    unsafe_word_l4_words = []
-
-    score = 0
-    word_count_dict = {}
-    for w in unsafe_words:
-        word, level, count = w["word"], w["level"], w["count"]
-
-        # "涉政|观测|L4|带头人"
-        w_detail = f'{w["type"]}|{level}|{word}'
-        unsafe_word_words.append(w_detail)
-        unsafe_word_levels.append(level)
-
-        if level == "L1":
-            unsafe_word_l1_words.append(w_detail)
-        elif level == "L2":
-            unsafe_word_l2_words.append(w_detail)
-        elif level == "L3":
-            unsafe_word_l3_words.append(w_detail)
-        elif level == "L4":
-            unsafe_word_l4_words.append(w_detail)
-
-        score += level_score_map[level] * count
-        word_count_dict[word] = word_count_dict.get(word, 0) + count
-
-    unsafe_word_levels = list(set(unsafe_word_levels))
-
-    d["unsafe_word_words"] = unsafe_word_words
-    d["unsafe_word_levels"] = unsafe_word_levels
-    d["unsafe_word_l1_words"] = unsafe_word_l1_words
-    d["unsafe_word_l2_words"] = unsafe_word_l2_words
-    d["unsafe_word_l3_words"] = unsafe_word_l3_words
-    d["unsafe_word_l4_words"] = unsafe_word_l4_words
-    d["unsafe_word_min_level"] = min(unsafe_word_levels + ["NF"])
-    d["unsafe_word_score"] = score
-    d["unsafe_word_density"] = (score / token_len) if token_len > 0 else 0.0
-    d["unsafe_word_count"] = word_count_dict
-
-    return d
-
-
 class UnsafeWordChecker:
     def __init__(self, language="zh-en") -> None:
         self.ac = get_ac(language)
 
-    def check_unsafe_words(self, content_str: str, data_source: str) -> list:
-        unsafe_words_list = get_unsafe_words(
-            self.ac, content=content_str, data_source=data_source
-        )
+    def check_unsafe_words(self, content_str: str) -> list:
+        unsafe_words_list = get_unsafe_words(self.ac, content=content_str)
         return unsafe_words_list
 
 
@@ -218,11 +180,7 @@ def decide_unsafe_word_by_data_checker(
 
     data_obj = DataJson(data_dict)
     content_str = data_obj.get_content_list().to_txt()
-    # todo：这里强制把data_source设为None，即假设没有data_source，看看有无问题
-    data_source = None
-    unsafe_words_list = unsafeWordChecker.check_unsafe_words(
-        content_str=content_str, data_source=data_source
-    )
+    unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
     unsafe_word_levels = []
 
     for w in unsafe_words_list:
@@ -236,26 +194,6 @@ def decide_unsafe_word_by_data_checker(
     return unsafe_word_min_level
 
 
-def get_zh_en_unsafe_fields(
-    data_dict: dict,
-):  # todo：如何获得from_safe_source和from_domestic_source待定
-    labels_dict = data_dict.get("labels", {})
-    unsafe_word_min_level = labels_dict.get("unsafe_word_min_level", "")
-    from_safe_source = labels_dict.get("from_safe_source", False)
-    from_domestic_source = labels_dict.get("from_domestic_source", False)
-
-    return unsafe_word_min_level, from_safe_source, from_domestic_source
-
-
-def get_xyz_unsafe_fields(
-    data_dict: dict,
-):  # todo：如何获得from_safe_source和from_domestic_source待定
-    labels_dict = data_dict.get("labels", {})
-    unsafe_word_min_level = labels_dict.get("unsafe_word_min_level", "")
-
-    return unsafe_word_min_level, False, True
-
-
 ######## 入口 #############
 
 
@@ -264,10 +202,20 @@ def unsafe_words_filter(
 ) -> str:
     if language in xyz_language_lst:
         language = "xyz"
-    elif language in ["zh", "en"]:
+    elif language in [
+        "zh",
+        "en",
+        "yue",
+        "zho",
+        "eng",
+        "zho_Hans",
+        "zho_Hant",
+        "yue_Hant",
+        "eng_Latn",
+    ]:
         language = "zh-en"
     else:
-        return "NF"  # todo: 待讨论  非支持语言直接返回NF，表示未命中敏感词
+        raise CleanLangTypeExp(f"Unsupported language: {language}")
 
     unsafeWordChecker = get_unsafe_words_checker(language)
     unsafe_word_min_level = decide_unsafe_word_by_data_checker(
@@ -278,18 +226,32 @@ def unsafe_words_filter(
 
 
 def unsafe_words_filter_overall(
-    data_dict: Dict[str, Any], language: str, content_style: str
-):  # todo ：如何获得from_safe_source和from_domestic_source还没迁，是否要迁
-    unsafe_word_min_level = unsafe_words_filter(data_dict=data_dict)
+    data_dict: Dict[str, Any],
+    language: str,
+    content_style: str,
+    from_safe_source,
+    from_domestic_source,
+):
+    unsafe_word_min_level = unsafe_words_filter(
+        data_dict=data_dict, language=language, content_style=content_style
+    )
 
     if language in xyz_language_lst:
-        unsafe_word_min_level, from_safe_source, from_domestic_source = (
-            get_xyz_unsafe_fields(data_dict)
-        )
+        language = "xyz"
+    elif language in [
+        "zh",
+        "en",
+        "yue",
+        "zho",
+        "eng",
+        "zho_Hans",
+        "zho_Hant",
+        "yue_Hant",
+        "eng_Latn",
+    ]:
+        language = "zh-en"
     else:
-        unsafe_word_min_level, from_safe_source, from_domestic_source = (
-            get_zh_en_unsafe_fields(data_dict)
-        )
+        raise CleanLangTypeExp(f"Unsupported language: {language}")
     if from_safe_source:
         return False
     if from_domestic_source:
