@@ -49,8 +49,10 @@ class TestHTMLLayoutClassifier(TestCase):
         mock_unzip.return_value = '/fake/unzip/path'
         mock_download.return_value = '/fake/cache/html_cls-25m2.zip'
 
+
         _ = HTMLLayoutClassifier()
         # result = classifier.auto_download()
+
 
         # self.assertEqual(result, "/fake/unzip/path")
         mock_download.assert_called_once_with(
