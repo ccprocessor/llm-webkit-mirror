@@ -1,15 +1,19 @@
 import os
+import time
 from typing import Any, Dict
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.input.datajson import DataJson
-from llm_web_kit.libs.standard_utils import json_loads, json_dumps
+from llm_web_kit.libs.standard_utils import json_loads
 from llm_web_kit.model.resource_utils.download_assets import (
     CACHE_DIR,
     download_auto_file,
 )
 from llm_web_kit.model.basic_functions.format_check import *
 from llm_web_kit.exception.exception import CleanLangTypeExp
+from tests.llm_web_kit.model.resource_utils.test_download_assets import (
+    test_S3Connection,
+)
 
 xyz_language_lst = [
     "ar",
@@ -51,9 +55,9 @@ _global_unsafe_words_detect = {}
 def auto_download(language="zh-en"):
     resource_config = load_config()["resources"]
     if language == "zh-en":
-        resource_name = "unsafe_words.jsonl"
+        resource_name = "unsafe_words"
     elif language == "xyz":
-        resource_name = "xyz_internal_unsafe_words.jsonl"
+        resource_name = "xyz_internal_unsafe_words"
     else:
         raise CleanLangTypeExp(f"Unsupported language: {language}")
     language_unsafe_words_config: Dict = resource_config[resource_name]
@@ -66,8 +70,10 @@ def auto_download(language="zh-en"):
 
 def get_ac(language="zh-en"):
     import ahocorasick
-
+    t1= time.time()
     unsafe_words_file_path = auto_download(language)
+    t2= time.time()
+    print(f"-----------------auto_download cost time: {t2-t1} , language: {language}------------------")
     with open(unsafe_words_file_path, "r") as f:
         lines = f.readlines()
 
@@ -157,7 +163,10 @@ def get_unsafe_words(ac, content: str) -> list:
 
 class UnsafeWordChecker:
     def __init__(self, language="zh-en") -> None:
+        t1 = time.time()
         self.ac = get_ac(language)
+        t2 = time.time()
+        print(f"---------------UnsafeWordChecker init time: {t2-t1} , language: {language}-----------------")
 
     def check_unsafe_words(self, content_str: str) -> list:
         unsafe_words_list = get_unsafe_words(self.ac, content=content_str)
@@ -177,12 +186,10 @@ def release_unsafe_checker():
 def decide_unsafe_word_by_data_checker(
     data_dict: dict, unsafeWordChecker: UnsafeWordChecker
 ) -> str:
-
     data_obj = DataJson(data_dict)
     content_str = data_obj.get_content_list().to_txt()
     unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
     unsafe_word_levels = []
-
     for w in unsafe_words_list:
         word, level, count = w["word"], w["level"], w["count"]
         # "涉政|观测|L4|带头人"
@@ -192,9 +199,6 @@ def decide_unsafe_word_by_data_checker(
     unsafe_word_min_level = min(unsafe_word_levels + ["NF"])
 
     return unsafe_word_min_level
-
-
-######## 入口 #############
 
 
 def unsafe_words_filter(
@@ -219,7 +223,7 @@ def unsafe_words_filter(
 
     unsafeWordChecker = get_unsafe_words_checker(language)
     unsafe_word_min_level = decide_unsafe_word_by_data_checker(
-        data_dict=data_dict, unsafeWordChecker=unsafeWordChecker
+        data_dict, unsafeWordChecker
     )
 
     return unsafe_word_min_level
@@ -232,9 +236,7 @@ def unsafe_words_filter_overall(
     from_safe_source,
     from_domestic_source,
 ):
-    unsafe_word_min_level = unsafe_words_filter(
-        data_dict=data_dict, language=language, content_style=content_style
-    )
+    unsafe_word_min_level = unsafe_words_filter(data_dict, language, content_style)
 
     if language in xyz_language_lst:
         language = "xyz"
@@ -262,14 +264,111 @@ def unsafe_words_filter_overall(
     return {"hit_unsafe_words": hit}
 
 
-# 以下为测试代码 todo：跑通后删掉
-
-
 if __name__ == "__main__":
-    from pprint import pprint
+    ################# 功能测试 #################
+    import copy
+
+    print("download zh-en unsafe_words to : ", auto_download("zh-en"))
+    print("download xyz unsafe_words to : ", auto_download("xyz"))
+
+    ac = get_ac("zh-en")
+    print("ac is ready")
 
     content = "习近平讲话"
-    unsafe_words = get_unsafe_words(get_ac(), content, "cn-weixin")
-    pprint(unsafe_words)
-    metrics = get_unsafe_words_metric(unsafe_words, len(content))
-    pprint(metrics)
+    unsafe_words = get_unsafe_words(ac, content)
+    print("unsafe_words : ", unsafe_words)
+
+    unsafeWordChecker = get_unsafe_words_checker("zh-en")
+    content_str = "习近平讲话"
+    unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
+    print("unsafe_words_list : ", unsafe_words_list)
+
+    data_dict1 = {
+        "content_list": [
+            [
+                {
+                    "type": "paragraph",
+                    "raw_content": '<div><div class="abstract-content selected" id="eng-abstract"><p><strong class="sub-title">\n          Objective:\n        </strong>\n      \n      This study analyzed the cost-effectiveness of delivering alcohol screening, brief intervention, and referral to treatment (SBIRT) in emergency departments (ED) when compared to outpatient medical settings.\n    </p></div></div>',
+                    "content": [{"c": "习近平", "t": "text"}],
+                },
+                {
+                    "type": "paragraph",
+                    "raw_content": '<div><div class="abstract-content selected" id="eng-abstract"><p><strong class="sub-title">\n          Results:\n        </strong>\n      \n      When considering provider costs only, compared to outpatient, SBIRT in ED cost $8.63 less, generated 0.005 more QALYs per patient, and resulted in 13.8% more patients drinking below threshold levels. Sensitivity analyses in which patients were assumed to receive a fixed number of treatment sessions that met clinical sites\' guidelines made SBIRT more expensive in ED than outpatient; the ED remained more effective. In this sensitivity analysis, the ED was the most cost-effective setting if decision makers were willing to pay more than $1500 per QALY gained.\n    </p></div></div>',
+                    "content": [{"c": "讲话", "t": "text"}],
+                },
+            ]
+        ],
+    }
+    data_dict2 = copy.deepcopy(data_dict1)
+    data_dict3 = copy.deepcopy(data_dict1)
+    data_dict4 = copy.deepcopy(data_dict1)
+    data_dict5 = copy.deepcopy(data_dict1)
+    data_dict6 = copy.deepcopy(data_dict1)
+    data_dict7 = copy.deepcopy(data_dict1)
+
+    unsafe_word_min_level = decide_unsafe_word_by_data_checker(
+        data_dict1, unsafeWordChecker
+    )
+    print("unsafe_words_min_level : ", unsafe_word_min_level)
+
+    print("test zh-en min_level : ", unsafe_words_filter(data_dict2, "zh", ""))
+    print("test xyz min_level : ", unsafe_words_filter(data_dict3, "ru", ""))
+
+    print(
+        "non-safe source and nono-domestic source : ",
+        unsafe_words_filter_overall(
+            data_dict4,
+            "zh",
+            "text",
+            from_safe_source=False,
+            from_domestic_source=False,
+        ),
+    )
+
+    print(
+        "safe source and nono-domestic source : ",
+        unsafe_words_filter_overall(
+            data_dict5,
+            "zho",
+            "text",
+            from_safe_source=True,
+            from_domestic_source=False,
+        ),
+    )
+
+    print(
+        "non-safe source and domestic source : ",
+        unsafe_words_filter_overall(
+            data_dict6,
+            "yue",
+            "text",
+            from_safe_source=False,
+            from_domestic_source=True,
+        ),
+    )
+
+    print(
+        "safe source and domestic source : ",
+        unsafe_words_filter_overall(
+            data_dict7, "en", "text", from_safe_source=True, from_domestic_source=True
+        ),
+    )
+
+    ################# 性能测试 #################
+    # import jsonlines
+
+    # datas = []
+    # tt1 = time.time()
+    # with jsonlines.open("./test.jsonl") as reader:
+    #     for line in reader:
+    #         datas.append(line)
+    # tt2 = time.time()
+    # print(f"datas len : {len(datas)} , read cost time : {tt2-tt1}")
+    # for data in datas:
+    #     unsafe_word_hit_result = unsafe_words_filter_overall(
+    #         data, "en", "text", False, False
+    #     )
+    # tt3 = time.time()
+    # print(
+    #     f"unsafe_words_filter_overall cost time : {tt3-tt2} , speed : {len(datas)/(tt3-tt2)}"
+    # )
