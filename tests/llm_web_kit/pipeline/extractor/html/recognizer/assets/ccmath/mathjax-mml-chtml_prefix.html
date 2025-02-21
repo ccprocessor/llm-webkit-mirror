@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:m="http://www.w3.org/1998/Math/MathML">
+<head>
+    <meta charset="utf-8">
+    <title>MathML with Namespace Prefix Test</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=MML_CHTML">
+    </script>
+    <script type="text/javascript">
+        MathJax.Hub.Config({
+            MMLorHTML: {
+                prefer: "MML"
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>MathML Test with Namespace Prefix</h1>
+
+    <h2>Standard MathML (without prefix):</h2>
+    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+        <mi>x</mi>
+        <mo>=</mo>
+        <mfrac>
+            <mrow>
+                <mo>−</mo>
+                <mi>b</mi>
+                <mo>±</mo>
+                <msqrt>
+                    <msup>
+                        <mi>b</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>−</mo>
+                    <mn>4</mn>
+                    <mi>a</mi>
+                    <mi>c</mi>
+                </msqrt>
+            </mrow>
+            <mrow>
+                <mn>2</mn>
+                <mi>a</mi>
+            </mrow>
+        </mfrac>
+    </math>
+
+    <h2>MathML with prefix:</h2>
+    <m:math xmlns:m="http://www.w3.org/1998/Math/MathML" display="block">
+        <m:mi>x</m:mi>
+        <m:mo>=</m:mo>
+        <m:mfrac>
+            <m:mrow>
+                <m:mo>−</m:mo>
+                <m:mi>b</m:mi>
+                <m:mo>±</m:mo>
+                <m:msqrt>
+                    <m:msup>
+                        <m:mi>b</m:mi>
+                        <m:mn>2</m:mn>
+                    </m:msup>
+                    <m:mo>−</m:mo>
+                    <m:mn>4</m:mn>
+                    <m:mi>a</m:mi>
+                    <m:mi>c</m:mi>
+                </m:msqrt>
+            </m:mrow>
+            <m:mrow>
+                <m:mn>2</m:mn>
+                <m:mi>a</m:mi>
+            </m:mrow>
+        </m:mfrac>
+    </m:math>
+</body>
+</html>
