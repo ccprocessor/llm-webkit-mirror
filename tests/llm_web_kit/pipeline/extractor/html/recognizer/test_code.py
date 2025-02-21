@@ -186,6 +186,15 @@ TEST_CASES = [
             'assets/cccode/telerik-8.cs',
         ],
     },
+    {
+        'input': (
+            'assets/cccode/table-code.html',
+            'https://git.znc.in/Dessa/gentoo/src/commit/d8bae05997012bacefdf65cb1f273a437c448129/sys-process/audit/audit-2.6.4.ebuild',
+        ),
+        'expected': [
+            'assets/cccode/table-code-1.sh',
+        ],
+    }
 ]
 
 base_dir = Path(__file__).parent
@@ -325,9 +334,172 @@ class TestCodeRecognizer(unittest.TestCase):
         self.assertEqual(
             answer,
             """```
-  •\tReview your business objectives
-  •\tUncover your challenges and problems
-  •\tVisualize solutions to help move your organization forward
+•\tReview your business objectives
+•\tUncover your challenges and problems
+•\tVisualize solutions to help move your organization forward
 ```
 """,
         )
+
+    """
+    测试用例来源：
+    http://terra.polydev.org/config/development/config-system.html
+    CC-MAIN-2024-30/segments/1720763514387.30/warc/CC-MAIN-20240712094214-20240712124214-00117.warc.gz?bytes=23736586,11582
+    """
+    def test_lineno(self):
+        html = """<pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="hll"><span class="linenos"> 2</span><span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ZOO"</span><span class="p">,</span>
+</span><span class="linenos"> 3</span><span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A zoo of Australian animals."</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">   </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">      </span><span class="nt">"koala"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">         </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"grey"</span><span class="p">,</span>
+<span class="linenos"> 7</span><span class="w">         </span><span class="nt">"legs"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+<span class="linenos"> 8</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos"> 9</span><span class="w">      </span><span class="nt">"kangaroo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">10</span><span class="w">         </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"brown"</span><span class="p">,</span>
+<span class="linenos">11</span><span class="w">         </span><span class="nt">"legs"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="linenos">12</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">13</span><span class="w">   </span><span class="p">}</span>
+<span class="linenos">14</span><span class="p">}</span>
+</pre>
+"""
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list().to_mm_md()
+
+        self.assertEqual(answer, """```
+{
+   "type": "ZOO",
+   "description": "A zoo of Australian animals.",
+   "animals": {
+      "koala": {
+         "color": "grey",
+         "legs": 4
+      },
+      "kangaroo": {
+         "color": "brown",
+         "legs": 2
+      }
+   }
+}
+```
+""")
+
+    def test_lineno_2(self):
+        html = """
+<div>
+<div class="linenumber index41"><span style="width: 50px; display: inline-block;">7</span><code>package</code>&nbsp;<code>com.servlet;</code></div>
+<div class="linenumber index42"><span style="width: 50px; display: inline-block;">8</span></div>
+<div class="linenumber index43"><span style="width: 50px; display: inline-block;">9</span><code>import</code>&nbsp;<code>java.io.IOException;</code></div>
+<div class="linenumber index44"><span style="width: 50px; display: inline-block;">10</span><code>import</code>&nbsp;<code>java.io.PrintWriter;</code></div>
+<div class="linenumber index45"><span style="width: 50px; display: inline-block;">11</span></div>
+<div class="linenumber index46"><span style="width: 50px; display: inline-block;">12</span><code>import</code>&nbsp;<code>javax.servlet.ServletException;</code></div>
+<div class="linenumber index47"><span style="width: 50px; display: inline-block;">13</span><code>import</code>&nbsp;<code>javax.servlet.http.HttpServlet;</code></div>
+<div class="linenumber index48"><span style="width: 50px; display: inline-block;">14</span><code>import</code>&nbsp;<code>javax.servlet.http.HttpServletRequest;</code></div>
+<div class="linenumber index49"><span style="width: 50px; display: inline-block;">15</span><code>import</code>&nbsp;<code>javax.servlet.http.HttpServletResponse;</code></div>
+<div class="linenumber index51"><span style="width: 50px; display: inline-block;">16</span></div>
+<div class="linenumber index50"><span style="width: 50px; display: inline-block;">100</span><code>import</code>&nbsp;<code>com.dao.UsersDao;</code></div>
+</div>
+"""
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list().to_mm_md()
+
+        self.assertEqual(answer, """```
+package com.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.dao.UsersDao;
+```
+""")
+
+    def test_lineno_3(self):
+        html = """<div>
+<div style="display: inline-block">
+<div class="linenumber index41" style="height: 2em;">7</div>
+<div class="linenumber index42" style="height: 2em;">8</div>
+<div class="linenumber index43" style="height: 2em;">9</div>
+<div class="linenumber index44" style="height: 2em;">10</div>
+<div class="linenumber index45" style="height: 2em;">11</div>
+<div class="linenumber index46" style="height: 2em;">12</div>
+<div class="linenumber index47" style="height: 2em;">13</div>
+<div class="linenumber index48" style="height: 2em;">14</div>
+<div class="linenumber index49" style="height: 2em;">15</div>
+<div class="linenumber index51" style="height: 2em;">16</div>
+<div class="linenumber index50" style="height: 2em;">100</div>
+</div>
+<div style="display: inline-block">
+<div class="linenumber index41" style="height: 2em;"><code>package</code>&nbsp;<code>com.servlet;</code><br></div>
+<div class="linenumber index42" style="height: 2em;"><br></div>
+<div class="linenumber index43" style="height: 2em;"><code>import</code>&nbsp;<code>java.io.IOException;</code><br></div>
+<div class="linenumber index44" style="height: 2em;"><code>import</code>&nbsp;<code>java.io.PrintWriter;</code><br></div>
+<div class="linenumber index45" style="height: 2em;"><br></div>
+<div class="linenumber index46" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.ServletException;</code><br></div>
+<div class="linenumber index47" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.http.HttpServlet;</code><br></div>
+<div class="linenumber index48" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.http.HttpServletRequest;</code><br></div>
+<div class="linenumber index49" style="height: 2em;"><code>import</code>&nbsp;<code>javax.servlet.http.HttpServletResponse;</code><br></div>
+<div class="linenumber index51" style="height: 2em;"><br></div>
+<div class="linenumber index50" style="height: 2em;"><code>import</code>&nbsp;<code>com.dao.UsersDao;</code><br></div>
+</div>
+</div>"""
+        pipeline = PipelineSuit(self.pipeline_config.as_posix())
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = pipeline.extract(input_data)
+        answer = resp.get_content_list().to_mm_md()
+
+        self.assertEqual(answer, """```
+package com.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.dao.UsersDao;
+```
+""")

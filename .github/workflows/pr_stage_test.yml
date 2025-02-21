@@ -45,8 +45,34 @@ jobs:
           pip install -r requirements/runtime.txt
           pip install -r requirements/dev.txt
       - name: Run tests and collect coverage
-        run: pytest --cov --cov-report=xml ./tests
+        run: pytest --cov --cov-report=xml ./tests/llm_web_kit
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  pr_st_test:
+    runs-on: ubuntu-latest
+    env:
+      LLM_WEB_KIT_CFG_PATH: ${{ github.workspace }}/bench/config/ours_config.jsonc
+      PYTHONPATH: $PYTHONPATH:${{ github.workspace }}
+    strategy:
+      matrix:
+        python-version: [3.10.15]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build llm_web_kit from source
+        run: |
+          pip install -e .
+          pip list | grep llm_web_kit
+      - name: Install unit tests dependencies
+        run: |
+          pip install -r requirements/runtime.txt
+          pip install -r requirements/dev.txt
+      - name: Run st tests
+        run: pytest -v ./tests/st

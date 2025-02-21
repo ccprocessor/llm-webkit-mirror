@@ -20,11 +20,11 @@ def __get_html_element(root: HtmlElement, node_path: list[str]) -> HtmlElement:
 
 
 def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
-    full_text = ''.join([x for x in ''.join(node.itertext(None)) if not x.isspace()])
+    full_text = ''.join([x for x in ''.join(node.itertext(None)) if not x.isspace() and not x.isdigit()])
     code_text = ''
     for s in node.xpath('.//code//text()'):
         for c in s:
-            if not c.isspace():
+            if not c.isspace() and not c.isdigit():
                 code_text += c
     return full_text == code_text
 

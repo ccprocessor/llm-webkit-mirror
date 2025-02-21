@@ -39,8 +39,8 @@
         ],
         "post_extractor": [
             {
-                "enable": false,
-                "python_class": "llm_web_kit.pipeline.extractor.html.post_extractor.HTMLFileFormatPostExtractor"
+                "enable": true,
+                "python_class": "llm_web_kit.pipeline.extractor.html.post_extractor.ContentListStaticsPostExtractor"
             }
         ]
     },

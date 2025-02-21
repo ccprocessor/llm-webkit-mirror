@@ -47,6 +47,12 @@ def calc_file_md5(file_path: str) -> str:
         return hashlib.md5(f.read()).hexdigest()
 
 
+def calc_file_sha256(file_path: str) -> str:
+    """Calculate the sha256 checksum of a file."""
+    with open(file_path, 'rb') as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
 class Connection:
 
     def __init__(self, *args, **kwargs):
@@ -98,7 +104,7 @@ class HttpConnection(Connection):
         self.response.close()
 
 
-def download_auto_file(resource_path: str, target_path: str, md5_sum: str = '', exist_ok=True) -> str:
+def download_auto_file(resource_path: str, target_path: str, md5_sum: str = '', sha256_sum: str = '',exist_ok=True) -> str:
     """Download a file from a given resource path (either an S3 path or an HTTP
     URL) to a target path on the local file system.
 
@@ -130,6 +136,13 @@ def download_auto_file(resource_path: str, target_path: str, md5_sum: str = '', 
             else:
                 logger.info(f'File {target_path} already exists but has incorrect md5 sum.')
         # if the file already exists, and not passed md5_sum
+        if sha256_sum:
+            file_sha256 = calc_file_sha256(target_path)
+            if file_sha256 == sha256_sum:
+                logger.info(f'File {target_path} already exists and has the correct sha256 sum')
+                return target_path
+            else:
+                logger.info(f'File {target_path} already exists but has incorrect sha256 sum.')
         if not exist_ok:
             # if not exist_ok, raise exception
             raise Exception(f'File {target_path} already exists and exist_ok is False')

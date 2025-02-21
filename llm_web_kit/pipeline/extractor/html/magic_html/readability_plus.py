@@ -245,6 +245,8 @@ class Document:
                     and (not self.REGEXES['okMaybeItsACandidateRe'].search(s))
                     and elem.tag not in ['html', 'body']
             ):
+                if ancestor_node_check(elem, ['code', 'pre']):
+                    continue
                 elem.drop_tree()
 
     def transform_misused_divs_into_paragraphs(self):

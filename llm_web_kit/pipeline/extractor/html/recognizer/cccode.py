@@ -70,6 +70,16 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
                 break
 
+            def remove_empty_code(r: HtmlElement):
+                for x in r:
+                    if x.tag == CCTag.CC_CODE or x.tag == CCTag.CC_CODE_INLINE:
+                        if not x.text:
+                            r.remove(x)
+                    else:
+                        remove_empty_code(x)
+
+            remove_empty_code(root)
+
             html_str: str = element_to_html(root)
 
             rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, CCTag.CC_CODE))

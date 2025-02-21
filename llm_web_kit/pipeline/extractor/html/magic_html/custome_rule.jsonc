@@ -1,0 +1,16 @@
+{
+  "docs.oracle.com": {
+    "clean": [
+      "//script",
+      "//style"
+    ],
+    "title": {
+      "mode": "xpath",
+      "value": "//h2[@class='title']/text()"
+    },
+    "content": {
+      "mode": "xpath",
+      "value": "//div[@class='contentContainer']"
+    }
+  }
+}

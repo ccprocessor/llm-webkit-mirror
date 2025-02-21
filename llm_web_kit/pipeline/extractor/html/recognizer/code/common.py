@@ -6,9 +6,12 @@ from lxml.html import HtmlElement
 from llm_web_kit.libs.html_utils import element_to_html
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import CCTag
 
+_RE_NUMBER = re.compile(r'^(\s*)([0-9]+)(\s*)')
+_RE_NUMBER_NO_CODE = re.compile(r'^(\s*)([0-9]+)(\s*)$')
 _RE_COMBINE_WHITESPACE = re.compile(r' +')
 _BLOCK_ELES = [
     'br',
+    'tr',
     'address',
     'article',
     'aside',
@@ -74,8 +77,6 @@ def __detect_language(node: HtmlElement) -> Optional[str]:
 
 
 def remove_html_newline_and_spaces(s: str) -> str:
-    if not s:
-        return s
     return _RE_COMBINE_WHITESPACE.sub(' ', s.replace('\n', '').replace('\r', ''))
 
 
@@ -88,7 +89,99 @@ def hit_last_leaf(ele: HtmlElement) -> bool:
     return hit_last_leaf(children[-1])
 
 
-def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, inline: bool = False) -> None:
+def _detect_lineno(s: str, is_code_after_lineno: bool = True) -> tuple[bool, list[int]]:
+    """
+    is_code_after_lineno: 行号后是否有代码正文
+    """
+    lines = s.split('\n')
+    maybe_linenos: list[tuple[int, int, int, int | None]] = []
+    empty_lines = 0
+    for line in lines:
+        if not line:
+            empty_lines += 1
+        if is_code_after_lineno:
+            match = _RE_NUMBER.match(line)
+        else:
+            match = _RE_NUMBER_NO_CODE.match(line)
+        if match:
+            groups = match.groups()
+            maybe_linenos.append(
+                (
+                    len(groups[0]),  # 行号前的空白符号
+                    len(groups[1]),  # 行号
+                    len(groups[2]),  # 行号后的空白符号
+                    int(groups[1]),
+                )
+            )
+        else:
+            maybe_linenos.append((0, 0, 0, None))
+
+    # 允许行号断裂，计算连续数字最大出现的次数
+    linenos = [maybe_lineno for _, _, _, maybe_lineno in maybe_linenos if maybe_lineno]
+    # 至少七成有行号
+    if len(linenos) < (len(maybe_linenos) - empty_lines) * 0.7:
+        return False, []
+
+    last = None
+    idx = 0
+    count = 0
+    max_count = 0
+    while idx < len(linenos):
+        if last is not None and last + 1 == linenos[idx]:
+            last += 1
+            count += 1
+        else:
+            last = linenos[idx]
+            count = 0 if last is None else 1
+        max_count = max(max_count, count)
+        idx += 1
+
+    # 行号到代码的空白符长度
+    post_lineno_indent = min([pos_lineno for _, _, pos_lineno, _ in maybe_linenos])
+    # 认为存在有三个连续数字就是行号
+    # （发现了只有一行行号的 bad case，但是没办法）
+    indents = []
+    for pre_lineno, lineno_len, _, lineno in maybe_linenos:
+        if lineno is not None:
+            indents.append(pre_lineno + lineno_len + post_lineno_indent)
+        else:
+            indents.append(0)
+    return max_count > 2, indents
+
+
+def _remove_linenos(s: str, line_indents: list[int]) -> str:
+    lines = s.split('\n')
+    new_lines = []
+    for line, pos in zip(lines, line_indents):
+        new_lines.append(line[pos:])
+    return '\n'.join(new_lines)
+
+
+def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
+    if depth == 0 or node is None or node.getparent() is None:
+        return
+
+    found = False
+    # 认为只有代码元素左侧的元素可能是行号，避免对无关的表格进行损坏
+    ele_before = None
+    for child in node.getparent():
+        if child == node:
+            if ele_before is None:
+                break
+            has_lineno, _ = _detect_lineno('\n'.join(ele_before.itertext()), False)
+            if has_lineno:
+                node.getparent().remove(ele_before)
+                found = True
+            break
+        ele_before = child
+
+    if not found:
+        _detect_and_remove_subling_lineno(node.getparent(), depth - 1)
+
+
+def replace_node_by_cccode(
+    node: HtmlElement, by: str, in_pre_tag: bool = True, inline: bool = False
+) -> None:
     """将 node 替换为 cccode 标签.
 
     Args:
@@ -96,6 +189,8 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, 
         by: 替换后的标签
     """
     origin_html = element_to_html(node)
+
+    _detect_and_remove_subling_lineno(node)
 
     language = __detect_language(node)
 
@@ -130,6 +225,34 @@ def replace_node_by_cccode(node: HtmlElement, by: str, in_pre_tag: bool = True, 
     while len(chunks) > 0 and not chunks[len(chunks) - 1]:
         chunks = chunks[:-1]
 
+    full_text = '\n'.join(chunks)
+    has_lineno, line_indents = _detect_lineno(full_text)
+    if has_lineno:
+        full_text = _remove_linenos(full_text, line_indents)
+
+    chunks = full_text.split('\n')
+    common_space = 0
+    add_space = True
+    while add_space:
+        add_space = False
+        first_space = None
+        for chunk in chunks:
+            if len(chunk) <= common_space:
+                continue
+            if chunk[common_space].isspace():
+                if first_space is None:
+                    add_space = True
+                    first_space = chunk[common_space]
+                elif first_space != chunk[common_space]:
+                    add_space = False
+                    break
+            else:
+                add_space = False
+                break
+        if add_space:
+            common_space += 1
+
+    chunks = [chunk[common_space:] for chunk in chunks]
     full_text = '\n'.join(chunks)
 
     node.clear(keep_tail=True)

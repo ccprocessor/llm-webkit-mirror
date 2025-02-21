@@ -181,6 +181,8 @@ class BaseExtractor:
             class_name = node.get('class')
             if class_name:
                 if class_name.lower() in USELESS_ATTR_LIST:
+                    if ancestor_node_check(node, ['code', 'pre']):
+                        continue
                     self.remove_node(node)
         return element
 

@@ -28,6 +28,10 @@
                 "class_init_kwargs": {
                     "html_parent_dir": "tests/llm_web_kit/pipeline/assets/pipline_suit_input/good_data/html/"
                 }
+            },
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.pipeline.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor"
             }
         ],
         "extractor": [

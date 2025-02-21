@@ -18,7 +18,8 @@ TEST_CASES = [
             'assets/recognizer/table_to_content_list_complex.html',
             'assets/recognizer/table_include_image.html',
             'assets/recognizer/table_simple_cc.html',
-            'assets/recognizer/table_include_rowspan_colspan.html'
+            'assets/recognizer/table_include_rowspan_colspan.html',
+            'assets/recognizer/table_involve_equation.html'
 
         ),
         'expected': [
@@ -142,3 +143,12 @@ class TestTableRecognizer(unittest.TestCase):
             fr = open(expect_path, 'r', encoding='utf-8')
             expect_result = json.loads(fr.read())
             assert result == expect_result
+
+    def test_table_involve_equation(self):
+        """involve equation table,待解决嵌套问题."""
+        for test_case in TEST_CASES:
+            raw_html_path = base_dir.joinpath(test_case['input'][9])
+            base_url = 'https://en.m.wikipedia.org/wiki/Variance'
+            raw_html = raw_html_path.read_text(encoding='utf-8')
+            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            assert parts is not None
