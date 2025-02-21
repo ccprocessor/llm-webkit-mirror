@@ -227,3 +227,21 @@ class HtmlPostExtractorExp(HTMLExp):
     def __init__(self, custom_message: str = None):
         """html post extractor init."""
         super().__init__(4150, custom_message)
+
+
+class CleanExp(PipelineBaseExp):
+    """清洗模块异常基类."""
+
+    def __init__(self, err_code: int = 4200, custom_message: str = None):
+        """清洗模块初始化异常.
+
+        Args:
+            custom_message (str, optional): _description_. Defaults to None.
+        """
+        super().__init__(err_code, custom_message)
+
+
+class CleanLangTypeExp(CleanExp):
+    """清洗模块语言类型异常."""
+    def __init__(self, custom_message: str = None):
+        super().__init__(4210, custom_message)
