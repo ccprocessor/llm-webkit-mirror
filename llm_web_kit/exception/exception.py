@@ -19,7 +19,11 @@ class ErrorMsg:
             for module, module_defs in jso.items():
                 for err_name, err_info in module_defs.items():
                     err_code = err_info['code']
-                    cls._errors[str(err_code)] = {'message': err_info['message'], 'module': module, 'error_name': err_name}
+                    cls._errors[str(err_code)] = {
+                        'message': err_info['message'],
+                        'module': module,
+                        'error_name': err_name,
+                    }
 
     @classmethod
     def get_error_message(cls, error_code: int):
@@ -50,11 +54,14 @@ class WebKitBaseException(Exception):
         self.__py_file_line_number = frame.f_lineno
 
     def __str__(self):
-        return f'{self.__py_filename}: {self.__py_file_line_number}#{self.err_code}#{self.message}#{self.custom_message}'
+        return (
+            f'{self.__py_filename}: {self.__py_file_line_number}#{self.err_code}#{self.message}#{self.custom_message}'
+        )
+
 
 ##############################################################################
 #
-#  Pipeline相关的异常
+#  extractor_chain相关的异常
 #
 ###############################################################################
 
@@ -69,71 +76,80 @@ class LlmWebKitBaseException(WebKitBaseException):
 
 class LlmWebKitBaseActException(LlmWebKitBaseException):
     """llm web kit base exp."""
+
     def __init__(self, custom_message: str = None):
         super().__init__(1000, custom_message)
 
 
-class PipelineInputExp(LlmWebKitBaseException):
-    """pipline input格式异常."""
+class ExtractorChainBaseException(LlmWebKitBaseException):
+    """ExtractorChain基础异常类."""
+
+    def __init__(self, error_code, custom_message: str = None):
+        super().__init__(error_code, custom_message)
+
+
+class ExtractorInitException(ExtractorChainBaseException):
+    """Extractor初始化异常."""
 
     def __init__(self, custom_message: str = None):
-        """init pipline input 异常."""
-        super().__init__(2000, custom_message)
+        super().__init__(2100, custom_message)
 
 
-class PipeLineSuitBaseExp(LlmWebKitBaseException):
-    """pipline input格式异常."""
+class ExtractorChainInputException(ExtractorChainBaseException):
+    """输入数据格式异常."""
 
     def __init__(self, custom_message: str = None):
-        """init pipline input 异常."""
-        super().__init__(3000, custom_message)
+        super().__init__(2200, custom_message)
 
 
-class PipelineBaseExp(LlmWebKitBaseException):
-    """Pipeline初始化异常.
+class ExtractorChainConfigException(ExtractorChainBaseException):
+    """配置相关异常."""
 
-    Args:
-        PipelineBaseException (_type_): _description_
-    """
-
-    def __init__(self, err_code: int, custom_message: str = None):
-        """pipeline对象抛出的异常基类.
-
-        Args:
-            err_code (int): _description_
-            custom_message (str, optional): _description_. Defaults to None.
-        """
-        super().__init__(4000, custom_message)
+    def __init__(self, custom_message: str = None):
+        super().__init__(2300, custom_message)
 
 
-class HTMLExp(PipelineBaseExp):
-    """Pipeline初始化异常.
+class ExtractorNotFoundException(ExtractorChainBaseException):
+    """找不到指定的Extractor."""
 
-    Args:
-        HTMLExp (_type_): _description_
-    """
-
-    def __init__(self, err_code, custom_message: str = None):
-        """pipeline初始化异常.
-
-        Args:
-            custom_message (str, optional): _description_. Defaults to None.
-        """
-        super().__init__(4100, custom_message)
+    def __init__(self, custom_message: str = None):
+        super().__init__(2400, custom_message)
 
 
+##############################################################################
+#
+#  HTML相关异常
+#
+###############################################################################
+
+
+class HtmlBaseExp(ExtractorChainBaseException):
+    """HTML基础异常类."""
+
+    def __init__(self, error_code: int, custom_message: str = None):
+        super().__init__(error_code, custom_message)
+
+
+class HTMLExp(HtmlBaseExp):
+    """HTML处理异常."""
+
+    def __init__(self, error_code: int, custom_message: str = None):
+        super().__init__(5000, custom_message)
+
+
+# 其他HTML相关异常继承HTMLExp
 class HtmlFormatExp(HTMLExp):
     """html format 异常."""
+
     def __init__(self, custom_message: str = None):
-        """html format init."""
-        super().__init__(4110, custom_message)
+        super().__init__(5001, custom_message)
 
 
 class HtmlPreExtractorExp(HTMLExp):
     """html pre extractor 异常."""
+
     def __init__(self, custom_message: str = None):
-        """html pre extractor init."""
-        super().__init__(4120, custom_message)
+        super().__init__(5002, custom_message)
 
 
 class HtmlRecognizerExp(HTMLExp):
@@ -146,6 +162,7 @@ class HtmlRecognizerExp(HTMLExp):
 
 class HtmlMagicHtmlExtractorExp(HtmlRecognizerExp):
     """magic-html异常."""
+
     def __init__(self, custom_message: str = None):
         """magic-html error."""
         super().__init__(4140, custom_message)
@@ -193,6 +210,7 @@ class HtmlListRecognizerExp(HtmlRecognizerExp):
 
 class HtmlAudioRecognizerExp(HtmlRecognizerExp):
     """Html audio recognizer异常."""
+
     def __init__(self, custom_message: str = None):
         """html audio recognizer init."""
         super().__init__(4136, custom_message)
@@ -224,6 +242,7 @@ class HtmlTextRecognizerExp(HtmlRecognizerExp):
 
 class HtmlPostExtractorExp(HTMLExp):
     """html post extractor 异常."""
+
     def __init__(self, custom_message: str = None):
         """html post extractor init."""
         super().__init__(4150, custom_message)
