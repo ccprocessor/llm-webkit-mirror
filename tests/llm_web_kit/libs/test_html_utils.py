@@ -83,7 +83,7 @@ class TestHtmlUtils(unittest.TestCase):
         self.assertEqual(old_element.tag, 'div')
 
         # Create new element
-        new_html = '<p a="1" b="a">New content</p>'
+        new_html = '<p a="1" b="a">New content<span>child1</span>span1 tail<span>child2</span>span2 tail</p>'
         new_element = html_to_element(new_html)
         self.assertEqual(new_element.tag, 'p')
 
@@ -95,6 +95,8 @@ class TestHtmlUtils(unittest.TestCase):
         self.assertEqual(old_element.text, 'New content')
         self.assertEqual(old_element.get('a'), '1')
         self.assertEqual(old_element.get('b'), 'a')
+        self.assertEqual(element_to_html(old_element[0]),'<span>child1</span>span1 tail')
+        self.assertEqual(element_to_html(old_element[1]),'<span>child2</span>span2 tail')
 
     def test_table_cells_count(self):
         """测试表格单元格数量."""

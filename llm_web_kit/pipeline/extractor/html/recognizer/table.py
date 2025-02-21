@@ -58,11 +58,42 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         """判断html片段是否是cc标签."""
         return BaseHTMLElementRecognizer.is_cc_html(cc_html)
 
+    def __is_table_empty(self, table) -> bool:
+        """检查表格是否为空（递归检查嵌套元素）
+
+        :param table: lxml.html.HtmlElement 对象，表示一个 <table> 元素
+        :return: 如果表格为空，返回 True；否则返回 False
+        """
+        def is_element_empty(elem):
+            # 检查元素本身的文本内容
+            if elem.text and elem.text.strip():
+                return False
+            # 检查所有子元素
+            for child in elem.iterchildren():
+                # 如果是嵌套表格，递归检查表格是否为空
+                if child.tag == 'table':
+                    if not self.__is_table_empty(child):
+                        return False
+                # 其他元素需要递归检查
+                elif not is_element_empty(child):
+                    return False
+            # 检查尾部文本（如 </div> 后的文本）
+            if elem.tail and elem.tail.strip():
+                return False
+            return True
+        # 检查所有单元格
+        for cell in table.xpath('.//td | .//th'):
+            # 检查单元格内容
+            if cell.text and cell.text.strip():
+                return False
+            # 递归检查子元素
+            if not is_element_empty(cell):
+                return False
+        return True
+
     def __is_simple_table(self, tree) -> bool:
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
         cells = tree.xpath('.//td') + tree.xpath('.//th')
-        if len(cells) == 0:
-            raise HtmlTableRecognizerExp(f'table节点未通过xpath定位到td或者th标签, cell长度为{len(cells)}')
         for cell in cells:
             colspan_str = cell.get('colspan', '1')
             rowspan_str = cell.get('rowspan', '1')
@@ -73,10 +104,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 raise HtmlTableRecognizerExp(f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数') from e
             if (colspan > 1) or (rowspan > 1):
                 return False
-            elif (colspan == 1) and (rowspan == 1):
-                return True
-            else:
-                raise HtmlTableRecognizerExp(f'table的合并单元格属性值colspan:{colspan}和rowspan:{rowspan}异常')
+        return True
 
     def __is_table_contain_img(self, tree) -> bool:
         """判断table元素是否包含图片."""
@@ -104,6 +132,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __get_table_type(self, child: HtmlElement) -> str:
         """获取table的类型."""
+        empty_flag = self.__is_table_empty(child)
+        if empty_flag:
+            return 'empty'
         flag = self.__is_simple_table(child) and self.__is_table_nested(child)
         if flag:
             table_type = 'simple'
@@ -127,12 +158,14 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             for item in elem.iterchildren():
                 self.__simplify_td_th_content(item)
 
-    def __get_table_body(self, table_root):
+    def __get_table_body(self, table_type, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
+        if table_type == 'empty':
+            return None
         allowed_attributes = ['colspan', 'rowspan']
         for child in list(table_root.iterchildren()):
             if child.tag is not None:
-                self.__get_table_body(child)
+                self.__get_table_body(table_type, child)
         for ele in table_root.iter('td', 'th'):
             self.__simplify_td_th_content(ele)
         if len(table_root.attrib) > 0:
@@ -152,7 +185,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_raw_html = self._element_to_html(root)
             table_type = self.__get_table_type(root)
             tail_text = root.tail
-            table_body = self.__get_table_body(root)
+            table_body = self.__get_table_body(table_type, root)
             cc_element = self._build_cc_element(
                 CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, html=table_raw_html)
             self._replace_element(root, cc_element)

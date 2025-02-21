@@ -31,28 +31,49 @@ TEST_CASES = [
         ),
         'expected': [
             (
-                '<p>这是p的text</p>',
-                '<p>这是p的text</p>'
+                '<p>这是p的text<span class="mathjax_display"></span></p>',
+                '<p>这是p的text<span class="mathjax_display"></span></p>'
             ),
             (
-                '<p><ccmath-interline type="latex" by="mathjax" html=\'&lt;span class="mathjax_display"&gt;$$a^2 + b^2 = c^2$$&lt;/span&gt;这是span的tail\'>a^2 + b^2 = c^2</ccmath-interline></p>',
-                '<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail'
+                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>',
+                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>'
             ),
             (
-                '<p>这是span的tail<b>这是b的text</b>这是b的tail</p>',
-                '<p>这是span的tail<b>这是b的text</b>这是b的tail</p>'
+                '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>',
+                '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
             )
         ]
     },
     {
         'input': [
-            ('<p>$x = 5$</p>',
-             '<p>$x = 5$</p>')
+            ('<p>$x = 5$,$$x=6$$</p>',
+             '<p>$x = 5$,$$x=6$$</p>')
         ],
-        'raw_html': '<p>$x = 5$</p>',
+        'raw_html': '<p>$x = 5$,$$x=6$$</p>',
         'expected': [
-            ('<ccmath-inline type="latex" by="None" html="&lt;p&gt;$x = 5$&lt;/p&gt;">x = 5</ccmath-inline>',
-             '<p>$x = 5$</p>')
+            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>')
+        ]
+    },
+    {
+        'input': [
+            ('<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
+             '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>')
+        ],
+        'raw_html': '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
+        'expected': [
+            ('<p>By substituting </p>',
+             '<p>By substituting </p>'),
+            ('<p><ccmath-interline type="latex" by="None" html="x">x</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="None" html="x">x</ccmath-interline></p>'),
+            ('<p> with </p>',
+             '<p> with </p>'),
+            ('<p><ccmath-interline type="latex" by="None" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="None" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
+            ('<p>, the general</p>',
+             '<p>, the general</p>')
         ]
     },
 ]
@@ -137,39 +158,43 @@ TEST_CASES_HTML = [
 TEST_EQUATION_TYPE = [
     {
         'input': '<span>$$a^2 + b^2 = c^2$$</span>',
-        'expected': ('equation-interline', 'latex')
+        'expected': [('ccmath-interline', 'latex')]
     },
     {
         'input': '<span>$a^2 + b^2 = c^2$</span>',
-        'expected': ('equation-inline', 'latex')
+        'expected': [('ccmath-inline', 'latex')]
     },
     {
         'input': '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>',
-        'expected': ('equation-inline', 'mathml')
+        'expected': [('ccmath-inline', 'mathml')]
     },
     {
         'input': '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>',
-        'expected': ('equation-interline', 'mathml')
+        'expected': [('ccmath-interline', 'mathml')]
     },
     {
         'input': '<span>x<sub>1</sub> + x<sup>2</sup></span>',
-        'expected': ('equation-inline', 'htmlmath')
+        'expected': [('ccmath-inline', 'htmlmath')]
     },
     {
         'input': '<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>',
-        'expected': ('equation-interline', 'asciimath')
+        'expected': [('ccmath-interline', 'asciimath')]
     },
     {
         'input': '<p>Matrices: <code>[[a,b],[c,d]]</code> </p>',
-        'expected': (None, None)
+        'expected': [(None, None)]
     },
     {
         'input': '<p>这是p的text</p>',
-        'expected': (None, None)
+        'expected': [(None, None)]
     },
     {
         'input': r'<p>\begin{align} a^2+b=c\end{align}</p>',
-        'expected': ('equation-interline', 'latex')
+        'expected': [('ccmath-interline', 'latex')]
+    },
+    {
+        'input': r'<p>$$x=5$$,$x=6$</p>',
+        'expected': [('ccmath-interline', 'latex'), ('ccmath-inline', 'latex')]
     }
 ]
 
@@ -277,6 +302,8 @@ class TestMathRecognizer(unittest.TestCase):
                 self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
+                    print(output_html[i][0])
+                    print(expect)
                     self.assertEqual(output_html[i][0], expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
 
     def test_math_recognizer_html(self):
@@ -286,6 +313,7 @@ class TestMathRecognizer(unittest.TestCase):
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            # print(parts)
             # 将parts列表中第一个元素拼接保存到文件，带随机数
             # import random
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
@@ -347,12 +375,14 @@ class TestCCMATH(unittest.TestCase):
     def test_get_equation_type(self):
         for test_case in TEST_EQUATION_TYPE:
             with self.subTest(input=test_case['input']):
-                equation_type, math_type = self.ccmath.get_equation_type(test_case['input'])
+                tag_math_type_list = self.ccmath.get_equation_type(test_case['input'])
                 print('input::::::::', test_case['input'])
-                expect0 = test_case['expected'][0]
-                expect1 = test_case['expected'][1]
-                self.assertEqual(equation_type, test_case['expected'][0], msg=f'result is: {equation_type}, expected is: {expect0}')
-                self.assertEqual(math_type, test_case['expected'][1], msg=f'result is: {math_type}, expected is: {expect1}')
+                if tag_math_type_list:
+                    for i in range(len(tag_math_type_list)):
+                        expect0 = test_case['expected'][i][0]
+                        expect1 = test_case['expected'][i][1]
+                        self.assertEqual(tag_math_type_list[i][0], expect0, msg=f'result is: {tag_math_type_list[i][0]}, expected is: {expect0}')
+                        self.assertEqual(tag_math_type_list[i][1], expect1, msg=f'result is: {tag_math_type_list[i][1]}, expected is: {expect1}')
 
     def test_get_math_render(self):
         for test_case in TEST_GET_MATH_RENDER:
@@ -377,7 +407,7 @@ class TestCCMATH(unittest.TestCase):
 if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
-    # r.test_math_recognizer()
+    r.test_math_recognizer()
     r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()

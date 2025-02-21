@@ -32,6 +32,19 @@ def element_to_html(element : HtmlElement) -> str:
     return s
 
 
+def element_to_html_unescaped(element : HtmlElement) -> str:
+    """将element转换成html字符串并保持标签不被转义.
+
+    Args:
+        element: lxml.html.HtmlElement: element
+
+    Returns:
+        str: html字符串
+    """
+    s = element_to_html(element)
+    return html.unescape(s)
+
+
 def build_cc_element(html_tag_name: str, text: str, tail: str, **kwargs) -> HtmlElement:
     """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
 
@@ -82,6 +95,8 @@ def replace_element(old_element: HtmlElement, new_element: HtmlElement) -> None:
         for k, v in new_element.attrib.items():
             old_element.attrib[k] = v
         old_element.tail = new_element.tail
+        for child in new_element:
+            old_element.append(child)
 
 
 def iter_node(element: HtmlElement):

@@ -5,28 +5,39 @@ from llm_web_kit.libs.doc_element_type import DocElementType
 
 
 class Statics:
-    def __init__(self):
-        self.statics = {}
+    """统计content_list中每个元素的type的数量."""
+    def __init__(self, statics: dict = None):
+        self.statics = statics if statics else {}
+        self._validate(self.statics)
 
-    def add(self, key, value):
+    def _validate(self, statics: dict):
+        """校验statics的格式.需要是字典且只有一个为"statics"的key.示例:
+            {
+                "list": 1,
+                "list.text": 2,
+                "list.equation-inline": 1,
+                "paragraph": 2,
+                "paragraph.text": 2,
+                "equation-interline": 2
+            }
+        """
+        if not isinstance(statics, dict):
+            raise ValueError('statics must be a dict')
+
+    def __additem__(self, key, value):
         self.statics[key] = value
 
-    def get(self, key):
+    def __getitem__(self, key):
         return self.statics[key]
 
-    def get_all(self):
+    def __getall__(self):
         return self.statics
 
-    def clear(self):
+    def __clear__(self):
         self.statics = {}
 
     def print(self):
-        for key, value in self.statics.items():
-            print(f'{key}: {value}')
-
-    def save(self, path):
-        with open(path, 'w') as f:
-            json.dump(self.statics, f)
+        print(json.dumps(self.statics, indent=4))
 
     def merge_statics(self, statics: dict) -> dict:
         """合并多个contentlist的统计结果.
@@ -48,7 +59,7 @@ class Statics:
         Returns:
             dict: 每个元素的类型的数量
         """
-        result = {}
+        self.__clear__()
 
         def process_list_items(items, parent_type):
             """递归处理列表项
@@ -62,26 +73,32 @@ class Statics:
             elif isinstance(items, dict) and 't' in items:
                 # 到达最终的文本/公式元素
                 item_type = f"{parent_type}.{items['t']}"
-                current_count = result.get(item_type, 0)
-                result[item_type] = current_count + 1
+                current_count = self.statics.get(item_type, 0)
+                self.statics[item_type] = current_count + 1
 
         for page in contentlist._get_data():  # page是每一页的内容列表
             for element in page:  # element是每个具体元素
                 # 1. 统计基础元素
                 element_type = element['type']
-                current_count = result.get(element_type, 0)
-                result[element_type] = current_count + 1
+                current_count = self.statics.get(element_type, 0)
+                self.statics[element_type] = current_count + 1
 
                 # 2. 统计复合元素内部结构
                 if element_type == DocElementType.PARAGRAPH:
                     # 段落内部文本类型统计
                     for item in element['content']:
                         item_type = f"{DocElementType.PARAGRAPH}.{item['t']}"
-                        current_count = result.get(item_type, 0)
-                        result[item_type] = current_count + 1
+                        current_count = self.statics.get(item_type, 0)
+                        self.statics[item_type] = current_count + 1
 
                 elif element_type == DocElementType.LIST:
                     # 使用递归函数处理列表项
                     process_list_items(element['content']['items'], DocElementType.LIST)
-        self.merge_statics(result)
-        return result
+                elif element_type == DocElementType.TABLE:
+                    # 统计复杂表格数量
+                    if element.get('content', {}).get('is_complex', False):
+                        item_type = f'{DocElementType.TABLE}.complex'
+                        current_count = self.statics.get(item_type, 0)
+                        self.statics[item_type] = current_count + 1
+
+        return self.statics

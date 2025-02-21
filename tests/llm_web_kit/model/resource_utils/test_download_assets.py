@@ -1,12 +1,13 @@
 import io
 import os
 import tempfile
+import unittest
 from typing import Tuple
 from unittest.mock import MagicMock, patch
 
 from llm_web_kit.model.resource_utils.download_assets import (
-    HttpConnection, S3Connection, calc_file_md5, decide_cache_dir,
-    download_auto_file)
+    HttpConnection, S3Connection, calc_file_md5, calc_file_sha256,
+    decide_cache_dir, download_auto_file)
 
 
 class Test_decide_cache_dir:
@@ -48,6 +49,18 @@ class Test_calc_file_md5:
             f.write(test_bytes)
             f.flush()
             assert calc_file_md5(f.name) == hashlib.md5(test_bytes).hexdigest()
+
+
+class Test_calc_file_sha256:
+
+    def test_calc_file_sha256(self):
+        import hashlib
+
+        with tempfile.NamedTemporaryFile() as f:
+            test_bytes = b'hello world' * 10000
+            f.write(test_bytes)
+            f.flush()
+            assert calc_file_sha256(f.name) == hashlib.sha256(test_bytes).hexdigest()
 
 
 def read_mockio_size(mock_io: io.BytesIO, size: int):
@@ -107,7 +120,7 @@ def test_HttpConnection(requests_get_mock):
     assert b''.join(conn.read_stream()) == test_data
 
 
-class TestDownloadAutoFile:
+class TestDownloadAutoFile(unittest.TestCase):
 
     @patch('llm_web_kit.model.resource_utils.download_assets.os.path.exists')
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')
@@ -138,6 +151,39 @@ class TestDownloadAutoFile:
 
         mock_os_path_exists.assert_called_once_with('target_path')
         mock_calc_file_md5.assert_called_once_with('target_path')
+        mock_os_remove.assert_not_called()
+        mock_http_conn.assert_not_called()
+        mock_s3_conn.assert_not_called()
+
+    @patch('llm_web_kit.model.resource_utils.download_assets.os.path.exists')
+    @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_sha256')
+    @patch('llm_web_kit.model.resource_utils.download_assets.os.remove')
+    @patch('llm_web_kit.model.resource_utils.download_assets.is_s3_path')
+    @patch('llm_web_kit.model.resource_utils.download_assets.S3Connection')
+    @patch('llm_web_kit.model.resource_utils.download_assets.HttpConnection')
+    def test_file_exists_correct_sha256(
+        self,
+        mock_http_conn,
+        mock_s3_conn,
+        mock_is_s3_path,
+        mock_os_remove,
+        mock_calc_file_sha256,
+        mock_os_path_exists,
+    ):
+        # Arrange
+        mock_os_path_exists.return_value = True
+        mock_calc_file_sha256.return_value = 'correct_sha256'
+        mock_is_s3_path.return_value = False
+        mock_http_conn.return_value = MagicMock(get_size=MagicMock(return_value=100))
+
+        # Act
+        result = download_auto_file('http://example.com', 'target_path', sha256_sum='correct_sha256')
+
+        # Assert
+        assert result == 'target_path'
+
+        mock_os_path_exists.assert_called_once_with('target_path')
+        mock_calc_file_sha256.assert_called_once_with('target_path')
         mock_os_remove.assert_not_called()
         mock_http_conn.assert_not_called()
         mock_s3_conn.assert_not_called()
@@ -176,6 +222,40 @@ class TestDownloadAutoFile:
             with open(target_path, 'rb') as f:
                 assert f.read() == b'hello world'
 
+    @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_sha256')
+    @patch('llm_web_kit.model.resource_utils.download_assets.os.remove')
+    @patch('llm_web_kit.model.resource_utils.download_assets.is_s3_path')
+    @patch('llm_web_kit.model.resource_utils.download_assets.S3Connection')
+    @patch('llm_web_kit.model.resource_utils.download_assets.HttpConnection')
+    def test_file_exists_wrong_sha256_download_http(
+        self,
+        mock_http_conn,
+        mock_s3_conn,
+        mock_is_s3_path,
+        mock_os_remove,
+        mock_calc_file_sha256,
+    ):
+        # Arrange
+        mock_calc_file_sha256.return_value = 'wrong_sha256'
+        mock_is_s3_path.return_value = False
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with open(os.path.join(tmp_dir, 'target_path'), 'wb') as f:
+                f.write(b'hello world')
+            response_mock, content_length = get_mock_http_response(b'hello world')
+            mock_http_conn.return_value = MagicMock(
+                get_size=MagicMock(return_value=content_length),
+                read_stream=MagicMock(return_value=response_mock.iter_content()),
+            )
+
+            target_path = os.path.join(tmp_dir, 'target_path')
+            # Act
+            result = download_auto_file('http://example.com', target_path, sha256_sum='correct_sha256')
+
+            assert result == target_path
+            with open(target_path, 'rb') as f:
+                assert f.read() == b'hello world'
+
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')
     @patch('llm_web_kit.model.resource_utils.download_assets.os.remove')
     @patch('llm_web_kit.model.resource_utils.download_assets.is_s3_path')
@@ -206,3 +286,7 @@ class TestDownloadAutoFile:
             assert result == target_path
             with open(target_path, 'rb') as f:
                 assert f.read() == b'hello world'
+
+
+if __name__ == '__main__':
+    unittest.main()

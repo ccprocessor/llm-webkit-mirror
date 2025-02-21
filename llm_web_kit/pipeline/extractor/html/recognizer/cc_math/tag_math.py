@@ -7,22 +7,18 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
                                          html_to_element, replace_element)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import (
-    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, EQUATION_INLINE,
-    EQUATION_INTERLINE, MathType, text_strip)
+    CCMATH, MathType, text_strip)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
     try:
         annotation_tags = node.xpath('.//*[local-name()="annotation"][@encoding="application/x-tex"]')
         math_type = MathType.MATHML
-        equation_type, math_type = cm.get_equation_type(o_html)
-        if equation_type == EQUATION_INLINE:
-            new_tag = CCMATH_INLINE
-        elif equation_type == EQUATION_INTERLINE:
-            new_tag = CCMATH_INTERLINE
-        else:
+        tag_math_type_list = cm.get_equation_type(o_html)
+        if not tag_math_type_list:
             return
-
+        new_tag = tag_math_type_list[0][0]
+        math_type = tag_math_type_list[0][1]
         if len(annotation_tags) > 0:
             annotation_tag = annotation_tags[0]
             text = annotation_tag.text

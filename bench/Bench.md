@@ -10,12 +10,12 @@
 # 使用方法
 
 ```
-python eval.py
+python run.py
 ```
 
 # 评估报告及评估指标
 
-每一个评测结果包含`summary.json`和`detail.json`两个文件，`summary.json`是评估指标的汇总，`detail.json`是评估指标的详细结果。
+每一个评测结果包含`summary.json`和`detail.json`两个文件，`summary.json`是整个评测集的汇总结果，`detail.json`是单个网页的详细结果。
 
 # 评估报告示例
 
@@ -28,26 +28,26 @@ python eval.py
     "create_time": "20250212_113509",  # 评测任务创建时间
     "finish_time": "20250212_113632",  # 评测任务完成时间
     "total": 52002,  # 总评测文件数量
-    "result": { # 评测结果
+    "result_summary": { # 评测结果
         "Overall": {
             "count": 52000, # 元素数量
             "type_acc": 0.9997, # 元素类型识别准确性
             "content_acc": 0.9997 # 元素内容识别准确性
         },
-        "Math": {
+        "equation-interline": {
             "count": 52, # 元素数量
             "type_acc": 0.9997, # 元素类型识别准确性
             "content_acc": 0.9997 # 元素内容识别准确性
         },
-        "Code": {
+        "code": {
             "count": 5, # 元素数量
             "type_acc": 0.9997, # 元素类型识别准确性
             "content_acc": 0.9997 # 元素内容识别准确性
         },
         ...
-        "error": {
-            "count": 2, # 错误数量
-        }
+    },
+    "error_summary": {
+        "count": 2, # 错误数量
     }
 }
 ```
@@ -60,8 +60,8 @@ python eval.py
     "output_path": "outputs/20250212_113509_5bbf75c0",  # 评测结果保存路径
     "create_time": "20250212_113509",  # 评测任务创建时间
     "finish_time": "20250212_113632",  # 评测任务完成时间
-    "detail": {
-        "success": [
+    "result_detail": {
+        "success_result": [
             {
                 "file_path": "html/ccmath/1.html",  # 评测文件路径
                 "result": { # 评测结果
@@ -70,12 +70,12 @@ python eval.py
                         "type_acc": 0.9997, # 元素类型识别准确性
                         "content_acc": 0.9997 # 元素内容识别准确性
                     },
-                    "Math": {
+                    "equation-interline": {
                         "count": 52, # 元素数量
                         "type_acc": 0.9997, # 元素类型识别准确性
                         "content_acc": 0.9997 # 元素内容识别准确性
                     },
-                    "Code": {
+                    "code": {
                         "count": 5, # 元素数量
                         "type_acc": 0.9997, # 元素类型识别准确性
                         "content_acc": 0.9997 # 元素内容识别准确性
@@ -85,10 +85,9 @@ python eval.py
             },
             ...
         ],
-        "error": [
+        "error_result": [ # 抽取失败的网页
             {
                 "file_path": "html/ccmath/1.html", # 评测文件路径
-                "error_reason": "type_error", # 错误原因
                 "error_detail": "type_error" # 错误详情
             },
             ...

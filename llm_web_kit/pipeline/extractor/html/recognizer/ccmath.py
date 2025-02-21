@@ -7,7 +7,7 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerExp
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import iter_node
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math import (
-    tag_common_modify, tag_img, tag_math, tag_script)
+    tag_asciimath, tag_common_modify, tag_img, tag_math, tag_script)
 from llm_web_kit.pipeline.extractor.html.recognizer.cc_math.common import \
     CCMATH
 from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import (
@@ -129,8 +129,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # script[type="math/tex"]
-            if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+            # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
+            #     tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # math tags
             if node.tag == 'math' or node.tag.endswith(':math'):
@@ -139,8 +139,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # script[type="math/asciimath"]
             # if node.tag == 'script' and node.get('type') == 'math/asciimath':
             if node.tag in ('p','div') and node.text and '`' in node.text:
-                # tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
-                pass
+                tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
 
             # Remove any .MathJax_Preview spans
             if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
@@ -159,7 +158,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
         # 打印处理后的html
         # print(self._element_to_html(tree))
-
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 

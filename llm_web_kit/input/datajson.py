@@ -15,6 +15,8 @@ class DataJsonKey(object):
     DATASET_NAME = 'dataset_name'
     FILE_FORMAT = 'data_source_category'
     CONTENT_LIST = 'content_list'
+    METAINFO = 'meta_info'
+    STATICS = 'statics'
 
 
 class DataSourceCategory(object):
@@ -212,17 +214,20 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
-            html_table = html_table.strip()
-            cells_count = table_cells_count(html_table)
-            if cells_count <= 1:  # 单个单元格的表格，直接返回文本
-                text = get_element_text(html_to_element(html_table)).strip()
-                return text
-            is_complex = content_lst_node['content']['is_complex']
-            if is_complex:
-                return html_table
+            if html_table is not None:
+                html_table = html_table.strip()
+                cells_count = table_cells_count(html_table)
+                if cells_count <= 1:  # 单个单元格的表格，直接返回文本
+                    text = get_element_text(html_to_element(html_table)).strip()
+                    return text
+                is_complex = content_lst_node['content']['is_complex']
+                if is_complex:
+                    return html_table
+                else:
+                    md_table = html_to_markdown_table(html_table)
+                    return md_table
             else:
-                md_table = html_to_markdown_table(html_table)
-                return md_table
+                return ''
         else:
             raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
 
@@ -333,13 +338,16 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
-            html_table = html_table.strip()
-            is_complex = content_lst_node['content']['is_complex']
-            if is_complex:
-                return html_table
+            if html_table is not None:
+                html_table = html_table.strip()
+                is_complex = content_lst_node['content']['is_complex']
+                if is_complex:
+                    return html_table
+                else:
+                    md_table = html_to_markdown_table(html_table)
+                    return md_table
             else:
-                md_table = html_to_markdown_table(html_table)
-                return md_table
+                return ''
         else:
             raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
 
@@ -450,3 +458,27 @@ class DataJson(StructureChecker):
 
     def get(self, key:str, default=None):
         return self.__json_data.get(key, default)
+
+    def to_json(self, pretty=False) -> str:
+        """
+        把datajson对象转化为json字符串， content_list对象作为json的content_list键值
+        Args:
+            pretty (bool): 是否格式化json字符串
+        Returns:
+            str: json字符串
+        """
+        json_dict = self.__json_data.copy()
+        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list()._get_data()
+        if pretty:
+            return json.dumps(json_dict, indent=2, ensure_ascii=False)
+        return json.dumps(json_dict, ensure_ascii=False)
+
+    def to_dict(self) -> dict:
+        """
+        把datajson对象转化为dict对象
+        Returns:
+            dict: dict对象
+        """
+        json_dict = self.__json_data.copy()
+        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list()._get_data()
+        return json_dict

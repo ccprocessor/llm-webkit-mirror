@@ -19,7 +19,8 @@ TEST_CASES = [
             'assets/recognizer/table_include_image.html',
             'assets/recognizer/table_simple_cc.html',
             'assets/recognizer/table_include_rowspan_colspan.html',
-            'assets/recognizer/table_involve_equation.html'
+            'assets/recognizer/table_involve_equation.html',
+            'assets/recognizer/table_include_after_code.html'
 
         ),
         'expected': [
@@ -152,3 +153,12 @@ class TestTableRecognizer(unittest.TestCase):
             raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             assert parts is not None
+
+    def test_table_involve_after_code(self):
+        """test table involve code, code被提取出去了，过滤掉空的和坏的table."""
+        for test_case in TEST_CASES:
+            raw_html_path = base_dir.joinpath(test_case['input'][10])
+            base_url = 'https://en.m.wikipedia.org/wiki/Variance'
+            raw_html = raw_html_path.read_text(encoding='utf-8')
+            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            assert html_to_element(parts[0][0]).xpath(f'.//{CCTag.CC_TABLE}')[0].text is None
