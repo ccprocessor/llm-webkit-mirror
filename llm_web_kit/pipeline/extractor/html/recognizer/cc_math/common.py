@@ -215,8 +215,8 @@ class CCMATH():
                 escaped_end = re.escape(end)
                 if end == '$':
                     escaped_end = r'(?<!\$)' + escaped_end + r'(?!\$)'
-                all_pattern = f'^{escaped_start}.*?{escaped_end}$'
-                partial_pattern = f'{escaped_start}.*?{escaped_end}'
+                all_pattern = f'^{escaped_start}.*?{escaped_end}$'.replace(r'\.\*\?', '.*?')
+                partial_pattern = f'{escaped_start}.*?{escaped_end}'.replace(r'\.\*\?', '.*?')
                 if re.search(all_pattern, s, re.DOTALL):
                     return MathMatchRes.ALLMATCH
                 if re.search(partial_pattern, s, re.DOTALL):
@@ -304,16 +304,77 @@ class CCMATH():
 
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
+        mml_ns = re.sub(r'<mspace[^>]*>.*?</mspace>', '', mml_ns, flags=re.DOTALL)
+        mml_ns = self.fix_mathml_superscript(mml_ns)
         mml_dom = etree.fromstring(mml_ns)
         mmldom = transform(mml_dom)
         latex_code = str(mmldom)
         return latex_code
 
+    def fix_mathml_superscript(self, mathml_str):
+        # 解析输入的MathML字符串
+        root = etree.fromstring(mathml_str)
+        namespace = {'m': 'http://www.w3.org/1998/Math/MathML'}
+        for msup in root.xpath('//m:msup', namespaces=namespace):
+            if len(msup) < 1:
+                continue
+            base = msup[0]
+            if base.tag != '{http://www.w3.org/1998/Math/MathML}mo' or base.text != ')':
+                continue
+            parent = msup.getparent()
+            if parent is None:
+                continue
+            siblings = list(parent)
+            msup_index = siblings.index(msup)
+            left_paren = None
+            for i in range(msup_index - 1, -1, -1):
+                node = siblings[i]
+                if (node.tag == '{http://www.w3.org/1998/Math/MathML}mo' and node.text == '('):
+                    left_paren = i
+                    break
+            if left_paren is None:
+                continue
+            content_nodes = siblings[left_paren:msup_index]
+            mrow = etree.Element('mrow')
+            for node in content_nodes:
+                parent.remove(node)
+                mrow.append(node)
+            new_msup = etree.Element('msup')
+            new_msup.append(mrow)
+            if len(msup) >= 2:
+                new_msup.append(msup[1])
+            msup.remove(base)
+            mrow.append(base)
+            parent.insert(left_paren, new_msup)
+            parent.remove(msup)
+
+        return etree.tostring(root, encoding='unicode', pretty_print=True)
+
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:
         # pattern re数学公式匹配 func 公式预处理 默认不处理
-        def replacement(match_text):
+        pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
+        original_text = node.text or ''
+
+        def is_ccmath_wrapped(match_text, original_text: str) -> bool:
+            if not match_text or not original_text:
+                return False
+            start_idx = match_text.start()
+            end_idx = match_text.end()
+            before_match = original_text[:start_idx].strip()
+            after_match = original_text[end_idx:].strip()
+            if 'ccmath' in before_match and 'ccmath' in after_match:
+                return True
+            if pattern_type == MATH_TYPE_PATTERN.DISPLAYMATH:
+                for start, end in MATH_TYPE_TO_DISPLAY[MathType.LATEX][MATH_TYPE_PATTERN.INLINEMATH]:
+                    if start in before_match and end in after_match:
+                        return True
+            return False
+
+        def process(match_text):
             try:
                 match = match_text.group(0)
+                if is_ccmath_wrapped(match_text, original_text):
+                    return match
                 math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
                 wrapped_text = func(math_text) if func else math_text
                 wrapped_text = self.wrap_math_md(wrapped_text)
@@ -329,14 +390,10 @@ class CCMATH():
                 return ''
             return element_to_html(new_span)
         try:
-            pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
-            original_text = node.text or ''
             for start, end in MATH_TYPE_TO_DISPLAY[math_type][pattern_type]:
-                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                pattern = f'{re.escape(start)}.*?{re.escape(end)}'.replace(r'\.\*\?', '.*?')
                 regex = re.compile(pattern, re.DOTALL)
-                if re.search(regex, original_text):
-                    original_text = re.sub(regex, replacement, original_text)
-                    break
+                original_text = re.sub(regex, process, original_text)
             node.text = original_text
         except Exception:
             return self.build_cc_exception_tag()
