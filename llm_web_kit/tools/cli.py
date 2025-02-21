@@ -5,8 +5,8 @@ from pathlib import Path
 import click
 from loguru import logger
 
-from llm_web_kit.pipeline.extractor.html.extractor import \
-    HTMLFileFormatExtractor
+from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
+from llm_web_kit.input.datajson import DataJson
 
 
 @click.command()
@@ -56,9 +56,8 @@ def cli(input_path, output_path, debug_mode):
                 raise ValueError('Input JSON must contain either html or path field')
 
         extractor = HTMLFileFormatExtractor({})
-        data_e = extractor._do_extract(input_data)
-        data_e['content_list'] = data_e['content_list']._get_data()
-        output_json = json.dumps(data_e, ensure_ascii=False, indent=2)
+        data_e = extractor.extract(DataJson(input_data))
+        output_json = data_e.to_json()
 
         if output_path:
             output_path = Path(output_path)
