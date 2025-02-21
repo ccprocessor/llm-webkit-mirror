@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- Path: 2.html -->
+
+<h1>Heading 1</h1>
+<p>Paragraph 1</p>
+<div>
+    <img alt="image-alt" title="image-title" src="test.png" />
+    <p>Paragraph 2</p>
+</div>
+
+<!-- 简单table -->
+<table>
+    <tr>
+        <td>1</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>4</td>
+    </tr>
+</table>
+
+<div>
+    <span>
+        <!-- 复杂table -->
+    <table>
+        <tr>
+            <td rowspan="2">1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td colspan="2">4</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>6</td>
+            <td>7</td>
+        </tr>
+    </table>
+    </span>
+</div>
+
+<!-- 简单list -->
+<ul>
+    <li>1</li>
+    <li>2</li>
+</ul>
+
+<!-- 列表项里有子列表 -->
+<ul>
+    <li>1
+        <ul>
+            <li>1.1</li>
+            <li>1.2</li>
+        </ul>
+    </li>
+    <li>2
+        <ul>
+            <li>2.1</li>
+            <li>2.2</li>
+        </ul>
+    </li>
+</ul>
+
+<!-- 数学公式 -->
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+    <mi>x</mi>
+    <mo>=</mo>
+    <mrow>
+      <mfrac>
+        <mrow>
+          <mo>&#x2212;</mo>
+          <mi>b</mi>
+          <mo>&#x00B1;</mo>
+          <msqrt>
+            <msup>
+              <mi>b</mi>
+              <mn>2</mn>
+            </msup>
+            <mo>&#x2212;</mo>
+            <mn>4</mn>
+            <mi>a</mi>
+            <mi>c</mi>
+          </msqrt>
+        </mrow>
+        <mrow>
+          <mn>2</mn>
+          <mi>a</mi>
+        </mrow>
+      </mfrac>
+    </mrow>
+    <mtext>.</mtext>
+  </math>
+
+<!-- 代码 -->
+<pre><code class="language-js">const Prism = require('prismjs');
+
+    // The code snippet you want to highlight, as a string
+    const code = `var data = 1;`;
+
+    // Returns a highlighted HTML string
+    const html = Prism.highlight(code, Prism.languages.javascript, 'javascript');</code></pre>
+
+<!-- 有序列表 -->
+<ol>
+    <li>100</li>
+    <li>200</li>
+</ol>
+
+<!-- 带链接的 inline code -->
+<p>reference: <code>#include&lt;<a href="xxxx.xxxx.com">xxxx.hpp</a>&gt;</code></p>
+
+</body>
+</html>

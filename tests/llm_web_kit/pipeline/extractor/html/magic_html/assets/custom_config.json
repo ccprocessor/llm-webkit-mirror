@@ -1,0 +1,17 @@
+{
+  "test.custom.com": {
+    "clean": [
+      "//script",
+      "//style",
+      "//*[@id=\"post-219\"]/div[1]/div[2]/div"
+    ],
+    "title": {
+      "mode": "xpath",
+      "value": "//*[@id=\"post-219\"]/div[1]/div[1]/h1/text()"
+    },
+    "content": {
+      "mode": "xpath",
+      "value": "//*[@id=\"post-219\"]/div[1]/div[2]"
+    }
+  }
+}

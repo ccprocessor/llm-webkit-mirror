@@ -1,0 +1,4 @@
+<RadioButton IsChecked="{Binding Value}"  Command="{Binding ChangeValueCommand}">                           <i:Interaction.Behaviors>
+        <behaviors:VirtualizedRadioButtonBehavior/>
+    </i:Interaction.Behaviors>
+</RadioButton>

@@ -1,0 +1,59 @@
+{
+    // dataset_name和path_prefix_matcher是二选一，如果都出现了，那么以path_prefix_matcher为准
+    "dataset_name": "news", //数据集名称
+    "enable": true, //是否跳过这个数据集
+
+    "formatter_pipe": {
+        "enable": true, //是否启用raw_data_format这个步骤
+        "debug": false, //如果开启debug模式，则不会缓存任何数据，所有持久化操作都会被忽略
+        "raw_input_data_path": [
+            "s3://llm-raw-input/bbc/v001/",
+            "s3://llm-raw-input/cctv/v001/"
+        ],
+        "formatted_raw_input_data_output_path": "s3://llm-raw-output/ebook/v001/", // 对raw_input_data_path里的数据进行格式化之后的数据存放路径
+        "formatter": [{
+            "enable": true,
+            "python_class": "llm_web_kit.pipeline.formatter.ebook.formatter.EBOOKFormatter",
+            "class_init_kwargs":{}
+        }]
+    },
+
+    "extractor_pipe": { //每个子key里的处理器都是有序的，顺序执行
+        "enable": true,
+        "pre_extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.pipeline.extractor.ebook.pre_extractor.EBOOKFileFormatFilterPreExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.pipeline.extractor.ebook.extractor.EBOOKFileFormatExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "post_extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.pipeline.extractor.ebook.post_extractor.EBOOKFileFormatPostExtractor"
+            }
+        ]
+    },
+
+    "content_safe_pipe": {
+        "enable": true,
+        "processor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.model.WebChecker",
+                "kwargs": {}
+            }, //自定义的处理程序
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.model.BooksChecker"
+            } //是否根据文件格式进行处理
+        ]
+    }
+}
