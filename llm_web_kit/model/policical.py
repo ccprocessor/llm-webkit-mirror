@@ -95,10 +95,10 @@ def decide_political_by_str(content_str: str) -> float:
 
 
 def update_political_by_str(content_str: str) -> Dict[str, float]:
-    return {'safety_prob': decide_political_by_str(content_str)}
+    return {'political_prob': decide_political_by_str(content_str)}
 
 
-def safety_filter_cpu(data_dict: Dict[str, Any], language: str):
+def political_filter_cpu(data_dict: Dict[str, Any], language: str):
     if language != 'zh' and language != 'en':
         raise CleanLangTypeExp(f"Unsupport language '{language}'")
     content = DataJson(data_dict).get_content_list().to_txt()
