@@ -53,6 +53,17 @@
     "Other_type_Error": { "code": 6000, "message": "Other type error" }
   },
 
+  //Clean 类型异常
+  "Clean": {
+    "Clean_base_Error": {
+      "code": 7000, "message": "Clean base error"
+    },
+    "Clean_lang_type_Error": {
+      "code": 7010,
+      "message": "Clean lang type error"
+    }
+  },
+
   // 分模块的业务异常
   "Format": {
     "HtmlFormat_Error": { "code": 3001, "message": "HTML format error" }

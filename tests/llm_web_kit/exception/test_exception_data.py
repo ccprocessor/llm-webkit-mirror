@@ -37,3 +37,7 @@ class TestException(unittest.TestCase):
         assert res == 'ExtractorChain configuration error'
         res = ErrorMsg.get_error_message(2400)
         assert res == 'Specified extractor not found'
+        res = ErrorMsg.get_error_message(7000)
+        assert res == 'Clean base error'
+        res = ErrorMsg.get_error_message(7010)
+        assert res == 'Clean lang type error'
