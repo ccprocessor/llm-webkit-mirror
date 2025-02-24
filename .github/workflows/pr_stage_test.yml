@@ -39,7 +39,7 @@ jobs:
       - name: Install build dependencies
         run: |
           pip install maturin
-          pip install --prefer-binary tokenizers==0.15.0
+          pip install --prefer-binary tokenizers>=0.19.0
       - name: Build llm_web_kit from source
         run: |
           pip install -e .
@@ -73,7 +73,7 @@ jobs:
       - name: Install build dependencies
         run: |
           pip install maturin
-          pip install --prefer-binary tokenizers==0.15.0
+          pip install --prefer-binary tokenizers>=0.19.0
       - name: Build llm_web_kit from source
         run: |
           pip install -e .
