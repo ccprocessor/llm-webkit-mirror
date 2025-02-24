@@ -296,14 +296,15 @@ DEF
         self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
         self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt([]))
 
-    # def test_lineno_detect(self):
-    #     chain = ExtractSimpleFactory.create(self.config)
-    #     self.assertIsNotNone(chain)
-    #     test_data = self.data_json[7]
-    #     # Create DataJson from test data
-    #     input_data = DataJson(test_data)
-    #     result = chain.extract(input_data)
-    #     self.assertEqual(result.get_content_list().to_mm_md(), self.csdn_lineno_expected_content)
+    def test_lineno_detect(self):
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[7]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        code_content = result.get_content_list()[0][0]['content']['code_content']
+        self.assertEqual(code_content, self.csdn_lineno_expected_content)
 
     def test_lineno_detect_2(self):
         chain = ExtractSimpleFactory.create(self.config)
