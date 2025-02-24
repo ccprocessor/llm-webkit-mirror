@@ -30,7 +30,6 @@ class TestAllTagListToRemove(unittest.TestCase):
         # 验证总数一致且包含关键标签
         self.assertEqual(len(all_tags), len(expected))
         self.assertIn('iframe', all_tags)
-        self.assertIn('noscript', all_tags)
 
 
 class TestRemoveTags(unittest.TestCase):

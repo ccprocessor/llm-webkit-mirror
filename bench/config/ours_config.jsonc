@@ -24,23 +24,23 @@
         "pre_extractor": [
             {
                 "enable": true,
-                "python_class": "llm_web_kit.pipeline.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor",
+                "python_class": "llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor",
                 "class_init_kwargs": {
-                    "html_parent_dir": "tests/llm_web_kit/pipeline/assets/pipline_suit_input/good_data/html/"
+                    "html_parent_dir": "tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/"
                 }
             }
         ],
         "extractor": [
             {
                 "enable": true,
-                "python_class": "llm_web_kit.pipeline.extractor.html.extractor.HTMLFileFormatExtractor",
+                "python_class": "llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor",
                 "class_init_kwargs": {}
             }
         ],
         "post_extractor": [
             {
                 "enable": true,
-                "python_class": "llm_web_kit.pipeline.extractor.html.post_extractor.ContentListStaticsPostExtractor"
+                "python_class": "llm_web_kit.extractor.html.post_extractor.ContentListStaticsPostExtractor"
             }
         ]
     },
