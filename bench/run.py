@@ -100,7 +100,11 @@ def main():
     detail.finish()
     statics_gt.print()
     statics_pre.print()
-    print(json.dumps(metrics.eval_type_acc(statics_gt, statics_pre), indent=4))
+    result = metrics.eval_type_acc(statics_gt, statics_pre)
+    print(json.dumps(result, indent=4))
+    summary.result_summary = result
+    print(json.dumps(summary.to_dict(), indent=4))
+    print(json.dumps(detail.to_dict(), indent=4))
     return summary, detail
 
 
