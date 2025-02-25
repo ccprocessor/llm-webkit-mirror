@@ -1,5 +1,5 @@
 import json
-from typing import List, Tuple, Any
+from typing import Any, List, Tuple
 
 from lxml.etree import _Element as HtmlElement
 from overrides import override
@@ -148,9 +148,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         return list_nest_level, is_ordered, content_list, raw_html, tail_text
 
     def __get_list_type(self, list_ele:HtmlElement) -> int:
-        """
-        获取list嵌套的类型
-        """
+        """获取list嵌套的类型."""
         if list_ele.tag not in ['ul', 'ol', 'dl', 'menu', 'dir']:
             return 0
         ancestor_count = list_ele.xpath('count(ancestor::ul | ancestor::ol)')
