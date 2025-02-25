@@ -24,6 +24,8 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             dict: content_list_node
         """
         level, text = self.__get_attribute(parsed_content)
+        if not text or len(text.strip()) == 0:  # 如果有的空标题存在
+            return None
         cctitle_content_node = {
             'type': DocElementType.TITLE,
             'raw_content': raw_html_segment,

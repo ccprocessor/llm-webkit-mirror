@@ -1,5 +1,6 @@
-import json
 from typing import List, Union
+
+import commentjson as json
 
 from llm_web_kit.exception.exception import (ExtractorChainConfigException,
                                              ExtractorChainInputException,

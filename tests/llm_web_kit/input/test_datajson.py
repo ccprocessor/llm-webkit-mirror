@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 
 from llm_web_kit.input.datajson import ContentList, DataJson, DataJsonKey
@@ -102,3 +104,19 @@ def test_datajson_validation():
     # Test invalid content_list type
     with pytest.raises(ValueError):
         DataJson({DataJsonKey.CONTENT_LIST: 'invalid'})  # String instead of list
+
+
+def test_data_json_deepcopy():
+    """从一个外部dict构建datajson, 改变datajson，不改变外部dict."""
+    d = {'track_id': '32266dfa-c335-45c5-896e-56f057889d28',
+        'url': 'http://mathematica.stackexchange.com/users/1931/ywdr1987?tab=activity&sort=all',
+        'html':'',
+        'page_layout_type': 'forum',
+        'domain': 'mathematica.stackexchange.com',
+        'dataset_name': 'math',
+        'data_source_category': 'HTML',
+        'meta_info': {'warc_headers': {'WARC-IP-Address': '104.16.12.13'}}}
+    copied = copy.deepcopy(d)
+    _ = DataJson(copied)
+    cl = copied.get('content_list')  # 不该变外部变量d
+    assert cl is None

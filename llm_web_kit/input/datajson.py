@@ -1,3 +1,4 @@
+import copy
 import json
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -143,9 +144,9 @@ class StructureMapper(ABC):
         """
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
-            code = content_lst_node['content'].get('code_content', '')
+            code = content_lst_node['content']['code_content']  # 这里禁止有None的content, 如果有应该消灭在模块内部。模块应该处理更精细，防止因为拼装导致掩盖了错误。
             # 代码不可以 strip，因为首行可能有缩进，只能 rstrip
-            code = (code or '').rstrip()
+            code = code.rstrip()
             if not code:
                 return ''
             language = content_lst_node['content'].get('language', '')
@@ -186,7 +187,7 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.VIDEO:
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
-            title_content = (content_lst_node['content'].get('title_content', '') or '').strip()
+            title_content = content_lst_node['content']['title_content'].strip()
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
@@ -388,7 +389,7 @@ class StructureChecker(object):
         if not isinstance(json_obj, dict):
             raise ValueError('json_obj must be a dict type.')
         if DataJsonKey.CONTENT_LIST in json_obj:
-            if not isinstance(json_obj[DataJsonKey.CONTENT_LIST], list):
+            if not isinstance(json_obj.get(DataJsonKey.CONTENT_LIST, ''), list):
                 raise ValueError('content_list must be a list type.')
 
 
@@ -430,10 +431,11 @@ class DataJson(StructureChecker):
         Args:
             input_data (dict): _description_
         """
-        self._validate(input_data)
-        self.__json_data = input_data
-        if DataJsonKey.CONTENT_LIST in input_data:
-            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList(input_data[DataJsonKey.CONTENT_LIST])
+        copied_input = copy.deepcopy(input_data)  # 防止修改外部数据，同时也让修改这个变量必须通过函数方法
+        self._validate(copied_input)
+        self.__json_data = copied_input
+        if DataJsonKey.CONTENT_LIST in copied_input:
+            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList(copied_input[DataJsonKey.CONTENT_LIST])
         if DataJsonKey.CONTENT_LIST not in self.__json_data:
             self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList([])
 
