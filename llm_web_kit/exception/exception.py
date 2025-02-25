@@ -248,10 +248,10 @@ class HtmlPostExtractorExp(HTMLExp):
         super().__init__(4150, custom_message)
 
 
-class CleanExp(PipelineBaseExp):
+class CleanExp(LlmWebKitBaseException):
     """清洗模块异常基类."""
 
-    def __init__(self, err_code: int = 4200, custom_message: str = None):
+    def __init__(self, err_code: int = 7000, custom_message: str = None):
         """清洗模块初始化异常.
 
         Args:
@@ -263,4 +263,4 @@ class CleanExp(PipelineBaseExp):
 class CleanLangTypeExp(CleanExp):
     """清洗模块语言类型异常."""
     def __init__(self, custom_message: str = None):
-        super().__init__(4210, custom_message)
+        super().__init__(7010, custom_message)
