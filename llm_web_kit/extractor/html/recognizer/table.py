@@ -1,9 +1,12 @@
-from typing import List, Tuple
+from itertools import chain
+from typing import Any, List, Tuple
 
 from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlTableRecognizerExp
+from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
+from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -42,7 +45,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
         if not parsed_content:
             raise HtmlTableRecognizerExp(f'table parsed_content{parsed_content}为空')
-        table_type, table_body = self.__get_attribute(parsed_content)
+        table_type, table_nest_level, table_body = self.__get_attribute(parsed_content)
         d = {
             'type': DocElementType.TABLE,
             # "bbox": [],
@@ -52,6 +55,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             },
         }
         d['content']['is_complex'] = table_type
+        d['content']['table_nest_level'] = table_nest_level
         return d
 
     def __is_contain_cc_html(self, cc_html: str) -> bool:
@@ -64,6 +68,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         :param table: lxml.html.HtmlElement 对象，表示一个 <table> 元素
         :return: 如果表格为空，返回 True；否则返回 False
         """
+
         def is_element_empty(elem):
             # 检查元素本身的文本内容
             if elem.text and elem.text.strip():
@@ -81,6 +86,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             if elem.tail and elem.tail.strip():
                 return False
             return True
+
         # 检查所有单元格
         for cell in table.xpath('.//td | .//th'):
             # 检查单元格内容
@@ -101,7 +107,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 colspan = int(colspan_str)
                 rowspan = int(rowspan_str)
             except ValueError as e:
-                raise HtmlTableRecognizerExp(f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数') from e
+                raise HtmlTableRecognizerExp(
+                    f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数') from e
             if (colspan > 1) or (rowspan > 1):
                 return False
         return True
@@ -114,15 +121,14 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         else:
             return False
 
-    def __is_table_nested(self, tree) -> bool:
-        """判断table元素是否嵌套."""
-        nested_tables = tree.xpath('//table//table')
-        if len(nested_tables) == 0:
-            return True
-        else:
-            return False
+    def __is_table_nested(self, tree) -> int:
+        """获取表格元素的嵌套层级（非表格元素返回0，顶层表格返回1，嵌套表格返回层级数）."""
+        if tree.tag != 'table':
+            return 0  # 非表格元素返回0
+        # 计算祖先中的 table 数量（不包括自身），再加1表示自身层级
+        return len(tree.xpath('ancestor::table')) + 1
 
-    def __extract_tables(self, ele: HtmlElement) -> List[str]:
+    def __extract_tables(self, ele: str) -> List[Tuple[str, str]]:
         """提取html中的table元素."""
         tree = self._build_html_tree(ele)
         self.__do_extract_tables(tree)
@@ -133,9 +139,11 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __get_table_type(self, child: HtmlElement) -> str:
         """获取table的类型."""
         empty_flag = self.__is_table_empty(child)
+        level = self.__is_table_nested(child)
         if empty_flag:
             return 'empty'
-        flag = self.__is_simple_table(child) and self.__is_table_nested(child)
+        # 是否跨行跨列
+        flag = (self.__is_simple_table(child) and level < 2)
         if flag:
             table_type = 'simple'
         else:
@@ -147,36 +155,90 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for item in ele.iterchildren():
             return self._element_to_html(item)
 
-    def __simplify_td_th_content(self, elem):
+    def __check_table_include_math_code(self, raw_html: HtmlElement):
+        """check table中是否包含math."""
+        math_html = self._element_to_html(raw_html)
+        ele_res = list()
+        math_recognizer = MathRecognizer()
+        math_res_parts = math_recognizer.recognize(base_url='', main_html_lst=[(math_html, math_html)],
+                                                   raw_html=math_html)
+        code_recognizer = CodeRecognizer()
+        code_res_parts = code_recognizer.recognize(base_url='', main_html_lst=math_res_parts,
+                                                   raw_html=math_html)
+        for math_item in code_res_parts:
+            ele_item = self._build_html_tree(math_item[0])
+            ccinline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INLINE}')
+            ccinline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE_INLINE}')
+            ccinterline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
+            ccinterline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE}')
+            if ccinline_math_node:
+                formulas = [
+                    el.text if el.text.strip() else ''
+                    for el in ccinline_math_node
+                ]
+                ele_res.extend(formulas)  # 添加字符串
+            elif ccinterline_math_node:
+                codes = [
+                    el.text if el.text.strip() else ''
+                    for el in ccinterline_math_node
+                ]
+                ele_res.extend(codes)
+            elif ccinline_code_node:
+                inline_codes = [
+                    el.text if el.text.strip() else ''
+                    for el in ccinline_code_node
+                ]
+                ele_res.extend(inline_codes)
+            elif ccinterline_code_node:
+                ccinterline_codes = [
+                    el.text if el.text else ''
+                    for el in ccinterline_code_node
+                ]
+                ele_res.extend(ccinterline_codes)
+            else:
+                ele_res.extend([
+                    text.strip()
+                    for text in self._build_html_tree(math_item[1]).itertext()
+                    if text.strip()
+                ])
+        return ele_res
+
+    def __simplify_td_th_content(self, elem: HtmlElement) -> None:
         """简化 <td> 和 <th> 内容，仅保留文本内容."""
-        if elem.tag in ['td', 'th'] and len(elem.xpath('.//table')) == 0:
-            result = '<br>'.join([text for text in elem.itertext() if text.strip()])
-            for child in list(elem):
-                elem.remove(child)
-            elem.text = result
-        elif elem.tag in ['td', 'th'] and len(elem.xpath('.//table')) > 0:
-            for item in elem.iterchildren():
-                self.__simplify_td_th_content(item)
+        if elem.tag in ['td', 'th']:
+            # 简化单元格中的元素
+            parse_res = list()
+            math_res = self.__check_table_include_math_code(elem)
+            parse_res.extend(math_res)
+            for item in list(elem.iterchildren()):
+                elem.remove(item)
+            elem.text = '<br>'.join(parse_res)
+            return
+        for child in elem.iter('td', 'th'):
+            self.__simplify_td_th_content(child)
 
     def __get_table_body(self, table_type, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
         if table_type == 'empty':
             return None
         allowed_attributes = ['colspan', 'rowspan']
-        for child in list(table_root.iterchildren()):
-            if child.tag is not None:
-                self.__get_table_body(table_type, child)
-        for ele in table_root.iter('td', 'th'):
-            self.__simplify_td_th_content(ele)
+        # 清理除了colspan和rowspan之外的属性
         if len(table_root.attrib) > 0:
             cleaned_attrs = {k: v for k, v in table_root.attrib.items() if k in allowed_attributes}
             table_root.attrib.clear()
             table_root.attrib.update(cleaned_attrs)
-        if table_root.text is not None:
-            table_root.text = table_root.text.strip()
-        for elem in table_root.iter():
-            if elem.tail is not None:
-                elem.tail = elem.tail.strip()
+        # text进行strip操作,tail去掉(有较多空换行)
+        for elem in chain([table_root], table_root.iterdescendants()):
+            if elem.text:
+                elem.text = elem.text.strip()
+            if elem.tail:
+                elem.tail = None
+        self.__simplify_td_th_content(table_root)
+        # 迭代
+        for child in table_root.iterchildren():
+            if child is not None:
+                self.__get_table_body(table_type, child)
+
         return self._element_to_html(table_root)
 
     def __do_extract_tables(self, root: HtmlElement) -> None:
@@ -184,23 +246,26 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         if root.tag in ['table']:
             table_raw_html = self._element_to_html(root)
             table_type = self.__get_table_type(root)
+            table_nest_level = self.__is_table_nested(root)
             tail_text = root.tail
             table_body = self.__get_table_body(table_type, root)
             cc_element = self._build_cc_element(
-                CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, html=table_raw_html)
+                CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, table_nest_level=table_nest_level,
+                html=table_raw_html)
             self._replace_element(root, cc_element)
             return
         for child in root.iterchildren():
             self.__do_extract_tables(child)
 
-    def __get_attribute(self, html: str) -> Tuple[int, str]:
+    def __get_attribute(self, html: str) -> Tuple[bool, Any, Any]:
         """获取element的属性."""
         ele = self._build_html_tree(html)
         if ele is not None and ele.tag == CCTag.CC_TABLE:
             table_type = ele.attrib.get('table_type')
+            table_nest_level = ele.attrib.get('table_nest_level')
             table_flag = self.__get_content_list_table_type(table_type)
             table_body = ele.text
-            return table_flag, table_body
+            return table_flag, table_nest_level, table_body
         else:
             raise HtmlTableRecognizerExp(f'{html}中没有cctable标签')
 
