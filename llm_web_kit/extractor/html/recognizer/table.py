@@ -232,7 +232,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             if elem.text:
                 elem.text = elem.text.strip()
             if elem.tail:
-                elem.tail = elem.tail.strip()
+                elem.tail = None
 
         self.__simplify_td_th_content(table_root)
         # 迭代

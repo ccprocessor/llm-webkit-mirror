@@ -87,7 +87,8 @@ class TestTableRecognizer(unittest.TestCase):
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             assert len(parts) == 3
             content = html_to_element(parts[1][0]).text_content()
-            assert content == r"<table>\n<tbody>\n<tr>\n<td>Рейтинг:</td><td>Рейтинг&lt;br&gt;5.00&lt;br&gt;3</td></tr><tr>\n<td>Тип товара:</td><td>Препараты для омоложения</td></tr><tr>\n<td>Форма:</td><td>Крем</td></tr><tr>\n<td>Объем:</td><td>50 мл</td></tr><tr>\n<td>Рецепт:</td><td>Отпускается без рецепта</td></tr><tr>\n<td>Способ хранения:</td><td>Хранить при температуре 4-20°</td></tr><tr>\n<td>Примечание:</td><td>Беречь от детей</td></tr><tr>\n<td>Оплата:</td><td>Наличными/банковской картой</td></tr><tr>\n<td>Доступность в Северске:</td><td>В наличии</td></tr><tr>\n<td>Доставка:</td><td>2-7 Дней</td></tr><tr>\n<td>Цена:</td><td>84&lt;br&gt;₽</td></tr></tbody></table>"
+            assert content == r'<table>\n<tbody>\n<tr>\n<td>Рейтинг:</td><td>Рейтинг&lt;br&gt;5.00&lt;br&gt;3</td></tr><tr>\n<td>Тип товара:</td><td>Препараты для омоложения</td></tr><tr>\n<td>Форма:</td><td>Крем</td></tr><tr>\n<td>Объем:</td><td>50 мл</td></tr><tr>\n<td>Рецепт:</td><td>Отпускается без рецепта</td></tr><tr>\n<td>Способ хранения:</td><td>Хранить при температуре 4-20°</td></tr><tr>\n<td>Примечание:</td><td>Беречь от детей</td></tr><tr>\n<td>Оплата:</td><td>Наличными/банковской картой</td></tr><tr>\n<td>Доступность в Северске:</td><td>В наличии</td></tr><tr>\n<td>Доставка:</td><td>2-7 Дней</td></tr><tr>\n<td>Цена:</td><td>84&lt;br&gt;₽</td></tr></tbody></table>'
+
     def test_cc_complex_table(self):
         """cc跨行跨列的表格."""
         for test_case in TEST_CASES:
