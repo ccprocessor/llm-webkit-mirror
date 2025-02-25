@@ -128,7 +128,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         # 计算祖先中的 table 数量（不包括自身），再加1表示自身层级
         return len(tree.xpath('ancestor::table')) + 1
 
-    def __extract_tables(self, ele: str) -> list[tuple[str, str]]:
+    def __extract_tables(self, ele: str) -> list[Tuple[str, str]]:
         """提取html中的table元素."""
         tree = self._build_html_tree(ele)
         self.__do_extract_tables(tree)
@@ -233,7 +233,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 elem.text = elem.text.strip()
             if elem.tail:
                 elem.tail = None
-
         self.__simplify_td_th_content(table_root)
         # 迭代
         for child in table_root.iterchildren():
@@ -258,7 +257,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for child in root.iterchildren():
             self.__do_extract_tables(child)
 
-    def __get_attribute(self, html: str) -> tuple[bool, Any, Any]:
+    def __get_attribute(self, html: str) -> Tuple[bool, Any, Any]:
         """获取element的属性."""
         ele = self._build_html_tree(html)
         if ele is not None and ele.tag == CCTag.CC_TABLE:
