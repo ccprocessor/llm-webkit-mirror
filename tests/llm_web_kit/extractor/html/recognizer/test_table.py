@@ -26,7 +26,8 @@ TEST_CASES = [
         'expected': [
             ('assets/recognizer/table_to_content_list_simple_res.json'),
             ('assets/recognizer/table_to_content_list_complex_res.json'),
-            ('assets/recognizer/table_include_image_expcet.json')
+            ('assets/recognizer/table_include_image_expcet.json'),
+            ('assets/recognizer/table_include_code_expect.json')
         ],
     }
 ]
@@ -172,5 +173,6 @@ class TestTableRecognizer(unittest.TestCase):
             raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
-            content = open('assets/recognizer/table_include_code_expect.json', 'r', encoding='utf-8').read()
+            expect_path = base_dir.joinpath(test_case['expected'][3])
+            content = open(expect_path, 'r', encoding='utf-8').read()
             assert complex_table_tag[0].text == content
