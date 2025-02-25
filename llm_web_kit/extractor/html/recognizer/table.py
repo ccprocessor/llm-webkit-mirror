@@ -128,10 +128,11 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         # 计算祖先中的 table 数量（不包括自身），再加1表示自身层级
         return len(tree.xpath('ancestor::table')) + 1
 
-    def __extract_tables(self, ele: HtmlElement) -> list[tuple[str, str]]:
+    def __extract_tables(self, ele: str) -> list[tuple[str, str]]:
         """提取html中的table元素."""
-        self.__do_extract_tables(ele)
-        new_html = self._element_to_html(ele)
+        tree = self._build_html_tree(ele)
+        self.__do_extract_tables(tree)
+        new_html = self._element_to_html(tree)
         lst = self.html_split_by_tags(new_html, CCTag.CC_TABLE)
         return lst
 
