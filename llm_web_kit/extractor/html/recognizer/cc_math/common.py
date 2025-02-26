@@ -379,6 +379,8 @@ class CCMATH():
                 math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
                 wrapped_text = func(math_text) if func else math_text
                 wrapped_text = self.wrap_math_md(wrapped_text)
+                if not wrapped_text:
+                    return match
                 new_span = build_cc_element(
                     html_tag_name=new_tag,
                     text=wrapped_text,

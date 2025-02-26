@@ -56,6 +56,17 @@ TEST_CASES = [
     },
     {
         'input': [
+            ('<p>$x = 5$,$$x=6$$,$x=4$</p>',
+             '<p>$x = 5$,$$x=6$$,$x=4$</p>')
+        ],
+        'raw_html': '<p>$x = 5$,$$x=6$$,$x=4$</p>',
+        'expected': [
+            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>',
+             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>'),
+        ]
+    },
+    {
+        'input': [
             ('<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
              '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>')
         ],
