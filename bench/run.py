@@ -110,3 +110,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # data = json.loads(open(os.path.join(root, 'data/test.json'), 'r').read())
+    # print(data.get('url'))
+    # writer.write(os.path.join(root, 'data/test.html'), data.get('html').encode('utf-8') + b'\n')
+    # eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}')
