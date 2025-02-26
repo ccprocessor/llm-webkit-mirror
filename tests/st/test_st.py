@@ -20,8 +20,36 @@ class TestST(unittest.TestCase):
 
         self.sourcePath = os.path.join(self.root, 'bench/data/all.json')
         self.outputPath = os.path.join(self.root, 'bench/output')
-        self.pipelineConfigPath = os.path.join(self.root, 'bench/config/ours_config.jsonc')
+        # self.pipelineConfigPath = os.path.join(self.root, 'bench/config/ours_config.jsonc')
         self.pipeline_data_path = os.path.join(self.root, 'bench/config/ours_data_config.jsonl')
+        self.chainConfig = {
+            'extractor_pipe': {
+                'enable': True,
+                'validate_input_format': False,
+                'pre_extractor': [
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
+                        'class_init_kwargs': {
+                            'html_parent_dir': 'tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/'
+                        }
+                    }
+                ],
+                'extractor': [
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
+                        'class_init_kwargs': {}
+                    }
+                ],
+                'post_extractor': [
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.post_extractor.ContentListStaticsPostExtractor'
+                    }
+                ]
+            },
+        }
 
     def test_st_bench(self):
         """测试run.py."""
@@ -48,7 +76,7 @@ class TestST(unittest.TestCase):
 
         with open(self.sourcePath, 'r') as f:
             files = json.load(f)
-            # files结构是{"filename":{"url":"","filepath":""}}，获取filepath
+            # files结构是{'filename': {'url': '', 'filepath': ''}}，获取filepath
             for fileName in files:
                 filepath = files[fileName]['origin_filepath']
                 page_layout_type = files[fileName]['layout_type']
@@ -58,7 +86,7 @@ class TestST(unittest.TestCase):
                 if 'code_5.html' in filepath:
                     continue
                 try:
-                    output, content_list, main_html, statics = eval_ours_extract_html(self.pipelineConfigPath, self.pipeline_data_path, f'{self.root}/bench/data/{filepath}', page_layout_type)
+                    output, content_list, main_html, statics = eval_ours_extract_html(self.chainConfig, self.pipeline_data_path, f'{self.root}/bench/data/{filepath}', page_layout_type)
                 except Exception as e:
                     summary.error_summary['count'] += 1
                     detail.result_detail['error_result'].append(Error_Item(

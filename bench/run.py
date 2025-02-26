@@ -100,9 +100,17 @@ def main():
     detail.finish()
     statics_gt.print()
     statics_pre.print()
-    print(json.dumps(metrics.eval_type_acc(statics_gt, statics_pre), indent=4))
+    result = metrics.eval_type_acc(statics_gt, statics_pre)
+    print(json.dumps(result, indent=4))
+    summary.result_summary = result
+    print(json.dumps(summary.to_dict(), indent=4))
+    print(json.dumps(detail.to_dict(), indent=4))
     return summary, detail
 
 
 if __name__ == '__main__':
     main()
+    # data = json.loads(open(os.path.join(root, 'data/test.json'), 'r').read())
+    # print(data.get('url'))
+    # writer.write(os.path.join(root, 'data/test.html'), data.get('html').encode('utf-8') + b'\n')
+    # eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}')

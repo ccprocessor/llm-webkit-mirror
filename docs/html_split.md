@@ -29,7 +29,7 @@
 调用html分割：
 
 ```python
-from llm_web_kit.pipeline.extractor.html.recognizer.recognizer import \
+from llm_web_kit.extractor.html.recognizer.recognizer import
     BaseHTMLElementRecognizer
 
 html = """<html>
