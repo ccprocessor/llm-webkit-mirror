@@ -1,0 +1,19 @@
+coverage:
+  status:
+    project:
+      default:
+        # 基本设置
+        target: auto
+        threshold: 1%
+
+  # 忽略特定路径
+  ignore:
+    - "tests/**/*"           # 忽略所有测试目录
+    - "**/__pycache__/**/*"  # 忽略缓存文件
+    - "**/__init__.py"       # 忽略初始化文件
+
+# 可选：调整报告显示
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
