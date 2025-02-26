@@ -279,6 +279,24 @@ TEST_WRAP_MATH_MD = [
     }
 ]
 
+TEST_FIX_MATHML_SUPERSCRIPT = [
+    {
+        'input': r'<math xmlns="http://www.w3.org/1998/Math/MathML"><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>x</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup></math>',
+        'expected': r'<math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></math>'
+    }
+]
+
+TEST_MML_TO_LATEX = [
+    {
+        'input': r'<math xmlns="http://www.w3.org/1998/Math/MathML"><msqrt><mn>3</mn><mi>x</mi><mo>&#x2212;<!-- − --></mo><mn>1</mn></msqrt><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>x</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup></math>',
+        'expected': r'$\sqrt{3x-1}+{\left(1+x\right)}^{2}$'
+    },
+    {
+        'input': '''<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msup><mrow><mo>(</mo><mrow><munderover><mo>&#x2211;<!-- ∑ --></mo><mrow class="MJX-TeXAtom-ORD"><mi>k</mi><mo>=</mo><mn>1</mn>
+                </mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>k</mi></msub><msub><mi>b</mi><mi>k</mi></msub></mrow><mo>)</mo></mrow><mrow class="MJX-TeXAtom-ORD"><mspace width="negativethinmathspace"></mspace><mspace width="negativethinmathspace"></mspace><mn>2</mn></mrow></msup></math>''',
+        'expected': r'${\left(\sum _{k=1}^{n}{a}_{k}{b}_{k}\right)}^{2}$'
+    }
+]
 base_dir = Path(__file__).parent
 
 
@@ -400,6 +418,20 @@ class TestCCMATH(unittest.TestCase):
                 output_math = self.ccmath.wrap_math_md(test_case['input'])
                 self.assertEqual(output_math, test_case['expected'])
 
+    def test_fix_mathml_superscript(self):
+        for test_case in TEST_FIX_MATHML_SUPERSCRIPT:
+            with self.subTest(input=test_case['input']):
+                output_math = self.ccmath.fix_mathml_superscript(test_case['input'])
+                output_math_clean = ''.join(output_math.split())
+                expected_clean = ''.join(test_case['expected'].split())
+                self.assertEqual(output_math_clean, expected_clean)
+
+    def test_mml_to_latex(self):
+        for test_case in TEST_MML_TO_LATEX:
+            with self.subTest(input=test_case['input']):
+                output_math = self.ccmath.mml_to_latex(test_case['input'])
+                self.assertEqual(output_math, test_case['expected'])
+
 
 if __name__ == '__main__':
     r = TestMathRecognizer()
@@ -421,6 +453,6 @@ if __name__ == '__main__':
 
     # c = TestCCMATH()
     # c.setUp()
-    # c.test_get_equation_type()
+    # c.test_mml_to_latex()
     # c.test_wrap_math()
     # c.test_wrap_math_md()

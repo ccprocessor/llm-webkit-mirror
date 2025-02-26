@@ -50,6 +50,7 @@ LATEX_IMAGE_SRC_NAMES = [
 # ccmath标签，区分行内行间公式
 CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
 CCMATH_INLINE = CCTag.CC_MATH_INLINE
+CCMATH_HANDLE_FAILED = 'ccmath-failed'
 
 
 # 数学标记语言
@@ -215,8 +216,8 @@ class CCMATH():
                 escaped_end = re.escape(end)
                 if end == '$':
                     escaped_end = r'(?<!\$)' + escaped_end + r'(?!\$)'
-                all_pattern = f'^{escaped_start}.*?{escaped_end}$'
-                partial_pattern = f'{escaped_start}.*?{escaped_end}'
+                all_pattern = f'^{escaped_start}.*?{escaped_end}$'.replace(r'\.\*\?', '.*?')
+                partial_pattern = f'{escaped_start}.*?{escaped_end}'.replace(r'\.\*\?', '.*?')
                 if re.search(all_pattern, s, re.DOTALL):
                     return MathMatchRes.ALLMATCH
                 if re.search(partial_pattern, s, re.DOTALL):
@@ -304,16 +305,77 @@ class CCMATH():
 
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
+        mml_ns = re.sub(r'<mspace[^>]*>.*?</mspace>', '', mml_ns, flags=re.DOTALL)
+        mml_ns = self.fix_mathml_superscript(mml_ns)
         mml_dom = etree.fromstring(mml_ns)
         mmldom = transform(mml_dom)
         latex_code = str(mmldom)
         return latex_code
 
+    def fix_mathml_superscript(self, mathml_str):
+        # 解析输入的MathML字符串
+        root = etree.fromstring(mathml_str)
+        namespace = {'m': 'http://www.w3.org/1998/Math/MathML'}
+        mathml_ns = namespace['m']
+        for msup in root.xpath('//m:msup', namespaces=namespace):
+            if len(msup) < 1:
+                continue
+            base = msup[0]
+            if base.tag != f'{{{mathml_ns}}}mo' or base.text != ')':
+                continue
+            parent = msup.getparent()
+            if parent is None:
+                continue
+            siblings = list(parent)
+            msup_index = siblings.index(msup)
+            left_paren = None
+            for i in range(msup_index - 1, -1, -1):
+                node = siblings[i]
+                if node.tag == f'{{{mathml_ns}}}mo' and node.text == '(':
+                    left_paren = i
+                    break
+            if left_paren is None:
+                continue
+            content_nodes = siblings[left_paren:msup_index]
+            mrow = etree.Element(f'{{{mathml_ns}}}mrow')
+            for node in content_nodes:
+                parent.remove(node)
+                mrow.append(node)
+            new_msup = etree.Element(f'{{{mathml_ns}}}msup')
+            new_msup.append(mrow)
+            if len(msup) >= 2:
+                new_msup.extend(msup[1:])
+            mrow.append(base)
+            parent.insert(left_paren, new_msup)
+            parent.remove(msup)
+
+        return etree.tostring(root, encoding='unicode', pretty_print=True)
+
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:
         # pattern re数学公式匹配 func 公式预处理 默认不处理
-        def replacement(match_text):
+        pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
+        original_text = node.text or ''
+
+        def is_ccmath_wrapped(match_text, original_text: str) -> bool:
+            if not match_text or not original_text:
+                return False
+            start_idx = match_text.start()
+            end_idx = match_text.end()
+            before_match = original_text[:start_idx].strip()
+            after_match = original_text[end_idx:].strip()
+            if 'ccmath' in before_match and 'ccmath' in after_match:
+                return True
+            if pattern_type == MATH_TYPE_PATTERN.DISPLAYMATH:
+                for start, end in MATH_TYPE_TO_DISPLAY[MathType.LATEX][MATH_TYPE_PATTERN.INLINEMATH]:
+                    if start in before_match and end in after_match:
+                        return True
+            return False
+
+        def process(match_text):
             try:
                 match = match_text.group(0)
+                if is_ccmath_wrapped(match_text, original_text):
+                    return match
                 math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
                 wrapped_text = func(math_text) if func else math_text
                 wrapped_text = self.wrap_math_md(wrapped_text)
@@ -326,31 +388,28 @@ class CCMATH():
                     html=wrapped_text
                 )
             except Exception:
-                return ''
+                return match
             return element_to_html(new_span)
         try:
-            pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
-            original_text = node.text or ''
             for start, end in MATH_TYPE_TO_DISPLAY[math_type][pattern_type]:
-                pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                pattern = f'{re.escape(start)}.*?{re.escape(end)}'.replace(r'\.\*\?', '.*?')
                 regex = re.compile(pattern, re.DOTALL)
-                if re.search(regex, original_text):
-                    original_text = re.sub(regex, replacement, original_text)
-                    break
-            node.text = original_text
+                original_text = re.sub(regex, process, original_text)
         except Exception:
-            return self.build_cc_exception_tag()
+            node.text = self.build_cc_exception_tag(original_text, math_type, math_render)
+            return node
+        node.text = original_text
         return html_to_element(element_to_html_unescaped(node))
 
-    def build_cc_exception_tag(self):
-        return build_cc_element(
-            html_tag_name='cc-failed',
-            text='xxxx',
+    def build_cc_exception_tag(self, text, math_type, math_render) -> str:
+        return element_to_html(build_cc_element(
+            html_tag_name=CCMATH_HANDLE_FAILED,
+            text=text,
             tail='',
-            type='ccmath-failed',
-            by='ccmath',
-            html='ccmath-failed'
-        )
+            type=math_type,
+            by=math_render,
+            html=text
+        ))
 
 
 if __name__ == '__main__':
