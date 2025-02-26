@@ -456,10 +456,10 @@ class TestCCMATH(unittest.TestCase):
                 self.assertEqual(output_math, test_case['expected'])
 
 
-if __name__ == '__main__':
-    r = TestMathRecognizer()
-    r.setUp()
-    r.test_math_recognizer()
+# if __name__ == '__main__':
+#     r = TestMathRecognizer()
+#     r.setUp()
+#     r.test_math_recognizer()
     # r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()
