@@ -2,7 +2,6 @@ from unittest.mock import MagicMock, patch
 import unittest
 
 from llm_web_kit.exception.exception import CleanLangTypeExp
-from llm_web_kit.input.datajson import DataJson
 
 
 from llm_web_kit.model.unsafe_words_detector import (

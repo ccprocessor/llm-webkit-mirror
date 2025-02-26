@@ -9,11 +9,8 @@ from llm_web_kit.model.resource_utils.download_assets import (
     CACHE_DIR,
     download_auto_file,
 )
-from llm_web_kit.model.basic_functions.format_check import *
+from llm_web_kit.model.basic_functions.format_check import is_pure_en_word, is_en_letter
 from llm_web_kit.exception.exception import CleanLangTypeExp
-from tests.llm_web_kit.model.resource_utils.test_download_assets import (
-    test_S3Connection,
-)
 
 xyz_language_lst = [
     "ar",
@@ -70,10 +67,13 @@ def auto_download(language="zh-en"):
 
 def get_ac(language="zh-en"):
     import ahocorasick
-    t1= time.time()
+
+    t1 = time.time()
     unsafe_words_file_path = auto_download(language)
-    t2= time.time()
-    print(f"-----------------auto_download cost time: {t2-t1} , language: {language}------------------")
+    t2 = time.time()
+    print(
+        f"-----------------auto_download cost time: {t2-t1} , language: {language}------------------"
+    )
     with open(unsafe_words_file_path, "r") as f:
         lines = f.readlines()
 
@@ -166,7 +166,9 @@ class UnsafeWordChecker:
         t1 = time.time()
         self.ac = get_ac(language)
         t2 = time.time()
-        print(f"---------------UnsafeWordChecker init time: {t2-t1} , language: {language}-----------------")
+        print(
+            f"---------------UnsafeWordChecker init time: {t2-t1} , language: {language}-----------------"
+        )
 
     def check_unsafe_words(self, content_str: str) -> list:
         unsafe_words_list = get_unsafe_words(self.ac, content=content_str)
@@ -191,7 +193,7 @@ def decide_unsafe_word_by_data_checker(
     unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
     unsafe_word_levels = []
     for w in unsafe_words_list:
-        word, level, count = w["word"], w["level"], w["count"]
+        _, level, _ = w["word"], w["level"], w["count"]
         # "涉政|观测|L4|带头人"
         unsafe_word_levels.append(level)
 
@@ -265,7 +267,7 @@ def unsafe_words_filter_overall(
 
 
 if __name__ == "__main__":
-    ################# 功能测试 #################
+    ### 功能测试 
     import copy
 
     print("download zh-en unsafe_words to : ", auto_download("zh-en"))
@@ -354,7 +356,7 @@ if __name__ == "__main__":
         ),
     )
 
-    ################# 性能测试 #################
+    ### 性能测试
     # import jsonlines
 
     # datas = []

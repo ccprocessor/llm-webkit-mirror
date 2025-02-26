@@ -1,3 +1,4 @@
+
 exclude: ^tests/llm_web_kit/extractor/html/magic_html/assets/
 
 repos:
