@@ -6,11 +6,10 @@ from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import CleanLangTypeExp
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.standard_utils import json_loads
-from llm_web_kit.model.basic_functions.format_check import is_en_letter, is_pure_en_word
+from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
+                                                            is_pure_en_word)
 from llm_web_kit.model.resource_utils.download_assets import (
-    CACHE_DIR,
-    download_auto_file,
-)
+    CACHE_DIR, download_auto_file)
 
 xyz_language_lst = [
     'ar',
