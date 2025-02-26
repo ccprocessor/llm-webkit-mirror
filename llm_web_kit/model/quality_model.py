@@ -2,7 +2,7 @@ import ctypes
 import os
 import pickle
 import re
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import pandas as pd
 
@@ -32,6 +32,10 @@ _model_resource_map = {
     'zh-paper': 'zh_en_long_article',
     'en-book': 'zh_en_long_article',
     'en-paper': 'zh_en_long_article',
+}
+threshold_map = {
+    'zh_en_article': 0.59,
+    'zh_en_long_article': 0.7,
 }
 
 
@@ -87,26 +91,26 @@ class QualityModel:
             model = pickle.load(file)
         return model
 
-    def predict_with_features(self, features_dict: Dict[str, Any]):
+    def predict_with_features(self, features_dict: Dict[str, Any]) -> float:
         feature_df = pd.json_normalize(features_dict)
         pred = self.quality_model.predict(feature_df)[0]
 
         return pred
 
-    def predict_with_content(self, content: str, content_style: str = None):
+    def predict_with_content(self, content: str, content_style: str = None) -> float:
         # 停用词相关
         stop_word_dict = stats_stop_words(content)
         stop_word_num = stop_word_dict['stop_word_num']
         stop_word_frac = stop_word_dict['stop_word_frac']
 
         if stop_word_num < 1:
-            return 0
+            return 0.0
 
         # 信息熵
         entropy = stats_entropy(content)['entropy']
 
         if entropy <= 1:
-            return 0
+            return 0.0
 
         # 文本长度
         content_len = get_content_len(content)
@@ -121,7 +125,7 @@ class QualityModel:
             longest_word_length = 0
 
         if longest_word_length > 56:
-            return 0
+            return 0.0
 
         # 内容文本长度和占比
         content_word_list = [x for x in word_list if x.isalpha()]
@@ -129,7 +133,7 @@ class QualityModel:
         content_word_frac = div_zero(content_word_len, content_len)
 
         if content_word_len <= 30:
-            return 0
+            return 0.0
 
         # 标点结尾句子
         punc_sentence_dict = stats_punctuation_end_sentence(content)
@@ -138,16 +142,16 @@ class QualityModel:
         longest_punc_sentence_len = punc_sentence_dict['longest_punc_sentence_len']
 
         if punc_end_sentence_mean_len <= 2:
-            return 0
+            return 0.0
 
         if longest_punc_sentence_len > 480:
-            return 0
+            return 0.0
 
         # 最大连续空格
         max_continue_space_num = stats_continue_space(content)['max_continue_space_num']
 
         if max_continue_space_num > 500:
-            return 0
+            return 0.0
 
         # 分行
         content_lines = content2lines(content)
@@ -164,7 +168,7 @@ class QualityModel:
         special_char_frac = div_zero(special_char_len, content_len_without_space)
 
         if special_char_frac > 0.01:
-            return 0
+            return 0.0
 
         # 数字长度和占比
         numbers = re.findall(r'\d+', content)
@@ -252,17 +256,25 @@ class QualityModel:
             block_formula_count = formula_count_dict['block_formula_count']
             total_formula_count = formula_count_dict['total_formula_count']
 
-            formula_density = total_formula_count / content_len if content_len > 0 else 0
+            formula_density = (
+                total_formula_count / content_len if content_len > 0 else 0
+            )
 
-            formula_complexity_dict = formula_complexity_features(inline_formulas, block_formulas)
+            formula_complexity_dict = formula_complexity_features(
+                inline_formulas, block_formulas
+            )
             average_formula_length = formula_complexity_dict['average_formula_length']
             average_operator_count = formula_complexity_dict['average_operator_count']
 
             formula_distribution_variance = formula_distribution_var(content_lines)
 
-            formula_type_ratio_dict = formula_type_ratios(inline_formulas, block_formulas)
+            formula_type_ratio_dict = formula_type_ratios(
+                inline_formulas, block_formulas
+            )
             integral_formula_ratio = formula_type_ratio_dict['integral_formula_ratio']
-            derivative_formula_ratio = formula_type_ratio_dict['derivative_formula_ratio']
+            derivative_formula_ratio = formula_type_ratio_dict[
+                'derivative_formula_ratio'
+            ]
             matrix_formula_ratio = formula_type_ratio_dict['matrix_formula_ratio']
 
             features_dict.update(
@@ -332,18 +344,62 @@ class QualityModel:
         return prob
 
 
-def get_quality_model(language, content_style):
+def get_quality_model(language, content_style) -> Tuple[QualityModel, float]:
     model_name = _model_resource_map.get(f'{language}-{content_style}', None)
     if model_name is None:
-        return None
+        return None, None
     if model_name not in _global_quality_model:
         _global_quality_model[model_name] = QualityModel(language, content_style)
-    return _global_quality_model[model_name]
+    threshold = threshold_map[model_name]
+
+    return _global_quality_model[model_name], threshold
 
 
-def quality_filter(data_dict: Dict[str, Any], language: str, content_style: str):
-    model = get_quality_model(language, content_style)
+def quality_prober(data_dict: Dict[str, Any], language: str, content_style: str):
+    model, _ = get_quality_model(language, content_style)
     if model is None:
-        raise CleanLangTypeExp(f"Unsupport language '{language}' or content_style '{content_style}'")
+        raise CleanLangTypeExp(
+            f"Unsupport language '{language}' or content_style '{content_style}'"
+        )
     content = DataJson(data_dict).get_content_list().to_txt()
     return {'quality_prob': model.predict_with_content(content, content_style)}
+
+
+class QualityFilter:
+    def __init__(self):
+        pass
+
+    def check_supported(self, language: str, content_style: str):
+        return f'{language}-{content_style}' in _model_resource_map
+
+    def filter(
+        self, content_str: str, language: str, language_details: str, content_style: str
+    ) -> Tuple[bool, Dict[str, Any]]:
+        """Predict the quality score of the content and filter out score below
+        the threshold First, check if the language and content_style are
+        supported Then get the quality model and threshold, and predict the
+        quality score of the content Finally, return the result of whether the
+        content should be filtered out.
+
+        Args:
+            content_str (str): the content string
+            language (str): the language of the content
+            language_details (str): the details of the language
+            content_style (str): the content style of the content
+
+        Raises:
+            TODO use custom exception instead of
+            ValueError: raise ValueError if the language and content_style are not supported
+
+        Returns:
+            bool: True if the content should remain, False if the content should be filtered out
+        """
+        if not self.check_supported(language, content_style):
+            # TODO move the exception to the upper level
+            raise ValueError(
+                f"Unsupport language '{language}' with content_style '{content_style}'"
+            )
+        else:
+            model, threshold = get_quality_model(language, content_style)
+            prob = model.predict_with_content(content_str, content_style)
+            return prob > threshold, {'quality_prob': prob}
