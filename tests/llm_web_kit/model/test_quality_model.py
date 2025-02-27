@@ -4,17 +4,18 @@ import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, mock_open, patch
 
-current_file_path = os.path.abspath(__file__)
-parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)
-normalized_path = os.path.normpath(parent_dir_path)
-sys.path.append(normalized_path)
-
 from llm_web_kit.exception.exception import CleanLangTypeExp  # noqa: E402
 from llm_web_kit.model.quality_model import QualityModel  # noqa: E402
 from llm_web_kit.model.quality_model import get_quality_model  # noqa: E402
 from llm_web_kit.model.quality_model import quality_prober  # noqa: E402
+from llm_web_kit.model.quality_model import QualityFilter
 from llm_web_kit.model.resource_utils.download_assets import \
     CACHE_DIR  # noqa: E402
+
+current_file_path = os.path.abspath(__file__)
+parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)
+normalized_path = os.path.normpath(parent_dir_path)
+sys.path.append(normalized_path)
 
 
 class TestQualityModel(TestCase):
@@ -267,6 +268,87 @@ Conclusions: Alcohol SBIRT generates costs savings and improves health in both E
         mock_get_quality_model.assert_called_once_with(
             test_language, test_content_style
         )
+
+
+class TestQualityFilter(unittest.TestCase):
+    def setUp(self):
+        self.filter = QualityFilter()
+
+    @patch.dict(
+        'llm_web_kit.model.quality_model._model_resource_map',
+        {'en-article': 'mock_value'},
+        clear=True,
+    )
+    def test_check_supported(self):
+        # 测试支持的语言和内容风格
+        self.assertTrue(self.filter.check_supported('en', 'article'))
+        # 测试不支持的组合
+        self.assertFalse(self.filter.check_supported('fr', 'blog'))
+
+    @patch('llm_web_kit.model.quality_model.get_quality_model')
+    def test_filter_supported_high_score(self, mock_get_model):
+        """测试支持的语言风格且分数高于阈值的情况."""
+        # 配置mock模型
+        mock_model = MagicMock()
+        mock_model.predict_with_content.return_value = 0.85
+        mock_get_model.return_value = (mock_model, 0.7)
+
+        # 执行过滤
+        result, details = self.filter.filter('test content', 'en', 'details', 'article')
+
+        # 验证结果
+        self.assertTrue(result)
+        self.assertEqual(details['quality_prob'], 0.85)
+        mock_get_model.assert_called_once_with('en', 'article')
+        mock_model.predict_with_content.assert_called_once_with(
+            'test content', 'article'
+        )
+
+    @patch('llm_web_kit.model.quality_model.get_quality_model')
+    def test_filter_supported_low_score(self, mock_get_model):
+        """测试支持的语言风格但分数低于阈值的情况."""
+        mock_model = MagicMock()
+        mock_model.predict_with_content.return_value = 0.6
+        mock_get_model.return_value = (mock_model, 0.7)
+
+        result, details = self.filter.filter(
+            'low quality content', 'en', 'details', 'article'
+        )
+
+        self.assertFalse(result)
+        self.assertEqual(details['quality_prob'], 0.6)
+
+    @patch.dict('llm_web_kit.model.quality_model._model_resource_map', {}, clear=True)
+    def test_filter_unsupported_combination(self):
+        """测试不支持的语言风格组合."""
+        with self.assertRaises(ValueError) as context:
+            self.filter.filter('content', 'jp', 'details', 'novel')
+
+        self.assertIn(
+            "Unsupport language 'jp' with content_style 'novel'", str(context.exception)
+        )
+
+    @patch('llm_web_kit.model.quality_model.get_quality_model')
+    def test_edge_case_threshold(self, mock_get_model):
+        """测试阈值边界情况."""
+        mock_model = MagicMock()
+        mock_model.predict_with_content.return_value = 0.7
+        mock_get_model.return_value = (mock_model, 0.7)
+
+        result, _ = self.filter.filter('boundary content', 'en', 'details', 'article')
+        self.assertFalse(result)  # 0.7不大于0.7应返回False
+
+    @patch('llm_web_kit.model.quality_model.get_quality_model')
+    def test_error_handling_in_model(self, mock_get_model):
+        """测试模型预测时的异常处理."""
+        mock_model = MagicMock()
+        mock_model.predict_with_content.side_effect = Exception('Model failure')
+        mock_get_model.return_value = (mock_model, 0.7)
+
+        with self.assertRaises(Exception) as context:
+            self.filter.filter('error content', 'en', 'details', 'article')
+
+        self.assertIn('Model failure', str(context.exception))
 
 
 if __name__ == '__main__':
