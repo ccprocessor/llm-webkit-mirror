@@ -30,15 +30,17 @@ def init_logger(config: dict = None):
         # 检查 to 是否指向控制台
         level = logger_configs.get('log-level', 'INFO')
         log_format = logger_configs.get('log-format', default_log_format)
-        if to == 'sys.stdout':
-            to = sys.stdout  # 使用 sys.stdout 对象而不是字符串
-            logger.add(to, level=level, format=log_format)
-            continue
-        else:
-            rotation = logger_configs.get('rotation', '1 days')
-            retention = logger_configs.get('retention', '1 days')
+        enable = logger_configs.get('enable', True)
+        if enable:
+            if to == 'sys.stdout':
+                to = sys.stdout  # 使用 sys.stdout 对象而不是字符串
+                logger.add(to, level=level, format=log_format)
+                continue
+            else:
+                rotation = logger_configs.get('rotation', '1 days')
+                retention = logger_configs.get('retention', '1 days')
 
-            logger.add(to, rotation=rotation, retention=retention, level=level, format=log_format, enqueue=True)
+                logger.add(to, rotation=rotation, retention=retention, level=level, format=log_format, enqueue=True)
 
     return logger
 

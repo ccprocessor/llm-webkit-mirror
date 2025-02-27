@@ -28,7 +28,6 @@ def decide_cache_dir():
     try:
         config = load_config()
         cache_dir = config['resources']['common']['cache_path']
-        print(config)
     except Exception:
         pass
 

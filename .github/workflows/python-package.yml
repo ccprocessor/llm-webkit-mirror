@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: dev
           fetch-depth: 0
 
       - name: Set up Python
@@ -37,8 +37,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.email "moe@myhloli.com"
-          git config --local user.name "myhloli"
+          git config --local user.email "qywan918@163.com"
+          git config --local user.name "quyuan"
           git add llm_web_kit/libs/version.py
           if git diff-index --quiet HEAD; then
             echo "No changes to commit"
@@ -52,7 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
-          git push origin HEAD:master
+          git push origin dev
 
   build:
     needs: [ update-version ]
@@ -66,9 +66,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        ref: master
+        ref: dev
         fetch-depth: 0
-
     - name: Verify version.py
       run: |
         ls -l llm_web_kit/libs/version.py

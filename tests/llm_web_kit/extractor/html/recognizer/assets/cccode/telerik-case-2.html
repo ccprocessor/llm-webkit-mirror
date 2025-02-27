@@ -1,0 +1,835 @@
+<!doctype html>
+
+<!--[if lte IE 7]><html id="html" class="ie oldie ie7" lang="en"><![endif]-->
+<!--[if IE 8]><html id="html" class="ie oldie ie8" lang="en"><![endif]-->
+<!--[if IE 9]><html id="html" class="ie ie9" lang="en"><![endif]-->
+<!--[if !IE]>--><html id="html" lang="en"><!--<![endif]-->
+<head id="Head"><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta property="twitter:account_id" content="44608081" /><title>
+	Set style of root radmenuitem when child item is selected. in UI for ASP.NET AJAX Menu - Telerik Forums
+</title><link rel="shortcut icon" href="/favicon.ico?v=rebv1" />
+    <!--[if lte IE 8]><script>(function(){var element = "header,section,article,nav,aside,hgroup,figure,figcaption,footer,mark,time".split(','), l = element.length;while (l > 0){l = l - 1; document.createElement(element[l]);}} )();</script><![endif]-->
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.12.1.min.js" type="text/javascript"></script>
+  
+    
+            <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-language="en" type="text/javascript" charset="UTF-8" data-domain-script="3dfce4f2-dab6-4128-9f33-df7e0597da82"></script>
+            
+<script type="text/javascript">
+    (function (w) {
+        w.OptanonGroups = {"StrictlyNecessaryCookies":"1","PerformanceCookies":"2","FunctionalCookies":"3","TargetingCookies":"4"};
+
+        w.isOptanonGroupActive = function (groupId, explicit) {
+            if (!w.OptanonActiveGroups) return !explicit;
+            var groupMatchKey = ',' + groupId + ',';
+
+            return w.OptanonActiveGroups.indexOf(groupMatchKey) !== -1;
+        }
+
+        var trackingScriptsQueue = [];
+        w.invokeTrackingScript = function (thisReference, trackingGroup, functionReference) {
+            if (isOptanonGroupActive(trackingGroup, true)) {
+                functionReference.call(thisReference);
+            }
+            else {
+                trackingScriptsQueue.push({
+                    thisReference: thisReference,
+                    trackingGroup: trackingGroup,
+                    functionReference: functionReference
+                });
+            }
+        }
+
+        var isOptanonToggled = false;
+        w.OptanonWrapper = function () {
+            var newTrackingScriptsQueue = [];
+            for (var i = 0; i < trackingScriptsQueue.length; i++) {
+                var trackingScriptData = trackingScriptsQueue[i];
+                if (isOptanonGroupActive(trackingScriptData.trackingGroup, true)) {
+                    trackingScriptData.functionReference.call(trackingScriptData.thisReference);
+                }
+                else {
+                    newTrackingScriptsQueue.push(trackingScriptData);
+                }
+            }
+
+            trackingScriptsQueue = newTrackingScriptsQueue;
+
+            if (!isOptanonToggled && w.location.hash === '#cookie-settings' && true) {
+                isOptanonToggled = true;
+                Optanon.ToggleInfoDisplay();
+            }
+        }
+    })(window);
+    
+</script>
+
+    <script>
+        var telerikId;
+        (function () {
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({ isTelerikMarketingWebsite: true });
+        })();
+    </script>
+    
+				<script type="text/javascript">
+                    telerikId = null;
+                    var tlrkUser = { isAuthenticated: !!telerikId }
+
+                    if (document.addEventListener) {
+                        window.dataLayer = window.dataLayer || [];
+                        dataLayer.push({ uniqueId: '9f041b33-07b0-41b9-ae1d-c83e70b6e24b', telerikId: telerikId });
+                        dataLayer.push({ event: 'persistuuid' });
+                    }
+				</script>
+			
+        <script type="text/javascript">(function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-6X92');</script>
+    <link rel="preload" href="https://www.telerik.com/Telerik.Web.UI.WebResource.axd?d=Fwpnh9ive5PG4kWt6XVIYJG6459c1jKhUm3AcHWvEvuMjmDtt0nQYpp556-bPLfosAWRWfIWO8imzqXaWgkgLhScpGrB32P8mSQO5DSQGgf-9Z5ns8Zg_Jd4IXBUoeFvYHpaPQ2&t=635187572960000000&compress=0&_TSM_CombinedScripts_=%3b%3bTelerik.Sitefinity.Resources%2c+Version%3d9.2.6227.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3aae88d681-8aa7-41a7-8dea-3adb06f76827%3a7a90d6a%3a6774a146%3a9d4e8f55%3bTelerik.Web.UI%2c+Version%3d2016.2.607.40%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen%3a66c1f7d3-8c8e-4a2b-bb9d-dc30b25f7c21%3a9ad5c0b%3abf649b0" as="style">
+<link rel="preload" href="https://ajax.aspnetcdn.com/ajax/4.5.1/1/WebForms.js" as="script"><meta property="og:title" content="Set style of root radmenuitem when child item is selected. in UI for ASP.NET AJAX Menu - Telerik Forums" /><meta property="og:url" content="https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected" /><meta property="og:type" content="website" /><meta property="og:site_name" content="Telerik.com" /><script id="doubleClickInitScript" type="text/javascript">var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+
+window.invokeTrackingScript(this, OptanonGroups.TargetingCookies, function () {
+	var gads = document.createElement('script');
+	gads.async = true;
+	gads.type = 'text/javascript';
+	var useSSL = 'https:' == document.location.protocol;
+	gads.src = (useSSL ? 'https:' : 'http:') + '//www.googletagservices.com/tag/js/gpt.js';
+	var node = document.getElementsByTagName('script')[0];
+	node.parentNode.insertBefore(gads, node);
+});</script><script id="adSlotsDefinition" type="text/javascript">googletag.cmd.push(function() { googletag.defineSlot('/22061388/aspnet-ajax_forums_thd_bp_970x120', [970, 120], 'div-gpt-ad-aspnet-ajax-103').setCollapseEmptyDiv(true, true).addService(googletag.pubads().setTargeting('environment', 'live')); });</script><script id="singleRequestScript" type="text/javascript">googletag.cmd.push(function() { googletag.pubads().enableSingleRequest();googletag.enableServices(); });</script><meta name="hgurl" content="aspnet-ajax" /><meta name="fid" content="228c5c295a4a4efa988fb8d4a5c7107b" /><meta name="ResourceType" content="Forum" /><meta name="PublicationDate" content="2010-09-28" /><script type="text/javascript">if(typeof(HTMLAudioElement) !== 'undefined' && HTMLAudioElement.prototype && HTMLAudioElement.prototype.canPlayType) {
+    var org = HTMLAudioElement.prototype.canPlayType;
+    HTMLAudioElement.prototype.canPlayType = function(typeString) {
+        var result = "";
+        try{
+            result = org(typeString);
+        }
+        catch(e) { }
+ 
+        return result;
+    }
+}
+</script><meta name="Generator" content="Sitefinity 12.1.7100.0 PU" /><script type="text/plain" class="optanon-category-2">
+	(function() {
+				var script = '//s1325.t.eloqua.com/visitor/v200/svrGP?pps=70&siteid=1325';
+				(function getScript(source, callback) {
+					var script = document.createElement('script');
+					var prior = document.getElementsByTagName('script')[0];
+					script.async = 1;
+					prior.parentNode.insertBefore(script, prior);
+					script.onload = script.onreadystatechange = function( _, isAbort ) {
+						if(isAbort || !script.readyState || /loaded|complete/.test(script.readyState) ) {
+							script.onload = script.onreadystatechange = null;
+							script = undefined;
+
+							if(!isAbort) { if(callback) callback(); }
+						}
+					};
+					script.src = source;
+				})(script, function() {
+					if (typeof GetElqCustomerGUID == 'function') {
+						var userId = GetElqCustomerGUID();
+						document.cookie = 'elqUserId=' + userId + '; path=/';
+					}
+				});
+			})();
+</script><meta name="twitter:title" content="Set style of root radmenuitem when child item is selected. in UI for ASP.NET AJAX Menu - Telerik Forums" /><meta name="twitter:url" content="https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected" /><meta property="og:image" content="https://www.telerik.com/sfimages/default-source/logos/telerik1200x630.png" /><meta name="twitter:image" content="https://www.telerik.com/sfimages/default-source/logos/telerik1200x630.png" /><meta property="fb:app_id" content="472070859628573" /><meta name="twitter:site" content="@Telerik" /><meta name="twitter:creator" content="@Telerik" /><meta name="twitter:card" content="summary_large_image" /><meta property="og:description" content="Join a community of over 2.6m developers to have your questions answered on Set style of root radmenuitem when child item is selected. of UI for ASP.NET AJAX Menu. New here? Start with our free trials." /><meta name="twitter:description" content="Join a community of over 2.6m developers to have your questions answered on Set style of root radmenuitem when child item is selected. of UI for ASP.NET AJAX Menu. New here? Start with our free trials." /><script type="text/javascript">
+	
+(function(){
+    var metadataStr = '{\"Id\":\"437a71ca-b016-415d-ac02-e8794533591f\",\"ContentType\":\"Page\",\"Title\":\"Forums\",\"CanonicalTitle\":\"Forums\",\"CreatedOn\":\"2013-11-12T16:37:52Z\",\"ModifiedOn\":\"2019-04-12T14:27:19.003Z\",\"SiteName\":\"Default\",\"PageId\":\"437a71ca-b016-415d-ac02-e8794533591f\"}';
+    window.decMetadata = window.decMetadata || {};
+    window.decMetadata.contentMetadata = JSON.parse(metadataStr);
+})();
+</script><script type="text/plain" class="optanon-category-2">
+	(function() {
+    var jqueryXhrModified = false;
+    var detectjs = false;
+    var executeDataIntelligenceScript = function() {
+        var source;
+        if (!window.JSON) {
+            source = '/WebResource.axd?d=tTNUeDtL8OsI39FmMLAdgKcthNPdreRFbN3gxA1Y5GyKMo9eg9f1IGNSh2h06g8EzbaJgHLOZnAdqJAVkRHl-rBbIbIBTv4bd8_CY88byo_tvEKebPFcrV7TmqJDw9pw724L82-HI_ZjW6P6jM7oXw7787c1&t=637452649260000000';
+        } else if (!window.jQuery) {
+            source = '/WebResource.axd?d=s7-zxpMGrfzFqvNoaI5niLqfDOAmZoKbKe3qvB--eiY3a-p1EbGKMAaCsH2Y7LX9D1TxuyLytLhynzQHf3LdpqOlOhYGO9SyNWE9M6P35lwGPRBkcJgHKD0OcRBtFcUcFVlzLKg_Fbc_mLUxSDEeazoKjmIqk_fgT-ISLW7_GNbKTnaQ0&t=637452649260000000';
+        } else if (!jqueryXhrModified) {
+            source = '/WebResource.axd?d=OtDu8JfVYXvNVzEo1LSFcG-tTleNsLn9z8HtSDKWTSOcI25M1w3C-x01PnZfNMlgdiQ8oCu2Pwlk5HldAzZwahBo4g-vNhCsZbqzc4PqYrgy87eORv-UnCbc9AmAWz2QKjowILrQFvnlZ9xq38fpZD4Y1Iea9kk9nYKv9c_CjaLNRkpHXTxxO2M4vgktPPrAIQ0nmaSYlMitcn0qYg8VOR44RNRZx-qRL04vKQuXFIKbCcHT0&t=637452649260000000';
+            jqueryXhrModified = true;
+        } else if (!detectjs) {
+            source = '/WebResource.axd?d=6kZXgApsQ6ne3RX7gMeiNVg4WE1cbUD1Ga6zYYRruiaa76FyjztU0WWUjmRnF_3aj-6OT2s5IfvpArCxliGa6f-TTG2jub64orMkAr2mu5cRI7oUmAEcI5l-Os23cQrVo2yP1FggNg6CCQN9Fc0_EIOjvyKsXnVWrz71JSWo4Bq9oR_kAYTSJCvRFUGKAwL-CHcONcKFE8pP-VvGeLAuL4D1Vps1&t=637452649260000000';
+            detectjs = true;
+        } else if (!window.DataIntelligenceSubmitScript) {
+            source = '/WebResource.axd?d=svCNDiDihPX-0SS0GCW70EljHBWGurLMoL1s7omtg9VSW3ijB5ycTwwH3oXe9WMd0NIwNeoAz5NqfwFgizwcq_yKW7TWNCr77cvULF4aDjAq8uk8mRM8_k8Mah2Y8VTHmyAxxbL9QFeoo0kD_QIdTLAa4qU0poUsDx9zZlvYKpBfyDRqx6_7joI5qyfNuXhn2lbHhYYVCVTk730mzt7b0MaduUWxhJLK1XeiGAgZMbqPHead0&t=637452649260000000';
+        } else if (!window.sfDataIntell) {
+            source = 'https://sitefinity-insight.azureedge.net/sdk/sitefinity-insight-client.min.3.1.1.js';
+        } else {
+            return DataIntelligenceSubmitScript.load({"apiServerUrl":"https://api.dec.sitefinity.com","apiKey":"76766c2b-82f4-2453-81e5-fd840f3b455b","applicationName":"TelerikCom","trackingCookieDomain":".telerik.com","keepDecTrackingCookieOnTrackingConsentRejection":false});
+        }
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        var callback = function() {
+            if (!this.readyState || this.readyState === 'complete' || this.readyState === 'loaded') {
+                executeDataIntelligenceScript();
+            }
+        };
+        if(script.addEventListener) {
+            script.addEventListener('load', callback, false);
+        } else if(script.readyState) {
+            script.onreadystatechange = callback;
+        }
+        script.src = source;
+        return document.body.appendChild(script);
+    };
+    if (window.addEventListener) {
+        window.addEventListener('load', executeDataIntelligenceScript, false);
+    } else if (window.attachEvent) {
+        window.attachEvent('onload', executeDataIntelligenceScript);
+    }
+if (window.document.readyState === 'complete') executeDataIntelligenceScript();})();
+</script><link href="/Telerik.Web.UI.WebResource.axd?d=PMrIT5dOWaVYIcpFWUE4nEm8iyRGNQaSpLgtdaPDOt-7_z4YBsUPEPRDdcmkmtaVaiOcVebmJrfdiEqnt-RK4L-0917Y-dZsEWLFkLP4tdrh3Jry0&amp;t=637352798100533952&amp;compress=0&amp;_TSM_CombinedScripts_=%3b%3bTelerik.Sitefinity.Resources%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3a9c895b69-1119-41e1-bb1e-e3a6c6aa5ab2%3a7a90d6a%3a2380cb54" type="text/css" rel="stylesheet" /><link href="https://dtzbdy9anri2p.cloudfront.net/cache/57ab4d39b0cdf393900df1d69d35106192f0c1f5/telerik/css/style.css" type="text/css" rel="stylesheet" /><meta name="description" content="Join a community of over 2.6m developers to have your questions answered on Set style of root radmenuitem when child item is selected. of UI for ASP.NET AJAX Menu. New here? Start with our free trials." /></head>
+<body id="telerik">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-6X92" height="0" width="0" style="display: none; visibility: hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    
+    
+
+    <form method="post" action="/forums/set-style-of-root-radmenuitem-when-child-item-is-selected" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="ScriptManager_TSM" id="ScriptManager_TSM" value="" />
+<input type="hidden" name="ctl12_TSSM" id="ctl12_TSSM" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="WDkvfeTh1PBfsAaeLnwatAZsAcdNYjJQHNctM+EqnlmN27RGNPdcp2PRcGfYQXmmPaYRp6eJgff3jLhj0/SZBXl3KgRx7ucmUyrxlc4C4dmGY7MCcecJjyYH9p1Iy9ntK19ZGsP/lid+JATIp46QoyGzfQ09HMqPlQ1kylOk0hsuWmDRrl9/JMB7LQrUH7I9N712GszyTJxKWdy98S2SxFP7yf7ox1xd8YqKQJghZezurmRGfhuT6hDwVmja/Kwrc52+rSYgTrWhCxIBDIC5x7+iBnd/3S9jDovyt9CpN1qOZUV9L7Ud+WRr/eQbdikrQBth90eL14ul+dvaA1LlrK8GJ015/YQtzeii4NXTZUWxRen5+4ZfIqs83kj0Jigu6Z/Id6/jU23g0t1r5U1DYH7QjpBU8hVIAhY+lmThfMA3mJDwGkluHq26AhQ+mUwEOK7c5MEmldLpFuk08z1EdrIoIOyAohcrUu/8dmbx6SY4wnTkoYdujy9a8145RkAEmU5XDaybEF2lAJPdgvJLc6j+27knKkIfa34agEuExBOaEgAPn+U9jFRC3mbBu7Fy2VnNraHJvIb2BUnVjeP4/8F3PypG8FgvWh8m9xrQcCzIFBMr3p2jUr/PO0fyB4XZmfnhNdSvVNcuYKMXBKnWT6xOZL2CDoZ+qwg1ZoT16FkQNEOp+/usLS5eRBsW6ocklRfeW0jcdAT8K3DnOecezlS0Tf9aYuW74f7CQm2dOXsds84WyB/FhI82bkZyUBTWzZ+oVvLuPfoeXVXYqmi/WhAtGEwFPotaO1nOb4wbo7bmPedlDrY1lcdBVZGgJfEbD9R8rFZyYJl6uOG5SaGOrn8LPNE3yo89Ei6lm2o2+9B7jSfJypQr3jbErM0FGIhnWYPajA==" />
+</div>
+
+
+<script type="text/javascript">
+//<![CDATA[
+var __cultureInfo = {"name":"en","numberFormat":{"CurrencyDecimalDigits":2,"CurrencyDecimalSeparator":".","IsReadOnly":true,"CurrencyGroupSizes":[3],"NumberGroupSizes":[3],"PercentGroupSizes":[3],"CurrencyGroupSeparator":",","CurrencySymbol":"$","NaNSymbol":"NaN","CurrencyNegativePattern":0,"NumberNegativePattern":1,"PercentPositivePattern":0,"PercentNegativePattern":0,"NegativeInfinitySymbol":"-∞","NegativeSign":"-","NumberDecimalDigits":2,"NumberDecimalSeparator":".","NumberGroupSeparator":",","CurrencyPositivePattern":0,"PositiveInfinitySymbol":"∞","PositiveSign":"+","PercentDecimalDigits":2,"PercentDecimalSeparator":".","PercentGroupSeparator":",","PercentSymbol":"%","PerMilleSymbol":"‰","NativeDigits":["0","1","2","3","4","5","6","7","8","9"],"DigitSubstitution":1},"dateTimeFormat":{"AMDesignator":"AM","Calendar":{"MinSupportedDateTime":"\/Date(-62135575200000)\/","MaxSupportedDateTime":"\/Date(253402300799999)\/","AlgorithmType":1,"CalendarType":1,"Eras":[1],"TwoDigitYearMax":2029,"IsReadOnly":true},"DateSeparator":"/","FirstDayOfWeek":0,"CalendarWeekRule":0,"FullDateTimePattern":"dddd, MMMM d, yyyy h:mm:ss tt","LongDatePattern":"dddd, MMMM d, yyyy","LongTimePattern":"h:mm:ss tt","MonthDayPattern":"MMMM d","PMDesignator":"PM","RFC1123Pattern":"ddd, dd MMM yyyy HH\u0027:\u0027mm\u0027:\u0027ss \u0027GMT\u0027","ShortDatePattern":"M/d/yyyy","ShortTimePattern":"h:mm tt","SortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss","TimeSeparator":":","UniversalSortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd HH\u0027:\u0027mm\u0027:\u0027ss\u0027Z\u0027","YearMonthPattern":"MMMM yyyy","AbbreviatedDayNames":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"ShortestDayNames":["Su","Mo","Tu","We","Th","Fr","Sa"],"DayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"AbbreviatedMonthNames":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",""],"MonthNames":["January","February","March","April","May","June","July","August","September","October","November","December",""],"IsReadOnly":true,"NativeCalendarName":"Gregorian Calendar","AbbreviatedMonthGenitiveNames":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",""],"MonthGenitiveNames":["January","February","March","April","May","June","July","August","September","October","November","December",""]},"eras":[1,"A.D.",null,0]};//]]>
+</script>
+
+<script src="https://ajax.aspnetcdn.com/ajax/4.6/1/MicrosoftAjax.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+(window.Sys && Sys._Application && Sys.Observer)||document.write('<script type="text/javascript" src="/ScriptResource.axd?d=NJmAwtEo3Ipnlaxl6CMhvjLg9o0NyTM26qgR6CE0MTebhyuOJLFgtGYk2wGy6kFK1xPioUIgC0pBKtal2nBW9SQt5Mmtl0mNd92P4RATO7s91a12j4oLwULbWsTQtMnpmO4pY0aGN1ZFAZ3hmJfbSXbhYoA1&t=ffffffffdfc97409"><\/script>');//]]>
+</script>
+
+<script src="/WebResource.axd?d=yAZznlIeaGQJz8qTi4uqDW2qshccnagqIVlyps7ZVw6pfrGu-LWFTpHz7jnLuWT2PIUTeHvUSwkUKc60d4GtAA9nCGgsC8mVbRFqgh0Z7uLNcE-9zSlSIxtabOT5vZlXvKQv4bAaeMLPE9jrpwTJJ94RG1M1&amp;t=637452649260000000" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="0EFE7A04" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="DHb8k/FmVLRZF7bm+tfHiNtfLdOHTO6GeIjiz5PIWq+8UBDdJAPkF0faHV7ge+vSvsB7MCdsupvoasok+pt5XFJ6Qt67/TV35Cm6sXbN2MeBZ6D5bqPusRax2QtAo2QCAcxObVbn7f3sbPeMRJXtchCwgimpEqAf6bhp5Qep/73bvmtfWHSavLWQyT/lZNDqCwTifPnwTlV/RkCOAtVSMpYkZocEAmFF3M0bNUuFX0V1eohg" />
+</div>
+        <input type="hidden" name="ctl00$ScriptManager" id="ScriptManager" />
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.setServerId("ScriptManager", "ctl00$ScriptManager");
+Sys.Application._enableHistoryInScriptManager();
+//]]>
+</script>
+
+        
+<link rel="preload" href="https://d6vtbcy3ong79.cloudfront.net/fonts/2.0.0/css/metric.min.css" as="style" media="(min-width: 621px)"><link rel="preload" href="https://d6vtbcy3ong79.cloudfront.net/fonts/2.0.0/metric/Metric-Light.woff2" as="font" crossorigin="anonymous" media="(min-width: 621px)"><link rel="preload" href="https://d6vtbcy3ong79.cloudfront.net/fonts/2.0.0/metric/Metric-Medium.woff2" as="font" crossorigin="anonymous" media="(min-width: 621px)"><link rel="preload" href="https://d6vtbcy3ong79.cloudfront.net/fonts/2.0.0/metric/Metric-Regular.woff2" as="font" crossorigin="anonymous" media="(min-width: 621px)"><link rel="preload" href="https://d6vtbcy3ong79.cloudfront.net/fonts/2.0.0/metric/Metric-Semibold.woff2" as="font" crossorigin="anonymous" media="(min-width: 621px)"><link rel="preload" href="https://d6vtbcy3ong79.cloudfront.net/telerik-navigation/3.0.57/css/index.min.css" as="style"><style id="js-tlrk-nav-inline-styles">.TK-Nav--Loading,.TK-Nav--Loading *{box-sizing:border-box}.TK-Nav--Loading{overflow:hidden;background:#fff;font-family:Metric}.TK-Nav--Loading>.TK-Bar{overflow:hidden;background:#fff}.TK-Nav--Loading .TK-container{max-width:1230px;margin:0 auto;padding:0 30px}.TK-Nav--Loading .TK-TLRK-Brand{margin:0}.TK-Nav--Loading .TK-Dropdown,.TK-Nav--Loading .TK-Nav-Overlay,.TK-Nav--Loading .TK-Print{display:none}.TK-Nav--Loading .TK-Context-Menu,.TK-Nav--Loading .TK-Products-Menu-Item-Button{visibility:hidden}@media only screen and (min-width:1240px){.TK-Nav--Loading,.TK-Nav--Loading>.TK-Bar{height:60px}}@media only screen and (max-width:1239px){.TK-Nav--Loading,.TK-Nav--Loading>.TK-Bar{height:45px}}@media only screen and (max-width:1229px){.TK-Nav--Loading .TK-container{padding:0 20px}}</style><link rel="stylesheet" type="text/css" href="https://d6vtbcy3ong79.cloudfront.net/fonts/2.0.0/css/metric.min.css" id="js-tlrk-nav-metric" class="is-loading" onload="this.classList.remove('is-loading')" onerror="this.classList.remove('is-loading')"><link rel="stylesheet" type="text/css" href="https://d6vtbcy3ong79.cloudfront.net/telerik-navigation/3.0.57/css/index.min.css" id="js-tlrk-nav-styles" class="is-loading" onload="this.classList.remove('is-loading')" onerror="this.classList.remove('is-loading')"><nav id="js-tlrk-nav" class="TK-Nav TK-Nav--Shadow TK-Nav--Loading" data-tlrk-nav-version="3.0.57" data-tlrk-nav-template="nav-main-noa-rel-component"><section class="TK-Bar"><div class="TK-container TK-Bar-container"><figure class="TK-TLRK-Brand TK-TLRK-Brand--Full"><a href="/" class="TK-TLRK-Logo"><svg xmlns="http://www.w3.org/2000/svg" width="147" height="60" viewBox="0 0 400.4 60.3"><path fill="#7c878e" d="M396.7 18.4c-2 0-3.7 1.6-3.7 3.7 0 2.2 1.7 3.7 3.7 3.7s3.7-1.6 3.7-3.7c0-2.2-1.7-3.7-3.7-3.7zm0 6.8c-1.7 0-3-1.3-3-3.1s1.3-3.1 3-3.1 3 1.3 3 3.1-1.3 3.1-3 3.1z"/><path fill="#7c878e" d="M398.5 21.5c0-.9-.6-1.4-1.4-1.4h-1.8V24h1.1v-1.2h.3l.8 1.2h1.2l-.9-1.4c.4-.1.7-.5.7-1.1zm-1.6.4h-.6V21h.6c.3 0 .5.2.5.4 0 .4-.2.5-.5.5zm-103.5-7.7h-28.5v2.6h12.7v32.4h2.9V16.8h12.9zm7.4 9.1c-6.7 0-10.9 5.6-10.9 13.4 0 7.9 4.7 12.9 11.8 12.9 3 0 5.5-.7 7.4-2.2v-2.7c-2.2 1.8-4.3 2.5-7.1 2.5-5.2 0-9.2-3.6-9.2-10.4H311v-1c-.2-7.4-3.6-12.5-10.2-12.5zm-8 11.1c.7-5.5 3.9-8.6 8-8.6 5 0 7.1 4.1 7.3 8.6h-15.3zM315 12.1h2.9v37.1H315zm18.1 11.2c-6.7 0-10.9 5.6-10.9 13.4 0 7.9 4.7 12.9 11.8 12.9 3 0 5.5-.7 7.4-2.2v-2.7c-2.2 1.8-4.3 2.5-7.1 2.5-5.2 0-9.2-3.6-9.2-10.4h18.2v-1c-.1-7.4-3.6-12.5-10.2-12.5zm-8 11.1c.7-5.5 3.9-8.6 8-8.6 5 0 7.1 4.1 7.3 8.6h-15.3zm25-6.5v-4h-2.9v25.3h2.9V31.5c1.2-3.2 3.6-5.5 6.7-5.5.9 0 1.7.2 2.3.5v-2.8c-.6-.2-1.3-.3-2.2-.3-3.1-.1-5.7 2-6.8 4.5zm12.1-4h2.8v25.3h-2.8zm1.5-9.7c-1.1 0-1.9.9-1.9 1.9 0 1.1.9 1.9 1.9 1.9s1.9-.9 1.9-1.9-.8-1.9-1.9-1.9zm26.5 9.7h-3.7l-12.8 11V12.1h-2.9v37.1h2.9v-13l13.2 13h3.5l-13.8-13.8z"/><path fill="#5ce500" d="M11.2 14.9L0 21.3l17.4 10.1v20.1l11.2-6.4c.5-.3.9-1 .9-1.6V24.4L13 14.9c-.5-.3-1.3-.3-1.8 0z"/><path fill="#5ce500" d="M12.1 48.4V34.5L0 41.5zM25 .2c-.5-.3-1.3-.3-1.8 0L10.7 7.4l24.1 13.9v27.9L47.3 42c.5-.3.9-1 .9-1.6V13.6L25 .2z"/><path fill="#4b4e52" d="M117.9 22.5c-4.3 0-7.7 1.6-9.8 4.7-2.3 3.2-2.6 7-2.6 9 0 8.3 4.9 13.6 12.5 13.6 9.2 0 12.5-7.4 12.5-13.8 0-3.7-1.1-7-3.1-9.4-2.3-2.7-5.6-4.1-9.5-4.1zm0 22.4c-4.2 0-6.9-3.4-6.9-8.8 0-5.5 2.6-8.9 6.9-8.9 4.2 0 6.9 3.4 6.9 8.8 0 5.5-2.7 8.9-6.9 8.9zM74.8 13.6H61.7v35.6h5.8v-14h7.4c8 0 12.4-3.9 12.4-11-.1-3.1-1.3-10.6-12.5-10.6zM74.1 30h-6.6V18.9h7.4c4.3 0 6.4 1.8 6.4 5.5 0 4-2.1 5.6-7.2 5.6zm26.6-7.3c-2.2.3-3.9 1.4-5.2 3.5V23h-5.1v26.1h5.4V37.9c0-5.2.4-9.6 5.9-9.6.6 0 1.1.1 1.7.3l.7.2 1-5.3-.4-.2c-1.2-.5-2.6-.7-4-.6zm145 12.1c-1.3-.5-4-1.2-6.1-1.7-1-.3-1.9-.5-2.5-.7-2-.6-3-1.4-3-2.6 0-2.5 3.5-2.8 5-2.8 1.8 0 4.8.5 5.3 3.5l.1.4h5.2v-.5c-.4-5.3-4-7.8-10.8-7.8-5.1 0-10.2 2.4-10.2 7.6 0 2.8 1.9 5.2 5.2 6.3 1.3.5 3.5 1.1 5.6 1.7 1.2.3 2.4.7 3.3.9 1.6.5 2.4 1.4 2.4 2.6 0 2.4-2.9 3.3-5.6 3.3-2.5 0-5.5-.7-6.2-3.9l-.1-.4h-5.2l.1.6c.5 5.4 4.6 8.3 11.4 8.3 7.7 0 11.2-4.2 11.2-8.4-.1-3-1.8-5.2-5.1-6.4zm-94-9.6c-1.7-1.8-4.1-2.7-7-2.7-7.9 0-11.5 7-11.5 13.5 0 6.6 3.6 13.4 11.5 13.4 2.7 0 5-1 6.7-2.7 0 1.2 0 2.3-.1 2.7-.3 4.3-2.4 6.3-6.5 6.3-2.3 0-4.9-.8-5.4-3.1l-.1-.5H134l.1.7c.6 4.6 4.6 7.5 10.6 7.5 5.2 0 8.9-2 10.8-5.7.9-1.8 1.3-4.4 1.3-7.8V23.1h-5.1v2.1zm-6.6 19.3c-1.9 0-6.3-.9-6.3-8.8 0-5.2 2.5-8.4 6.4-8.4 3.1 0 6.3 2.2 6.3 8.4.1 5.5-2.3 8.8-6.4 8.8zm75.6-9.7c-1.3-.5-4-1.2-6.1-1.7-1-.3-1.9-.5-2.5-.7-2-.6-3-1.4-3-2.6 0-2.5 3.5-2.8 5-2.8 1.8 0 4.8.5 5.3 3.5l.1.4h5.2v-.5c-.4-5.3-4-7.8-10.8-7.8-5.1 0-10.2 2.4-10.2 7.6 0 2.8 1.9 5.2 5.2 6.3 1.3.5 3.5 1.1 5.6 1.7 1.2.3 2.4.7 3.3.9 1.6.5 2.4 1.4 2.4 2.6 0 2.4-2.9 3.3-5.6 3.3-2.5 0-5.5-.7-6.2-3.9l-.1-.4h-5.2l.1.6c.5 5.4 4.6 8.3 11.4 8.3 7.7 0 11.2-4.2 11.2-8.4 0-3-1.7-5.2-5.1-6.4zm-19.9 0c-.3-7.3-5-12.2-11.9-12.2-4 0-7.3 1.6-9.5 4.5-1.8 2.4-2.8 5.7-2.8 9.1 0 8.1 5 13.5 12.5 13.5 5.8 0 9.8-2.9 11.2-8.3l.2-.6h-5.4l-.1.3c-1.1 3.2-3.8 3.9-5.9 3.9-4.1 0-6.7-2.7-7-7.1h18.5l.1-.5c.1-.6.1-1.5.1-2.1v-.5zm-18.4-1.6c.5-3.6 2.9-5.9 6.5-5.9 2.7 0 5.9 1.6 6.3 5.9h-12.8zm-10.5-10.5c-2.2.3-3.9 1.4-5.2 3.5V23h-5.1v26.1h5.4V37.9c0-5.2.4-9.6 5.9-9.6.6 0 1.1.1 1.7.3l.7.2 1-5.3-.4-.2c-1.2-.5-2.6-.7-4-.6zm84.8-1.2c0-.9-.6-1.4-1.4-1.4h-1.8V24h1.1v-1.2h.3l.8 1.2h1.2l-.9-1.4c.4-.1.7-.5.7-1.1zm-1.5.4h-.6V21h.6c.3 0 .5.2.5.4 0 .4-.2.5-.5.5z"/><path fill="#4b4e52" d="M255 18.4c-2 0-3.7 1.6-3.7 3.7 0 2.2 1.7 3.7 3.7 3.7s3.7-1.6 3.7-3.7c0-2.2-1.7-3.7-3.7-3.7zm0 6.8c-1.7 0-3-1.3-3-3.1s1.3-3.1 3-3.1 3 1.3 3 3.1-1.4 3.1-3 3.1z"/></svg></a></figure><ul class="TK-Products-Menu"><li class="TK-Products-Menu-Item TK-Static"><button type="button" class="TK-Products-Menu-Item-Button">All Products <i class="TK-Arrow"></i></button><aside id="js-tlrk-nav-dash" class="TK-Dash TK-Dropdown TK-Dropdown--Full TK-Dropdown--White TK-Dropdown---Mobile"><div class="TK-container"><div class="TK-row TK-BG"><div class="TK-col-6"><div class="TK-Bundles"><h5 class="TK-Dash-Title">Product Bundles</h5><a href="/devcraft" class="TK-Bundle" data-match-exact-path><div class="TK-Bundle-Icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70" width="75" height="61"><path d="M70 35c0 5.3-1.2 10.3-3.2 14.7-4.8 10.4-14.6 18-26.4 19.8-1.8.4-3.6.5-5.4.5-2.6 0-5.1-.3-7.5-.8-6.9-1.5-13.1-5.1-17.8-10C7.1 56.5 5 53.4 3.4 50c-.4-.8-.7-1.5-1-2.3C.8 43.7 0 39.5 0 35 0 15.7 15.7 0 35 0s35 15.7 35 35z" fill-rule="evenodd" clip-rule="evenodd" fill="#a3d8f1"/><path d="M40.9 65.6l-.5 4c-1.8.3-3.6.4-5.4.4-2.6 0-5.1-.3-7.5-.8-6.9-1.5-13.1-5.1-17.8-10C7.1 56.5 5 53.4 3.4 50c3.2-4.4 8.2-7.5 14-8.3 1-.1 1.9-.2 2.9-.2.6 0 1.1 0 1.7.1 4.7.4 8.9 2.3 12.2 5.2 3 2.7 5.3 6.2 6.3 10.1.7 2.7.9 5.7.4 8.7z" fill-rule="evenodd" clip-rule="evenodd" fill="#e26841"/><path d="M17.3 48.5L32 61.3l13.2-7-10-8c-1.4-1.1-2.3-2.9-2.3-4.7v-9H17.3v15.9z" fill="#31475c" fill-rule="evenodd" clip-rule="evenodd"/><path d="M21.9 32.6v15.9l-2.3 2-9.9 8.7C7.1 56.5 5 53.4 3.4 50c-.4-.8-.7-1.5-1-2.3L4 46.3c1.4-1.1 2.3-2.9 2.3-4.7v-9h15.6z" fill="#31475c" fill-rule="evenodd" clip-rule="evenodd"/><defs><filter id="a" filterUnits="userSpaceOnUse" x="28.1" y=".3" width="31.2" height="17.4"><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0"/></filter></defs><mask maskUnits="userSpaceOnUse" x="28.1" y=".3" width="31.2" height="17.4" id="b"><g filter="url(#a)"><path d="M25.7 10.8l32.5-11L61.4 9 28.8 20z" fill="#fff" fill-rule="evenodd" clip-rule="evenodd"/></g></mask><path d="M28.1 17.8l9.1-8.4c2-1.9 4.9-2.3 7.4-1 3 1.5 6.6.5 8.4-2.3L56.6.4 59.3 3l-5.1 7.2c-1.9 2.7-5.6 3.5-8.5 1.9l-1.1-.6c-2.1-1.2-4.6-1.1-6.7.2l-9.8 6.1z" mask="url(#b)" fill-rule="evenodd" clip-rule="evenodd" fill="#e26841"/><path d="M62.8 13.7l-8 6.2a6.61 6.61 0 01-8.2 0l-3.2-2.5c-1.4-1.1-3.2-1.6-5-1.3l-10.2 1.5 10.1-3.7c1.9-.7 4.1-.5 5.8.6l2.5 1.6c2.5 1.5 5.7 1.3 7.9-.6l5.6-4.8 2.7 3z" fill-rule="evenodd" clip-rule="evenodd" fill="#e26841"/><path d="M27 11.6h-5.5c-8.4 0-15.3 6.8-15.3 15.3v15.6c0 3.4 2.7 6.1 6.1 6.1H27c3.4 0 6.1-2.7 6.1-6.1V17.7c0-3.4-2.8-6.1-6.1-6.1" fill-rule="evenodd" clip-rule="evenodd" fill="#14254c"/><path d="M31.7 32.2c0 6.7-5.4 12.1-12.1 12.1S7.5 38.8 7.5 32.2s5.4-12.1 12.1-12.1 12.1 5.4 12.1 12.1" fill="#31475c" fill-rule="evenodd" clip-rule="evenodd"/><defs><filter id="c" filterUnits="userSpaceOnUse" x="9.1" y="15.8" width="21.1" height="34"><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0"/></filter></defs><mask maskUnits="userSpaceOnUse" x="9.1" y="15.8" width="21.1" height="34" id="d"><g filter="url(#c)"><path d="M7.5 32.2c0 6.7 5.4 12.1 12.1 12.1 6.7 0 12.1-5.4 12.1-12.1 0-6.7-5.4-12.1-12.1-12.1-6.7 0-12.1 5.4-12.1 12.1z" fill="#fff" fill-rule="evenodd" clip-rule="evenodd"/></g></mask><path d="M9.1 48.1V26.3c0-5.8 4.7-10.5 10.5-10.5s10.5 4.7 10.5 10.5v23.5l-21-1.7z" mask="url(#d)" fill-rule="evenodd" clip-rule="evenodd" fill="#e9ac6a"/><path d="M14.6 35.1h5.5v-9.5z" fill="#dc7f1b" fill-rule="evenodd" clip-rule="evenodd"/><path d="M20.3 39.3c1.3.1 2.7-.2 4-1 1.1-.6 1.8-1.5 2.3-2.3l-1-.6c-.4.7-1.1 1.4-1.9 1.9-1.1.7-2.3.9-3.3.8l-.1 1.2z" fill="#fff"/><path d="M27.4 27.6h-2.3c0-.6.5-1.1 1.1-1.1h.2c.5 0 1 .5 1 1.1m-13.5 0h-2.3c0-.6.5-1.1 1.1-1.1h.2c.6 0 1 .5 1 1.1" fill="#231f20" fill-rule="evenodd" clip-rule="evenodd"/><path d="M7.5 24.7h25.1v-1.2H7.5zm0 5.5h25.1V29H7.5zm0 11h23.6v-1.3H7.5zm0-5.5h25.1v-1.3H7.5z" fill="#14254c"/><path d="M66.8 49.7c-4.8 10.4-14.6 18-26.4 19.8-1.8.4-3.6.5-5.4.5-2.6 0-5.1-.3-7.5-.8l-.4-2.8c-.5-3.1-.3-6.2.4-9 1.1-4.2 3.4-7.9 6.5-10.7.2-.2.5-.5.8-.7 3.8-3.2 8.7-5.1 14.2-5.1 7.3 0 13.7 3.5 17.8 8.8z" fill-rule="evenodd" clip-rule="evenodd"/><g fill-rule="evenodd" clip-rule="evenodd"><path d="M56.503 26.65c5.8-3 11.9-4.7 16.4-2.3 2.5 1.4 3.1 3.3 5.4 4 3 .9 7.5-.8 14.8-9.4l4.1 4.4c-10.7 10.6-16.4 11.8-19.7 10.4-2.6-1-3.2-3.4-6.7-5.5-4.8-2.7-10.3-2.4-14.3-1.6" fill="#22b573"/><path d="M58.003 26.05c2.9-7.4 9.8-11.7 16-10.9 4.9.7 7.9 4.3 8.7 5.5-1.6.9-3.2 1.9-4.8 2.8-1.2-1-3-2.2-5.4-2.8-7.6-1.8-14 4.9-14.5 5.4" fill="#22b573"/><path d="M37.103 44.85l-2-13.4c0-7.4 6.1-13.4 13.5-13.4s13.5 6 13.5 13.4l-1.7 13.4c-.8 5.8-5.8 10.1-11.6 10.1s-10.8-4.3-11.7-10.1z" fill="#00264b"/><path d="M34.803 34.25h27.5v-5.8h-27.5z" fill="#22b573"/><path d="M57.003 38.05h-16.5c-1.8 0-3.3-1.5-3.3-3.3 0-1.8 1.5-3.3 3.3-3.3h16.5c1.8 0 3.3 1.5 3.3 3.3 0 1.8-1.5 3.3-3.3 3.3" fill="#e9ac6a"/><path d="M39.203 35.05c0-.6.5-1.1 1.1-1.1.6 0 1.1.5 1.1 1.1m11 .1c0-.6.5-1.1 1.1-1.1s1.1.5 1.1 1.1" fill="#00264b"/><path d="M46.403 38.05h2.9v-5.5z" fill="#dc7f1b"/></g></svg></div><h4 class="TK-Bundle-Title TK-Best-Value">DevCraft</h4><p class="TK-Bundle-Description">All Telerik .NET tools and Kendo UI JavaScript components in one package. Now enhanced with:</p><ul class="TK-Bundle-list"><li>Conversational UI</li><li>Online Training</li><li>Document Processing Library</li><li>Embedded Reporting for web and desktop</li></ul></a></div></div><div class="TK-col-18"><div class="TK-row"><div class="TK-col-8"><h5 class="TK-Dash-Title">Web</h5><div class="TK-Dash-Links"><a href="/kendo-ui" class="TK-Dash-Link" data-match-exact-path>Kendo UI</a> <a href="/kendo-jquery-ui" class="TK-Dash-Link TK-Dash-Link--Indented" data-match-exact-path>UI for jQuery</a> <a href="/kendo-angular-ui" class="TK-Dash-Link TK-Dash-Link--Indented" data-match-exact-path>UI for Angular</a> <a href="/kendo-react-ui/" class="TK-Dash-Link TK-Dash-Link--Indented" data-match-exact-path>UI for React</a> <a href="/kendo-vue-ui" class="TK-Dash-Link TK-Dash-Link--Indented" data-match-exact-path>UI for Vue</a> <a href="/products/aspnet-ajax.aspx" class="TK-Dash-Link" data-match-exact-path>UI for ASP.NET AJAX</a> <a href="/aspnet-mvc" class="TK-Dash-Link" data-match-exact-path>UI for ASP.NET MVC</a> <a href="/aspnet-core-ui" class="TK-Dash-Link" data-match-exact-path>UI for ASP.NET Core</a> <a href="/blazor-ui" class="TK-Dash-Link TK-New" data-match-exact-path>UI for Blazor</a> <a href="/products/silverlight/overview.aspx" class="TK-Dash-Link" data-match-exact-path>UI for Silverlight</a> <a href="/php-ui" class="TK-Dash-Link" data-match-exact-path>UI for PHP</a> <a href="/jsp-ui" class="TK-Dash-Link" data-match-exact-path>UI for JSP</a></div><h5 class="TK-Dash-Title">Mobile</h5><div class="TK-Dash-Links"><a href="/xamarin-ui" class="TK-Dash-Link" data-match-exact-path>UI for Xamarin</a></div></div><div class="TK-col-8"><h5 class="TK-Dash-Title">Desktop</h5><div class="TK-Dash-Links"><a href="/products/winforms.aspx" class="TK-Dash-Link" data-match-exact-path>UI for WinForms</a> <a href="/products/wpf/overview.aspx" class="TK-Dash-Link" data-match-exact-path>UI for WPF</a> <a href="/winui" class="TK-Dash-Link TK-Experimental" data-match-exact-path>UI for WinUI</a> <a href="/universal-windows-platform-ui" class="TK-Dash-Link" data-match-exact-path>UI for UWP</a></div><h5 class="TK-Dash-Title">Reporting &amp; Mocking</h5><div class="TK-Dash-Links"><a href="/products/reporting.aspx" class="TK-Dash-Link" data-match-exact-path>Telerik Reporting</a> <a href="/report-server" class="TK-Dash-Link" data-match-exact-path>Telerik Report Server</a> <a href="/products/mocking.aspx" class="TK-Dash-Link" data-match-exact-path>Telerik JustMock</a></div><h5 class="TK-Dash-Title">Automated Testing</h5><div class="TK-Dash-Links"><a href="/teststudio" class="TK-Dash-Link" data-match-exact-path>Test Studio</a> <a href="/teststudio-dev" class="TK-Dash-Link" data-match-exact-path>Test Studio Dev Edition</a></div><h5 class="TK-Dash-Title">Debugging</h5><div class="TK-Dash-Links"><a href="/fiddlercore" class="TK-Dash-Link" data-match-exact-path>FiddlerCore</a> <a href="/fiddler" class="TK-Dash-Link" data-match-exact-path>Fiddler Everywhere</a></div><h5 class="TK-Dash-Title">CMS</h5><div class="TK-Dash-Links"><a href="https://www.progress.com/sitefinity-cms" class="TK-Dash-Link" data-match-exact-path>Sitefinity</a></div></div><div class="TK-col-8"><h5 class="TK-Dash-Title">UX Design</h5><div class="TK-Dash-Links"><a href="/unite-ux" class="TK-Dash-Link TK-Experimental" data-match-exact-path>Unite UX</a></div><h5 class="TK-Dash-Title">Document Management</h5><div class="TK-Dash-Links"><a href="/document-processing-libraries" class="TK-Dash-Link" data-match-exact-path>Telerik Document Processing</a></div><h5 class="TK-Dash-Title">Innovations Lab</h5><div class="TK-Dash-Links"><a href="/ar-vr-lab" class="TK-Dash-Link" data-match-exact-path>VR DataViz</a></div><h5 class="TK-Dash-Title">Free Tools</h5><div class="TK-Dash-Links"><a href="/download/fiddler" class="TK-Dash-Link" data-match-exact-path>Fiddler Classic</a> <a href="/justassembly" class="TK-Dash-Link" data-match-exact-path>JustAssembly</a> <a href="/products/decompiler.aspx" class="TK-Dash-Link" data-match-exact-path>JustDecompile</a> <a href="http://converter.telerik.com" class="TK-Dash-Link">VB.NET to C# Converter</a> <a href="/teststudio/testing-framework" class="TK-Dash-Link" data-match-exact-path>Testing Framework</a></div></div></div><div class="TK-Dash-Footer"><a href="/all-products" class="TK-Dash-Featured-Link" data-match-exact-path>View all products <svg xmlns="http://www.w3.org/2000/svg" width="9.061" height="9.061"><g fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5"><path data-name="Stroke 3" d="M4 .53l4 4-4 4"/><path data-name="Stroke 5" d="M0 4.53h8"/></g></svg></a></div></div></div></div></aside><div class="TK-Dash-Extension TK--Mobile"></div></li></ul><div class="TK-Drawer" id="js-tlrk-nav-drawer"><ul class="TK-Context-Menu TK-Menu"><li class="TK-Menu-Item"><a href="/support/demos" class="TK-Menu-Item-Link" data-match-exact-path>Demos</a></li><li class="TK-Menu-Item"><a href="/purchase.aspx" class="TK-Menu-Item-Link" data-match-exact-path>Pricing</a></li><li class="TK-Menu-Item"><a href="/services" class="TK-Menu-Item-Link" data-match-exact-path>Services</a></li><li class="TK-Menu-Item"><a href="/blogs" class="TK-Menu-Item-Link" data-match-starts-with-path>Blogs</a></li><li class="TK-Menu-Item"><a href="/support" class="TK-Menu-Item-Link" data-match-exact-path data-match-pattern data-pattern="telerik.com/support/kb/aspnet-ajax|telerik.com/support/kb/silverlight|telerik.com/support/kb/justmock">Docs &amp; Support</a></li></ul><ul class="TK-Aside-Menu TK-Aside-Menu--Max"><li id="js-tlrk-nav-search-wrapper" class="TK-Aside-Menu-Item"><a href="/search" id="js-tlrk-nav-search-link" class="TK-Aside-Menu-Link" title="Search" data-match-exact-path><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M13.75 14.5a.742.742 0 01-.53-.22l-3.12-3.118A6.181 6.181 0 016.25 12.5a6.25 6.25 0 116.25-6.25 6.18 6.18 0 01-1.338 3.85l3.118 3.12a.75.75 0 01-.53 1.28zm-7.5-13A4.75 4.75 0 1011 6.25 4.755 4.755 0 006.25 1.5z" transform="translate(.75 .75)"/></svg> <span class="TK-Aside-Menu-Link-Text">Search</span></a></li><li class="TK-Aside-Menu-Item"><a href="https://store.progress.com/shopping-cart" data-empty-url="/purchase.aspx#individual-products" class="TK-Aside-Menu-Link js-tlrk-nav-shopping-cart-counter-container" title="Shopping cart" data-match-exact-path><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M11.75 14.5a1 1 0 111-1 1 1 0 01-1 1zm-8.25 0a1 1 0 111-1 1 1 0 01-1 1zm8.18-3H4.25A1.752 1.752 0 012.5 9.75v-8a.25.25 0 00-.25-.25H.75a.75.75 0 010-1.5h1.5A1.752 1.752 0 014 1.75v.75h8.78a1.75 1.75 0 011.72 2.093l-1.1 5.5a1.754 1.754 0 01-1.72 1.407zM4 4v5.75a.25.25 0 00.25.25h7.43a.251.251 0 00.245-.2l1.1-5.5a.251.251 0 00-.245-.3z" transform="translate(.75 .75)"/></svg> <span class="TK-Aside-Menu-Link-Text">Shopping cart</span></a></li><li class="TK-Aside-Menu-Item TK--Not-Auth" id="js-tlrk-nav-not-auth-container"><a href="/account/" title="Your Account" class="TK-Aside-Menu-Button" data-match-exact-path><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13.75 14.5a.751.751 0 01-.75-.75v-.5a5.75 5.75 0 10-11.5 0v.5a.75.75 0 01-1.5 0v-.5a7.175 7.175 0 011.319-4.159A7.262 7.262 0 014.69 6.476 3.717 3.717 0 013.5 3.75a3.75 3.75 0 117.5 0 3.716 3.716 0 01-1.19 2.726 7.263 7.263 0 013.371 2.615A7.175 7.175 0 0114.5 13.25v.5a.751.751 0 01-.75.75zm-6.5-13A2.25 2.25 0 109.5 3.75 2.253 2.253 0 007.25 1.5z" transform="translate(.75 .75)"/></svg> <span class="TK-Aside-Menu-Button-Text">Login</span></a></li><li class="TK-Aside-Menu-Item"><a href="/contact" class="TK-Aside-Menu-Button" title="Contact Us" data-match-starts-with-path><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M12.75 14.5h-11A1.752 1.752 0 010 12.753v-7.37a.092.092 0 01.005-.026.1.1 0 000-.023.782.782 0 01.01-.093.63.63 0 01.02-.071l.007-.021V5.14a.828.828 0 01.036-.088.673.673 0 01.045-.078.078.078 0 00.009-.02.069.069 0 01.01-.02.1.1 0 01.028-.019.1.1 0 00.019-.015.68.68 0 01.077-.076.124.124 0 00.015-.024.106.106 0 01.019-.016L6.2.354a1.736 1.736 0 012.1 0l5.9 4.431a.1.1 0 01.018.02.118.118 0 00.017.019.591.591 0 01.076.075.109.109 0 00.02.018.1.1 0 01.019.017.077.077 0 01.01.02.088.088 0 00.01.02c.017.026.031.053.045.078a.9.9 0 01.039.1l.007.021a.5.5 0 01.03.164.1.1 0 000 .023.092.092 0 01.005.027v7.37A1.752 1.752 0 0112.75 14.5zM1.5 6.883v5.87a.253.253 0 00.25.247h11a.253.253 0 00.249-.25V6.883L8.3 10.412a1.737 1.737 0 01-2.1 0zM7.25 1.5a.248.248 0 00-.15.053L2 5.383l5.1 3.83a.253.253 0 00.15.052.245.245 0 00.15-.053l5.1-3.829-5.1-3.83a.248.248 0 00-.15-.053z" transform="translate(.75 .75)"/></svg> <span class="TK-Aside-Menu-Button-Text">Contact Us</span></a></li><li class="TK-Aside-Menu-Item TK-bn"><a href="/download" class="TK-Button TK-Button--CTA TK-Button--Sec">Get A Free Trial</a></li></ul></div><div class="TK-Drawer-Extension"></div><div class="TK-Aside TK--Mobile"><ul class="TK-Aside-Menu"><li class="TK-Aside-Menu-Item"><button type="button" class="TK-Aside-Menu-Button TK-Aside-Menu-Button--Toggle-Drawer" id="js-tlrk-nav-drawer-button"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 512 512" fill="#4d4f52"><path d="M0 91h512v60H0zM0 237.3h512v60H0zM0 383.5h512v60H0z"/></svg></button></li></ul></div></div></section><button type="button" class="TK-Nav-Overlay" id="js-tlrk-nav-overlay">close mobile menu</button></nav><script async nomodule src="https://d6vtbcy3ong79.cloudfront.net/telerik-navigation/3.0.57/js/index.min.js"></script><script async type="module" src="https://d6vtbcy3ong79.cloudfront.net/telerik-navigation/3.0.57/js/index.min.mjs"></script>
+
+
+        
+            <script src='https://d6vtbcy3ong79.cloudfront.net/external-assets/1.0.6/utils/store-lead-data.min.js' type="text/plain" class="optanon-category-2"></script>
+        
+        
+<div class="sf_cols PageWrapper">
+    <div class="sf_colsOut sf_1col_1_100" style="">
+        <div id="GeneralContent_T73A12E0A113_Col00" class="sf_colsIn sf_1col_1in_100"><span id="GeneralContent_C011"></span><script type="text/javascript">var db = [
+    {
+      name: 'JustTrace',
+      lp: 'http://www.telerik.com/products/memory-performance-profiler-sunsetting',
+      url: '/forums/justtrace'
+    },
+    {
+      name: 'JustCode',
+      lp: 'http://www.telerik.com/products/justcode-sunsetting',
+      url: '/forums/justcode'
+    },
+    {
+      name: 'UI for Windows Phone',
+      lp: 'http://www.telerik.com/products/windows-phone-sunsetting',
+      url: '/forums/windows-phone'
+    },
+    {
+      name: 'UI for Windows Universal',
+      lp: 'http://www.telerik.com/windows-universal-ui-sunsetting',
+      url: '/forums/windows-universal'
+    },
+    {
+      name: 'UI for iOS',
+      lp: 'http://www.telerik.com/ios-ui-sunsetting',
+      url: '/forums/ios'
+    },
+    {
+      name: 'UI for Android',
+      lp: 'http://www.telerik.com/android-ui-sunsetting',
+      url: '/forums/android'
+    },
+    {
+      name: 'DataAccess',
+      lp: 'http://www.telerik.com/data-access-sunsetting',
+      url: '/forums/data-access'
+    },
+    {
+        name: 'Telerik Platform',
+        lp: '/platform-next-level',
+        url: '/forums/mobile-testing',
+        ribbon: '<div class="Box Box--ribbon"><span id="rname"></span> is retired. Please refer to <a id="rlp" href="">this page</a> for more information.</div>'
+      },
+      {
+        name: 'Telerik Platform',
+        lp: '/platform-next-level',
+        url: '/forums/appfeedback',
+        ribbon: '<div class="Box Box--ribbon"><span id="rname"></span> is retired. Please refer to <a id="rlp" href="">this page</a> for more information.</div>'
+      },
+  ];
+  
+  var $defaultRibbon = $('<div class="Box Box--ribbon"><span id="rname"></span> has been discontinued. Please refer to <a id="rlp" href="">this page</a> for more information.</div>');
+  
+  for (var page in db) {
+    page = db[page];
+    var $ribbon = $defaultRibbon;
+
+    if(page['ribbon']) {
+        $ribbon = $(page['ribbon']);
+    }
+
+    var
+      $name = $ribbon.find('#rname'),
+      $lp = $ribbon.find('#rlp');
+
+    if( page.url === document.location.pathname ) {
+      $name.html(page.name);
+      $lp.attr('href', page.lp); 
+      $ribbon.insertBefore( $('#js-TK-Nav') );
+    }
+  }</script><div id="GeneralContent_C007_forumsFrontendPostsList">
+	
+
+
+<div class="container">
+    <div id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_breadcrumb">
+		
+
+<div class="sfforumPostBreabcrumbWrp">
+    
+    <a id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_breadcrumb_ctl00_ctl00_start" href="https://www.telerik.com/forums">Telerik Forums</a>
+     / 
+    <a id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_breadcrumb_ctl00_ctl00_group" href="https://www.telerik.com/forums/aspnet-ajax">UI for ASP.NET AJAX Forum</a>
+     / 
+    <a id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_breadcrumb_ctl00_ctl00_forum" href="https://www.telerik.com/forums/aspnet-ajax/menu">Menu</a>
+     / 
+    
+</div>
+	</div>
+    
+
+</div>
+
+<div id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsList">
+		
+    <div class="container PostTopInfo">
+        <div class="u-fl" id="top">
+            <h1 id="threadTitleText" class="h2">
+                Set style of root radmenuitem when child item is selected.</h1>
+            
+
+            
+            <input type="submit" name="ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$saveTitleChangesBtn" value="Save" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$saveTitleChangesBtn&quot;, &quot;&quot;, true, &quot;postsListView&quot;, &quot;&quot;, false, false))" id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_saveTitleChangesBtn" style="display: none;" />
+            <span id="cancelTitleChangesBtn" style="display: none;">
+                Cancel</span>
+            
+        </div>
+
+        <div class="u-fr">
+            <div>
+			<!-- 2019.2.514.45 -->
+        <ul class="List Space--comfort">
+            
+        <li data-sf-provider='OpenAccessProvider' data-sf-id='0a85fb27-80c9-4e79-a46d-4d7c53e5ca53' data-sf-type="Telerik.Sitefinity.DynamicModules.Model.DynamicContent">
+            <a id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView_ctrl0_ProductLink" class="u-ff-sans1 Text--xl u-tdn" href="https://www.telerik.com/products/aspnet-ajax.aspx">Telerik UI for ASP.NET AJAX</a>
+            <nav class="QuickLinks Product-info Product-info--fullwidth">
+              
+                  <a href="https://www.telerik.com/support/aspnet-ajax">Resources</a>
+                
+                  <a href="https://www.telerik.com/purchase/individual/aspnet-ajax.aspx">Buy</a>
+                
+                  <a href="https://www.telerik.com/products/aspnet-ajax/download.aspx">Try</a>
+                
+            </nav>
+        </li>
+    
+        </ul>
+    <input id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView_ClientState" name="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView_ClientState" type="hidden" /><span id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView" style="display:none;"></span>
+
+
+		</div>
+        </div>
+
+        <div class="Forum-actions">
+            <div class="row">
+                <div class="col-5">
+                    <input type="submit" name="ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$replyButton" value="Post a reply" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$replyButton&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_replyButton" class="Btn" />
+                    
+                </div>
+                <div class="col-4 col--offset-2">
+                    <div class="Forum-subscribe Justify">
+                        <div class="Justify-item">
+                            <a id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_rssLink" class="Link--RSS" href="https://www.telerik.com/feeds/forumsRss?threadFilter=229c89b9-0925-4cff-bc1e-fb570d3f7a4e&amp;defaultPage=437a71ca-b016-415d-ac02-e8794533591f">Feed for this thread</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        3
+        posts, 
+        0
+        answers
+        
+    </div>
+
+
+    
+            <ol class="List List--separated">
+                
+            
+                    <li class="Forum-post">
+                        <div class="container">
+                            <div class="Section">
+                
+            <div class="row">
+                <a id='bscMocCiv0KZ-tO4lPqdvA'></a>
+                <div class="col-2">
+                    
+                    
+                            <h5>Big Daftie</h5>
+                        
+                    
+                    <div class="u-mb1">
+                        <img width="100" src='https://d585tldpucybw.cloudfront.net/images/AvatarImages/default.gif' alt="Big Daftie avatar" />
+                    </div>
+                    
+                            <div class="Text--s Text--b5">
+                                <div class="u-mb1">
+                                    7
+                                    posts
+                                </div>
+                                
+                                        <div>
+                                            Member since:<br />
+                                            Jun 2008
+                                        </div>
+                                    
+                            </div>
+                        
+                </div>
+                <div class="col-10">
+                    <p class="Label">
+                        Posted 24 Sep 2010
+                        
+                        <a href='#bscMocCiv0KZ-tO4lPqdvA' class="u-fr">
+                            Link to this post
+                        </a>
+                    </p>
+
+
+                    <div class="ForumPostContent">Hi all,<br />
+<br />
+I'm attempting to set the style of a root menuitem to it's focussed state when an item in its submenu has been selected. I'm doing this in a master page, code as follows:<br />
+<br />
+<div id="radePasteHelper" style="border: 0px  solid  red;position: absolute;             top: 0px; overflow-x: hidden; overflow-y: hidden;"></div>
+<div class="tFormatCodeBlock supportThreadCodeBlock" style="border: 1px  solid  #7f9db9;overflow-y: auto;" id="highlighter_46368">
+<div style="background-color: #ffffff;"><span style="margin-left: 0px !important;"><code style="color: #000000;">Private Sub sitemenu_ItemCreated(ByVal sender As Object, ByVal e As Telerik.Web.UI.RadMenuEventArgs) Handles sitemenu.ItemCreated</code></span></div>
+<div style="background-color: #f8f8f8;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 24px !important;"><code style="color: #000000;">Dim item As RadMenuItem = sitemenu.FindItemByUrl(Request.Url.PathAndQuery)</code></span></span></div>
+<div style="background-color: #ffffff;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 24px !important;"><code style="color: #000000;">If item IsNot Nothing Then</code></span></span></div>
+<div style="background-color: #f8f8f8;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 36px !important;"><code style="color: #000000;">item.CssClass = "focused"</code></span></span></div>
+<div style="background-color: #ffffff;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 24px !important;"><code style="color: #000000;">End If</code></span></span></div>
+<div style="background-color: #f8f8f8;"><span style="margin-left: 0px !important;">&nbsp;</span></div>
+<div style="background-color: #ffffff;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 12px !important;"><code style="color: #000000;">End Sub</code></span></span></div>
+</div>
+<div id="radePasteHelper" style="border: 0px  solid  red;position: absolute;             top: 0px; overflow-x: hidden; overflow-y: hidden;"><br />
+<br />
+This works great, and the root items show the focussed state when clicking between them. However when i click on a child item, the root menu item does not have the focused class added to it. Any pointers?&nbsp;</div></div>
+
+                    
+
+
+
+
+
+                    <input type="submit" name="ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list$ctrl0$replyBtn" value="Reply" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list$ctrl0$replyBtn&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ctrl0_replyBtn" class="Btn Btn--sec" />
+
+                    <div>
+                        
+                    </div>
+                </div>
+            </div>
+            </div>
+                    </div>
+
+                <li class="container">
+                    <span id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ctrl0_doubleClickBanner"><script id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ctrl0_doubleClickBanner_bannersRendererScript" type="text/javascript">$(document).ready(function () {
+
+		renderBanner(true);
+
+		$(window).resize(function () {
+				renderBanner();
+		});
+});
+
+function renderBanner(shouldCallDC) {
+		if (!shouldCallDC) {
+				shouldCallDC = false;
+		}
+		var width = window.innerWidth;
+		var container = $('#div-gpt-ad-aspnet-ajax-103');
+		var maxWidth = parseInt('970');
+
+		if (width < maxWidth) {
+				container.hide();
+				return;
+		}
+
+		if (shouldCallDC) {
+				googletag.cmd.push(function () {
+						googletag.display('div-gpt-ad-aspnet-ajax-103')
+				});
+				return;
+		}
+
+		var isHidden = container.css('display') === 'none';
+		if (isHidden) {
+				container.show();
+		}
+}</script>
+<div class="row">
+  <div class="col-2">
+  </div>
+  <div class="col-10">
+    
+    <div id='div-gpt-ad-aspnet-ajax-103'>
+     </div>
+    
+  </div>
+  </div>
+</span>
+
+        
+            
+                    <li class="Forum-post">
+                        <div class="container">
+                            <div class="Section">
+                
+            <div class="row">
+                <a id='sCrPeiGzG0SKjF03agXcSg'></a>
+                <div class="col-2">
+                    
+                    
+                            <h5>Peter</h5>
+                        
+                    
+                            <span id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ctrl1_Conditional1_ctl00_postedByStatus" class="Indicator u-mb1" text="Admin">Admin</span>
+                        
+                    <div class="u-mb1">
+                        <img width="100" src='https://www.telerik.com/images/AdminImages/default.gif' alt="Peter avatar" />
+                    </div>
+                    
+                            <div class="Text--s Text--b5">
+                                <div class="u-mb1">
+                                    6637
+                                    posts
+                                </div>
+                                
+                            </div>
+                        
+                </div>
+                <div class="col-10">
+                    <p class="Label">
+                        Posted 28 Sep 2010
+                        
+                        <a href='#sCrPeiGzG0SKjF03agXcSg' class="u-fr">
+                            Link to this post
+                        </a>
+                    </p>
+
+
+                    <div class="ForumPostContent">Hello Big Daftie,<br />
+<br />
+Please, see the&nbsp;<a href="http://demos.telerik.com/aspnet-ajax/menu/examples/programming/showpath/defaultcs.aspx" target="_blank">Show Path And BreadCrumb</a>&nbsp;demo. Basically,&nbsp; you need to call the <strong>HighlightPath</strong>() method of the current item. <br />
+<br />
+<br />
+All the best,<br />
+ Peter <br />
+the Telerik team
+<div class="forumBaloonTop"></div>
+<div class="forumBaloon">Do you want to have your say when we set our development plans? Do you want to know when a feature you care about is added or when a bug fixed? Explore the <a href="http://www.telerik.com/support/pits.aspx">Telerik Public Issue Tracking</a> system and vote to affect the priority of the items </div>
+<div class="forumBaloonBottom"></div></div>
+
+                    
+
+
+
+
+
+                    <input type="submit" name="ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list$ctrl1$replyBtn" value="Reply" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list$ctrl1$replyBtn&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ctrl1_replyBtn" class="Btn Btn--sec" />
+
+                    <div>
+                        
+                    </div>
+                </div>
+            </div>
+            </div>
+                    </div>
+
+                <li class="container">
+                    
+
+        
+            
+                    <li class="Forum-post">
+                        <div class="container">
+                            <div class="Section">
+                
+            <div class="row">
+                <a id='jEqjO_m7ZEC9cKveHsHsCA'></a>
+                <div class="col-2">
+                    
+                    
+                            <h5>Big Daftie</h5>
+                        
+                    
+                    <div class="u-mb1">
+                        <img width="100" src='https://d585tldpucybw.cloudfront.net/images/AvatarImages/default.gif' alt="Big Daftie avatar" />
+                    </div>
+                    
+                            <div class="Text--s Text--b5">
+                                <div class="u-mb1">
+                                    7
+                                    posts
+                                </div>
+                                
+                                        <div>
+                                            Member since:<br />
+                                            Jun 2008
+                                        </div>
+                                    
+                            </div>
+                        
+                </div>
+                <div class="col-10">
+                    <p class="Label">
+                        Posted 28 Sep 2010
+                        
+                        <a href='#jEqjO_m7ZEC9cKveHsHsCA' class="u-fr">
+                            Link to this post
+                        </a>
+                    </p>
+
+
+                    <div class="ForumPostContent">Hi there Peter,<br />
+<br />
+thanks for you reply. I actually sorted this myself - I was using loadcontentfromfile(), which did not databind the xml so could not use the itemdatabound() handler.<br />
+<br />
+I've now moved the code to itemdatabound, and modified it to the following (in the unlikely event it's of use to anyone else):<br />
+<br />
+<div class="tFormatCodeBlock supportThreadCodeBlock" style="border: 1px  solid  #7f9db9;overflow-y: auto;" id="highlighter_38500">
+<div style="background-color: #ffffff;"><span style="margin-left: 0px !important;"><code style="color: #006699; font-weight: bold;">Dim</code> <code style="color: #000000;">item </code><code style="color: #006699; font-weight: bold;">As</code> <code style="color: #000000;">RadMenuItem = sitemenu.FindItemByUrl(Request.Url.PathAndQuery)</code></span></div>
+<div style="background-color: #f8f8f8;"><span style="margin-left: 0px !important;"><code style="color: #006699; font-weight: bold;">If</code> <code style="color: #000000;">item IsNot </code><code style="color: #006699; font-weight: bold;">Nothing</code> <code style="color: #006699; font-weight: bold;">Then</code></span></div>
+<div style="background-color: #ffffff;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 12px !important;"><code style="color: #006699; font-weight: bold;">If</code> <code style="color: #000000;">item.Level &gt; 0 </code><code style="color: #006699; font-weight: bold;">Then</code> <code style="color: #008200;">'menu will only ever be one level deep</code></span></span></div>
+<div style="background-color: #f8f8f8;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 24px !important;"><code style="color: #006699; font-weight: bold;">Dim</code> <code style="color: #000000;">rootitem </code><code style="color: #006699; font-weight: bold;">As</code> <code style="color: #000000;">RadMenuItem = item.Parent</code></span></span></div>
+<div style="background-color: #ffffff;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 24px !important;"><code style="color: #000000;">rootitem.CssClass = </code><code style="color: blue;">"focused"</code></span></span></div>
+<div style="background-color: #f8f8f8;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 12px !important;"><code style="color: #006699; font-weight: bold;">End</code> <code style="color: #006699; font-weight: bold;">If</code></span></span></div>
+<div style="background-color: #ffffff;"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;</code><span style="margin-left: 12px !important;"><code style="color: #000000;">item.CssClass = </code><code style="color: blue;">"focused"</code></span></span></div>
+<div style="background-color: #f8f8f8;"><span style="margin-left: 0px !important;"><code style="color: #006699; font-weight: bold;">End</code> <code style="color: #006699; font-weight: bold;">If</code></span></div>
+</div>
+<br />
+This seems to work fine - however I'm looking at your breadcrumb demo just now :)<br />
+<br />
+Many thanks!<br />
+<br /></div>
+
+                    
+
+
+
+
+
+                    <input type="submit" name="ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list$ctrl2$replyBtn" value="Reply" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list$ctrl2$replyBtn&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ctrl2_replyBtn" class="Btn Btn--sec" />
+
+                    <div>
+                        
+                    </div>
+                </div>
+            </div>
+            </div>
+                    </div>
+
+                <li class="container">
+                    
+
+        
+            </ol>
+        <input id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ClientState" name="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ClientState" type="hidden" /><span id="ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list" style="display:none;"></span>
+
+    <div class="Section--s">
+        <div class="container">
+            <a href="#top" class="u-fr">Back to Top</a>
+            <input type="submit" name="ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$additionalReplyButton" value="Post a reply" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$additionalReplyButton&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_additionalReplyButton" class="Btn" />
+
+            <div>
+                
+            </div>
+
+            <div id="div_visit_forumthread_OpenAccessDataProvider|229c89b9-0925-4cff-bc1e-fb570d3f7a4e" style="display:none;" ><script>
+(function () {
+function readCookie() {
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+   var c = ca[i];
+   while (c.charAt(0)==' ') c = c.substring(1,c.length);
+   if (c.indexOf('VisitorsCounterUniqueId=') == 0) return c.substring('VisitorsCounterUniqueId='.length,c.length);
+  }
+  return null;
+}
+var cookieStoredValue = readCookie();
+if (cookieStoredValue === null) {
+  var exdate = new Date();
+  exdate.setFullYear(exdate.getFullYear() + 10);
+  var randomValue = Math.floor(Math.random()*100000000);
+  document.cookie='VisitorsCounterUniqueId=' + randomValue + '; expires=' + exdate.toUTCString();
+  cookieStoredValue = randomValue;
+}
+var image = document.createElement('img');
+image.setAttribute('src', 'https://www.telerik.com/Sitefinity/WebCounter/counter.gif?action=visit&objectType=forumthread&objectid=OpenAccessDataProvider%7c229c89b9-0925-4cff-bc1e-fb570d3f7a4e&imgExpire=24&random=' + cookieStoredValue);
+document.getElementById('div_visit_forumthread_OpenAccessDataProvider|229c89b9-0925-4cff-bc1e-fb570d3f7a4e').appendChild(image);
+}());
+</script></div>
+
+            
+        </div>
+    </div>
+
+
+    <div id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_replyContainer" class="Section PopupFixed sfforumPostReplyContainer" style="display: none">
+        <div id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView" class="container" ControlDefinitionName="ForumsFrontendPostsDetailsViewName" ContentViewDisplayMode="Detail" DetailViewName="PostsDetailsView">
+			
+
+<fieldset class="row">
+    <div class="col-2">
+        
+    </div>
+    <div class="col-10">
+        <h1 class="h2">
+            </h1>
+        
+        
+        <a onclick="return false;" id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView_ctl00_ctl00_closePostsDetailsView" class="sfClose" href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$postsDetailsView$ctl00$ctl00$closePostsDetailsView&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, true))">Close</a>
+    </div>
+    <div id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView_ctl00_ctl00_quoteContainer" class="sfQuoteContainer" style="display: none"></div>
+    <div id="GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView_ctl00_ctl00_quotedUserContainer" class="sfQuotedUserContainer" style="display: none"></div>
+</fieldset>
+<span></span>
+		</div>
+    </div>
+
+	</div>
+
+<div>
+		
+
+
+	</div><script type="application/ld+json">{"@context":"http://schema.org","@type":"QAPage","mainEntity":{"@type":"Question","headline":"Set style of root radmenuitem when child item is selected.","name":"Set style of root radmenuitem when child item is selected.","dateCreated":"2010-09-24","url":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected","answerCount":"0","commentCount":"3","author":{"@type":"Person","name":"Big Daftie","image":"https://www.telerik.com/images/avatarimages/default.gif"},"comment":[{"@type":"Answer","@id":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected#bscMocCiv0KZ-tO4lPqdvA","url":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected#bscMocCiv0KZ-tO4lPqdvA","dateCreated":"2010-09-24","author":{"@type":"Person","name":"Big Daftie","image":"https://www.telerik.com/images/avatarimages/default.gif"}},{"@type":"Answer","@id":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected#sCrPeiGzG0SKjF03agXcSg","url":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected#sCrPeiGzG0SKjF03agXcSg","dateCreated":"2010-09-28","author":{"@type":"Person","name":"Peter","image":"https://www.telerik.com/images/adminimages/default.gif"}},{"@type":"Answer","@id":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected#jEqjO_m7ZEC9cKveHsHsCA","url":"https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected#jEqjO_m7ZEC9cKveHsHsCA","dateCreated":"2010-09-28","author":{"@type":"Person","name":"Big Daftie","image":"https://www.telerik.com/images/avatarimages/default.gif"}}]}}</script><span></span>
+</div>
+            
+        </div>
+    </div>
+</div>
+<div class="sf_cols">
+    <div class="sf_colsOut sf_1col_1_100">
+        <div id="GeneralContent_T73A12E0A120_Col00" class="sf_colsIn sf_1col_1in_100"><div id="GeneralContent_T73A12E0A119">
+
+</div><script data-sf-pers-id="a457ef4b-7940-4809-8489-7834e25e97da" data-sf-pers-page-node-id="437a71ca-b016-415d-ac02-e8794533591f" data-sf-pers-page-data-id="168c95ad-eaee-4509-9b27-3de02e214425" data-sf-pers-page-node-key="437A71CA-B016-415D-AC02-E8794533591F/b31ca85c-a1c5-4a9d-8b5d-e7b0736a8b16/SitefinitySiteMap" data-sf-pers-raise-events="True"></script><div class='sfContentBlock'><footer class="TK-Footer" data-tlrk-nav-version="3.0.57" data-tlrk-nav-template="footer-big-rel-markup"><div class="TK-container"><div class="TK-row TK-No-Print"><div class="TK-col-8 TK--Footer-Desktop"><div class="TK-Footer-Featured-Item"><h6 class="TK-Footer-H">Complete .NET Toolbox</h6><a href="/devcraft" class="TK-Footer-Featured-Link">Telerik DevCraft</a></div><div class="TK-Footer-Featured-Item"><h6 class="TK-Footer-H">Web App Development</h6><a href="/kendo-ui" class="TK-Footer-Featured-Link">Kendo UI</a></div></div><div class="TK-col-16"><div class="TK-row"><div class="TK-col-6 TK--Footer-Desktop"><h6 class="TK-Footer-H TK--Footer-Desktop">Get Products</h6><ul class="TK-Footer-List"><li class="TK-Footer-List-Item"><a href="/download" class="TK-Footer-Link">Free Trials</a></li><li class="TK-Footer-List-Item"><a href="/purchase.aspx" class="TK-Footer-Link">Pricing</a></li></ul></div><div class="TK-col-6 TK--Footer-Desktop"><h6 class="TK-Footer-H TK--Footer-Desktop">Resources</h6><ul class="TK-Footer-List"><li class="TK-Footer-List-Item"><a href="/support/demos" class="TK-Footer-Link">Demos</a></li><li class="TK-Footer-List-Item"><a href="/documentation" class="TK-Footer-Link">Documentation</a></li><li class="TK-Footer-List-Item"><a href="/support/whats-new/release-history" class="TK-Footer-Link">Release History</a></li><li class="TK-Footer-List-Item"><a href="/forums" class="TK-Footer-Link">Forums</a></li><li class="TK-Footer-List-Item"><a href="/blogs" class="TK-Footer-Link">Blogs</a></li><li class="TK-Footer-List-Item"><a href="/blogs/developer-central" class="TK-Footer-Link">Developer Central</a></li><li class="TK-Footer-List-Item"><a href="https://partnerlink.progress.com" class="TK-Footer-Link">Partners</a></li><li class="TK-Footer-List-Item"><a href="/support/virtual-classroom" class="TK-Footer-Link">Virtual Classroom</a></li><li class="TK-Footer-List-Item"><a href="/events" class="TK-Footer-Link">Events</a></li></ul></div><div class="TK-col-6 TK--Footer-Desktop"><h6 class="TK-Footer-H TK--Footer-Desktop">Recognition</h6><ul class="TK-Footer-List"><li class="TK-Footer-List-Item"><a href="/about/success-stories" class="TK-Footer-Link">Success Stories</a></li><li class="TK-Footer-List-Item"><a href="/about/testimonials" class="TK-Footer-Link">Testimonials</a></li></ul></div><div class="TK-col-6 TK--Footer-Desktop"><h6 class="TK-Footer-H TK--Footer-Desktop">Get in touch</h6><ul class="TK-Footer-List"><li class="TK-Footer-List-Item"><a href="/contact" class="TK-Footer-Link">Contact Us</a></li><li><ul class="TK-Footer-List--inner"><li class="TK-Footer-List-Item"><a href="tel:+18883652779" class="TK-Footer-Phone-Link u-db">USA: <span class="TK-wsn">+1 888 365 2779</span></a></li><li class="TK-Footer-List-Item"><a href="tel:+441344360444" class="TK-Footer-Phone-Link u-db">UK: <span class="TK-wsn">+44 13 4436 0444</span></a></li><li class="TK-Footer-List-Item"><a href="tel:+911244300987" class="TK-Footer-Phone-Link u-db">India: <span class="TK-wsn">+91 124 4300987</span></a></li><li class="TK-Footer-List-Item"><a href="tel:+35928099850" class="TK-Footer-Phone-Link u-db">Bulgaria: <span class="TK-wsn">+359 2 8099850</span></a></li><li class="TK-Footer-List-Item"><a href="tel:+61398058670" class="TK-Footer-Phone-Link u-db">Australia: <span class="TK-wsn">+61 3 9805 8670</span></a></li></ul></li><li><ul class="TK-Footer-List--inner TK-Footer-List-Horizontal TK-wsn"><li class="TK-Footer-List-Horizontal-Item"><a href="https://www.facebook.com/telerik" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M16 7h-1.924C13.461 7 13 7.252 13 7.889V9h3l-.238 3H13v8h-3v-8H8V9h2V7.077C10 5.055 11.064 4 13.461 4H16zM5 0a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5z" fill="#000"/></svg></a></li><li class="TK-Footer-List-Horizontal-Item"><a href="https://twitter.com/telerik" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M17.566 9.146A8.122 8.122 0 019.4 17.69 8.127 8.127 0 015 16.401a5.778 5.778 0 004.252-1.189 2.879 2.879 0 01-2.684-1.995 2.881 2.881 0 001.3-.049 2.876 2.876 0 01-2.3-2.853 2.865 2.865 0 001.3.359 2.877 2.877 0 01-.889-3.835 8.153 8.153 0 005.92 3 2.876 2.876 0 012.8-3.527 2.874 2.874 0 012.1.907 5.733 5.733 0 001.823-.7 2.884 2.884 0 01-1.263 1.589A5.745 5.745 0 0019 7.657a5.785 5.785 0 01-1.434 1.489M19 .001H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5v-14a5 5 0 00-5-5" fill="#000"/></svg></a></li><li class="TK-Footer-List-Horizontal-Item"><a href="https://www.linkedin.com/company/telerik" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M20 19h-3v-5.6c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.4-2.586 7-2.777 7 2.476zM6.5 6.732a1.757 1.757 0 01-1.75-1.764A1.757 1.757 0 016.5 3.2a1.758 1.758 0 011.75 1.764A1.757 1.757 0 016.5 6.728zM5 19h3V8H5zM19 0H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5z" fill="#000" fill-rule="evenodd"/></svg></a></li><li class="TK-Footer-List-Horizontal-Item"><a href="https://www.twitch.tv/codeitlive" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 23 24.05"><path d="M1.57.02L0 4.18V20.9h5.75v3.12h3.14l3.13-3.14h4.71L23 14.61V.02zm2.09 2.07h17.25v11.5l-3.66 3.66H11.5l-3.13 3.13v-3.13H3.66zm5.75 10.45h2.09V6.27H9.41zm5.75 0h2.09V6.27h-2.09z" fill="#000"/></svg></a></li></ul></li></ul></div></div><div class="TK-row TK-row--M2 TK--Footer-Mobile"><div class="TK-col-24"><ul class="TK-Footer-List"><li class="TK-Footer-List-Item"><a href="/contact" class="TK-Footer-Link">Contact Us</a></li><li><ul class="TK-Footer-List--inner TK-Footer-List-Horizontal TK-wsn"><li class="TK-Footer-List-Horizontal-Item"><a href="https://www.facebook.com/telerik" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M16 7h-1.924C13.461 7 13 7.252 13 7.889V9h3l-.238 3H13v8h-3v-8H8V9h2V7.077C10 5.055 11.064 4 13.461 4H16zM5 0a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5z" fill="#000"/></svg></a></li><li class="TK-Footer-List-Horizontal-Item"><a href="https://twitter.com/telerik" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M17.566 9.146A8.122 8.122 0 019.4 17.69 8.127 8.127 0 015 16.401a5.778 5.778 0 004.252-1.189 2.879 2.879 0 01-2.684-1.995 2.881 2.881 0 001.3-.049 2.876 2.876 0 01-2.3-2.853 2.865 2.865 0 001.3.359 2.877 2.877 0 01-.889-3.835 8.153 8.153 0 005.92 3 2.876 2.876 0 012.8-3.527 2.874 2.874 0 012.1.907 5.733 5.733 0 001.823-.7 2.884 2.884 0 01-1.263 1.589A5.745 5.745 0 0019 7.657a5.785 5.785 0 01-1.434 1.489M19 .001H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5v-14a5 5 0 00-5-5" fill="#000"/></svg></a></li><li class="TK-Footer-List-Horizontal-Item"><a href="https://www.linkedin.com/company/telerik" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M20 19h-3v-5.6c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.4-2.586 7-2.777 7 2.476zM6.5 6.732a1.757 1.757 0 01-1.75-1.764A1.757 1.757 0 016.5 3.2a1.758 1.758 0 011.75 1.764A1.757 1.757 0 016.5 6.728zM5 19h3V8H5zM19 0H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5z" fill="#000" fill-rule="evenodd"/></svg></a></li><li class="TK-Footer-List-Horizontal-Item"><a href="https://www.twitch.tv/codeitlive" class="TK-Footer-Social-Link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 23 24.05"><path d="M1.57.02L0 4.18V20.9h5.75v3.12h3.14l3.13-3.14h4.71L23 14.61V.02zm2.09 2.07h17.25v11.5l-3.66 3.66H11.5l-3.13 3.13v-3.13H3.66zm5.75 10.45h2.09V6.27H9.41zm5.75 0h2.09V6.27h-2.09z" fill="#000"/></svg></a></li></ul></li></ul></div></div></div></div><div class="TK-row TK-row--M1"><div class="TK-col-24"><a href="https://www.progress.com" class="TK-PRGS-Logo-Footer"><svg xmlns="http://www.w3.org/2000/svg" width="130" height="30" viewBox="0 0 512 120"><path fill="#5ce500" d="M95.52 29.33v51a3.93 3.93 0 0 1-1.78 3.08l-1.67 1-12.72 7.35-8.59 5-1.78 1V42.6L21.23 15 43.91 1.93 46 .74a3.94 3.94 0 0 1 3.56 0L81 18.9l14.51 8.38v2.05zM58.36 48.72l-9.79-5.66-22.91-13.23a4 4 0 0 0-3.56 0L1.77 41.57 0 42.6l34.49 19.91v39.83l20.3-11.73 1.79-1a3.94 3.94 0 0 0 1.78-3.08V48.72zM0 82.43l23.86 13.78V68.63z"></path><path fill="#4b4e52" d="M148.09 27.28h-26v70.48h11.55V70.1h14.57c15.77 0 24.45-7.7 24.45-21.69 0-6.35-2.4-21.12-24.55-21.12m12.78 21.31c0 7.95-4.12 11.19-14.24 11.19h-13v-22.1h14.57c8.56 0 12.71 3.57 12.71 10.91M207 46.41l.87.42-2 10.42-1.35-.42a11.32 11.32 0 0 0-3.34-.51c-10.79 0-11.67 8.59-11.67 19v22.44h-10.64V46h10v6.24c2.73-4.2 6-6.37 10.37-6.9a14.55 14.55 0 0 1 7.76 1.07M233.29 45c-8.42 0-15.16 3.2-19.5 9.27-4.56 6.37-5.23 13.85-5.23 17.74 0 16.36 9.7 26.92 24.73 26.92 18.26 0 24.73-14.71 24.73-27.3 0-7.25-2.15-13.82-6-18.51-4.41-5.31-10.87-8.12-18.7-8.12m0 44.38c-8.37 0-13.57-6.66-13.57-17.37s5.2-17.55 13.57-17.55S247 61.23 247 71.78c0 10.83-5.24 17.56-13.66 17.56m114.55-42.93l.87.42-2 10.42-1.35-.42a11.26 11.26 0 0 0-3.33-.51c-10.78 0-11.66 8.59-11.66 19v22.44h-10.66V46h10v6.24c2.73-4.2 6-6.37 10.37-6.9a14.54 14.54 0 0 1 7.73 1.06m38.4 34.76l-.2.57c-2.23 6.36-7.57 7.7-11.65 7.7-8.09 0-13.3-5.37-13.81-14.09h36.59l.13-1a31.26 31.26 0 0 0 .12-4.12v-.93C396.93 54.78 387.48 45 374 45c-7.9 0-14.37 3.1-18.73 9a30.85 30.85 0 0 0-5.54 18c0 16 9.95 26.74 24.74 26.74 11.45 0 19.33-5.82 22.2-16.38l.33-1.2h-10.7zM361 66.05c.9-7.17 5.81-11.73 12.79-11.73 5.33 0 11.64 3.1 12.52 11.73H361zm-60.7-15.71c-3.45-3.58-8.06-5.39-13.76-5.39-15.69 0-22.83 13.81-22.83 26.63 0 13.16 7.06 26.44 22.83 26.44a18.33 18.33 0 0 0 13.35-5.42c0 2.28-.1 4.45-.16 5.38-.58 8.54-4.68 12.51-12.91 12.51-4.47 0-9.61-1.59-10.6-6l-.22-1h-10.54l.17 1.41c1.1 9.12 9.11 14.79 20.9 14.79 10.34 0 17.7-3.9 21.28-11.26 1.73-3.55 2.6-8.72 2.6-15.37V46h-10.13v4.34zm-13.11 38.15c-3.74 0-12.43-1.69-12.43-17.37 0-10.3 4.87-16.7 12.71-16.7 6.06 0 12.52 4.39 12.52 16.7 0 10.87-4.79 17.37-12.81 17.37m159.67-6.31c0 8.23-6.83 16.53-22.09 16.53-13.5 0-21.53-5.85-22.61-16.45l-.15-1.1h10.52l.21.84c1.29 6.38 7.37 7.72 12.24 7.72 5.34 0 11-1.72 11-6.54 0-2.44-1.59-4.18-4.73-5.16-1.86-.55-4.15-1.2-6.56-1.87-4.16-1.16-8.47-2.38-11.12-3.29-6.56-2.35-10.33-6.93-10.33-12.56 0-10.43 10.16-15.11 20.22-15.11 13.46 0 20.42 5.07 21.3 15.49l.09 1.07H434.5l-.14-.82c-1-6-7-6.9-10.48-6.9-3 0-10 .53-10 5.5 0 2.25 1.93 3.91 5.89 5.06 1.18.33 2.94.78 5 1.31 4.22 1.09 9.48 2.46 12.13 3.37 6.59 2.32 9.93 6.67 9.93 13m49.39 0c0 8.23-6.83 16.53-22.09 16.53-13.5 0-21.53-5.85-22.61-16.45l-.11-1.09H462l.12.74c1.29 6.38 7.37 7.72 12.24 7.72 5.34 0 11-1.72 11-6.54 0-2.44-1.59-4.18-4.72-5.16-1.86-.55-4.15-1.2-6.57-1.87-4.16-1.16-8.46-2.38-11.11-3.29-6.57-2.35-10.33-6.93-10.33-12.56 0-10.43 10.16-15.11 20.22-15.11 13.46 0 20.42 5.07 21.29 15.49l.09 1.07H483.9l-.14-.82c-1-6-7-6.9-10.48-6.9-3 0-9.95.53-9.95 5.5 0 2.25 1.93 3.91 5.89 5.06 1.18.33 2.94.78 5 1.31 4.22 1.09 9.48 2.46 12.13 3.37 6.58 2.32 9.93 6.67 9.93 13m8.43-30.78a7.37 7.37 0 1 1 7.29-7.37 7.23 7.23 0 0 1-7.29 7.37m0-13.49a6.12 6.12 0 1 0 6 6.12 5.91 5.91 0 0 0-6-6.12m-.85 7.49v2.46h-2.17v-7.74h3.62a2.58 2.58 0 0 1 2.86 2.7 2.26 2.26 0 0 1-1.49 2.34l1.77 2.7H506l-1.49-2.46h-.68zm1.21-3.49h-1.21v1.73h1.21a.86.86 0 0 0 1-.85.88.88 0 0 0-1-.89"></path></svg></a></div></div><div class="TK-row"><div class="TK-col-12"><p class="TK-Footer-About">Telerik and Kendo UI are part of Progress product portfolio. Progress is the leading provider of application development and digital experience technologies.</p></div><div class="TK-col-24"><div class="TK-row--M3 TK--Footer-Desktop"><ul class="TK-Footer-List-Horizontal"><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="https://www.progress.com/company">Company</a></li><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="https://www.progress.com/products">Technology</a></li><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="https://www.progress.com/company/awards">Awards</a></li><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="http://investors.progress.com/releases.cfm">Press Releases</a></li><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="https://www.progress.com/company/press-coverage">Media Coverage</a></li><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="https://www.progress.com/company/careers">Careers</a></li><li class="TK-Footer-List-Horizontal-Item"><a class="TK-Footer-Link TK-Footer-Link-Horizontal" href="https://www.progress.com/company/offices">Offices</a></li></ul></div></div></div><div class="TK-row TK-row--M2 TK--Footer-Mobile"><div class="TK-col-24"><ul class="TK-Footer-List"><li class="TK-Footer-List-Item"><a href="https://www.progress.com/company" class="TK-Footer-Link">Company</a></li><li class="TK-Footer-List-Item"><a href="https://www.progress.com/products" class="TK-Footer-Link">Technology</a></li><li class="TK-Footer-List-Item"><a href="https://www.progress.com/company/awards" class="TK-Footer-Link">Awards</a></li><li class="TK-Footer-List-Item"><a href="http://investors.progress.com/releases.cfm" class="TK-Footer-Link">Press Releases</a></li><li class="TK-Footer-List-Item"><a href="https://www.progress.com/company/press-coverage" class="TK-Footer-Link">Media Coverage</a></li><li class="TK-Footer-List-Item"><a href="https://www.progress.com/company/careers" class="TK-Footer-Link">Careers</a></li><li class="TK-Footer-List-Item"><a href="https://www.progress.com/company/offices" class="TK-Footer-Link">Offices</a></li></ul></div></div><div class="TK-row"><div class="TK-col-16"><p class="TK-Footer-Copy">Copyright &copy; 2021, Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.</p><p class="TK-Footer-Copy">Progress, Telerik, Ipswitch, and certain product names used herein are trademarks or registered trademarks of Progress Software Corporation and/or one of its subsidiaries or affiliates in the U.S. and/or other countries. See <a href="https://www.progress.com/legal/trademarks" class="TK-Footer-Link-Tiny">Trademarks</a> for appropriate markings.</p></div><div class="TK-col-8 TK-tar"><ul class="TK-Footer-List-Horizontal"><li class="TK-Footer-List-Horizontal-Item TK-Footer-List-Horizontal-Item-Effect"><a href="/company/terms-of-use" class="TK-Footer-Link-Tiny">Terms of Use</a></li><li class="TK-Footer-List-Horizontal-Item TK-Footer-List-Horizontal-Item-Effect"><a href="/company/feedback" class="TK-Footer-Link-Tiny">Site Feedback</a></li><li class="TK-Footer-List-Horizontal-Item TK-Footer-List-Horizontal-Item-Effect"><a href="https://www.progress.com/legal/privacy-center" class="TK-Footer-Link-Tiny" target="_blank" rel="noopener">Privacy Center</a></li><li class="TK-Footer-List-Horizontal-Item TK-Footer-List-Horizontal-Item-Effect"><a href="https://www.progress.com/security" class="TK-Footer-Link-Tiny" target="_blank" rel="noopener">Security Center</a></li></ul><div class="TLRK-CPPA"><a href="https://forms.progress.com/ccpa-subscription" target="_blank" rel="nofollow noopener">Do Not Sell My Personal Information</a></div><p class="TK-Footer-Power">Powered by <a href="https://www.progress.com/sitefinity-cms" class="TK-Footer-Link-Tiny">Progress Sitefinity</a></p></div></div></div></footer>
+
+</div>
+            
+        </div>
+    </div>
+</div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ScriptManager_TSM');//]]>
+</script>
+<script type="text/javascript">function isIE() {
+  var myNav = navigator.userAgent.toLowerCase();
+  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+}
+
+$(document).ready(function () {
+  if (isIE() == 8) {
+    $("#topMainBarLogoImg").attr("src", "/sfimages/default-source/logos/telerik-logo-white.png");
+  }
+});</script>
+<script type="text/javascript">
+//<![CDATA[
+var sf_appPath='/';//]]>
+</script>
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ScriptManager_TSM&amp;compress=0&amp;_TSM_CombinedScripts_=%3b%3bWeb.SitefinityExtensions.Pages%3aen%3a5d30135d-873b-443c-89a5-df4dbbda1431%3af5489325" type="text/javascript"></script>
+<script src="https://d2i2wahzwrm1n5.cloudfront.net/ajax/2019.2.514/Common/Core.js" type="text/javascript"></script>
+<script src="https://d2i2wahzwrm1n5.cloudfront.net/ajax/2019.2.514/Common/jQueryExternal.js" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ScriptManager_TSM&amp;compress=0&amp;_TSM_CombinedScripts_=%3b%3bWeb.SitefinityExtensions.EloquaConnector%3aen%3aec4e66c1-3787-458d-a785-7a6981c372f5%3af94d2b9b%3aebb5ea5e%3a3bbb5787%3bTelerik.Sitefinity.Personalization.Impl%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3aa2490f4a-3bc0-4c57-8cb7-c646ed8660d1%3aee52b440%3bTelerik.Sitefinity%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3a4151ab31-de01-4ba7-86bb-f15f9c6c5ede%3a721addc%3bTelerik.Sitefinity.Forums%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3ac35a2e0e-1f95-4b6d-a549-ec348f1e3bb4%3a511cdc66" type="text/javascript"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+<script src="https://d2i2wahzwrm1n5.cloudfront.net/ajax/2019.2.514/ListView/RadListViewScripts.js" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ScriptManager_TSM&amp;compress=0&amp;_TSM_CombinedScripts_=%3b%3bTelerik.Sitefinity%3aen%3a4151ab31-de01-4ba7-86bb-f15f9c6c5ede%3a4a2e6458%3bTelerik.Sitefinity.Forums%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3ac35a2e0e-1f95-4b6d-a549-ec348f1e3bb4%3af39efa2b%3bTelerik.Sitefinity%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3a4151ab31-de01-4ba7-86bb-f15f9c6c5ede%3a41f6c3a7%3a1900ec7d%3a2aeb216e" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+var sf_appPath='/';;(function() {
+                        function loadHandler() {
+                            var hf = $get('ctl12_TSSM');
+                            if (!hf._RSSM_init) { hf._RSSM_init = true; hf.value = ''; }
+                            hf.value += ';Telerik.Sitefinity.Resources, Version=12.1.7100.0, Culture=neutral, PublicKeyToken=b28c218413bdf563:en:9c895b69-1119-41e1-bb1e-e3a6c6aa5ab2:7a90d6a:2380cb54';
+                            Sys.Application.remove_load(loadHandler);
+                        };
+                        Sys.Application.add_load(loadHandler);
+                    })();Sys.Application.add_init(function() {
+    $create(Telerik.Sitefinity.Forums.Web.UI.PostsListView, {"_saveTitleChangesButtonId":"GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_saveTitleChangesBtn","_showEditBoxButtonId":"GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_showEditBoxButton","_threadTitleEditBoxId":"GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_threadTitleEditBox","threadTitle":null}, null, null, $get("GeneralContent_C007_forumsFrontendPostsList"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadListView, {"UniqueID":"ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$ctl01$ctl00$ctl00$dynamicContentListView","_clientSettings":{"DataBinding":{"ItemPlaceHolderID":"ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView_ItemsContainer","DataService":{}}},"_virtualItemCount":1,"clientStateFieldID":"ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView_ClientState","renderMode":1}, null, null, $get("ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_ctl01_ctl00_ctl00_dynamicContentListView"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadListView, {"UniqueID":"ctl00$GeneralContent$C007$forumsFrontendPostsList$ctl00$ctl00$list","_clientSettings":{"DataBinding":{"ItemPlaceHolderID":"ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ItemsContainer","DataService":{}}},"_virtualItemCount":3,"clientStateFieldID":"ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list_ClientState","renderMode":1}, null, null, $get("ctl00_GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_list"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Sitefinity.Forums.Web.UI.PostsDetailsView, {"_defaultQuoteText":"Your quote goes here","_openPostForm":"false","_successfullySubmitted":"false","baseUrl":"/","cancelButton":$get("GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView_ctl00_ctl00_cancelBtn"),"cancelPostUrl":"/forums/set-style-of-root-radmenuitem-when-child-item-is-selected","closePostsDetailsView":$get("GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView_ctl00_ctl00_closePostsDetailsView"),"onLoadEvents":[],"quoteButton":$get("GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView_ctl00_ctl00_quoteBtn")}, null, null, $get("GeneralContent_C007_forumsFrontendPostsList_ctl00_ctl00_postsDetailsView"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Sitefinity.Web.UI.UserPreferences, {"_timeOffset":"-21600000","_userBrowserSettingsForCalculatingDates":true,"timeZoneDisplayName":"(UTC-06:00) Central Time (US \u0026 Canada)","timeZoneId":"Central Standard Time"}, null, null);
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Sitefinity.Web.UI.Fields.FormManager, {"_controlIdMappings":{},"_validationGroupMappings":{}}, null, null);
+});
+//]]>
+</script>
+<script src="https://dtzbdy9anri2p.cloudfront.net/cache/18c0bd6f6c7fff4b5f2953ebeb197e289217b127/telerik/js/dist/all.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+var sf_loaded_scripts = ['/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ScriptManager_TSM&compress=0&_TSM_CombinedScripts_=%3b%3bWeb.SitefinityExtensions.Pages%3aen%3a5d30135d-873b-443c-89a5-df4dbbda1431%3af5489325','https://d2i2wahzwrm1n5.cloudfront.net/ajax/2019.2.514/Common/Core.js','https://d2i2wahzwrm1n5.cloudfront.net/ajax/2019.2.514/Common/jQueryExternal.js','/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ScriptManager_TSM&compress=0&_TSM_CombinedScripts_=%3b%3bWeb.SitefinityExtensions.EloquaConnector%3aen%3aec4e66c1-3787-458d-a785-7a6981c372f5%3af94d2b9b%3aebb5ea5e%3a3bbb5787%3bTelerik.Sitefinity.Personalization.Impl%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3aa2490f4a-3bc0-4c57-8cb7-c646ed8660d1%3aee52b440%3bTelerik.Sitefinity%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3a4151ab31-de01-4ba7-86bb-f15f9c6c5ede%3a721addc%3bTelerik.Sitefinity.Forums%2c+Version%3d12.1.7100.0%2c+Culture%3dneutral%2c+PublicKeyToken%3db28c218413bdf563%3aen%3ac35a2e0e-1f95-4b6d-a549-ec348f1e3bb4%3a511cdc66','//code.jquery.com/jquery-migrate-1.2.1.min.js'];//]]>
+</script>
+</form>
+    <script type="text/plain" class="optanon-category-2">!function(e){function n(){if(e&&r()){var n=t();i(e,n)}}function i(e,n){l.post(u,new c({telerikId:e,uniqueId:n}))}function t(){for(var e=document.cookie.split(";"),n="gauuid",i=0;i<e.length;i++){for(var t=e[i];" "===t.charAt(0);)t=t.substring(1,t.length);if(0===t.indexOf(n))return t.substring(n.length,t.length).replace("=","")}return null}function r(){var e=new Date;if(null===localStorage.getItem(a))return o(e),!0;var n=Date.parse(localStorage.getItem(a));if(isNaN(n))return!1;var i=new Date(n);return i.setTime(i.getTime()+6048e5)<e?(o(e),!0):!1}function o(e){localStorage.setItem(a,e.toISOString())}if(window.jQuery){var l=window.jQuery,u=window.location.origin+"/services/callhomeservice/api/userlogged",a="call-home-client-key-user-logged",c=function(e){this.telerikId=e.telerikId,this.uniqueId=e.uniqueId};l(document).ready(function(){n()}),window.__callhome__||(window.__callhome__={}),window.__callhome__.verify=r,window.__callhome__.init=n}}(telerikId);</script>
+</body>
+</html>

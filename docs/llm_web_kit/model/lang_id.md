@@ -4,7 +4,7 @@
 
 ## 配置文件需要改动的部分
 
-huggingface版本
+huggingface版本：
 
 ```json
 "resources": {
@@ -26,7 +26,7 @@ huggingface版本
     },
 ```
 
-s3版本
+s3版本：
 
 ```json
 "resources": {
@@ -38,7 +38,7 @@ s3版本
             "md5": "01810bc59c6a3d2b79c79e6336612f65"
         },
         "lang-id-218": {
-            "download_path": "s3://xyz-process-ylk2/xyz-users/huyucheng1/lid218e.bin",
+            "download_path": "s3://web-parse-huawei/shared_resource/identification/lid218e.bin",
             "sha256": "8ded5749a2ad79ae9ab7c9190c7c8b97ff20d54ad8b9527ffa50107238fc7f6a"
         },
         "political-24m7": {

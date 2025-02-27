@@ -9,7 +9,7 @@
 如果环境变量不存在，则默认去用户的HOME目录下寻找名字为llm-web-kit.jsonc的配置文件
 
 <b>二、格式</b>
-配置文件的格式：
+配置文件的模板：
 
 ```json
 {
@@ -60,7 +60,24 @@
                     "log-level": "ERROR",
                     "log-format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}"
                 }
-            ]
+            ],
+  "magic-html-custom-rule": {
+      "test.custom.com": {
+                "clean": [
+                  "//script",
+                  "//style",
+                  "//*[@id=\"post-219\"]/div[1]/div[2]/div"
+                ],
+                "title": {
+                  "mode": "xpath",
+                  "value": "//*[@id=\"post-219\"]/div[1]/div[1]/h1/text()"
+                },
+                "content": {
+                  "mode": "xpath",
+                  "value": "//*[@id=\"post-219\"]/div[1]/div[2]"
+                }
+          }
+    }
 }
 
 
