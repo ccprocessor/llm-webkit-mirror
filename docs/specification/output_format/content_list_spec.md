@@ -83,7 +83,8 @@
                 "html": "<table><tr><td>1</td><td>2</td></tr></table>",
                 "title": "example table",
                 "note": "数据来源于...",
-                "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false
+                "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false,
+                "table_nest_level": 1 //table嵌套层级
             }
         },
         {
@@ -285,7 +286,8 @@
         "html": "<table><tr><td>1</td><td>2</td></tr></table>",
         "title": "example table",
         "note": "数据来源于...",
-        "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false
+        "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false,
+        "table_nest_level": 1 //table嵌套等级，无嵌套为1,嵌套一层table为2，以此类推
     }
 }
 ```
@@ -298,7 +300,8 @@
 | content.html       | string  | 表格的html内容                           | 是       |
 | content.title      | string  | 表格的title属性                          | 可选     |
 | content.note       | string  | 表格的note属性                           | 可选     |
-| content.is_complex | boolean | 是否是复杂表格(跨行、跨列的, 默认为false | 可选     |
+| content.is_complex | boolean | 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false | 可选     |
+| content.table_nest_level | int | table嵌套层级 | 可选     |
 
 ### 列表段
 
