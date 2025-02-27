@@ -1,0 +1,371 @@
+import os
+import time
+from typing import Any, Dict
+
+import ahocorasick
+
+from llm_web_kit.config.cfg_reader import load_config
+from llm_web_kit.exception.exception import CleanLangTypeExp
+from llm_web_kit.input.datajson import DataJson
+from llm_web_kit.libs.standard_utils import json_loads
+from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
+                                                            is_pure_en_word)
+from llm_web_kit.model.resource_utils.download_assets import (
+    CACHE_DIR, download_auto_file)
+from llm_web_kit.model.resource_utils.singleton_resource_manager import \
+    singleton_resource_manager
+
+xyz_language_lst = [
+    'ar',
+    'cs',
+    'hu',
+    'sr',
+    'ru',
+    'ko',
+    'vi',
+    'th',
+    'arb',
+    'arb_Arab',
+    'arb_Latn',
+    'ces',
+    'ces_Latn',
+    'hun',
+    'hun_Latn',
+    'srp',
+    'srp_Cyrl',
+    'rus',
+    'rus_Cyrl',
+    'kor',
+    'kor_Hang',
+    'vie',
+    'vie_Latn',
+    'tha',
+    'tha_Thai',
+]
+level_score_map = {
+    'L1': 100,
+    'L2': 10,
+    'L3': 1,
+    'L4': 0.1,
+}
+
+
+def auto_download(language='zh-en'):
+    resource_config = load_config()['resources']
+    if language == 'zh-en':
+        resource_name = 'unsafe_words'
+    elif language == 'xyz':
+        resource_name = 'xyz_internal_unsafe_words'
+    else:
+        raise CleanLangTypeExp(f'Unsupported language: {language}')
+    language_unsafe_words_config: Dict = resource_config[resource_name]
+    download_path = language_unsafe_words_config['download_path']
+    md5 = language_unsafe_words_config['md5']
+    local_path = os.path.join(CACHE_DIR, resource_name)
+    unsafe_words_file_path = download_auto_file(download_path, local_path, md5)
+    return unsafe_words_file_path
+
+
+def get_ac(language='zh-en'):
+    t1 = time.time()
+    unsafe_words_file_path = auto_download(language)
+    t2 = time.time()
+    print(
+        f'-----------------auto_download cost time: {t2-t1} , language: {language}------------------'
+    )
+    with open(unsafe_words_file_path, 'r') as f:
+        lines = f.readlines()
+
+    # sub_word: [{
+    #   "word": "席源评",
+    #   "sub_words": ["席源评"],
+    #   "type": "涉政",
+    #   "level": "L3",
+    #   "language": "zh",
+    # }, {
+    #   ...
+    # }]
+    words = {}
+    for line in lines:
+        w = json_loads(line)
+        word = str(w.get('word') or '').lower()
+        if not word:
+            continue
+        if is_pure_en_word(word) and len(word) <= 4:
+            continue
+
+        sub_words = word.split('&&&')
+
+        w_info = {
+            'word': word,
+            'sub_words': set(sub_words),
+            'type': w.get('type'),
+            'level': w.get('level'),
+            'language': w.get('language'),
+            'applicable': w.get('applicable'),
+            'unapplicable': w.get('unapplicable'),
+        }
+
+        for sub_word in sub_words:
+            lst = words.get(sub_word, [])
+            lst.append({'sub_word': sub_word, **w_info})
+            words[sub_word] = lst
+
+    ac = ahocorasick.Automaton()
+    for word, w_info_lst in words.items():
+        ac.add_word(word, w_info_lst)
+    ac.make_automaton()
+    return ac
+
+
+def get_unsafe_words(ac, content: str) -> list:
+    content = content.lower()
+
+    def is_word_standalone(sub_word, end_pos):
+        # 检查子词是否为独立英文单词（前后无其他英文字符）
+        if is_pure_en_word(sub_word):
+            prev_pos = end_pos - len(sub_word)
+            # 检查前一个字符是否为英文字母
+            if prev_pos >= 0 and is_en_letter(content[prev_pos]):
+                return False
+            # 检查后一个字符是否为英文字母
+            post_pos = end_pos + 1
+            if post_pos < len(content) and is_en_letter(content[post_pos]):
+                return False
+        return True  # 子词是独立的
+
+    all_sub_words = set()  # 记录所有独立出现的子词
+    all_w_info_lst = []  # 记录所有子词的详细信息
+    # 遍历所有匹配的子词及其结束位置pos
+    for pos, w_info_lst in ac.iter(content):
+        for w_info in w_info_lst:
+            sub_word = w_info['sub_word']
+            if is_word_standalone(sub_word, pos):
+                all_sub_words.add(sub_word)
+                all_w_info_lst.append(w_info)
+
+    unsafe_words = {}
+    for w_info in all_w_info_lst:
+        # 检查该词的所有子词是否均被匹配到
+        if all_sub_words.issuperset(w_info['sub_words']):
+            if w_info['word'] not in unsafe_words:
+                unsafe_words[w_info['word']] = {
+                    'word': w_info['word'],
+                    'type': w_info['type'],
+                    'level': w_info['level'],
+                    'language': w_info['language'],
+                    'count': 0.0,
+                }
+            unsafe_words[w_info['word']]['count'] += 1.0 / len(w_info['sub_words'])
+    return list(unsafe_words.values())
+
+
+class UnsafeWordChecker:
+    def __init__(self, language='zh-en') -> None:
+        t1 = time.time()
+        self.ac = get_ac(language)
+        t2 = time.time()
+        print(
+            f'---------------UnsafeWordChecker init time: {t2-t1} , language: {language}-----------------'
+        )
+
+    def check_unsafe_words(self, content_str: str) -> list:
+        unsafe_words_list = get_unsafe_words(self.ac, content=content_str)
+        return unsafe_words_list
+
+
+def get_unsafe_words_checker(language='zh-en') -> UnsafeWordChecker:
+    if not singleton_resource_manager.has_name(language):
+        singleton_resource_manager.set_resource(language, UnsafeWordChecker(language))
+    return singleton_resource_manager.get_resource(language)
+
+
+def decide_unsafe_word_by_data_checker(
+    data_dict: dict, unsafeWordChecker: UnsafeWordChecker
+) -> str:
+    data_obj = DataJson(data_dict)
+    content_str = data_obj.get_content_list().to_txt()
+    unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
+    unsafe_word_levels = []
+    for w in unsafe_words_list:
+        _, level, _ = w['word'], w['level'], w['count']
+        # "涉政|观测|L4|带头人"
+        unsafe_word_levels.append(level)
+
+    unsafe_word_levels = list(set(unsafe_word_levels))
+    unsafe_word_min_level = min(unsafe_word_levels + ['NF'])
+
+    return unsafe_word_min_level
+
+
+def unsafe_words_filter(
+    data_dict: Dict[str, Any], language: str, content_style: str
+) -> str:
+    if language in xyz_language_lst:
+        language = 'xyz'
+    elif language in [
+        'zh',
+        'en',
+        'yue',
+        'zho',
+        'eng',
+        'zho_Hans',
+        'zho_Hant',
+        'yue_Hant',
+        'eng_Latn',
+    ]:
+        language = 'zh-en'
+    else:
+        raise CleanLangTypeExp(f'Unsupported language: {language}')
+
+    unsafeWordChecker = get_unsafe_words_checker(language)
+    unsafe_word_min_level = decide_unsafe_word_by_data_checker(
+        data_dict, unsafeWordChecker
+    )
+
+    return unsafe_word_min_level
+
+
+def unsafe_words_filter_overall(
+    data_dict: Dict[str, Any],
+    language: str,
+    content_style: str,
+    from_safe_source,
+    from_domestic_source,
+):
+    unsafe_word_min_level = unsafe_words_filter(data_dict, language, content_style)
+
+    if language in xyz_language_lst:
+        language = 'xyz'
+    elif language in [
+        'zh',
+        'en',
+        'yue',
+        'zho',
+        'eng',
+        'zho_Hans',
+        'zho_Hant',
+        'yue_Hant',
+        'eng_Latn',
+    ]:
+        language = 'zh-en'
+    else:
+        raise CleanLangTypeExp(f'Unsupported language: {language}')
+    if from_safe_source:
+        return {'hit_unsafe_words': False}
+    if from_domestic_source:
+        unsafe_range = ('L1',)
+    else:
+        unsafe_range = ('L1', 'L2')
+    hit = (unsafe_word_min_level in unsafe_range)
+    return {'hit_unsafe_words': hit}
+
+
+if __name__ == '__main__':
+    # 功能测试
+    import copy
+
+    print('download zh-en unsafe_words to : ', auto_download('zh-en'))
+    print('download xyz unsafe_words to : ', auto_download('xyz'))
+
+    ac = get_ac('zh-en')
+    print('ac is ready')
+
+    content = '习近平讲话'
+    unsafe_words = get_unsafe_words(ac, content)
+    print('unsafe_words : ', unsafe_words)
+
+    unsafeWordChecker = get_unsafe_words_checker('zh-en')
+    content_str = '习近平讲话'
+    unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
+    print('unsafe_words_list : ', unsafe_words_list)
+
+    data_dict1 = {
+        'content_list': [
+            [
+                {
+                    'type': 'paragraph',
+                    'raw_content': '<div><div class="abstract-content selected" id="eng-abstract"><p><strong class="sub-title">\n          Objective:\n        </strong>\n      \n      This study analyzed the cost-effectiveness of delivering alcohol screening, brief intervention, and referral to treatment (SBIRT) in emergency departments (ED) when compared to outpatient medical settings.\n    </p></div></div>',
+                    'content': [{'c': '习近平', 't': 'text'}],
+                },
+                {
+                    'type': 'paragraph',
+                    'raw_content': '<div><div class="abstract-content selected" id="eng-abstract"><p><strong class="sub-title">\n          Results:\n        </strong>\n      \n      When considering provider costs only, compared to outpatient, SBIRT in ED cost $8.63 less, generated 0.005 more QALYs per patient, and resulted in 13.8% more patients drinking below threshold levels. Sensitivity analyses in which patients were assumed to receive a fixed number of treatment sessions that met clinical sites\' guidelines made SBIRT more expensive in ED than outpatient; the ED remained more effective. In this sensitivity analysis, the ED was the most cost-effective setting if decision makers were willing to pay more than $1500 per QALY gained.\n    </p></div></div>',
+                    'content': [{'c': '讲话', 't': 'text'}],
+                },
+            ]
+        ],
+    }
+    data_dict2 = copy.deepcopy(data_dict1)
+    data_dict3 = copy.deepcopy(data_dict1)
+    data_dict4 = copy.deepcopy(data_dict1)
+    data_dict5 = copy.deepcopy(data_dict1)
+    data_dict6 = copy.deepcopy(data_dict1)
+    data_dict7 = copy.deepcopy(data_dict1)
+
+    unsafe_word_min_level = decide_unsafe_word_by_data_checker(
+        data_dict1, unsafeWordChecker
+    )
+    print('unsafe_words_min_level : ', unsafe_word_min_level)
+
+    print('test zh-en min_level : ', unsafe_words_filter(data_dict2, 'zh', ''))
+    print('test xyz min_level : ', unsafe_words_filter(data_dict3, 'ru', ''))
+
+    print(
+        'non-safe source and nono-domestic source : ',
+        unsafe_words_filter_overall(
+            data_dict4,
+            'zh',
+            'text',
+            from_safe_source=False,
+            from_domestic_source=False,
+        ),
+    )
+
+    print(
+        'safe source and nono-domestic source : ',
+        unsafe_words_filter_overall(
+            data_dict5,
+            'zho',
+            'text',
+            from_safe_source=True,
+            from_domestic_source=False,
+        ),
+    )
+
+    print(
+        'non-safe source and domestic source : ',
+        unsafe_words_filter_overall(
+            data_dict6,
+            'yue',
+            'text',
+            from_safe_source=False,
+            from_domestic_source=True,
+        ),
+    )
+
+    print(
+        'safe source and domestic source : ',
+        unsafe_words_filter_overall(
+            data_dict7, 'en', 'text', from_safe_source=True, from_domestic_source=True
+        ),
+    )
+
+    # 性能测试
+    # import jsonlines
+
+    # datas = []
+    # tt1 = time.time()
+    # with jsonlines.open("./test.jsonl") as reader:
+    #     for line in reader:
+    #         datas.append(line)
+    # tt2 = time.time()
+    # print(f"datas len : {len(datas)} , read cost time : {tt2-tt1}")
+    # for data in datas:
+    #     unsafe_word_hit_result = unsafe_words_filter_overall(
+    #         data, "en", "text", False, False
+    #     )
+    # tt3 = time.time()
+    # print(
+    #     f"unsafe_words_filter_overall cost time : {tt3-tt2} , speed : {len(datas)/(tt3-tt2)}"
+    # )
