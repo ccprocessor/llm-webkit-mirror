@@ -10,6 +10,8 @@ from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
                                                             is_pure_en_word)
 from llm_web_kit.model.resource_utils.download_assets import (
     CACHE_DIR, download_auto_file)
+from llm_web_kit.model.resource_utils.singleton_resource_manager import \
+    singleton_resource_manager
 
 xyz_language_lst = [
     'ar',
@@ -45,7 +47,7 @@ level_score_map = {
     'L4': 0.1,
 }
 
-_global_unsafe_words_detect = {}
+# _global_unsafe_words_detect = {}
 
 
 def auto_download(language='zh-en'):
@@ -175,13 +177,9 @@ class UnsafeWordChecker:
 
 
 def get_unsafe_words_checker(language='zh-en') -> UnsafeWordChecker:
-    if language not in _global_unsafe_words_detect:
-        _global_unsafe_words_detect[language] = UnsafeWordChecker(language)
-    return _global_unsafe_words_detect[language]
-
-
-def release_unsafe_checker():
-    _global_unsafe_words_detect.clear()
+    if not singleton_resource_manager.has_name(language):
+        singleton_resource_manager.set_resource(language, UnsafeWordChecker(language))
+    return singleton_resource_manager.get_resource(language)
 
 
 def decide_unsafe_word_by_data_checker(
