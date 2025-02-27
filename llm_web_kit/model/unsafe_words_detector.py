@@ -2,6 +2,8 @@ import os
 import time
 from typing import Any, Dict
 
+import ahocorasick
+
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import CleanLangTypeExp
 from llm_web_kit.input.datajson import DataJson
@@ -65,8 +67,6 @@ def auto_download(language='zh-en'):
 
 
 def get_ac(language='zh-en'):
-    import ahocorasick
-
     t1 = time.time()
     unsafe_words_file_path = auto_download(language)
     t2 = time.time()
@@ -252,12 +252,12 @@ def unsafe_words_filter_overall(
     else:
         raise CleanLangTypeExp(f'Unsupported language: {language}')
     if from_safe_source:
-        return False
+        return {'hit_unsafe_words': False}
     if from_domestic_source:
         unsafe_range = ('L1',)
     else:
         unsafe_range = ('L1', 'L2')
-    hit = unsafe_word_min_level in unsafe_range
+    hit = (unsafe_word_min_level in unsafe_range)
     return {'hit_unsafe_words': hit}
 
 
