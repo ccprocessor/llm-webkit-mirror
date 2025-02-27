@@ -47,8 +47,6 @@ level_score_map = {
     'L4': 0.1,
 }
 
-# _global_unsafe_words_detect = {}
-
 
 def auto_download(language='zh-en'):
     resource_config = load_config()['resources']
