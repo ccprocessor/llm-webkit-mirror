@@ -1,3 +1,4 @@
+import copy
 import json
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -143,9 +144,9 @@ class StructureMapper(ABC):
         """
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
-            code = content_lst_node['content'].get('code_content', '')
+            code = content_lst_node['content']['code_content']  # 这里禁止有None的content, 如果有应该消灭在模块内部。模块应该处理更精细，防止因为拼装导致掩盖了错误。
             # 代码不可以 strip，因为首行可能有缩进，只能 rstrip
-            code = (code or '').rstrip()
+            code = code.rstrip()
             if not code:
                 return ''
             language = content_lst_node['content'].get('language', '')
@@ -186,7 +187,7 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.VIDEO:
             return ''  # TODO: 视频格式
         elif node_type == DocElementType.TITLE:
-            title_content = (content_lst_node['content'].get('title_content', '') or '').strip()
+            title_content = content_lst_node['content']['title_content'].strip()
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
@@ -214,17 +215,20 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
-            html_table = html_table.strip()
-            cells_count = table_cells_count(html_table)
-            if cells_count <= 1:  # 单个单元格的表格，直接返回文本
-                text = get_element_text(html_to_element(html_table)).strip()
-                return text
-            is_complex = content_lst_node['content']['is_complex']
-            if is_complex:
-                return html_table
+            if html_table is not None:
+                html_table = html_table.strip()
+                cells_count = table_cells_count(html_table)
+                if cells_count <= 1:  # 单个单元格的表格，直接返回文本
+                    text = get_element_text(html_to_element(html_table)).strip()
+                    return text
+                is_complex = content_lst_node['content']['is_complex']
+                if is_complex:
+                    return html_table
+                else:
+                    md_table = html_to_markdown_table(html_table)
+                    return md_table
             else:
-                md_table = html_to_markdown_table(html_table)
-                return md_table
+                return ''
         else:
             raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
 
@@ -335,13 +339,16 @@ class StructureMapper(ABC):
         elif node_type == DocElementType.TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
-            html_table = html_table.strip()
-            is_complex = content_lst_node['content']['is_complex']
-            if is_complex:
-                return html_table
+            if html_table is not None:
+                html_table = html_table.strip()
+                is_complex = content_lst_node['content']['is_complex']
+                if is_complex:
+                    return html_table
+                else:
+                    md_table = html_to_markdown_table(html_table)
+                    return md_table
             else:
-                md_table = html_to_markdown_table(html_table)
-                return md_table
+                return ''
         else:
             raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
 
@@ -382,7 +389,7 @@ class StructureChecker(object):
         if not isinstance(json_obj, dict):
             raise ValueError('json_obj must be a dict type.')
         if DataJsonKey.CONTENT_LIST in json_obj:
-            if not isinstance(json_obj[DataJsonKey.CONTENT_LIST], list):
+            if not isinstance(json_obj.get(DataJsonKey.CONTENT_LIST, ''), list):
                 raise ValueError('content_list must be a list type.')
 
 
@@ -424,10 +431,11 @@ class DataJson(StructureChecker):
         Args:
             input_data (dict): _description_
         """
-        self._validate(input_data)
-        self.__json_data = input_data
-        if DataJsonKey.CONTENT_LIST in input_data:
-            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList(input_data[DataJsonKey.CONTENT_LIST])
+        copied_input = copy.deepcopy(input_data)  # 防止修改外部数据，同时也让修改这个变量必须通过函数方法
+        self._validate(copied_input)
+        self.__json_data = copied_input
+        if DataJsonKey.CONTENT_LIST in copied_input:
+            self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList(copied_input[DataJsonKey.CONTENT_LIST])
         if DataJsonKey.CONTENT_LIST not in self.__json_data:
             self.__json_data[DataJsonKey.CONTENT_LIST] = ContentList([])
 
@@ -452,3 +460,27 @@ class DataJson(StructureChecker):
 
     def get(self, key:str, default=None):
         return self.__json_data.get(key, default)
+
+    def to_json(self, pretty=False) -> str:
+        """
+        把datajson对象转化为json字符串， content_list对象作为json的content_list键值
+        Args:
+            pretty (bool): 是否格式化json字符串
+        Returns:
+            str: json字符串
+        """
+        json_dict = self.__json_data.copy()
+        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list()._get_data()
+        if pretty:
+            return json.dumps(json_dict, indent=2, ensure_ascii=False)
+        return json.dumps(json_dict, ensure_ascii=False)
+
+    def to_dict(self) -> dict:
+        """
+        把datajson对象转化为dict对象
+        Returns:
+            dict: dict对象
+        """
+        json_dict = self.__json_data.copy()
+        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list()._get_data()
+        return json_dict

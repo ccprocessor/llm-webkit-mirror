@@ -1,0 +1,47 @@
+name: pr_stage_ut_extra
+
+on:
+  pull_request:
+    paths:
+      - 'requirements/**'
+      - 'setup.py'
+  push:
+    branches:
+      - main
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 额外的 Python 版本测试，只在 requirements 目录有修改时运行
+  pr_ut_test_extra:
+    runs-on: ubuntu-latest
+    env:
+      LLM_WEB_KIT_CFG_PATH: ${{ github.workspace }}/bench/config/ours_config.jsonc
+      PYTHONPATH: $PYTHONPATH:${{ github.workspace }}
+    strategy:
+      matrix:
+        python-version: [3.11.11, 3.12.8]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build llm_web_kit from source
+        run: |
+          pip install -e .
+          pip list | grep llm_web_kit
+      - name: Install unit tests dependencies
+        run: |
+          pip install -r requirements/runtime.txt
+          pip install -r requirements/dev.txt
+      - name: Run tests and collect coverage
+        run: pytest --cov --cov-report=xml -n auto ./tests/llm_web_kit
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

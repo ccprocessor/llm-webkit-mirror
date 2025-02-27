@@ -107,6 +107,12 @@
         "groundtruth_filepath":"groundtruth/code_18_csdn.jsonl",
         "layout_type": "article"
     },
+    "code_19_codecademy":{
+        "url": "https://www.codecademy.com/learn/learn-swift-arrays-sets-and-dictionaries/modules/learn-swift-arrays/cheatsheet",
+        "origin_filepath":"origin/code_19_codecademy.html",
+        "groundtruth_filepath":"groundtruth/code_19_codecademy.jsonl",
+        "layout_type": "article"
+    },
     "img_1":{
         "url": "http://15.demooo.pl/produkt/okulary-ochronne/",
         "origin_filepath":"origin/img_1.html",
@@ -220,6 +226,12 @@
         "origin_filepath":"origin/math_none_mathml_1.html",
         "groundtruth_filepath":"groundtruth/math_none_mathml_1.jsonl",
         "layout_type": "article"
+    },
+    "math_1": {
+        "url": "https://physics.stackexchange.com/questions/10098/1-form-formulation-of-quantized-electromagnetism",
+        "origin_filepath":"origin/math_1.html",
+        "groundtruth_filepath":"groundtruth/math_1.jsonl",
+        "layout_type": "forum"
     },
     "table_1":{
         "url": "https://grondwerken-overzicht.nl/noordwolde/gwy",
