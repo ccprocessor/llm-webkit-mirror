@@ -226,7 +226,11 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         return text
 
     def __parse_svg_img_attr(self, elem: HtmlElement, attributes: dict):
-        svg_img = self.__svg_to_base64(attributes['html'])
+        if [k for k, v in elem.attrib.items() if k == 'xmlns']:
+            elem.attrib.pop('xmlns')
+            svg_img = self.__svg_to_base64(self._element_to_html(elem))
+        else:
+            svg_img = self.__svg_to_base64(attributes['html'])
         if svg_img:
             attributes['text'] = svg_img
             attributes['format'] = 'base64'
@@ -298,17 +302,17 @@ if __name__ == '__main__':
     path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_part-676e680976e0-000000.jsonl.gz'
 
     idx = 0
-    num = 0
+    num = 1
     for html_d in read_gz_and_parse_json_line_by_line(path):
         idx += 1
-        # if idx < num:
-        #     continue
-        # if idx > num:
-        #     break
         if idx < num:
             continue
-        if idx > 5000:
+        if idx > num:
             break
+        # if idx < num:
+        #     continue
+        # if idx > 5000:
+        #     break
         print(f"start analysis idx: {idx}, url: {html_d['url']}")
         # print(html_d['html'])
         res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
