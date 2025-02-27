@@ -23,7 +23,7 @@
 ## 调用方法
 
 ```python
-from llm_web_kit.model.quality_model import *
+from llm_web_kit.model.quality_model import quality_prober
 data = {
     "track_id": "1e07f144-b290-4bcc-b6eb-37fc9a7f15ca",
     "content_list": [
@@ -73,11 +73,11 @@ data = {
 }
 # 支持article, paper, book三种文体，其中article使用的是上述配置文件中的`zh_en_article`模型，paper和book使用的是上述配置文件中的`zh_en_long_article`模型。
 # `zh_en_long_article`模型适用于长文本，并支持提取文本中公式的特征，适用于清洗带公式的文本。
-print(quality_filter(data, "en", "article"))
+print(quality_prober(data, "en", "article"))
 # {'quality_prob': 0.8930529675838833}
-print(quality_filter(data, "en", "paper"))
+print(quality_prober(data, "en", "paper"))
 # {'quality_prob': 0.9265140423831497}
-print(quality_filter(data, "en", "book"))
+print(quality_prober(data, "en", "book"))
 # {'quality_prob': 0.9265140423831497}
 ```
 
