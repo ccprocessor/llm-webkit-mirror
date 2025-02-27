@@ -1,7 +1,5 @@
 import base64
-import gzip
 import html
-import json
 import re
 from typing import List, Tuple
 from urllib.parse import urljoin, urlparse
@@ -284,39 +282,40 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
             raise Exception(f'svg_to_base64 failed: {e}')
 
-
-def read_gz_and_parse_json_line_by_line(file_path):
-    try:
-        # 使用 gzip.open() 读取 .gz 文件
-        with gzip.open(file_path, 'rt', encoding='utf-8') as gz_file:
-            for line in gz_file:
-                # 解析每一行 JSON 数据
-                json_line = json.loads(line)
-                yield json_line
-    except Exception as e:
-        print(f'Error reading or parsing the file: {e}')
-
-
-if __name__ == '__main__':
-    img = ImageRecognizer()
-    path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_part-676e680976e0-000000.jsonl.gz'
-
-    idx = 0
-    num = 1
-    for html_d in read_gz_and_parse_json_line_by_line(path):
-        idx += 1
-        if idx < num:
-            continue
-        if idx > num:
-            break
-        # if idx < num:
-        #     continue
-        # if idx > 5000:
-        #     break
-        print(f"start analysis idx: {idx}, url: {html_d['url']}")
-        # print(html_d['html'])
-        res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
-        # parsed_content = """<ccimage by="img" html='&lt;img style="margin:0;padding:0;border:0;" alt="Hosted by uCoz" src="http://s201.ucoz.net/img/cp/6.gif" width="80" height="15" title="Hosted by uCoz"&gt;' format="url" alt="Hosted by uCoz">http://s201.ucoz.net/img/cp/6.gif</ccimage>"""
-        # res = img.to_content_list_node(html_d["url"], parsed_content, html_d["html"])
-        print(f'res size: {len(res)}')
-# 43 svg, figure -- 21, 92 picture --53, 69 base64--186, 62 svg--26, table -- 1
+# import gzip
+# import json
+# def read_gz_and_parse_json_line_by_line(file_path):
+#     try:
+#         # 使用 gzip.open() 读取 .gz 文件
+#         with gzip.open(file_path, 'rt', encoding='utf-8') as gz_file:
+#             for line in gz_file:
+#                 # 解析每一行 JSON 数据
+#                 json_line = json.loads(line)
+#                 yield json_line
+#     except Exception as e:
+#         print(f'Error reading or parsing the file: {e}')
+#
+#
+# if __name__ == '__main__':
+#     img = ImageRecognizer()
+#     path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_part-676e680976e0-000000.jsonl.gz'
+#
+#     idx = 0
+#     num = 1
+#     for html_d in read_gz_and_parse_json_line_by_line(path):
+#         idx += 1
+#         if idx < num:
+#             continue
+#         if idx > num:
+#             break
+#         # if idx < num:
+#         #     continue
+#         # if idx > 5000:
+#         #     break
+#         print(f"start analysis idx: {idx}, url: {html_d['url']}")
+#         # print(html_d['html'])
+#         res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
+#         # parsed_content = """<ccimage by="img" html='&lt;img style="margin:0;padding:0;border:0;" alt="Hosted by uCoz" src="http://s201.ucoz.net/img/cp/6.gif" width="80" height="15" title="Hosted by uCoz"&gt;' format="url" alt="Hosted by uCoz">http://s201.ucoz.net/img/cp/6.gif</ccimage>"""
+#         # res = img.to_content_list_node(html_d["url"], parsed_content, html_d["html"])
+#         print(f'res size: {len(res)}')
+# # 43 svg, figure -- 21, 92 picture --53, 69 base64--186, 62 svg--26, table -- 1
