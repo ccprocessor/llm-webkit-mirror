@@ -227,7 +227,7 @@
         "groundtruth_filepath":"groundtruth/math_none_mathml_1.jsonl",
         "layout_type": "article"
     },
-    "math_1.html": {
+    "math_1": {
         "url": "https://physics.stackexchange.com/questions/10098/1-form-formulation-of-quantized-electromagnetism",
         "origin_filepath":"origin/math_1.html",
         "groundtruth_filepath":"groundtruth/math_1.jsonl",
