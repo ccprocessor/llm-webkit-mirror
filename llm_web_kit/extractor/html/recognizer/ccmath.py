@@ -166,16 +166,20 @@ if __name__ == '__main__':
     math_recognizer = MathRecognizer()
     test_html = [
         (
-            ('<p>这是p的text<span class="mathjax_display">'
-                '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
-                '这是b的tail</p>'
-                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
-                r'<script type="math/tex">x+\sqrt{1-x^2}</script>'),
-            ('<p>这是p的text<span class="mathjax_display">'
-                '$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>'
-                '这是b的tail</p>'
-                '<p><img src="https://s0.wp.com/latex.php?latex=2" srcset="https://s0.wp.com/latex.php?latex=2omega_0.5" alt="2omega_0,  2omega_0-4pi,  2omega_0-8pi, ... 2omega_0-52pi " class="latex" /><br /></p>'
-                r'<script type="math/tex">x+\sqrt{1-x^2}</script>')
+            ("""
+        <div>
+            <script type="math/tex">x^2 + y^2 = z^2</script>
+            <script type="math/tex"></script>
+            <script type="math/tex; mode=display">E=mc^2</script>
+        </div>
+        """),
+            ("""
+        <div>
+            <script type="math/tex">x^2 + y^2 = z^2</script>
+            <script type="math/tex"></script>
+            <script type="math/tex; mode=display">E=mc^2</script>
+        </div>
+        """)
         )
     ]
     raw_html = (

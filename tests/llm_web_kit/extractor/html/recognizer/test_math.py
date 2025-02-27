@@ -56,6 +56,17 @@ TEST_CASES = [
     },
     {
         'input': [
+            ('<p>$x = 5$,$$x=6$$,$x=4$</p>',
+             '<p>$x = 5$,$$x=6$$,$x=4$</p>')
+        ],
+        'raw_html': '<p>$x = 5$,$$x=6$$,$x=4$</p>',
+        'expected': [
+            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>',
+             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>'),
+        ]
+    },
+    {
+        'input': [
             ('<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
              '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>')
         ],
@@ -73,6 +84,22 @@ TEST_CASES = [
              '<p>, the general</p>')
         ]
     },
+    {
+        'input': [
+            ('<script type="math/tex">x^2 + y^2 = z^2</script>', '<script type="math/tex">x^2 + y^2 = z^2</script>')
+        ],
+        'raw_html': '<script type="math/tex">x^2 + y^2 = z^2</script>',
+        'expected': [
+            ('<html><head><ccmath-inline type="latex" by="None" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>', '<html><head><ccmath-inline type="latex" by="None" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>')
+        ]
+    },
+    {
+        'input': [
+            ('<script type="math/tex"></script>', '<script type="math/tex"></script>')
+        ],
+        'raw_html': '<script type="math/tex"></script>',
+        'expected': []
+    }
 ]
 
 TEST_CASES_HTML = [
@@ -324,7 +351,7 @@ class TestMathRecognizer(unittest.TestCase):
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
-            print('raw_html_path::::::::', raw_html_path)
+            # print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
             parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
@@ -334,6 +361,7 @@ class TestMathRecognizer(unittest.TestCase):
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
+            # 检查行间公式抽取正确性
             parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
             print(len(parts))
             expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
@@ -345,11 +373,17 @@ class TestMathRecognizer(unittest.TestCase):
                 a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
                 answer = a_result.text.replace('\n', '').strip()
                 # print('part::::::::', part)
-                print('expect::::::::', expect)
-                print('answer::::::::', answer)
+                # print('expect::::::::', expect)
+                # print('answer::::::::', answer)
                 # answers.append(answer)
                 self.assertEqual(expect, answer)
             # self.write_to_html(answers, test_case['input'][0])
+            # 检查行内公式抽取正确性
+            if test_case.get('expected_inline', None):
+                print('expected_inline::::::::', test_case['expected_inline'])
+                parts = [part[0] for part in parts if CCTag.CC_MATH_INLINE in part[0]]
+                print(len(parts))
+                print(parts)
 
     def write_to_html(self, answers, file_name):
         file_name = file_name.split('.')[0]

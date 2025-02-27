@@ -532,3 +532,28 @@ import javax.servlet.http.HttpServletResponse;
 import com.dao.UsersDao;
 ```
 """)
+
+    def test_lineno_4(self):
+        """行内代码尝试寻找行号删除导致代码节点顺序发生变化。 原代码路径为：/div[2]/code, /div[3]/code
+        在删除行号后为：/div[1]/cccode, /div[2]/code."""
+        html = """<div>
+<p>1<p>
+<p>2<p>
+<p>3<p>
+<p>4<p>
+<p>5<p>
+</div>
+<div>This is inline <code>code</code>.<div>
+<div>
+<code>line one</code><br>
+<code>line two</code><br>
+<code>line three</code><br>
+<code>line four</code><br>
+<code>line five</code><br>
+</div>
+<div>
+<code>A<code>
+</div>
+"""
+        # 无须检查内容，只要不爆错就可以了
+        _ = self.rec.recognize('', [(html, html)], html)

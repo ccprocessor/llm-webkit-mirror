@@ -15,7 +15,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         text = node.text
         if text and text_strip(text):
             if node.tag not in ['script', 'style']:
-                node.text = None
                 new_span = create_new_span([(CCMATH_INTERLINE,MathType.LATEX)], cm.wrap_math_md(text), node, math_render, o_html)
                 node.addnext(new_span)
             else:
@@ -35,7 +34,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                     tag_math_type_list = cm.get_equation_type(o_html)
                     if not tag_math_type_list:
                         return
-                    node.text = None
                     new_span = create_new_span(tag_math_type_list, cm.wrap_math_md(node_text), node, math_render, o_html)
                     replace_element(node, new_span)
     except Exception as e:

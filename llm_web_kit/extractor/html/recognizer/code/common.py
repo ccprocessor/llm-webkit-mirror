@@ -190,7 +190,8 @@ def replace_node_by_cccode(
     """
     origin_html = element_to_html(node)
 
-    _detect_and_remove_subling_lineno(node)
+    if not inline:
+        _detect_and_remove_subling_lineno(node)
 
     language = __detect_language(node)
 

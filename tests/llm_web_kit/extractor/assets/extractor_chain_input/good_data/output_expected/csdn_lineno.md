@@ -1,4 +1,3 @@
-```
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
@@ -298,7 +297,3 @@ public class Dowriteservlet extends HttpServlet {
     }
 
 }
-```
-
-posted @ 2022-05-29 20:20 徐涛% 阅读( 77) 
-评论( 0) 编辑 收藏 举报
