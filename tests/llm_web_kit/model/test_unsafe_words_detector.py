@@ -87,7 +87,7 @@ class TestUnsafeWordChecker(unittest.TestCase):
         self.assertIsInstance(result, dict)
         self.assertTrue(result['hit_unsafe_words'])
 
-    @patch('llm_web_kit.config.cfg_reader.load_config')
+    @patch('llm_web_kit.model.unsafe_words_detector.load_config')
     @patch('llm_web_kit.model.unsafe_words_detector.download_auto_file')
     def test_auto_download(self, mock_download_auto_file, mock_load_config):
         mock_load_config.return_value = {
