@@ -110,7 +110,7 @@ class TestUnsafeWordChecker(unittest.TestCase):
 
         # 调用被测试函数
         result = auto_download(language='zh-en')
-
+        mock_load_config.assert_called_once()
         # 预期的返回路径
         expected_local_path = '/fake/path/unsafe_words'
 
