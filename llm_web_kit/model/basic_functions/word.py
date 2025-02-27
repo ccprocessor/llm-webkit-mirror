@@ -10,14 +10,11 @@ def build_stop_word_set(include_zh: bool = True, include_en: bool = True) -> set
             for line in f:
                 stop_word_list.append(line.strip())
     if include_en:
-        from nltk.corpus import stopwords
-        try:
-            stop_word_list += stopwords.words('english')
-        except LookupError:
-            with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets/stop_word_en.txt'), 'r') as f:
-                for line in f:
-                    if line.strip():
-                        stop_word_list.append(line.strip())
+        # stop_word_en.txt通过执行nltk.download('stopwords')下载得到，这里的nltk==3.8.1
+        with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets/stop_word_en.txt'), 'r') as f:
+            for line in f:
+                if line.strip():
+                    stop_word_list.append(line.strip())
     stop_word_set = set(stop_word_list)
     return stop_word_set
 
