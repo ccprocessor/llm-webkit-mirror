@@ -28,14 +28,11 @@ def test_unzip_local_file():
         with open(os.path.join(target_dir, 'test2.txt')) as f:
             assert f.read() == 'This is another test file'
 
-        os.remove(zip_path + '.lock')
-
         unzip_local_file(zip_path, target_dir, exist_ok=True)
         with open(os.path.join(target_dir, 'test1.txt')) as f:
             assert f.read() == 'This is a test file'
         with open(os.path.join(target_dir, 'test2.txt')) as f:
             assert f.read() == 'This is another test file'
-        os.remove(zip_path + '.lock')
         try:
             unzip_local_file(zip_path, target_dir, exist_ok=False)
         except Exception as e:
