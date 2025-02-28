@@ -1,7 +1,5 @@
 coverage:
   status:
-    project: off  # 关闭项目整体覆盖率检查
-
     patch:  # 只检查变更部分的覆盖率
       default:
         target: 85%  # 变更代码的覆盖率目标
