@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # 需要根据实际模块路径调整
 from llm_web_kit.model.clean_module import (CleanModule, CleanModuleDataPack,
-                                            check_type)
+                                            ContentStyle, check_type)
 from llm_web_kit.model.quality_model import QualityFilter
 
 
@@ -34,7 +34,7 @@ class TestCleanModuleDataPack(TestCase):
             'content_str': 'test',
             'language': 'en',
             'language_details': 'details',
-            'content_style': 'article',
+            'content_style': ContentStyle.ARTICLE,
         }
 
         # 测试所有参数的正确类型
@@ -52,7 +52,7 @@ class TestCleanModuleDataPack(TestCase):
 
     def test_set_process_result(self):
         """测试设置处理结果的功能."""
-        data_pack = CleanModuleDataPack('test', 'en', 'details', 'article')
+        data_pack = CleanModuleDataPack('test', 'en', 'details', ContentStyle.ARTICLE)
 
         # 测试正确类型
         data_pack.set_process_result(False, {'key': 'value'})
@@ -68,7 +68,7 @@ class TestCleanModuleDataPack(TestCase):
 
     def test_get_output(self):
         """测试输出字典的生成."""
-        data_pack = CleanModuleDataPack('test', 'en', 'details', 'article')
+        data_pack = CleanModuleDataPack('test', 'en', 'details', ContentStyle.ARTICLE)
         data_pack.set_process_result(False, {'info': 'test'})
 
         expected_output = {'clean_remained': False, 'clean_infos': {'info': 'test'}}
@@ -84,13 +84,13 @@ class TestCleanModule(TestCase):
 
         # 初始化测试对象
         clean_module = CleanModule(prod=True)
-        data_pack = CleanModuleDataPack('test', 'en', 'details', 'article')
+        data_pack = CleanModuleDataPack('test', 'en', 'details', ContentStyle.ARTICLE)
 
         # 执行核心处理
         result = clean_module.process_core(data_pack)
 
         # 验证过滤方法被正确调用
-        mock_filter.assert_called_once_with('test', 'en', 'details', 'article')
+        mock_filter.assert_called_once_with('test', 'en', 'details', ContentStyle.ARTICLE.value)
         # 验证处理结果设置正确
         self.assertFalse(result.clean_remained)
         self.assertEqual(result.clean_infos, {'reason': 'test'})
@@ -105,7 +105,7 @@ class TestCleanModule(TestCase):
             content_str='content',
             language='en',
             language_details='details',
-            content_style='article',
+            content_style=ContentStyle.ARTICLE,
         )
 
         expected_result = {'clean_remained': True, 'clean_infos': {'quality': 0.95}}
