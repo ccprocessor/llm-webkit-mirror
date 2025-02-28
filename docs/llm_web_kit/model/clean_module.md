@@ -1,6 +1,8 @@
 ## 作用
 
-对输入数据进行质量清洗。
+**注意!!** 本模块是质量清洗模块的顶层接口
+
+对输入数据进行质量清洗。目前版本只包含 `llm_web_kit/model/quality_model.py` 模块。
 注意：需要语言模型先决定输入数据的语言，语言模型见 `docs/llm_web_kit/model/lang_id.md`。
 
 ## 配置文件需要改动的部分
@@ -31,9 +33,10 @@ content_str = "Your content string here."
 # content_style = "article", "book", "paper" ...
 content_style = ContentStyle.ARTICLE
 
-# language = "en", "zh"
-# language_details = "eng_Latn", "zho_Hans"
-language, language_details = update_language_by_str(content_str)
+language = "en"
+language_details = "eng_Latn"
+# 注意：如果需要自动决定语言，可以使用下面的方法
+# language, language_details = update_language_by_str(content_str)
 
 
 clean_module = CleanModule(prod = True)
