@@ -10,4 +10,4 @@ class SourceFilter:
         language_details: str,
         content_style: str,
     ) -> dict:
-        return {"from_safe_source": False, "from_domestic_source": False}
+        return {'from_safe_source': False, 'from_domestic_source': False}
