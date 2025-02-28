@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from lxml.html import HtmlElement
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   MathType,
                                                                   text_strip)
@@ -57,7 +57,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             new_span = build_cc_element(html_tag_name=new_tag, text=cm.wrap_math_md(latex), tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
             replace_element(node, new_span)
     except Exception as e:
-        raise HtmlMathRecognizerExp(f'Error processing math tag: {e}')
+        raise HtmlMathRecognizerException(f'Error processing math tag: {e}')
 
 
 if __name__ == '__main__':
