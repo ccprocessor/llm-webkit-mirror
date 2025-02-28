@@ -3,7 +3,7 @@ from typing import Dict
 
 from lxml.html import HtmlElement
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INTERLINE, MathType, text_strip)
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
@@ -37,7 +37,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                     new_span = create_new_span(tag_math_type_list, cm.wrap_math_md(node_text), node, math_render, o_html)
                     replace_element(node, new_span)
     except Exception as e:
-        raise HtmlMathRecognizerExp(f'Error processing katex math: {e}')
+        raise HtmlMathRecognizerException(f'Error processing katex math: {e}')
 
 
 def create_new_span(tag_math_type_list, text_content, node, math_render, o_html):

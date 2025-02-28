@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.html_utils import html_to_element
@@ -408,7 +408,7 @@ class TestMathRecognizer(unittest.TestCase):
             '<div>Some math content</div>',
             '<div>Some math content</div>'
         )
-        with self.assertRaises(HtmlMathRecognizerExp) as exc_info:
+        with self.assertRaises(HtmlMathRecognizerException) as exc_info:
             self.math_recognizer.to_content_list_node(
                 invalid_content[0],
                 invalid_content[1],

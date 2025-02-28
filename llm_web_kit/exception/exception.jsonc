@@ -1,135 +1,116 @@
 {
-  // 兜底异常 (1000-1999)
+  // Base基础异常 (10000000)
   "LlmWebKitBase": {
-    "LlmWebKitBase_Error": { "code": 1000, "message": "LlmWebKitBase error" }
+    "LlmWebKitBaseException": {
+      "code": 10000000,
+      "message": "LlmWebKit base exception"
+    }
   },
 
-  // ExtractorChain相关异常 (2000-2999)
+  // ExtractorChain相关异常 (20000000)
   "ExtractorChain": {
-    // 基础异常 (2000)
-    "ExtractorChain_Base_Error": {
-      "code": 2000,
-      "message": "ExtractorChain base error"
+    "ExtractorChainBaseException": {
+      "code": 20000000,
+      "message": "ExtractorChain base exception"
     },
-    // 初始化异常 (2100)
-    "Extractor_Init_Error": {
-      "code": 2100,
-      "message": "Failed to initialize extractor"
+    "ExtractorChainInitException": {
+      "code": 21000000,
+      "message": "ExtractorChain initialization exception"
     },
-    // 输入异常 (2200)
-    "ExtractorChain_Input_Error": {
-      "code": 2200,
-      "message": "Invalid input data format for ExtractorChain"
+    "ExtractorChainConfigException": {
+      "code": 22000000,
+      "message": "ExtractorChain configuration exception"
     },
-    // 配置异常 (2300)
-    "ExtractorChain_Config_Error": {
-      "code": 2300,
-      "message": "ExtractorChain configuration error"
+    "ExtractorChainInputException": {
+      "code": 23000000,
+      "message": "ExtractorChain input exception"
     },
-    // Extractor加载异常 (2400)
-    "Extractor_NotFound_Error": {
-      "code": 2400,
-      "message": "Specified extractor not found"
+    "ExtractorNotFoundException": {
+      "code": 24000000,
+      "message": "Extractor not found exception"
     }
   },
 
-  //HTML类型异常
-  "HTML": {
-    "HTML_Error": { "code": 3000, "message": "HTML type error" }
-  },
-
-  //PDF类型异常
-  "PDF": {
-    "PDF_Error": { "code": 4000, "message": "PDF type error" }
-  },
-
-  //EBook类异常
-  "EBOOK": {
-    "EBOOK_Error": { "code": 5000, "message": "EBOOK type error" }
-  },
-
-  //Other 类型异常
-  "Other": {
-    "Other_type_Error": { "code": 6000, "message": "Other type error" }
-  },
-
-  //Clean 类型异常
-  "Clean": {
-    "Clean_base_Error": {
-      "code": 7000, "message": "Clean base error"
+  // Extractor相关异常 (30000000)
+  "Extractor": {
+    "ExtractorBaseException": {
+      "code": 30000000,
+      "message": "Extractor base exception"
     },
-    "Clean_lang_type_Error": {
-      "code": 7010,
-      "message": "Clean lang type error"
+    "HtmlFileExtractorException": {
+      "code": 31000000,
+      "message": "HTML file extractor exception"
+    },
+    "PdfFileExtractorException": {
+      "code": 32000000,
+      "message": "PDF file extractor exception"
+    },
+    "EbookFileExtractorException": {
+      "code": 33000000,
+      "message": "Ebook file extractor exception"
+    },
+    "OtherFileExtractorException": {
+      "code": 34000000,
+      "message": "Other file extractor exception"
+    },
+    "MagicHtmlExtractorException": {
+      "code": 31010000,
+      "message": "Magic HTML extractor exception"
+    },
+    "HtmlPreExtractorException": {
+      "code": 31020000,
+      "message": "HTML pre-extractor exception"
+    },
+    "HtmlExtractorException": {
+      "code": 31030000,
+      "message": "HTML extractor exception"
+    },
+    "HtmlPostExtractorException": {
+      "code": 31040000,
+      "message": "HTML post-extractor exception"
     }
   },
-
-  // 分模块的业务异常
-  "Format": {
-    "HtmlFormat_Error": { "code": 3001, "message": "HTML format error" }
-  },
-
-  "PreExtractor": {
-    "HtmlPreExtractor_Error": {
-      "code": 3002,
-      "message": "Html PreExtractor error"
-    }
-  },
-
-  "Recognizer": {
-    "HtmlRecognizer_Error": {
-      "code": 2003,
-      "message": "Html recognizer error"
+  // HtmlRecognizer相关异常
+  "HtmlRecognizer": {
+    "HtmlRecognizerException": {
+        "code": 31031000,
+        "message": "HTML recognizer exception"
     },
-    "HtmlMathRecognizer_Error": {
-      "code": 3005,
-      "message": "Html math recognize error"
+    "HtmlMathRecognizerException": {
+      "code": 31031100,
+      "message": "HTML math recognizer exception"
     },
-    "HtmlCodeRecognizer_Error": {
-      "code": 3006,
-      "message": "Html code recognizer error"
+    "HtmlCodeRecognizerException": {
+      "code": 31031200,
+      "message": "HTML code recognizer exception"
     },
-    "HtmlTableRecognizer_Error": {
-      "code": 3007,
-      "message": "Html table recognizer error"
+    "HtmlTableRecognizerException": {
+      "code": 31031300,
+      "message": "HTML table recognizer exception"
     },
-    "HtmlImageRecognizer_Error": {
-      "code": 3008,
-      "message": "Html image recognizer error"
+    "HtmlImageRecognizerException": {
+      "code": 31031400,
+      "message": "HTML image recognizer exception"
     },
-    "HtmlListRecognizer_Error": {
-      "code": 3009,
-      "message": "Html list recognizer error"
+    "HtmlListRecognizerException": {
+      "code": 31031500,
+      "message": "HTML list recognizer exception"
     },
-    "HtmlAudioRecognizer_Error": {
-      "code": 3010,
-      "message": "Html audio recognizer error"
+    "HtmlAudioRecognizerException": {
+      "code": 31031600,
+      "message": "HTML audio recognizer exception"
     },
-    "HtmlVideoRecognizer_Error": {
-      "code": 3011,
-      "message": "Html video recognizer error"
+    "HtmlVideoRecognizerException": {
+      "code": 31031700,
+      "message": "HTML video recognizer exception"
     },
-    "HtmlTitleRecognizer_Error": {
-      "code": 3012,
-      "message": "Html title recognizer error"
+    "HtmlTitleRecognizerException": {
+      "code": 31031800,
+      "message": "HTML title recognizer exception"
     },
-    "HtmlTextRecognizer_Error": {
-      "code": 3013,
-      "message": "Html text recognizer error"
-    }
-  },
-
-  "MagicHtmlExtractor": {
-    "MagicHtmlExtractor_Error": {
-      "code": 3004,
-      "message": "magic-html extrac error"
-    }
-  },
-
-  "PostExtractor": {
-    "HtmlPostExtractor_Error": {
-      "code": 3014,
-      "message": "html post extractor error"
+    "HtmlTextRecognizerException": {
+      "code": 31031900,
+      "message": "HTML text recognizer exception"
     }
   }
 }

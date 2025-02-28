@@ -1,6 +1,6 @@
 from lxml.html import HtmlElement
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   text_strip)
 from llm_web_kit.libs.html_utils import replace_element
@@ -21,4 +21,4 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             replace_element(node,new_span)
             new_span.tail = tail
     except Exception as e:
-        raise HtmlMathRecognizerExp(f'Error processing asciimath: {e}')
+        raise HtmlMathRecognizerException(f'Error processing asciimath: {e}')
