@@ -10,6 +10,7 @@ import requests
 from tqdm import tqdm
 
 from llm_web_kit.config.cfg_reader import load_config
+from llm_web_kit.exception.exception import ModelInputException
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils.boto3_ext import (get_s3_client,
                                                         is_s3_path,
@@ -163,6 +164,11 @@ def verify_file_checksum(
     file_path: str, md5_sum: Optional[str] = None, sha256_sum: Optional[str] = None
 ) -> bool:
     """校验文件哈希值."""
+    if not sum([bool(md5_sum), bool(sha256_sum)]) == 1:
+        raise ModelInputException(
+            'Exactly one of md5_sum or sha256_sum must be provided'
+        )
+
     if md5_sum:
         actual = calc_file_md5(file_path)
         if actual != md5_sum:
@@ -203,7 +209,9 @@ def download_to_temp(conn, progress_bar) -> str:
 def move_to_target(tmp_path: str, target_path: str, expected_size: int):
     """移动文件并验证."""
     if os.path.getsize(tmp_path) != expected_size:
-        raise ValueError(f'File size mismatch: {os.path.getsize(tmp_path)} vs {expected_size}')
+        raise ValueError(
+            f'File size mismatch: {os.path.getsize(tmp_path)} vs {expected_size}'
+        )
 
     os.makedirs(os.path.dirname(target_path), exist_ok=True)
     shutil.move(tmp_path, target_path)  # 原子操作替换
