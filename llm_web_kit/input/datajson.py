@@ -130,6 +130,9 @@ class StructureMapper(ABC):
         else:
             return json.dumps(content_lst, ensure_ascii=False)
 
+    def to_dict(self) -> dict:
+        return copy.deepcopy(self._get_data())
+
     @abstractmethod
     def _get_data(self) -> List[Dict]:
         raise NotImplementedError('This method must be implemented by the subclass.')
