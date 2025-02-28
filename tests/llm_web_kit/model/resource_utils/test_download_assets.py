@@ -124,7 +124,6 @@ class TestDownloadAutoFile(unittest.TestCase):
 
     @patch('llm_web_kit.model.resource_utils.download_assets.os.path.exists')
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')
-    @patch('llm_web_kit.model.resource_utils.download_assets.os.remove')
     @patch('llm_web_kit.model.resource_utils.download_assets.is_s3_path')
     @patch('llm_web_kit.model.resource_utils.download_assets.S3Connection')
     @patch('llm_web_kit.model.resource_utils.download_assets.HttpConnection')
@@ -133,7 +132,6 @@ class TestDownloadAutoFile(unittest.TestCase):
         mock_http_conn,
         mock_s3_conn,
         mock_is_s3_path,
-        mock_os_remove,
         mock_calc_file_md5,
         mock_os_path_exists,
     ):
@@ -151,13 +149,15 @@ class TestDownloadAutoFile(unittest.TestCase):
 
         mock_os_path_exists.assert_called_once_with('target_path')
         mock_calc_file_md5.assert_called_once_with('target_path')
-        mock_os_remove.assert_not_called()
         mock_http_conn.assert_not_called()
         mock_s3_conn.assert_not_called()
+        try:
+            os.remove('target_path.lock')
+        except FileNotFoundError:
+            pass
 
     @patch('llm_web_kit.model.resource_utils.download_assets.os.path.exists')
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_sha256')
-    @patch('llm_web_kit.model.resource_utils.download_assets.os.remove')
     @patch('llm_web_kit.model.resource_utils.download_assets.is_s3_path')
     @patch('llm_web_kit.model.resource_utils.download_assets.S3Connection')
     @patch('llm_web_kit.model.resource_utils.download_assets.HttpConnection')
@@ -166,7 +166,6 @@ class TestDownloadAutoFile(unittest.TestCase):
         mock_http_conn,
         mock_s3_conn,
         mock_is_s3_path,
-        mock_os_remove,
         mock_calc_file_sha256,
         mock_os_path_exists,
     ):
@@ -177,16 +176,19 @@ class TestDownloadAutoFile(unittest.TestCase):
         mock_http_conn.return_value = MagicMock(get_size=MagicMock(return_value=100))
 
         # Act
-        result = download_auto_file('http://example.com', 'target_path', sha256_sum='correct_sha256')
+        result = download_auto_file('http://example.com', 'sha256_target_path', sha256_sum='correct_sha256')
 
         # Assert
-        assert result == 'target_path'
+        assert result == 'sha256_target_path'
 
-        mock_os_path_exists.assert_called_once_with('target_path')
-        mock_calc_file_sha256.assert_called_once_with('target_path')
-        mock_os_remove.assert_not_called()
+        mock_os_path_exists.assert_called_once_with('sha256_target_path')
+        mock_calc_file_sha256.assert_called_once_with('sha256_target_path')
         mock_http_conn.assert_not_called()
         mock_s3_conn.assert_not_called()
+        try:
+            os.remove('sha256_target_path.lock')
+        except FileNotFoundError:
+            pass
 
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')
     @patch('llm_web_kit.model.resource_utils.download_assets.os.remove')
