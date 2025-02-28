@@ -4,6 +4,7 @@
 venv*/
 envs/
 slurm_logs/
+local_tests/
 
 __pycache__
 *.log
