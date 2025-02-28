@@ -2,6 +2,24 @@
 
 匹配敏感词并返回当前场景下的命中情况。
 
+## 配置文件需要改动的部分
+
+```json
+"resources": {
+        "common":{
+            "cache_path": "~/.llm_web_kit_cache"
+        },
+        "unsafe_words":{
+            "download_path": "s3://web-parse-huawei/shared_resource/political/unsafe_words.jsonl",
+            "md5": "e81dd1050a79f68b9d9b3f66baadde66",
+        },
+        "xyz_internal_unsafe_words":{
+            "download_path": "s3://web-parse-huawei/shared_resource/political/xyz_internal_unsafe_words.jsonl",
+            "md5": "05024905f03a420fc63ecae2f35b6e24",
+        },
+    },
+```
+
 ## 用法
 
 入口函数有2个：
