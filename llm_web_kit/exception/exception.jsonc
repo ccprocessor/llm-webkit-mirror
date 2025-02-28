@@ -112,5 +112,36 @@
       "code": 31031900,
       "message": "HTML text recognizer exception"
     }
+  },
+  // Model相关异常 (40000000)
+  "Model": {
+    "ModelBaseException": {
+      "code": 40000000,
+      "message": "Model base exception"
+    },
+    "ModelResourceException": {
+      "code": 41000000,
+      "message": "Model resource exception"
+    },
+    "ModelInitException": {
+      "code": 42000000,
+      "message": "Model initialization exception"
+    },
+    "ModelInputException": {
+      "code": 43000000,
+      "message": "Model input exception"
+    },
+    "ModelOutputException": {
+      "code": 44000000,
+      "message": "Model output exception"
+    },
+    "SafeModelException": {
+      "code": 45000000,
+      "message": "Safe model exception"
+    },
+    "CleanModelException": {
+      "code": 46000000,
+      "message": "Clean model exception"
+    }
   }
 }

@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from llm_web_kit.exception.exception import (CleanExp, CleanLangTypeExp,
+from llm_web_kit.exception.exception import (CleanModelException,
                                              EbookFileExtractorException,
                                              ErrorMsg, ExtractorBaseException,
                                              ExtractorChainBaseException,
@@ -25,8 +25,14 @@ from llm_web_kit.exception.exception import (CleanExp, CleanLangTypeExp,
                                              HtmlVideoRecognizerException,
                                              LlmWebKitBaseException,
                                              MagicHtmlExtractorException,
+                                             ModelBaseException,
+                                             ModelInitException,
+                                             ModelInputException,
+                                             ModelOutputException,
+                                             ModelResourceException,
                                              OtherFileExtractorException,
-                                             PdfFileExtractorException)
+                                             PdfFileExtractorException,
+                                             SafeModelException)
 
 
 class TestException(unittest.TestCase):
@@ -112,7 +118,6 @@ class TestException(unittest.TestCase):
             (ExtractorNotFoundException('Not found'), 24000000),
             (HtmlPreExtractorException('Pre-process error'), 31020000),
             (HtmlMathRecognizerException('Math parse error'), 31031100),
-            (CleanLangTypeExp('Language error'), 7010),
         ]
 
         for exc, expected_code in test_cases:
@@ -171,24 +176,21 @@ class TestException(unittest.TestCase):
                 self.assertIsNotNone(exc.message)
 
     def test_clean_module_exceptions(self):
-        """Test Clean module exceptions."""
-        # Test default error code
-        clean_exc = CleanExp()
-        self.assertEqual(clean_exc.error_code, 7000)
+        """Test clean module exceptions."""
+        test_cases = [
+            (ModelBaseException(), 40000000),
+            (ModelResourceException(), 41000000),
+            (ModelInitException(), 42000000),
+            (ModelInputException(), 43000000),
+            (ModelOutputException(), 44000000),
+            (SafeModelException(), 45000000),
+            (CleanModelException(), 46000000),
+        ]
 
-        # Test custom error code
-        custom_clean_exc = CleanExp(err_code=7001)
-        self.assertEqual(custom_clean_exc.error_code, 7001)
-
-        # Test with custom message
-        clean_exc_with_msg = CleanExp(custom_message='Clean error')
-        self.assertEqual(clean_exc_with_msg.error_code, 7000)
-        self.assertEqual(clean_exc_with_msg.custom_message, 'Clean error')
-
-        # Test CleanLangTypeExp
-        lang_exc = CleanLangTypeExp('Language error')
-        self.assertEqual(lang_exc.error_code, 7010)
-        self.assertEqual(lang_exc.custom_message, 'Language error')
+        for exc, expected_code in test_cases:
+            with self.subTest(exception_type=type(exc).__name__):
+                self.assertEqual(exc.error_code, expected_code)
+                self.assertIsNotNone(exc.message)
 
     def test_error_code_uniqueness(self):
         """Test that all error codes in the JSON file are unique."""

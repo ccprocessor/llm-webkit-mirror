@@ -10,7 +10,7 @@ parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)
 normalized_path = os.path.normpath(parent_dir_path)
 sys.path.append(normalized_path)
 
-from llm_web_kit.exception.exception import CleanLangTypeExp
+from llm_web_kit.exception.exception import ModelInputException
 from llm_web_kit.model.policical import (PoliticalDetector,
                                          decide_political_by_prob,
                                          decide_political_by_str,
@@ -107,6 +107,6 @@ def test_political_filter_cpu():
             mock_decide_political_by_str.return_value = 0.6
             assert political_filter_cpu({'content': 'This is a test content.'}, 'en') == {'political_prob': 0.6}
 
-    with pytest.raises(CleanLangTypeExp) as excinfo:
+    with pytest.raises(ModelInputException) as excinfo:
         political_filter_cpu({'content': 'This is a test content.'}, 'fr')
     assert "Unsupport language 'fr'" in str(excinfo.value)

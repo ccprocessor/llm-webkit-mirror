@@ -306,26 +306,57 @@ class HtmlTextRecognizerException(HtmlRecognizerException):
         super().__init__(custom_message, error_code)
 
 
-##############################################################################
-#
-#  Clean Module Exceptions
-#
-##############################################################################
-
-class CleanExp(LlmWebKitBaseException):
-    """清洗模块异常基类."""
-
-    def __init__(self, custom_message: str = None, err_code: int = 7000):
-        """清洗模块初始化异常.
-
-        Args:
-            custom_message (str, optional): _description_. Defaults to None.
-        """
-        super().__init__(custom_message, err_code)
+class ModelBaseException(LlmWebKitBaseException):
+    """Base exception class for Model module."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelBaseException')
+        super().__init__(custom_message, error_code)
 
 
-class CleanLangTypeExp(CleanExp):
-    """清洗模块语言类型异常."""
+class ModelResourceException(ModelBaseException):
+    """Exception raised during model resource loading."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelResourceException')
+        super().__init__(custom_message, error_code)
 
-    def __init__(self, custom_message: str = None):
-        super().__init__(custom_message, 7010)
+
+class ModelInitException(ModelBaseException):
+    """Exception raised during model initialization."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelInitException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelInputException(ModelBaseException):
+    """Exception raised for model input data format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelInputException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelOutputException(ModelBaseException):
+    """Exception raised for model output data format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelOutputException')
+        super().__init__(custom_message, error_code)
+
+
+class SafeModelException(ModelBaseException):
+    """Exception raised for safe model related issues."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'SafeModelException')
+        super().__init__(custom_message, error_code)
+
+
+class CleanModelException(ModelBaseException):
+    """Exception raised for clean model related issues."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'CleanModelException')
+        super().__init__(custom_message, error_code)

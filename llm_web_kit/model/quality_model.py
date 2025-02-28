@@ -8,7 +8,7 @@ import pandas as pd
 
 import llm_web_kit.model.basic_functions as bfuncs
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import CleanLangTypeExp
+from llm_web_kit.exception.exception import ModelInputException
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.basic_functions.features import (
@@ -358,7 +358,7 @@ def get_quality_model(language, content_style) -> Tuple[QualityModel, float]:
 def quality_prober(data_dict: Dict[str, Any], language: str, content_style: str):
     model, _ = get_quality_model(language, content_style)
     if model is None:
-        raise CleanLangTypeExp(
+        raise ModelInputException(
             f"Unsupport language '{language}' or content_style '{content_style}'"
         )
     content = DataJson(data_dict).get_content_list().to_txt()
