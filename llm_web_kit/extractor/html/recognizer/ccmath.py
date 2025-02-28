@@ -3,7 +3,7 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
@@ -70,7 +70,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         """
         tree = self._build_html_tree(parsed_content)
         if tree is None:
-            raise HtmlMathRecognizerExp(f'Failed to load html: {parsed_content}')
+            raise HtmlMathRecognizerException(f'Failed to load html: {parsed_content}')
 
         inter_ele = tree.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
         in_els = tree.xpath(f'//{CCTag.CC_MATH_INLINE}')
@@ -101,7 +101,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 }
             }
         else:
-            raise HtmlMathRecognizerExp(f'No ccmath element found in content: {parsed_content}')
+            raise HtmlMathRecognizerException(f'No ccmath element found in content: {parsed_content}')
 
     def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
@@ -116,7 +116,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # node是从cc_html中解析出来的lxml节点
         tree = self._build_html_tree(cc_html)
         if tree is None:
-            raise HtmlMathRecognizerExp(f'Failed to load html: {cc_html}')
+            raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
 
         # 打印遍历node次数
         # count = 0
