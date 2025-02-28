@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, Mock, mock_open, patch
 
 from llm_web_kit.exception.exception import SafeModelException
 from llm_web_kit.model.unsafe_words_detector import (
-    UnsafeWordChecker, auto_download, decide_unsafe_word_by_data_checker,
+    UnsafeWordChecker, auto_download, decide_data_unsafe_word_by_data_checker,
     get_ac, get_unsafe_words, get_unsafe_words_checker, unsafe_words_filter,
     unsafe_words_filter_overall)
 
@@ -46,7 +46,7 @@ class TestUnsafeWordChecker(unittest.TestCase):
         mock_get_checker.return_value = mock_checker
 
         data_dict = {'content': 'Some content with unsafe elements.'}
-        result = decide_unsafe_word_by_data_checker(data_dict, mock_checker)
+        result = decide_data_unsafe_word_by_data_checker(data_dict, mock_checker)
         self.assertEqual(result, 'L2')
 
     def test_standalone_word_detection(self):
