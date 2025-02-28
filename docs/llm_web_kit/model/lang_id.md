@@ -34,11 +34,11 @@ s3版本：
             "cache_path": "~/.llm_web_kit_cache"
         },
         "lang-id-176": {
-            "download_path": "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin",
+            "download_path": "s3://web-parse-huawei/shared_resource/language/lid176.bin",
             "md5": "01810bc59c6a3d2b79c79e6336612f65"
         },
         "lang-id-218": {
-            "download_path": "s3://web-parse-huawei/shared_resource/identification/lid218e.bin",
+            "download_path": "s3://web-parse-huawei/shared_resource/language/lid218e.bin",
             "sha256": "8ded5749a2ad79ae9ab7c9190c7c8b97ff20d54ad8b9527ffa50107238fc7f6a"
         },
         "political-24m7": {

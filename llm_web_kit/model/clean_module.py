@@ -1,6 +1,14 @@
+from enum import Enum
 from typing import Any, Type
 
 from llm_web_kit.model.quality_model import QualityFilter
+
+
+# 定义枚举类型 ContentStyle
+class ContentStyle(Enum):
+    ARTICLE = 'article'
+    BOOK = 'book'
+    PAPER = 'paper'
 
 
 def check_type(arg_name: str, arg_value: Any, arg_type: Type):
@@ -23,7 +31,7 @@ class CleanModuleDataPack:
         content_str: str,
         language: str,
         language_details: str,
-        content_style: str,
+        content_style: ContentStyle,
     ):
 
         # the content of the dataset
@@ -39,8 +47,9 @@ class CleanModuleDataPack:
         self.language_details = language_details
 
         # the content style of the content
-        check_type('content_style', content_style, str)
-        self.content_style = content_style
+        check_type('content_style', content_style, ContentStyle)
+
+        self.content_style = content_style.value
 
         # the flag of the processed data should be remained or not
         self.clean_remained = True
@@ -66,7 +75,7 @@ class CleanModuleDataPack:
 class CleanModule:
     def __init__(self, prod: bool):
         # when in production mode
-        # the process will return immediately when the data is not safe
+        # the process will return immediately when the data is not clean
         self.prod = prod
         self.quality_filter = QualityFilter()
 

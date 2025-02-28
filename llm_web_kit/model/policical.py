@@ -5,7 +5,7 @@ import fasttext
 from transformers import AutoTokenizer
 
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import CleanLangTypeExp
+from llm_web_kit.exception.exception import ModelInputException
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils.download_assets import (
@@ -100,7 +100,7 @@ def update_political_by_str(content_str: str) -> Dict[str, float]:
 
 def political_filter_cpu(data_dict: Dict[str, Any], language: str):
     if language != 'zh' and language != 'en':
-        raise CleanLangTypeExp(f"Unsupport language '{language}'")
+        raise ModelInputException(f"Unsupport language '{language}'")
     content = DataJson(data_dict).get_content_list().to_txt()
     return update_political_by_str(content)
 
