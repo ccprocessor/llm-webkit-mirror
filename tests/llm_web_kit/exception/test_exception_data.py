@@ -46,7 +46,7 @@ class TestException(unittest.TestCase):
             31030000: 'HTML extractor exception',
             31031100: 'HTML math recognizer exception',
             31031200: 'HTML code recognizer exception',
-            99999999: '未知错误代码99999999',  # Test unknown error code
+            99999999: 'unknown error code 99999999',
         }
 
         for code, expected_message in test_cases.items():
