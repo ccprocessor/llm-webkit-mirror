@@ -6,8 +6,10 @@ from overrides import override
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
-                                                           tag_img, tag_math,
-                                                           tag_script)
+                                                           tag_img,
+                                                           tag_katex_script,
+                                                           tag_math,
+                                                           tag_math_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -130,8 +132,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # script[type="math/tex"]
-            # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-            #     tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+            if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
+                tag_math_script.modify_tree(cm, math_render, original_html, node, parent)
 
             # math tags
             if node.tag == 'math' or node.tag.endswith(':math'):
@@ -152,7 +154,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # span.katex
             if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
-                tag_script.modify_tree(cm, math_render, original_html, node, parent)
+                tag_katex_script.modify_tree(cm, math_render, original_html, node, parent)
 
             # 14. 只处理只有一层的p标签
             if node.tag == 'p' and len(node.getchildren()) == 0:

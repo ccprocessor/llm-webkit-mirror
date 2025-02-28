@@ -10,7 +10,6 @@ from py_asciimath.translator.translator import ASCIIMath2Tex
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         element_to_html_unescaped,
                                          html_to_element)
 
 asciimath2tex = ASCIIMath2Tex(log=False)
@@ -50,7 +49,6 @@ LATEX_IMAGE_SRC_NAMES = [
 # ccmath标签，区分行内行间公式
 CCMATH_INTERLINE = CCTag.CC_MATH_INTERLINE
 CCMATH_INLINE = CCTag.CC_MATH_INLINE
-CCMATH_HANDLE_FAILED = 'ccmath-failed'
 
 
 # 数学标记语言
@@ -359,15 +357,13 @@ class CCMATH():
         def is_ccmath_wrapped(match_text, original_text: str) -> bool:
             if not match_text or not original_text:
                 return False
-            start_idx = match_text.start()
-            end_idx = match_text.end()
-            before_match = original_text[:start_idx].strip()
-            after_match = original_text[end_idx:].strip()
-            if 'ccmath' in before_match and 'ccmath' in after_match:
+            start_idx, end_idx = match_text.start(), match_text.end()
+            before_match, after_match = original_text[:start_idx].strip(), original_text[end_idx:].strip()
+            if 'ccmath' in before_match and '/ccmath' in after_match and '/ccmath' not in before_match :
                 return True
             if pattern_type == MATH_TYPE_PATTERN.DISPLAYMATH:
                 for start, end in MATH_TYPE_TO_DISPLAY[MathType.LATEX][MATH_TYPE_PATTERN.INLINEMATH]:
-                    if start in before_match and end in after_match:
+                    if before_match.count(start) % 2 == 1 and after_match.count(end) % 2 == 1:
                         return True
             return False
 
@@ -398,20 +394,9 @@ class CCMATH():
                 regex = re.compile(pattern, re.DOTALL)
                 original_text = re.sub(regex, process, original_text)
         except Exception:
-            node.text = self.build_cc_exception_tag(original_text, math_type, math_render)
             return node
         node.text = original_text
-        return html_to_element(element_to_html_unescaped(node))
-
-    def build_cc_exception_tag(self, text, math_type, math_render) -> str:
-        return element_to_html(build_cc_element(
-            html_tag_name=CCMATH_HANDLE_FAILED,
-            text=text,
-            tail='',
-            type=math_type,
-            by=math_render,
-            html=text
-        ))
+        return node
 
 
 if __name__ == '__main__':

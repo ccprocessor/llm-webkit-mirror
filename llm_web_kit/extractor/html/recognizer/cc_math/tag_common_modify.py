@@ -4,7 +4,8 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   MathType,
                                                                   text_strip)
-from llm_web_kit.libs.html_utils import replace_element
+from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
+                                         html_to_element, replace_element)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
@@ -21,6 +22,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 asciimath_wrap = True if math_type == MathType.ASCIIMATH else False
                 new_span = cm.replace_math(new_tag, math_type, math_render, new_span, None,asciimath_wrap)
             new_span.tail = tail
+            new_span = html_to_element(element_to_html_unescaped(new_span))
             replace_element(node,new_span)
             # if math_type == MathType.ASCIIMATH:
             #     text = cm.wrap_math_md(text)

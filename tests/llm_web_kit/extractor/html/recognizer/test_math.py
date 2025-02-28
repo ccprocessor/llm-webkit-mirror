@@ -28,16 +28,16 @@ TEST_CASES = [
         ),
         'expected': [
             (
-                '<p>这是p的text<span class="mathjax_display"></span></p>',
-                '<p>这是p的text<span class="mathjax_display"></span></p>'
+                '<p>这是p的text<span><span class="mathjax_display"></span></span></p>',
+                '<p>这是p的text<span><span class="mathjax_display"></span></span></p>'
             ),
             (
-                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>',
-                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>'
+                '<p><span><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></span></p>',
+                '<p><span><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></span></p>'
             ),
             (
-                '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>',
-                '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
+                '<p><span><span class="mathjax_display"></span>这是span的tail</span><b>这是b的text</b>这是b的tail</p>',
+                '<p><span><span class="mathjax_display"></span>这是span的tail</span><b>这是b的text</b>这是b的tail</p>'
             )
         ]
     },
@@ -61,8 +61,13 @@ TEST_CASES = [
         ],
         'raw_html': '<p>$x = 5$,$$x=6$$,$x=4$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>',
-             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>'),
+            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>'),
+             ('<p>,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>',
+              '<p>,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>')
+
         ]
     },
     {
@@ -176,6 +181,13 @@ TEST_CASES_HTML = [
         ],
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_prefix_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/replace_math.html',
+        ],
+        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
+        'expected': 'assets/ccmath/replace_math_1.html'
     },
 ]
 
