@@ -83,7 +83,8 @@
                 "html": "<table><tr><td>1</td><td>2</td></tr></table>",
                 "title": "example table",
                 "note": "数据来源于...",
-                "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false
+                "is_complex": false // 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false,
+                "table_nest_level": 1 //table的嵌套层级
             }
         },
         {
@@ -285,20 +286,22 @@
         "html": "<table><tr><td>1</td><td>2</td></tr></table>",
         "title": "example table",
         "note": "数据来源于...",
-        "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false
+        "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false,
+        "table_nest_level": 1 //表格嵌套层级
     }
 }
 ```
 
-| 字段               | 类型    | 描述                                     | 是否必须 |
-| ------------------ | ------- | ---------------------------------------- | -------- |
-| type               | string  | 值固定为table                            | 是       |
-| bbox               | array   | \[x1, y1, x2, y2\]                       | 可选     |
-| raw_content        | string  | 原始文本内容                             | 可选     |
-| content.html       | string  | 表格的html内容                           | 是       |
-| content.title      | string  | 表格的title属性                          | 可选     |
-| content.note       | string  | 表格的note属性                           | 可选     |
-| content.is_complex | boolean | 是否是复杂表格(跨行、跨列的, 默认为false | 可选     |
+| 字段                     | 类型    | 描述                                              | 是否必须 |
+| ------------------------ | ------- | ------------------------------------------------- | -------- |
+| type                     | string  | 值固定为table                                     | 是       |
+| bbox                     | array   | \[x1, y1, x2, y2\]                                | 可选     |
+| raw_content              | string  | 原始文本内容                                      | 可选     |
+| content.html             | string  | 表格的html内容                                    | 是       |
+| content.title            | string  | 表格的title属性                                   | 可选     |
+| content.note             | string  | 表格的note属性                                    | 可选     |
+| content.is_complex       | boolean | 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false | 可选     |
+| content.table_nest_level | int     | table嵌套层级(单个table为1,两层为2，以此类推)     | 可选     |
 
 ### 列表段
 
