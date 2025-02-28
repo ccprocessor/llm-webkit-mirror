@@ -80,7 +80,7 @@ class TestException(unittest.TestCase):
         # Test with custom error code
         custom_exc = LlmWebKitBaseException(error_code=99999999)
         self.assertEqual(custom_exc.error_code, 99999999)
-        self.assertEqual(custom_exc.message, '未知错误代码99999999')
+        self.assertEqual(custom_exc.message, 'unknown error code 99999999')
 
         # Test ExtractorChainBaseException
         chain_exc = ExtractorChainBaseException()

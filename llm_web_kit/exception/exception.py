@@ -29,7 +29,7 @@ class ErrorMsg:
     def get_error_message(cls, error_code: int):
         # 根据错误代码获取错误消息
         if str(error_code) not in cls._errors:
-            return f'未知错误代码{error_code}'
+            return f'unknown error code {error_code}'
         return cls._errors[str(error_code)]['message']
 
     @classmethod
@@ -38,7 +38,7 @@ class ErrorMsg:
         for code, info in cls._errors.items():
             if info['module'] == module and info['error_name'] == error_name:
                 return int(code)
-        raise ValueError(f'未找到错误代码: module={module}, error_name={error_name}')
+        raise ValueError(f'error code not found: module={module}, error_name={error_name}')
 
 
 ErrorMsg._load_errors()
