@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
-from llm_web_kit.exception.exception import CleanLangTypeExp
+from llm_web_kit.exception.exception import SafeModelException
 from llm_web_kit.model.unsafe_words_detector import (
     UnsafeWordChecker, auto_download, decide_unsafe_word_by_data_checker,
     get_ac, get_unsafe_words, get_unsafe_words_checker, unsafe_words_filter,
@@ -95,12 +95,12 @@ class TestUnsafeWordChecker(unittest.TestCase):
         self.assertEqual(result, 'L3')
         result = unsafe_words_filter(data_dict, 'ko', 'text')
         self.assertEqual(result, 'L3')
-        with self.assertRaises(CleanLangTypeExp):
+        with self.assertRaises(SafeModelException):
             unsafe_words_filter(data_dict, 'unk', 'text')
 
     def test_unsafe_words_filter_with_unsupported_language(self):
         data_dict = {'content': 'Test content'}
-        with self.assertRaises(CleanLangTypeExp):
+        with self.assertRaises(SafeModelException):
             unsafe_words_filter(data_dict, 'unsupported_language', 'text')
 
     @patch('llm_web_kit.model.unsafe_words_detector.unsafe_words_filter')
@@ -159,7 +159,7 @@ class TestUnsafeWordChecker(unittest.TestCase):
         self.assertIsInstance(result, dict)
         self.assertTrue(result['hit_unsafe_words'])
 
-        with self.assertRaises(CleanLangTypeExp):
+        with self.assertRaises(SafeModelException):
             result = unsafe_words_filter_overall(
                 data_dict,
                 language='unknown',
@@ -190,7 +190,7 @@ class TestUnsafeWordChecker(unittest.TestCase):
         mock_download_auto_file.return_value = '/fake/path/unsafe_words'
 
         # 调用被测试函数
-        with self.assertRaises(CleanLangTypeExp):
+        with self.assertRaises(SafeModelException):
             auto_download(language='unknown')
         mock_load_config.assert_called_once()
         auto_download(language='xyz')

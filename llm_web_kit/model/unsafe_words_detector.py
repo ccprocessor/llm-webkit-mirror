@@ -5,7 +5,7 @@ from typing import Any, Dict
 import ahocorasick
 
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import CleanLangTypeExp
+from llm_web_kit.exception.exception import SafeModelException
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.standard_utils import json_loads
 from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
@@ -57,7 +57,7 @@ def auto_download(language='zh-en'):
     elif language == 'xyz':
         resource_name = 'xyz_internal_unsafe_words'
     else:
-        raise CleanLangTypeExp(f'Unsupported language: {language}')
+        raise SafeModelException(f'Unsupported language: {language}')
     language_unsafe_words_config: Dict = resource_config[resource_name]
     download_path = language_unsafe_words_config['download_path']
     md5 = language_unsafe_words_config['md5']
@@ -216,7 +216,7 @@ def unsafe_words_filter(
     ]:
         language = 'zh-en'
     else:
-        raise CleanLangTypeExp(f'Unsupported language: {language}')
+        raise SafeModelException(f'Unsupported language: {language}')
 
     unsafeWordChecker = get_unsafe_words_checker(language)
     unsafe_word_min_level = decide_unsafe_word_by_data_checker(
@@ -250,7 +250,7 @@ def unsafe_words_filter_overall(
     ]:
         language = 'zh-en'
     else:
-        raise CleanLangTypeExp(f'Unsupported language: {language}')
+        raise SafeModelException(f'Unsupported language: {language}')
     if from_safe_source:
         return {'hit_unsafe_words': False}
     if from_domestic_source:
