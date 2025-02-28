@@ -251,22 +251,6 @@ def unsafe_words_filter_overall(
     from_safe_source,
     from_domestic_source,
 ):
-    if language in xyz_language_lst:
-        language = "xyz"
-    elif language in [
-        "zh",
-        "en",
-        "yue",
-        "zho",
-        "eng",
-        "zho_Hans",
-        "zho_Hant",
-        "yue_Hant",
-        "eng_Latn",
-    ]:
-        language = "zh-en"
-    else:
-        raise SafeModelException(f"Unsupported language: {language}")
     if from_safe_source:
         return {"hit_unsafe_words": False}
     if from_domestic_source:
