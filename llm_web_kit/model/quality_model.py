@@ -95,7 +95,7 @@ class QualityModel:
         feature_df = pd.json_normalize(features_dict)
         pred = self.quality_model.predict(feature_df)[0]
 
-        return pred
+        return float(pred)
 
     def predict_with_content(self, content: str, content_style: str = None) -> float:
         # 停用词相关
