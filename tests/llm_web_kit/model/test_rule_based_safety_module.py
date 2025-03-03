@@ -2,12 +2,13 @@ import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
+from llm_web_kit.model.domain_safety_detector import DomainFilter
 # 需要根据实际模块路径调整
 from llm_web_kit.model.rule_based_safety_module import (
     RuleBasedSafetyModule, RuleBasedSafetyModuleDataPack, check_type)
-from llm_web_kit.model.domain_safety_detector import DomainFilter
 from llm_web_kit.model.source_safety_detector import SourceFilter
 from llm_web_kit.model.unsafe_words_detector import UnsafeWordsFilter
+
 
 class TestCheckType(TestCase):
     def test_type_checking(self):
@@ -59,8 +60,8 @@ class TestRuleBasedSafetyModuleDataPack(TestCase):
 
         # 测试正确类型
         data_pack.set_process_result(False, {'key': 'value'})
-        self.assertFalse(data_pack.clean_remained)
-        self.assertEqual(data_pack.clean_infos, {'key': 'value'})
+        self.assertFalse(data_pack.safety_remained)
+        self.assertEqual(data_pack.safety_infos, {'key': 'value'})
 
         # 测试错误类型
         with self.assertRaises(TypeError):
@@ -79,9 +80,9 @@ class TestRuleBasedSafetyModuleDataPack(TestCase):
 
 
 class TestRuleBasedSafetyModule(TestCase):
-    @patch.object(DomainFilter.filter)
-    @patch.object(SourceFilter.filter)
-    @patch.object(UnsafeWordsFilter.filter)
+    @patch.object(DomainFilter,'filter')
+    @patch.object(SourceFilter,'filter')
+    @patch.object(UnsafeWordsFilter,'filter')
     def test_process_core(self, mock_unsafe_words_filter, mock_source_filter, mock_domain_filter):
         """测试核心处理流程."""
         # 设置模拟返回值
@@ -90,29 +91,29 @@ class TestRuleBasedSafetyModule(TestCase):
         mock_unsafe_words_filter.return_value = (False, {'reason': 'test'})
 
         # 初始化测试对象
-        clean_module = RuleBasedSafetyModule(prod=True)
+        safety_module = RuleBasedSafetyModule(prod=True)
         data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article','http://test.com', 'test_dataset')
 
         # 执行核心处理
-        result = clean_module.process_core(data_pack)
+        result = safety_module.process_core(data_pack)
 
         # 验证过滤方法被正确调用
         mock_unsafe_words_filter.assert_called_once_with('test', 'en', 'details', 'article', False, False)
         # 验证处理结果设置正确
-        self.assertFalse(result.clean_remained)
-        self.assertEqual(result.clean_infos, {'reason': 'test'})
+        self.assertFalse(result.safety_remained)
+        self.assertEqual(result.safety_infos, {'reason': 'test'})
 
-    @patch.object(DomainFilter.filter)
-    @patch.object(SourceFilter.filter)
-    @patch.object(UnsafeWordsFilter.filter)
+    @patch.object(DomainFilter,'filter')
+    @patch.object(SourceFilter,'filter')
+    @patch.object(UnsafeWordsFilter,'filter')
     def test_process_flow(self, mock_unsafe_words_filter, mock_source_filter, mock_domain_filter):
         """测试完整处理流程."""
         mock_source_filter.return_value = {'from_safe_source': False, 'from_domestic_source': False}
         mock_domain_filter.return_value = (True, {})
         mock_unsafe_words_filter.return_value = (True, {})
 
-        clean_module = RuleBasedSafetyModule(prod=False)
-        result = clean_module.process(
+        safety_module = RuleBasedSafetyModule(prod=False)
+        result = safety_module.process(
             content_str='content',
             language='en',
             language_details='details',
@@ -121,7 +122,7 @@ class TestRuleBasedSafetyModule(TestCase):
             dataset_name='test_dataset',
         )
 
-        expected_result = {'clean_remained': True, 'clean_infos': {}}
+        expected_result = {'safety_remained': True, 'safety_infos': {}}
         self.assertDictEqual(result, expected_result)
 
     def test_production_mode_effect(self):
@@ -132,8 +133,8 @@ class TestRuleBasedSafetyModule(TestCase):
 
     def test_get_version(self):
         """测试版本获取."""
-        clean_module = RuleBasedSafetyModule(prod=True)
-        self.assertEqual(clean_module.get_version(), '1.0.0')
+        safety_module = RuleBasedSafetyModule(prod=True)
+        self.assertEqual(safety_module.get_version(), '1.0.0')
 
 
 if __name__ == '__main__':
