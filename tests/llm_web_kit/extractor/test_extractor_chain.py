@@ -344,3 +344,18 @@ DEF
         result = chain.extract(input_data)
         main_html = result.get_content_list().to_main_html()
         assert 'public int hashCode()' in main_html
+
+    def test_table_involve_inline_code(self):
+        """
+        table里面包含行内code
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[11]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list()._get_data()
+        print(content_list)
