@@ -77,9 +77,9 @@ class TestRuleBasedSafetyModuleDataPack(TestCase):
 
 
 class TestRuleBasedSafetyModule(TestCase):
-    @patch.object('llm_web_kit.model.rule_based_safety_module.DomainFilter', 'filter')
-    @patch.object('llm_web_kit.model.rule_based_safety_module.SourceFilter', 'filter')
-    @patch.object('llm_web_kit.model.rule_based_safety_module.UnsafeWordsFilter', 'filter')
+    @patch.object(RuleBasedSafetyModule.domain_filter, 'filter')
+    @patch.object(RuleBasedSafetyModule.source_filter, 'filter')
+    @patch.object(RuleBasedSafetyModule.unsafe_words_filter, 'filter')
     def test_process_core(self, mock_unsafe_words_filter, mock_source_filter, mock_domain_filter):
         """测试核心处理流程."""
         # 设置模拟返回值
@@ -88,7 +88,7 @@ class TestRuleBasedSafetyModule(TestCase):
         mock_unsafe_words_filter.return_value = (False, {'reason': 'test'})
 
         # 初始化测试对象
-        clean_module = RuleBasedSafetyModule(prod=True)
+        clean_module = RuleBasedSafetyModule(prod=True)        
         data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article','http://test.com', 'test_dataset')
 
         # 执行核心处理
@@ -100,9 +100,9 @@ class TestRuleBasedSafetyModule(TestCase):
         self.assertFalse(result.clean_remained)
         self.assertEqual(result.clean_infos, {'reason': 'test'})
 
-    @patch.object('llm_web_kit.model.rule_based_safety_module.DomainFilter', 'filter')
-    @patch.object('llm_web_kit.model.rule_based_safety_module.SourceFilter', 'filter')
-    @patch.object('llm_web_kit.model.rule_based_safety_module.UnsafeWordsFilter', 'filter')
+    @patch.object(RuleBasedSafetyModule.domain_filter, 'filter')
+    @patch.object(RuleBasedSafetyModule.source_filter, 'filter')
+    @patch.object(RuleBasedSafetyModule.unsafe_words_filter, 'filter')
     def test_process_flow(self, mock_unsafe_words_filter, mock_source_filter, mock_domain_filter):
         """测试完整处理流程."""
         mock_source_filter.return_value = {'from_safe_source': False, 'from_domestic_source': False}

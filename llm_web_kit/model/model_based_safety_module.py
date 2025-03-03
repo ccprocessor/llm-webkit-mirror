@@ -1,6 +1,7 @@
 from typing import List, Tuple, Any, Type, TypeVar
 from llm_web_kit.model.policical import PoliticalDetector, decide_political_by_prob
 from llm_web_kit.model.porn_detector import BertModel as EnPornBertModel
+from llm_web_kit.model.porn_detector import XlmrModel as ZhPornXlmrModel
 from llm_web_kit.exception.exception import ModelInputException
 
 I = TypeVar("I")  # input type
@@ -22,7 +23,7 @@ def check_type(arg_name: str, arg_value: Any, arg_type: Type):
 class ModelBasedSafetyDataPack:
     """The data pack for the model based safety module."""
 
-    def __init__(self, content_str: str, langurage: str, langurage_details: str):
+    def __init__(self, content_str: str, language: str, language_details: str):
 
         self._dict = {}
         # the content of the dataset
@@ -30,12 +31,12 @@ class ModelBasedSafetyDataPack:
         self._dict["content_str"] = content_str
 
         # the language of the content
-        check_type("langurage", langurage, str)
-        self._dict["langurage"] = langurage
+        check_type("language", language, str)
+        self._dict["language"] = language
 
         # the details of the language
-        check_type("langurage_details", langurage_details, str)
-        self._dict["langurage_details"] = langurage_details
+        check_type("language_details", language_details, str)
+        self._dict["language_details"] = language_details
 
         # the flag of the processed data should be remained or not
         self._dict["model_based_safety_remained"] = True
@@ -47,8 +48,8 @@ class ModelBasedSafetyDataPack:
     def from_dict(cls, data: dict):
         new_data_pack = cls(
             content_str=data["content_str"],
-            langurage=data["langurage"],
-            langurage_details=data["langurage_details"],
+            language=data["language"],
+            language_details=data["language_details"],
         )
         new_data_pack._dict.update(data)
         return new_data_pack
@@ -112,9 +113,9 @@ class ContentStrBatchModel:
         return self.postprocess(info, results[0])
 
     def process_one(
-        self, content_str: str, langurage: str, langurage_details: str
+        self, content_str: str, language: str, language_details: str
     ) -> dict:
-        data_pack = ModelBasedSafetyDataPack(content_str, langurage, langurage_details)
+        data_pack = ModelBasedSafetyDataPack(content_str, language, language_details)
         return self.process_one_core(data_pack).get_output()
 
 
@@ -127,7 +128,7 @@ class ZhEnPoliticalModel(ContentStrBatchModel):
         self.threshold = model_config["threshold"]
 
     def check_support(self, data_pack: ModelBasedSafetyDataPack) -> bool:
-        return data_pack.langurage in ["zh", "en"]
+        return data_pack.language in ["zh", "en"]
 
     def inference(self, batch: List[str]) -> List[dict]:
         result_list = []
@@ -161,7 +162,7 @@ class EnPronModel(ContentStrBatchModel):
         self.threshold = model_config["threshold"]
 
     def check_support(self, data_pack: ModelBasedSafetyDataPack) -> bool:
-        return data_pack.langurage == "en"
+        return data_pack.language == "en"
 
     def inference(self, batch: List[str]) -> List[dict]:
         result_list = []
