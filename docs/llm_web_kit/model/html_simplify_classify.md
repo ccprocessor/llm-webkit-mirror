@@ -16,6 +16,22 @@
 
 该部分用于简化HTML从而提高网页布局分类的效果。在 `llm_web_kit/model/html_lib/html_lib` 目录下的 `simplify.py` 文件中的 `general_simplify_html_str` 函数实现了对html字符串的简化操作。
 
+默认路径为`~/.llm-web-kit.jsonc`中需要使用如下配置，可以自动下载模型：
+
+```json
+{
+    "resources": {
+        "common":{
+            "cache_path": "~/.llm_web_kit_cache"
+        },
+        "html_cls-25m2": {
+            "download_path": "s3://web-parse-huawei/shared_resource/html_layout_cls/html_cls_25m2.zip",
+            "md5": "e15ea22a9aa65aa8c7c3a0e3c2e0c98a"
+        },
+	}
+}
+```
+
 使用方法如下：
 
 ```python
