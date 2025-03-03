@@ -3,10 +3,10 @@ from unittest import TestCase
 from unittest.mock import patch
 
 # 需要根据实际模块路径调整
-from llm_web_kit.model.rule_based_safety_module import (RuleBasedSafetyModule, RuleBasedSafetyModuleDataPack,
-                                            check_type)
-from llm_web_kit.model.unsafe_words_detector import UnsafeWordsFilter
+from llm_web_kit.model.rule_based_safety_module import (
+    RuleBasedSafetyModule, RuleBasedSafetyModuleDataPack, check_type)
 from llm_web_kit.model.source_safety_detector import SourceFilter
+from llm_web_kit.model.unsafe_words_detector import UnsafeWordsFilter
 
 
 class TestCheckType(TestCase):
@@ -36,6 +36,8 @@ class TestRuleBasedSafetyModuleDataPack(TestCase):
             'language': 'en',
             'language_details': 'details',
             'content_style': 'article',
+            'url': 'http://test.com',
+            'dataset_name': 'test_dataset',
         }
 
         # 测试所有参数的正确类型
@@ -53,7 +55,7 @@ class TestRuleBasedSafetyModuleDataPack(TestCase):
 
     def test_set_process_result(self):
         """测试设置处理结果的功能."""
-        data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article')
+        data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article','http://test.com', 'test_dataset')
 
         # 测试正确类型
         data_pack.set_process_result(False, {'key': 'value'})
@@ -69,37 +71,46 @@ class TestRuleBasedSafetyModuleDataPack(TestCase):
 
     def test_get_output(self):
         """测试输出字典的生成."""
-        data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article')
+        data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article','http://test.com', 'test_dataset')
         data_pack.set_process_result(False, {'info': 'test'})
 
-        expected_output = {'clean_remained': False, 'clean_infos': {'info': 'test'}}
+        expected_output = {'safety_remained': False, 'safety_infos': {'info': 'test'}}
         self.assertDictEqual(data_pack.get_output(), expected_output)
 
 
 class TestRuleBasedSafetyModule(TestCase):
-    @patch.object(UnsafeWordsFilter, 'filter')
-    def test_process_core(self, mock_filter):
+    @patch.object('llm_web_kit.model.rule_based_safety_module.DomainFilter', 'filter')
+    @patch.object('llm_web_kit.model.rule_based_safety_module.SourceFilter', 'filter')
+    @patch.object('llm_web_kit.model.rule_based_safety_module.UnsafeWordsFilter', 'filter')
+    def test_process_core(self, mock_unsafe_words_filter, mock_source_filter, mock_domain_filter):
         """测试核心处理流程."""
         # 设置模拟返回值
-        mock_filter.return_value = (False, {'reason': 'test'})
+        mock_source_filter.return_value = {'from_safe_source': False, 'from_domestic_source': False}
+        mock_domain_filter.return_value = (True, {})
+        mock_unsafe_words_filter.return_value = (False, {'reason': 'test'})
+
 
         # 初始化测试对象
         clean_module = RuleBasedSafetyModule(prod=True)
-        data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article')
+        data_pack = RuleBasedSafetyModuleDataPack('test', 'en', 'details', 'article','http://test.com', 'test_dataset')
 
         # 执行核心处理
         result = clean_module.process_core(data_pack)
 
         # 验证过滤方法被正确调用
-        mock_filter.assert_called_once_with('test', 'en', 'details', 'article')
+        mock_unsafe_words_filter.assert_called_once_with('test', 'en', 'details', 'article', False, False)
         # 验证处理结果设置正确
         self.assertFalse(result.clean_remained)
         self.assertEqual(result.clean_infos, {'reason': 'test'})
 
-    @patch.object(UnsafeWordsFilter, 'filter')
-    def test_process_flow(self, mock_filter):
+    @patch.object('llm_web_kit.model.rule_based_safety_module.DomainFilter', 'filter')
+    @patch.object('llm_web_kit.model.rule_based_safety_module.SourceFilter', 'filter')
+    @patch.object('llm_web_kit.model.rule_based_safety_module.UnsafeWordsFilter', 'filter')
+    def test_process_flow(self, mock_unsafe_words_filter, mock_source_filter, mock_domain_filter):
         """测试完整处理流程."""
-        mock_filter.return_value = (True, {'quality': 0.95})
+        mock_source_filter.return_value = {'from_safe_source': False, 'from_domestic_source': False}
+        mock_domain_filter.return_value = (True, {})
+        mock_unsafe_words_filter.return_value = (True, {})
 
         clean_module = RuleBasedSafetyModule(prod=False)
         result = clean_module.process(
@@ -107,9 +118,11 @@ class TestRuleBasedSafetyModule(TestCase):
             language='en',
             language_details='details',
             content_style='article',
+            url='http://test.com',
+            dataset_name='test_dataset',
         )
 
-        expected_result = {'clean_remained': True, 'clean_infos': {'quality': 0.95}}
+        expected_result = {'clean_remained': True, 'clean_infos': {}}
         self.assertDictEqual(result, expected_result)
 
     def test_production_mode_effect(self):

@@ -1,8 +1,8 @@
 from typing import Any, Type
 
-from llm_web_kit.model.unsafe_words_detector import UnsafeWordsFilter
-from llm_web_kit.model.source_safety_detector import SourceFilter
 from llm_web_kit.model.domain_safety_detector import DomainFilter
+from llm_web_kit.model.source_safety_detector import SourceFilter
+from llm_web_kit.model.unsafe_words_detector import UnsafeWordsFilter
 
 
 def check_type(arg_name: str, arg_value: Any, arg_type: Type):
@@ -11,7 +11,7 @@ def check_type(arg_name: str, arg_value: Any, arg_type: Type):
     if not isinstance(arg_value, arg_type):
         # TODO change TypeError to custom exception
         raise TypeError(
-            "The type of {} should be {}, but got {}".format(
+            'The type of {} should be {}, but got {}'.format(
                 arg_name, arg_type, type(arg_value)
             )
         )
@@ -31,27 +31,27 @@ class RuleBasedSafetyModuleDataPack:
     ):
 
         # the content of the dataset
-        check_type("content_str", content_str, str)
+        check_type('content_str', content_str, str)
         self.content_str = content_str
 
         # the language of the content
-        check_type("language", language, str)
+        check_type('language', language, str)
         self.language = language
 
         # the details of the language
-        check_type("language_details", language_details, str)
+        check_type('language_details', language_details, str)
         self.language_details = language_details
 
         # the content style of the content
-        check_type("content_style", content_style, str)
+        check_type('content_style', content_style, str)
         self.content_style = content_style
 
         # the url of the content
-        check_type("url", url, str)
+        check_type('url', url, str)
         self.url = url
 
         # the data source of the content
-        check_type("dataset_name", dataset_name, str)
+        check_type('dataset_name', dataset_name, str)
         self.dataset_name = dataset_name
 
         # the flag of the processed data should be remained or not
@@ -61,8 +61,8 @@ class RuleBasedSafetyModuleDataPack:
 
     def set_process_result(self, safety_remained: bool, safety_infos: dict) -> None:
         """set the process result of the rule_based_safety module."""
-        check_type("safety_remained", safety_remained, bool)
-        check_type("safety_infos", safety_infos, dict)
+        check_type('safety_remained', safety_remained, bool)
+        check_type('safety_infos', safety_infos, dict)
         if safety_remained is False:
             self.safety_remained = False
         self.safety_infos.update(safety_infos)
@@ -70,8 +70,8 @@ class RuleBasedSafetyModuleDataPack:
     def get_output(self) -> dict:
         """get the output of the data pack."""
         return {
-            "safety_remained": self.safety_remained,
-            "safety_infos": self.safety_infos,
+            'safety_remained': self.safety_remained,
+            'safety_infos': self.safety_infos,
         }
 
 
@@ -90,6 +90,8 @@ class RuleBasedSafetyModule:
         language: str,
         language_details: str,
         content_style: str,
+        url: str,
+        dataset_name: str,
     ) -> dict:
         """The process of the rule based safety."""
         data_pack = RuleBasedSafetyModuleDataPack(
@@ -97,6 +99,8 @@ class RuleBasedSafetyModule:
             language=language,
             language_details=language_details,
             content_style=content_style,
+            url=url,
+            dataset_name=dataset_name,
         )
         data_pack = self.process_core(data_pack)
         return data_pack.get_output()
@@ -123,8 +127,8 @@ class RuleBasedSafetyModule:
             content_str, language, data_source, content_style
         )
 
-        from_safe_source = source_type_dict["from_safe_source"]
-        from_domestic_source = source_type_dict["from_domestic_source"]
+        from_safe_source = source_type_dict['from_safe_source']
+        from_domestic_source = source_type_dict['from_domestic_source']
         unsafe_words_remained, process_info = self.unsafe_words_filter.filter(
             content_str,
             language,
@@ -137,5 +141,5 @@ class RuleBasedSafetyModule:
         return data_pack
 
     def get_version(self):
-        version_str = "1.0.0"
+        version_str = '1.0.0'
         return version_str
