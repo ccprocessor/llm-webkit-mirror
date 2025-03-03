@@ -33,7 +33,6 @@ def test_unzip_local_file():
             assert f.read() == 'This is a test file'
         with open(os.path.join(target_dir, 'test2.txt')) as f:
             assert f.read() == 'This is another test file'
-
         try:
             unzip_local_file(zip_path, target_dir, exist_ok=False)
         except Exception as e:

@@ -18,10 +18,6 @@ huggingface版本：
         "lang-id-218": {
             "download_path": "https://huggingface.co/facebook/fasttext-language-identification/resolve/main/model.bin?download=true",
             "sha256": "8ded5749a2ad79ae9ab7c9190c7c8b97ff20d54ad8b9527ffa50107238fc7f6a"
-        },
-        "political-24m7": {
-            "download_path": "XXXXXX",
-            "md5": "XXXXX"
         }
     },
 ```
@@ -40,10 +36,6 @@ s3版本：
         "lang-id-218": {
             "download_path": "s3://web-parse-huawei/shared_resource/language/lid218e.bin",
             "sha256": "8ded5749a2ad79ae9ab7c9190c7c8b97ff20d54ad8b9527ffa50107238fc7f6a"
-        },
-        "political-24m7": {
-            "download_path": "XXXXXX",
-            "md5": "XXXXX"
         }
     },
 ```
