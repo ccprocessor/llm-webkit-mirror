@@ -176,10 +176,10 @@ class TestTableRecognizer(unittest.TestCase):
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
             expect_path = base_dir.joinpath(test_case['expected'][3])
             content = open(expect_path, 'r', encoding='utf-8').read()
-            assert complex_table_tag[0].text == content.strip("\n")
+            assert complex_table_tag[0].text == content.strip('\n')
 
     def test_table_involve_complex_code(self):
-        """table involve complex code"""
+        """table involve complex code."""
         for test_case in TEST_CASES:
             raw_html_path = base_dir.joinpath(test_case['input'][12])
             base_url = 'https://en.m.wikipedia.org/wiki/Variance'
@@ -188,4 +188,4 @@ class TestTableRecognizer(unittest.TestCase):
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
             expect_path = base_dir.joinpath(test_case['expected'][3])
             content = open(expect_path, 'r', encoding='utf-8').read()
-            assert complex_table_tag[0].text == content.strip("\n")
+            assert complex_table_tag[0].text == content.strip('\n')

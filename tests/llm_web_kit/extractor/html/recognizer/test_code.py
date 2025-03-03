@@ -268,7 +268,7 @@ class TestCodeRecognizer(unittest.TestCase):
             raw_html_path = base_dir.joinpath(test_case['input'][0])
             base_url = test_case['input'][1]
             print(base_url)
-            raw_html = raw_html_path.read_text(encoding="utf-8")
+            raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             parts = [
                 part[0]
