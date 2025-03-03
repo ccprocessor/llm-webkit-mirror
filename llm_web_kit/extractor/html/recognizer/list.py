@@ -1,5 +1,5 @@
 import json
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 from lxml.etree import _Element as HtmlElement
 from overrides import override
@@ -88,16 +88,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         list_tag_names = ['ul', 'ol', 'dl', 'menu', 'dir']
 
         if root.tag in list_tag_names:
-            is_ordered, content_list, raw_html, tail_text = self.__extract_list_element(root)
+            list_nest_level, is_ordered, content_list, raw_html, tail_text = self.__extract_list_element(root)
             text = json.dumps(content_list, ensure_ascii=False, indent=4)
-            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, ordered=is_ordered, html=raw_html)
+            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, ordered=is_ordered, list_nest_level=list_nest_level, html=raw_html)
             self._replace_element(root, cc_element)  # cc_element 替换掉原来的列表元素
             return
 
         for child in root.iterchildren():
             self.__do_extract_list(child)
 
-    def __extract_list_element(self, ele: HtmlElement) -> Tuple[bool, list, str, str]:
+    def __extract_list_element(self, ele: HtmlElement) -> tuple[int, bool, list[list[list]], str, Any]:
         """
         提取列表元素:
         假如有如下列表：
@@ -135,6 +135,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             (bool, str, str): 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
         is_ordered = ele.tag in ['ol', 'dl']
+        list_nest_level = self.__get_list_type(ele)
         tail_text = ele.tail
         content_list = []
         raw_html = self._element_to_html(ele)
@@ -144,7 +145,15 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             text_paragraph = self.__extract_list_item_text(item)
             content_list.append(text_paragraph)
 
-        return is_ordered, content_list, raw_html, tail_text
+        return list_nest_level, is_ordered, content_list, raw_html, tail_text
+
+    def __get_list_type(self, list_ele:HtmlElement) -> int:
+        """获取list嵌套的类型."""
+        if list_ele.tag not in ['ul', 'ol', 'dl', 'menu', 'dir']:
+            return 0
+        ancestor_count = list_ele.xpath('count(ancestor::ul | ancestor::ol)')
+        # 层级 = 祖先列表数量 + 自身（1层）
+        return int(ancestor_count) + 1
 
     def __extract_list_item_text(self, root:HtmlElement) -> list[list]:
         """提取列表项的文本.

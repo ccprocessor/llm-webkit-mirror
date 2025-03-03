@@ -4,7 +4,7 @@ import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, mock_open, patch
 
-from llm_web_kit.exception.exception import CleanLangTypeExp  # noqa: E402
+from llm_web_kit.exception.exception import ModelInputException  # noqa: E402
 from llm_web_kit.model.quality_model import QualityModel  # noqa: E402
 from llm_web_kit.model.quality_model import get_quality_model  # noqa: E402
 from llm_web_kit.model.quality_model import quality_prober  # noqa: E402
@@ -127,7 +127,7 @@ class TestQualityModel(TestCase):
         mock_json_normalize.assert_called_once_with(test_features)
 
         # 验证模型的 predict 方法是否被正确调用
-        mock_model.predict.assert_called_once_with(mock_df)
+        mock_model.predict.assert_called_once_with(mock_df, num_threads=1)
 
         # 验证预测结果
         self.assertEqual(prediction, 0.9)
@@ -261,7 +261,7 @@ Conclusions: Alcohol SBIRT generates costs savings and improves health in both E
         test_language = 'xx'
         test_content_style = 'article'
 
-        with self.assertRaises(CleanLangTypeExp):
+        with self.assertRaises(ModelInputException):
             quality_prober(test_data_dict, test_language, test_content_style)
 
         # 确认是否正确调用了 get_quality_model
