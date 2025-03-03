@@ -5,8 +5,6 @@ from unittest.mock import patch
 # 需要根据实际模块路径调整
 from llm_web_kit.model.rule_based_safety_module import (
     RuleBasedSafetyModule, RuleBasedSafetyModuleDataPack, check_type)
-from llm_web_kit.model.source_safety_detector import SourceFilter
-from llm_web_kit.model.unsafe_words_detector import UnsafeWordsFilter
 
 
 class TestCheckType(TestCase):
@@ -88,7 +86,6 @@ class TestRuleBasedSafetyModule(TestCase):
         mock_source_filter.return_value = {'from_safe_source': False, 'from_domestic_source': False}
         mock_domain_filter.return_value = (True, {})
         mock_unsafe_words_filter.return_value = (False, {'reason': 'test'})
-
 
         # 初始化测试对象
         clean_module = RuleBasedSafetyModule(prod=True)
