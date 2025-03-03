@@ -178,6 +178,7 @@ class TestTableRecognizer(unittest.TestCase):
             content = open(expect_path, 'r', encoding='utf-8').read()
             assert complex_table_tag[0].text == content.strip('\n')
 
+    @unittest.skip(reason='在code模块解决了这个问题')
     def test_table_involve_complex_code(self):
         """table involve complex code."""
         for test_case in TEST_CASES:
