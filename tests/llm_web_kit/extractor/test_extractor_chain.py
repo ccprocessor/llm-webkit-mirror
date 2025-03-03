@@ -357,5 +357,5 @@ DEF
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        content_list = result.get_content_list()._get_data()
-        print(content_list)
+        content_list = result.get_content_list()._get_data()[0][0]['content']['html']
+        assert content_list == """<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>print()</td><td>Prints a message to the console.</td><td>print("Hello, World!")</td></tr><tr><td>len()</td><td>Returns the length of an object.</td><td>len([1, 2, 3])</td></tr><tr><td>range()</td><td>Generates a sequence of numbers.</td><td>range(1, 10)</td></tr></table>"""
