@@ -4,6 +4,8 @@ import tempfile
 import zipfile
 from typing import Optional
 
+from llm_web_kit.model.resource_utils.download_assets import FileLock
+
 
 def get_unzip_dir(zip_path: str) -> str:
     """Get the directory to unzip the zip file to. If the zip file is.
@@ -26,6 +28,7 @@ def unzip_local_file(
     target_dir: str,
     password: Optional[str] = None,
     exist_ok: bool = False,
+    lock_timeout: float = 300,
 ) -> str:
     """Unzip a zip file to a target directory.
 
@@ -42,21 +45,28 @@ def unzip_local_file(
     Returns:
         str: The path to the target directory.
     """
+    lock_path = f'{zip_path}.lock'
+    with FileLock(lock_path, timeout=lock_timeout):
 
-    # ensure target directory not exists
-    if os.path.exists(target_dir):
-        if exist_ok:
-            shutil.rmtree(target_dir)
-        else:
-            raise Exception(f'Target directory {target_dir} already exists')
+        # ensure target directory not exists
+        if os.path.exists(target_dir):
+            if exist_ok:
+                shutil.rmtree(target_dir)
+            else:
+                raise Exception(f'Target directory {target_dir} already exists')
 
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        if password:
-            zip_ref.setpassword(password.encode())
+        # 创建临时解压目录
         with tempfile.TemporaryDirectory() as temp_dir:
             extract_dir = os.path.join(temp_dir, 'temp')
-            os.makedirs(extract_dir)
-            zip_ref.extractall(extract_dir)
+            os.makedirs(extract_dir, exist_ok=True)
+
+            # 解压到临时目录
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                if password:
+                    zip_ref.setpassword(password.encode())
+                zip_ref.extractall(extract_dir)
+
+            # 原子性复制到目标目录
             shutil.copytree(extract_dir, target_dir)
 
     return target_dir

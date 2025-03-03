@@ -4,7 +4,7 @@ from typing import Any, List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.exception.exception import HtmlTableRecognizerExp
+from llm_web_kit.exception.exception import HtmlTableRecognizerException
 from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
@@ -44,7 +44,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     @override
     def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
         if not parsed_content:
-            raise HtmlTableRecognizerExp(f'table parsed_content{parsed_content}为空')
+            raise HtmlTableRecognizerException(f'table parsed_content{parsed_content}为空')
         table_type, table_nest_level, table_body = self.__get_attribute(parsed_content)
         d = {
             'type': DocElementType.TABLE,
@@ -107,7 +107,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 colspan = int(colspan_str)
                 rowspan = int(rowspan_str)
             except ValueError as e:
-                raise HtmlTableRecognizerExp(
+                raise HtmlTableRecognizerException(
                     f'table的合并单元格属性值colspan:{colspan_str}或rowspan:{rowspan_str}不是有效的整数') from e
             if (colspan > 1) or (rowspan > 1):
                 return False
@@ -267,7 +267,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_body = ele.text
             return table_flag, table_nest_level, table_body
         else:
-            raise HtmlTableRecognizerExp(f'{html}中没有cctable标签')
+            raise HtmlTableRecognizerException(f'{html}中没有cctable标签')
 
     def __get_content_list_table_type(self, table_type):
         """complex|simple 转为True|False."""

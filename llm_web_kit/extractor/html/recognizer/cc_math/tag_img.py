@@ -2,7 +2,7 @@ from urllib.parse import unquote
 
 from lxml.html import HtmlElement
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerExp
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (
     CCMATH, CCMATH_INTERLINE, LATEX_IMAGE_CLASS_NAMES, LATEX_IMAGE_SRC_NAMES,
     MathType, text_strip)
@@ -51,4 +51,4 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                     replace_element(node, new_span)
 
     except Exception as e:
-        raise HtmlMathRecognizerExp(f'Error processing img tag: {e}')
+        raise HtmlMathRecognizerException(f'Error processing img tag: {e}')
