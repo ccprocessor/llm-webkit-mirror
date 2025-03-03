@@ -127,7 +127,7 @@ class TestQualityModel(TestCase):
         mock_json_normalize.assert_called_once_with(test_features)
 
         # 验证模型的 predict 方法是否被正确调用
-        mock_model.predict.assert_called_once_with(mock_df)
+        mock_model.predict.assert_called_once_with(mock_df, num_threads=1)
 
         # 验证预测结果
         self.assertEqual(prediction, 0.9)
