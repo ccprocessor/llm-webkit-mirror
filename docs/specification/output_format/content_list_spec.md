@@ -108,7 +108,8 @@
                       ]
                     ]
                 ],
-                "ordered": true
+                "ordered": true,
+                "list_nest_level": 1 //list的嵌套层级
             }
         }
     ],
@@ -327,18 +328,20 @@
              ]
            ]
         ],
-        "ordered": true
+        "ordered": true,
+        "list_nest_level": 1 //list嵌套层级
     }
 }
 ```
 
-| 字段            | 类型    | 描述                                                | 是否必须 |
-| --------------- | ------- | --------------------------------------------------- | -------- |
-| type            | string  | 值固定为list                                        | 是       |
-| bbox            | array   | \[x1, y1, x2, y2\]                                  | 可选     |
-| raw_content     | string  | 原始文本内容                                        | 可选     |
-| content.items   | array   | 列表项，每个元素是N个段落，段落里的元素是文本或公式 | 是       |
-| content.ordered | boolean | 是否是有序列表                                      | 可选     |
+| 字段                    | 类型    | 描述                                                | 是否必须 |
+| ----------------------- | ------- | --------------------------------------------------- | -------- |
+| type                    | string  | 值固定为list                                        | 是       |
+| bbox                    | array   | \[x1, y1, x2, y2\]                                  | 可选     |
+| raw_content             | string  | 原始文本内容                                        | 可选     |
+| content.items           | array   | 列表项，每个元素是N个段落，段落里的元素是文本或公式 | 是       |
+| content.ordered         | boolean | 是否是有序列表                                      | 可选     |
+| content.list_nest_level | int     | list的嵌套层级(单层list list_nest_level为1)         | 可选     |
 
 <b>items字段说明</b>
 
