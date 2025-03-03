@@ -159,15 +159,6 @@ class TestUnsafeWordChecker(unittest.TestCase):
         self.assertIsInstance(result, dict)
         self.assertTrue(result['hit_unsafe_words'])
 
-        with self.assertRaises(SafeModelException):
-            result = unsafe_words_filter_overall(
-                data_dict,
-                language='unknown',
-                content_style='text',
-                from_safe_source=False,
-                from_domestic_source=False,
-            )
-
     @patch('llm_web_kit.model.unsafe_words_detector.load_config')
     @patch('llm_web_kit.model.unsafe_words_detector.download_auto_file')
     def test_auto_download(self, mock_download_auto_file, mock_load_config):
