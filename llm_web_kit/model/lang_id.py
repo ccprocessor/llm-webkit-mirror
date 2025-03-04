@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Tuple
+from typing import Dict, Tuple
 
 import fasttext
 
@@ -196,7 +196,7 @@ def detect_latex_env(content_str: str) -> bool:
     return latex_env_pattern.search(content_str) is not None
 
 
-def decide_language_func(content_str: str, lang_detect: LanguageIdentification) -> str:
+def decide_language_func(content_str: str, lang_detect: LanguageIdentification) -> Dict[str, str]:
     """Decide language based on the content string. This function will truncate
     the content string if it is too long. This function will return "empty" if
     the content string is empty.
@@ -216,7 +216,7 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
         lang_detect (LanguageIdentification): The language identification model
 
     Returns:
-        str: The final language label
+        dict: Dictionary containing 'language' and 'language_details' keys
     """
 
     # truncate the content string if it is too long
@@ -236,40 +236,35 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
 
     # return "empty" if the content string is empty
     if len(content_str.strip()) == 0:
-        return 'empty'
+        return {'language': 'empty', 'language_details': None}
 
-    if lang_detect.version in ['176.bin', '218.bin']:
-        predictions, probabilities = lang_detect.predict(content_str)
-        result = decide_language_by_prob_v176(predictions, probabilities)
-    else:
+    if lang_detect.version not in LANG_ID_SUPPORTED_VERSIONS:
         raise ValueError(f'Unsupported version: {lang_detect.version}. Supported versions: {LANG_ID_SUPPORTED_VERSIONS}')
-    return result
 
+    predictions, probabilities = lang_detect.predict(content_str)
+    language = decide_language_by_prob_v176(predictions, probabilities)
 
-def decide_lang_by_str(content_str: str, model_path: str = None) -> str:
-    """Decide language based on the content string, based on
-    decide_language_func."""
-    lang_detect = get_singleton_lang_detect(model_path)
+    language_details = None
+    if lang_detect.version == '218.bin':
+        first_pred = predictions[0]
+        match = re.match(r'^__label__([a-z]+)_[A-Za-z]+$', first_pred)
+        if match:
+            lang_code = match.group(1)
+        else:
+            lang_code = first_pred.replace('__label__', '').split('_')[0]
+        language_details = lang_code
 
-    return decide_language_func(content_str, lang_detect)
-
-
-def decide_lang_by_str_v218(content_str: str, model_path: str = None) -> str:
-    """Decide language based on the content string, displayed in the format of
-    the fasttext218 model."""
-    lang_detect = get_singleton_lang_detect(model_path)
-    if lang_detect.version == '176.bin':
-        return None
-    else:
-        return lang_detect.predict(content_str)[0][0].replace('__label__', '')
-
-
-def update_language_by_str(content_str: str, model_path: str = None) -> str:
-    """Decide language based on the content string."""
     return {
-        'language': decide_lang_by_str(content_str, model_path),
-        'language_details': decide_lang_by_str_v218(content_str, model_path)
+        'language': language,
+        'language_details': language_details
     }
+
+
+def update_language_by_str(content_str: str, model_path: str = None) -> Dict[str, str]:
+    """Decide language based on the content string and return a dictionary with
+    language and details."""
+    lang_detect = get_singleton_lang_detect(model_path)
+    return decide_language_func(content_str, lang_detect)
 
 
 if __name__ == '__main__':
