@@ -155,7 +155,7 @@ class ZhEnPoliticalModel(ContentStrBatchModel):
         return datapack
 
 
-class EnPronModel(ContentStrBatchModel):
+class EnPornModel(ContentStrBatchModel):
     def __init__(self, model_config: dict):
         super().__init__(model_config)
         self.model = EnPornBertModel(model_config["model_path"])
@@ -180,3 +180,10 @@ class EnPronModel(ContentStrBatchModel):
             model_based_safety_infos={"porn_prob": porn_prob},
         )
         return datapack
+
+
+class ZhPornModel(EnPornModel):
+    def __init__(self, model_config: dict):
+        self.model_config = model_config
+        self.model = ZhPornXlmrModel(model_config["model_path"])
+        self.threshold = model_config["threshold"]
