@@ -7,6 +7,7 @@ import cairosvg
 from lxml.html import HtmlElement
 from overrides import override
 
+from llm_web_kit.exception.exception import HtmlImageRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -45,12 +46,12 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         """
         html_obj = self._build_html_tree(parsed_content)
         if html_obj is None:
-            raise ValueError(f'Failed to load html: {parsed_content}')
+            HtmlImageRecognizerException(f'Failed to load html: {parsed_content}', 31031400)
 
         if html_obj.tag == CCTag.CC_IMAGE:
             return self.__ccimg_to_content_list(raw_html_segment, html_obj)
         else:
-            raise ValueError(f'No ccimage element found in content: {parsed_content}')
+            HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}', 31031400)
 
     def __ccimg_to_content_list(self, raw_html_segment: str, html_obj: HtmlElement) -> dict:
         result = {
@@ -90,7 +91,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                         ccimg_html.append(html_li)
             except Exception as e:
                 mylogger.exception(f'recognizer image failed: {e}')
-                raise Exception(f'recognizer image failed: {e}')
+                HtmlImageRecognizerException(f'recognizer image failed: {e}', 31031400)
         return ccimg_html
 
     def __parse_html_img(self, base_url: str, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
@@ -173,12 +174,12 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
             except Exception as e:
                 mylogger.exception(f'build_cc_element failed: {e}')
-                raise Exception(f'build_cc_element failed: {e}')
+                HtmlImageRecognizerException(f'build_cc_element failed: {e}', 31031400)
             try:
                 self._replace_element(elem, new_ccimage)
             except Exception as e:
                 mylogger.exception(f'replace img element fail: {e}')
-                raise Exception(f'replace img element fail: {e}')
+                HtmlImageRecognizerException(f'replace img element fail: {e}', 31031400)
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
@@ -235,8 +236,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
 
     def __parse_text_tail(self, attributes: dict) -> Tuple[str, str]:
         """解析img标签的text&tail值."""
-        if not attributes:
-            raise ZeroDivisionError
         text = attributes.pop('text') if attributes.get('text') else ''
         tail = attributes.pop('tail') if attributes.get('tail') else ''
         return (text, tail)
@@ -269,4 +268,4 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             mylogger.info(f'value error, The SVG size is undefined: {svg_content}')
         except Exception as e:
             mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
-            raise Exception(f'svg_to_base64 failed: {e}')
+            HtmlImageRecognizerException(f'svg_to_base64 failed: {e}', 31031400)
