@@ -155,9 +155,10 @@ class FileLock:
         try:
             if self._fd:
                 os.close(self._fd)
-            os.remove(self.lock_path)
         except OSError:
             pass
+        finally:
+            try_remove(self.lock_path)
 
 
 def verify_file_checksum(

@@ -20,7 +20,8 @@ TEST_CASES = [
             'assets/recognizer/table_include_rowspan_colspan.html',
             'assets/recognizer/table_involve_equation.html',
             'assets/recognizer/table_include_after_code.html',
-            'assets/recognizer/table_involve_code.html'
+            'assets/recognizer/table_involve_code.html',
+            'assets/recognizer/table_involve_complex_code.html'
 
         ),
         'expected': [
@@ -175,4 +176,17 @@ class TestTableRecognizer(unittest.TestCase):
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
             expect_path = base_dir.joinpath(test_case['expected'][3])
             content = open(expect_path, 'r', encoding='utf-8').read()
-            assert complex_table_tag[0].text == content
+            assert complex_table_tag[0].text == content.strip('\n')
+
+    @unittest.skip(reason='在code模块解决了这个问题')
+    def test_table_involve_complex_code(self):
+        """table involve complex code."""
+        for test_case in TEST_CASES:
+            raw_html_path = base_dir.joinpath(test_case['input'][12])
+            base_url = 'https://en.m.wikipedia.org/wiki/Variance'
+            raw_html = raw_html_path.read_text(encoding='utf-8')
+            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
+            expect_path = base_dir.joinpath(test_case['expected'][3])
+            content = open(expect_path, 'r', encoding='utf-8').read()
+            assert complex_table_tag[0].text == content.strip('\n')

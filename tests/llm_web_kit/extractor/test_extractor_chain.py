@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 11
+        assert len(self.data_json) == 12
 
         # Config for HTML extraction
         self.config = {
@@ -344,3 +344,18 @@ DEF
         result = chain.extract(input_data)
         main_html = result.get_content_list().to_main_html()
         assert 'public int hashCode()' in main_html
+
+    def test_table_involve_inline_code(self):
+        """
+        table里面包含行内code
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[11]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list()._get_data()[0][0]['content']['html']
+        assert content_list == """<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>print()</td><td>Prints a message to the console.</td><td>print("Hello, World!")</td></tr><tr><td>len()</td><td>Returns the length of an object.</td><td>len([1, 2, 3])</td></tr><tr><td>range()</td><td>Generates a sequence of numbers.</td><td>range(1, 10)</td></tr></table>"""
