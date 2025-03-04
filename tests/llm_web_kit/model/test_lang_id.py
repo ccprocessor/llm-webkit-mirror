@@ -2,8 +2,6 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from llm_web_kit.model.lang_id import (LanguageIdentification,
-                                       decide_lang_by_str,
-                                       decide_lang_by_str_v218,
                                        decide_language_by_prob_v176,
                                        decide_language_func, detect_code_block,
                                        detect_inline_equation,
@@ -126,25 +124,27 @@ def test_decide_language_func():
     lang_detect = MagicMock()
     lang_detect.version = '176.bin'
     lang_detect.predict.return_value = (['__label__en', '__label__zh'], [0.6, 0.4])
-    assert decide_language_func('test text', lang_detect) == 'en'
+    result = decide_language_func('test text', lang_detect)
+    assert result == {'language': 'en', 'language_details': None}
 
+    # Test for 218.bin version
+    lang_detect.version = '218.bin'
+    lang_detect.predict.return_value = (['__label__eng_Latn', '__label__zho_Hans'], [0.6, 0.4])
+    result = decide_language_func('test text', lang_detect)
+    assert result == {'language': 'en', 'language_details': 'eng'}
 
-def test_decide_lang_by_str():
-    with patch('llm_web_kit.model.lang_id.get_singleton_lang_detect') as mock_get_singleton_lang_detect, patch(
-            'llm_web_kit.model.lang_id.decide_language_func') as mock_decide_language_func:
-        mock_get_singleton_lang_detect.return_value = MagicMock()
-        mock_decide_language_func.return_value = 'en'
-        assert decide_lang_by_str('test text') == 'en'
+    # Test for empty string
+    result = decide_language_func('', lang_detect)
+    assert result == {'language': 'empty', 'language_details': None}
 
 
 def test_update_language_by_str():
-    # 模拟 decide_lang_by_str 和 decide_lang_by_str_v218 的行为
-    with patch('llm_web_kit.model.lang_id.decide_lang_by_str') as mock_decide_lang_by_str, \
-         patch('llm_web_kit.model.lang_id.decide_lang_by_str_v218') as mock_decide_lang_by_str_v218:
+    with patch('llm_web_kit.model.lang_id.get_singleton_lang_detect') as mock_get_singleton_lang_detect, \
+         patch('llm_web_kit.model.lang_id.decide_language_func') as mock_decide_language_func:
 
         # 设置模拟函数的返回值
-        mock_decide_lang_by_str.return_value = 'en'
-        mock_decide_lang_by_str_v218.return_value = 'en_v218'
+        mock_get_singleton_lang_detect.return_value = MagicMock()
+        mock_decide_language_func.return_value = {'language': 'en', 'language_details': 'eng'}
 
         # 调用被测函数
         result = update_language_by_str('test text')
@@ -152,30 +152,7 @@ def test_update_language_by_str():
         # 验证返回结果
         expected_result = {
             'language': 'en',
-            'language_details': 'en_v218'
+            'language_details': 'eng'
         }
         assert result == expected_result, f'Expected {expected_result}, but got {result}'
         print('Test passed!')
-
-
-class TestDecideLangByStrV218(unittest.TestCase):
-
-    @patch('llm_web_kit.model.lang_id.get_singleton_lang_detect')
-    def test_decide_lang_by_str_v218(self, mock_get_singleton_lang_detect):
-        mock_lang_detect = MagicMock()
-        mock_lang_detect.predict.return_value = [('__label__en', 0.8), ('__label__fr', 0.2)]
-        mock_get_singleton_lang_detect.return_value = mock_lang_detect
-
-        content_str = 'This is an English text.'
-        result = decide_lang_by_str_v218(content_str, 'model_path')
-        self.assertEqual(result, 'en')
-
-    @patch('llm_web_kit.model.lang_id.get_singleton_lang_detect')
-    def test_decide_lang_by_str_v218_custom_model_path(self, mock_get_singleton_lang_detect):
-        mock_lang_detect = MagicMock()
-        mock_lang_detect.predict.return_value = [('__label__es', 0.9), ('__label__de', 0.1)]
-        mock_get_singleton_lang_detect.return_value = mock_lang_detect
-
-        content_str = 'Este es un texto en español.'
-        result = decide_lang_by_str_v218(content_str, 'custom_model_path')
-        self.assertEqual(result, 'es')

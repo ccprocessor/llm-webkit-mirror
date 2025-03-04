@@ -47,17 +47,15 @@ from llm_web_kit.model.lang_id import *
 text = 'hello world, this is a test. the language is english'
 print(update_language_by_str(text))
 #{'language': 'en','language_details': 'eng_Latn'}
-print(decide_lang_by_str(text))
-#en
-print(decide_lang_by_str_v218(text))
-#eng_Latn
 ```
 
 ## 运行时间
 
-总共有 2099 条数据
+使用单cpu进行推理
+共有 2099 条数据
 总 token 数: 379375
 平均 token 数: 180.74
-载入数据时间: 0.02 秒
-处理函数时间: 0.02 秒
-总时间: 0.04 秒
+载入数据时间: 0.0214 秒
+语言识别时间: 2.4313 秒
+总时间: 2.4527 秒
+处理速度: 863.33 条/秒
