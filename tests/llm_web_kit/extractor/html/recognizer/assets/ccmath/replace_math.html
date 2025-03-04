@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width">
+  <title>MathJax v3 with TeX input and HTML output</title>
+  <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <p>\[
+    \mathbf{V}_1 \times \mathbf{V}_2 =
+     \begin{vmatrix}
+      \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+      \frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \\
+      \frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \\
+     \end{vmatrix}
+  \]</p>
+  <span class="math-container">$\mathbf{y}^2 = \begin{bmatrix} y_1^2 &amp; \cdots &amp; y_n^2 \end{bmatrix}$</span>
+  <p>
+    When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+    </p>
+  <p>$x = 5$,$$x=6$$,$x=4$</p>
+
+</body>
+</html>
