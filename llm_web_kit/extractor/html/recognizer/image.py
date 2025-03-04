@@ -11,7 +11,6 @@ from llm_web_kit.exception.exception import HtmlImageRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.logger import mylogger
 
 
 class ImageRecognizer(BaseHTMLElementRecognizer):
@@ -91,7 +90,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                     else:
                         ccimg_html.append(html_li)
             except Exception as e:
-                mylogger.exception(f'recognizer image failed: {e}')
                 HtmlImageRecognizerException(f'recognizer image failed: {e}', 31031400)
         return ccimg_html
 
@@ -176,13 +174,11 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             try:
                 new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
             except Exception as e:
-                mylogger.exception(f'build_cc_element failed: {e}')
                 HtmlImageRecognizerException(f'build_cc_element failed: {e}', 31031400)
             # mylogger.info(f'new_ccimage:{self._element_to_html(new_ccimage)}')
             try:
                 self._replace_element(elem, new_ccimage)
             except Exception as e:
-                mylogger.exception(f'replace img element fail: {e}')
                 HtmlImageRecognizerException(f'replace img element fail: {e}', 31031400)
 
         if is_valid_img:
@@ -269,8 +265,5 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 f'data:{mime_type};'
                 f'base64,{base64_data}'
             )
-        except ValueError:
-            mylogger.info(f'value error, The SVG size is undefined: {svg_content}')
         except Exception as e:
-            mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
-            HtmlImageRecognizerException(f'svg_to_base64 failed: {e}', 31031400)
+            HtmlImageRecognizerException(f'svg_to_base64 failed: {e}, error data: {svg_content}', 31031400)
