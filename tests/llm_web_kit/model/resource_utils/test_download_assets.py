@@ -6,7 +6,7 @@ import unittest
 from typing import Tuple
 from unittest.mock import MagicMock, call, mock_open, patch
 
-from llm_web_kit.exception.exception import ModelInputException
+from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.model.resource_utils.download_assets import (
     FileLock, HttpConnection, S3Connection, calc_file_md5, calc_file_sha256,
     decide_cache_dir, download_auto_file, download_to_temp, move_to_target,
@@ -448,7 +448,7 @@ class TestDownloadAutoFile(unittest.TestCase):
 # ) -> bool:
 #     """校验文件哈希值."""
 # if not sum([bool(md5_sum), bool(sha256_sum)]) == 1:
-#     raise ModelInputException('Exactly one of md5_sum or sha256_sum must be provided')
+#     raise ModelResourceException('Exactly one of md5_sum or sha256_sum must be provided')
 
 #     if md5_sum:
 #         actual = calc_file_md5(file_path)
@@ -482,8 +482,8 @@ class Test_verify_file_checksum(unittest.TestCase):
         sha256_sum = 'sha256_sum'
         mock_calc_file_md5.return_value = md5_sum
         mock_calc_file_sha256.return_value = sha256_sum
-        # will raise ModelInputException
-        with self.assertRaises(ModelInputException):
+        # will raise ModelResourceException
+        with self.assertRaises(ModelResourceException):
             verify_file_checksum(file_path, md5_sum, sha256_sum)
 
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')
@@ -492,8 +492,8 @@ class Test_verify_file_checksum(unittest.TestCase):
         file_path = 'file_path'
         md5_sum = None
         sha256_sum = None
-        # will raise ModelInputException
-        with self.assertRaises(ModelInputException):
+        # will raise ModelResourceException
+        with self.assertRaises(ModelResourceException):
             verify_file_checksum(file_path, md5_sum, sha256_sum)
 
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')

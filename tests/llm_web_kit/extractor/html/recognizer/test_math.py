@@ -219,6 +219,14 @@ TEST_EQUATION_TYPE = [
     {
         'input': r'<p>$$x=5$$,$x=6$</p>',
         'expected': [('ccmath-interline', 'latex'), ('ccmath-inline', 'latex')]
+    },
+    {
+        'input': r'<p>[tex]\frac{1}{4} Log(x-1)=Log((x-1)^{1\over{4}})= Log(\sqrt[4]{x-1})[/tex]</p>',
+        'expected': [('ccmath-interline', 'latex')]
+    },
+    {
+        'input': r'<p>abc [itex]x^2[/itex] abc</p>',
+        'expected': [('ccmath-inline', 'latex')]
     }
 ]
 

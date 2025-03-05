@@ -79,14 +79,19 @@ class TestST(unittest.TestCase):
             # files结构是{'filename': {'url': '', 'filepath': ''}}，获取filepath
             for fileName in files:
                 filepath = files[fileName]['origin_filepath']
+                groundtruth_filepath = os.path.join(self.root, 'bench/data/', files[fileName]['groundtruth_filepath'])
                 page_layout_type = files[fileName]['layout_type']
                 summary.total += 1
                 print(f'开始抽取:{filepath}...')
-                # TODO: code_5.html当前因代码有bug，导致抽取失败，先跳过
-                if 'code_5.html' in filepath:
-                    continue
                 try:
                     output, content_list, main_html, statics = eval_ours_extract_html(self.chainConfig, self.pipeline_data_path, f'{self.root}/bench/data/{filepath}', page_layout_type)
+                    # 断言statics中的元素数量和groundtruth_filepath中的元素数量一致
+                    with open(groundtruth_filepath, 'r') as f:
+                        groundtruth = json.loads(f.readline().strip())
+                    # 断言equation-interline, paragraph.equation-inline和list.equation-inline元素数一致
+                    self.assertEqual(statics.get('equation-interline'), groundtruth.get('statics', {}).get('equation-interline'), msg=f'{filepath}抽取equation-interline数量和groundtruth:{groundtruth_filepath}不一致')
+                    self.assertEqual(statics.get('paragraph.equation-inline'), groundtruth.get('statics', {}).get('paragraph.equation-inline'), msg=f'{filepath}抽取paragraph.equation-inline数量和groundtruth:{groundtruth_filepath}不一致')
+                    self.assertEqual(statics.get('list.equation-inline'), groundtruth.get('statics', {}).get('list.equation-inline'), msg=f'{filepath}抽取list.equation-inline数量和groundtruth:{groundtruth_filepath}不一致')
                 except Exception as e:
                     summary.error_summary['count'] += 1
                     detail.result_detail['error_result'].append(Error_Item(

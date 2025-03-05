@@ -2,6 +2,7 @@ import os
 import tempfile
 import zipfile
 
+from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
                                                         unzip_local_file)
 
@@ -35,5 +36,5 @@ def test_unzip_local_file():
             assert f.read() == 'This is another test file'
         try:
             unzip_local_file(zip_path, target_dir, exist_ok=False)
-        except Exception as e:
-            assert str(e) == f'Target directory {target_dir} already exists'
+        except ModelResourceException as e:
+            assert e.custom_message == f'Target directory {target_dir} already exists'

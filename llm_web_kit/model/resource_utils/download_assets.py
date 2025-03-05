@@ -10,7 +10,7 @@ import requests
 from tqdm import tqdm
 
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import ModelInputException
+from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils.boto3_ext import (get_s3_client,
                                                         is_s3_path,
@@ -117,14 +117,18 @@ class HttpConnection(Connection):
 class FileLock:
     """基于文件锁的上下文管理器（跨平台兼容版）"""
 
-    def __init__(self, lock_path: str, timeout: float = 300):
+    def __init__(self, lock_path: str, check_callback=None, timeout: float = 300):
         self.lock_path = lock_path
+        self.check_callback = check_callback
         self.timeout = timeout
         self._fd = None
 
     def __enter__(self):
         start_time = time.time()
         while True:
+            if self.check_callback:
+                if self.check_callback():
+                    return True
             try:
                 # 原子性创建锁文件（O_EXCL标志是关键）
                 self._fd = os.open(
@@ -166,7 +170,7 @@ def verify_file_checksum(
 ) -> bool:
     """校验文件哈希值."""
     if not sum([bool(md5_sum), bool(sha256_sum)]) == 1:
-        raise ModelInputException(
+        raise ModelResourceException(
             'Exactly one of md5_sum or sha256_sum must be provided'
         )
 
@@ -254,19 +258,28 @@ def download_auto_file(
     """线程安全的文件下载函数"""
     lock_path = f'{target_path}.lock'
 
-    with FileLock(lock_path, timeout=lock_timeout):
-        # 二次检查（其他进程可能已经完成下载）
-        if os.path.exists(target_path):
-            if verify_file_checksum(target_path, md5_sum, sha256_sum):
-                logger.info(f'File already exists with valid checksum: {target_path}')
-                return target_path
+    def check_callback():
+        return verify_file_checksum(target_path, md5_sum, sha256_sum)
 
-            if not exist_ok:
-                raise FileExistsError(
-                    f'File exists with invalid checksum: {target_path}'
-                )
+    if os.path.exists(target_path):
+        if not exist_ok:
+            raise ModelResourceException(
+                f'File exists with invalid checksum: {target_path}'
+            )
+
+        if verify_file_checksum(target_path, md5_sum, sha256_sum):
+            logger.info(f'File already exists with valid checksum: {target_path}')
+            return target_path
+        else:
             logger.warning(f'Removing invalid file: {target_path}')
             try_remove(target_path)
+
+    with FileLock(lock_path, check_callback, timeout=lock_timeout) as lock:
+        if lock is True:
+            logger.info(
+                f'File already exists with valid checksum: {target_path} while waiting'
+            )
+            return target_path
 
         # 创建连接
         conn_cls = S3Connection if is_s3_path(resource_path) else HttpConnection
