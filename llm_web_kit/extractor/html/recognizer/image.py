@@ -44,8 +44,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             dict: content_list_node
         """
         html_obj = self._build_html_tree(parsed_content)
-        if html_obj is None:
-            HtmlImageRecognizerException(f'Failed to load html: {parsed_content}', 31031400)
 
         if html_obj.tag == CCTag.CC_IMAGE:
             return self.__ccimg_to_content_list(raw_html_segment, html_obj)
@@ -64,7 +62,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 'caption': html_obj.get('caption')
             }
         }
-        # print(f'content: {result["content"]}')
         return result
 
     @override
@@ -80,17 +77,14 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         """
         ccimg_html = list()
         for html_li in main_html_lst:
-            try:
-                if self.is_cc_html(html_li[0]):
-                    ccimg_html.append(html_li)
+            if self.is_cc_html(html_li[0]):
+                ccimg_html.append(html_li)
+            else:
+                new_html_li = self.__parse_html_img(base_url, html_li)
+                if new_html_li:
+                    ccimg_html.extend(new_html_li)
                 else:
-                    new_html_li = self.__parse_html_img(base_url, html_li)
-                    if new_html_li:
-                        ccimg_html.extend(new_html_li)
-                    else:
-                        ccimg_html.append(html_li)
-            except Exception as e:
-                HtmlImageRecognizerException(f'recognizer image failed: {e}', 31031400)
+                    ccimg_html.append(html_li)
         return ccimg_html
 
     def __parse_html_img(self, base_url: str, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
@@ -169,14 +163,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             img_tag.append(CCTag.CC_IMAGE)
             is_valid_img = True
             img_text, img_tail = self.__parse_text_tail(attributes)
-            try:
-                new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
-            except Exception as e:
-                HtmlImageRecognizerException(f'build_cc_element failed: {e}', 31031400)
-            try:
-                self._replace_element(elem, new_ccimage)
-            except Exception as e:
-                HtmlImageRecognizerException(f'replace img element fail: {e}', 31031400)
+            new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
+            self._replace_element(elem, new_ccimage)
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
@@ -261,5 +249,5 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 f'data:{mime_type};'
                 f'base64,{base64_data}'
             )
-        except Exception as e:
-            HtmlImageRecognizerException(f'svg_to_base64 failed: {e}, error data: {svg_content}', 31031400)
+        except ValueError:
+            pass

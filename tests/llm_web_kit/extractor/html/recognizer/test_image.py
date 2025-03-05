@@ -76,8 +76,15 @@ TEST_CC_CASE = [
                                  'data': None, 'alt': 'Układanie wykładzin', 'title': None, 'caption': None}},
         'alt': 'Układanie wykładzin',
         'img_url': 'http://15.demooo.pl/wp-content/uploads/2022/08/ukladanie-wykladzin.svg'
-    }
+    },
+    {
+        'url': 'xxx',
+        'parsed_content': """<img by="figure" html='&lt;figure&gt;&lt;img src="http://15.demooo.pl/wp-content/uploads/2022/08/ukladanie-wykladzin.svg" alt="Układanie wykładzin"&gt;&lt;/figure&gt;
 
+                            ' format="url" alt="Układanie wykładzin">""",
+        'html': '...',
+        'expected': None,
+    },
 ]
 base_dir = Path(__file__).parent
 
@@ -104,5 +111,6 @@ class TestImageRecognizer(unittest.TestCase):
             res = self.img_recognizer.to_content_list_node(test_case['url'], test_case['parsed_content'],
                                                            test_case['html'])
             self.assertEqual(res, test_case['expected'])
-            self.assertEqual(res['content']['alt'], test_case['alt'])
-            self.assertEqual(res['content']['url'], test_case['img_url'])
+            if res:
+                self.assertEqual(res['content']['alt'], test_case['alt'])
+                self.assertEqual(res['content']['url'], test_case['img_url'])
