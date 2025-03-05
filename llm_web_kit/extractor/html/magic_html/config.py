@@ -109,6 +109,7 @@ CONTENT_EXTRACTOR_NOISE_XPATHS = [
     '//div[starts-with(@class, "advert") or starts-with(@name, "advert") or starts-with(@id, "advert")]',
     '//div[contains(@style, "display: none")]',
     '//div[contains(@style, "display:none")]',
+    '//*[contains(@class, "d-none")]',  # 任意标签，class包含d-none，如这类网站https://stats.stackexchange.com/questions/11544/testing-for-stability-in-a-time-series/11750
     # '//head//script'
 ]
 

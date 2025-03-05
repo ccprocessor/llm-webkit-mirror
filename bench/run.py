@@ -61,6 +61,8 @@ def main():
             url = files[fileName]['url']
             origin_filepath = files[fileName]['origin_filepath']
             groundtruth_filepath = files[fileName]['groundtruth_filepath']
+            layout_type = files[fileName].get('layout_type', '')
+            print(layout_type)
             html = reader.read(f'{root}/data/{origin_filepath}').decode('utf-8')
             groundtruth = json.loads(reader.read(f'{root}/data/{groundtruth_filepath}').decode('utf-8'))
             statics_gt.merge_statics(groundtruth.get('statics', {}))
@@ -77,7 +79,7 @@ def main():
                     print(pipelineConfigPath)
                     print(pipeline_data_path)
                     print(f'{root}/data/{origin_filepath}')
-                    output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}')
+                    output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}', layout_type)
                     out['content_list'] = content_list
                     out['main_html'] = main_html
                     out['statics'] = statics
