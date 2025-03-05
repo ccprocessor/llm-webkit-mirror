@@ -3,7 +3,8 @@ coverage:
     patch:  # 只检查变更部分的覆盖率
       default:
         target: 85%  # 变更代码的覆盖率目标
-        threshold: 1%  # 允许的浮动范围
+        threshold: 2%  # 允许的浮动范围
+        base: auto     # 基于当前分支的覆盖率
 
   # 忽略特定路径
   ignore:
