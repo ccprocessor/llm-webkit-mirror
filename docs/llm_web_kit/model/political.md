@@ -73,9 +73,7 @@ print(political_filter_cpu(text, "en"))
 
 ## 运行时间
 
-在s集群的10.140.24.131机器上，用cpu单核跑，测试样本位于s3://xyz-llm-users/xyz-users/minrui/junk_information_filter/second_largest_cluster_extract/1/part-67adb46f3b43-000053.jsonl
-
-总共有 77861 条数据（排除第一条数据和非中英文的数据），下面只统计了political_filter_cpu接口本身的耗时，排除了数据读取的时间。
+使用型号为`AMD EPYC 7742`的cpu单核进行测试，测试集总共有 77861 条数据（均是中英文的数据），下面只统计了political_filter_cpu接口本身的耗时，排除了数据读取的时间。
 
 总字符数: 135617056
 
