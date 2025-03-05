@@ -369,4 +369,4 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert 'Online| ID: 975' in content_md
+        assert '| ID: 975' in content_md

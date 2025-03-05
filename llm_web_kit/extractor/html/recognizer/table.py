@@ -196,21 +196,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 ]
                 ele_res.extend(ccinterline_codes)
             else:
-                tree = self._build_html_tree(math_item[1])
                 texts = []
-                for element in tree.iter():
-                    if element.text and element.text.strip():
-                        text = element.text.strip()
-                        # 如果有tail，直接拼接到text后面
-                        if element.tail and element.tail.strip():
-                            text += element.tail.strip()
-                        texts.append(text)
-                    elif element.tail and element.tail.strip():
-                        # 如果只有tail且前面有内容，则拼接到最后一个text
-                        if texts:
-                            texts[-1] += element.tail.strip()
-                        else:
-                            texts.append(element.tail.strip())
+                # 使用 itertext() 遍历所有文本片段
+                for text_segment in ele_item.itertext():
+                    # 统一处理文本：去空白 + 替换字面 \n
+                    cleaned_text = text_segment.strip().replace('\\n', '')
+                    if cleaned_text:  # 过滤空字符串
+                        texts.append(cleaned_text)
                 ele_res.extend(texts)
         return ele_res
 
@@ -242,9 +234,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         # text进行strip操作,tail保留（部分内容留在tail中）
         for elem in chain([table_root], table_root.iterdescendants()):
             if elem.text is not None:
-                elem.text = elem.text.strip()
+                elem.text = elem.text.strip().replace('\\n', '')
             if elem.tail is not None:
-                elem.tail = elem.tail.strip()
+                elem.tail = elem.tail.strip().replace('\\n', '')
                 if not elem.tail:
                     elem.tail = None
         self.__simplify_td_th_content(table_root)
