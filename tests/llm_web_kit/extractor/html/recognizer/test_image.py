@@ -83,7 +83,7 @@ TEST_CC_CASE = [
 
                             ' format="url" alt="Układanie wykładzin">""",
         'html': '...',
-        'expected': None,
+        'expected': 31031400,
     },
 ]
 base_dir = Path(__file__).parent
@@ -108,9 +108,11 @@ class TestImageRecognizer(unittest.TestCase):
 
     def test_to_content_list_node(self):
         for test_case in TEST_CC_CASE:
-            res = self.img_recognizer.to_content_list_node(test_case['url'], test_case['parsed_content'],
-                                                           test_case['html'])
-            self.assertEqual(res, test_case['expected'])
-            if res:
+            try:
+                res = self.img_recognizer.to_content_list_node(test_case['url'], test_case['parsed_content'],
+                                                               test_case['html'])
+                self.assertEqual(res, test_case['expected'])
                 self.assertEqual(res['content']['alt'], test_case['alt'])
                 self.assertEqual(res['content']['url'], test_case['img_url'])
+            except Exception as e:
+                self.assertEqual(e.error_code, test_case['expected'])
