@@ -48,7 +48,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         if html_obj.tag == CCTag.CC_IMAGE:
             return self.__ccimg_to_content_list(raw_html_segment, html_obj)
         else:
-            HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}', 31031400)
+            HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}')
+            raise HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}')
 
     def __ccimg_to_content_list(self, raw_html_segment: str, html_obj: HtmlElement) -> dict:
         result = {
