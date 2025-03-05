@@ -196,11 +196,14 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 ]
                 ele_res.extend(ccinterline_codes)
             else:
-                ele_res.extend([
-                    text.strip()
-                    for text in self._build_html_tree(math_item[1]).itertext()
-                    if text.strip()
-                ])
+                texts = []
+                # 使用 itertext() 遍历所有文本片段
+                for text_segment in ele_item.itertext():
+                    # 统一处理文本：去空白 + 替换字面 \n
+                    cleaned_text = text_segment.strip().replace('\\n', '')
+                    if cleaned_text:  # 过滤空字符串
+                        texts.append(cleaned_text)
+                ele_res.extend(texts)
         return ele_res
 
     def __simplify_td_th_content(self, elem: HtmlElement) -> None:
@@ -212,7 +215,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             parse_res.extend(math_res)
             for item in list(elem.iterchildren()):
                 elem.remove(item)
-            elem.text = '<br>'.join(parse_res)
+            if parse_res:
+                elem.text = '<br>'.join(parse_res)
             return
         for child in elem.iter('td', 'th'):
             self.__simplify_td_th_content(child)
@@ -227,18 +231,17 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             cleaned_attrs = {k: v for k, v in table_root.attrib.items() if k in allowed_attributes}
             table_root.attrib.clear()
             table_root.attrib.update(cleaned_attrs)
-        # text进行strip操作,tail去掉(有较多空换行)
+        # text进行strip操作,tail保留（部分内容留在tail中）
         for elem in chain([table_root], table_root.iterdescendants()):
-            if elem.text:
-                elem.text = elem.text.strip()
-            if elem.tail:
-                elem.tail = None
+            if elem.text is not None:
+                elem.text = elem.text.strip().replace('\\n', '')
+            if elem.tail is not None:
+                elem.tail = elem.tail.strip().replace('\\n', '')
         self.__simplify_td_th_content(table_root)
         # 迭代
         for child in table_root.iterchildren():
             if child is not None:
                 self.__get_table_body(table_type, child)
-
         return self._element_to_html(table_root)
 
     def __do_extract_tables(self, root: HtmlElement) -> None:

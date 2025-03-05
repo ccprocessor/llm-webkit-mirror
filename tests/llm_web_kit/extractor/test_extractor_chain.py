@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 12
+        assert len(self.data_json) == 13
 
         # Config for HTML extraction
         self.config = {
@@ -359,3 +359,14 @@ DEF
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()[0][0]['content']['html']
         assert content_list == """<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>print()</td><td>Prints a message to the console.</td><td>print("Hello, World!")</td></tr><tr><td>len()</td><td>Returns the length of an object.</td><td>len([1, 2, 3])</td></tr><tr><td>range()</td><td>Generates a sequence of numbers.</td><td>range(1, 10)</td></tr></table>"""
+
+    def test_table_tail_text(self):
+        """table的tail文本保留."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[12]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert '| ID: 975' in content_md
