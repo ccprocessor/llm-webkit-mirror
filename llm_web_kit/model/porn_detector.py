@@ -37,9 +37,6 @@ class BertModel:
         self.model.eval()
         self.model.to(self.device, dtype=torch.float16)
 
-        if hasattr(self.model, "to_bettertransformer"):
-            self.model = self.model.to_bettertransformer()
-
         self.tokenizer = AutoTokenizer.from_pretrained(
             os.path.join(model_path, "porn_classifier/classifier_hf")
         )
@@ -176,9 +173,6 @@ class XlmrModel(BertModel):
 
         self.model.eval()
         self.model.to(self.device, dtype=torch.float16)
-
-        if hasattr(self.model, "to_bettertransformer"):
-            self.model = self.model.to_bettertransformer()
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             os.path.join(model_path, "porn_classifier/classifier_hf")
