@@ -93,7 +93,7 @@ class QualityModel:
 
     def predict_with_features(self, features_dict: Dict[str, Any]) -> float:
         feature_df = pd.json_normalize(features_dict)
-        pred = self.quality_model.predict(feature_df)[0]
+        pred = self.quality_model.predict(feature_df, num_threads=1)[0]
 
         return float(pred)
 
