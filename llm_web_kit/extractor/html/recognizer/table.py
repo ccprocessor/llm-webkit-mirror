@@ -237,8 +237,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 elem.text = elem.text.strip().replace('\\n', '')
             if elem.tail is not None:
                 elem.tail = elem.tail.strip().replace('\\n', '')
-                if not elem.tail:
-                    elem.tail = None
         self.__simplify_td_th_content(table_root)
         # 迭代
         for child in table_root.iterchildren():
