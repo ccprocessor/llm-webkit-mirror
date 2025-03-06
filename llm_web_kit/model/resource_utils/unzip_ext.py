@@ -84,7 +84,9 @@ def unzip_local_file(
 
     if os.path.exists(target_dir):
         if not exist_ok:
-            raise ModelResourceException(f'Target directory {target_dir} already exists')
+            raise ModelResourceException(
+                f'Target directory {target_dir} already exists'
+            )
 
         if check_zip():
             logger.info(f'zip file {zip_path} is already unzipped to {target_dir}')
