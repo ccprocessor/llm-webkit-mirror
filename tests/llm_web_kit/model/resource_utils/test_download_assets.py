@@ -464,7 +464,7 @@ class TestMoveToTarget(unittest.TestCase):
         with open(tmp_path, 'wb') as f:
             f.write(b'short')
 
-        with self.assertRaisesRegex(ValueError, 'size mismatch'):
+        with self.assertRaisesRegex(ModelResourceException, 'size mismatch'):
             move_to_target(tmp_path, self.target_path, 100)
 
     def test_directory_creation(self):

@@ -154,7 +154,7 @@ def download_to_temp(conn, progress_bar) -> str:
 def move_to_target(tmp_path: str, target_path: str, expected_size: int):
     """移动文件并验证."""
     if os.path.getsize(tmp_path) != expected_size:
-        raise ValueError(
+        raise ModelResourceException(
             f'File size mismatch: {os.path.getsize(tmp_path)} vs {expected_size}'
         )
 
@@ -162,7 +162,7 @@ def move_to_target(tmp_path: str, target_path: str, expected_size: int):
     shutil.move(tmp_path, target_path)  # 原子操作替换
 
     if not os.path.exists(target_path):
-        raise RuntimeError(f'Move failed: {tmp_path} -> {target_path}')
+        raise ModelResourceException(f'Move failed: {tmp_path} -> {target_path}')
 
 
 def download_auto_file(
