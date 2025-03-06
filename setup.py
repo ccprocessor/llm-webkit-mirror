@@ -33,6 +33,11 @@ if __name__ == '__main__':
         },
         url='https://github.com/ccprocessor/llm_web_kit',
         python_requires='>=3.10, <3.14',
+        entry_points={
+            'console_scripts': [
+                'magic-html = llm_web_kit.tools.cli:cli'
+            ],
+        },  # 项目提供的可执行命令
         include_package_data=True,  # 是否包含非代码文件，如数据文件、配置文件等
         zip_safe=False,  # 是否使用 zip 文件格式打包，一般设为 False
     )

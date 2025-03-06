@@ -1,0 +1,19 @@
+coverage:
+  status:
+    patch:  # 只检查变更部分的覆盖率
+      default:
+        target: 85%  # 变更代码的覆盖率目标
+        threshold: 2%  # 允许的浮动范围
+        base: auto     # 基于当前分支的覆盖率
+
+  # 忽略特定路径
+  ignore:
+    - "tests/**/*"           # 忽略所有测试目录
+    - "**/__pycache__/**/*"  # 忽略缓存文件
+    - "**/__init__.py"       # 忽略初始化文件
+
+# 可选：调整报告显示
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false

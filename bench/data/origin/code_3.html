@@ -1,0 +1,1505 @@
+
+<!DOCTYPE html><html lang="zh"><head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
+	<link rel="icon" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/favicon.20241211061245463.ico" type="image/x-icon"/>
+	<link rel="canonical" href="https://ww2.mathworks.cn/help/fixedpoint/ug/single-precision-conversion-verification-best-practices.html"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/webvitals.min.20241211061245463.js"></script>
+
+
+
+
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/jquery.min.20241211061245463.js"></script>
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/jquery-migrate.min.20241211061245463.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/core.min.20241211061245463.css" type="text/css"/>
+<link rel="stylesheet" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/zh.min.20241211061245463.css" type="text/css"/>
+
+
+
+
+
+<link rel="stylesheet" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/footer.min.20241211061245463.css" type="text/css"/>
+
+
+
+
+
+<link rel="stylesheet" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/offcanvasv4.min.20241211061245463.css" type="text/css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/documentation.min.20241211061245463.css" type="text/css"/>
+
+
+
+
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/roboto/roboto-latin-italic-400.20241211061245463.woff2" rel="preload" as="font" type="font/woff2" crossorigin=""/>
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/roboto/roboto-latin-italic-500.20241211061245463.woff2" rel="preload" as="font" type="font/woff2" crossorigin=""/>
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/roboto/roboto-latin-italic-700.20241211061245463.woff2" rel="preload" as="font" type="font/woff2" crossorigin=""/>
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/roboto/roboto-latin-normal-400.20241211061245463.woff2" rel="preload" as="font" type="font/woff2" crossorigin=""/>
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/roboto/roboto-latin-normal-500.20241211061245463.woff2" rel="preload" as="font" type="font/woff2" crossorigin=""/>
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/roboto/roboto-latin-normal-700.20241211061245463.woff2" rel="preload" as="font" type="font/woff2" crossorigin=""/>
+	<link href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/fonts/mathworks.20241211061245463.woff" rel="preload" as="font" type="font/woff" crossorigin=""/>
+
+
+
+		<script>(function(g,b,d,f){(function(a,c,d){if(a){var e=b.createElement("style");e.id=c;e.innerHTML=d;a.appendChild(e)}})(b.getElementsByTagName("head")[0],"at-body-style",d);setTimeout(function(){var a=b.getElementsByTagName("head")[0];if(a){var c=b.getElementById("at-body-style");c&&a.removeChild(c)}},f)})(window,document,"[class*='personalization-container']:not([id^='web-application']) {opacity: 0 !important}",1E3);</script> <script src="//assets.adobedtm.com/d0cc0600946eb3957f703b9fe43c3590597a8c2c/satelliteLib-e8d23c2e444abadc572df06537e2def59c01db09.js" async=""></script>
+
+
+
+
+
+
+
+
+	<title>Single-Precision Conversion Best Practices
+</title>
+
+<meta xmlns="http://www.w3.org/1999/xhtml" http-equiv="Content-Script-Type" content="text/javascript"/>
+
+<link xmlns="http://www.w3.org/1999/xhtml" href="/help/releases/R2024b/includes/web/css/doc_center.css" rel="stylesheet" type="text/css"/>
+
+<script src="/help/releases/R2024b/includes/shared/equationrenderer/release/MathRenderer.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/l10n.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/docscripts.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/f1help.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/mw.imageanimation.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/jquery.highlight.js"></script>
+<script src="/help/releases/R2024b/includes/product/scripts/underscore-min.js"></script>
+
+<script xmlns="http://www.w3.org/1999/xhtml" src="/help/search/R2024b/searchresults.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="/help/search/R2024b/tokenize.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="/help/search/R2024b/helpcenter_docsearch.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="/help/search/R2024b/searchtracking.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="/help/releases/R2024b/includes/shared/scripts/localstorage.js"></script>
+
+<script src="/help/releases/R2024b/includes/shared/scripts/overload.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/helpservices.js"></script>
+<script src="/help/releases/R2024b/includes/product/scripts/productfilter.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/matlab_dialog_shared.js"></script>
+<link href="/help/releases/R2024b/includes/shared/highlight/styles/mwdochighlight.min.css" rel="stylesheet" type="text/css"/>
+<script src="/help/releases/R2024b/includes/shared/highlight/highlight.min.js"></script>
+	<meta name="robots" content="all"/><style>.-has_standardnav {
+  @media (min-width:992px) {
+    #offcanvas_menu { box-shadow: inset 0 1px 0 0 var(--mw-ws-global-border-color); }
+    &.locked #offcanvas_menu { box-shadow: inset 0 1px 0 0 #fafafa; }
+  }
+}
+.-has_standardnav #sticky_container #subnav {
+  @media (min-width:992px) {
+    .navbar-nav { margin:0 0 0 -5px !important; display:inline-block; font-size:0; white-space:nowrap; }
+    .navbar-nav > li { padding:0 !important; margin-bottom:0; display:inline-block; font-size:13px; line-height:1.00; float:none; }
+    .navbar-nav > .nav-item + .nav-item { padding-left:1px !important; border-left:none !important; }
+    .navbar-nav > li > a { padding:10px 10px 8px !important; border-radius:4px; display:inline-block; line-height:1.00; text-align:center; }
+
+    .navbar-nav > li > a,
+    .navbar-nav > li > a:visited { color:var(--mw-ws-global-link-color);  }
+    .navbar-nav > li > a:hover { background:var(--mw-ws-additive-color-transparent); color:var(--mw-color-brand03) !important; text-decoration:none !important; }
+    .navbar-nav > li > a:focus { outline-offset:-2px; }
+
+    .navbar-nav > li > a.active { background:#e6f2fa !important; color:var(--mw-ws-global-color) !important; }
+    .navbar-nav > li > a.active:hover { background:#e6f2fa !important; color:var(--mw-ws-global-color) !important; }
+
+    .navbar-nav > li > a >.result_count { font-size:11px; }
+
+    #localnav > li#crux_nav_documentation.active { padding:10px 10px 8px; border-radius:var(--mw-ws-global-border-radius); background:#e6f2fa; color:var(--mw-ws-global-color); line-height:1.00; text-align:center; }
+    #localnav > li#crux_nav_documentation.active > a { padding:0; background:var(--mw-ws-additive-color-transparent); }
+
+  }
+
+  @media (max-width:991.98px) {
+    .navbar-nav { width:100% !important; }
+    .navbar-nav > li { padding-left:0 !important; font-size:13px; }
+    .navbar-nav > li > a.active { background:#e6f2fa; color:var(--mw-ws-global-color) !important; }
+  }
+}</style><script nonce="79cf3c748304048bf21ea082087b0fc5">bazadebezolkohpepadr="1772021276"</script><script type="text/javascript" src="https://ww2.mathworks.cn/akam/13/699ee49e" nonce="79cf3c748304048bf21ea082087b0fc5" defer></script></head>
+
+
+
+
+	<body id="responsive_offcanvas" class="-is_bootstrap3
+		  no_animate offcanvas_fluid
+		   templateservice
+
+
+
+
+
+		  -has_standardnav">
+
+	<a class="skip_link sr-only" href="#skip_link_anchor" tabindex="1">跳到内容</a>
+
+
+
+
+
+<!-- Mobile TopNav: Start -->
+<div class="header visible-xs visible-sm" id="header_mobile">
+	<nav class="navbar navbar-default" role="navigation" aria-label="主导航">
+		<div class="navbar-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-3">
+						<button type="button" class="navbar-toggle topnav_toggle" tabindex="1" data-toggle="collapse" data-target="#topnav_collapse">
+							<span class="sr-only">切换主导航</span>
+							<span class="icon-menu"></span>
+						</button>
+					</div>
+					<div class="col-xs-6">
+						<div class="text-center">
+							<a href="/?s_tid=gn_logo" class="svg_link navbar-brand" tabindex="3">
+								<img src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/pic-header-mathworks-logo.20241211061245463.svg" class="mw_logo" alt="MathWorks - Mobile View"/>
+							</a>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="matrix_affordance_container_mobile" id="matrix_affordance_container_mobile">
+							<mw-matrix lang="zh" tier="DOTCOM" env="prod" type="mobile" bsversion="bs3" host="https://ww2.mathworks.cn"></mw-matrix>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="row visible-xs visible-sm">
+					<div class="col-xs-12">
+						<div class="navbar-collapse collapse" id="topnav_collapse">
+							<div class="topNavigation topnavigation containsResourceName resourceClass-topnavigation">
+
+<ul class="nav navbar-nav topnav" id="topnav_mobile">
+
+
+
+<li class="headernav_login" style="display: none;">
+	<a class="mwa-nav_login" tabindex="2" title="登录到您的 MathWorks 帐户"><span class="visible-xs visible-sm">登录</span></a>
+</li>
+<li class="headernav_logout dropdown" style="display: none;">
+	<a href="#" role="button" title="访问您的 MathWorks 帐户" aria-haspopup="menu" aria-controls="mw_nav_mobile" class="dropdown-toggle mwa_image_drop_down" data-toggle="dropdown" tabindex="2">
+		<span class="visible-xs visible-sm">
+			<span class="mobile_account_image"></span>
+			<span class="mobile_account_name" aria-hidden="true"></span>
+			<b class="caret"></b>
+		</span>
+	</a>
+	<ul role="menu" class="dropdown-menu" id="mw_nav_mobile">
+		<li class="mwa-nav_account"><a role="menuitem" class="mwa-account" tabindex="2">我的帐户</a></li>
+		<li class="mwa-nav_community"><a role="menuitem" class="mwa-community-profile" tabindex="2">我的社区资料</a></li>
+		<li class="mwa-nav_associate"><a role="menuitem" class="mwa-link-license" tabindex="2">关联许可证</a></li>
+		<li class="mwa-nav_logout"><a role="menuitem" class="mwa-logout" tabindex="2">登出</a>
+		</li>
+	</ul>
+</li>
+
+
+
+
+		<li class="topnav_products ">
+			<a href="/products.html" tabindex="2">产品</a>
+		</li>
+
+		<li class="topnav_solutions ">
+			<a href="/solutions.html?s_tid=nav_solutions" tabindex="2">解决方案</a>
+		</li>
+
+		<li class="topnav_academia ">
+			<a href="/academia.html?s_tid=gn_acad" tabindex="2">学术</a>
+		</li>
+
+		<li class="topnav_support ">
+			<a href="/help/?s_tid=gn_supp" tabindex="2">支持</a>
+		</li>
+
+		<li class="topnav_community ">
+			<a href="/matlabcentral/?s_tid=gn_mlc" tabindex="2">社区</a>
+		</li>
+
+		<li class="topnav_events ">
+			<a href="/company/events.html?s_tid=gn_ev" tabindex="2">活动</a>
+		</li>
+
+
+		<li class="headernav_store">
+			<a href="https://login.mathworks.com/embedded-login/landing.html?cid=getmatlab&amp;s_tid=gn_getml" tabindex="2">
+				<span class="not-logged-in" style="display: none;">获取 MATLAB</span>
+				<span class="logged-in" style="display: none;">MATLAB</span>
+			</a>
+		</li>
+
+</ul>
+</div>
+
+						</div>
+						<div class="navbar-collapse collapse" id="matrix_collapse">
+							<div class="matrix_menu_container_mobile" id="matrix_menu_container_mobile"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+</div>
+<!-- Mobile TopNav: End -->
+<!-- Desktop TopNav: Start -->
+<div class="header hidden-xs hidden-sm" id="header_desktop">
+	<nav class="navbar navbar-default" role="navigation" aria-label="Main Navigation">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-9">
+					<div class="navbar-header">
+						<div class="logo_container hidden-xs hidden-sm">
+							<a href="/?s_tid=gn_logo" class="svg_link pull-left" tabindex="1">
+								<img src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/pic-header-mathworks-logo.20241211061245463.svg" class="mw_logo" alt="MathWorks"/>
+							</a>
+						</div>
+						<div class="navbar-collapse collapse hidden-xs hidden-sm">
+
+							<div class="topNavigation topnavigation containsResourceName resourceClass-topnavigation">
+
+
+
+
+
+
+
+	<ul id="topnav_desktop" class="nav navbar-nav topnav">
+		<li class="topnav_products ">
+			<a href="/products.html" tabindex="2">产品</a>
+		</li>
+
+		<li class="topnav_solutions ">
+			<a href="/solutions.html?s_tid=nav_solutions" tabindex="2">解决方案</a>
+		</li>
+
+		<li class="topnav_academia ">
+			<a href="/academia.html?s_tid=gn_acad" tabindex="2">学术</a>
+		</li>
+
+		<li class="topnav_support ">
+			<a href="/help/?s_tid=gn_supp" tabindex="2">支持</a>
+		</li>
+
+		<li class="topnav_community ">
+			<a href="/matlabcentral/?s_tid=gn_mlc" tabindex="2">社区</a>
+		</li>
+
+		<li class="topnav_events ">
+			<a href="/company/events.html?s_tid=gn_ev" tabindex="2">活动</a>
+		</li>
+	</ul>
+
+</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="headerNavigation headernavigation containsResourceName resourceClass-headernavigation">
+<div class="collapse navbar-collapse" id="headernav_collapse">
+	<ul class="nav navbar-nav navbar-right" id="headernav">
+
+			<li class="headernav_store">
+				<a href="https://login.mathworks.com/embedded-login/landing.html?cid=getmatlab&amp;s_tid=gn_getml" class="not-logged-in btn btn_color_blue companion_btn btn-xs" tabindex="2" style="display: none;">获取 MATLAB</a>
+				<a href="https://login.mathworks.com/embedded-login/landing.html?cid=getmatlab&amp;s_tid=gn_getml" class="logged-in btn btn_color_blue companion_btn btn-xs" tabindex="2" style="display: none;">MATLAB</a>
+			</li>
+
+
+
+
+<li class="headernav_login" style="display: none;">
+	<a class="mwa-nav_login" tabindex="2" title="登录到您的 MathWorks 帐户"><span class="visible-xs visible-sm">登录</span></a>
+</li>
+<li class="headernav_logout dropdown" style="display: none;">
+	<a href="#" role="button" title="访问您的 MathWorks 帐户" aria-haspopup="menu" aria-controls="mw_nav_desktop" class="dropdown-toggle mwa_image_drop_down" data-toggle="dropdown" tabindex="2">
+		<span class="visible-xs visible-sm">
+			<span class="mobile_account_image"></span>
+			<span class="mobile_account_name" aria-hidden="true"></span>
+			<b class="caret"></b>
+		</span>
+	</a>
+	<ul role="menu" class="dropdown-menu" id="mw_nav_desktop">
+		<li class="mwa-nav_account"><a role="menuitem" class="mwa-account" tabindex="2">我的帐户</a></li>
+		<li class="mwa-nav_community"><a role="menuitem" class="mwa-community-profile" tabindex="2">我的社区资料</a></li>
+		<li class="mwa-nav_associate"><a role="menuitem" class="mwa-link-license" tabindex="2">关联许可证</a></li>
+		<li class="mwa-nav_logout"><a role="menuitem" class="mwa-logout" tabindex="2">登出</a>
+		</li>
+	</ul>
+</li>
+
+
+
+		<li id="headernav_matrix" class="headernav_matrix">
+			<mw-matrix lang="zh" tier="DOTCOM" env="prod" host="https://ww2.mathworks.cn"></mw-matrix>
+		</li>
+	</ul>
+</div></div>
+
+				</div>
+			</div>
+		</div>
+	</nav>
+</div>
+<!-- Desktop TopNav: End -->
+
+
+
+
+
+
+
+		<!-- Section Header: Start -->
+		<div class="section_header level_3">
+			<div class="container-fluid">
+				<div class="row" id="mobile_search_row">
+					<div class="col-sm-6 col-md-7" id="section_header_title">
+						<div><div class="sectionHead sectionhead containsResourceName resourceClass-sectionhead">
+
+
+
+
+
+
+	<div class="section_header_content">
+		<div class="section_header_title">
+			<p class="h1">
+				<a href="/help" class="add_cursor_pointer">帮助中心</a>
+
+			</p>
+
+
+		</div>
+	</div>
+</div>
+</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-md-5" id="mobile_search">
+						<div><div class="sectionHeadSearchBox sectionheadsearchbox containsResourceName resourceClass-sectionheadsearchbox">
+
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/sectionheadsearchbox.min.20241211061245463.js"></script>
+
+
+
+		<div class="search_nested_content_container">
+
+			<div id="search_scope_doc" class="collapse in"><form name="docsearch_form" id="docsearch_form" data-release="R2024b" data-language="zh_CN" action="/support/search.html" method="get">
+    <div class="input-group tokenized_search_field">
+        <label class="sr-only">Search MATLAB Documentation</label>
+        <input type="search" class="form-control conjoined_search" autocomplete="off" name="q" placeholder="搜索帮助中心" id="docsearch"/>
+        <input type="hidden" name="selectedsource" value="mw" id="selected_source"/>
+        <div class="input-group-btn">
+            <button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+        </div>
+    </div>
+</form>
+
+
+			</div>
+
+				<script>
+					$(".search_scope_trigger").on('click', function handlerSearch(event) {
+						var target1 = event.target.parentNode.attributes.getNamedItem("data-groupid").nodeValue;
+						$('#' + target1).removeClass("in");
+					});
+				</script>
+
+
+		</div>
+		<button class="btn icon-remove btn_search pull-right icon_32 visible-xs" data-toggle="collapse" data-target="#mobile_search" aria-expanded="false" aria-controls="mobile_search"><span class="sr-only">关闭移动搜索</span>
+		</button>
+
+</div>
+</div>
+					</div>
+					<div class="visible-xs" id="search_actuator">
+						<button class="btn icon-search btn_search pull-right icon_16 containsResourceName resourceClass-button" data-toggle="collapse" data-target="#mobile_search" aria-expanded="false" aria-controls="mobile_search"><span class="sr-only">关闭移动搜索</span></button>
+					</div>
+				</div>
+				<!-- Community Subnav: Start -->
+
+				<!-- Community Subnav: End -->
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+	<div class="row-offcanvas row-offcanvas-left" id="row-offcanvas">
+		<div id="sidebar_offcanvas_mobile_pointer">
+
+
+
+
+<div class="sidebar-offcanvas" id="sidebar">
+	<nav class="offcanvas_nav" aria-label="筛选器导航">
+		<div class="offcanvas_actuator" data-toggle="offcanvas" data-target="#sidebar" id="nav_toggle">
+			<button type="button" class="btn">
+				<span class="sr-only">切换导航</span>
+				<span class="icon-menu"></span>
+			</button>
+			<span class="offcanvas_actuator_label" id="translation_icon-menu" tabindex="-1" aria-hidden="true">
+				目录
+			</span>
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/offcanvasv4.min.20241211061245463.js"></script>
+
+
+
+		</div>
+		<div class="nav_list_wrapper" id="nav_list_wrapper"><nav class="offcanvas_nav" role="navigation">
+<div class="personalization-container" id="web-application-offcanvas-container">
+<ul xmlns="http://www.w3.org/1999/xhtml" class="nav_breadcrumb" id="ul_left_nav_ancestors">
+	<li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb">
+		<a href="/help/index.html?s_tid=CRUX_lftnav" itemprop="url"><span itemprop="title">文档主页</span>
+		</a>
+	</li>
+</ul>
+
+<ul xmlns="http://www.w3.org/1999/xhtml" class="nav_breadcrumb" id="ul_left_nav_productgroups">
+<li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb">
+	<a href="/help/overview/code-generation.html?s_tid=hc_product_group_bc" itemprop="url"><span itemprop="title">代码生成</span>
+	</a>
+</li>
+<li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb">
+	<a href="/help/overview/fpga-asic-and-soc-development.html?s_tid=hc_product_group_bc" itemprop="url"><span itemprop="title">FPGA、ASIC 和 SoC 开发</span>
+	</a>
+</li></ul><ul xmlns="http://www.w3.org/1999/xhtml" class="nav_disambiguation"><li><a href="../index.html?s_tid=CRUX_lftnav" id="index">Fixed-Point Designer</a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb">
+						<a href="../automated-data-typing.html?s_tid=CRUX_lftnav" itemprop="url"><span itemprop="title">Automated Data Type Conversion</span></a>
+					</li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb">
+						<a href="../single-precision-design-for-matlab-code.html?s_tid=CRUX_lftnav" itemprop="url" id="mw_8350e24d-777f-4c54-bb54-e98983536c87"><span itemprop="title">Single-Precision Design for MATLAB Code</span></a>
+					</li></ul><ul xmlns="http://www.w3.org/1999/xhtml" class="nav_scrollspy nav" id="pnav">
+	<li class="nav_scrollspy_function notranslate">
+		<a href="#responsive_offcanvas">
+			<span class="refname">Single-Precision Conversion Best Practices</span>
+		</a>
+	</li>
+
+<li class="nav_scrollspy_title" id="SSPY810-refentry">On this page</li><li class=""><a href="#buzbmwf" class="intrnllnk">Use Integers for Index Variables</a></li><li class=""><a href="#buzcvj2" class="intrnllnk">Limit Use of assert Statements</a></li><li class=""><a href="#buzcvtt" class="intrnllnk">Initialize MATLAB Class Properties in Constructor</a></li><li class=""><a href="#buzcwc8-1" class="intrnllnk">Provide a Test File That Calls Your MATLAB Function</a></li><li class=""><a href="#buy1zzo" class="intrnllnk">Prepare Your Code for Code Generation</a></li><li class=""><a href="#buzcwvm" class="intrnllnk">Use the -args Option to Specify Input Properties</a></li><li class=""><a href="#buzcwvo" class="intrnllnk">Test Numerics and Log I/O Data</a></li></ul></div>
+</nav>
+			<div class="sidebar parsys containsResourceName resourceClass-parsys"><div class="targetcontainer containsResourceName resourceClass-targetcontainer section">
+
+
+
+</div>
+
+</div>
+
+		</div>
+	</nav>
+</div>
+
+
+		</div>
+
+		<div class="offcanvas_content_container">
+			<div class="sticky_header_container">
+
+
+
+
+	<div class="horizontal_nav">
+		<div class="horizontal_nav_container">
+
+			<div class="offcanvas_horizontal_nav">
+				<div class="container-fluid">
+					<div class="row">
+
+	<div class="col-md-7 col-lg-8 hidden-xs">
+		<nav class="navbar navbar-default" role="navigation" id="subnav" aria-label="子导航"><div>
+	<ul class="crux_resource_list_default nav navbar-nav list-unstyled add_margin_0" style="display:none;">
+
+		<li class="crux_resource"><a href="/help/fixedpoint/single-precision-design-for-matlab-code.html?s_tid=CRUX_topnav">文档</a></li>
+
+		<li class="crux_resource"><a href="/help/fixedpoint/examples.html?s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">示例</a></li>
+
+		<li class="crux_resource"><a href="/help/fixedpoint/referencelist.html?type=function&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">函数</a></li>
+
+		<li class="crux_resource"><a href="/help/fixedpoint/referencelist.html?type=block&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">模块</a></li>
+
+		<li class="crux_resource"><a href="/help/fixedpoint/referencelist.html?type=app&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">App</a></li>
+
+		<li class="crux_resource"><a href="/support/search.html?fq%5B%5D=asset_type_name:video&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav">视频</a></li>
+
+		<li class="crux_resource"><a href="/support/search.html?fq%5B%5D=asset_type_name:answer&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav">问答</a></li>
+
+	</ul>
+	<ul class="crux_resource_list crux_browse nav navbar-nav" id="crux_browse">
+
+		<li class="crux_resource active " data-nav-id="crux_nav_文档">
+			<a href="/help/fixedpoint/single-precision-design-for-matlab-code.html?s_tid=CRUX_topnav" data-id="">
+			文档
+		</a></li>
+
+		<li class="crux_resource  " data-nav-id="crux_nav_示例">
+			<a href="/help/fixedpoint/examples.html?s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+			示例
+		</a></li>
+
+		<li class="crux_resource  " data-nav-id="crux_nav_function">
+			<a href="/help/fixedpoint/referencelist.html?type=function&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+			函数
+		</a></li>
+
+		<li class="crux_resource  " data-nav-id="crux_nav_block">
+			<a href="/help/fixedpoint/referencelist.html?type=block&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+			模块
+		</a></li>
+
+		<li class="crux_resource  " data-nav-id="crux_nav_app">
+			<a href="/help/fixedpoint/referencelist.html?type=app&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+			App
+		</a></li>
+
+		<li class="crux_resource  " data-nav-id="crux_nav_video">
+			<a href="/support/search.html?fq%5B%5D=asset_type_name:video&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav" data-id="">
+			视频
+		</a></li>
+
+		<li class="crux_resource  " data-nav-id="crux_nav_answers">
+			<a href="/support/search.html?fq%5B%5D=asset_type_name:answer&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav" data-id="">
+			问答
+		</a></li>
+
+	</ul>
+</div></nav>
+	</div>
+
+<div class="visible-xs">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-9">
+			<div class="mobile_crux_nav_trigger crux_nav">
+				<!-- Single button -->
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+							Resources
+						 <span class="icon-arrow-down icon_16"></span>
+					</button>
+					<div class="dropdown-menu" role="navigation" aria-label="Resource filter navigation">
+						<ul class="crux_resource_list_default nav list-unstyled add_margin_0" style="display:none;">
+
+							<li class="crux_resource"><a href="/help/fixedpoint/single-precision-design-for-matlab-code.html?s_tid=CRUX_topnav">文档</a></li>
+
+							<li class="crux_resource"><a href="/help/fixedpoint/examples.html?s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">示例</a></li>
+
+							<li class="crux_resource"><a href="/help/fixedpoint/referencelist.html?type=function&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">函数</a></li>
+
+							<li class="crux_resource"><a href="/help/fixedpoint/referencelist.html?type=block&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">模块</a></li>
+
+							<li class="crux_resource"><a href="/help/fixedpoint/referencelist.html?type=app&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code">App</a></li>
+
+							<li class="crux_resource"><a href="/support/search.html?fq%5B%5D=asset_type_name:video&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav">视频</a></li>
+
+							<li class="crux_resource"><a href="/support/search.html?fq%5B%5D=asset_type_name:answer&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav">问答</a></li>
+
+						</ul>
+						<ul class="crux_resource_list list-unstyled add_margin_0">
+
+							<li class=" " data-nav-id="crux_nav_文档">
+							<a href="/help/fixedpoint/single-precision-design-for-matlab-code.html?s_tid=CRUX_topnav" data-id="">
+							文档</a>
+							</li>
+
+							<li class=" " data-nav-id="crux_nav_示例">
+							<a href="/help/fixedpoint/examples.html?s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+							示例</a>
+							</li>
+
+							<li class=" " data-nav-id="crux_nav_function">
+							<a href="/help/fixedpoint/referencelist.html?type=function&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+							函数</a>
+							</li>
+
+							<li class=" " data-nav-id="crux_nav_block">
+							<a href="/help/fixedpoint/referencelist.html?type=block&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+							模块</a>
+							</li>
+
+							<li class=" " data-nav-id="crux_nav_app">
+							<a href="/help/fixedpoint/referencelist.html?type=app&amp;s_tid=CRUX_topnav&amp;category=single-precision-design-for-matlab-code" data-id="">
+							App</a>
+							</li>
+
+							<li class=" " data-nav-id="crux_nav_video">
+							<a href="/support/search.html?fq%5B%5D=asset_type_name:video&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav" data-id="">
+							视频</a>
+							</li>
+
+							<li class=" " data-nav-id="crux_nav_answers">
+							<a href="/support/search.html?fq%5B%5D=asset_type_name:answer&amp;fq%5B%5D=category:fixedpoint/single-precision-design-for-matlab-code&amp;page=1&amp;s_tid=CRUX_topnav" data-id="">
+							问答</a>
+							</li>
+
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="translate_placeholder"></div>
+		</div>
+	</div>
+</div>
+</div>
+	<div class="col-md-5 col-lg-4 hidden-xs hidden-sm">
+		<div><div class="callToAction calltoactionheader containsResourceName resourceClass-calltoactionheader">
+
+
+
+
+
+
+
+	<div class="cta_box">
+		<ul class="list-inline">
+			<li class="cta_item cta_item_general">
+
+
+
+
+
+
+
+	<a href="/campaigns/products/trials.html?prodcode=PO&amp;s_tid=doc_trial_PO_tb" class="icon-download " data-link="lead" data-offertype="trial">
+
+
+
+
+
+			试用软件</a>
+
+
+
+
+
+			</li>
+
+			<li class="cta_item cta_item_general">
+
+
+
+
+
+
+
+	<a href="/downloads/web_downloads/?s_tid=doc_downloads" class="icon-download ">
+
+
+
+
+
+			产品更新</a>
+
+
+
+
+
+			</li>
+		</ul>
+	</div>
+
+
+
+
+</div>
+</div>
+	</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+			</div>
+			<div class="introParsys parsys containsResourceName resourceClass-parsys"><div class="cssjs containsResourceName section resourceClass-cssjs">
+
+
+
+
+
+
+<div class="search_crux" data-label-more-dropdown="更多"></div>
+</div>
+
+</div>
+
+				<div class="content_container" id="content_container">
+					<div id="sidebar_offcanvas_desktop_pointer"></div>
+					<main id="skip_link_anchor" tabindex="-1">
+						<div class="container-fluid">
+							<div id="offcanvas_focus_actuator" tabindex="0" class="visible-xs"><span class="sr-only">主要内容</span></div>
+
+
+							<section><div class="mainParsys parsys containsResourceName resourceClass-parsys"><div class="targetcontainer containsResourceName resourceClass-targetcontainer section">
+
+
+
+<div class="personalization-container " id="web-application-body-container">
+<section xmlns="http://www.w3.org/1999/xhtml" id="doc_center_content" itemprop="content" lang="en" data-language="en" data-bs-spy="scroll" data-bs-target="#nav_scrollspy"><div id="pgtype-topic">
+<section itemprop="content"><h2 class="title r2024b" itemprop="title content" id="buy1w5l">Single-Precision Conversion Best Practices</h2><section itemprop="content"><h3 class="title" id="buzbmwf">Use Integers for Index Variables</h3><p>In MATLAB<sup>®</sup> code that you want to convert to single precision,
+it is a best practice to use integers for index variables. However,
+if the code does not use integers for index variables, when possible <code class="function">convertToSingle</code> tries to detect
+the index variables and select <code class="literal">int32</code> types for
+them.</p></section><section itemprop="content"><h3 class="title" id="buzcvj2">Limit Use of <code class="function">assert</code> Statements</h3><p></p>
+<div class="itemizedlist"><ul><li><p>Do not use <code class="function">assert</code> statements
+to define the properties of input arguments. </p></li><li><p>Do not use <code class="function">assert</code> statements
+to test the type of a variable. For example, do not use </p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>assert(isa(a, <span style="color:#A020F0">&#39;double&#39;</span>))</pre></div></div></div><p></p></li></ul></div><p>
+</p></section><section itemprop="content"><h3 class="title" id="buzcvtt">Initialize <span class="trademark entity">MATLAB</span> Class Properties in Constructor</h3><p>Do not initialize MATLAB class properties in the <code class="function">properties</code> block.
+Instead, use the constructor to initialize the class properties.</p></section><section itemprop="content"><h3 class="title" id="buzcwc8-1">Provide a Test File That Calls Your <span class="trademark entity">MATLAB</span> Function</h3><p>Separate your core algorithm from other code that you use to
+test and verify the results. Create a test file that calls your double-precision MATLAB algorithm.
+You can use the test file to:</p>
+<div class="itemizedlist"><ul><li><p>Automatically define properties of the top-level function
+inputs.</p></li><li><p>Verify that the double-precision algorithm behaves
+as you expect. The double-precision behavior is the baseline against
+which you compare the behavior of the single-precision versions of
+your algorithm.</p></li><li><p>Compare the behavior of the single-precision version
+of your algorithm to the double-precision baseline.</p></li></ul></div><p>
+For best results, the test file must exercise the algorithm
+over its full operating range.</p></section><section itemprop="content"><h3 class="title" id="buy1zzo">Prepare Your Code for Code Generation</h3><p>MATLAB code that you want to convert to single precision
+must comply with code generation requirements. See <a href="matlab-language-features-supported-for-code-generation.html" class="a">MATLAB Language Features Supported for C/C++ Code Generation</a>.</p><p>To help you identify unsupported functions or constructs in
+your MATLAB code, add the <code class="literal">%#codegen</code> pragma
+to the top of your MATLAB file. When you edit your code in the MATLAB editor,
+the MATLAB Code Analyzer flags functions and constructs that
+are not supported for code generation. See <a href="using-the-matlab-code-analyzer-to-check-code-interactively-at-design-time.html" class="a">Check Code Using the MATLAB Code Analyzer</a>. When you use the <span class="entity">MATLAB
+            Coder™</span> app,
+the app screens your code for code generation readiness. At the function
+line, you can use the Code Generation Readiness Tool. See <a href="check-code-using-the-code-generation-readiness-tool.html" class="a">Check Code Using the Code Generation Readiness Tool</a>.</p></section><section itemprop="content"><h3 class="title" id="buzcwvm">Use the <code class="literal remove_text_wrapping">-args</code> Option to Specify Input Properties</h3><p>When you generate single-precision MATLAB code, if you
+specify a test file, you do not have to specify argument properties
+with the <code class="literal remove_text_wrapping">-args</code> option. In this case, the code generator
+runs the test file to determine the properties of the input types.
+However, running the test file can slow the code generation. It is
+a best practice to pass the properties to the <code class="literal remove_text_wrapping">-args</code> option
+so that <code class="function">convertToSingle</code> does not run the test
+file to determine the argument properties. If you have a <span class="entity">MATLAB
+            Coder</span> license,
+you can use <code class="function">coder.getArgTypes</code> to determine the
+argument properties. For example:</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>types = coder.getArgTypes(<span style="color:#A020F0">&#39;myfun_test&#39;</span>, <span style="color:#A020F0">&#39;myfun&#39;</span>);
+scfg = coder.config(<span style="color:#A020F0">&#39;single&#39;</span>);
+convertToSingle <span style="color:#A020F0">-config</span> <span style="color:#A020F0">scfg</span> <span style="color:#A020F0">-args</span> <span style="color:#A020F0">types</span> <span style="color:#A020F0">myfun</span></pre></div></div></div><p></p></section><section itemprop="content"><h3 class="title" id="buzcwvo">Test Numerics and Log I/O Data</h3><p>When you use the <span>convertToSingle</span> function to
+generate single-precision MATLAB code, enable numerics testing
+and I/O data logging for comparison plots. To use numerics testing,
+you must provide a test file that calls your MATLAB function.
+To enable numerics testing and I/O data logging, create a <code class="literal">coder.SingleConfig</code> object.
+Set the <code class="literal">TestBenchName</code>, <code class="literal">TestNumerics</code>,
+and <code class="literal">LogIOForComparisonPlotting</code> properties. For
+example:</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>scfg = coder.config(<span style="color:#A020F0">&#39;single&#39;</span>);
+scfg.TestBenchName = <span style="color:#A020F0">&#39;mytest&#39;</span>;
+scfg.TestNumerics = true;
+scfg.LogIOForComparisonPlotting = true;</pre></div></div></div><p></p></section>
+
+</section>
+    </div></section><div class="clearfix"></div>
+
+<div align="center" class="feedbackblock" id="mw_docsurvey"><script src="/help/includes/shared/docsurvey/docfeedback.js"></script>
+
+<script>loadSurveyHidden();</script>
+
+<link rel="stylesheet" href="/help/includes/shared/docsurvey/release/index-css.css" type="text/css"/>
+
+<script src="/help/includes/shared/docsurvey/release/bundle.index.js"></script>
+
+<script>initDocSurvey();</script></div>
+
+<div class="modal fade" id="matlab-command-dialog" tabindex="-1" role="dialog" aria-labelledby="matlabCommandDialogLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h2 class="modal-title">MATLAB Command</h2>
+      </div>
+      <div class="modal-body" id="dialog-body">
+        <p>You clicked a link that corresponds to this MATLAB command: </p>
+        <pre id="dialog-matlab-command"></pre>
+        <p>Run the command by entering it in the MATLAB Command Window.
+        Web browsers do not support MATLAB commands.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn_secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+	<div><div class="targetContent parsys containsResourceName resourceClass-parsys"><div class="cqColumns containsResourceName section resourceClass-columns"><div class="row   ">
+
+
+		<div class=" col-xs-12 "><div class="2420e633-83fe-4c2d-9b62-4248985f27d2 parsys containsResourceName resourceClass-parsys">
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+</div></div>
+
+</div>
+</section>
+
+
+
+
+
+<div><div class="modalParsys parsys containsResourceName resourceClass-parsys">
+</div>
+</div>
+
+
+
+
+
+
+
+	<div id="location_content" style="display:none;"></div>
+
+	<div class="modal fade" id="country-unselected" tabindex="-1" role="dialog" aria-labelledby="country-unselected-title" translate="no">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">×</span></button>
+					<img src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/pic-header-mathworks-logo.20241211061245463.svg" style="width:167px; height:auto;" class="mw_logo" alt="MathWorks - Domain Selector"/>
+				</div>
+				<div class="modal-body">
+					<div class="row add_margin_40">
+						<div class="col-xs-12">
+							<p class="h1 icon-globe add_icon_color_darkblue" id="country-unselected-title">选择网站</p>
+							<p>选择网站以获取翻译的可用内容，以及查看当地活动和优惠。根据您的位置，我们建议您选择：<strong class="recommended-country"></strong>。
+							</p>
+							<div class="default-recommendation">
+								<a href="#" id="recommended_domain_button" class="btn btn_color_blue containsResourceName resourceClass-button"><span class="recommended-country"></span></a>
+							</div>
+							<div class="ch-recommendation" style="display:none;">
+								<ul class="list-inline">
+									<li class="add_display_block_xs add_margin_10_xs"><a href="//ch.mathworks.com" class="recommendation-button btn companion_btn btn-md add_display_block_xs" data-subdomain="ch" data-lang="en" data-recommended-text="Switzerland" data-default-lang="true" data-do-not-rewrite="true"><strong class="recommended-country"></strong> (English)</a></li>
+									<li class="add_display_block_xs add_margin_10_xs"><a href="//ch.mathworks.com" class="recommendation-button btn companion_btn btn-md add_display_block_xs" data-subdomain="ch" data-lang="de" data-recommended-text="Schweiz" data-do-not-rewrite="true"><strong class="recommended-country"></strong> (Deutsch)</a></li>
+									<li class="add_display_block_xs"><a href="//ch.mathworks.com" class="recommendation-button btn companion_btn btn-md add_display_block_xs" data-subdomain="ch" data-lang="fr" data-recommended-text="Suisse" data-do-not-rewrite="true"><strong class="recommended-country"></strong> (Français)</a></li>
+								</ul>
+							</div>
+							<div class="zh-recommendation" style="display:none;">
+								<ul class="list-inline">
+									<li class="add_display_block_xs add_margin_10_xs"><a href="//ww2.mathworks.cn" class="recommendation-button btn companion_btn btn-md add_display_block_xs" data-subdomain="ww2" data-lang="zh" data-recommended-text="中国" data-default-lang="true" data-do-not-rewrite="true"><strong class="recommended-country"></strong>（简体中文）</a></li>
+									<li class="add_display_block_xs"><a href="//ww2.mathworks.cn" class="recommendation-button btn companion_btn btn-md add_display_block_xs" data-subdomain="ww2" data-lang="en" data-recommended-text="China" data-do-not-rewrite="true"><strong class="recommended-country"></strong> (English)</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<p>您也可以从以下列表中选择网站：</p>
+					<div class="alert alert-warning" role="alert" id="china_performance_alert" style="display:none;"><span class="alert_icon icon-alert-warning"></span>
+						<p class="h2">如何获得最佳网站性能</p>
+						<p>选择中国网站（中文或英文）以获得最佳网站性能。其他 MathWorks 国家/地区网站并未针对您所在位置的访问进行优化。</p>
+					</div>
+					<div class="row add_margin_20">
+						<div class="col-sm-4 col-md-3">
+							<p class="h3 add_bottom_rule">美洲</p>
+							<ul class="list-unstyled">
+								<li><a href="//la.mathworks.com" class="domain_selector_link" data-country-code="LA" data-subdomain="la" data-lang="es" data-default-lang="true" data-selected-text="América Latina" data-recommended-text="América Latina" data-do-not-rewrite="true">América Latina</a> (Español)
+								</li>
+								<li><a href="//www.mathworks.com" class="domain_selector_link" data-country-code="CA" data-subdomain="www" data-lang="en" data-do-not-rewrite="true">Canada</a> (English)
+								</li>
+								<li><a href="//www.mathworks.com" class="domain_selector_link" data-country-code="US" data-subdomain="www" data-lang="en" data-default-lang="true" data-selected-text="United States" data-recommended-text="United States" data-do-not-rewrite="true">United States</a> (English)
+								</li>
+							</ul>
+						</div>
+						<div class="col-sm-4 col-md-6">
+							<p class="h3 add_bottom_rule">欧洲</p>
+							<div class="row">
+								<div class="col-xs-6 col-sm-12 col-md-6">
+									<ul class="list-unstyled add_margin_0_sm">
+										<li><a href="//nl.mathworks.com" class="domain_selector_link" data-country-code="BE" data-subdomain="nl" data-lang="en" data-do-not-rewrite="true">Belgium</a> (English)
+										</li>
+										<li><a href="//se.mathworks.com" class="domain_selector_link" data-country-code="DK" data-subdomain="se" data-lang="en" data-do-not-rewrite="true">Denmark</a> (English)
+										</li>
+										<li><a href="//de.mathworks.com" class="domain_selector_link" data-country-code="DE" data-subdomain="de" data-lang="de" data-default-lang="true" data-selected-text="Deutschland" data-recommended-text="Deutschland" data-do-not-rewrite="true">Deutschland</a> (Deutsch)
+										</li>
+										<li><a href="//es.mathworks.com" class="domain_selector_link" data-country-code="ES" data-subdomain="es" data-lang="es" data-default-lang="true" data-selected-text="España" data-recommended-text="España" data-do-not-rewrite="true">España</a> (Español)
+										</li>
+										<li><a href="//se.mathworks.com" class="domain_selector_link" data-country-code="FI" data-subdomain="se" data-lang="en" data-do-not-rewrite="true">Finland</a> (English)
+										</li>
+										<li><a href="//fr.mathworks.com" class="domain_selector_link" data-country-code="FR" data-subdomain="fr" data-lang="fr" data-default-lang="true" data-selected-text="France" data-recommended-text="France" data-do-not-rewrite="true">France</a> (Français)
+										</li>
+										<li><a href="//uk.mathworks.com" class="domain_selector_link" data-country-code="IE" data-subdomain="uk" data-lang="en" data-do-not-rewrite="true">Ireland</a> (English)
+										</li>
+										<li><a href="//it.mathworks.com" class="domain_selector_link" data-country-code="IT" data-subdomain="it" data-lang="it" data-default-lang="true" data-selected-text="Italia" data-recommended-text="Italia" data-do-not-rewrite="true">Italia</a> (Italiano)
+										</li>
+										<li><a href="//nl.mathworks.com" class="domain_selector_link" data-country-code="LU" data-subdomain="nl" data-lang="en" data-do-not-rewrite="true">Luxembourg</a> (English)
+										</li>
+									</ul>
+								</div>
+								<div class="col-xs-6 col-sm-12 col-md-6">
+									<ul class="list-unstyled">
+										<li><a href="//nl.mathworks.com" class="domain_selector_link" data-country-code="NL" data-subdomain="nl" data-lang="en" data-default-lang="true" data-selected-text="Benelux" data-recommended-text="Netherlands" data-do-not-rewrite="true">Netherlands</a> (English)
+										</li>
+										<li><a href="//se.mathworks.com" class="domain_selector_link" data-country-code="NO" data-subdomain="se" data-lang="en" data-do-not-rewrite="true">Norway</a> (English)
+										</li>
+										<li><a href="//de.mathworks.com" class="domain_selector_link" data-country-code="AT" data-subdomain="de" data-lang="de" data-do-not-rewrite="true">Österreich</a> (Deutsch)
+										</li>
+										<li><a href="//www.mathworks.com" class="domain_selector_link" data-country-code="PT" data-subdomain="www" data-lang="en" data-do-not-rewrite="true">Portugal</a> (English)
+										</li>
+										<li><a href="//se.mathworks.com" class="domain_selector_link" data-country-code="SE" data-subdomain="se" data-lang="en" data-default-lang="true" data-selected-text="Nordic" data-recommended-text="Sweden" data-do-not-rewrite="true">Sweden</a> (English)
+										</li>
+										<li>Switzerland
+											<ul class="list-unstyled add_indent_20">
+												<li><a href="//ch.mathworks.com" class="domain_selector_link" data-country-code="CH" data-subdomain="ch" data-lang="de" data-selected-text="Schweiz" data-recommended-text="Schweiz" data-do-not-rewrite="true">Deutsch</a>
+												</li>
+												<li><a href="//ch.mathworks.com" class="domain_selector_link" data-country-code="CH" data-subdomain="ch" data-lang="en" data-default-lang="true" data-selected-text="Switzerland" data-recommended-text="Switzerland" data-do-not-rewrite="true">English</a>
+												</li>
+												<li><a href="//ch.mathworks.com" class="domain_selector_link" data-country-code="CH" data-subdomain="ch" data-lang="fr" data-selected-text="Suisse" data-recommended-text="Suisse" data-do-not-rewrite="true">Français</a>
+												</li>
+											</ul>
+										</li>
+										<li><a href="//uk.mathworks.com" class="domain_selector_link" data-country-code="GB" data-subdomain="uk" data-lang="en" data-default-lang="true" data-selected-text="United Kingdom" data-recommended-text="United Kingdom" data-do-not-rewrite="true">United Kingdom</a>
+											(English)
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4 col-md-3">
+							<p class="h3 add_bottom_rule">亚太</p>
+							<ul class="list-unstyled">
+								<li><a href="//au.mathworks.com" class="domain_selector_link" data-country-code="AU" data-subdomain="au" data-lang="en" data-default-lang="true" data-selected-text="Australia" data-recommended-text="Australia" data-do-not-rewrite="true">Australia</a> (English)
+								</li>
+								<li><a href="//in.mathworks.com" class="domain_selector_link" data-country-code="IN" data-subdomain="in" data-lang="en" data-default-lang="true" data-selected-text="India" data-recommended-text="India" data-do-not-rewrite="true">India</a> (English)
+								</li>
+								<li><a href="//au.mathworks.com" class="domain_selector_link" data-country-code="NZ" data-subdomain="au" data-lang="en" data-do-not-rewrite="true">New Zealand</a> (English)
+								</li>
+								<li>中国
+									<ul class="list-unstyled add_indent_20">
+										<li><a href="//ww2.mathworks.cn" class="domain_selector_link" data-country-code="CN" data-subdomain="ww2" data-lang="zh" data-default-lang="true" data-selected-text="中国" data-recommended-text="中国" data-do-not-rewrite="true">简体中文<span class="sr-only">Chinese</span>
+										</a>
+										</li>
+										<li><a href="//ww2.mathworks.cn" class="domain_selector_link" data-country-code="CN" data-subdomain="ww2" data-lang="en" data-default-lang="true" data-selected-text="China" data-recommended-text="China" data-do-not-rewrite="true">English</a>
+										</li>
+									</ul>
+								</li>
+								<li><a href="//jp.mathworks.com" class="domain_selector_link" data-country-code="JP" data-subdomain="jp" data-lang="ja" data-default-lang="true" data-selected-text="日本" data-recommended-text="日本" data-do-not-rewrite="true">日本<span class="sr-only">Japanese</span></a> (日本語)
+								</li>
+								<li><a href="//kr.mathworks.com" class="domain_selector_link" data-country-code="KR" data-subdomain="kr" data-lang="ko" data-default-lang="true" data-selected-text="한국" data-recommended-text="한국" data-do-not-rewrite="true">한국<span class="sr-only">Korean</span></a> (한국어)
+								</li>
+							</ul>
+						</div>
+					</div>
+					<p class="text-center"><a href="#" class="worldwide_link" data-do-not-rewrite="true">联系您当地的办事处</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/domainselector.min.20241211061245463.js"></script>
+
+
+
+
+						</div>
+					</main>
+				</div>
+			<div class="cta_container_mobile visible-sm visible-xs">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12">
+				<div><div class="callToAction calltoactionheader containsResourceName resourceClass-calltoactionheader">
+
+
+
+
+
+
+
+	<div class="cta_box">
+		<ul class="list-inline">
+			<li class="cta_item cta_item_general">
+
+
+
+
+
+
+
+	<a href="/campaigns/products/trials.html?prodcode=PO&amp;s_tid=doc_trial_PO_tb" class="icon-download " data-link="lead" data-offertype="trial">
+
+
+
+
+
+			试用软件</a>
+
+
+
+
+
+			</li>
+
+			<li class="cta_item cta_item_general">
+
+
+
+
+
+
+
+	<a href="/downloads/web_downloads/?s_tid=doc_downloads" class="icon-download ">
+
+
+
+
+
+			产品更新</a>
+
+
+
+
+
+			</li>
+		</ul>
+	</div>
+
+
+
+
+</div>
+</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<footer id="footer" class="bs-footer">
+
+
+
+	<!-- BASIC FOOTER CONTENT - Begin -->
+	<div class="container-fluid">
+		<div class="footer">
+			<div class="row">
+				<div class="col-xs-12 col-md-9" role="navigation" aria-label="页脚导航">
+					<ul class="countrynav">
+						<!-- Code to Remove Tracking from Previous page and add new tracking -->
+						<li class="footernav_country">
+							<a href="#" data-toggle="modal" id="domainButton" data-target="#country-unselected">
+								<span class="sr-only">选择网站</span>
+								<span class="icon-globe icon_color_quinary icon_16"></span><span id="countrySelectorButtonText">United States</span>
+							</a>
+						</li>
+					</ul>
+					<div class="clearfix"></div>
+
+					<div><div class="footerNavigation footernavigation containsResourceName resourceClass-footernavigation">
+
+
+
+
+	<ul class="footernav  " id="footernav" data-privacy="您的隐私选项">
+		<li class="footernav_footernav_patents">
+
+
+
+
+
+
+
+	<a href="/company/aboutus/policies_statements/trust-center.html?s_tid=gf_tc">
+
+
+
+
+
+			信任中心</a>
+
+
+
+
+
+		</li>
+
+		<li class="footernav_footernav_trademarks">
+
+
+
+
+
+
+
+	<a href="/company/aboutus/policies_statements/trademarks.html?s_tid=gf_trd">
+
+
+
+
+
+			商标</a>
+
+
+
+
+
+		</li>
+
+		<li class="footernav_footernav_privacy">
+
+
+
+
+
+
+
+	<a href="/company/aboutus/policies_statements.html?s_tid=gf_priv">
+
+
+
+
+
+			隐私政策</a>
+
+
+
+
+
+		</li>
+
+		<li class="footernav_footernav_piracy">
+
+
+
+
+
+
+
+	<a href="/company/aboutus/policies_statements/piracy.html?s_tid=gf_pir">
+
+
+
+
+
+			防盗版</a>
+
+
+
+
+
+		</li>
+
+		<li class="footernav_footernav_status">
+
+
+
+
+
+
+
+	<a href="https://status.mathworks.com/?s_tid=gf_application">
+
+
+
+
+
+			应用程序状态</a>
+
+
+
+
+
+		</li>
+
+		<li class="footernav_footernav_contactus">
+
+
+
+
+
+
+
+	<a href="/company/aboutus/contact_us.html?s_tid=gf_contact">
+
+
+
+
+
+			联系我们</a>
+
+
+
+
+
+		</li>
+	</ul>
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/footernavigation.min.20241211061245463.js"></script>
+
+
+
+</div>
+</div>
+
+					<div><div class="footerCompanyAddress footercompanyaddress containsResourceName resourceClass-footercompanyaddress">
+
+
+
+
+	<div class="cq-placeholder" data-emptytext="Footer Company Address"></div>
+
+</div>
+</div>
+
+					<div><div class="footerParsys iparsys parsys resourceClass-iparsys containsResourceName"><div class="section"><div class="new containsResourceName resourceClass-new"></div>
+</div><div class="iparys_inherited"><div class="footerParsys iparsys parsys containsResourceName resourceClass-par"><div class="text containsResourceName section resourceClass-text"><div class="mw-text   text-left text-start">
+	<div>
+ <img src="/content/dam/mathworks/mathworks-dot-com/images/responsive/global/beian_logo.png" style="float: left;"/>
+ <p><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502045942" style="display: inline-block; text-decoration: none; height: 20px; line-height: 20px;">京公网安备 11010502045942号</a><span style="width: 300px; margin: 0 auto; padding: 0 0 0 10px;"><a target="_blank" href="https://beian.miit.gov.cn/">京ICP备12052471号</a></span></p>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+					<div class="clearfix"></div>
+					<p class="copyright">© 1994-2024 The MathWorks, Inc.</p>
+				</div>
+				<div class="clearfix visible-sm add_margin_10"></div>
+				<div class="col-xs-12 col-md-3">
+
+					<div><div class="socialMediaIconParsys iparsys parsys resourceClass-iparsys containsResourceName"><div class="section"><div class="new containsResourceName resourceClass-new"></div>
+</div><div class="iparys_inherited"><div class="socialMediaIconParsys iparsys parsys containsResourceName resourceClass-par"><div class="socialmediaicon containsResourceName resourceClass-socialmediaicon section">
+
+
+
+
+
+	<div class="social_media  " id="social_icons_cn">
+		<ul class="social_media_icons list-unstyled  ">
+
+			<li>
+				<a href="https://www.weibo.com/mathworks" class="svg_link" rel="noreferrer" target="_blank">
+					<img class="ico_weibo" alt="Weibo" src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/ico-weibo.20241211061245463.svg"/>
+				</a>
+
+
+
+			</li>
+
+			<li>
+				<a href="#" class="svg_link" rel="noreferrer" data-toggle="modal" data-target="#wechat_id_ab309d43-2f56-4f04-b476-57a23b1adc70">
+					<img class="ico_wechat" alt="WeChat" src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/ico-wechat.20241211061245463.svg"/>
+				</a>
+
+				<div class="modal fade" id="wechat_id_ab309d43-2f56-4f04-b476-57a23b1adc70">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">x</span></button>
+								<h4 class="add_margin_0 text-left">WeChat</h4>
+							</div>
+							<div class="modal-body text-center">
+								<a href="#" rel="noreferrer">
+
+
+
+
+	<img src="https://ww2.mathworks.cn/_jcr_content/socialMediaIconParsys/socialmediaicon.adapt.full.medium.jpg/1731621102134.jpg" alt="" width="430" height="430" sizes="100vw" loading="lazy" class="responsiveImage " srcset="https://ww2.mathworks.cn/_jcr_content/socialMediaIconParsys/socialmediaicon.adapt.150.medium.jpg/1731621102134.jpg 150w, https://ww2.mathworks.cn/_jcr_content/socialMediaIconParsys/socialmediaicon.adapt.320.medium.jpg/1731621102134.jpg 320w, https://ww2.mathworks.cn/_jcr_content/socialMediaIconParsys/socialmediaicon.adapt.full.medium.jpg/1731621102134.jpg 430w" data-aem-src="/content/dam/mathworks/mathworks-dot-com/images/responsive/global/wechat-qr.jpg"/>
+
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</li>
+
+			<li>
+				<a href="https://space.bilibili.com/1768836923" class="svg_link" rel="noreferrer" target="_blank">
+					<img class="ico_bilibili" alt="Bilibili" src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/ico-bilibili.20241211061245463.svg"/>
+				</a>
+
+
+
+			</li>
+
+			<li>
+				<a href="https://i.youku.com/mathworks" class="svg_link" rel="noreferrer" target="_blank">
+					<img class="ico_youku" alt="Youku" src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/ico-youku.20241211061245463.svg"/>
+				</a>
+
+
+
+			</li>
+
+			<li>
+				<a href="https://www.linkedin.com/company/the-mathworks_2" class="svg_link" rel="noreferrer" target="_blank">
+					<img class="ico_linkedin" alt="LinkedIn" src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/ico-linkedin.20241211061245463.svg"/>
+				</a>
+
+
+
+			</li>
+
+			<li>
+				<a href="/company/rss.html" class="svg_link" rel="noreferrer">
+					<img class="ico_rss" alt="RSS" src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/ico-rss.20241211061245463.svg"/>
+				</a>
+
+
+
+			</li>
+
+
+		</ul>
+		<div class="clearfix"></div>
+	</div>
+
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+					<div class="clearfix"></div>
+					<p class="pull_right_sm pull_right_md pull_right_lg"><small class="percent_90"><em></em></small></p>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<!-- BASIC FAT FOOTER CONTENT - End -->
+</footer>
+
+		</div>
+	</div>
+
+
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/domainredirect.min.20241211061245463.js"></script>
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/akamai.min.20241211061245463.js"></script>
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/lodash.min.20241211061245463.js"></script>
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/core.min.20241211061245463.js"></script>
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common.min.20241211061245463.js"></script>
+
+
+
+
+
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/truncatenav.min.20241211061245463.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+		<div id="web-application-footer-assets"></div>
+
+
+
+
+<link rel="stylesheet" href="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/matrixmenu.min.20241211061245463.css" type="text/css"/>
+<script src="https://ww2.mathworks.cn/etc.clientlibs/mathworks/clientlibs/customer-ui/components/matrixmenu.min.20241211061245463.js"></script>
+
+
+
+			<script>
+				$('.matrix_affordance_container_mobile button').on('click', function() { $('#matrix_collapse').collapse('toggle') })
+			</script>
+
+
+
+
+
+
+
+
+
+<script src="/help/releases/R2024b/includes/shared/scripts/localstorage.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/saxonjs/SaxonJS2.rt.js"></script>
+<script src="/help/releases/R2024b/includes/shared/scripts/product_group.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml">
+        window.history.replaceState(window.location.href, null, ""); // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+        mystylesheetLocation = "/help/releases/R2024b/includes/shared/scripts/product_group-sef.json";
+        mysourceLocation = "/help/releases/R2024b/docset.xml";
+        product_help_location = "fixedpoint";
+        pagetype = "module";
+        doccentertype = "web";
+        langcode = "";
+        getProductFilteredList(mystylesheetLocation, mysourceLocation, product_help_location, pagetype, doccentertype, langcode);
+        });
+      </script>
+<script src="/help/includes/web/scripts/livecontrolpopoverhandler.js?202409"></script><script src="/help/includes/web/scripts/livetaskpopoverhandler.js?202409"></script><script src="https://matlab.mathworks.com/open/openwith.js?202403"></script><style>.examples_short_list a.btn {display: none;}</style><script src="/help/includes/web/scripts/openInBrowser.js"></script><noscript><img src="https://ww2.mathworks.cn/akam/13/pixel_699ee49e?a=dD01ZmEyNjk5OGZjNzNmOGYyYTEwYWNkYjExNDQxYmFhYzE1YzNlZmRiJmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;" /></noscript><script type="text/javascript" nonce="79cf3c748304048bf21ea082087b0fc5" src="/0cQ3uQ-e9xS_HAWEsQ/afSahm4t4bmbX1/W3QcSzUB/PH/cSFSZkOzk"></script></body></html>

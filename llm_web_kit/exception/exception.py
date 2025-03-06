@@ -7,41 +7,52 @@ from llm_web_kit.input.datajson import DataJsonKey
 
 
 class ErrorMsg:
-    # 类属性，用于存储错误代码和消息
+    """Error message manager class."""
     _errors = {}
 
     @classmethod
     def _load_errors(cls):
-        # 从JSON文件中加载错误代码和消息
+        """Load error codes and messages from JSON file."""
         exception_defs_file_path = Path(__file__).parent / 'exception.jsonc'
         with open(exception_defs_file_path, 'r', encoding='utf-8') as file:
             jso = json.load(file)
             for module, module_defs in jso.items():
                 for err_name, err_info in module_defs.items():
                     err_code = err_info['code']
-                    cls._errors[str(err_code)] = {'message': err_info['message'], 'module': module, 'error_name': err_name}
+                    cls._errors[str(err_code)] = {
+                        'message': err_info['message'],
+                        'module': module,
+                        'error_name': err_name,
+                    }
 
     @classmethod
     def get_error_message(cls, error_code: int):
         # 根据错误代码获取错误消息
         if str(error_code) not in cls._errors:
-            return f'未知错误代码{error_code}'
+            return f'unknown error code {error_code}'
         return cls._errors[str(error_code)]['message']
+
+    @classmethod
+    def get_error_code(cls, module: str, error_name: str) -> int:
+        """根据模块名和错误名获取错误代码."""
+        for code, info in cls._errors.items():
+            if info['module'] == module and info['error_name'] == error_name:
+                return int(code)
+        raise ValueError(f'error code not found: module={module}, error_name={error_name}')
 
 
 ErrorMsg._load_errors()
 
 
-class WebKitBaseException(Exception):
-    """基础的Pipeline异常类，系统中任何地方抛出的异常都必须是这个异常的子类.
+class LlmWebKitBaseException(Exception):
+    """Base exception class for LlmWebKit."""
 
-    Args:
-        Exception (_type_): _description_
-    """
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('LlmWebKitBase', 'LlmWebKitBaseException')
 
-    def __init__(self, err_code: int, custom_message: str):
-        self.err_code = err_code
-        self.message = ErrorMsg.get_error_message(self.err_code)
+        self.error_code = error_code
+        self.message = ErrorMsg.get_error_message(self.error_code)
         self.custom_message = custom_message
         self.dataset_name = DataJsonKey.DATASET_NAME
         super().__init__(self.message)
@@ -50,180 +61,302 @@ class WebKitBaseException(Exception):
         self.__py_file_line_number = frame.f_lineno
 
     def __str__(self):
-        return f'{self.__py_filename}: {self.__py_file_line_number}#{self.err_code}#{self.message}#{self.custom_message}'
+        return (
+            f'{self.__py_filename}: {self.__py_file_line_number}#{self.error_code}#{self.message}#{self.custom_message}'
+        )
+
 
 ##############################################################################
 #
-#  Pipeline相关的异常
+#  ExtractorChain Exceptions
 #
-###############################################################################
+##############################################################################
+
+class ExtractorChainBaseException(LlmWebKitBaseException):
+    """Base exception class for ExtractorChain."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('ExtractorChain', 'ExtractorChainBaseException')
+        super().__init__(custom_message, error_code)
 
 
-class LlmWebKitBaseException(WebKitBaseException):
-    """llm web kit base exp."""
-
-    def __init__(self, error_code, custom_message: str = None):
-        """init llm web kit异常."""
-        super().__init__(error_code, custom_message)
-
-
-class LlmWebKitBaseActException(LlmWebKitBaseException):
-    """llm web kit base exp."""
-    def __init__(self, custom_message: str = None):
-        super().__init__(1000, custom_message)
+class ExtractorInitException(ExtractorChainBaseException):
+    """Exception raised during Extractor initialization."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('ExtractorChain', 'ExtractorChainInitException')
+        super().__init__(custom_message, error_code)
 
 
-class PipelineInputExp(LlmWebKitBaseException):
-    """pipline input格式异常."""
+class ExtractorChainInputException(ExtractorChainBaseException):
+    """Exception raised for invalid input data format."""
 
-    def __init__(self, custom_message: str = None):
-        """init pipline input 异常."""
-        super().__init__(2000, custom_message)
-
-
-class PipeLineSuitBaseExp(LlmWebKitBaseException):
-    """pipline input格式异常."""
-
-    def __init__(self, custom_message: str = None):
-        """init pipline input 异常."""
-        super().__init__(3000, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('ExtractorChain', 'ExtractorChainInputException')
+        super().__init__(custom_message, error_code)
 
 
-class PipelineBaseExp(LlmWebKitBaseException):
-    """Pipeline初始化异常.
+class ExtractorChainConfigException(ExtractorChainBaseException):
+    """Exception raised for configuration related issues."""
 
-    Args:
-        PipelineBaseException (_type_): _description_
-    """
-
-    def __init__(self, err_code: int, custom_message: str = None):
-        """pipeline对象抛出的异常基类.
-
-        Args:
-            err_code (int): _description_
-            custom_message (str, optional): _description_. Defaults to None.
-        """
-        super().__init__(4000, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('ExtractorChain', 'ExtractorChainConfigException')
+        super().__init__(custom_message, error_code)
 
 
-class HTMLExp(PipelineBaseExp):
-    """Pipeline初始化异常.
+class ExtractorNotFoundException(ExtractorChainBaseException):
+    """Exception raised when specified Extractor is not found."""
 
-    Args:
-        HTMLExp (_type_): _description_
-    """
-
-    def __init__(self, err_code, custom_message: str = None):
-        """pipeline初始化异常.
-
-        Args:
-            custom_message (str, optional): _description_. Defaults to None.
-        """
-        super().__init__(4100, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('ExtractorChain', 'ExtractorNotFoundException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlFormatExp(HTMLExp):
-    """html format 异常."""
-    def __init__(self, custom_message: str = None):
-        """html format init."""
-        super().__init__(4110, custom_message)
+##############################################################################
+#
+#  Extractor Base Exception
+#
+##############################################################################
+
+class ExtractorBaseException(LlmWebKitBaseException):
+    """Base exception class for all Extractor related exceptions."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'ExtractorBaseException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlPreExtractorExp(HTMLExp):
-    """html pre extractor 异常."""
-    def __init__(self, custom_message: str = None):
-        """html pre extractor init."""
-        super().__init__(4120, custom_message)
+##############################################################################
+#
+#  File Extractor Exceptions
+#
+##############################################################################
+
+class HtmlFileExtractorException(ExtractorBaseException):
+    """Base exception class for HTML file processing."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'HtmlFileExtractorException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlRecognizerExp(HTMLExp):
-    """Html recognizer."""
+class PdfFileExtractorException(ExtractorBaseException):
+    """Exception raised during PDF file processing."""
 
-    def __init__(self, error_code, custom_message: str = None):
-        """html recognizer init."""
-        super().__init__(4130, custom_message)
-
-
-class HtmlMagicHtmlExtractorExp(HtmlRecognizerExp):
-    """magic-html异常."""
-    def __init__(self, custom_message: str = None):
-        """magic-html error."""
-        super().__init__(4140, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'PdfFileExtractorException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlMathRecognizerExp(HtmlRecognizerExp):
-    """math recognizer异常."""
+class EbookFileExtractorException(ExtractorBaseException):
+    """Exception raised during Ebook file processing."""
 
-    def __init__(self, custom_message: str = None):
-        """math recognizer error."""
-        super().__init__(4131, custom_message)
-
-
-class HtmlCodeRecognizerExp(HtmlRecognizerExp):
-    """code recognizer 异常."""
-
-    def __init__(self, custom_message: str = None):
-        """code recognizer error."""
-        super().__init__(4132, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'EbookFileExtractorException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlTableRecognizerExp(HtmlRecognizerExp):
-    """html table recognizer 异常."""
+class OtherFileExtractorException(ExtractorBaseException):
+    """Exception raised during processing of other file types."""
 
-    def __init__(self, custom_message: str = None):
-        """html table recognizer init."""
-        super().__init__(4133, custom_message)
-
-
-class HtmlImageRecognizerExp(HtmlRecognizerExp):
-    """html image recognizer 异常."""
-
-    def __init__(self, custom_message: str = None):
-        """html image recognizer init."""
-        super().__init__(4134, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'OtherFileExtractorException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlListRecognizerExp(HtmlRecognizerExp):
-    """html list recognizer 异常."""
+##############################################################################
+#
+#  HTML Processing Exceptions
+#
+##############################################################################
 
-    def __init__(self, custom_message: str = None):
-        """html list recognizer init."""
-        super().__init__(4135, custom_message)
+class MagicHtmlExtractorException(HtmlFileExtractorException):
+    """Exception raised during magic-html processing."""
 
-
-class HtmlAudioRecognizerExp(HtmlRecognizerExp):
-    """Html audio recognizer异常."""
-    def __init__(self, custom_message: str = None):
-        """html audio recognizer init."""
-        super().__init__(4136, custom_message)
-
-
-class HtmlVideoRecognizerExp(HtmlRecognizerExp):
-    """Html video recognizer 异常."""
-
-    def __init__(self, custom_message: str = None):
-        """html video recognizer init."""
-        super().__init__(4137, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'MagicHtmlExtractorException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlTitleRecognizerExp(HtmlRecognizerExp):
-    """html title recognizer 异常."""
+class HtmlPreExtractorException(HtmlFileExtractorException):
+    """Exception raised during HTML pre-extraction phase."""
 
-    def __init__(self, custom_message: str = None):
-        """html title recognizer init."""
-        super().__init__(4138, custom_message)
-
-
-class HtmlTextRecognizerExp(HtmlRecognizerExp):
-    """html text recognizer 异常."""
-
-    def __init__(self, custom_message: str = None):
-        """html text recognizer init."""
-        super().__init__(4139, custom_message)
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'HtmlPreExtractorException')
+        super().__init__(custom_message, error_code)
 
 
-class HtmlPostExtractorExp(HTMLExp):
-    """html post extractor 异常."""
-    def __init__(self, custom_message: str = None):
-        """html post extractor init."""
-        super().__init__(4150, custom_message)
+class HtmlExtractorException(HtmlFileExtractorException):
+    """Base exception class for HTML extraction."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'HtmlExtractorException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlPostExtractorException(HtmlFileExtractorException):
+    """Exception raised during HTML post-extraction phase."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Extractor', 'HtmlPostExtractorException')
+        super().__init__(custom_message, error_code)
+
+
+##############################################################################
+#
+#  HTML Recognizer Exceptions
+#
+##############################################################################
+
+class HtmlRecognizerException(HtmlExtractorException):
+    """Base exception class for HTML recognizer."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlMathRecognizerException(HtmlRecognizerException):
+    """Exception raised during math content recognition."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlMathRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlCodeRecognizerException(HtmlRecognizerException):
+    """Exception raised during code content recognition."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlCodeRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlTableRecognizerException(HtmlRecognizerException):
+    """Exception raised during table content recognition."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlTableRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlImageRecognizerException(HtmlRecognizerException):
+    """Exception raised during image content recognition."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlImageRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlListRecognizerException(HtmlRecognizerException):
+    """Exception raised during list content recognition."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlListRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlAudioRecognizerException(HtmlRecognizerException):
+    """Exception raised during audio content recognition."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlAudioRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlVideoRecognizerException(HtmlRecognizerException):
+    """Exception raised during video content recognition."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlVideoRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlTitleRecognizerException(HtmlRecognizerException):
+    """Exception raised during title content recognition."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlTitleRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class HtmlTextRecognizerException(HtmlRecognizerException):
+    """Exception raised during text content recognition."""
+
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlTextRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelBaseException(LlmWebKitBaseException):
+    """Base exception class for Model module."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelBaseException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelResourceException(ModelBaseException):
+    """Exception raised during model resource loading."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelResourceException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelInitException(ModelBaseException):
+    """Exception raised during model initialization."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelInitException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelInputException(ModelBaseException):
+    """Exception raised for model input data format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelInputException')
+        super().__init__(custom_message, error_code)
+
+
+class ModelOutputException(ModelBaseException):
+    """Exception raised for model output data format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelOutputException')
+        super().__init__(custom_message, error_code)
+
+
+class SafeModelException(ModelBaseException):
+    """Exception raised for safe model related issues."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'SafeModelException')
+        super().__init__(custom_message, error_code)
+
+
+class CleanModelException(ModelBaseException):
+    """Exception raised for clean model related issues."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'CleanModelException')
+        super().__init__(custom_message, error_code)
