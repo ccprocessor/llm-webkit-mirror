@@ -369,7 +369,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        print(content_md)
         assert '| ID: 975' in content_md
 
     def test_table_element_include_enter(self):
@@ -381,7 +380,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        print(content_md)
         assert """| عنوان فارسی | توسعه مالی و هزینه سرمایه حقوق سهامداران: شواهدی از چین |
 |---|---|
 | عنوان انگلیسی | Financial development and the cost of equity capital: Evidence from China |
