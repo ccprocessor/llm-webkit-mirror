@@ -6,8 +6,7 @@ from typing import Optional
 
 from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils.download_assets import (FileLock,
-                                                              try_remove)
+from llm_web_kit.model.resource_utils.utils import FileLock, try_remove
 
 
 def get_unzip_dir(zip_path: str) -> str:
