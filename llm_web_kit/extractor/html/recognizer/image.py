@@ -1,7 +1,4 @@
 import base64
-import gzip
-import html
-import json
 import re
 from typing import List, Tuple
 from urllib.parse import urljoin, urlparse
@@ -10,10 +7,10 @@ import cairosvg
 from lxml.html import HtmlElement
 from overrides import override
 
+from llm_web_kit.exception.exception import HtmlImageRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.logger import mylogger
 
 
 class ImageRecognizer(BaseHTMLElementRecognizer):
@@ -47,13 +44,12 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             dict: content_list_node
         """
         html_obj = self._build_html_tree(parsed_content)
-        if html_obj is None:
-            raise ValueError(f'Failed to load html: {parsed_content}')
 
         if html_obj.tag == CCTag.CC_IMAGE:
             return self.__ccimg_to_content_list(raw_html_segment, html_obj)
         else:
-            raise ValueError(f'No ccimage element found in content: {parsed_content}')
+            HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}')
+            raise HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}')
 
     def __ccimg_to_content_list(self, raw_html_segment: str, html_obj: HtmlElement) -> dict:
         result = {
@@ -67,7 +63,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 'caption': html_obj.get('caption')
             }
         }
-        # print(f'content: {result["content"]}')
         return result
 
     @override
@@ -83,18 +78,14 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         """
         ccimg_html = list()
         for html_li in main_html_lst:
-            try:
-                if self.is_cc_html(html_li[0]):
-                    ccimg_html.append(html_li)
+            if self.is_cc_html(html_li[0]):
+                ccimg_html.append(html_li)
+            else:
+                new_html_li = self.__parse_html_img(base_url, html_li)
+                if new_html_li:
+                    ccimg_html.extend(new_html_li)
                 else:
-                    new_html_li = self.__parse_html_img(base_url, html_li)
-                    if new_html_li:
-                        ccimg_html.extend(new_html_li)
-                    else:
-                        ccimg_html.append(html_li)
-            except Exception as e:
-                mylogger.exception(f'recognizer image failed: {e}')
-                raise Exception(f'recognizer image failed: {e}')
+                    ccimg_html.append(html_li)
         return ccimg_html
 
     def __parse_html_img(self, base_url: str, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
@@ -135,7 +126,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         for elem in img_elements:
             tag = elem.tag
             raw_img_html = self._element_to_html(elem)
-            # mylogger.info(f'raw_img_html: {raw_img_html}')
             attributes = {
                 'by': tag,
                 'html': raw_img_html,  # 保留原始 <img> 标签作为属性值
@@ -173,19 +163,9 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
 
             img_tag.append(CCTag.CC_IMAGE)
             is_valid_img = True
-            # attributes = {k: self.__clean_xml_string(v) for k, v in attributes.items()}
             img_text, img_tail = self.__parse_text_tail(attributes)
-            try:
-                new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
-            except Exception as e:
-                mylogger.exception(f'build_cc_element failed: {e}')
-                raise Exception(f'build_cc_element failed: {e}')
-            # mylogger.info(f'new_ccimage:{self._element_to_html(new_ccimage)}')
-            try:
-                self._replace_element(elem, new_ccimage)
-            except Exception as e:
-                mylogger.exception(f'replace img element fail: {e}')
-                raise Exception(f'replace img element fail: {e}')
+            new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
+            self._replace_element(elem, new_ccimage)
 
         if is_valid_img:
             updated_html = self._element_to_html(html_obj)
@@ -201,7 +181,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             if text.startswith('data:image'):
                 attributes['text'] = text
                 attributes['format'] = 'base64'
-                # attributes['text'] = re.search(r'base64[, ]?(.*)', text).group(1)
             else:
                 attributes['text'] = self.__get_full_image_url(base_url, text)
         common_attributes = ['alt', 'title', 'width', 'height']  # , 'src', 'style', 'data-src', 'srcset'
@@ -226,7 +205,11 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         return text
 
     def __parse_svg_img_attr(self, elem: HtmlElement, attributes: dict):
-        svg_img = self.__svg_to_base64(attributes['html'])
+        if [k for k, v in elem.attrib.items() if k == 'xmlns']:
+            elem.attrib.pop('xmlns')
+            svg_img = self.__svg_to_base64(self._element_to_html(elem))
+        else:
+            svg_img = self.__svg_to_base64(attributes['html'])
         if svg_img:
             attributes['text'] = svg_img
             attributes['format'] = 'base64'
@@ -237,15 +220,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 if elem.get(attr) is not None:
                     attributes[attr] = elem.get(attr)
 
-    def __clean_xml_string(self, s):
-        """清洗html数据，统一标准的unicode编码，移除NULL字节和其他控制字符."""
-        s = html.unescape(s)
-        return ''.join(c for c in s if ord(c) >= 32)
-
     def __parse_text_tail(self, attributes: dict) -> Tuple[str, str]:
         """解析img标签的text&tail值."""
-        if not attributes:
-            raise ZeroDivisionError
         text = attributes.pop('text') if attributes.get('text') else ''
         tail = attributes.pop('tail') if attributes.get('tail') else ''
         return (text, tail)
@@ -275,44 +251,4 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 f'base64,{base64_data}'
             )
         except ValueError:
-            mylogger.info(f'value error, The SVG size is undefined: {svg_content}')
-        except Exception as e:
-            mylogger.exception(f'svg_to_base64 failed: {e}, error data: {svg_content}')
-            raise Exception(f'svg_to_base64 failed: {e}')
-
-
-def read_gz_and_parse_json_line_by_line(file_path):
-    try:
-        # 使用 gzip.open() 读取 .gz 文件
-        with gzip.open(file_path, 'rt', encoding='utf-8') as gz_file:
-            for line in gz_file:
-                # 解析每一行 JSON 数据
-                json_line = json.loads(line)
-                yield json_line
-    except Exception as e:
-        print(f'Error reading or parsing the file: {e}')
-
-
-if __name__ == '__main__':
-    img = ImageRecognizer()
-    path = r'C:\Users\renpengli\Downloads\CC_benchmark_test_v014_part-676e680976e0-000000.jsonl.gz'
-
-    idx = 0
-    num = 0
-    for html_d in read_gz_and_parse_json_line_by_line(path):
-        idx += 1
-        # if idx < num:
-        #     continue
-        # if idx > num:
-        #     break
-        if idx < num:
-            continue
-        if idx > 5000:
-            break
-        print(f"start analysis idx: {idx}, url: {html_d['url']}")
-        # print(html_d['html'])
-        res = img.recognize(html_d['url'], [(html_d['html'], html_d['html'])], html_d['html'])
-        # parsed_content = """<ccimage by="img" html='&lt;img style="margin:0;padding:0;border:0;" alt="Hosted by uCoz" src="http://s201.ucoz.net/img/cp/6.gif" width="80" height="15" title="Hosted by uCoz"&gt;' format="url" alt="Hosted by uCoz">http://s201.ucoz.net/img/cp/6.gif</ccimage>"""
-        # res = img.to_content_list_node(html_d["url"], parsed_content, html_d["html"])
-        print(f'res size: {len(res)}')
-# 43 svg, figure -- 21, 92 picture --53, 69 base64--186, 62 svg--26, table -- 1
+            pass
