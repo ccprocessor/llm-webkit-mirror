@@ -89,6 +89,7 @@ class TestTableRecognizer(unittest.TestCase):
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             assert len(parts) == 3
             content = html_to_element(parts[1][0]).text_content()
+            print(content)
             assert content == r'<table><tbody><tr><td>Рейтинг:</td><td>Рейтинг&lt;br&gt;5.00&lt;br&gt;из 5 на основе опроса&lt;br&gt;3&lt;br&gt;пользователей</td></tr><tr><td>Тип товара:</td><td>Препараты для омоложения</td></tr><tr><td>Форма:</td><td>Крем</td></tr><tr><td>Объем:</td><td>50 мл</td></tr><tr><td>Рецепт:</td><td>Отпускается без рецепта</td></tr><tr><td>Способ хранения:</td><td>Хранить при температуре 4-20°</td></tr><tr><td>Примечание:</td><td>Беречь от детей</td></tr><tr><td>Оплата:</td><td>Наличными/банковской картой</td></tr><tr><td>Доступность в Северске:</td><td>В наличии</td></tr><tr><td>Доставка:</td><td>2-7 Дней</td></tr><tr><td>Цена:</td><td>84&lt;br&gt;₽</td></tr></tbody></table>'
 
     def test_cc_complex_table(self):
@@ -166,6 +167,7 @@ class TestTableRecognizer(unittest.TestCase):
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             assert html_to_element(parts[0][0]).xpath(f'.//{CCTag.CC_TABLE}')[0].text is None
 
+    @unittest.skip(reason='在code模块解决了table嵌套多行代码问题')
     def test_table_involve_code(self):
         """table involve code."""
         for test_case in TEST_CASES:
@@ -176,6 +178,7 @@ class TestTableRecognizer(unittest.TestCase):
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
             expect_path = base_dir.joinpath(test_case['expected'][3])
             content = open(expect_path, 'r', encoding='utf-8').read()
+            print(content)
             assert complex_table_tag[0].text == content.strip('\n')
 
     @unittest.skip(reason='在code模块解决了这个问题')

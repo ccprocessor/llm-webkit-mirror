@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 13
+        assert len(self.data_json) == 14
 
         # Config for HTML extraction
         self.config = {
@@ -369,4 +369,21 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
+        print(content_md)
         assert '| ID: 975' in content_md
+
+    def test_table_element_include_enter(self):
+        """table的元素中间有换行."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[13]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        print(content_md)
+        assert """| عنوان فارسی | توسعه مالی و هزینه سرمایه حقوق سهامداران: شواهدی از چین |
+|---|---|
+| عنوان انگلیسی | Financial development and the cost of equity capital: Evidence from China |
+| کلمات کلیدی : | &nbsp         توسعه مالی؛ هزینه سرمایه حقوق سهامداران؛ قانون و امور مالی؛ چین |
+| درسهای مرتبط | حسابداری |""" in content_md
