@@ -233,6 +233,24 @@
         "groundtruth_filepath":"groundtruth/math_1.jsonl",
         "layout_type": "forum"
     },
+    "math_mathhelpforum_1": {
+        "url": "https://mathhelpforum.com/t/integral-question.76128/",
+        "origin_filepath":"origin/math_mathhelpforum_1.html",
+        "groundtruth_filepath":"groundtruth/math_mathhelpforum_1.jsonl",
+        "layout_type": "forum"
+    },
+    "math_stackexchange_1": {
+        "url": "https://math.stackexchange.com/questions/458323/is-8327-1-a-prime-number?answertab=active",
+        "origin_filepath":"origin/math_stackexchange_1.html",
+        "groundtruth_filepath":"groundtruth/math_stackexchange_1.jsonl",
+        "layout_type": "forum"
+    },
+    "math_physicsforums_1": {
+        "url": "https://www.physicsforums.com/threads/probability-theoretic-inequality.246150/",
+        "origin_filepath":"origin/math_physicsforums_1.html",
+        "groundtruth_filepath":"groundtruth/math_physicsforums_1.jsonl",
+        "layout_type": "forum"
+    },
     "table_1":{
         "url": "https://grondwerken-overzicht.nl/noordwolde/gwy",
         "origin_filepath":"origin/table_1.html",
