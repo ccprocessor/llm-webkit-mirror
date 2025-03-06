@@ -3,7 +3,7 @@ from typing import Any, List, Tuple
 
 from lxml.html import HtmlElement
 from overrides import override
-
+import json
 from llm_web_kit.exception.exception import HtmlTableRecognizerException
 from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
@@ -68,7 +68,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         :param table: lxml.html.HtmlElement 对象，表示一个 <table> 元素
         :return: 如果表格为空，返回 True；否则返回 False
         """
-
         def is_element_empty(elem):
             # 检查元素本身的文本内容
             if elem.text and elem.text.strip():
@@ -113,20 +112,19 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 return False
         return True
 
-    def __is_table_contain_img(self, tree) -> bool:
-        """判断table元素是否包含图片."""
-        imgs = tree.xpath('//table//img')
-        if len(imgs) == 0:
-            return True
-        else:
-            return False
-
-    def __is_table_nested(self, tree) -> int:
-        """获取表格元素的嵌套层级（非表格元素返回0，顶层表格返回1，嵌套表格返回层级数）."""
-        if tree.tag != 'table':
-            return 0  # 非表格元素返回0
-        # 计算祖先中的 table 数量（不包括自身），再加1表示自身层级
-        return len(tree.xpath('ancestor::table')) + 1
+    def __is_table_nested(self, element) -> int:
+        """计算表格的嵌套层级（非表格返回0）"""
+        if element.tag != "table":
+            return 0
+        # 获取当前表格下所有的表格（包括自身）
+        all_tables = [element] + element.xpath('.//table')
+        max_level = 1  # 初始层级为1（当前表格）
+        # 计算每个表格的层级，取最大值
+        for table in all_tables:
+            ancestor_count = len(table.xpath('ancestor::table'))
+            level = ancestor_count + 1
+            max_level = max(max_level, level)
+        return max_level
 
     def __extract_tables(self, ele: str) -> List[Tuple[str, str]]:
         """提取html中的table元素."""
@@ -150,61 +148,60 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_type = 'complex'
         return table_type
 
-    def __extract_table_element(self, ele: HtmlElement) -> str:
-        """提取表格的元素."""
-        for item in ele.iterchildren():
-            return self._element_to_html(item)
 
     def __check_table_include_math_code(self, raw_html: HtmlElement):
-        """check table中是否包含math."""
+        """检查table中的内容，包括普通文本、数学公式和代码."""
         math_html = self._element_to_html(raw_html)
-        ele_res = list()
+        # 处理数学公式和代码
         math_recognizer = MathRecognizer()
         math_res_parts = math_recognizer.recognize(base_url='', main_html_lst=[(math_html, math_html)],
-                                                   raw_html=math_html)
+                                               raw_html=math_html)
         code_recognizer = CodeRecognizer()
         code_res_parts = code_recognizer.recognize(base_url='', main_html_lst=math_res_parts,
-                                                   raw_html=math_html)
+                                               raw_html=math_html)
+        
+        result = []
         for math_item in code_res_parts:
             ele_item = self._build_html_tree(math_item[0])
+            # 处理所有文本内容
+            for text_segment in ele_item.itertext():
+                cleaned_text = text_segment.strip().replace('\\n', '')
+                if cleaned_text:  # 过滤空字符串
+                    #print("cleaned_text", cleaned_text)
+                    result.append(cleaned_text)
+            # 处理行内公式
             ccinline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INLINE}')
-            ccinline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE_INLINE}')
-            ccinterline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
-            ccinterline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE}')
             if ccinline_math_node:
                 formulas = [
-                    el.text if el.text.strip() else ''
-                    for el in ccinline_math_node
+                    el.text.strip() for el in ccinline_math_node if el.text and el.text.strip()
                 ]
-                ele_res.extend(formulas)  # 添加字符串
-            elif ccinterline_math_node:
+                result.extend(formulas)
+            
+            # 处理行间公式
+            ccinterline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
+            if ccinterline_math_node:
+                formulas = [
+                    el.text.strip() for el in ccinterline_math_node if el.text and el.text.strip()
+                ]
+                result.extend(formulas)
+            
+            # 处理行内代码
+            ccinline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE_INLINE}')
+            if ccinline_code_node:
                 codes = [
-                    el.text if el.text.strip() else ''
-                    for el in ccinterline_math_node
+                    el.text.strip() for el in ccinline_code_node if el.text and el.text.strip()
                 ]
-                ele_res.extend(codes)
-            elif ccinline_code_node:
-                inline_codes = [
-                    el.text if el.text.strip() else ''
-                    for el in ccinline_code_node
+                result.extend(codes)
+            
+            # 处理行间代码
+            ccinterline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE}')
+            if ccinterline_code_node:
+                codes = [
+                    el.text.strip() for el in ccinterline_code_node if el.text and el.text.strip()
                 ]
-                ele_res.extend(inline_codes)
-            elif ccinterline_code_node:
-                ccinterline_codes = [
-                    el.text if el.text else ''
-                    for el in ccinterline_code_node
-                ]
-                ele_res.extend(ccinterline_codes)
-            else:
-                texts = []
-                # 使用 itertext() 遍历所有文本片段
-                for text_segment in ele_item.itertext():
-                    # 统一处理文本：去空白 + 替换字面 \n
-                    cleaned_text = text_segment.strip().replace('\\n', '')
-                    if cleaned_text:  # 过滤空字符串
-                        texts.append(cleaned_text)
-                ele_res.extend(texts)
-        return ele_res
+                result.extend(codes)
+        
+        return result
 
     def __simplify_td_th_content(self, elem: HtmlElement) -> None:
         """简化 <td> 和 <th> 内容，仅保留文本内容."""

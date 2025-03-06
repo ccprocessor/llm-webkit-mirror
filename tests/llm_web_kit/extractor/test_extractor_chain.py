@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 14
+        assert len(self.data_json) == 16
 
         # Config for HTML extraction
         self.config = {
@@ -385,3 +385,26 @@ DEF
 | عنوان انگلیسی | Financial development and the cost of equity capital: Evidence from China |
 | کلمات کلیدی : | &nbsp         توسعه مالی؛ هزینه سرمایه حقوق سهامداران؛ قانون و امور مالی؛ چین |
 | درسهای مرتبط | حسابداری |""" in content_md
+
+    def test_list_empty(self):
+        """list抽取为空，原因是嵌套的img标签没有text"""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[14]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        list_type = result.get_content_list()._get_data()[0][0]["type"]
+        assert list_type != "list"
+    
+    def test_table_include_math_p(self):
+        """table包含math和其他内容"""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[15]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list()._get_data()
+        # TODO math模块需要处理下$符号但是非公式
+        assert len(content_list[0]) == 17
