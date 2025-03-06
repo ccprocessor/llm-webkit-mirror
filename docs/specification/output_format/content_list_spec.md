@@ -187,8 +187,8 @@
 | bbox                 | array  | \[x1, y1, x2, y2\]                                              | 可选     |
 | raw_content          | string | 原始文本内容                                                    | 可选     |
 | content.math_content | string | 干净的，格式化过的公式内容。无论是行内还是行间公式两边都不能有$ | 是       |
-| content.math_type    | string | 公式语言类型，kelatex\\mathml\\asciimath                        | 可选     |
-| content.by           | string | 原html中使用公式渲染器                                          | 可选     |
+| content.math_type    | string | 公式语言类型，latex\\mathml\\asciimath                          | 可选     |
+| content.by           | string | 原html中使用公式渲染器，mathjax\\katex                          | 可选     |
 
 ### 图片段
 

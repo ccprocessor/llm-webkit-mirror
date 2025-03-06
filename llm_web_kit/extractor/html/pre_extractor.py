@@ -2,10 +2,12 @@ import os
 
 from overrides import override
 
+from llm_web_kit.extractor.config import INVISIBLE_TAGS
 from llm_web_kit.extractor.pre_extractor import \
     BaseFileFormatFilterPreExtractor
 from llm_web_kit.input.datajson import DataJson
-from llm_web_kit.libs.html_utils import html_to_element
+from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
+                                         remove_element)
 from llm_web_kit.libs.path_lib import get_proj_root_dir
 
 
@@ -83,3 +85,29 @@ class TestHTMLFileFormatFilterPreExtractor(HTMLFileFormatFilterPreExtractor):
             data_json['html'] = html
             del data_json['path']
         return data_json
+
+
+class HTMLFileFormatCleanTagsPreExtractor(HTMLFileFormatFilterPreExtractor):
+    """清理html中隐藏标签."""
+
+    def __init__(self, config: dict):
+        super().__init__(config)
+
+    @override
+    def _do_pre_extract(self, data_json: DataJson) -> DataJson:
+        data_json['html'] = self.__clean_invisible_elements(data_json)
+        return data_json
+
+    def __clean_invisible_elements(self, data_json: DataJson) -> str:
+        """清理隐藏标签."""
+        html_content = data_json['html']
+        tree = html_to_element(html_content)
+        # 遍历所有配置的隐藏标签规则
+        for tag in INVISIBLE_TAGS:
+            # 如果url是通配符*或者匹配当前url
+            if tag['url'] == '*' or (data_json['url'] and tag['url'] in data_json['url']):
+                # 查找所有匹配xpath的节点
+                elements = tree.xpath(tag['tag'])
+                for element in elements:
+                    remove_element(element)
+        return element_to_html(tree)

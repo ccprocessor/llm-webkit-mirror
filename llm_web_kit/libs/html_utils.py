@@ -191,3 +191,25 @@ def convert_html_entity_to_str(html_str):
     """将HTML实体转换回原始字符."""
     result = html.unescape(html_str)
     return result
+
+
+def remove_element(element: HtmlElement):
+    """删除节点.
+
+    删除节点时，保留节点后的tail文本
+
+    Args:
+        element: HtmlElement
+    """
+    parent = element.getparent()
+    if parent is None:
+        return
+
+    if element.tail:
+        previous = element.getprevious()
+        if previous is None:
+            parent.text = (parent.text or '') + element.tail
+        else:
+            previous.tail = (previous.tail or '') + element.tail
+
+    parent.remove(element)
