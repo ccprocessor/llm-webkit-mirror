@@ -1,5 +1,6 @@
 import json
 import string
+from functools import reduce
 from typing import List, Tuple
 
 from lxml import etree
@@ -108,14 +109,56 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             text2: str: 第二段文本
             lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊符号开头的连接不加空格。
         """
-        text1 = text1.strip() if text1 else ''
-        text2 = text2.strip() if text2 else ''
+        text1 = text1.rstrip(' ') if text1 else ''
+        text2 = text2.lstrip(' ') if text2 else ''
         if lang == 'zh':
-            return text1.strip() + text2.strip()
+            return text1.lstrip(' ') + text2.rstrip(' ')
         else:
             words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
             txt = text1 + words_sep + text2
-            return txt.strip()
+            return txt
+
+    # def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
+    #     """
+    #     获取段落全部的文本.
+    #     对于段落里的行内公式<equation-inline>需要特定处理，转换为段落格式：
+    #     [
+    #       {"c":"content text", "t":"text"},
+    #       {"c": "equation text", "t":"equation"},
+    #       {"c":"content text", "t":"text"}
+    #     ]
+    #
+    #     Args:
+    #         el: 代表一个段落的html元素
+    #     """
+    #     para_text = []
+    #
+    #     def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
+    #         if el.tag == CCTag.CC_MATH_INLINE:
+    #             if text:
+    #                 para_text.append({'c':text, 't':ParagraphTextType.TEXT})
+    #                 text = ''
+    #             para_text.append({'c':el.text, 't':ParagraphTextType.EQUATION_INLINE})
+    #         elif el.tag == CCTag.CC_CODE_INLINE:
+    #             if text:
+    #                 para_text.append({'c':text, 't':ParagraphTextType.TEXT})
+    #                 text = ''
+    #             para_text.append({'c':el.text, 't':ParagraphTextType.CODE_INLINE})
+    #         else:
+    #             if el.text and el.text.strip():
+    #                 text = self.__combine_text(text, el.text.strip())
+    #             for child in el.getchildren():
+    #                 text = __get_paragraph_text_recusive(child, text)
+    #
+    #         if el.tail and el.tail.strip():
+    #             text = self.__combine_text(text, el.tail.strip())
+    #
+    #         return text
+    #
+    #     if final := __get_paragraph_text_recusive(root, ''):
+    #         para_text.append({'c':final, 't':ParagraphTextType.TEXT})
+    #
+    #     return para_text
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
         """
@@ -128,34 +171,47 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         ]
 
         Args:
-            el: 代表一个段落的html元素
+            node: 代表一个段落的html元素
         """
         para_text = []
 
-        def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
-            if el.tag == CCTag.CC_MATH_INLINE:
-                if text:
-                    para_text.append({'c':text, 't':ParagraphTextType.TEXT})
-                    text = ''
-                para_text.append({'c':el.text, 't':ParagraphTextType.EQUATION_INLINE})
-            elif el.tag == CCTag.CC_CODE_INLINE:
-                if text:
-                    para_text.append({'c':text, 't':ParagraphTextType.TEXT})
-                    text = ''
-                para_text.append({'c':el.text, 't':ParagraphTextType.CODE_INLINE})
+        def _get_text(node, result_list, current_text=""):
+            if node.tag == CCTag.CC_MATH_INLINE:
+                if current_text:
+                    para_text.append({'c':current_text, 't':ParagraphTextType.TEXT})
+                    current_text = ''
+                para_text.append({'c':node.text, 't':ParagraphTextType.EQUATION_INLINE})
+            elif node.tag == CCTag.CC_CODE_INLINE:
+                if current_text:
+                    para_text.append({'c':current_text, 't':ParagraphTextType.TEXT})
+                    current_text = ''
+                para_text.append({'c':node.text, 't':ParagraphTextType.CODE_INLINE})
             else:
-                if el.text and el.text.strip():
-                    text = self.__combine_text(text, el.text.strip())
-                for child in el.getchildren():
-                    text = __get_paragraph_text_recusive(child, text)
+                if node.text:
+                    current_text += node.text
 
-            if el.tail and el.tail.strip():
-                text = self.__combine_text(text, el.tail.strip())
+                for child in node:
+                    # 如果当前节点是 br 标签，则在最终结果中添加换行符
+                    if child.tag == 'br':
+                        if current_text.strip():  # 只有当 current_text 非空时才添加
+                            result_list.append(current_text)
+                            current_text = ""
+                        result_list.append('\n')
+                    else:
+                        _get_text(child, result_list, current_text)
+                        current_text = ""
 
-            return text
+                    if child.tail:
+                        current_text += child.tail
 
-        if final := __get_paragraph_text_recusive(root, ''):
-            para_text.append({'c':final, 't':ParagraphTextType.TEXT})
+            if current_text.strip():  # 确保最后的文本被添加
+                result_list.append(current_text)
+
+        result = []
+        _get_text(root, result)
+        result_str = reduce(lambda x, y: self.__combine_text(x, y), result)
+        if result_str:
+            para_text.append({'c': result_str, 't': ParagraphTextType.TEXT})
 
         return para_text
 
