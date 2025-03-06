@@ -6,7 +6,7 @@ from typing import Optional
 
 from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils.utils import FileLock, try_remove
+from llm_web_kit.model.resource_utils.utils import FileLockContext, try_remove
 
 
 def get_unzip_dir(zip_path: str) -> str:
@@ -96,7 +96,7 @@ def unzip_local_file(
             )
             try_remove(target_dir)
 
-    with FileLock(lock_path, check_zip, timeout=lock_timeout) as lock:
+    with FileLockContext(lock_path, check_zip, timeout=lock_timeout) as lock:
         if lock is True:
             logger.info(
                 f'zip file {zip_path} is already unzipped to {target_dir} while waiting'

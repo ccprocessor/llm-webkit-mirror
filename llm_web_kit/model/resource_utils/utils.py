@@ -11,7 +11,7 @@ def try_remove(path: str):
         pass
 
 
-class FileLock:
+class FileLockContext:
     """基于文件锁的上下文管理器（跨平台兼容版）"""
 
     def __init__(self, lock_path: str, check_callback=None, timeout: float = 300):

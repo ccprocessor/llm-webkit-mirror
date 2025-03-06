@@ -3,7 +3,7 @@ import os
 import unittest
 from unittest.mock import MagicMock, mock_open, patch
 
-from llm_web_kit.model.resource_utils.utils import FileLock, try_remove
+from llm_web_kit.model.resource_utils.utils import FileLockContext, try_remove
 
 
 class Test_try_remove:
@@ -40,7 +40,7 @@ class TestFileLock(unittest.TestCase):
         mock_fd.write.return_value = None
         mock_os_fdopen.return_value = mock_fd
 
-        with FileLock(self.lock_path):
+        with FileLockContext(self.lock_path):
             mock_open.assert_called_once_with(
                 self.lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644
             )
@@ -70,7 +70,7 @@ class TestFileLock(unittest.TestCase):
         # 当前时间设置为超过超时时间（timeout=300）
         mock_time.return_value = 401  # 100 + 300 + 1
 
-        with FileLock(self.lock_path, timeout=300):
+        with FileLockContext(self.lock_path, timeout=300):
             mock_remove.assert_called_once_with(self.lock_path)
             mock_os_open.assert_any_call(
                 self.lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644
@@ -91,7 +91,7 @@ class TestFileLock(unittest.TestCase):
         ]
 
         with self.assertRaises(TimeoutError):
-            with FileLock(self.lock_path, timeout=300):
+            with FileLockContext(self.lock_path, timeout=300):
                 pass
 
     @patch('os.open')
@@ -99,7 +99,7 @@ class TestFileLock(unittest.TestCase):
         # 模拟其他OS错误（如权限不足）
         mock_os_open.side_effect = OSError(errno.EACCES, 'Permission denied')
         with self.assertRaises(OSError):
-            with FileLock(self.lock_path):
+            with FileLockContext(self.lock_path):
                 pass
 
     @patch('os.close')
@@ -109,7 +109,7 @@ class TestFileLock(unittest.TestCase):
         mock_close.side_effect = None
         # 确保退出上下文时执行清理
         lock_path = 'test.lock'
-        lock = FileLock(lock_path)
+        lock = FileLockContext(lock_path)
         lock._fd = 123  # 模拟已打开的文件描述符
         lock.__exit__('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', None, None)
         mock_remove.assert_called_once_with(self.lock_path)
@@ -118,7 +118,7 @@ class TestFileLock(unittest.TestCase):
     def test_cleanup_failure_handled(self, mock_remove):
         # 模拟删除锁文件时失败
         mock_remove.side_effect = OSError
-        lock = FileLock(self.lock_path)
+        lock = FileLockContext(self.lock_path)
         lock._fd = 123
         # 不应抛出异常
         lock.__exit__(None, None, None)
@@ -137,6 +137,6 @@ class TestFileLock(unittest.TestCase):
                 mock_file = MagicMock()
                 mock_fdopen.return_value.__enter__.return_value = mock_file
 
-                with FileLock(self.lock_path):
+                with FileLockContext(self.lock_path):
                     mock_fdopen.assert_called_once_with(123, 'w')
                     mock_file.write.assert_called_once_with('9999\n123456.789')

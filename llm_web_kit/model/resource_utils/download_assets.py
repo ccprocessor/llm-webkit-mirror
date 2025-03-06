@@ -13,7 +13,7 @@ from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils.boto3_ext import (get_s3_client,
                                                         is_s3_path,
                                                         split_s3_path)
-from llm_web_kit.model.resource_utils.utils import FileLock, try_remove
+from llm_web_kit.model.resource_utils.utils import FileLockContext, try_remove
 
 
 def decide_cache_dir():
@@ -214,7 +214,7 @@ def download_auto_file(
             logger.warning(f'Removing invalid file: {target_path}')
             try_remove(target_path)
 
-    with FileLock(lock_path, check_callback, timeout=lock_timeout) as lock:
+    with FileLockContext(lock_path, check_callback, timeout=lock_timeout) as lock:
         if lock is True:
             logger.info(
                 f'File already exists with valid checksum: {target_path} while waiting'
