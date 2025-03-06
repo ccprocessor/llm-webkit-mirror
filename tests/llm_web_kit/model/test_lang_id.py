@@ -131,7 +131,7 @@ def test_decide_language_func():
     lang_detect.version = '218.bin'
     lang_detect.predict.return_value = (['__label__eng_Latn', '__label__zho_Hans'], [0.6, 0.4])
     result = decide_language_func('test text', lang_detect)
-    assert result == {'language': 'en', 'language_details': 'eng'}
+    assert result == {'language': 'en', 'language_details': 'eng_Latn'}
 
     # Test for empty string
     result = decide_language_func('', lang_detect)
@@ -144,7 +144,7 @@ def test_update_language_by_str():
 
         # 设置模拟函数的返回值
         mock_get_singleton_lang_detect.return_value = MagicMock()
-        mock_decide_language_func.return_value = {'language': 'en', 'language_details': 'eng'}
+        mock_decide_language_func.return_value = {'language': 'en', 'language_details': 'eng_Latn'}
 
         # 调用被测函数
         result = update_language_by_str('test text')
@@ -152,7 +152,7 @@ def test_update_language_by_str():
         # 验证返回结果
         expected_result = {
             'language': 'en',
-            'language_details': 'eng'
+            'language_details': 'eng_Latn'
         }
         assert result == expected_result, f'Expected {expected_result}, but got {result}'
         print('Test passed!')
