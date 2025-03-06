@@ -387,18 +387,18 @@ DEF
 | درسهای مرتبط | حسابداری |""" in content_md
 
     def test_list_empty(self):
-        """list抽取为空，原因是嵌套的img标签没有text"""
+        """list抽取为空，原因是嵌套的img标签没有text."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[14]
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        list_type = result.get_content_list()._get_data()[0][0]["type"]
-        assert list_type != "list"
-    
+        list_type = result.get_content_list()._get_data()[0][0]['type']
+        assert list_type != 'list'
+
     def test_table_include_math_p(self):
-        """table包含math和其他内容"""
+        """table包含math和其他内容."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[15]

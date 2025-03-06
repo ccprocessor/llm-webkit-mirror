@@ -3,7 +3,7 @@ from typing import Any, List, Tuple
 
 from lxml.html import HtmlElement
 from overrides import override
-import json
+
 from llm_web_kit.exception.exception import HtmlTableRecognizerException
 from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
@@ -114,7 +114,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __is_table_nested(self, element) -> int:
         """计算表格的嵌套层级（非表格返回0）"""
-        if element.tag != "table":
+        if element.tag != 'table':
             return 0
         # 获取当前表格下所有的表格（包括自身）
         all_tables = [element] + element.xpath('.//table')
@@ -148,7 +148,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_type = 'complex'
         return table_type
 
-
     def __check_table_include_math_code(self, raw_html: HtmlElement):
         """检查table中的内容，包括普通文本、数学公式和代码."""
         math_html = self._element_to_html(raw_html)
@@ -159,7 +158,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         code_recognizer = CodeRecognizer()
         code_res_parts = code_recognizer.recognize(base_url='', main_html_lst=math_res_parts,
                                                raw_html=math_html)
-        
+
         result = []
         for math_item in code_res_parts:
             ele_item = self._build_html_tree(math_item[0])
@@ -167,7 +166,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             for text_segment in ele_item.itertext():
                 cleaned_text = text_segment.strip().replace('\\n', '')
                 if cleaned_text:  # 过滤空字符串
-                    #print("cleaned_text", cleaned_text)
+                    # print("cleaned_text", cleaned_text)
                     result.append(cleaned_text)
             # 处理行内公式
             ccinline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INLINE}')
@@ -176,7 +175,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     el.text.strip() for el in ccinline_math_node if el.text and el.text.strip()
                 ]
                 result.extend(formulas)
-            
+
             # 处理行间公式
             ccinterline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
             if ccinterline_math_node:
@@ -184,7 +183,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     el.text.strip() for el in ccinterline_math_node if el.text and el.text.strip()
                 ]
                 result.extend(formulas)
-            
+
             # 处理行内代码
             ccinline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE_INLINE}')
             if ccinline_code_node:
@@ -192,7 +191,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     el.text.strip() for el in ccinline_code_node if el.text and el.text.strip()
                 ]
                 result.extend(codes)
-            
+
             # 处理行间代码
             ccinterline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE}')
             if ccinterline_code_node:
@@ -200,7 +199,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     el.text.strip() for el in ccinterline_code_node if el.text and el.text.strip()
                 ]
                 result.extend(codes)
-        
+
         return result
 
     def __simplify_td_th_content(self, elem: HtmlElement) -> None:
