@@ -1,0 +1,209 @@
+import os
+import shutil
+import tempfile
+import time
+import unittest
+from unittest.mock import Mock, patch
+
+from filelock import Timeout
+
+from llm_web_kit.model.resource_utils.process_with_lock import (
+    get_path_mtime, process_and_verify_file_with_lock)
+
+
+class TestGetPathMtime(unittest.TestCase):
+    """测试 get_path_mtime 函数."""
+
+    def setUp(self):
+        self.test_dir = 'test_dir'
+        self.test_file = 'test_file.txt'
+        os.makedirs(self.test_dir, exist_ok=True)
+        with open(self.test_file, 'w') as f:
+            f.write('test')
+
+    def tearDown(self):
+        if os.path.exists(self.test_file):
+            os.remove(self.test_file)
+        if os.path.exists(self.test_dir):
+            shutil.rmtree(self.test_dir)
+
+    def test_file_mtime(self):
+        # 测试文件路径
+        expected_mtime = os.path.getmtime(self.test_file)
+        result = get_path_mtime(self.test_file)
+        self.assertEqual(result, expected_mtime)
+
+    def test_dir_with_files(self):
+        # 测试包含文件的目录
+        file1 = os.path.join(self.test_dir, 'file1.txt')
+        file2 = os.path.join(self.test_dir, 'file2.txt')
+
+        with open(file1, 'w') as f:
+            f.write('test1')
+        time.sleep(0.1)  # 确保mtime不同
+        with open(file2, 'w') as f:
+            f.write('test2')
+
+        latest_mtime = max(os.path.getmtime(file1), os.path.getmtime(file2))
+        result = get_path_mtime(self.test_dir)
+        self.assertEqual(result, latest_mtime)
+
+    def test_empty_dir(self):
+        # 测试空目录（预期返回0）
+        empty_dir = 'empty_dir'
+        os.makedirs(empty_dir, exist_ok=True)
+        try:
+            result = get_path_mtime(empty_dir)
+            self.assertEqual(result, None)  # 根据当前函数逻辑返回0
+        finally:
+            shutil.rmtree(empty_dir)
+
+
+class TestProcessAndVerifyFileWithLock(unittest.TestCase):
+    """测试 process_and_verify_file_with_lock 函数."""
+
+    def setUp(self):
+        self.target_path = 'target.txt'
+        self.lock_path = self.target_path + '.lock'
+
+    def tearDown(self):
+        if os.path.exists(self.target_path):
+            os.remove(self.target_path)
+        if os.path.exists(self.lock_path):
+            os.remove(self.lock_path)
+
+    @patch('os.path.exists')
+    @patch('llm_web_kit.model.resource_utils.process_with_lock.try_remove')
+    def test_target_exists_and_valid(self, mock_remove, mock_exists):
+        # 目标存在且验证成功
+        mock_exists.side_effect = lambda path: path == self.target_path
+        process_func = Mock()
+        verify_func = Mock(return_value=True)
+
+        result = process_and_verify_file_with_lock(
+            process_func, verify_func, self.target_path
+        )
+
+        self.assertEqual(result, self.target_path)
+        process_func.assert_not_called()
+        verify_func.assert_called_once()
+
+    @patch('os.path.exists')
+    @patch('llm_web_kit.model.resource_utils.process_with_lock.try_remove')
+    @patch('time.sleep')
+    def test_target_not_exists_acquire_lock_success(
+        self, mock_sleep, mock_remove, mock_exists
+    ):
+        # 目标不存在，成功获取锁
+        mock_exists.side_effect = lambda path: False
+        process_func = Mock(return_value=self.target_path)
+        verify_func = Mock()
+
+        result = process_and_verify_file_with_lock(
+            process_func, verify_func, self.target_path
+        )
+
+        process_func.assert_called_once()
+        self.assertEqual(result, self.target_path)
+
+    @patch('os.path.exists')
+    @patch('llm_web_kit.model.resource_utils.process_with_lock.try_remove')
+    @patch('time.sleep')
+    def test_second_validation_after_lock(self, mock_sleep, mock_remove, mock_exists):
+        # 获取锁后二次验证成功（其他进程已完成）
+        mock_exists.side_effect = lambda path: {
+            self.lock_path: False,
+            self.target_path: True,
+        }
+        verify_func = Mock(return_value=True)
+        process_func = Mock()
+
+        result = process_and_verify_file_with_lock(
+            process_func, verify_func, self.target_path
+        )
+
+        process_func.assert_not_called()
+        self.assertEqual(result, self.target_path)
+
+    @patch('os.path.exists')
+    @patch('llm_web_kit.model.resource_utils.process_with_lock.SoftFileLock')
+    @patch('time.sleep')
+    def test_lock_timeout_retry_success(self, mock_sleep, mock_lock, mock_exists):
+        # 第一次获取锁超时，重试后成功
+        lock_str = self.target_path + '.lock'
+        mock_exists.return_value = False
+        lock_instance = Mock()
+        mock_lock.return_value = lock_instance
+
+        # 第一次acquire抛出Timeout，第二次成功
+        lock_instance.acquire.side_effect = [Timeout(lock_str), None]
+        process_func = Mock(return_value=self.target_path)
+        verify_func = Mock()
+
+        process_and_verify_file_with_lock(
+            process_func, verify_func, self.target_path
+        )
+
+        self.assertEqual(lock_instance.acquire.call_count, 2)
+        process_func.assert_called_once()
+
+
+class TestProcessWithLockRealFiles(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.target_name = 'test_target.dat'
+        self.lock_suffix = '.lock'
+
+        self.target_path = os.path.join(self.temp_dir.name, self.target_name)
+        self.lock_path = self.target_path + self.lock_suffix
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+    def test_zombie_process_recovery(self):
+        # 准备过期文件和僵尸锁文件
+        with open(self.target_path, 'w') as f:
+            f.write('old content')
+        with open(self.lock_path, 'w') as f:
+            f.write('lock')
+
+        # 设置文件修改时间为超时前（60秒超时，设置为2分钟前）
+        old_mtime = time.time() - 59
+        os.utime(self.target_path, (old_mtime, old_mtime))
+
+        # Mock验证函数和处理函数
+        def verify_func():
+            # 验证文件内容
+            with open(self.target_path) as f:
+                content = f.read()
+            return content == 'new content'
+
+        process_called = [False]  # 使用list实现nonlocal效果
+
+        def real_process():
+            # 真实写入文件
+            with open(self.target_path, 'w') as f:
+                f.write('new content')
+            process_called[0] = True
+            return self.target_path
+
+        # 执行测试
+        result = process_and_verify_file_with_lock(
+            process_func=real_process,
+            verify_func=verify_func,
+            target_path=self.target_path,
+            lock_suffix=self.lock_suffix,
+            timeout=60,
+        )
+
+        # 验证结果
+        self.assertTrue(os.path.exists(self.target_path))
+        self.assertFalse(os.path.exists(self.lock_path))
+        self.assertTrue(process_called[0])
+        self.assertEqual(result, self.target_path)
+
+        # 验证文件内容
+        with open(self.target_path) as f:
+            content = f.read()
+        print(content)
+        self.assertEqual(content, 'new content')

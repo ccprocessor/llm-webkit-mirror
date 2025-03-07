@@ -1,7 +1,7 @@
 import hashlib
 import os
-import shutil
 import tempfile
+from functools import partial
 from typing import Iterable, Optional
 
 import requests
@@ -13,7 +13,8 @@ from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils.boto3_ext import (get_s3_client,
                                                         is_s3_path,
                                                         split_s3_path)
-from llm_web_kit.model.resource_utils.utils import FileLockContext, try_remove
+from llm_web_kit.model.resource_utils.process_with_lock import \
+    process_and_verify_file_with_lock
 
 
 def decide_cache_dir():
@@ -133,36 +134,45 @@ def verify_file_checksum(
     return True
 
 
-def download_to_temp(conn, progress_bar) -> str:
+def download_to_temp(conn, progress_bar, download_path):
     """下载到临时文件."""
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        tmp_path = tmp_file.name
-        logger.info(f'Downloading to temporary file: {tmp_path}')
 
+    with open(download_path, 'wb') as f:
+        for chunk in conn.read_stream():
+            if chunk:  # 防止空chunk导致进度条卡死
+                f.write(chunk)
+                progress_bar.update(len(chunk))
+
+
+def download_auto_file_core(
+    resource_path: str,
+    target_path: str,
+) -> str:
+    # 创建连接
+    conn_cls = S3Connection if is_s3_path(resource_path) else HttpConnection
+    conn = conn_cls(resource_path)
+    total_size = conn.get_size()
+
+    # 下载流程
+    logger.info(f'Downloading {resource_path} => {target_path}')
+    progress = tqdm(total=total_size, unit='iB', unit_scale=True)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        download_path = os.path.join(temp_dir, 'download_file')
         try:
-            with open(tmp_path, 'wb') as f:
-                for chunk in conn.read_stream():
-                    if chunk:  # 防止空chunk导致进度条卡死
-                        f.write(chunk)
-                        progress_bar.update(len(chunk))
-            return tmp_path
-        except Exception:
-            try_remove(tmp_path)
-            raise
+            download_to_temp(conn, progress, download_path)
+            if not total_size == os.path.getsize(download_path):
+                raise ModelResourceException(
+                    f'Downloaded {resource_path} to {download_path}, but size mismatch'
+                )
 
+            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+            os.rename(download_path, target_path)
 
-def move_to_target(tmp_path: str, target_path: str, expected_size: int):
-    """移动文件并验证."""
-    if os.path.getsize(tmp_path) != expected_size:
-        raise ModelResourceException(
-            f'File size mismatch: {os.path.getsize(tmp_path)} vs {expected_size}'
-        )
+            return target_path
 
-    os.makedirs(os.path.dirname(target_path), exist_ok=True)
-    shutil.move(tmp_path, target_path)  # 原子操作替换
-
-    if not os.path.exists(target_path):
-        raise ModelResourceException(f'Move failed: {tmp_path} -> {target_path}')
+        finally:
+            progress.close()
 
 
 def download_auto_file(
@@ -170,71 +180,25 @@ def download_auto_file(
     target_path: str,
     md5_sum: str = '',
     sha256_sum: str = '',
-    exist_ok=True,
-    lock_timeout: int = 300,
+    lock_suffix: str = '.lock',
+    lock_timeout: float = 60,
 ) -> str:
-    """Download a file from a given resource path (either an S3 path or an HTTP
-    URL) to a target path on the local file system.
-
-    This function will first download the file to a temporary file, then move the temporary file to the target path after
-    the download is complete. A progress bar will be displayed during the download.
-
-    If the size of the downloaded file does not match the expected size, an exception will be raised.
+    """Download a file from the web or S3, verify its checksum, and return the
+    target path. Use SoftFileLock to prevent concurrent downloads.
 
     Args:
-        resource_path (str): The path of the resource to download. This can be either an S3 path (e.g., "s3://bucket/key")
-            or an HTTP URL (e.g., "http://example.com/file").
-        target_path (str): The path on the local file system where the downloaded file should be saved.\
-        exist_ok (bool, optional): If False, raise an exception if the target path already exists. Defaults to True.
+        resource_path (str): the source URL or S3 path to download from
+        target_path (str): the target path to save the downloaded file
+        md5_sum (str, optional): the expected MD5 checksum of the file. Defaults to ''.
+        sha256_sum (str, optional): the expected SHA256 checksum of the file. Defaults to ''.
+        lock_suffix (str, optional): the suffix of the lock file. Defaults to '.lock'.
+        lock_timeout (float, optional): the timeout of the lock file. Defaults to 60.
 
     Returns:
-        str: The path where the downloaded file was saved.
-
-    Raises:
-        Exception: If an error occurs during the download, or if the size of the downloaded file does not match the
-            expected size, or if the temporary file cannot be moved to the target path.
+        str: the target path of the downloaded file
     """
-
-    """线程安全的文件下载函数"""
-    lock_path = f'{target_path}.lock'
-
-    def check_callback():
-        return verify_file_checksum(target_path, md5_sum, sha256_sum)
-
-    if os.path.exists(target_path):
-        if not exist_ok:
-            raise ModelResourceException(
-                f'File exists with invalid checksum: {target_path}'
-            )
-
-        if verify_file_checksum(target_path, md5_sum, sha256_sum):
-            logger.info(f'File already exists with valid checksum: {target_path}')
-            return target_path
-        else:
-            logger.warning(f'Removing invalid file: {target_path}')
-            try_remove(target_path)
-
-    with FileLockContext(lock_path, check_callback, timeout=lock_timeout) as lock:
-        if lock is True:
-            logger.info(
-                f'File already exists with valid checksum: {target_path} while waiting'
-            )
-            return target_path
-
-        # 创建连接
-        conn_cls = S3Connection if is_s3_path(resource_path) else HttpConnection
-        conn = conn_cls(resource_path)
-        total_size = conn.get_size()
-
-        # 下载流程
-        logger.info(f'Downloading {resource_path} => {target_path}')
-        progress = tqdm(total=total_size, unit='iB', unit_scale=True)
-
-        try:
-            tmp_path = download_to_temp(conn, progress)
-            move_to_target(tmp_path, target_path, total_size)
-
-            return target_path
-        finally:
-            progress.close()
-            try_remove(tmp_path)  # 确保清理临时文件
+    process_func = partial(download_auto_file_core, resource_path, target_path)
+    verify_func = partial(verify_file_checksum, target_path, md5_sum, sha256_sum)
+    return process_and_verify_file_with_lock(
+        process_func, verify_func, target_path, lock_suffix, lock_timeout
+    )
