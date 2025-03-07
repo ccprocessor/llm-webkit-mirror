@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 13
+        assert len(self.data_json) == 14
 
         # Config for HTML extraction
         self.config = {
@@ -78,6 +78,11 @@ class TestExtractorChain(unittest.TestCase):
                         'enable': True,
                         'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor',
                     },
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
+                        'class_init_kwargs': {},
+                    }
                 ],
                 'extractor': [
                     {
@@ -370,3 +375,14 @@ DEF
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert '| ID: 975' in content_md
+
+    def test_clean_tags(self):
+        """测试clean_tag的preExtractor是否生效."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[13]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        print(content_md)
+        self.assertNotIn('begingroup', content_md)
