@@ -29,7 +29,7 @@ class PoliticalDetector:
 
         self.model = fasttext.load_model(model_bin_path)
         self.tokenizer = AutoTokenizer.from_pretrained(
-            tokenizer_path, use_fast=False, trust_remote_code=True, cache_dir=CACHE_DIR
+            tokenizer_path, use_fast=False, trust_remote_code=True
         )
 
     def auto_download(self):
