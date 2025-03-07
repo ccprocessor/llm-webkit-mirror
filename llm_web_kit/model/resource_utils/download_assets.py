@@ -42,8 +42,7 @@ def decide_cache_dir():
 
 CACHE_DIR = decide_cache_dir()
 CACHE_TMP_DIR = os.path.join(CACHE_DIR, 'tmp')
-# TODO set environment variable for huggingface cache in other places
-os.environ['HF_HOME'] = CACHE_DIR
+
 
 if not os.path.exists(CACHE_DIR):
     os.makedirs(CACHE_DIR)

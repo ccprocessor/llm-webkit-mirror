@@ -2,7 +2,6 @@ import os
 from typing import Any, Dict, Tuple
 
 import fasttext
-from transformers import AutoTokenizer
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import ModelInputException
@@ -19,6 +18,10 @@ from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
 class PoliticalDetector:
 
     def __init__(self, model_path: str = None):
+        # import AutoTokenizer here to avoid isort error
+        # must set the HF_HOME to the CACHE_DIR at this point
+        os.environ['HF_HOME'] = CACHE_DIR
+        from transformers import AutoTokenizer
         if not model_path:
             model_path = self.auto_download()
         model_bin_path = os.path.join(model_path, 'model.bin')
