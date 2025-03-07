@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 14
+        assert len(self.data_json) == 18
 
         # Config for HTML extraction
         self.config = {
@@ -363,7 +363,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()[0][0]['content']['html']
-        assert content_list == """<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>print()</td><td>Prints a message to the console.</td><td>print("Hello, World!")</td></tr><tr><td>len()</td><td>Returns the length of an object.</td><td>len([1, 2, 3])</td></tr><tr><td>range()</td><td>Generates a sequence of numbers.</td><td>range(1, 10)</td></tr></table>"""
+        assert content_list == r"""<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>`print()`</td><td>Prints a message to the console.</td><td>`print("Hello, World!")`</td></tr><tr><td>`len()`</td><td>Returns the length of an object.</td><td>`len([1, 2, 3])`</td></tr><tr><td>`range()`</td><td>Generates a sequence of numbers.</td><td>`range(1, 10)`</td></tr></table>"""
 
     def test_table_tail_text(self):
         """table的tail文本保留."""
@@ -376,13 +376,61 @@ DEF
         content_md = result.get_content_list().to_mm_md()
         assert '| ID: 975' in content_md
 
+    def test_table_element_include_enter(self):
+        """table的元素中间有换行."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[13]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert """| عنوان فارسی | توسعه مالی و هزینه سرمایه حقوق سهامداران: شواهدی از چین |
+|---|---|
+| عنوان انگلیسی | Financial development and the cost of equity capital: Evidence from China |
+| کلمات کلیدی : | &nbsp         توسعه مالی؛ هزینه سرمایه حقوق سهامداران؛ قانون و امور مالی؛ چین |
+| درسهای مرتبط | حسابداری |""" in content_md
+
+    def test_list_empty(self):
+        """list抽取为空，原因是嵌套的img标签没有text."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[14]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        list_type = result.get_content_list()._get_data()[0][0]['type']
+        assert list_type != 'list'
+
+    def test_table_include_math_p(self):
+        """table包含math和其他内容."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[15]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list()._get_data()
+        assert len(content_list[0]) == 17
+        assert content_list[0][3]['content']['html'] == r"<table><tr><td>up vote 17 down vote favorite 5</td><td>I'm having problems with exercises on proving whether or not a given number is prime. Is $83^{27} + 1$ prime? prime-numbers factoring</td></tr><tr><td></td><td></td></tr></table>"
+
+    def test_table_include_math_p_2(self):
+        """table包含math和其他内容."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[16]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list()._get_data()
+        assert content_list[0][2]['content']['html'] == '<table><tr><td>单位换算：</td><td>$1 \\text{km} = 10^3 \\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>$1m=10^2cm$</td><td>$1kg=10^3g$</td><td>$1h=3600s$</td></tr></table></td></tr><tr><td>运动学：</td><td>$v = \\frac{dx}{dt}$ $a = \\frac{dv}{dt}$</td></tr></table>'
+
     def test_clean_tags(self):
         """测试clean_tag的preExtractor是否生效."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[13]
+        test_data = self.data_json[17]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        print(content_md)
         self.assertNotIn('begingroup', content_md)

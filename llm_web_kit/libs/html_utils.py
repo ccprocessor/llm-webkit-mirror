@@ -1,4 +1,5 @@
 import html
+import re
 from copy import deepcopy
 
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
@@ -114,6 +115,18 @@ def iter_node(element: HtmlElement):
             yield from iter_node(sub_element)
 
 
+def _escape_table_cell(text: str) -> str:
+    """转义表格单元格中的特殊字符.
+
+    比如 |、内容中的\n等
+    """
+    # 首先处理换行符，将其替换为空格
+    text = re.sub(r'[\r\n]+', ' ', text)
+    # 转义竖线和点号，避免与markdown表格语法冲突
+    escaped = text.replace('|', '\\|')
+    return escaped
+
+
 def html_to_markdown_table(table_html_source: str) -> str:
     """把html代码片段转换成markdown表格.
 
@@ -140,7 +153,7 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
     # 检查第一行是否是表头并获取表头内容
     first_row_tags = rows[0].xpath('.//th | .//td')
-    headers = [tag.text_content().strip() for tag in first_row_tags]
+    headers = [_escape_table_cell(tag.text_content().strip()) for tag in first_row_tags]
     # 如果表头存在，添加表头和分隔符，并保证表头与最大列数对齐
     if headers:
         while len(headers) < max_cols:
@@ -155,7 +168,7 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
     # 添加表格内容，跳过已被用作表头的第一行（如果有的话）
     for row in rows[1:]:
-        columns = [td.text_content().strip() for td in row.xpath('.//td | .//th')]
+        columns = [_escape_table_cell(td.text_content().strip()) for td in row.xpath('.//td | .//th')]
         # 如果这一行的列数少于最大列数，则补充空白单元格
         while len(columns) < max_cols:
             columns.append('')

@@ -38,7 +38,6 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             if self.is_cc_html(html):
                 rtn.append((html, raw_html))
                 continue
-
             root: HtmlElement = html_to_element(html)
             while True:
                 # 最常见:

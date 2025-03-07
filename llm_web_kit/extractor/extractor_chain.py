@@ -46,7 +46,6 @@ class ExtractorChain:
             # Pre extractors
             for pre_ext in self.__pre_extractors:
                 data = pre_ext.pre_extract(data)
-
             # Main extractors
             for ext in self.__extractors:
                 data = ext.extract(data)
