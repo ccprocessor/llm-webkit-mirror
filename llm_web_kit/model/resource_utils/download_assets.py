@@ -41,6 +41,14 @@ def decide_cache_dir():
 
 
 CACHE_DIR = decide_cache_dir()
+CACHE_TMP_DIR = os.path.join(CACHE_DIR, 'tmp')
+
+
+if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+
+if not os.path.exists(CACHE_TMP_DIR):
+    os.makedirs(CACHE_TMP_DIR)
 
 
 def calc_file_md5(file_path: str) -> str:
@@ -157,7 +165,7 @@ def download_auto_file_core(
     logger.info(f'Downloading {resource_path} => {target_path}')
     progress = tqdm(total=total_size, unit='iB', unit_scale=True)
 
-    with tempfile.TemporaryDirectory() as temp_dir:
+    with tempfile.TemporaryDirectory(dir=CACHE_TMP_DIR) as temp_dir:
         download_path = os.path.join(temp_dir, 'download_file')
         try:
             download_to_temp(conn, progress, download_path)
@@ -167,6 +175,8 @@ def download_auto_file_core(
                 )
 
             os.makedirs(os.path.dirname(target_path), exist_ok=True)
+            print(f'download_path: {download_path}')
+            print(f'target_path: {target_path}')
             os.rename(download_path, target_path)
 
             return target_path

@@ -6,6 +6,7 @@ from typing import Optional
 
 from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.libs.logger import mylogger as logger
+from llm_web_kit.model.resource_utils.download_assets import CACHE_TMP_DIR
 from llm_web_kit.model.resource_utils.process_with_lock import \
     process_and_verify_file_with_lock
 
@@ -82,7 +83,7 @@ def unzip_local_file_core(
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         if password:
             zip_ref.setpassword(password.encode())
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with tempfile.TemporaryDirectory(dir=CACHE_TMP_DIR) as temp_dir:
             extract_dir = os.path.join(temp_dir, 'temp')
             os.makedirs(extract_dir, exist_ok=True)
             zip_ref.extractall(extract_dir)
