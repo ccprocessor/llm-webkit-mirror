@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 17
+        assert len(self.data_json) == 18
 
         # Config for HTML extraction
         self.config = {
@@ -424,3 +424,13 @@ DEF
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()
         assert content_list[0][2]['content']['html'] == '<table><tr><td>单位换算：</td><td>$1 \\text{km} = 10^3 \\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>$1m=10^2cm$</td><td>$1kg=10^3g$</td><td>$1h=3600s$</td></tr></table></td></tr><tr><td>运动学：</td><td>$v = \\frac{dx}{dt}$ $a = \\frac{dv}{dt}$</td></tr></table>'
+
+    def test_clean_tags(self):
+        """测试clean_tag的preExtractor是否生效."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[17]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        self.assertNotIn('begingroup', content_md)
