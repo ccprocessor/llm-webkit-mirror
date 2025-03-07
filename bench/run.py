@@ -79,7 +79,7 @@ def main():
                     print(pipelineConfigPath)
                     print(pipeline_data_path)
                     print(f'{root}/data/{origin_filepath}')
-                    output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}', layout_type)
+                    output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}', layout_type, url)
                     out['content_list'] = content_list
                     out['main_html'] = main_html
                     out['statics'] = statics
@@ -112,6 +112,12 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # pipeline_data_path是jsonl，逐行读取
+    # with open(pipeline_data_path, 'r') as f:
+    #     for line in f:
+    #         data_json = DataJson(json.loads(line.strip()))
+    #         output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, data_json)
+    # print(output)
     # data = json.loads(open(os.path.join(root, 'data/test.json'), 'r').read())
     # print(data.get('url'))
     # writer.write(os.path.join(root, 'data/test.html'), data.get('html').encode('utf-8') + b'\n')

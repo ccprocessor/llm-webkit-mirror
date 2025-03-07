@@ -1,5 +1,6 @@
 import pytest
 
+from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.model.resource_utils.singleton_resource_manager import \
     SingletonResourceManager
 
@@ -27,15 +28,15 @@ class TestSingletonResourceManager:
         assert self.manager.get_resource('test') == 'resource'
 
         # "test" should not be set again
-        with pytest.raises(AssertionError):
+        with pytest.raises(ModelResourceException):
             self.manager.set_resource('test', 'resource')
 
         # name should be a string
-        with pytest.raises(TypeError):
+        with pytest.raises(ModelResourceException):
             self.manager.set_resource(1, 'resource')
 
         # resource should not be None
-        with pytest.raises(TypeError):
+        with pytest.raises(ModelResourceException):
             self.manager.set_resource(None, 'resource')
 
     def test_get_resource(self):
@@ -43,7 +44,7 @@ class TestSingletonResourceManager:
         # "test" should exist after setting and the resource should be "resource"
         assert self.manager.get_resource('test') == 'resource'
         # Exception should be raised if the resource does not exist
-        with pytest.raises(Exception):
+        with pytest.raises(ModelResourceException):
             self.manager.get_resource('test1')
 
     def test_release_resource(self):
@@ -52,7 +53,7 @@ class TestSingletonResourceManager:
         # "test" should not exist after releasing
         assert not self.manager.has_name('test')
         # Exception should be raised if the resource does not exist
-        with pytest.raises(Exception):
+        with pytest.raises(ModelResourceException):
             self.manager.get_resource('test')
         # Should not raise exception if the resource does not exist
         self.manager.release_resource('test')

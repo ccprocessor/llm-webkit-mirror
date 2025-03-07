@@ -31,8 +31,13 @@ class TestST(unittest.TestCase):
                         'enable': True,
                         'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
                         'class_init_kwargs': {
-                            'html_parent_dir': 'tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/'
+                            'html_parent_dir': 'bench/data/'
                         }
+                    },
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
+                        'class_init_kwargs': {}
                     }
                 ],
                 'extractor': [

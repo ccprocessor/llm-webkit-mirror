@@ -22,6 +22,11 @@ class TestExtractorChainNormal(unittest.TestCase):
                         'enable': True,
                         'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterPreExtractor',
                         'class_init_kwargs': {},
+                    },
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
+                        'class_init_kwargs': {},
                     }
                 ],
                 'extractor': [
