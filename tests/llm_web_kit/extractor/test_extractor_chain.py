@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 16
+        assert len(self.data_json) == 17
 
         # Config for HTML extraction
         self.config = {
@@ -358,7 +358,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()[0][0]['content']['html']
-        assert content_list == """<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>print()</td><td>Prints a message to the console.</td><td>print("Hello, World!")</td></tr><tr><td>len()</td><td>Returns the length of an object.</td><td>len([1, 2, 3])</td></tr><tr><td>range()</td><td>Generates a sequence of numbers.</td><td>range(1, 10)</td></tr></table>"""
+        assert content_list == r"""<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>`print()`</td><td>Prints a message to the console.</td><td>`print("Hello, World!")`</td></tr><tr><td>`len()`</td><td>Returns the length of an object.</td><td>`len([1, 2, 3])`</td></tr><tr><td>`range()`</td><td>Generates a sequence of numbers.</td><td>`range(1, 10)`</td></tr></table>"""
 
     def test_table_tail_text(self):
         """table的tail文本保留."""
@@ -406,5 +406,17 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()
-        # TODO math模块需要处理下$符号但是非公式
         assert len(content_list[0]) == 17
+        assert content_list[0][3]['content']['html'] == r"<table><tr><td>up vote 17 down vote favorite 5</td><td>I'm having problems with exercises on proving whether or not a given number is prime. Is $83^{27} + 1$ prime? prime-numbers factoring</td></tr><tr><td></td><td></td></tr></table>"
+
+    def test_table_include_math_p_2(self):
+        """table包含math和其他内容."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[16]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list()._get_data()
+        assert content_list[0][2]['content']['html'] == "<table><tr><td>单位换算：</td><td>$1 \\text{km} = 10^3 \\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>$1m=10^2cm$</td><td>$1kg=10^3g$</td><td>$1h=3600s$</td></tr></table></td></tr><tr><td>运动学：</td><td>$v = \\frac{dx}{dt}$ $a = \\frac{dv}{dt}$</td></tr></table>"
+

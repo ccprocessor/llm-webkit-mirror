@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<body>
+<table border="1">
+  <tr>
+    <!-- 第一层单元格：主内容区 -->
+    <td style="vertical-align: top">
+      <!-- 第二层表格：公式与代码分区 -->
+      <table>
+        <tr>
+          <td colspan="2">
+            <h3>STEM 综合展示表</h3>
+          </td>
+        </tr>
+        
+        <!-- 数学公式区块 -->
+        <tr>
+          <td>
+            <p>基础公式：</p>
+            <math display="block">E = mc^2</math>
+            
+            <!-- 第三层嵌套表格：公式分类 -->
+            <table style="background-color: #f0f0f0">
+              <tr>
+                <td>单位换算：</td>
+                <td>
+                  <math display="inline">1 \text{km} = 10^3 \text{m}</math>
+                  <!-- 第三层子嵌套 -->
+                  <table>
+                    <tr>
+                      <td>长度</td>
+                      <td>质量</td>
+                      <td>时间</td>
+                    </tr>
+                    <tr>
+                      <td><math>1m=10^2cm</math></td>
+                      <td><math>1kg=10^3g</math></td>
+                      <td><math>1h=3600s</math></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>运动学：</td>
+                <td>
+                  <math display="inline">v = \frac{dx}{dt}</math>
+                  <math display="inline">a = \frac{dv}{dt}</math>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <!-- 代码区块 -->
+          <td>
+            <p>编程示例：</p>
+            <pre>console.log("Hello World")</pre>
+            
+            <!-- 第三层嵌套表格：多语言示例 -->
+            <table style="border: 2px dashed blue">
+              <tr>
+                <td>
+                  <p>Python：</p>
+                  <pre>print(sum(range(1,n+1)))</pre>
+                </td>
+                <td>
+                  <p>对应公式：</p>
+                  <math display="block">\sum_{i=1}^{n} i = \frac{n(n+1)}{2}</math>
+                  
+                  <!-- 第三层子嵌套 -->
+                  <table>
+                    <tr>
+                      <td>等差数列</td>
+                      <td>等比数列</td>
+                    </tr>
+                    <tr>
+                      <td><math>S_n = \frac{n(a_1+a_n)}{2}</math></td>
+                      <td><math>S_n = a_1\frac{1-r^n}{1-r}</math></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

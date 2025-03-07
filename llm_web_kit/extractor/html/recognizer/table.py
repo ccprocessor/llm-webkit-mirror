@@ -5,7 +5,6 @@ from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlTableRecognizerException
-from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -113,7 +112,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         return True
 
     def __is_table_nested(self, element) -> int:
-        """计算表格的嵌套层级（非表格返回0）"""
+        """计算表格的嵌套层级（非表格返回0，根据原始table判断的."""
         if element.tag != 'table':
             return 0
         # 获取当前表格下所有的表格（包括自身）
@@ -151,73 +150,90 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __check_table_include_math_code(self, raw_html: HtmlElement):
         """检查table中的内容，包括普通文本、数学公式和代码."""
         math_html = self._element_to_html(raw_html)
-        # 处理数学公式和代码
         math_recognizer = MathRecognizer()
-        math_res_parts = math_recognizer.recognize(base_url='', main_html_lst=[(math_html, math_html)],
-                                               raw_html=math_html)
-        code_recognizer = CodeRecognizer()
-        code_res_parts = code_recognizer.recognize(base_url='', main_html_lst=math_res_parts,
-                                               raw_html=math_html)
-
+        math_res_parts = math_recognizer.recognize(
+            base_url='',
+            main_html_lst=[(math_html, math_html)],
+            raw_html=math_html
+        )
         result = []
-        for math_item in code_res_parts:
+        for math_item in math_res_parts:
             ele_item = self._build_html_tree(math_item[0])
-            # 处理所有文本内容
-            for text_segment in ele_item.itertext():
-                cleaned_text = text_segment.strip().replace('\\n', '')
-                if cleaned_text:  # 过滤空字符串
-                    # print("cleaned_text", cleaned_text)
-                    result.append(cleaned_text)
-            # 处理行内公式
-            ccinline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INLINE}')
-            if ccinline_math_node:
-                formulas = [
-                    el.text.strip() for el in ccinline_math_node if el.text and el.text.strip()
-                ]
-                result.extend(formulas)
 
-            # 处理行间公式
-            ccinterline_math_node = ele_item.xpath(f'//{CCTag.CC_MATH_INTERLINE}')
-            if ccinterline_math_node:
-                formulas = [
-                    el.text.strip() for el in ccinterline_math_node if el.text and el.text.strip()
-                ]
-                result.extend(formulas)
-
-            # 处理行内代码
-            ccinline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE_INLINE}')
-            if ccinline_code_node:
-                codes = [
-                    el.text.strip() for el in ccinline_code_node if el.text and el.text.strip()
-                ]
-                result.extend(codes)
-
-            # 处理行间代码
-            ccinterline_code_node = ele_item.xpath(f'//{CCTag.CC_CODE}')
-            if ccinterline_code_node:
-                codes = [
-                    el.text.strip() for el in ccinterline_code_node if el.text and el.text.strip()
-                ]
-                result.extend(codes)
-
+            def process_node(node):
+                """处理行内公式、行间公式、行间代码、行内代码."""
+                if node.tag == CCTag.CC_MATH_INLINE:
+                    if node.text and node.text.strip():
+                        result.append(f'${node.text.strip()}$')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                # 处理行间公式
+                elif node.tag == CCTag.CC_MATH_INTERLINE:
+                    if node.text and node.text.strip():
+                        result.append(f'$${node.text.strip()}$$')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                # 处理行间代码
+                elif node.tag == CCTag.CC_CODE:
+                    if node.text and node.text.strip():
+                        result.append(f'```{node.text.strip()}```')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                # 处理行内代码
+                elif node.tag == CCTag.CC_CODE_INLINE:
+                    if node.text and node.text.strip():
+                        result.append(f'`{node.text.strip()}`')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                else:
+                    # 提取当前节点的文本
+                    if node.text and node.text.strip():
+                        cleaned_text = node.text.strip().replace('\\n', '')
+                        result.append(cleaned_text)
+                    # 处理节点的tail（元素闭合后的文本）
+                    if node.tail and node.tail.strip():
+                        cleaned_tail = node.tail.strip().replace('\\n', '')
+                        result.append(cleaned_tail)
+                    # 递归处理子节点
+                    for child in node:
+                        process_node(child)
+            # 从根节点开始处理
+            process_node(ele_item)
         return result
 
-    def __simplify_td_th_content(self, elem: HtmlElement) -> None:
-        """简化 <td> 和 <th> 内容，仅保留文本内容."""
+    def __simplify_td_th_content(self, table_nest_level, elem: HtmlElement) -> None:
+        """简化 <td> 和 <th> 内容，保留嵌套表格结构."""
         if elem.tag in ['td', 'th']:
-            # 简化单元格中的元素
-            parse_res = list()
-            math_res = self.__check_table_include_math_code(elem)
-            parse_res.extend(math_res)
-            for item in list(elem.iterchildren()):
-                elem.remove(item)
-            if parse_res:
-                elem.text = '<br>'.join(parse_res)
+            parse_res = []
+            # 检查是否存在嵌套的表格
+            if table_nest_level > 1:
+                # 存在嵌套表格，递归处理子节点
+                for child in elem.iterchildren():
+                    if child.tag == 'table':
+                        # 对嵌套表格递归调用简化处理
+                        self.__simplify_td_th_content(table_nest_level, child)
+                    else:
+                        # 处理非表格元素
+                        math_res = self.__check_table_include_math_code(child)
+                        parse_res.extend(math_res)
+                        elem.remove(child)
+                # 将非表格内容拼接后放在表格前面
+                if parse_res:
+                    elem.text = ' '.join(parse_res) + (elem.text or '')
+            else:
+                # 没有嵌套表格，直接简化
+                math_res = self.__check_table_include_math_code(elem)
+                parse_res.extend(math_res)
+                for item in list(elem.iterchildren()):
+                    elem.remove(item)
+                if parse_res:
+                    elem.text = ' '.join(parse_res)
             return
-        for child in elem.iter('td', 'th'):
-            self.__simplify_td_th_content(child)
+        # 非 td/th 元素继续递归处理
+        for child in elem.iterchildren():
+            self.__simplify_td_th_content(table_nest_level, child)
 
-    def __get_table_body(self, table_type, table_root):
+    def __get_table_body(self, table_type, table_nest_level, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
         if table_type == 'empty':
             return None
@@ -233,11 +249,12 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 elem.text = elem.text.strip().replace('\\n', '')
             if elem.tail is not None:
                 elem.tail = elem.tail.strip().replace('\\n', '')
-        self.__simplify_td_th_content(table_root)
+        # 单元格内的多标签内容进行简化，空格拼接，公式、代码识别
+        self.__simplify_td_th_content(table_nest_level, table_root)
         # 迭代
         for child in table_root.iterchildren():
             if child is not None:
-                self.__get_table_body(table_type, child)
+                self.__get_table_body(table_type, table_nest_level, child)
         return self._element_to_html(table_root)
 
     def __do_extract_tables(self, root: HtmlElement) -> None:
@@ -247,7 +264,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_type = self.__get_table_type(root)
             table_nest_level = self.__is_table_nested(root)
             tail_text = root.tail
-            table_body = self.__get_table_body(table_type, root)
+            table_body = self.__get_table_body(table_type, table_nest_level, root)
             cc_element = self._build_cc_element(
                 CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, table_nest_level=table_nest_level,
                 html=table_raw_html)
