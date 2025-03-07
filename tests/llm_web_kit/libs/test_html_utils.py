@@ -5,7 +5,8 @@ from lxml.html import HtmlElement
 
 from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
                                          html_to_markdown_table,
-                                         replace_element, table_cells_count)
+                                         remove_element, replace_element,
+                                         table_cells_count)
 
 
 class TestHtmlUtils(unittest.TestCase):
@@ -181,3 +182,100 @@ class TestHtmlUtils(unittest.TestCase):
         """
         cell_count = table_cells_count(html)
         self.assertEqual(cell_count, 33)
+
+
+# 测试用例数据
+TEST_REMOVE_ELEMENT_CASES = [
+    # 基本的元素删除
+    {
+        'input': '<div><p>要删除的段落</p></div>',
+        'xpath': './/p',
+        'expect': '<div></div>'
+    },
+    # 删除带有tail文本的元素
+    {
+        'input': '<div><p>要删除的段落</p>这是tail文本</div>',
+        'xpath': './/p',
+        'expect': '<div>这是tail文本</div>'
+    },
+    # 删除有前置兄弟节点且带tail的元素
+    {
+        'input': '<div><span>前置元素</span><p>要删除的段落</p>这是tail文本</div>',
+        'xpath': './/p',
+        'expect': '<div><span>前置元素</span>这是tail文本</div>'
+    },
+    # 删除没有父节点的元素（根元素）
+    {
+        'input': '<p>根元素</p>',
+        'xpath': '.',
+        'expect': '<p>根元素</p>'  # 不应该变化
+    },
+    # 嵌套结构中删除元素
+    {
+        'input': '<div><section><p>要删除的段落</p>段落后文本</section></div>',
+        'xpath': './/p',
+        'expect': '<div><section>段落后文本</section></div>'
+    },
+    # 删除包含子元素的元素
+    {
+        'input': '<div><article>文章开始<p>段落<span>重点</span></p>文章结束</article></div>',
+        'xpath': './/p',
+        'expect': '<div><article>文章开始文章结束</article></div>'
+    },
+    # 删除带属性的元素
+    {
+        'input': '<div><p class="important" id="p1">带属性的段落</p>后续文本</div>',
+        'xpath': './/p',
+        'expect': '<div>后续文本</div>'
+    },
+    # 有多个兄弟节点的情况
+    {
+        'input': '<div><span>第一个</span><p>要删除的</p>中间文本<span>最后一个</span></div>',
+        'xpath': './/p',
+        'expect': '<div><span>第一个</span>中间文本<span>最后一个</span></div>'
+    },
+    # 父节点已有文本且删除元素有tail的情况
+    {
+        'input': '<div>父节点文本<p>要删除的段落</p>tail文本</div>',
+        'xpath': './/p',
+        'expect': '<div>父节点文本tail文本</div>'
+    },
+    # 删除第一个子元素且有tail的情况
+    {
+        'input': '<div><p>第一个子元素</p>tail文本<span>其他元素</span></div>',
+        'xpath': './/p',
+        'expect': '<div>tail文本<span>其他元素</span></div>'
+    },
+    # 删除多个元素中的一个
+    {
+        'input': '<div><p>段落1</p><p>段落2</p><p>段落3</p></div>',
+        'xpath': './/p[2]',
+        'expect': '<div><p>段落1</p><p>段落3</p></div>'
+    },
+    # 删除带有HTML实体的元素
+    {
+        'input': '<div><p>段落&nbsp;带有&lt;实体&gt;</p>后文本</div>',
+        'xpath': './/p',
+        'expect': '<div>后文本</div>'
+    }
+]
+
+
+class TestRemoveElement(unittest.TestCase):
+    """测试remove_element函数."""
+    def setUp(self):
+        self.test_cases = TEST_REMOVE_ELEMENT_CASES
+
+    def test_remove_element(self):
+        """使用测试用例数据测试remove_element函数."""
+        for case in self.test_cases:
+            with self.subTest(case=case):
+                # 解析HTML
+                root = html_to_element(case['input'])
+                # 查找要删除的元素
+                element = root.xpath(case['xpath'])[0]
+                # 执行删除
+                remove_element(element)
+                # 验证结果
+                result = element_to_html(root)
+                self.assertEqual(result, case['expect'])
