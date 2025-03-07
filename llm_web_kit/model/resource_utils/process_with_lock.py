@@ -50,7 +50,6 @@ def process_and_verify_file_with_lock(
                     now = time.time()
                     try:
                         mtime = get_path_mtime(target_path)
-                        print(f'now: {now}, mtime: {mtime}')
                         if now - mtime < timeout:
                             time.sleep(1)
                             continue

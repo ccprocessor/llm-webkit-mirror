@@ -1,8 +1,10 @@
+import multiprocessing
 import os
 import shutil
 import tempfile
 import time
 import unittest
+from functools import partial
 from unittest.mock import Mock, patch
 
 from filelock import Timeout
@@ -140,9 +142,7 @@ class TestProcessAndVerifyFileWithLock(unittest.TestCase):
         process_func = Mock(return_value=self.target_path)
         verify_func = Mock()
 
-        process_and_verify_file_with_lock(
-            process_func, verify_func, self.target_path
-        )
+        process_and_verify_file_with_lock(process_func, verify_func, self.target_path)
 
         self.assertEqual(lock_instance.acquire.call_count, 2)
         process_func.assert_called_once()
@@ -207,3 +207,98 @@ class TestProcessWithLockRealFiles(unittest.TestCase):
             content = f.read()
         print(content)
         self.assertEqual(content, 'new content')
+
+
+def dummy_process_func(target_path, data_content):
+    # 写入文件
+    with open(target_path, 'w') as f:
+        time.sleep(1)
+        f.write(data_content)
+    return target_path
+
+
+def dummy_verify_func(target_path, data_content):
+    # 验证文件内容
+    with open(target_path) as f:
+        content = f.read()
+    return content == data_content
+
+
+class TestMultiProcessWithLock(unittest.TestCase):
+
+    def setUp(self):
+        # 临时文件夹
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.target_name = 'test_target.dat'
+        self.lock_suffix = '.lock'
+        self.data_content = 'test content'
+        self.target_path = os.path.join(self.temp_dir.name, self.target_name)
+        self.lock_path = self.target_path + self.lock_suffix
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+    # 开始时什么都没有，多个进程尝试拿锁，一个进程拿到锁并用1s写入一个资源文件（指定内容，verify尝试检查）。然后所有的进程都发现这个文件被写入，成功返回。资源文件存在，并且锁文件被删掉
+    def test_multi_process_with_lock(self):
+        process_func = partial(dummy_process_func, self.target_path, self.data_content)
+        verify_func = partial(dummy_verify_func, self.target_path, self.data_content)
+
+        # 多进程同时执行
+        # 构建多个进程 然后同时执行
+        pool = multiprocessing.Pool(16)
+        process = partial(
+            process_and_verify_file_with_lock,
+            process_func,
+            verify_func,
+            self.target_path,
+            self.lock_suffix,
+        )
+        results = pool.map(process, [60] * 32)
+        pool.close()
+        # 检查文件是否存在
+        self.assertTrue(os.path.exists(self.target_path))
+        self.assertFalse(os.path.exists(self.lock_path))
+        # 检查结果
+        for result in results:
+            self.assertEqual(result, self.target_path)
+        # 检查文件内容
+        with open(self.target_path) as f:
+            content = f.read()
+        self.assertEqual(content, self.data_content)
+
+    # 开始时有个文件，这个文件mtime比较早，且有个锁文件（模拟之前下载失败了）。然后同样多进程尝试执行，有某个进程尝试删掉这个文件和锁文件，然后还原为场景1，最终大家成功返回。
+    def test_multi_process_with_zombie_files(self):
+        # 准备过期文件和僵尸锁文件
+        with open(self.target_path, 'w') as f:
+            f.write('old content')
+        with open(self.lock_path, 'w') as f:
+            f.write('lock')
+
+        # 设置文件修改时间为超时前（60秒超时，设置为2分钟前）
+        old_mtime = time.time() - 59
+        os.utime(self.target_path, (old_mtime, old_mtime))
+
+        process_func = partial(dummy_process_func, self.target_path, self.data_content)
+        verify_func = partial(dummy_verify_func, self.target_path, self.data_content)
+
+        # 多进程同时执行
+        pool = multiprocessing.Pool(16)
+        process = partial(
+            process_and_verify_file_with_lock,
+            process_func,
+            verify_func,
+            self.target_path,
+            self.lock_suffix,
+        )
+        results = pool.map(process, [60] * 32)
+        pool.close()
+        # 检查文件是否存在
+        self.assertTrue(os.path.exists(self.target_path))
+        self.assertFalse(os.path.exists(self.lock_path))
+        # 检查结果
+        for result in results:
+            self.assertEqual(result, self.target_path)
+        # 检查文件内容
+        with open(self.target_path) as f:
+            content = f.read()
+        self.assertEqual(content, self.data_content)
