@@ -2,122 +2,153 @@ import os
 import tempfile
 import zipfile
 from unittest import TestCase
+from unittest.mock import patch
 
 from llm_web_kit.exception.exception import ModelResourceException
-from llm_web_kit.model.resource_utils.unzip_ext import (check_zip_file,
+from llm_web_kit.model.resource_utils.unzip_ext import (check_zip_path,
                                                         get_unzip_dir,
-                                                        unzip_local_file)
-
-
-def get_assert_dir():
-    file_path = os.path.abspath(__file__)
-    assert_dir = os.path.join(os.path.dirname(os.path.dirname(file_path)), 'assets')
-    return assert_dir
+                                                        unzip_local_file,
+                                                        unzip_local_file_core)
 
 
 class TestGetUnzipDir(TestCase):
+    def test_get_unzip_dir_with_zip_extension(self):
+        self.assertEqual(
+            get_unzip_dir('/path/to/test.zip'),
+            '/path/to/test_unzip',
+        )
 
-    def test_get_unzip_dir_case1(self):
-        assert get_unzip_dir('/path/to/test.zip') == '/path/to/test_unzip'
-
-    def test_get_unzip_dir_case2(self):
-        assert get_unzip_dir('/path/to/test') == '/path/to/test_unzip'
-
-
-class TestCheckZipFile(TestCase):
-    # # test_zip/
-    # # ├── test1.txt "test1\n"
-    # # ├── folder1
-    # # │   └── test2.txt "test2\n"
-    # # └── folder2
-
-    def get_zipfile(self):
-        # 创建一个临时文件夹
-        zip_path = os.path.join(get_assert_dir(), 'zip_demo.zip')
-        zip_file = zipfile.ZipFile(zip_path, 'r')
-        return zip_file
-
-    def test_check_zip_file_cese1(self):
-        zip_file = self.get_zipfile()
-        # # test_zip/
-        # # ├── test1.txt
-        # # ├── folder1
-        # # │   └── test2.txt
-        # # └── folder2
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root_dir = os.path.join(temp_dir, 'test_zip')
-            os.makedirs(os.path.join(root_dir, 'test_zip'))
-            os.makedirs(os.path.join(root_dir, 'folder1'))
-            os.makedirs(os.path.join(root_dir, 'folder2'))
-            with open(os.path.join(root_dir, 'test1.txt'), 'w') as f:
-                f.write('test1\n')
-            with open(os.path.join(root_dir, 'folder1', 'test2.txt'), 'w') as f:
-                f.write('test2\n')
-
-            assert check_zip_file(zip_file, temp_dir) is True
-
-    def test_check_zip_file_cese2(self):
-        zip_file = self.get_zipfile()
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root_dir = os.path.join(temp_dir, 'test_zip')
-            os.makedirs(os.path.join(root_dir, 'test_zip'))
-            os.makedirs(os.path.join(root_dir, 'folder1'))
-            with open(os.path.join(root_dir, 'test1.txt'), 'w') as f:
-                f.write('test1\n')
-            with open(os.path.join(root_dir, 'folder1', 'test2.txt'), 'w') as f:
-                f.write('test2\n')
-
-            assert check_zip_file(zip_file, temp_dir) is True
-
-    def test_check_zip_file_cese3(self):
-        zip_file = self.get_zipfile()
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root_dir = os.path.join(temp_dir, 'test_zip')
-            os.makedirs(os.path.join(root_dir, 'test_zip'))
-            os.makedirs(os.path.join(root_dir, 'folder1'))
-            with open(os.path.join(root_dir, 'folder1', 'test2.txt'), 'w') as f:
-                f.write('test2\n')
-
-            assert check_zip_file(zip_file, temp_dir) is False
-
-    def test_check_zip_file_cese4(self):
-        zip_file = self.get_zipfile()
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root_dir = os.path.join(temp_dir, 'test_zip')
-            os.makedirs(os.path.join(root_dir, 'test_zip'))
-            os.makedirs(os.path.join(root_dir, 'folder1'))
-            with open(os.path.join(root_dir, 'test1.txt'), 'w') as f:
-                f.write('test1\n')
-            with open(os.path.join(root_dir, 'folder1', 'test2.txt'), 'w') as f:
-                f.write('test123\n')
-
-            assert check_zip_file(zip_file, temp_dir) is False
+    def test_get_unzip_dir_without_zip_extension(self):
+        self.assertEqual(
+            get_unzip_dir('/path/to/test'),
+            '/path/to/test_unzip',
+        )
 
 
-def test_unzip_local_file():
-    # creat a temp dir to test
-    with tempfile.TemporaryDirectory() as temp_dir1, tempfile.TemporaryDirectory() as temp_dir2:
-        # test unzip a zip file with 2 txt files
-        zip_path = os.path.join(temp_dir1, 'test.zip')
-        target_dir = os.path.join(temp_dir2, 'target')
-        # zip 2 txt files
-        with zipfile.ZipFile(zip_path, 'w') as zipf:
-            zipf.writestr('test1.txt', 'This is a test file')
-            zipf.writestr('test2.txt', 'This is another test file')
+class TestCheckZipPath(TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.zip_path = os.path.join(self.temp_dir.name, 'test.zip')
+        self.target_dir = os.path.join(self.temp_dir.name, 'target')
+        os.makedirs(self.target_dir, exist_ok=True)
 
-        unzip_local_file(zip_path, target_dir)
-        with open(os.path.join(target_dir, 'test1.txt')) as f:
-            assert f.read() == 'This is a test file'
-        with open(os.path.join(target_dir, 'test2.txt')) as f:
-            assert f.read() == 'This is another test file'
+    def tearDown(self):
+        self.temp_dir.cleanup()
 
-        unzip_local_file(zip_path, target_dir, exist_ok=True)
-        with open(os.path.join(target_dir, 'test1.txt')) as f:
-            assert f.read() == 'This is a test file'
-        with open(os.path.join(target_dir, 'test2.txt')) as f:
-            assert f.read() == 'This is another test file'
-        try:
-            unzip_local_file(zip_path, target_dir, exist_ok=False)
-        except ModelResourceException as e:
-            assert e.custom_message == f'Target directory {target_dir} already exists'
+    def test_check_valid_zip(self):
+        # Create valid zip with test file
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+        # Properly extract files
+        with zipfile.ZipFile(self.zip_path, 'r') as zip_ref:
+            zip_ref.extractall(self.target_dir)
+
+        self.assertTrue(check_zip_path(self.zip_path, self.target_dir))
+
+    def test_check_missing_file(self):
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+        # Extract and then delete file
+        with zipfile.ZipFile(self.zip_path, 'r') as zip_ref:
+            zip_ref.extractall(self.target_dir)
+        os.remove(os.path.join(self.target_dir, 'file.txt'))
+
+        self.assertFalse(check_zip_path(self.zip_path, self.target_dir))
+
+    def test_check_corrupted_file_size(self):
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'original content')
+        # Modify extracted file
+        with zipfile.ZipFile(self.zip_path, 'r') as zip_ref:
+            zip_ref.extractall(self.target_dir)
+        with open(os.path.join(self.target_dir, 'file.txt'), 'w') as f:
+            f.write('modified')
+
+        self.assertFalse(check_zip_path(self.zip_path, self.target_dir))
+
+    def test_password_protected_zip(self):
+        password = 'secret'
+        # Create encrypted zip
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+            zipf.setpassword(password.encode())
+        # Extract with correct password
+        with zipfile.ZipFile(self.zip_path, 'r') as zip_ref:
+            zip_ref.setpassword(password.encode())
+            zip_ref.extractall(self.target_dir)
+
+        self.assertTrue(
+            check_zip_path(self.zip_path, self.target_dir, password=password)
+        )
+
+
+class TestUnzipLocalFileCore(TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.zip_path = os.path.join(self.temp_dir.name, 'test.zip')
+        self.target_dir = os.path.join(self.temp_dir.name, 'target')
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+    def test_nonexistent_zip_file(self):
+        with self.assertRaises(ModelResourceException) as cm:
+            unzip_local_file_core('invalid.zip', self.target_dir)
+        self.assertIn('does not exist', str(cm.exception))
+
+    def test_target_directory_conflict(self):
+        # Create target directory first
+        os.makedirs(self.target_dir)
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+
+        with self.assertRaises(ModelResourceException) as cm:
+            unzip_local_file_core(self.zip_path, self.target_dir)
+        self.assertIn('already exists', str(cm.exception))
+
+    def test_successful_extraction(self):
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+
+        result = unzip_local_file_core(self.zip_path, self.target_dir)
+        self.assertEqual(result, self.target_dir)
+        self.assertTrue(os.path.exists(os.path.join(self.target_dir, 'file.txt')))
+
+    def test_password_protected_extraction(self):
+        password = 'secret'
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+            zipf.setpassword(password.encode())
+
+        unzip_local_file_core(self.zip_path, self.target_dir, password=password)
+        self.assertTrue(os.path.exists(os.path.join(self.target_dir, 'file.txt')))
+
+
+class TestUnzipLocalFile(TestCase):
+
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.zip_path = os.path.join(self.temp_dir.name, 'test.zip')
+        self.target_dir = os.path.join(self.temp_dir.name, 'target')
+        with zipfile.ZipFile(self.zip_path, 'w') as zipf:
+            zipf.writestr('file.txt', 'content')
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+    @patch(
+        'llm_web_kit.model.resource_utils.unzip_ext.process_and_verify_file_with_lock'
+    )
+    def test_unzip(self, mock_process):
+
+        def process_and_verify(
+            process_func, verify_func, target_path, lock_suffix, timeout
+        ):
+            process_func()
+            if verify_func():
+                return target_path
+
+        mock_process.side_effect = process_and_verify
+        result = unzip_local_file(self.zip_path, self.target_dir)
+        self.assertEqual(result, self.target_dir)
+        self.assertTrue(os.path.exists(os.path.join(self.target_dir, 'file.txt')))
