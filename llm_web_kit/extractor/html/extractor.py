@@ -5,6 +5,7 @@ import commentjson as json
 from overrides import override
 
 from llm_web_kit.config.cfg_reader import load_config
+from llm_web_kit.exception.exception import HtmlFileExtractorException
 from llm_web_kit.extractor.extractor import BaseFileFormatExtractor
 from llm_web_kit.extractor.html.magic_html import GeneralExtractor
 from llm_web_kit.extractor.html.recognizer.audio import AudioRecognizer
@@ -20,7 +21,6 @@ from llm_web_kit.extractor.html.recognizer.title import TitleRecognizer
 from llm_web_kit.extractor.html.recognizer.video import VideoRecognizer
 from llm_web_kit.input.datajson import ContentList, DataJson
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
-from llm_web_kit.libs.logger import mylogger
 from llm_web_kit.libs.path_lib import get_py_pkg_root_dir
 
 
@@ -245,6 +245,63 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
+    def __is_valid_node(self, node: dict) -> bool:
+        """检查节点是否有效(不为空).
+
+        Args:
+            node (dict): 内容节点
+
+        Returns:
+            bool: 如果节点有效返回True,否则返回False
+        """
+        if not node:
+            raise HtmlFileExtractorException('node is empty')
+        node_type = node.get('type')
+        valid_types = {'list', 'code', 'equation-interline', 'image', 'table', 'title', 'paragraph'}
+        if node_type not in valid_types:
+            raise HtmlFileExtractorException(f'Invalid node type: {node_type}')
+        # 检查列表类型的节点
+        if node.get('type') == 'list':
+            items = node.get('content', {}).get('items', [])
+            # 过滤掉None、空列表，以及只包含None或空值的列表
+            return bool(items) and any(
+                isinstance(item, (dict, list)) and bool(item)
+                for item in items)
+        # 检测code类型的节点
+        if node.get('type') == 'code':
+            code_content = node.get('content', {}).get('code_content')
+            # 如果代码内容为None或空字符串，则视为无效节点
+            return bool(code_content and code_content.strip())
+        # 检测行间公式类型的节点
+        if node.get('type') == 'equation-interline':
+            math_content = node.get('content', {}).get('math_content')
+            # 如果公式内容为None或空字符串，则视为无效节点
+            return bool(math_content and math_content.strip())
+        # 检测image类型的节点
+        if node.get('type') == 'image':
+            content = node.get('content', {})
+            # 检查url、path或data字段是否至少有一个不为空
+            return bool(content.get('url') or content.get('path') or content.get('data'))
+        # 检测table类型的节点
+        if node.get('type') == 'table':
+            html = node.get('content', {}).get('html')
+            # 如果表格的html内容为None或空字符串，则视为无效节点
+            return bool(html and html.strip())
+        # 检测title类型的节点
+        if node.get('type') == 'title':
+            title_content = node.get('content', {}).get('title_content')
+            # 如果标题内容为None或空字符串，则视为无效节点
+            return bool(title_content and title_content.strip())
+        # 检测段落类型的节点
+        if node.get('type') == 'paragraph':
+            content = node.get('content', [])
+            # 检查content列表是否存在且不为空，并且至少有一个非空的内容项
+            return bool(content) and any(
+                item.get('c') and item.get('c').strip()
+                for item in content
+            )
+        return True
+
     def _export_to_content_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> ContentList:
         """将解析结果存入content_list格式中.
 
@@ -263,12 +320,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             parser:BaseHTMLElementRecognizer = self.__to_content_list_mapper.get(cc_tag)
             if parser:
                 node = parser.to_content_list_node(base_url, ccnode_html, raw_html)
-                if node:
+                if node and self.__is_valid_node(node):
                     one_page.append(node)
             else:
-                mylogger.warning(f'无法识别的html标签：{cc_tag}, {parsed_html}')
-                # TODO 开发成熟的时候，在这里抛出异常，让调用者记录下来，以便后续分析改进
-
+                raise HtmlFileExtractorException(f'无法识别的html标签：{cc_tag}, {parsed_html}')
         content_list = ContentList([one_page])  # 对于网页来说仅有一页，如果多页，则剩下的每个都是一个论坛的回复
         return content_list
 
@@ -289,9 +344,9 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             xpath_expr = ' | '.join(f'self::{tag} | .//{tag}' for tag in self.__to_content_list_mapper.keys())
             nodes = el.xpath(xpath_expr)
             if len(nodes) == 0:
-                raise ValueError(f'html文本中没有cc标签: {html}')  # TODO 异常处理
-            if len(nodes) > 1:
-                raise ValueError(f'html文本中包含多个cc标签: {html}')  # TODO 异常处理
+                raise HtmlFileExtractorException(f'html文本中没有cc标签: {html}')
+            if len(nodes) > 3:
+                raise HtmlFileExtractorException(f'html文本中包含多个cc标签: {html}')
             return element_to_html(nodes[0]), nodes[0].tag
 
     def __build_extractor(self):
