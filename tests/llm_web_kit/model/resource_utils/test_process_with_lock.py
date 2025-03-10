@@ -205,7 +205,6 @@ class TestProcessWithLockRealFiles(unittest.TestCase):
         # 验证文件内容
         with open(self.target_path) as f:
             content = f.read()
-        print(content)
         self.assertEqual(content, 'new content')
 
 
