@@ -443,4 +443,4 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_content_list = result.get_content_list()._get_data()
-        assert result_content_list[0][0]['content']['nested_level'] == 3
+        assert int(result_content_list[0][0]['content']['list_nest_level']) == 3

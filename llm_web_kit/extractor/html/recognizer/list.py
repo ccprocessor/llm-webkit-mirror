@@ -53,7 +53,6 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             if self.is_cc_html(html):
                 new_html_lst.append((html, raw_html))
             else:
-                print(f'0000000html: {html}')
                 lst = self._extract_list(html)
                 new_html_lst.extend(lst)
         return new_html_lst
