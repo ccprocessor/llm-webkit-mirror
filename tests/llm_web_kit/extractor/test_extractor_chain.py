@@ -443,6 +443,5 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_mm_md()
-        print(result_md)
         assert '&amp;' not in result_md
         assert '&nbsp;' not in result_md
