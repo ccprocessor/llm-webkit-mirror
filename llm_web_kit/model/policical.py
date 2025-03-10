@@ -7,12 +7,10 @@ from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import ModelInputException
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils.download_assets import download_auto_file
-from llm_web_kit.model.resource_utils.singleton_resource_manager import \
-    singleton_resource_manager
-from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
-                                                        unzip_local_file)
-from llm_web_kit.model.resource_utils.utils import CACHE_DIR
+from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
+                                              get_unzip_dir,
+                                              singleton_resource_manager,
+                                              unzip_local_file)
 
 
 class PoliticalDetector:
@@ -22,6 +20,7 @@ class PoliticalDetector:
         # must set the HF_HOME to the CACHE_DIR at this point
         os.environ['HF_HOME'] = CACHE_DIR
         from transformers import AutoTokenizer
+
         if not model_path:
             model_path = self.auto_download()
         model_bin_path = os.path.join(model_path, 'model.bin')
