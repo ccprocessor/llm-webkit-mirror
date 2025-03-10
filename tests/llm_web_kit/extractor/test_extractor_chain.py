@@ -444,6 +444,3 @@ DEF
         result = chain.extract(input_data)
         result_content_list = result.get_content_list()._get_data()
         assert result_content_list[0][0]['content']['nested_level'] == 3
-
-if __name__ == "__main__":
-    unittest.main()

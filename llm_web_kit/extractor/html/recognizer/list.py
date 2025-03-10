@@ -3,6 +3,7 @@ from typing import Any, List, Tuple
 
 from lxml.etree import _Element as HtmlElement
 from overrides import override
+
 from llm_web_kit.exception.exception import HtmlListRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -22,7 +23,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         Returns:
         """
-        ordered, content_list, _, list_nest_level= self.__get_attribute(parsed_content)
+        ordered, content_list, _, list_nest_level = self.__get_attribute(parsed_content)
         ele_node = {
             'type': DocElementType.LIST,
             'raw_content': raw_html_segment,
@@ -52,7 +53,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             if self.is_cc_html(html):
                 new_html_lst.append((html, raw_html))
             else:
-                print(f"0000000html: {html}")
+                print(f'0000000html: {html}')
                 lst = self._extract_list(html)
                 new_html_lst.extend(lst)
         return new_html_lst
@@ -151,13 +152,13 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
     def __get_list_type(self, list_ele:HtmlElement) -> int:
         """获取list嵌套的层级。
-        
+
         计算一个列表元素的最大嵌套深度，通过递归遍历所有子元素。
         例如：
         - 没有嵌套的列表返回1
         - 有一层嵌套的列表返回2
         - 有两层嵌套的列表返回3
-        
+
         Args:
             list_ele: 列表HTML元素
 
@@ -165,7 +166,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             int: 列表的最大嵌套深度
         """
         list_type = ['ul', 'ol', 'dl', 'menu', 'dir']
-        
+
         def get_max_depth(element):
             max_child_depth = 0
             for child in element.iterchildren():
@@ -179,7 +180,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     max_child_depth = max(max_child_depth, child_depth)
             return max_child_depth
         return get_max_depth(list_ele) + 1
-    
+
     def __extract_list_item_text(self, root:HtmlElement) -> list[list]:
         """提取列表项的文本.
         列表项里的文本的分段策略采用最简单的方式：
@@ -233,7 +234,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
             content_list = json.loads(ele.text)
             raw_html = ele.attrib.get('html')
-            list_nest_level = ele.attrib.get('list_nest_level', 0)  
+            list_nest_level = ele.attrib.get('list_nest_level', 0)
             return ordered, content_list, raw_html, list_nest_level
         else:
             raise HtmlListRecognizerException(f'{html}中没有cctitle标签')
