@@ -108,14 +108,15 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             text2: str: 第二段文本
             lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊符号开头的连接不加空格。
         """
-        text1 = text1.strip() if text1 else ''
-        text2 = text2.strip() if text2 else ''
+        text1 = text1.strip(' ') if text1 else ''
+        text2 = text2.strip(' ') if text2 else ''
         if lang == 'zh':
-            return text1.strip() + text2.strip()
+            txt = text1 + text2
+            return txt.strip().replace('\\r\\n', '\n').replace('\\n', '\n')
         else:
             words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
             txt = text1 + words_sep + text2
-            return txt.strip()
+            return txt.strip().replace('\\r\\n', '\n').replace('\\n', '\n')
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
         """
@@ -140,13 +141,15 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 para_text.append({'c':el.text, 't':ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE:
                 if text:
-                    para_text.append({'c':text, 't':ParagraphTextType.TEXT})
+                    para_text.append({'c': text, 't': ParagraphTextType.TEXT})
                     text = ''
-                para_text.append({'c':el.text, 't':ParagraphTextType.CODE_INLINE})
+                para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
+            elif el.tag in ['br']:
+                text += '\n'
             else:
                 if el.text and el.text.strip():
                     text = self.__combine_text(text, el.text.strip())
-                for child in el.getchildren():
+                for child in el:
                     text = __get_paragraph_text_recusive(child, text)
 
             if el.tail and el.tail.strip():
