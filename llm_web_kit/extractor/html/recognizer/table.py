@@ -1,5 +1,6 @@
 from itertools import chain
 from typing import Any, List, Tuple
+import html
 
 from lxml.html import HtmlElement
 from overrides import override
@@ -255,7 +256,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for child in table_root.iterchildren():
             if child is not None:
                 self.__get_table_body(table_type, table_nest_level, child)
-        return self._element_to_html(table_root)
+        return self._element_to_html_entity(table_root)
 
     def __do_extract_tables(self, root: HtmlElement) -> None:
         """递归处理所有子标签."""
