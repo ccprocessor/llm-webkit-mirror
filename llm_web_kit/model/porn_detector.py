@@ -7,10 +7,10 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils.download_assets import (
-    CACHE_DIR, download_auto_file)
+from llm_web_kit.model.resource_utils.download_assets import download_auto_file
 from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
                                                         unzip_local_file)
+from llm_web_kit.model.resource_utils.utils import CACHE_DIR
 
 
 class BertModel():

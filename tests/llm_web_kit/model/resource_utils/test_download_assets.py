@@ -8,39 +8,8 @@ from unittest.mock import MagicMock, call, patch
 from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.model.resource_utils.download_assets import (
     HttpConnection, S3Connection, calc_file_md5, calc_file_sha256,
-    decide_cache_dir, download_auto_file, download_auto_file_core,
-    download_to_temp, verify_file_checksum)
-
-
-class TestDecideCacheDir:
-
-    @patch('os.environ', {'WEB_KIT_CACHE_DIR': '/env/cache_dir'})
-    @patch('llm_web_kit.model.resource_utils.download_assets.load_config')
-    def test_only_env(self, get_config_mock):
-        get_config_mock.side_effect = Exception
-        assert decide_cache_dir() == '/env/cache_dir'
-
-    @patch('os.environ', {})
-    @patch('llm_web_kit.model.resource_utils.download_assets.load_config')
-    def test_only_config(self, get_config_mock):
-        get_config_mock.return_value = {
-            'resources': {'common': {'cache_path': '/config/cache_dir'}}
-        }
-        assert decide_cache_dir() == '/config/cache_dir'
-
-    @patch('os.environ', {})
-    @patch('llm_web_kit.model.resource_utils.download_assets.load_config')
-    def test_default(self, get_config_mock):
-        get_config_mock.side_effect = Exception
-        assert decide_cache_dir() == os.path.expanduser('~/.llm_web_kit_cache')
-
-    @patch('os.environ', {'WEB_KIT_CACHE_DIR': '/env/cache_dir'})
-    @patch('llm_web_kit.model.resource_utils.download_assets.load_config')
-    def test_priority(self, get_config_mock):
-        get_config_mock.return_value = {
-            'resources': {'common': {'cache_path': '/config/cache_dir'}}
-        }
-        assert decide_cache_dir() == '/config/cache_dir'
+    download_auto_file, download_auto_file_core, download_to_temp,
+    verify_file_checksum)
 
 
 class TestChecksumCalculations:

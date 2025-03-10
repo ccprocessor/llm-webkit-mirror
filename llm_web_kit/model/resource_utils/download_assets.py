@@ -7,7 +7,6 @@ from typing import Iterable, Optional
 import requests
 from tqdm import tqdm
 
-from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils.boto3_ext import (get_s3_client,
@@ -15,40 +14,7 @@ from llm_web_kit.model.resource_utils.boto3_ext import (get_s3_client,
                                                         split_s3_path)
 from llm_web_kit.model.resource_utils.process_with_lock import \
     process_and_verify_file_with_lock
-
-
-def decide_cache_dir():
-    """Get the cache directory for the web kit. The.
-
-    Returns:
-        _type_: _description_
-    """
-    cache_dir = '~/.llm_web_kit_cache'
-
-    if 'WEB_KIT_CACHE_DIR' in os.environ:
-        cache_dir = os.environ['WEB_KIT_CACHE_DIR']
-
-    try:
-        config = load_config()
-        cache_dir = config['resources']['common']['cache_path']
-    except Exception:
-        pass
-
-    if cache_dir.startswith('~/'):
-        cache_dir = os.path.expanduser(cache_dir)
-
-    return cache_dir
-
-
-CACHE_DIR = decide_cache_dir()
-CACHE_TMP_DIR = os.path.join(CACHE_DIR, 'tmp')
-
-
-if not os.path.exists(CACHE_DIR):
-    os.makedirs(CACHE_DIR)
-
-if not os.path.exists(CACHE_TMP_DIR):
-    os.makedirs(CACHE_TMP_DIR)
+from llm_web_kit.model.resource_utils.utils import CACHE_TMP_DIR
 
 
 def calc_file_md5(file_path: str) -> str:
