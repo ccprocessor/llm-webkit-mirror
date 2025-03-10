@@ -126,15 +126,26 @@ class TestDownloadToTemp:
 
 class TestVerifyChecksum(unittest.TestCase):
 
+    def setUp(self):
+        self.temp_file = tempfile.NamedTemporaryFile()
+        self.temp_file.write(b'test data')
+        self.temp_file.flush()
+
+    def tearDown(self):
+        self.temp_file.close()
+
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_md5')
     def test_valid_md5(self, mock_md5):
         mock_md5.return_value = 'correct_md5'
-        assert verify_file_checksum('dummy', md5_sum='correct_md5') is True
+        assert verify_file_checksum(self.temp_file.name, md5_sum='correct_md5') is True
 
     @patch('llm_web_kit.model.resource_utils.download_assets.calc_file_sha256')
     def test_invalid_sha256(self, mock_sha):
         mock_sha.return_value = 'wrong_sha'
-        assert verify_file_checksum('dummy', sha256_sum='correct_sha') is False
+        assert verify_file_checksum(self.temp_file.name, sha256_sum='correct_sha') is False
+
+    def test_no_such_file(self):
+        assert verify_file_checksum('dummy', md5_sum='a') is False
 
     def test_invalid_arguments(self):
         with self.assertRaises(ModelResourceException):
