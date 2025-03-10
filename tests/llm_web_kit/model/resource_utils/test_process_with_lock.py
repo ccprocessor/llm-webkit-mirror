@@ -218,8 +218,11 @@ def dummy_process_func(target_path, data_content):
 
 def dummy_verify_func(target_path, data_content):
     # 验证文件内容
-    with open(target_path) as f:
-        content = f.read()
+    try:
+        with open(target_path) as f:
+            content = f.read()
+    except FileNotFoundError:
+        return False
     return content == data_content
 
 
@@ -301,3 +304,7 @@ class TestMultiProcessWithLock(unittest.TestCase):
         with open(self.target_path) as f:
             content = f.read()
         self.assertEqual(content, self.data_content)
+
+
+if __name__ == '__main__':
+    unittest.main()

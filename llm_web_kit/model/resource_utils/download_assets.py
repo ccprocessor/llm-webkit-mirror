@@ -83,7 +83,8 @@ def verify_file_checksum(
         raise ModelResourceException(
             'Exactly one of md5_sum or sha256_sum must be provided'
         )
-
+    if not os.path.exists(file_path):
+        return False
     if md5_sum:
         actual = calc_file_md5(file_path)
         if actual != md5_sum:

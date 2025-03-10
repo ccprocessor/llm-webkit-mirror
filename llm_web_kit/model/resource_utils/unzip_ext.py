@@ -40,6 +40,9 @@ def check_zip_path(
     Returns:
         bool: True if the zip file is correctly unzipped to the target directory, False otherwise.
     """
+    if not os.path.exists(zip_path):
+        logger.error(f'zip file {zip_path} does not exist')
+        return False
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         if password:
             zip_ref.setpassword(password.encode())
