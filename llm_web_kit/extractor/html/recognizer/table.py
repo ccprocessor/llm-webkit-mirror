@@ -1,6 +1,5 @@
 from itertools import chain
 from typing import Any, List, Tuple
-import html
 
 from lxml.html import HtmlElement
 from overrides import override

@@ -5,8 +5,8 @@ from typing import List, Tuple
 from lxml.html import HtmlElement, HTMLParser
 
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         html_to_element, replace_element,
-                                         element_to_html_unescaped)
+                                         element_to_html_unescaped,
+                                         html_to_element, replace_element)
 from llm_web_kit.libs.logger import mylogger
 
 
@@ -94,7 +94,7 @@ class BaseHTMLElementRecognizer(ABC):
     def _element_to_html_entity(self, element: HtmlElement) -> str:
         """将element转换成html字符串."""
         return element_to_html_unescaped(element)
-    
+
     def _build_cc_element(self, html_tag_name: str, text: str, tail: str, **kwargs) -> HtmlElement:
         """构建cctitle的html. 例如：<cctitle level=1>标题1</cctitle>
 
