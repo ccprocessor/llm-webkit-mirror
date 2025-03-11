@@ -6,8 +6,10 @@ import fasttext
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
-                                              singleton_resource_manager)
+from llm_web_kit.model.resource_utils.download_assets import (
+    CACHE_DIR, download_auto_file)
+from llm_web_kit.model.resource_utils.singleton_resource_manager import \
+    singleton_resource_manager
 
 language_dict = {
     'srp': 'sr', 'swe': 'sv', 'dan': 'da', 'ita': 'it', 'spa': 'es', 'pes': 'fa', 'slk': 'sk', 'hun': 'hu', 'bul': 'bg', 'cat': 'ca',
@@ -245,12 +247,9 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
     language_details = None
     if lang_detect.version == '218.bin':
         first_pred = predictions[0]
-        match = re.match(r'^__label__([a-z]+)_[A-Za-z]+$', first_pred)
-        if match:
-            lang_code = match.group(1)
-        else:
-            lang_code = first_pred.replace('__label__', '').split('_')[0]
-        language_details = lang_code
+        # Extract the full label (e.g., __label__eng_Latn -> eng_Latn)
+        if first_pred.startswith('__label__'):
+            language_details = first_pred.replace('__label__', '')
 
     return {
         'language': language,
