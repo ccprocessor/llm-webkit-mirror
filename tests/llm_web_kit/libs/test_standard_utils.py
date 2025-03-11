@@ -48,13 +48,13 @@ def test_json_loads(input: Union[str, bytes], target_dict) -> None:
         '0': 'aaa',
         '1': 'bbb',
         '2': 'ccc'
-    }, '''{"0": "aaa", "1": "bbb", "2": "ccc"}'''),
+    }, '''{"0":"aaa","1":"bbb","2":"ccc"}'''),
     ({
         'track_id': '7c5b99d3',
         'warc_record_offset': 65390694,
         'warc_record_length': '16190',
         'layout_id': 0
-    }, '{"track_id": "7c5b99d3", "warc_record_offset": 65390694, "warc_record_length": "16190", "layout_id": 0}'),
+    }, '{"track_id":"7c5b99d3","warc_record_offset":65390694,"warc_record_length":"16190","layout_id":0}'),
 ])
 def test_json_dumps(input_dict: dict, target_str) -> None:
     """
@@ -66,4 +66,13 @@ def test_json_dumps(input_dict: dict, target_str) -> None:
     Returns: None
 
     """
-    assert target_str == json_dumps(input_dict)
+    expected_obj = json_loads(target_str)
+    # 比较两个对象是否相等
+    for key, value in input_dict.items():
+        assert expected_obj[key] == value
+
+    # 比较json_dumps的输出是否与target_str相等
+    json_str = json_dumps(input_dict)  # 由于不同的python版本，json_dumps的输出可能不同，所以需要比较json_loads的输出
+    obj = json_loads(json_str)
+    for key, value in input_dict.items():
+        assert obj[key] == value

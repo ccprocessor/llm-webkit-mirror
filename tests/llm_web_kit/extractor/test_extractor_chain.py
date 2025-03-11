@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 19
+        assert len(self.data_json) == 20
 
         # Config for HTML extraction
         self.config = {
@@ -444,3 +444,14 @@ DEF
         result = chain.extract(input_data)
         result_content_list = result.get_content_list()._get_data()
         assert int(result_content_list[0][0]['content']['list_nest_level']) == 3
+
+    def test_table_include_entity(self):
+        """测试table包含实体."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[19]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        assert '&amp;' not in result_md
+        assert '&nbsp;' not in result_md

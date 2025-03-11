@@ -6,10 +6,8 @@ import fasttext
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils.download_assets import (
-    CACHE_DIR, download_auto_file)
-from llm_web_kit.model.resource_utils.singleton_resource_manager import \
-    singleton_resource_manager
+from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
+                                              singleton_resource_manager)
 
 language_dict = {
     'srp': 'sr', 'swe': 'sv', 'dan': 'da', 'ita': 'it', 'spa': 'es', 'pes': 'fa', 'slk': 'sk', 'hun': 'hu', 'bul': 'bg', 'cat': 'ca',
