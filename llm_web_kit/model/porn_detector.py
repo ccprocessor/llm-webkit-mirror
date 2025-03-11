@@ -3,19 +3,23 @@ import os
 from typing import Dict, List, Union
 
 import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
-                                              get_unzip_dir, unzip_local_file)
+                                              get_unzip_dir,
+                                              import_transformer,
+                                              unzip_local_file)
+
+# from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
 class BertModel:
     def __init__(self, model_path: str = None) -> None:
         if not model_path:
             model_path = self.auto_download()
-        self.model = AutoModelForSequenceClassification.from_pretrained(
+        transformers_module = import_transformer()
+        self.model = transformers_module.AutoModelForSequenceClassification.from_pretrained(
             os.path.join(model_path, 'porn_classifier/classifier_hf')
         )
         with open(
@@ -37,7 +41,7 @@ class BertModel:
         if hasattr(self.model, 'to_bettertransformer'):
             self.model = self.model.to_bettertransformer()
 
-        self.tokenizer = AutoTokenizer.from_pretrained(
+        self.tokenizer = transformers_module.AutoTokenizer.from_pretrained(
             os.path.join(model_path, 'porn_classifier/classifier_hf')
         )
         self.tokenizer_config = {

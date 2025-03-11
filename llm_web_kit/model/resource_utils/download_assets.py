@@ -201,6 +201,7 @@ def download_auto_file_core(
     progress = tqdm(total=total_size, unit='iB', unit_scale=True)
 
     # 使用临时目录确保原子性
+    os.makedirs(CACHE_TMP_DIR, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=CACHE_TMP_DIR) as temp_dir:
         download_path = os.path.join(temp_dir, 'download_file')
         try:

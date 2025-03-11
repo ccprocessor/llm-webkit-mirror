@@ -9,6 +9,7 @@ from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
                                               get_unzip_dir,
+                                              import_transformer,
                                               singleton_resource_manager,
                                               unzip_local_file)
 
@@ -18,8 +19,7 @@ class PoliticalDetector:
     def __init__(self, model_path: str = None):
         # import AutoTokenizer here to avoid isort error
         # must set the HF_HOME to the CACHE_DIR at this point
-        os.environ['HF_HOME'] = CACHE_DIR
-        from transformers import AutoTokenizer
+        transformer = import_transformer()
 
         if not model_path:
             model_path = self.auto_download()
@@ -27,7 +27,7 @@ class PoliticalDetector:
         tokenizer_path = os.path.join(model_path, 'internlm2-chat-20b')
 
         self.model = fasttext.load_model(model_bin_path)
-        self.tokenizer = AutoTokenizer.from_pretrained(
+        self.tokenizer = transformer.AutoTokenizer.from_pretrained(
             tokenizer_path, use_fast=False, trust_remote_code=True
         )
 

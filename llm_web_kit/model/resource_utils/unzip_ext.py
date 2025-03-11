@@ -83,6 +83,9 @@ def unzip_local_file_core(
     if os.path.exists(target_dir):
         raise ModelResourceException(f'Target directory {target_dir} already exists')
 
+    # make sure the parent directory exists
+    os.makedirs(os.path.dirname(target_dir), exist_ok=True)
+
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         if password:
             zip_ref.setpassword(password.encode())
