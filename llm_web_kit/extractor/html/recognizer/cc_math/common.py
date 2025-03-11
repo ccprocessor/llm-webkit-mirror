@@ -447,6 +447,9 @@ class MathJax():
     def __init__(self):
         self.options = {}
 
+    def get_options(self, html: str):
+        pass
+
 
 if __name__ == '__main__':
     cm = CCMATH()
