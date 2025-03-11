@@ -101,6 +101,13 @@ latex_config = {
     ],
 }
 
+# 兼容一些网站有错误的公式起始结尾
+MATH_MD_CUSTOM_CONFIG = {
+    'mathhelpforum.com': [
+        ['<br />', '\\<br />'],  # 使用双反斜杠
+    ],
+}
+
 asciiMath_config = {
     MATH_TYPE_PATTERN.INLINEMATH: [
         [r'`', r'`'],
@@ -129,6 +136,10 @@ transform = etree.XSLT(xslt)
 
 
 class CCMATH():
+    def __init__(self):
+        self.url = ''
+
+    # end def
     def wrap_math(self, s, display=False):
         """根据行间行内公式加上$$或$"""
         s = re.sub(r'\s+', ' ', s)
@@ -158,6 +169,18 @@ class CCMATH():
             return s.replace('\\[', '').replace('\\]', '')
         if s.startswith('`') and s.endswith('`'):
             return s.replace('`', '')
+        s = self.wrap_math_md_custom(s)
+        return s
+
+    # 循环MATH_MD_CUSTOM_CONFIG，如果url匹配，则去掉特殊网站的公式奇怪的起始结尾
+    def wrap_math_md_custom(self, s):
+        """去掉特殊网站的公式奇怪的起始结尾."""
+        for url, config in MATH_MD_CUSTOM_CONFIG.items():
+            if url in self.url:
+                for start, end in config:
+                    if s.startswith(start) and s.endswith(end):
+                        # 去除 start 和 end
+                        s = s[len(start):-len(end)]
         return s
 
     def wrap_math_space(self, s):
@@ -420,6 +443,9 @@ class MathJax():
     def __init__(self):
         self.options = {}
 
+    def get_options(self, html: str):
+        pass
+
 
 if __name__ == '__main__':
     cm = CCMATH()
@@ -444,3 +470,5 @@ if __name__ == '__main__':
     print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True))
     print(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False))
     print(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False))
+    cm.url = 'mathhelpforum.com'
+    print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))

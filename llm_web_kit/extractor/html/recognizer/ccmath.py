@@ -39,7 +39,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         math_render = cm.get_math_render(raw_html)
         for cc_html, o_html in main_html_lst:
             if not self.is_cc_html(cc_html):
-                result.extend(self.process_ccmath_html(cc_html, o_html, math_render))
+                result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
 
@@ -103,7 +103,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         else:
             raise HtmlMathRecognizerException(f'No ccmath element found in content: {parsed_content}')
 
-    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
+    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str, base_url: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
 
         Args:
@@ -114,6 +114,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
+        cm.url = base_url
         tree = self._build_html_tree(cc_html)
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
@@ -160,6 +161,14 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # 打印处理后的html
         # print(self._element_to_html(tree))
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
+
+    def process_ccmath_html_mathjax(self, cc_html: str, o_html: str, math_render: str, base_url: str) -> List[Tuple[str, str]]:
+        """处理mathjax有自定义标识符的数学公式."""
+        cm.url = base_url
+        tree = self._build_html_tree(cc_html)
+        if tree is None:
+            raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
+        pass
 
 
 if __name__ == '__main__':
