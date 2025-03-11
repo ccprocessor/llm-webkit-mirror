@@ -160,7 +160,11 @@ class TestExtractorChainNormal(unittest.TestCase):
 
         # Test invalid input type
         with self.assertRaises(ExtractorChainInputException):
-            chain.extract(DataJson({'data_source_category': 'html', 'html': '<h1>Test</h1>'}))
+            chain.extract(DataJson({
+                'dataset_name': 'test_dataset',  # 添加 dataset_name
+                'data_source_category': 'html',
+                'html': '<h1>Test</h1>'
+            }))
 
         # Test invalid config
         invalid_config = {'extractor_pipe': {'extractor': [{'enable': True, 'python_class': 'non.existent.Extractor'}]}}
@@ -182,4 +186,4 @@ class TestExtractorChainNormal(unittest.TestCase):
 
         # Test missing required fields
         with self.assertRaises(ExtractorChainInputException):
-            chain.extract(DataJson({'data_source_category': 'html'}))
+            chain.extract(DataJson({'data_source_category': 'html', 'dataset_name': 'test_dataset'}))
