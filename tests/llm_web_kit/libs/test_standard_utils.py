@@ -72,4 +72,7 @@ def test_json_dumps(input_dict: dict, target_str) -> None:
         assert expected_obj[key] == value
 
     # 比较json_dumps的输出是否与target_str相等
-    assert target_str == json_dumps(input_dict)
+    json_str = json_dumps(input_dict)  # 由于不同的python版本，json_dumps的输出可能不同，所以需要比较json_loads的输出
+    obj = json_loads(json_str)
+    for key, value in input_dict.items():
+        assert obj[key] == value
