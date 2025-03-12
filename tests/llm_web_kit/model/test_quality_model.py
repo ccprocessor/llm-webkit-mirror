@@ -9,8 +9,7 @@ from llm_web_kit.model.quality_model import QualityModel  # noqa: E402
 from llm_web_kit.model.quality_model import get_quality_model  # noqa: E402
 from llm_web_kit.model.quality_model import quality_prober  # noqa: E402
 from llm_web_kit.model.quality_model import QualityFilter
-from llm_web_kit.model.resource_utils.download_assets import \
-    CACHE_DIR  # noqa: E402
+from llm_web_kit.model.resource_utils.utils import CACHE_DIR
 
 current_file_path = os.path.abspath(__file__)
 parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)
@@ -127,7 +126,7 @@ class TestQualityModel(TestCase):
         mock_json_normalize.assert_called_once_with(test_features)
 
         # 验证模型的 predict 方法是否被正确调用
-        mock_model.predict.assert_called_once_with(mock_df)
+        mock_model.predict.assert_called_once_with(mock_df, num_threads=1)
 
         # 验证预测结果
         self.assertEqual(prediction, 0.9)

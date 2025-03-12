@@ -1,3 +1,6 @@
+from llm_web_kit.exception.exception import ModelResourceException
+
+
 class SingletonResourceManager:
 
     def __init__(self):
@@ -8,9 +11,11 @@ class SingletonResourceManager:
 
     def set_resource(self, name: str, resource):
         if not isinstance(name, str):
-            raise TypeError('name should be a string')
+            raise ModelResourceException(
+                f'Name should be a string, but got {type(name)}'
+            )
         if name in self.resources:
-            raise AssertionError(f'Resource {name} already exists')
+            raise ModelResourceException(f'Resource {name} already exists')
 
         self.resources[name] = resource
 
@@ -18,7 +23,7 @@ class SingletonResourceManager:
         if name in self.resources:
             return self.resources[name]
         else:
-            raise Exception(f'Resource {name} does not exist')
+            raise ModelResourceException(f'Resource {name} does not exist')
 
     def release_resource(self, name):
         if name in self.resources:

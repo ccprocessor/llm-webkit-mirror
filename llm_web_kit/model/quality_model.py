@@ -19,10 +19,8 @@ from llm_web_kit.model.basic_functions.features import (
     stats_html_entity, stats_ngram_mini, stats_punctuation_end_sentence,
     stats_stop_words, stats_unicode)
 from llm_web_kit.model.basic_functions.utils import div_zero
-from llm_web_kit.model.resource_utils.download_assets import (
-    CACHE_DIR, download_auto_file)
-from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
-                                                        unzip_local_file)
+from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
+                                              get_unzip_dir, unzip_local_file)
 
 _global_quality_model = {}
 _model_resource_map = {
@@ -93,7 +91,7 @@ class QualityModel:
 
     def predict_with_features(self, features_dict: Dict[str, Any]) -> float:
         feature_df = pd.json_normalize(features_dict)
-        pred = self.quality_model.predict(feature_df)[0]
+        pred = self.quality_model.predict(feature_df, num_threads=1)[0]
 
         return float(pred)
 

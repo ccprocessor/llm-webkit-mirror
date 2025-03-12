@@ -20,7 +20,8 @@ TEST_CASES = [
             'assets/recognizer/table_include_rowspan_colspan.html',
             'assets/recognizer/table_involve_equation.html',
             'assets/recognizer/table_include_after_code.html',
-            'assets/recognizer/table_involve_code.html'
+            'assets/recognizer/table_involve_code.html',
+            'assets/recognizer/table_involve_complex_code.html'
 
         ),
         'expected': [
@@ -88,7 +89,7 @@ class TestTableRecognizer(unittest.TestCase):
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             assert len(parts) == 3
             content = html_to_element(parts[1][0]).text_content()
-            assert content == r'<table>\n<tbody>\n<tr>\n<td>Рейтинг:</td><td>Рейтинг&lt;br&gt;5.00&lt;br&gt;3</td></tr><tr>\n<td>Тип товара:</td><td>Препараты для омоложения</td></tr><tr>\n<td>Форма:</td><td>Крем</td></tr><tr>\n<td>Объем:</td><td>50 мл</td></tr><tr>\n<td>Рецепт:</td><td>Отпускается без рецепта</td></tr><tr>\n<td>Способ хранения:</td><td>Хранить при температуре 4-20°</td></tr><tr>\n<td>Примечание:</td><td>Беречь от детей</td></tr><tr>\n<td>Оплата:</td><td>Наличными/банковской картой</td></tr><tr>\n<td>Доступность в Северске:</td><td>В наличии</td></tr><tr>\n<td>Доставка:</td><td>2-7 Дней</td></tr><tr>\n<td>Цена:</td><td>84&lt;br&gt;₽</td></tr></tbody></table>'
+            assert content == r'<table><tbody><tr><td>Рейтинг:</td><td>Рейтинг 5.00 из 5 на основе опроса 3 пользователей</td></tr><tr><td>Тип товара:</td><td>Препараты для омоложения</td></tr><tr><td>Форма:</td><td>Крем</td></tr><tr><td>Объем:</td><td>50 мл</td></tr><tr><td>Рецепт:</td><td>Отпускается без рецепта</td></tr><tr><td>Способ хранения:</td><td>Хранить при температуре 4-20°</td></tr><tr><td>Примечание:</td><td>Беречь от детей</td></tr><tr><td>Оплата:</td><td>Наличными/банковской картой</td></tr><tr><td>Доступность в Северске:</td><td>В наличии</td></tr><tr><td>Доставка:</td><td>2-7 Дней</td></tr><tr><td>Цена:</td><td>84 ₽</td></tr></tbody></table>'
 
     def test_cc_complex_table(self):
         """cc跨行跨列的表格."""
@@ -154,7 +155,8 @@ class TestTableRecognizer(unittest.TestCase):
             raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
-            assert complex_table_tag[0].text == r'<table><tbody><tr><th>Name of the probability distribution</th><th>Probability distribution function</th><th>Mean</th><th>Variance</th></tr><tr><td>Binomial distribution</td><td>{\displaystyle \Pr \,(X=k)={\binom {n}{k}}p^{k}(1-p)^{n-k}}</td><td>{\displaystyle np}</td><th>{\displaystyle np(1-p)}</th></tr><tr><td>Geometric distribution</td><td>{\displaystyle \Pr \,(X=k)=(1-p)^{k-1}p}</td><td>{\displaystyle {\frac {1}{p}}}</td><th>{\displaystyle {\frac {(1-p)}{p^{2}}}}</th></tr><tr><td>Normal distribution</td><td>{\displaystyle f\left(x\mid \mu ,\sigma ^{2}\right)={\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}}</td><td>{\displaystyle \mu }</td><th>{\displaystyle \sigma ^{2}}</th></tr><tr><td>Uniform distribution (continuous)</td><td>{\displaystyle f(x\mid a,b)={\begin{cases}{\frac {1}{b-a}}&amp;{\text{for }}a\leq x\leq b,\\[3pt]0&amp;{\text{for }}x&lt;a{\text{ or }}x&gt;b\end{cases}}}</td><td>{\displaystyle {\frac {a+b}{2}}}</td><th>{\displaystyle {\frac {(b-a)^{2}}{12}}}</th></tr><tr><td>Exponential distribution</td><td>{\displaystyle f(x\mid \lambda )=\lambda e^{-\lambda x}}</td><td>{\displaystyle {\frac {1}{\lambda }}}</td><th>{\displaystyle {\frac {1}{\lambda ^{2}}}}</th></tr><tr><td>Poisson distribution</td><td>{\displaystyle f(k\mid \lambda )={\frac {e^{-\lambda }\lambda ^{k}}{k!}}}</td><td>{\displaystyle \lambda }</td><th>{\displaystyle \lambda }</th></tr></tbody></table>'
+            print(complex_table_tag[0].text)
+            assert complex_table_tag[0].text == r'<table><tbody><tr><th>Name of the probability distribution</th><th>Probability distribution function</th><th>Mean</th><th>Variance</th></tr><tr><td>Binomial distribution</td><td>${\displaystyle \Pr \,(X=k)={\binom {n}{k}}p^{k}(1-p)^{n-k}}$</td><td>${\displaystyle np}$</td><th>${\displaystyle np(1-p)}$</th></tr><tr><td>Geometric distribution</td><td>${\displaystyle \Pr \,(X=k)=(1-p)^{k-1}p}$</td><td>${\displaystyle {\frac {1}{p}}}$</td><th>${\displaystyle {\frac {(1-p)}{p^{2}}}}$</th></tr><tr><td>Normal distribution</td><td>${\displaystyle f\left(x\mid \mu ,\sigma ^{2}\right)={\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}}$</td><td>${\displaystyle \mu }$</td><th>${\displaystyle \sigma ^{2}}$</th></tr><tr><td>Uniform distribution (continuous)</td><td>${\displaystyle f(x\mid a,b)={\begin{cases}{\frac {1}{b-a}}&{\text{for }}a\leq x\leq b,\\[3pt]0&{\text{for }}x<a{\text{ or }}x>b\end{cases}}}$</td><td>${\displaystyle {\frac {a+b}{2}}}$</td><th>${\displaystyle {\frac {(b-a)^{2}}{12}}}$</th></tr><tr><td>Exponential distribution</td><td>${\displaystyle f(x\mid \lambda )=\lambda e^{-\lambda x}}$</td><td>${\displaystyle {\frac {1}{\lambda }}}$</td><th>${\displaystyle {\frac {1}{\lambda ^{2}}}}$</th></tr><tr><td>Poisson distribution</td><td>${\displaystyle f(k\mid \lambda )={\frac {e^{-\lambda }\lambda ^{k}}{k!}}}$</td><td>${\displaystyle \lambda }$</td><th>${\displaystyle \lambda }$</th></tr></tbody></table>'
 
     def test_table_involve_after_code(self):
         """test table involve code, code被提取出去了，过滤掉空的和坏的table."""
@@ -165,6 +167,7 @@ class TestTableRecognizer(unittest.TestCase):
             parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
             assert html_to_element(parts[0][0]).xpath(f'.//{CCTag.CC_TABLE}')[0].text is None
 
+    @unittest.skip(reason='在code模块解决了table嵌套多行代码问题')
     def test_table_involve_code(self):
         """table involve code."""
         for test_case in TEST_CASES:
@@ -175,4 +178,17 @@ class TestTableRecognizer(unittest.TestCase):
             complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
             expect_path = base_dir.joinpath(test_case['expected'][3])
             content = open(expect_path, 'r', encoding='utf-8').read()
-            assert complex_table_tag[0].text == content
+            assert complex_table_tag[0].text == content.strip('\n')
+
+    @unittest.skip(reason='在code模块解决了这个问题')
+    def test_table_involve_complex_code(self):
+        """table involve complex code."""
+        for test_case in TEST_CASES:
+            raw_html_path = base_dir.joinpath(test_case['input'][12])
+            base_url = 'https://en.m.wikipedia.org/wiki/Variance'
+            raw_html = raw_html_path.read_text(encoding='utf-8')
+            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            complex_table_tag = html_to_element(parts[1][0]).xpath(f'.//{CCTag.CC_TABLE}')
+            expect_path = base_dir.joinpath(test_case['expected'][3])
+            content = open(expect_path, 'r', encoding='utf-8').read()
+            assert complex_table_tag[0].text == content.strip('\n')

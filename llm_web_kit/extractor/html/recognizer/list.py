@@ -1,9 +1,10 @@
 import json
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 from lxml.etree import _Element as HtmlElement
 from overrides import override
 
+from llm_web_kit.exception.exception import HtmlListRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
@@ -22,13 +23,14 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         Returns:
         """
-        ordered, content_list, _ = self.__get_attribute(parsed_content)
+        ordered, content_list, _, list_nest_level = self.__get_attribute(parsed_content)
         ele_node = {
             'type': DocElementType.LIST,
             'raw_content': raw_html_segment,
             'content': {
                 'items': content_list,
-                'ordered': ordered
+                'ordered': ordered,
+                'list_nest_level': list_nest_level
             }
         }
 
@@ -88,16 +90,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         list_tag_names = ['ul', 'ol', 'dl', 'menu', 'dir']
 
         if root.tag in list_tag_names:
-            is_ordered, content_list, raw_html, tail_text = self.__extract_list_element(root)
+            list_nest_level, is_ordered, content_list, raw_html, tail_text = self.__extract_list_element(root)
             text = json.dumps(content_list, ensure_ascii=False, indent=4)
-            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, ordered=is_ordered, html=raw_html)
+            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, ordered=is_ordered, list_nest_level=list_nest_level, html=raw_html)
             self._replace_element(root, cc_element)  # cc_element 替换掉原来的列表元素
             return
 
         for child in root.iterchildren():
             self.__do_extract_list(child)
 
-    def __extract_list_element(self, ele: HtmlElement) -> Tuple[bool, list, str, str]:
+    def __extract_list_element(self, ele: HtmlElement) -> tuple[int, bool, list[list[list]], str, Any]:
         """
         提取列表元素:
         假如有如下列表：
@@ -135,6 +137,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             (bool, str, str): 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
         is_ordered = ele.tag in ['ol', 'dl']
+        list_nest_level = self.__get_list_type(ele)
         tail_text = ele.tail
         content_list = []
         raw_html = self._element_to_html(ele)
@@ -144,7 +147,38 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             text_paragraph = self.__extract_list_item_text(item)
             content_list.append(text_paragraph)
 
-        return is_ordered, content_list, raw_html, tail_text
+        return list_nest_level, is_ordered, content_list, raw_html, tail_text
+
+    def __get_list_type(self, list_ele:HtmlElement) -> int:
+        """获取list嵌套的层级。
+
+        计算一个列表元素的最大嵌套深度，通过递归遍历所有子元素。
+        例如：
+        - 没有嵌套的列表返回1
+        - 有一层嵌套的列表返回2
+        - 有两层嵌套的列表返回3
+
+        Args:
+            list_ele: 列表HTML元素
+
+        Returns:
+            int: 列表的最大嵌套深度
+        """
+        list_type = ['ul', 'ol', 'dl', 'menu', 'dir']
+
+        def get_max_depth(element):
+            max_child_depth = 0
+            for child in element.iterchildren():
+                if child.tag in list_type:
+                    # 找到嵌套列表，其深度至少为1
+                    child_depth = 1 + get_max_depth(child)
+                    max_child_depth = max(max_child_depth, child_depth)
+                else:
+                    # 对非列表元素递归检查其子元素
+                    child_depth = get_max_depth(child)
+                    max_child_depth = max(max_child_depth, child_depth)
+            return max_child_depth
+        return get_max_depth(list_ele) + 1
 
     def __extract_list_item_text(self, root:HtmlElement) -> list[list]:
         """提取列表项的文本.
@@ -199,7 +233,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
             content_list = json.loads(ele.text)
             raw_html = ele.attrib.get('html')
-            return ordered, content_list, raw_html
+            list_nest_level = ele.attrib.get('list_nest_level', 0)
+            return ordered, content_list, raw_html, list_nest_level
         else:
-            # TODO 抛出异常, 需要自定义
-            raise ValueError(f'{html}中没有cctitle标签')
+            raise HtmlListRecognizerException(f'{html}中没有cctitle标签')

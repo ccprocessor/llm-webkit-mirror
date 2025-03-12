@@ -85,11 +85,13 @@ EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
 latex_config = {
     MATH_TYPE_PATTERN.INLINEMATH: [
         ['$', '$'],
-        ['\\(', '\\)']
+        ['\\(', '\\)'],
+        ['[itex]', '[/itex]'],  # 这个网站自定义的分割，https://www.physicsforums.com/threads/turning-to-a-single-logarithm-then-simply.269419/
     ],
     MATH_TYPE_PATTERN.DISPLAYMATH: [
         ['\\[', '\\]'],
         ['$$', '$$'],
+        ['[tex]', '[/tex]'],  # 这个网站自定义的分割，https://www.physicsforums.com/threads/turning-to-a-single-logarithm-then-simply.269419/
         ['\\begin{equation}', '\\end{equation}'],
         ['\\begin{align}', '\\end{align}'],
         ['\\begin{alignat}', '\\end{alignat}'],
@@ -420,6 +422,9 @@ if __name__ == '__main__':
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'))
     print(cm.get_equation_type('<p>这是p的text</p>'))
+    # print(cm.get_equation_type(r'<p>[tex]\frac{1}{4} Log(x-1)=Log((x-1)^{1\over{4}})= Log(\sqrt[4]{x-1})[/tex]</p>'))
+    # print(cm.get_equation_type(r'<p>abc [itex]x^2[/itex] abc</p>'))
+    # print(cm.get_equation_type(r'<p>abc [itex]x^2 abc</p>'))
     print(cm.get_equation_type(r'<p>\begin{align} a^2+b=c\end{align}</p>'))
     print(cm.get_equation_type(r'<p>\begin{abc} a^2+b=c\end{abc}</p>'))
     print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))

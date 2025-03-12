@@ -84,9 +84,7 @@ print(quality_prober(data, "en", "book"))
 
 ## 运行时间
 
-在s集群的10.140.24.131机器上，用cpu单核跑，测试样本位于s3://xyz-llm-users/xyz-users/minrui/junk_information_filter/second_largest_cluster_extract/1/part-67adb46f3b43-000053.jsonl
-
-总共有 77856 条数据（排除第一条数据、非中英文的数据和被启发式规则提前拒绝的数据），下面只统计了`quality_filter`接口本身的耗时，排除了数据读取的时间。
+使用型号为`AMD EPYC 7742`的cpu单核进行测试，测试集总共有 77856 条数据（均是中英文的数据，且不会被启发式规则提前拒绝），下面只统计了`quality_prober`接口本身的耗时，排除了数据读取的时间。
 
 总字符数: 135616946
 
