@@ -106,6 +106,7 @@ class TestUnzipLocalFileCore(TestCase):
             unzip_local_file_core(self.zip_path, self.target_dir)
         self.assertIn('already exists', str(cm.exception))
 
+    @patch('llm_web_kit.model.resource_utils.unzip_ext.CACHE_TMP_DIR', '/tmp')
     def test_successful_extraction(self):
         with zipfile.ZipFile(self.zip_path, 'w') as zipf:
             zipf.writestr('file.txt', 'content')
@@ -114,6 +115,7 @@ class TestUnzipLocalFileCore(TestCase):
         self.assertEqual(result, self.target_dir)
         self.assertTrue(os.path.exists(os.path.join(self.target_dir, 'file.txt')))
 
+    @patch('llm_web_kit.model.resource_utils.unzip_ext.CACHE_TMP_DIR', '/tmp')
     def test_password_protected_extraction(self):
         password = 'secret'
         with zipfile.ZipFile(self.zip_path, 'w') as zipf:
@@ -136,6 +138,7 @@ class TestUnzipLocalFile(TestCase):
     def tearDown(self):
         self.temp_dir.cleanup()
 
+    @patch('llm_web_kit.model.resource_utils.unzip_ext.CACHE_TMP_DIR', '/tmp')
     @patch(
         'llm_web_kit.model.resource_utils.unzip_ext.process_and_verify_file_with_lock'
     )
