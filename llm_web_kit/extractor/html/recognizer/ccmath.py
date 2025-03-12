@@ -9,7 +9,8 @@ from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
-from llm_web_kit.extractor.html.recognizer.cc_math.render import MathJaxRender
+from llm_web_kit.extractor.html.recognizer.cc_math.render import (
+    BaseMathRender, MathRenderType)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -37,16 +38,17 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         result = []
         self.cm.url = base_url
         # 获取数学公式渲染器
-        math_render = self.cm.get_math_render(raw_html)
-        # 对于自定义的mathj
-        if isinstance(math_render, MathJaxRender) and math_render.is_customized_options():
-            result.extend(self.process_mathjax_html(raw_html, raw_html, math_render, base_url))
-        else:
-            for cc_html, o_html in main_html_lst:
-                if not self.is_cc_html(cc_html):
-                    result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
+        base_render = BaseMathRender()
+        math_render = base_render.get_math_render(raw_html)
+        for cc_html, o_html in main_html_lst:
+            if not self.is_cc_html(cc_html):
+                # 对于自定义的mathjax，需要单独处理
+                if math_render and math_render.render_type == MathRenderType.MATHJAX and math_render.is_customized_options():
+                    result.extend(self.process_mathjax_html(cc_html, o_html, math_render, base_url))
                 else:
-                    result.append((cc_html, o_html))
+                    result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
+            else:
+                result.append((cc_html, o_html))
 
         return result
 
@@ -175,6 +177,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
         math_render.find_math(tree)
+
         with open('math_physicsforums_1_processed.html', 'w') as f:
             f.write(self._element_to_html(tree))
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])

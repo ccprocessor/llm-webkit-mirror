@@ -264,29 +264,6 @@ TEST_CONTENT_LIST_NODE = [
     }
 ]
 
-TEST_GET_MATH_RENDER = [
-    {
-        'input': [
-            'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'
-        ],
-        'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
-        'expected': 'mathjax',
-    },
-    {
-        'input': [
-            'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-        ],
-        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-        'expected': 'mathjax',
-    },
-    {
-        'input': [
-            'assets/ccmath/math_katex_latex_2.html',
-        ],
-        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
-        'expected': 'katex',
-    }
-]
 
 TEST_WRAP_MATH = [
     {
@@ -478,13 +455,6 @@ class TestCCMATH(unittest.TestCase):
                         expect1 = test_case['expected'][i][1]
                         self.assertEqual(tag_math_type_list[i][0], expect0, msg=f'result is: {tag_math_type_list[i][0]}, expected is: {expect0}')
                         self.assertEqual(tag_math_type_list[i][1], expect1, msg=f'result is: {tag_math_type_list[i][1]}, expected is: {expect1}')
-
-    def test_get_math_render(self):
-        for test_case in TEST_GET_MATH_RENDER:
-            raw_html_path = base_dir.joinpath(test_case['input'][0])
-            raw_html = raw_html_path.read_text()
-            output_render = self.ccmath.get_math_render(raw_html)
-            self.assertEqual(output_render, test_case['expected'])
 
     def test_wrap_math(self):
         for test_case in TEST_WRAP_MATH:
