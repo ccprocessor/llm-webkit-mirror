@@ -336,6 +336,14 @@ class ModelInputException(ModelBaseException):
         super().__init__(custom_message, error_code)
 
 
+class ModelRuntimeException(ModelBaseException):
+    """Exception raised for model input data format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelRuntimeException')
+        super().__init__(custom_message, error_code)
+
+
 class ModelOutputException(ModelBaseException):
     """Exception raised for model output data format."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):

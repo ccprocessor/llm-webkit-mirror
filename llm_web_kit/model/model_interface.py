@@ -114,14 +114,14 @@ class ModelResource(ABC):
         """清理资源."""
         pass
 
+    @abstractmethod
+    def get_resource_requirement(self) -> ResourceRequirement:
+        """获取资源需求."""
+        pass
+
 
 class ModelPredictor(ABC):
     """通用预测器接口."""
-
-    @abstractmethod
-    def get_model_info(self) -> Dict[str, BatchProcessConfig]:
-        """获取模型信息."""
-        pass
 
     @abstractmethod
     def get_resource_requirement(self, language: str) -> ResourceRequirement:
