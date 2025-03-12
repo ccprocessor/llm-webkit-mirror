@@ -9,6 +9,7 @@ from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
+from llm_web_kit.extractor.html.recognizer.cc_math.render import MathJaxRender
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -37,11 +38,15 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         self.cm.url = base_url
         # 获取数学公式渲染器
         math_render = self.cm.get_math_render(raw_html)
-        for cc_html, o_html in main_html_lst:
-            if not self.is_cc_html(cc_html):
-                result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
-            else:
-                result.append((cc_html, o_html))
+        # 对于自定义的mathj
+        if isinstance(math_render, MathJaxRender) and math_render.is_customized_options():
+            result.extend(self.process_mathjax_html(raw_html, raw_html, math_render, base_url))
+        else:
+            for cc_html, o_html in main_html_lst:
+                if not self.is_cc_html(cc_html):
+                    result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
+                else:
+                    result.append((cc_html, o_html))
 
         return result
 
@@ -128,11 +133,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
             if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
-                tag_common_modify.modify_tree(self.cm, math_render, original_html, node, parent)
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # script[type="math/tex"]
-            # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-            #     tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+            if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
+                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
 
             # math tags
             if node.tag == 'math' or node.tag.endswith(':math'):
@@ -159,15 +164,20 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(self.cm, math_render, original_html, node, parent)
         # 打印处理后的html
         # print(self._element_to_html(tree))
+        with open('math_physicsforums_1_processed.html', 'w') as f:
+            f.write(self._element_to_html(tree))
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
-    def process_ccmath_html_mathjax(self, cc_html: str, o_html: str, math_render: str, base_url: str) -> List[Tuple[str, str]]:
+    def process_mathjax_html(self, cc_html: str, o_html: str, math_render: str, base_url: str) -> List[Tuple[str, str]]:
         """处理mathjax有自定义标识符的数学公式."""
         cm.url = base_url
         tree = self._build_html_tree(cc_html)
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
-        pass
+        math_render.find_math(tree)
+        with open('math_physicsforums_1_processed.html', 'w') as f:
+            f.write(self._element_to_html(tree))
+        return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
 if __name__ == '__main__':
@@ -197,11 +207,17 @@ if __name__ == '__main__':
         '</head> '
         '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
-    print(math_recognizer.recognize(
-        'https://www.baidu.com',
-        test_html,
-        raw_html
-    ))
+    # print(math_recognizer.recognize(
+    #     'https://www.baidu.com',
+    #     test_html,
+    #     raw_html
+    # ))
+    # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
+    # print(math_recognizer.recognize(
+    #     'https://www.baidu.com',
+    #     [(raw_html, raw_html)],
+    #     raw_html
+    # ))
     # print(math_recognizer.to_content_list_node(
     #     'https://www.baidu.com',
     #     '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
@@ -212,3 +228,9 @@ if __name__ == '__main__':
     #     raw_html,
     #     ['ccmath']
     # ))
+    raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
+    print(math_recognizer.recognize(
+        'https://www.baidu.com',
+        [(raw_html, raw_html)],
+        raw_html
+    ))

@@ -7,6 +7,8 @@ from lxml import etree
 from lxml.html import HtmlElement
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
+from llm_web_kit.extractor.html.recognizer.cc_math.render import (
+    BaseMathRender, KaTeXRender, MathJaxRender)
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
@@ -59,12 +61,6 @@ class MathType:
     MATHML = 'mathml'
     ASCIIMATH = 'asciimath'
     HTMLMATH = 'htmlmath'  # sub, sup, etc.
-
-
-# 数学公式渲染器
-class MathRender:
-    MATHJAX = 'mathjax'
-    KATEX = 'katex'
 
 
 # node.text匹配结果：
@@ -195,7 +191,7 @@ class CCMATH():
         parsed = asciimath2tex.translate(s)
         return parsed
 
-    def get_math_render(self, html: str) -> str:
+    def get_math_render(self, html: str) -> BaseMathRender:
         """获取数学公式渲染器.
         示例:
         MathJax:
@@ -209,7 +205,9 @@ class CCMATH():
         # 检查 KaTeX
         for link in tree.iter('link'):
             if link.get('href') and 'katex' in link.get('href', '').lower():
-                return MathRender.KATEX
+                render = KaTeXRender()
+                render.get_options(link)
+                return render
         # 查找head标签
         # head = tree.find('head')
         # if head is not None:
@@ -217,7 +215,9 @@ class CCMATH():
         for script in tree.iter('script'):
             src = script.get('src', '').lower()
             if src and ('mathjax' in src or 'asciimath' in src):
-                return MathRender.MATHJAX
+                render = MathJaxRender()
+                render.get_options(script)
+                return render
         return None
 
     def get_equation_type(self, html: str) -> List[Tuple[str, str]]:
@@ -441,14 +441,6 @@ class CCMATH():
             by=math_render,
             html=text
         ))
-
-
-class MathJax():
-    def __init__(self):
-        self.options = {}
-
-    def get_options(self, html: str):
-        pass
 
 
 if __name__ == '__main__':
