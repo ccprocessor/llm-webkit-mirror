@@ -1,8 +1,11 @@
 # 测试text识别器
 import os
 import unittest
+from pathlib import Path
 
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
+from llm_web_kit.extractor.html.recognizer.recognizer import \
+    BaseHTMLElementRecognizer
 from llm_web_kit.extractor.html.recognizer.text import TextParagraphRecognizer
 from llm_web_kit.input.datajson import DataJson
 
@@ -181,21 +184,10 @@ class TestTextParagraphRecognize(unittest.TestCase):
         Returns:
 
         """
-        chain = ExtractSimpleFactory.create(self.config)
-        self.assertIsNotNone(chain)
-        test_data = {
-            'track_id': 'text_md',
-            'dataset_name': 'text_md',
-            'url': 'http://mathhelpforum.com/algebra/121269-difficult-distance-speed-time-problems.html',
-            'data_source_category': 'HTML',
-            'path': 'text7.html',
-            'file_bytes': 1000,
-            'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
-        }
-        input_data = DataJson(test_data)
-        result = chain.extract(input_data)
-        content_md = result.get_content_list().to_mm_md()
-        assert content_md
+        with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text7.html', 'r') as file:
+            html_content = file.read()
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
+        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in result[0][0] and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
 
     def test_text_8(self):
         """
@@ -204,21 +196,10 @@ class TestTextParagraphRecognize(unittest.TestCase):
         Returns:
 
         """
-        chain = ExtractSimpleFactory.create(self.config)
-        self.assertIsNotNone(chain)
-        test_data = {
-            'track_id': 'text_md',
-            'dataset_name': 'text_md',
-            'url': 'http://mathhelpforum.com/calculus/169103-particular-solution.html',
-            'data_source_category': 'HTML',
-            'path': 'text8.html',
-            'file_bytes': 1000,
-            'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
-        }
-        input_data = DataJson(test_data)
-        result = chain.extract(input_data)
-        content_md = result.get_content_list().to_mm_md()
-        assert content_md
+        with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text8.html', 'r') as file:
+            html_content = file.read()
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
+        assert "40xy' -ln(x^8) = 0\\n\\n\\nInitial Condition: y(1)=31" in result[0][0] and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
 
     def test_text_9(self):
         """
@@ -227,21 +208,10 @@ class TestTextParagraphRecognize(unittest.TestCase):
         Returns:
 
         """
-        chain = ExtractSimpleFactory.create(self.config)
-        self.assertIsNotNone(chain)
-        test_data = {
-            'track_id': 'text_md',
-            'dataset_name': 'text_md',
-            'url': 'http://mathhelpforum.com/differential-geometry/82966-continuous-functions.html',
-            'data_source_category': 'HTML',
-            'path': 'text9.html',
-            'file_bytes': 1000,
-            'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
-        }
-        input_data = DataJson(test_data)
-        result = chain.extract(input_data)
-        content_md = result.get_content_list().to_nlp_md()
-        assert content_md
+        with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text9.html', 'r') as file:
+            html_content = file.read()
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
+        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in result[50][0] and BaseHTMLElementRecognizer.is_cc_html(result[50][0])
 
     def test_text_10(self):
         """
