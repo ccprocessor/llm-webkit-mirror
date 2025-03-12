@@ -7,8 +7,6 @@ from lxml import etree
 from lxml.html import HtmlElement
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
-from llm_web_kit.extractor.html.recognizer.cc_math.render import (
-    BaseMathRender, KaTeXRender, MathJaxRender)
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
@@ -190,35 +188,6 @@ class CCMATH():
     def extract_asciimath(self, s: str) -> str:
         parsed = asciimath2tex.translate(s)
         return parsed
-
-    def get_math_render(self, html: str) -> BaseMathRender:
-        """获取数学公式渲染器.
-        示例:
-        MathJax:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
-        Katex:
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-        """
-        tree = html_to_element(html)
-        if tree is None:
-            return None
-        # 检查 KaTeX
-        for link in tree.iter('link'):
-            if link.get('href') and 'katex' in link.get('href', '').lower():
-                render = KaTeXRender()
-                render.get_options(link)
-                return render
-        # 查找head标签
-        # head = tree.find('head')
-        # if head is not None:
-        # 检查 MathJax
-        for script in tree.iter('script'):
-            src = script.get('src', '').lower()
-            if src and ('mathjax' in src or 'asciimath' in src):
-                render = MathJaxRender()
-                render.get_options(script)
-                return render
-        return None
 
     def get_equation_type(self, html: str) -> List[Tuple[str, str]]:
         """根据latex_config判断数学公式是行内还是行间公式.

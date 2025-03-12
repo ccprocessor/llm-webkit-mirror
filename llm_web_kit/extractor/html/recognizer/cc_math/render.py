@@ -1,13 +1,13 @@
 import re
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Any, Dict, List
 
-from lxml import etree
 from lxml.html import HtmlElement
 
 from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
-from llm_web_kit.libs.html_utils import build_cc_element, html_to_element
+from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
+                                         html_to_element)
 
 
 class MathRenderType:
@@ -29,7 +29,7 @@ MATHJAX_OPTIONS = {
 }
 
 
-class BaseMathRender(ABC):
+class BaseMathRender():
     """数学公式渲染器基类.
 
     提供了识别和处理不同类型数学公式渲染器的基本功能。 子类需要实现特定渲染器的选项解析和处理逻辑。
@@ -64,6 +64,35 @@ class BaseMathRender(ABC):
             root: HTML根节点
         """
         pass
+
+    def get_math_render(self, html: str) -> 'BaseMathRender':
+        """获取数学公式渲染器.
+        示例:
+        MathJax:
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+        Katex:
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+        """
+        tree = html_to_element(html)
+        if tree is None:
+            return None
+        # 检查 KaTeX
+        for link in tree.iter('link'):
+            if link.get('href') and 'katex' in link.get('href', '').lower():
+                render = KaTeXRender()
+                render.get_options(link)
+                return render
+        # 查找head标签
+        # head = tree.find('head')
+        # if head is not None:
+        # 检查 MathJax
+        for script in tree.iter('script'):
+            src = script.get('src', '').lower()
+            if src and ('mathjax' in src or 'asciimath' in src):
+                render = MathJaxRender()
+                render.get_options(script)
+                return render
+        return None
 
     def _process_text_nodes(
         self,
@@ -197,7 +226,7 @@ class BaseMathRender(ABC):
                     tail='',
                     type=MathType.LATEX,
                     by=self.render_type,
-                    html=formula
+                    html=f'{start}{formula}{end}'  # 使用完整的原始HTML
                 )
 
                 # 添加公式节点
@@ -231,7 +260,8 @@ class BaseMathRender(ABC):
                         nodes[i - 1].tail = node
                     else:
                         # 如果前一个也是文本，或者是第一个节点，创建一个空节点
-                        empty_node = etree.Element('span')
+                        empty_node = HtmlElement()
+                        empty_node.tag = 'span'
                         empty_node.tail = node
                         parent.append(empty_node)
                 else:
@@ -271,7 +301,7 @@ class BaseMathRender(ABC):
                     tail='',
                     type=MathType.LATEX,
                     by=self.render_type,
-                    html=formula
+                    html=f'{start}{formula}{end}'  # 使用完整的原始HTML
                 )
 
                 # 添加公式节点
@@ -308,7 +338,8 @@ class BaseMathRender(ABC):
                         nodes[i - 1].tail = node
                     else:
                         # 如果前一个也是文本，或者是第一个节点，创建一个空节点
-                        empty_node = etree.Element('span')
+                        empty_node = HtmlElement()
+                        empty_node.tag = 'span'
                         empty_node.tail = node
                         parent.insert(parent_index + 1, empty_node)
                         parent_index += 1
@@ -358,12 +389,10 @@ class BaseMathRender(ABC):
         """
         render_type = BaseMathRender.detect_render_type(tree)
 
-        if render_type == MathRenderType.MATHJAX:
-            return MathJaxRender()
-        elif render_type == MathRenderType.KATEX:
+        if render_type == MathRenderType.KATEX:
             return KaTeXRender()
 
-        return None
+        return MathJaxRender()
 
 
 class MathJaxRender(BaseMathRender):
@@ -502,7 +531,7 @@ class MathJaxRender(BaseMathRender):
         if not inline_delimiters:
             # 使用默认分隔符
             inline_delimiters = MATHJAX_OPTIONS.get(
-                'inlineMath', [['\\(', '\\)']]
+                'inlineMath', [['$', '$'], ['\\(', '\\)']]
             )
 
         display_delimiters = self.options.get('display_delimiters', [])
@@ -683,9 +712,9 @@ class KaTeXRender(BaseMathRender):
                     html_tag_name=tag_name,
                     text=math_text,
                     tail=elem.tail or '',
-                    type='latex',  # 假设类型为latex，可以根据实际情况调整
-                    by=self.render_type,  # 使用渲染器类型作为by属性
-                    html=math_text  # 使用公式作为原始HTML
+                    type=MathType.LATEX,  # 使用MathType枚举
+                    by=self.render_type,
+                    html=element_to_html(elem)  # 使用完整的原始HTML
                 )
 
                 # 替换原节点
@@ -777,18 +806,18 @@ if __name__ == '__main__':
     mathjax_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
     mathjax_tree = html_to_element(mathjax_html)
     mathjax_render = BaseMathRender.create_render(mathjax_tree)
-    print(f'mathjax_render options1111111111: {mathjax_render.get_options(mathjax_tree)}')
+    print(f'mathjax_render options: {mathjax_render.get_options(mathjax_tree)}')
     if mathjax_render:
         # 处理前的HTML
         print('处理前的HTML:')
-        print(etree.tostring(mathjax_tree, encoding='unicode', pretty_print=True)[:500] + '...')
+        print(element_to_html(mathjax_tree)[:500] + '...')
 
         # 使用find_math处理数学公式
         mathjax_render.find_math(mathjax_tree)
 
         # 处理后的HTML
         print('\n处理后的HTML:')
-        processed_html = etree.tostring(mathjax_tree, encoding='unicode', pretty_print=True)
+        processed_html = element_to_html(mathjax_tree)
         print(processed_html[:500] + '...')
 
         # 查找处理后的ccmath节点
@@ -812,14 +841,14 @@ if __name__ == '__main__':
 
     # 处理前的HTML
     print('处理前的HTML:')
-    print(etree.tostring(tex_tree, encoding='unicode', pretty_print=True))
+    print(element_to_html(tex_tree))
 
     # 使用find_math处理数学公式
     mathjax_render.find_math(tex_tree)
 
     # 处理后的HTML
     print('\n处理后的HTML:')
-    processed_html = etree.tostring(tex_tree, encoding='unicode', pretty_print=True)
+    processed_html = element_to_html(tex_tree)
     print(processed_html)
 
     # 查找处理后的ccmath节点
@@ -831,7 +860,7 @@ if __name__ == '__main__':
     # 测试真实文本
     print('\n测试真实文本:')
     real_text = '''
-    <p>where [tex]d^2(x_1,x_2)[/tex] is the squared distance between [tex]x_1[/tex] and [tex]x_2[/tex] in some metric space [tex]\\Theta[/tex]. All integrals are over [tex]\\Theta[/tex]</p>
+    <p>where [tex]d^2(x_1,x_2)[/tex] is the $a=b$ squared distance between [tex]x_1[/tex] and [tex]x_2[/tex] in some metric space [tex]\\Theta[/tex]. All integrals are over [tex]\\Theta[/tex]</p>
     '''
 
     real_tree = html_to_element(real_text)
@@ -839,18 +868,45 @@ if __name__ == '__main__':
 
     # 处理前的HTML
     print('处理前的HTML:')
-    print(etree.tostring(real_tree, encoding='unicode', pretty_print=True))
+    print(element_to_html(real_tree))
 
     # 使用find_math处理数学公式
     mathjax_render.find_math(real_tree)
 
     # 处理后的HTML
     print('\n处理后的HTML:')
-    processed_html = etree.tostring(real_tree, encoding='unicode', pretty_print=True)
+    processed_html = element_to_html(real_tree)
     print(processed_html)
 
     # 查找处理后的ccmath节点
     ccmath_nodes = real_tree.xpath('.//*[self::ccmath-inline or self::ccmath-interline]')
+    print(f'\n找到 {len(ccmath_nodes)} 个数学公式节点:')
+    for i, node in enumerate(ccmath_nodes, 1):
+        print(f'{i}. <{node.tag}> {node.text}')
+
+    # 测试$$格式的公式
+    print('\n专门测试$$格式的公式:')
+    dollar_text = '''
+    <p>This is a display formula: $$F = G\\frac{m_1 m_2}{r^2}$$</p>
+    '''
+
+    dollar_tree = html_to_element(dollar_text)
+    mathjax_render = MathJaxRender()
+
+    # 处理前的HTML
+    print('处理前的HTML:')
+    print(element_to_html(dollar_tree))
+
+    # 使用find_math处理数学公式
+    mathjax_render.find_math(dollar_tree)
+
+    # 处理后的HTML
+    print('\n处理后的HTML:')
+    processed_html = element_to_html(dollar_tree)
+    print(processed_html)
+
+    # 查找处理后的ccmath节点
+    ccmath_nodes = dollar_tree.xpath('.//*[self::ccmath-inline or self::ccmath-interline]')
     print(f'\n找到 {len(ccmath_nodes)} 个数学公式节点:')
     for i, node in enumerate(ccmath_nodes, 1):
         print(f'{i}. <{node.tag}> {node.text}')
