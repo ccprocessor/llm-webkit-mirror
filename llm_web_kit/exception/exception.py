@@ -3,8 +3,6 @@ from pathlib import Path
 
 import commentjson as json
 
-from llm_web_kit.input.datajson import DataJsonKey
-
 
 class ErrorMsg:
     """Error message manager class."""
@@ -54,7 +52,7 @@ class LlmWebKitBaseException(Exception):
         self.error_code = error_code
         self.message = ErrorMsg.get_error_message(self.error_code)
         self.custom_message = custom_message
-        self.dataset_name = DataJsonKey.DATASET_NAME
+        self.dataset_name = ''
         super().__init__(self.message)
         frame = inspect.currentframe().f_back
         self.__py_filename = frame.f_code.co_filename

@@ -9,8 +9,7 @@ from llm_web_kit.model.quality_model import QualityModel  # noqa: E402
 from llm_web_kit.model.quality_model import get_quality_model  # noqa: E402
 from llm_web_kit.model.quality_model import quality_prober  # noqa: E402
 from llm_web_kit.model.quality_model import QualityFilter
-from llm_web_kit.model.resource_utils.download_assets import \
-    CACHE_DIR  # noqa: E402
+from llm_web_kit.model.resource_utils.utils import CACHE_DIR
 
 current_file_path = os.path.abspath(__file__)
 parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)

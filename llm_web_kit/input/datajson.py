@@ -130,6 +130,9 @@ class StructureMapper(ABC):
         else:
             return json.dumps(content_lst, ensure_ascii=False)
 
+    def to_dict(self) -> dict:
+        return copy.deepcopy(self._get_data())
+
     @abstractmethod
     def _get_data(self) -> List[Dict]:
         raise NotImplementedError('This method must be implemented by the subclass.')
@@ -470,7 +473,7 @@ class DataJson(StructureChecker):
             str: json字符串
         """
         json_dict = self.__json_data.copy()
-        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list()._get_data()
+        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list().to_dict()
         if pretty:
             return json.dumps(json_dict, indent=2, ensure_ascii=False)
         return json.dumps(json_dict, ensure_ascii=False)
@@ -482,5 +485,5 @@ class DataJson(StructureChecker):
             dict: dict对象
         """
         json_dict = self.__json_data.copy()
-        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list()._get_data()
+        json_dict[DataJsonKey.CONTENT_LIST] = self.get_content_list().to_dict()
         return json_dict

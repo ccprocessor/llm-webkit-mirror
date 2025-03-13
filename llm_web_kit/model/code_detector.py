@@ -7,12 +7,10 @@ import fasttext
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
-from llm_web_kit.model.resource_utils.download_assets import (
-    CACHE_DIR, download_auto_file)
-from llm_web_kit.model.resource_utils.singleton_resource_manager import \
-    singleton_resource_manager
-from llm_web_kit.model.resource_utils.unzip_ext import (get_unzip_dir,
-                                                        unzip_local_file)
+from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
+                                              get_unzip_dir,
+                                              singleton_resource_manager,
+                                              unzip_local_file)
 
 
 class CodeClassification:
@@ -139,13 +137,17 @@ def decide_code_func(content_str: str, code_detect: CodeClassification) -> float
     if str_len > 10000:
         logger.warning('Content string is too long, truncate to 10000 characters')
         start_idx = (str_len - 10000) // 2
-        content_str = content_str[start_idx:start_idx + 10000]
+        content_str = content_str[start_idx : start_idx + 10000]
 
     # check if the content string contains latex environment
     if detect_latex_env(content_str):
-        logger.warning('Content string contains latex environment, may be misclassified')
+        logger.warning(
+            'Content string contains latex environment, may be misclassified'
+        )
 
-    def decide_code_by_prob_v3(predictions: Tuple[str], probabilities: Tuple[float]) -> float:
+    def decide_code_by_prob_v3(
+        predictions: Tuple[str], probabilities: Tuple[float]
+    ) -> float:
         idx = predictions.index('__label__1')
         true_prob = probabilities[idx]
         return true_prob
@@ -154,7 +156,9 @@ def decide_code_func(content_str: str, code_detect: CodeClassification) -> float
         predictions, probabilities = code_detect.predict(content_str)
         result = decide_code_by_prob_v3(predictions, probabilities)
     else:
-        raise ValueError(f'Unsupported version: {code_detect.version}. Supported versions: {[CODE_CL_SUPPORTED_VERSIONS]}')
+        raise ValueError(
+            f'Unsupported version: {code_detect.version}. Supported versions: {[CODE_CL_SUPPORTED_VERSIONS]}'
+        )
     return result
 
 
