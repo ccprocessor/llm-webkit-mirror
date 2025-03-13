@@ -517,8 +517,15 @@ class MathJaxRender(BaseMathRender):
 
     def is_customized_options(self) -> bool:
         """是否与默认配置不同."""
+        # 如果options中inlineMath和displayMath为空，则认为没有自定义配置
+        if self.options.get('inlineMath') and self.options.get('displayMath'):
+            return False
         # 先只判断MATHJAX_OPTIONS的inlineMath和displayMath
-        return self.options.get('inlineMath', []) != MATHJAX_OPTIONS['inlineMath'] or self.options.get('displayMath', []) != MATHJAX_OPTIONS['displayMath']
+        if self.options.get('inlineMath', []) != MATHJAX_OPTIONS['inlineMath']:
+            return True
+        if self.options.get('displayMath', []) != MATHJAX_OPTIONS['displayMath']:
+            return True
+        return False
 
     def find_math(self, root: HtmlElement) -> None:
         """查找MathJax格式的数学公式，并创建相应的数学公式节点.
