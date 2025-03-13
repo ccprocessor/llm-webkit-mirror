@@ -465,6 +465,6 @@ if __name__ == '__main__':
     print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True))
     print(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False))
     print(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False))
-    cm.url = 'mathhelpforum.com'
-    print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))
-    print(cm.wrap_math_md_custom(r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />'))
+    # cm.url = 'mathhelpforum.com'
+    # print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))
+    # print(cm.wrap_math_md_custom(r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />'))

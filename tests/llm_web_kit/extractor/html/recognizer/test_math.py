@@ -334,6 +334,11 @@ TEST_WRAP_MATH_MD = [
         'expected': r'\begin{align} a^2+b=c\end{align}'
     },
     {
+        'input': r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />',
+        'url': 'mathhelpforum.com',
+        'expected': r'dz=\frac{1}{2}\frac{dx}{\cos ^2 x}'
+    },
+    {
         'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
         'expected': r'<br />\begin{align} a^2+b=c\end{align}\<br />'
     }
