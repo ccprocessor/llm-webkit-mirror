@@ -234,7 +234,7 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
 
     # return "empty" if the content string is empty
     if len(content_str.strip()) == 0:
-        return {'language': 'empty', 'language_details': None}
+        return {'language': 'empty', 'language_details': 'empty'}
 
     if lang_detect.version not in LANG_ID_SUPPORTED_VERSIONS:
         raise ValueError(f'Unsupported version: {lang_detect.version}. Supported versions: {LANG_ID_SUPPORTED_VERSIONS}')
@@ -242,12 +242,13 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
     predictions, probabilities = lang_detect.predict(content_str)
     language = decide_language_by_prob_v176(predictions, probabilities)
 
-    language_details = None
     if lang_detect.version == '218.bin':
         first_pred = predictions[0]
         # Extract the full label (e.g., __label__eng_Latn -> eng_Latn)
         if first_pred.startswith('__label__'):
             language_details = first_pred.replace('__label__', '')
+    else:
+        language_details = 'not_defined'
 
     return {
         'language': language,
