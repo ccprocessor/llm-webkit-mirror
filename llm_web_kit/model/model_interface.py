@@ -17,7 +17,7 @@ class ModelRequest:
 class ModelResponse:
     """通用模型响应基类."""
 
-    remained: bool
+    is_remained: bool
     details: Dict[str, Any] = None
 
 

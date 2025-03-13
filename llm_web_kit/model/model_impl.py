@@ -209,9 +209,9 @@ class PornZhGPUModel(BaseModelResource):
             raise ModelInitException(f'Failed to init the zh porn model: {e}')
 
     def get_resource_requirement(self):
-        # S2 cluster has 128 CPUs, 1TB memory, 8 GPUs
-        # so we can use 16 CPUs, 64GB memory, 1 GPU for this model
-        return ResourceRequirement(num_cpus=16, memory_GB=64, num_gpus=1)
+        # S2 cluster has at least 96 CPUs, 1TB memory, 8 GPUs
+        # so we can use 12 CPUs, 64GB memory, 1 GPU for this model
+        return ResourceRequirement(num_cpus=12, memory_GB=64, num_gpus=1)
 
     def get_batch_config(self) -> BatchProcessConfig:
         return BatchProcessConfig(
