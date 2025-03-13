@@ -18,7 +18,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
     IMG_LABEL = ['.jpg', '.jpeg', '.png', '.gft', '.webp', '.bmp', '.svg', 'data:image', '.gif']  # '.pdf'
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -43,7 +43,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         Returns:
             dict: content_list_node
         """
-        html_obj = self._build_html_tree(parsed_content)
+        # html_obj = self._build_html_tree(parsed_content)
+        html_obj = parsed_content
 
         if html_obj.tag == CCTag.CC_IMAGE:
             return self.__ccimg_to_content_list(raw_html_segment, html_obj)
@@ -66,7 +67,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         return result
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[str, str]], raw_html: str) -> List[Tuple[str, str]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析图片元素.
 
         Args:
@@ -88,9 +89,10 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                     ccimg_html.append(html_li)
         return ccimg_html
 
-    def __parse_html_img(self, base_url: str, html_str: Tuple[str, str]) -> List[Tuple[str, str]]:
+    def __parse_html_img(self, base_url: str, html_str: Tuple[HtmlElement, HtmlElement]) -> List[Tuple[HtmlElement, HtmlElement]]:
         """解析html，获取img标签."""
-        html_obj = self._build_html_tree(html_str[0])
+        # html_obj = self._build_html_tree(html_str[0])
+        html_obj = html_str[0]
         image_related_selectors = [
             '//*[contains(@class, "image-embed") or contains(@id, "image-embed")]',  # 可能包含嵌入图片的自定义标签
             '//*[starts-with(@src, "data:image/") and not(self::img)]',
@@ -168,7 +170,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             self._replace_element(elem, new_ccimage)
 
         if is_valid_img:
-            updated_html = self._element_to_html(html_obj)
+            # updated_html = self._element_to_html(html_obj)
+            updated_html = html_obj
             return (updated_html, img_tag)
         else:
             return (None, None)

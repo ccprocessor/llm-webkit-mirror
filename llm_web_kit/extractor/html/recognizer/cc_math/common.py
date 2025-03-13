@@ -169,7 +169,7 @@ class CCMATH():
         parsed = asciimath2tex.translate(s)
         return parsed
 
-    def get_math_render(self, html: str) -> str:
+    def get_math_render(self, html: HtmlElement) -> str:
         """获取数学公式渲染器.
         示例:
         MathJax:

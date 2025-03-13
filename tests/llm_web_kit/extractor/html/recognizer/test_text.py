@@ -8,6 +8,7 @@ from llm_web_kit.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 from llm_web_kit.extractor.html.recognizer.text import TextParagraphRecognizer
 from llm_web_kit.input.datajson import DataJson
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 
 class TestTextParagraphRecognize(unittest.TestCase):
@@ -64,8 +65,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         assert self.text_recognize._TextParagraphRecognizer__combine_text('知识乱象\n',
                                                                           '中共中央政治局召开会议审议《成-2020年10月16日新闻联播',
                                                                           'zh')[:7] == '知识乱象\n中共'
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert result[909][0][1413:1422] == '知识乱象\\n 中共'
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert element_to_html(result[909][0])[1413:1422] == '知识乱象\\n 中共'
 
     def test_text_2(self):
         """
@@ -186,8 +187,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         """
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text7.html', 'r') as file:
             html_content = file.read()
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in result[0][0] and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in element_to_html(result[0][0]) and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
 
     def test_text_8(self):
         """
@@ -198,8 +199,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         """
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text8.html', 'r') as file:
             html_content = file.read()
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert "40xy' -ln(x^8) = 0\\n\\n\\nInitial Condition: y(1)=31" in result[0][0] and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert "40xy' -ln(x^8) = 0\\n\\n\\nInitial Condition: y(1)=31" in element_to_html(result[0][0]) and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
 
     def test_text_9(self):
         """
@@ -210,8 +211,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         """
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text9.html', 'r') as file:
             html_content = file.read()
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in result[50][0] and BaseHTMLElementRecognizer.is_cc_html(result[50][0])
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in element_to_html(result[50][0]) and BaseHTMLElementRecognizer.is_cc_html(result[50][0])
 
     def test_text_10(self):
         """

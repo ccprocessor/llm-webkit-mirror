@@ -3,6 +3,7 @@ from pathlib import Path
 
 from llm_web_kit.extractor.html.recognizer.image import ImageRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
+from llm_web_kit.libs.html_utils import html_to_element
 
 TEST_CASES_HTML = [
     {
@@ -98,7 +99,7 @@ class TestImageRecognizer(unittest.TestCase):
             raw_html_path = base_dir.joinpath(test_case['input'])
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text(encoding='utf-8')
-            parts = self.img_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            parts = self.img_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
             self.assertEqual(len(parts), test_case['expected'])
             ccimg_datas = [ccimg[0] for ccimg in parts if CCTag.CC_IMAGE in ccimg[0] and 'by="svg"' not in ccimg[0]]
             if ccimg_datas:
@@ -109,7 +110,7 @@ class TestImageRecognizer(unittest.TestCase):
     def test_to_content_list_node(self):
         for test_case in TEST_CC_CASE:
             try:
-                res = self.img_recognizer.to_content_list_node(test_case['url'], test_case['parsed_content'],
+                res = self.img_recognizer.to_content_list_node(test_case['url'], html_to_element(test_case['parsed_content']),
                                                                test_case['html'])
                 self.assertEqual(res, test_case['expected'])
                 self.assertEqual(res['content']['alt'], test_case['alt'])
