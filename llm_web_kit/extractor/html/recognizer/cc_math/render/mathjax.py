@@ -35,6 +35,10 @@ class MathJaxRender(BaseMathRender):
             'version': ''
         }
 
+    def get_render_type(self) -> str:
+        """获取渲染器类型."""
+        return self.render_type
+
     def get_options(self, html: str) -> Dict[str, Any]:
         """从HTML中提取MathJax选项.
 
@@ -175,6 +179,7 @@ class MathJaxRender(BaseMathRender):
             self.options.get('inlineMath', []),
             MATHJAX_OPTIONS['inlineMath']
         ):
+            self.render_type = MathRenderType.MATHJAX_CUSTOMIZED
             return True
 
         # 检查displayMath是否被默认配置包含
@@ -182,6 +187,7 @@ class MathJaxRender(BaseMathRender):
             self.options.get('displayMath', []),
             MATHJAX_OPTIONS['displayMath']
         ):
+            self.render_type = MathRenderType.MATHJAX_CUSTOMIZED
             return True
 
         return False
@@ -208,7 +214,6 @@ class MathJaxRender(BaseMathRender):
             display_delimiters = MATHJAX_OPTIONS.get(
                 'displayMath', [['$$', '$$'], ['\\[', '\\]']]
             )
-
         # 打印调试信息
         print(f'行间公式分隔符: {display_delimiters}')
 
@@ -257,7 +262,7 @@ if __name__ == '__main__':
 
     # 测试find_math方法
     print('\n测试find_math方法 - MathJax:')
-    mathjax_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
+    mathjax_html = open('tests/llm_web_kit/extractor/html/recognizer/assets/ccmath/math_physicsforums.html', 'r').read()
     mathjax_tree = html_to_element(mathjax_html)
     mathjax_render = BaseMathRender.create_render(mathjax_tree)
     print(f'mathjax_render options: {mathjax_render.get_options(mathjax_html)}')

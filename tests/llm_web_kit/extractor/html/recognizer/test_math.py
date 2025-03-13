@@ -185,6 +185,13 @@ TEST_CASES_HTML = [
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_prefix_1.html'
     },
+    {
+        'input': [
+            'assets/ccmath/math_physicsforums.html',
+        ],
+        'base_url': 'https://www.physicsforums.com/threads/probability-theoretic-inequality.246150/',
+        'expected': 'assets/ccmath/math_physicsforums_1.html'
+    }
 ]
 
 TEST_EQUATION_TYPE = [

@@ -80,6 +80,10 @@
       "code": 31031100,
       "message": "HTML math recognizer exception"
     },
+    "HtmlMathMathjaxRenderRecognizerException": {
+      "code": 31031110,
+      "message": "HTML math mathjax render recognizer exception"
+    },
     "HtmlCodeRecognizerException": {
       "code": 31031200,
       "message": "HTML code recognizer exception"
