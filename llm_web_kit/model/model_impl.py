@@ -7,12 +7,12 @@ from llm_web_kit.exception.exception import (ModelInitException,
                                              ModelRuntimeException)
 from llm_web_kit.model.model_interface import (BatchProcessConfig,
                                                ModelPredictor, ModelResource,
-                                               PoliticalRequest,
+                                               ModelResponse, PoliticalRequest,
                                                PoliticalResponse, PornRequest,
-                                               PornResponse)
+                                               PornResponse,
+                                               ResourceRequirement)
 from llm_web_kit.model.policical import (get_singleton_political_detect,
                                          update_political_by_str)
-from llm_web_kit.model.porn_detector import BertModel as PornBertModel
 
 
 class ModelType(Enum):
@@ -40,6 +40,10 @@ class BaseModelResource(ModelResource):
 
     @abstractmethod
     def _load_model(self):
+        pass
+
+    @abstractmethod
+    def convert_result_to_response(self, result: dict) -> ModelResponse:
         pass
 
     def cleanup(self) -> None:
@@ -82,12 +86,15 @@ class PoliticalCPUModel(BaseModelResource):
         except Exception as e:
             raise RuntimeError(f'Failed to load political CPU model: {e}')
 
+    def get_resource_requirement(self):
+        return ResourceRequirement(num_cpus=1, memory_GB=4, num_gpus=0)
+
     def get_batch_config(self) -> BatchProcessConfig:
         return BatchProcessConfig(
             max_batch_size=128, optimal_batch_size=64, min_batch_size=8
         )
 
-    def predict_batch(self, contents: List[str]) -> List[float]:
+    def predict_batch(self, contents: List[str]) -> List[dict]:
         if not self.model:
             raise RuntimeError('Model not initialized')
         try:
@@ -95,10 +102,18 @@ class PoliticalCPUModel(BaseModelResource):
             results = []
             for content in contents:
                 result = update_political_by_str(content)
-                results.append(result['political_prob'])
+                results.append(result)
+
             return results
         except Exception as e:
             raise RuntimeError(f'Prediction failed: {e}')
+
+    def convert_result_to_response(self, result: dict) -> ModelResponse:
+        # raise NotImplementedError
+        # TODO convert result to response ensure the threshold
+        return PoliticalResponse(
+            remained=result['political_prob'] > 0.5, details=result
+        )
 
 
 class PoliticalPredictorImpl(BasePredictor):
@@ -132,7 +147,7 @@ class PoliticalPredictorImpl(BasePredictor):
             if batch_contents:
                 # 批量处理
                 probs = self.model.predict_batch(batch_contents)
-                responses = [PoliticalResponse(probability=prob) for prob in probs]
+                responses = [self.model.convert_result_to_response(prob) for prob in probs]
         except Exception as e:
             raise ModelRuntimeException(f'Political prediction failed: {e}')
 
@@ -145,46 +160,87 @@ class PornEnGPUModel(BaseModelResource):
 
     def _load_model(self):
         try:
-            return PornBertModel('')
+            from llm_web_kit.model.porn_detector import \
+                BertModel as PornEnModel
+
+            return PornEnModel()
         except Exception as e:
-            raise RuntimeError(f'Failed to load porn GPU model: {e}')
+            raise ModelInitException(f'Failed to init the en pron model: {e}')
+
+    def get_resource_requirement(self):
+        # S2 cluster has 128 CPUs, 1TB memory, 8 GPUs
+        # so we can use 16 CPUs, 64GB memory, 1 GPU for this model
+        return ResourceRequirement(num_cpus=16, memory_GB=64, num_gpus=1)
 
     def get_batch_config(self) -> BatchProcessConfig:
         return BatchProcessConfig(
             max_batch_size=128, optimal_batch_size=64, min_batch_size=8
         )
 
-    def predict_batch(self, contents: List[str]) -> List[float]:
+    def predict_batch(self, contents: List[str]) -> List[dict]:
         if not self.model:
             raise RuntimeError('Model not initialized')
         try:
             # 色情模型本身支持批处理
             results = self.model.predict(contents)
-            return [result[self.model.get_output_key('prob')] for result in results]
+            return [
+                {'porn_prob': result[self.model.get_output_key('prob')]}
+                for result in results
+            ]
         except Exception as e:
             raise RuntimeError(f'Prediction failed: {e}')
+
+    def convert_result_to_response(self, result: dict) -> ModelResponse:
+        # raise NotImplementedError
+        # TODO convert result to response ensure the threshold
+        return PornResponse(remained=result['porn_prob'] < 0.5, details=result)
 
 
 class PornZhGPUModel(BaseModelResource):
     """中文色情检测GPU模型."""
 
     def _load_model(self):
-        raise NotImplementedError('TODO')
+        try:
+            from llm_web_kit.model.porn_detector import \
+                XlmrModel as PronZhModel
+
+            return PronZhModel()
+        except Exception as e:
+            raise ModelInitException(f'Failed to init the zh porn model: {e}')
+
+    def get_resource_requirement(self):
+        # S2 cluster has 128 CPUs, 1TB memory, 8 GPUs
+        # so we can use 16 CPUs, 64GB memory, 1 GPU for this model
+        return ResourceRequirement(num_cpus=16, memory_GB=64, num_gpus=1)
 
     def get_batch_config(self) -> BatchProcessConfig:
-        raise NotImplementedError('TODO')
         return BatchProcessConfig(
             max_batch_size=128, optimal_batch_size=64, min_batch_size=8
         )
 
-    def predict_batch(self, contents: List[str]) -> List[float]:
-        raise NotImplementedError('TODO')
+    def predict_batch(self, contents: List[str]) -> List[dict]:
+        if not self.model:
+            raise RuntimeError('Model not initialized')
+        try:
+            # 色情模型本身支持批处理
+            results = self.model.predict(contents)
+            return [
+                {'porn_prob': result[self.model.get_output_key('prob')]}
+                for result in results
+            ]
+        except Exception as e:
+            raise RuntimeError(f'Prediction failed: {e}')
+
+    def convert_result_to_response(self, result: dict) -> ModelResponse:
+        # raise NotImplementedError
+        # TODO convert result to response ensure the threshold
+        return PornResponse(remained=result['porn_prob'] < 0.5, details=result)
 
 
 class PornPredictorImpl(BasePredictor):
     """色情检测预测器实现."""
 
-    def _create_models(self, language: str) -> ModelResource:
+    def _create_model(self, language: str) -> ModelResource:
         if language == 'en':
             return PornEnGPUModel()
         elif language == 'zh':
@@ -208,7 +264,7 @@ class PornPredictorImpl(BasePredictor):
             if batch_contents:
                 # 批量处理
                 probs = self.model.predict_batch(batch_contents)
-                responses = [PornResponse(probability=prob) for prob in probs]
+                responses = [self.model.convert_result_to_response(prob) for prob in probs]
         except Exception as e:
             raise ModelRuntimeException(f'Porn prediction failed: {e}')
         return responses
@@ -227,6 +283,7 @@ class ModelFactory:
     def create_predictor(cls, model_type: ModelType, language: str) -> BasePredictor:
         """创建预测器实例."""
         predictor_class = cls._predictor_registry.get(model_type)
+        print(predictor_class)
         if not predictor_class:
             raise ValueError(f'No predictor registered for type: {model_type}')
         return predictor_class(language=language)

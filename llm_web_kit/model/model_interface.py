@@ -17,7 +17,7 @@ class ModelRequest:
 class ModelResponse:
     """通用模型响应基类."""
 
-    probability: float
+    remained: bool
     details: Dict[str, Any] = None
 
 
@@ -66,27 +66,53 @@ class ResourceType(Enum):
     DEFAULT = 'default'
 
 
-class ResourceRequirement:
-    """资源需求配置."""
+# class ResourceRequirement:
+#     """资源需求配置."""
 
-    def __init__(self, resource_type: ResourceType = ResourceType.DEFAULT, num_cpus: int = 1, memory: int = 4 << 30):
-        self.resource_type = resource_type
+#     def __init__(self, resource_type: ResourceType = ResourceType.DEFAULT, num_cpus: int = 1, memory: int = 4 << 30):
+#         self.resource_type = resource_type
+#         self.num_cpus = num_cpus
+#         self.memory = memory
+
+#     def to_ray_resources(self) -> Dict:
+#         """转换为Ray资源配置."""
+#         resources = {
+#             'num_cpus': self.num_cpus,
+#             'memory': self.memory,
+#         }
+
+#         # 根据资源类型设置正确的资源配置
+#         if self.resource_type == ResourceType.CPU:
+#             resources['resources'] = {'cpu_only': 1}
+#         elif self.resource_type == ResourceType.GPU:
+#             # 使用 num_gpus 而不是在 resources 字典中设置
+#             resources['num_gpus'] = 0.25
+
+#         return resources
+
+
+class ResourceRequirement:
+    def __init__(self, num_cpus: float, memory_GB: float, num_gpus: float = 0.0):
         self.num_cpus = num_cpus
-        self.memory = memory
+        self.memory_GB = memory_GB
+        self.num_gpus = num_gpus
 
     def to_ray_resources(self) -> Dict:
-        """转换为Ray资源配置."""
-        resources = {
-            'num_cpus': self.num_cpus,
-            'memory': self.memory,
-        }
-
-        # 根据资源类型设置正确的资源配置
-        if self.resource_type == ResourceType.CPU:
-            resources['resources'] = {'cpu_only': 1}
-        elif self.resource_type == ResourceType.GPU:
-            # 使用 num_gpus 而不是在 resources 字典中设置
-            resources['num_gpus'] = 0.25
+        if self.num_gpus > 0:
+            resources = {
+                'num_cpus': self.num_cpus,
+                'memory': self.memory_GB * 2**30,
+                'num_gpus': self.num_gpus,
+            }
+        else:
+            # prefer to use CPU on CPU only node
+            # we set dummy resource "cpu_only" on CPU only node
+            # so set resources.cpu_only = 1 to ensure the task can be scheduled on CPU only node
+            resources = {
+                'num_cpus': self.num_cpus,
+                'memory': self.memory_GB * 2**30,
+                'resources': {'cpu_only': 1},
+            }
 
         return resources
 
@@ -105,7 +131,7 @@ class ModelResource(ABC):
         pass
 
     @abstractmethod
-    def predict_batch(self, contents: List[str]) -> List[float]:
+    def predict_batch(self, contents: List[str]) -> List[dict]:
         """批量预测."""
         pass
 
@@ -137,7 +163,9 @@ class ModelPredictor(ABC):
 class PoliticalPredictor(ModelPredictor):
     """涉政预测器接口."""
 
-    def predict_batch(self, requests: List[PoliticalRequest]) -> List[PoliticalResponse]:
+    def predict_batch(
+        self, requests: List[PoliticalRequest]
+    ) -> List[PoliticalResponse]:
         pass
 
 
