@@ -441,14 +441,6 @@ class CCMATH():
         ))
 
 
-class MathJax():
-    def __init__(self):
-        self.options = {}
-
-    def get_options(self, html: str):
-        pass
-
-
 if __name__ == '__main__':
     cm = CCMATH()
     print(cm.get_equation_type('<span>$$a^2 + b^2 = c^2$$</span>'))

@@ -162,14 +162,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # print(self._element_to_html(tree))
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
-    def process_ccmath_html_mathjax(self, cc_html: str, o_html: str, math_render: str, base_url: str) -> List[Tuple[str, str]]:
-        """处理mathjax有自定义标识符的数学公式."""
-        cm.url = base_url
-        tree = self._build_html_tree(cc_html)
-        if tree is None:
-            raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
-        pass
-
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
