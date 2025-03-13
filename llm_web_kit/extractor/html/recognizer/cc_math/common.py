@@ -105,6 +105,7 @@ latex_config = {
 MATH_MD_CUSTOM_CONFIG = {
     'mathhelpforum.com': [
         ['<br />', '\\<br />'],  # 使用双反斜杠
+        ['<br />', '<br />'],
     ],
 }
 
@@ -466,3 +467,4 @@ if __name__ == '__main__':
     print(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False))
     cm.url = 'mathhelpforum.com'
     print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))
+    print(cm.wrap_math_md_custom(r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />'))
