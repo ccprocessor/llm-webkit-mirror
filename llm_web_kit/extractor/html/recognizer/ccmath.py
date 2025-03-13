@@ -24,7 +24,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         super().__init__()
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[str, str]], raw_html: str) -> List[Tuple[str, str]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析数学公式元素.
 
         Args:
@@ -46,7 +46,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         return result
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -68,7 +68,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns:
             dict: content_list_node
         """
-        tree = self._build_html_tree(parsed_content)
+        # tree = self._build_html_tree(parsed_content)
+        tree = parsed_content
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {parsed_content}')
 
@@ -103,7 +104,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         else:
             raise HtmlMathRecognizerException(f'No ccmath element found in content: {parsed_content}')
 
-    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str) -> List[Tuple[str, str]]:
+    def process_ccmath_html(self, cc_html: HtmlElement, o_html: HtmlElement, math_render: str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """处理数学公式，将外层标签修改为 ccmath.
 
         Args:
@@ -114,7 +115,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
-        tree = self._build_html_tree(cc_html)
+        # tree = self._build_html_tree(cc_html)
+        tree = cc_html
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
 
@@ -159,7 +161,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
         # 打印处理后的html
         # print(self._element_to_html(tree))
-        return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
+        # return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
+        return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
 
 
 if __name__ == '__main__':

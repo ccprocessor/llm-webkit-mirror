@@ -279,6 +279,7 @@ class TestExtractorChain(unittest.TestCase):
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
+        # print("code_pre_mixed", result.get_content_list().to_mm_md())
         self.assertIn("""```
 this (DEFAULT_SERVER_NAME, DEFAULT_SERVER_PORT);
 ```

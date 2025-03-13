@@ -2,6 +2,7 @@ import os
 import unittest
 
 from llm_web_kit.extractor.html.recognizer.list import ListRecognizer
+from llm_web_kit.libs.html_utils import html_to_element
 
 
 class TestSimpleListRecognize(unittest.TestCase):
@@ -17,10 +18,10 @@ class TestSimpleListRecognize(unittest.TestCase):
             self.__complex_list_content = file.read()
 
     def test_simple_list(self):
-        html_part = self.__list_recognize.recognize('http://url.com', [(self.__simple_list_content, self.__complex_list_content)], self.__simple_list_content)
+        html_part = self.__list_recognize.recognize('http://url.com', [(html_to_element(self.__simple_list_content), html_to_element(self.__complex_list_content))], self.__simple_list_content)
         assert len(html_part) == 6
 
     def test_complex_list(self):
         # TODO: Fix this test
-        html_part = self.__list_recognize.recognize('http://url.com', [(self.__simple_list_content, self.__complex_list_content)], self.__complex_list_content)
+        html_part = self.__list_recognize.recognize('http://url.com', [(html_to_element(self.__simple_list_content), html_to_element(self.__complex_list_content))], self.__complex_list_content)
         assert len(html_part) == 6

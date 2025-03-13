@@ -4,7 +4,7 @@ from pathlib import Path
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
-from llm_web_kit.libs.html_utils import html_to_element
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 TEST_CASES = [
     # 基本公式测试用例
@@ -344,7 +344,7 @@ class TestMathRecognizer(unittest.TestCase):
             with self.subTest(input=test_case['input'], raw_html=test_case['raw_html']):
                 output_html = self.math_recognizer.recognize(
                     'https://www.baidu.com',
-                    test_case['input'],
+                    [(html_to_element(test_case['input'][0][0]), html_to_element(test_case['input'][0][1]))],
                     test_case['raw_html']
                 )
                 print(output_html)
@@ -352,9 +352,7 @@ class TestMathRecognizer(unittest.TestCase):
                 self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
-                    print(output_html[i][0])
-                    print(expect)
-                    self.assertEqual(output_html[i][0], expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
+                    self.assertEqual(element_to_html(output_html[i][0]), expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
 
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
@@ -362,16 +360,19 @@ class TestMathRecognizer(unittest.TestCase):
             # print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
-            parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            parts = self.math_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
             # print(parts)
             # 将parts列表中第一个元素拼接保存到文件，带随机数
             # import random
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
+            print(parts)
             # 检查行间公式抽取正确性
-            parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
-            print(len(parts))
+            new_parts = []
+            for part in parts:
+                new_parts.append((element_to_html(part[0]), element_to_html(part[1])))
+            parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
             expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
             self.assertEqual(len(parts), len(expect_formulas))
@@ -390,8 +391,6 @@ class TestMathRecognizer(unittest.TestCase):
             if test_case.get('expected_inline', None):
                 print('expected_inline::::::::', test_case['expected_inline'])
                 parts = [part[0] for part in parts if CCTag.CC_MATH_INLINE in part[0]]
-                print(len(parts))
-                print(parts)
 
     def write_to_html(self, answers, file_name):
         file_name = file_name.split('.')[0]
@@ -405,9 +404,11 @@ class TestMathRecognizer(unittest.TestCase):
             with self.subTest(input=test_case['input']):
                 output_node = self.math_recognizer.to_content_list_node(
                     test_case['input'][0],
-                    test_case['input'][1],
+                    html_to_element(test_case['input'][1]),
                     test_case['input'][2]
                 )
+                print('output_node::::::::', output_node)
+                print(test_case['expected'])
                 self.assertEqual(output_node, test_case['expected'])
 
         # 测试没有ccmath标签的情况
@@ -419,7 +420,7 @@ class TestMathRecognizer(unittest.TestCase):
         with self.assertRaises(HtmlMathRecognizerException) as exc_info:
             self.math_recognizer.to_content_list_node(
                 invalid_content[0],
-                invalid_content[1],
+                html_to_element(invalid_content[1]),
                 invalid_content[2]
             )
         self.assertIn('No ccmath element found in content', str(exc_info.exception))

@@ -2,14 +2,14 @@ import json
 import string
 from typing import List, Tuple
 
-from lxml import etree
+from lxml import html
 from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import element_to_html
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -42,27 +42,28 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
     """解析文本段落元素."""
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
         """
         把文本段落元素转换为content list node.
         Args:
             base_url:
-            parsed_content:
+            parsed_content: 可能是字符串或HtmlElement对象
             raw_html_segment:
 
         Returns:
 
         """
-        el = self._build_html_tree(parsed_content)
+        # 如果是字符串则转换为HtmlElement，否则直接使用
+        el = parsed_content
         node = {
             'type': DocElementType.PARAGRAPH,
-            'raw_content': el.attrib.get('html', ''),
+            'raw_content': raw_html_segment,
             'content': json.loads(el.text),
         }
         return node
 
     @override
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement | str, HtmlElement | str]], raw_html:str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析文本段落元素.
 
         Args:
@@ -73,31 +74,34 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         Returns:
         """
         new_html_lst = []
-        for html, raw_html in main_html_lst:
-            if self.is_cc_html(html):
-                new_html_lst.append((html, raw_html))
+        for html_element, raw_html_element in main_html_lst:
+            # 如果是字符串则转换为 HtmlElement
+            # html_element = html_to_element(html) if isinstance(html, str) else html
+            # raw_html_element = html_to_element(raw_html) if isinstance(raw_html, str) else raw_html
+            if self.is_cc_html(html_element):
+                new_html_lst.append((html_element, raw_html_element))
             else:
-                root_el = self._build_html_tree(html)
-                lst = list(self.__extract_paragraphs(root_el))
-                # 然后对lst[Element, raw_html] 进行处理. 提出Element里的文字，做成<<cctext>>标签
+                lst = list(self.__extract_paragraphs(html_element))
                 new_lst = self.__to_cctext_lst(lst)
                 new_html_lst.extend(new_lst)
         return new_html_lst
 
-    def __to_cctext_lst(self, lst: List[Tuple[HtmlElement, str]]) -> List[Tuple[str, str]]:
+    def __to_cctext_lst(self, lst: List[Tuple[HtmlElement | str, HtmlElement | str]]) -> List[Tuple[HtmlElement, HtmlElement]]:
         """将lst[Element, raw_html] 进行处理. 提出Element里的文字，做成<<cctext>>标签.
 
         Args:
-            lst: List[Tuple[HtmlElement, str]]: Element和raw_html组成的列表
+            lst: List[Tuple[HtmlElement | str, HtmlElement | str]]: Element和raw_html组成的列表
         """
         new_lst = []
         for el, raw_html in lst:
-            para_text = self.__get_paragraph_text(el)
-            if para_text:
-                cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=raw_html)
-                cc_node_html = self._element_to_html(cctext_el)
-                new_lst.append((cc_node_html, raw_html))
+            # 如果是字符串则转换为 HtmlElement
+            el_element = html_to_element(el) if isinstance(el, str) else el
+            raw_html_element = html_to_element(raw_html) if isinstance(raw_html, str) else raw_html
 
+            para_text = self.__get_paragraph_text(el_element)
+            if para_text:
+                cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html(raw_html_element))
+                new_lst.append((cctext_el, raw_html_element))
         return new_lst
 
     def __combine_text(self, text1:str, text2:str, lang='en') -> str:
@@ -169,7 +173,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             解析后的文本段落元素
         """
         path: List[HtmlElement] = []
-        parser = etree.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+        parser = html.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
 
         def is_contain_readable_text(text):
             return text.strip() if text else text
@@ -224,8 +228,8 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 if has_direct_text(sub_elem) or (sub_elem.tag == 'p' and has_text(sub_elem)):
                     rebuild_path()
                     path[-1].append(copy_helper(sub_elem))
-                    yield path[0], element_to_html(path[0])
-
+                    # yield path[0], element_to_html(path[0])
+                    yield path[0], path[0]
                     # detach the yielded tree
                     rebuild_path()
                     continue

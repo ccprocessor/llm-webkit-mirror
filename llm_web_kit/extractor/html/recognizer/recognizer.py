@@ -28,7 +28,7 @@ class BaseHTMLElementRecognizer(ABC):
 
     """基本的元素解析类."""
     @abstractmethod
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析html中的元素.
 
         Args:
@@ -37,11 +37,12 @@ class BaseHTMLElementRecognizer(ABC):
             raw_html: 原始完整的html
 
         Returns:
+            List[Tuple[HtmlElement, HtmlElement]]: 处理后的HTML元素列表
         """
         raise NotImplementedError
 
     @abstractmethod
-    def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
+    def to_content_list_node(self, base_url:str, parsed_content: HtmlElement, raw_html_segment:str) -> dict:
         """将content转换成content_list_node.
         每种类型的html元素都有自己的content-list格式：参考 docs/specification/output_format/content_list_spec.md
         例如代码的返回格式：
@@ -114,7 +115,7 @@ class BaseHTMLElementRecognizer(ABC):
         replace_element(element, cc_element)
 
     @staticmethod
-    def html_split_by_tags(html_segment: str, split_tag_names:str | list) -> List[Tuple[str,str]]:
+    def html_split_by_tags(root: HtmlElement, split_tag_names:str | list) -> List[Tuple[HtmlElement,HtmlElement]]:
         """根据split_tag_name将html分割成不同的部分.
 
         Args:
@@ -122,7 +123,7 @@ class BaseHTMLElementRecognizer(ABC):
             split_tag_names: str|list: 分割标签名, 例如 'p' 或者 'div' 或者 ['p', 'div']
         """
         copy_attri = True  # 是否copy 父节点的属性
-        root = html_to_element(html_segment)
+        # root = html_to_element(html_segment)
         if isinstance(split_tag_names, str):  # 如果参数是str，转换成list
             split_tag_names = [split_tag_names]
 
@@ -179,7 +180,8 @@ class BaseHTMLElementRecognizer(ABC):
             for sub_elem in elem:
                 if sub_elem.tag in split_tag_names:
                     # previous elements
-                    nodes = raw_nodes = element_to_html(path[0])
+                    # nodes = raw_nodes = element_to_html(path[0])
+                    nodes = raw_nodes = path[0]
                     if not __is_element_text_empty(path[0]):
                         yield nodes, raw_nodes
 
@@ -191,7 +193,11 @@ class BaseHTMLElementRecognizer(ABC):
                     if not html_source_segment:
                         mylogger.error(f'{sub_elem.tag} has no html attribute')
                         # TODO raise exception
-                    nodes, raw_nodes = element_to_html(path[0]), html_source_segment
+                    # nodes, raw_nodes = element_to_html(path[0]), html_source_segment
+                    if html_source_segment:
+                        nodes, raw_nodes = path[0], html_to_element(html_source_segment)
+                    else:
+                        nodes, raw_nodes = path[0], None
                     # if not __is_element_text_empty(path[0]):
                     yield nodes, raw_nodes  # 这个地方无需检查是否为空，因为这个是分割元素，必须返还
 
@@ -208,7 +214,8 @@ class BaseHTMLElementRecognizer(ABC):
                 copied.tail = elem.tail
 
             if not path:
-                nodes = raw_nodes = element_to_html(copied)
+                nodes = raw_nodes = copied
+                # raw_nodes = element_to_html(copied)
                 if not __is_element_text_empty(copied):
                     yield nodes, raw_nodes
 
@@ -216,18 +223,18 @@ class BaseHTMLElementRecognizer(ABC):
         return rtn
 
     @staticmethod
-    def is_cc_html(html: str, tag_name: str | list = None) -> bool:
+    def is_cc_html(el: HtmlElement, tag_name: str | list = None) -> bool:
         """判断html片段是否是cc标签.
 
         判断的时候由于自定义ccmath等标签可能会含有父标签，因此要逐层判断tagname. 含有父html
         完整路径的如：<html><body><ccmath>...</ccmath></body></html>，这种情况也会被识别为cc标签.
-        TODO 保证进来的cc标签没有父标签，只有一个根标签。
+
         Args:
-            html: str: html片段
+            el: str|HtmlElement: html片段或HtmlElement对象
             tag_name: str|list: cc标签，如ccmath, cccode, 如果指定了那么就只检查这几个标签是否在html里，否则检查所有cc标签
         """
         # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
-        el = html_to_element(html)
+        # el = html_to_element(html)
         if el is None:
             return False
 

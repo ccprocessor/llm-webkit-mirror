@@ -1,15 +1,17 @@
 from typing import List, Tuple
 
+from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
+from llm_web_kit.libs.doc_element_type import DocElementType
 
 
 class AudioRecognizer(BaseHTMLElementRecognizer):
     """解析音频元素."""
     @override
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement,HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement,HtmlElement]]:
         """父类，解析音频元素.
 
         Args:
@@ -22,5 +24,24 @@ class AudioRecognizer(BaseHTMLElementRecognizer):
         raise NotImplementedError
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
-        raise NotImplementedError
+    def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
+        """
+        把音频元素转换为content list node.
+        Args:
+            base_url:
+            parsed_content:
+            raw_html_segment:
+
+        Returns:
+
+        """
+        node = {
+            'type': DocElementType.AUDIO,
+            'raw_content': parsed_content.attrib.get('html', ''),
+            'content': {
+                'url': parsed_content.attrib.get('url', ''),
+                'path': parsed_content.attrib.get('path', ''),
+                'data': parsed_content.attrib.get('data', '')
+            }
+        }
+        return node
