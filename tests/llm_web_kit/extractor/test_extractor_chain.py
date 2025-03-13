@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 19
+        assert len(self.data_json) == 20
 
         # Config for HTML extraction
         self.config = {

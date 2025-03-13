@@ -10,10 +10,8 @@ from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.standard_utils import json_loads
 from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
                                                             is_pure_en_word)
-from llm_web_kit.model.resource_utils.download_assets import (
-    CACHE_DIR, download_auto_file)
-from llm_web_kit.model.resource_utils.singleton_resource_manager import \
-    singleton_resource_manager
+from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
+                                              singleton_resource_manager)
 
 xyz_language_lst = [
     'ar',
@@ -257,5 +255,5 @@ def unsafe_words_filter_overall(
         unsafe_range = ('L1',)
     else:
         unsafe_range = ('L1', 'L2')
-    hit = (unsafe_word_min_level in unsafe_range)
+    hit = unsafe_word_min_level in unsafe_range
     return {'hit_unsafe_words': hit}

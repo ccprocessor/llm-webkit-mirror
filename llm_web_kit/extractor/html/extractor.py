@@ -267,7 +267,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         if not node:
             raise HtmlFileExtractorException('node is empty')
         node_type = node.get('type')
-        valid_types = {DocElementType.LIST, DocElementType.CODE, DocElementType.EQUATION_INTERLINE, DocElementType.IMAGE, DocElementType.TABLE, DocElementType.IMAGE, DocElementType.PARAGRAPH}
+        valid_types = {DocElementType.TITLE, DocElementType.LIST, DocElementType.CODE, DocElementType.EQUATION_INTERLINE, DocElementType.IMAGE, DocElementType.TABLE, DocElementType.IMAGE, DocElementType.PARAGRAPH}
         if node_type not in valid_types:
             raise HtmlFileExtractorException(f'Invalid node type: {node_type}')
         # 检查列表类型的节点

@@ -2,16 +2,17 @@ from typing import List, Union
 
 import commentjson as json
 
-from llm_web_kit.exception.exception import (ExtractorChainConfigException,
+from llm_web_kit.exception.exception import (ExtractorChainBaseException,
+                                             ExtractorChainConfigException,
                                              ExtractorChainInputException,
                                              ExtractorInitException,
-                                             ExtractorNotFoundException)
+                                             ExtractorNotFoundException,
+                                             LlmWebKitBaseException)
 from llm_web_kit.extractor.extractor import AbstractExtractor
 from llm_web_kit.extractor.post_extractor import AbstractPostExtractor
 from llm_web_kit.extractor.pre_extractor import AbstractPreExtractor
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.class_loader import load_python_class_by_name
-from llm_web_kit.libs.logger import mylogger
 
 
 # ##########################################################
@@ -55,11 +56,19 @@ class ExtractorChain:
                 data = post_ext.post_extract(data)
 
         except KeyError as e:
-            mylogger.error(f'Required field missing in input data: {str(e)}')
-            raise ExtractorChainInputException(f'Required field missing in input data: {str(e)}')
-        except Exception as e:
-            mylogger.error(f'Error during extraction: {str(e)}')
+            exc = ExtractorChainInputException(f'Required field missing: {str(e)}')
+            exc.dataset_name = data.get_dataset_name()
+            raise exc
+        except ExtractorChainBaseException as e:
+            e.dataset_name = data.get_dataset_name()
             raise
+        except LlmWebKitBaseException as e:
+            e.dataset_name = data.get_dataset_name()
+            raise
+        except Exception as e:
+            wrapped = ExtractorChainBaseException(f'Error during extraction: {str(e)}')
+            wrapped.dataset_name = data.get_dataset_name()
+            raise wrapped from e
 
         return data
 

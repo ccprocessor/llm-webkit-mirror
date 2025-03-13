@@ -46,3 +46,4 @@ output/
 coverage.xml
 
 llm_web_kit.egg-info/*
+.llm-web-kit.jsonc
