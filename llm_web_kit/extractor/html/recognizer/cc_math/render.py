@@ -41,7 +41,7 @@ class BaseMathRender():
         self.render_type = None
 
     @abstractmethod
-    def get_options(self, tree: HtmlElement) -> Dict[str, Any]:
+    def get_options(self, html: str) -> Dict[str, Any]:
         """从HTML中提取渲染器选项.
 
         Args:
@@ -80,7 +80,6 @@ class BaseMathRender():
         for link in tree.iter('link'):
             if link.get('href') and 'katex' in link.get('href', '').lower():
                 render = KaTeXRender()
-                render.get_options(link)
                 return render
         # 查找head标签
         # head = tree.find('head')
@@ -90,7 +89,6 @@ class BaseMathRender():
             src = script.get('src', '').lower()
             if src and ('mathjax' in src or 'asciimath' in src):
                 render = MathJaxRender()
-                render.get_options(script)
                 return render
         return None
 
@@ -410,7 +408,7 @@ class MathJaxRender(BaseMathRender):
             'version': ''
         }
 
-    def get_options(self, tree: HtmlElement) -> Dict[str, Any]:
+    def get_options(self, html: str) -> Dict[str, Any]:
         """从HTML中提取MathJax选项.
 
         Args:
@@ -419,6 +417,7 @@ class MathJaxRender(BaseMathRender):
         Returns:
             Dict[str, Any]: MathJax选项字典
         """
+        tree = html_to_element(html)
         if tree is None:
             return self.options
 
@@ -570,7 +569,7 @@ class KaTeXRender(BaseMathRender):
             'delimiters': []
         }
 
-    def get_options(self, tree: HtmlElement) -> Dict[str, Any]:
+    def get_options(self, html: str) -> Dict[str, Any]:
         """从HTML中提取KaTeX选项.
 
         Args:
@@ -579,6 +578,7 @@ class KaTeXRender(BaseMathRender):
         Returns:
             Dict[str, Any]: KaTeX选项字典
         """
+        tree = html_to_element(html)
         if tree is None:
             return self.options
 
@@ -887,33 +887,6 @@ if __name__ == '__main__':
 
     # 查找处理后的ccmath节点
     ccmath_nodes = real_tree.xpath('.//*[self::ccmath-inline or self::ccmath-interline]')
-    print(f'\n找到 {len(ccmath_nodes)} 个数学公式节点:')
-    for i, node in enumerate(ccmath_nodes, 1):
-        print(f'{i}. <{node.tag}> {node.text}')
-
-    # 测试$$格式的公式
-    print('\n专门测试$$格式的公式:')
-    dollar_text = '''
-    <p>This is a display formula: $$F = G\\frac{m_1 m_2}{r^2}$$</p>
-    '''
-
-    dollar_tree = html_to_element(dollar_text)
-    mathjax_render = MathJaxRender()
-
-    # 处理前的HTML
-    print('处理前的HTML:')
-    print(element_to_html(dollar_tree))
-
-    # 使用find_math处理数学公式
-    mathjax_render.find_math(dollar_tree)
-
-    # 处理后的HTML
-    print('\n处理后的HTML:')
-    processed_html = element_to_html(dollar_tree)
-    print(processed_html)
-
-    # 查找处理后的ccmath节点
-    ccmath_nodes = dollar_tree.xpath('.//*[self::ccmath-inline or self::ccmath-interline]')
     print(f'\n找到 {len(ccmath_nodes)} 个数学公式节点:')
     for i, node in enumerate(ccmath_nodes, 1):
         print(f'{i}. <{node.tag}> {node.text}')
