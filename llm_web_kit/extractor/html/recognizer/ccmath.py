@@ -9,7 +9,7 @@ from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
-from llm_web_kit.extractor.html.recognizer.cc_math.render import (
+from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -44,6 +44,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if not self.is_cc_html(cc_html):
                 # 对于自定义的mathjax，需要单独处理
                 if math_render and math_render.render_type == MathRenderType.MATHJAX and math_render.is_customized_options():
+                    math_render.get_options(raw_html)
+                    print(f'处理mathjax，有自定义配置, options: {math_render.options}')
                     result.extend(self.process_mathjax_html(cc_html, o_html, math_render, base_url))
                 else:
                     result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
