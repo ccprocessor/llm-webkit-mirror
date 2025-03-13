@@ -234,6 +234,14 @@ class HtmlMathRecognizerException(HtmlRecognizerException):
         super().__init__(custom_message, error_code)
 
 
+class HtmlMathMathjaxRenderRecognizerException(HtmlRecognizerException):
+    """Exception raised during math render."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlMathMathjaxRenderRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
 class HtmlCodeRecognizerException(HtmlRecognizerException):
     """Exception raised during code content recognition."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):

@@ -1,12 +1,9 @@
 import re
 from typing import Any, Dict, List
 
-from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
-from llm_web_kit.libs.html_utils import (HtmlElement, build_cc_element,
-                                         element_to_html, html_to_element,
-                                         replace_element)
+from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
 
 
 class KaTeXRender(BaseMathRender):
@@ -24,6 +21,10 @@ class KaTeXRender(BaseMathRender):
             'version': '',
             'delimiters': []
         }
+
+    def get_render_type(self) -> str:
+        """获取渲染器类型."""
+        return self.render_type
 
     def get_options(self, html: str) -> Dict[str, Any]:
         """从HTML中提取KaTeX选项.
@@ -132,94 +133,95 @@ class KaTeXRender(BaseMathRender):
         Args:
             root: HTML根节点
         """
+        raise NotImplementedError('KaTeXRender.find_math is not implemented')
         # 获取分隔符配置
-        delimiters = self.options.get('delimiters', [])
-        if not delimiters:
-            # 使用常见的默认分隔符
-            delimiters = [
-                {'left': '$$', 'right': '$$', 'display': True},
-                {'left': '$', 'right': '$', 'display': False},
-                {'left': '\\(', 'right': '\\)', 'display': False},
-                {'left': '\\[', 'right': '\\]', 'display': True}
-            ]
+        # delimiters = self.options.get('delimiters', [])
+        # if not delimiters:
+        #     # 使用常见的默认分隔符
+        #     delimiters = [
+        #         {'left': '$$', 'right': '$$', 'display': True},
+        #         {'left': '$', 'right': '$', 'display': False},
+        #         {'left': '\\(', 'right': '\\)', 'display': False},
+        #         {'left': '\\[', 'right': '\\]', 'display': True}
+        #     ]
 
-        # 分离行内和行间分隔符
-        inline_delimiters = []
-        display_delimiters = []
+        # # 分离行内和行间分隔符
+        # inline_delimiters = []
+        # display_delimiters = []
 
-        for delimiter in delimiters:
-            start = delimiter.get('left', '')
-            end = delimiter.get('right', '')
-            is_display = delimiter.get('display', False)
+        # for delimiter in delimiters:
+        #     start = delimiter.get('left', '')
+        #     end = delimiter.get('right', '')
+        #     is_display = delimiter.get('display', False)
 
-            if start and end:
-                if is_display:
-                    display_delimiters.append([start, end])
-                else:
-                    inline_delimiters.append([start, end])
+        #     if start and end:
+        #         if is_display:
+        #             display_delimiters.append([start, end])
+        #         else:
+        #             inline_delimiters.append([start, end])
 
-        # 处理所有文本节点
-        self._process_text_nodes(
-            root, inline_delimiters, display_delimiters
-        )
+        # # 处理所有文本节点
+        # self._process_text_nodes(
+        #     root, inline_delimiters, display_delimiters
+        # )
 
-        # 处理特殊的KaTeX元素
-        for elem in root.xpath('.//*[@class="katex"]'):
-            math_text = elem.get('data-katex-expression')
-            if math_text:
-                is_display = 'katex-display' in elem.get('class', '')
-                tag_name = 'ccmath-interline' if is_display else 'ccmath-inline'
+        # # 处理特殊的KaTeX元素
+        # for elem in root.xpath('.//*[@class="katex"]'):
+        #     math_text = elem.get('data-katex-expression')
+        #     if math_text:
+        #         is_display = 'katex-display' in elem.get('class', '')
+        #         tag_name = 'ccmath-interline' if is_display else 'ccmath-inline'
 
-                # 创建新节点，使用build_cc_element
-                math_node = build_cc_element(
-                    html_tag_name=tag_name,
-                    text=math_text,
-                    tail=elem.tail or '',
-                    type=MathType.LATEX,  # 使用MathType枚举
-                    by=self.render_type,
-                    html=element_to_html(elem)  # 使用完整的原始HTML
-                )
-                # 替换原节点
-                replace_element(elem, math_node)
+        #         # 创建新节点，使用build_cc_element
+        #         math_node = build_cc_element(
+        #             html_tag_name=tag_name,
+        #             text=math_text,
+        #             tail=elem.tail or '',
+        #             type=MathType.LATEX,  # 使用MathType枚举
+        #             by=self.render_type,
+        #             html=element_to_html(elem)  # 使用完整的原始HTML
+        #         )
+        #         # 替换原节点
+        #         replace_element(elem, math_node)
 
 
-if __name__ == '__main__':
-    # KaTeX示例
-    katex_html = '''
-    <html>
-    <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                renderMathInElement(document.body, {
-                    delimiters: [
-                        {left: "$$", right: "$$", display: true},
-                        {left: "$", right: "$", display: false},
-                        {left: "\\\\(", right: "\\\\)", display: false},
-                        {left: "\\\\[", right: "\\\\]", display: true}
-                    ],
-                    throwOnError: false,
-                    errorColor: "#cc0000"
-                });
-            });
-        </script>
-    </head>
-    <body>
-        <p>Inline math: $E=mc^2$</p>
-        <p>Display math: $$F = G\\frac{m_1 m_2}{r^2}$$</p>
-    </body>
-    </html>
-    '''
-    print('\nTesting KaTeX detection:')
-    katex_tree = html_to_element(katex_html)
-    render_type = BaseMathRender.detect_render_type(katex_tree)
-    print(f'Detected render type: {render_type}')
+# if __name__ == '__main__':
+#     # KaTeX示例
+#     katex_html = '''
+#     <html>
+#     <head>
+#         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+#         <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+#         <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+#         <script>
+#             document.addEventListener("DOMContentLoaded", function() {
+#                 renderMathInElement(document.body, {
+#                     delimiters: [
+#                         {left: "$$", right: "$$", display: true},
+#                         {left: "$", right: "$", display: false},
+#                         {left: "\\\\(", right: "\\\\)", display: false},
+#                         {left: "\\\\[", right: "\\\\]", display: true}
+#                     ],
+#                     throwOnError: false,
+#                     errorColor: "#cc0000"
+#                 });
+#             });
+#         </script>
+#     </head>
+#     <body>
+#         <p>Inline math: $E=mc^2$</p>
+#         <p>Display math: $$F = G\\frac{m_1 m_2}{r^2}$$</p>
+#     </body>
+#     </html>
+#     '''
+#     print('\nTesting KaTeX detection:')
+#     katex_tree = html_to_element(katex_html)
+#     render_type = BaseMathRender.detect_render_type(katex_tree)
+#     print(f'Detected render type: {render_type}')
 
-    render = BaseMathRender.create_render(katex_tree)
-    if render:
-        options = render.get_options(katex_tree)
-        print(f'KaTeX options: {options}')
-    else:
-        print('No renderer detected')
+#     render = BaseMathRender.create_render(katex_tree)
+#     if render:
+#         options = render.get_options(katex_tree)
+#         print(f'KaTeX options: {options}')
+#     else:
+#         print('No renderer detected')

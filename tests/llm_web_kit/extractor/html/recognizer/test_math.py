@@ -187,6 +187,13 @@ TEST_CASES_HTML = [
     },
     {
         'input': [
+            'assets/ccmath/math_physicsforums.html',
+        ],
+        'base_url': 'https://www.physicsforums.com/threads/probability-theoretic-inequality.246150/',
+        'expected': 'assets/ccmath/math_physicsforums_1.html'
+    },
+    {
+        'input': [
             'assets/ccmath/math_physicsforums_2.html',
         ],
         'base_url': 'https://physicshelpforum.com/t/latex-upgrade-physics-forum-powered-by-mathjax-v3.17489/',
