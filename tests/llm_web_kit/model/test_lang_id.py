@@ -125,7 +125,7 @@ def test_decide_language_func():
     lang_detect.version = '176.bin'
     lang_detect.predict.return_value = (['__label__en', '__label__zh'], [0.6, 0.4])
     result = decide_language_func('test text', lang_detect)
-    assert result == {'language': 'en', 'language_details': None}
+    assert result == {'language': 'en', 'language_details': 'not_defined'}
 
     # Test for 218.bin version
     lang_detect.version = '218.bin'
@@ -135,7 +135,7 @@ def test_decide_language_func():
 
     # Test for empty string
     result = decide_language_func('', lang_detect)
-    assert result == {'language': 'empty', 'language_details': None}
+    assert result == {'language': 'empty', 'language_details': 'empty'}
 
 
 def test_update_language_by_str():
