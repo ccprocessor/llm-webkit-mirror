@@ -61,12 +61,6 @@ class MathType:
     HTMLMATH = 'htmlmath'  # sub, sup, etc.
 
 
-# 数学公式渲染器
-class MathRender:
-    MATHJAX = 'mathjax'
-    KATEX = 'katex'
-
-
 # node.text匹配结果：
 class MathMatchRes:
     ALLMATCH = 'all_match'
@@ -194,31 +188,6 @@ class CCMATH():
     def extract_asciimath(self, s: str) -> str:
         parsed = asciimath2tex.translate(s)
         return parsed
-
-    def get_math_render(self, html: str) -> str:
-        """获取数学公式渲染器.
-        示例:
-        MathJax:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
-        Katex:
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-        """
-        tree = html_to_element(html)
-        if tree is None:
-            return None
-        # 检查 KaTeX
-        for link in tree.iter('link'):
-            if link.get('href') and 'katex' in link.get('href', '').lower():
-                return MathRender.KATEX
-        # 查找head标签
-        # head = tree.find('head')
-        # if head is not None:
-        # 检查 MathJax
-        for script in tree.iter('script'):
-            src = script.get('src', '').lower()
-            if src and ('mathjax' in src or 'asciimath' in src):
-                return MathRender.MATHJAX
-        return None
 
     def get_equation_type(self, html: str) -> List[Tuple[str, str]]:
         """根据latex_config判断数学公式是行内还是行间公式.
