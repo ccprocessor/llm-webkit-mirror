@@ -117,18 +117,35 @@ class BaseMathRender():
         if element.text:
             # 处理行间公式（优先处理，因为可能包含行内公式）
             for start, end in display_delimiters:
-                element.text = self._replace_math(
-                    element, element.text, start, end, True
-                )
+                # 循环处理所有匹配的公式
+                has_match = True
+                while has_match and element.text:
+                    # 检查是否还有匹配的公式
+                    pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                    has_match = re.search(pattern, element.text, re.DOTALL) is not None
+                    if has_match:
+                        element.text = self._replace_math(
+                            element, element.text, start, end, True
+                        )
 
             # 处理行内公式
             for start, end in inline_delimiters:
-                element.text = self._replace_math(
-                    element, element.text, start, end, False
-                )
+                # 循环处理所有匹配的公式
+                has_match = True
+                while has_match and element.text:
+                    # 检查是否还有匹配的公式
+                    pattern = f'{re.escape(start)}.*?{re.escape(end)}'
+                    has_match = re.search(pattern, element.text, re.DOTALL) is not None
+                    if has_match:
+                        element.text = self._replace_math(
+                            element, element.text, start, end, False
+                        )
+
+        # 获取子节点的副本，以避免在迭代过程中修改列表
+        children = list(element)
 
         # 递归处理子节点
-        for child in list(element):  # 创建副本以避免迭代时修改
+        for child in children:
             self._process_text_nodes(
                 child, inline_delimiters, display_delimiters
             )
@@ -183,6 +200,7 @@ class BaseMathRender():
         Returns:
             str: 处理后的文本
         """
+        print(f"处理文本: '{text}'")
         if not text or not start or not end:
             return text
 
