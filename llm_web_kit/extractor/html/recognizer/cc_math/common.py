@@ -147,6 +147,8 @@ class CCMATH():
 
     def wrap_math_md(self, s):
         """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
+        if not s:
+            return s
         s = s.strip()
         if s.startswith('$$') and s.endswith('$$'):
             return s.replace('$$', '').strip()
