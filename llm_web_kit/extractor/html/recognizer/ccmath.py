@@ -14,14 +14,13 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import iter_node
 
-cm = CCMATH()
-
 
 class MathRecognizer(BaseHTMLElementRecognizer):
     """解析数学公式元素."""
 
     def __init__(self):
         super().__init__()
+        self.cm = CCMATH()
 
     @override
     def recognize(self, base_url: str, main_html_lst: List[Tuple[str, str]], raw_html: str) -> List[Tuple[str, str]]:
@@ -35,8 +34,9 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         Returns: main_html_lst中发现有公式，则返回处理后的元素，标签更新为ccmath，否则原样返回.
         """
         result = []
+        self.cm.url = base_url
         # 获取数学公式渲染器
-        math_render = cm.get_math_render(raw_html)
+        math_render = self.cm.get_math_render(raw_html)
         for cc_html, o_html in main_html_lst:
             if not self.is_cc_html(cc_html):
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
@@ -77,7 +77,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         if len(inter_ele) > 0:
             # 获取math_content
             math_content = inter_ele[0].text
-            math_content = cm.wrap_math_md(math_content)
+            math_content = self.cm.wrap_math_md(math_content)
 
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
@@ -114,7 +114,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
-        cm.url = base_url
         tree = self._build_html_tree(cc_html)
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
@@ -128,7 +127,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
             if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
-                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+                tag_common_modify.modify_tree(self.cm, math_render, original_html, node, parent)
 
             # script[type="math/tex"]
             # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
@@ -136,12 +135,12 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # math tags
             if node.tag == 'math' or node.tag.endswith(':math'):
-                tag_math.modify_tree(cm, math_render, original_html, node, parent)
+                tag_math.modify_tree(self.cm, math_render, original_html, node, parent)
 
             # script[type="math/asciimath"]
             # if node.tag == 'script' and node.get('type') == 'math/asciimath':
             if node.tag in ('p','div') and node.text and '`' in node.text:
-                tag_asciimath.modify_tree(cm, math_render, original_html, node, parent)
+                tag_asciimath.modify_tree(self.cm, math_render, original_html, node, parent)
 
             # Remove any .MathJax_Preview spans
             if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
@@ -149,15 +148,15 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # img中的latex
             if node.tag == 'img':
-                tag_img.modify_tree(cm, math_render, original_html, node, parent)
+                tag_img.modify_tree(self.cm, math_render, original_html, node, parent)
 
             # span.katex
             if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
-                tag_script.modify_tree(cm, math_render, original_html, node, parent)
+                tag_script.modify_tree(self.cm, math_render, original_html, node, parent)
 
             # 14. 只处理只有一层的p标签
             if node.tag == 'p' and len(node.getchildren()) == 0:
-                tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+                tag_common_modify.modify_tree(self.cm, math_render, original_html, node, parent)
         # 打印处理后的html
         # print(self._element_to_html(tree))
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
