@@ -149,16 +149,16 @@ class CCMATH():
         """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
         s = s.strip()
         if s.startswith('$$') and s.endswith('$$'):
-            return s.replace('$$', '')
+            return s.replace('$$', '').strip()
         if s.startswith('$') and s.endswith('$'):
-            return s.replace('$', '')
+            return s.replace('$', '').strip()
         if s.startswith('\\(') and s.endswith('\\)'):
-            return s.replace('\\(', '').replace('\\)', '')
+            return s.replace('\\(', '').replace('\\)', '').strip()
         if s.startswith('\\[') and s.endswith('\\]'):
-            return s.replace('\\[', '').replace('\\]', '')
+            return s.replace('\\[', '').replace('\\]', '').strip()
         if s.startswith('`') and s.endswith('`'):
-            return s.replace('`', '')
-        return s
+            return s.replace('`', '').strip()
+        return s.strip()
 
     def wrap_math_space(self, s):
         """转义空格."""
@@ -381,7 +381,7 @@ class CCMATH():
                 math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
                 wrapped_text = func(math_text) if func else math_text
                 wrapped_text = self.wrap_math_md(wrapped_text)
-                if not wrapped_text:
+                if not wrapped_text or len(wrapped_text) == 0:
                     return match
                 new_span = build_cc_element(
                     html_tag_name=new_tag,
