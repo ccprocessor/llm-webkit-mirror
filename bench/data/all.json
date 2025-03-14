@@ -239,6 +239,12 @@
         "groundtruth_filepath":"groundtruth/math_mathhelpforum_1.jsonl",
         "layout_type": "forum"
     },
+    "math_mathhelpforum_2": {
+        "url": "http://mathhelpforum.com/differential-geometry/82966-continuous-functions.html",
+        "origin_filepath":"origin/math_mathhelpforum_2.html",
+        "groundtruth_filepath":"groundtruth/math_mathhelpforum_2.jsonl",
+        "layout_type": "forum"
+    },
     "math_stackexchange_1": {
         "url": "https://math.stackexchange.com/questions/458323/is-8327-1-a-prime-number?answertab=active",
         "origin_filepath":"origin/math_stackexchange_1.html",

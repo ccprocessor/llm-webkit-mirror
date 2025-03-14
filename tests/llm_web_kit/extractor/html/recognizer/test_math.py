@@ -328,7 +328,15 @@ TEST_WRAP_MATH_MD = [
         'input': '',
         'expected': ''
     },
-
+    {
+        'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
+        'url': 'mathhelpforum.com',
+        'expected': r'\begin{align} a^2+b=c\end{align}'
+    },
+    {
+        'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
+        'expected': r'<br />\begin{align} a^2+b=c\end{align}\<br />'
+    }
 ]
 
 TEST_FIX_MATHML_SUPERSCRIPT = [
@@ -474,6 +482,7 @@ class TestCCMATH(unittest.TestCase):
     def test_wrap_math_md(self):
         for test_case in TEST_WRAP_MATH_MD:
             with self.subTest(input=test_case['input']):
+                self.ccmath.url = test_case.get('url', '')
                 output_math = self.ccmath.wrap_math_md(test_case['input'])
                 self.assertEqual(output_math, test_case['expected'])
 
