@@ -370,13 +370,14 @@ class TestMathRender(unittest.TestCase):
     def test_nested_elements(self):
         """测试嵌套元素的情况."""
         # 创建一个嵌套的HTML元素
-        parent = html_to_element('<div><p>Paragraph <span>Span</span> text</p></div>')
+        parent = html_to_element('<div><p>Paragraph with formula: $a^2$ <span>Span</span> text with formula: $b^2$ end.</p></div>')
         p_elem = parent[0]
         span_elem = p_elem[0]
 
         # 设置文本和tail
         p_elem.text = 'Paragraph with formula: $a^2$ '
         span_elem.tail = ' text with formula: $b^2$ end.'
+        print('test_nested_elements p_elem.text:', element_to_html(parent))
 
         # 处理p.text
         self.mathjax_render._replace_math(p_elem, p_elem.text, '$', '$', False)

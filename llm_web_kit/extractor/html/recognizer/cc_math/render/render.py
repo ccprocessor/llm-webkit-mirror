@@ -6,7 +6,8 @@ from lxml.html import HtmlElement
 
 from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
-from llm_web_kit.libs.html_utils import build_cc_element, html_to_element
+from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
+                                         html_to_element)
 
 
 class MathRenderType:
@@ -117,29 +118,26 @@ class BaseMathRender():
         if element.text:
             # 处理行间公式（优先处理，因为可能包含行内公式）
             for start, end in display_delimiters:
-                # 循环处理所有匹配的公式
-                has_match = True
-                while has_match and element.text:
-                    # 检查是否还有匹配的公式
-                    pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                    has_match = re.search(pattern, element.text, re.DOTALL) is not None
-                    if has_match:
-                        element.text = self._replace_math(
-                            element, element.text, start, end, True
-                        )
-
+                element.text = self._replace_math(
+                    element, element.text, start, end, True
+                )
             # 处理行内公式
             for start, end in inline_delimiters:
-                # 循环处理所有匹配的公式
-                has_match = True
-                while has_match and element.text:
-                    # 检查是否还有匹配的公式
-                    pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                    has_match = re.search(pattern, element.text, re.DOTALL) is not None
-                    if has_match:
-                        element.text = self._replace_math(
-                            element, element.text, start, end, False
-                        )
+                element.text = self._replace_math(
+                    element, element.text, start, end, False
+                )
+
+        if element.tail:
+            # 处理行间公式（优先处理，因为可能包含行内公式）
+            for start, end in display_delimiters:
+                element.tail = self._replace_math(
+                    element, element.tail, start, end, True
+                )
+            # 处理行内公式
+            for start, end in inline_delimiters:
+                element.tail = self._replace_math(
+                    element, element.tail, start, end, False
+                )
 
         # 获取子节点的副本，以避免在迭代过程中修改列表
         children = list(element)
@@ -149,34 +147,6 @@ class BaseMathRender():
             self._process_text_nodes(
                 child, inline_delimiters, display_delimiters
             )
-
-            # 处理尾部文本
-            if child.tail:
-                # 处理行间公式
-                for start, end in display_delimiters:
-                    # 循环处理所有匹配的公式
-                    has_match = True
-                    while has_match and child.tail:
-                        # 检查是否还有匹配的公式
-                        pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                        has_match = re.search(pattern, child.tail, re.DOTALL) is not None
-                        if has_match:
-                            child.tail = self._replace_math(
-                                element, child.tail, start, end, True, child
-                            )
-
-                # 处理行内公式
-                for start, end in inline_delimiters:
-                    # 循环处理所有匹配的公式
-                    has_match = True
-                    while has_match and child.tail:
-                        # 检查是否还有匹配的公式
-                        pattern = f'{re.escape(start)}.*?{re.escape(end)}'
-                        has_match = re.search(pattern, child.tail, re.DOTALL) is not None
-                        if has_match:
-                            child.tail = self._replace_math(
-                                element, child.tail, start, end, False, child
-                            )
 
     def _replace_math(
         self,
@@ -200,7 +170,6 @@ class BaseMathRender():
         Returns:
             str: 处理后的文本
         """
-        print(f"处理文本: '{text}'")
         if not text or not start or not end:
             return text
 
@@ -330,3 +299,24 @@ class BaseMathRender():
             return KaTeXRender()
 
         return BaseMathRender()
+
+
+if __name__ == '__main__':
+    # 测试 _process_text_nodes 方法
+    # 创建一个示例HTML元素树
+    root = html_to_element('<div>This is a test with $a^2$ and $b^2$.</div>')
+
+    # 创建一个示例行内分隔符
+    inline_delimiters = [['$', '$']]
+
+    # 创建一个示例行间分隔符
+    display_delimiters = [['$$', '$$']]
+
+    # 创建一个示例渲染器
+    render = BaseMathRender()
+
+    # 测试 _process_text_nodes 方法
+    render._process_text_nodes(root, inline_delimiters, display_delimiters)
+
+    # 打印处理后的结果
+    print('处理后的结果: ', element_to_html(root))
