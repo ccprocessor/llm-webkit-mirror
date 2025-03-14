@@ -319,7 +319,16 @@ TEST_WRAP_MATH_MD = [
     {
         'input': r'\[a^2 + b^2 = c^2\]',
         'expected': r'a^2 + b^2 = c^2'
-    }
+    },
+    {
+        'input': r'`E=mc^2`',
+        'expected': r'E=mc^2'
+    },
+    {
+        'input': '',
+        'expected': ''
+    },
+
 ]
 
 TEST_FIX_MATHML_SUPERSCRIPT = [
