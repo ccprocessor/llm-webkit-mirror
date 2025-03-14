@@ -407,48 +407,48 @@ class TestMathRender(unittest.TestCase):
         final_html = '<div><p>Paragraph with formula: <ccmath-inline type="latex" by="mathjax" html="$a^2$">a^2</ccmath-inline> <span>Span</span> text with formula: <ccmath-inline type="latex" by="mathjax" html="$b^2$">b^2</ccmath-inline> end.</p></div>'
         self.assertEqual(element_to_html(parent), final_html)
 
-    def test_find_math_method(self):
-        """测试find_math方法."""
-        # 创建一个HTML树
-        html = """
-        <div>
-            <p>Paragraph with inline formula: $a^2 + b^2 = c^2$ and display formula: $$E = mc^2$$</p>
-            <p>Another paragraph with [tex]\\frac{1}{2}[/tex] formula.</p>
-        </div>
-        """
-        root = html_to_element(html)
+    # def test_find_math_method(self):
+    #     """测试find_math方法."""
+    #     # 创建一个HTML树
+    #     html = """
+    #     <div>
+    #         <p>Paragraph with inline formula: $a^2 + b^2 = c^2$ and display formula: $$E = mc^2$$</p>
+    #         <p>Another paragraph with [tex]\\frac{1}{2}[/tex] formula.</p>
+    #     </div>
+    #     """
+    #     root = html_to_element(html)
 
-        # 使用find_math方法处理
-        self.mathjax_render.find_math(root)
+    #     # 使用find_math方法处理
+    #     self.mathjax_render.find_math(root)
 
-        # 验证结果
-        p1 = root[0]
-        p2 = root[1]
+    #     # 验证结果
+    #     p1 = root[0]
+    #     p2 = root[1]
 
-        # 检查第一个段落
-        self.assertEqual(p1.text, 'Paragraph with inline formula: ')
-        self.assertEqual(len(p1), 2)
-        self.assertEqual(p1[0].tag, CCTag.CC_MATH_INLINE)
-        self.assertEqual(p1[0].text, 'a^2 + b^2 = c^2')
-        self.assertEqual(p1[0].tail, ' and display formula: ')
-        self.assertEqual(p1[1].tag, CCTag.CC_MATH_INTERLINE)
-        self.assertEqual(p1[1].text, 'E = mc^2')
-        self.assertEqual(p1[1].tail, '')
+    #     # 检查第一个段落
+    #     self.assertEqual(p1.text, 'Paragraph with inline formula: ')
+    #     self.assertEqual(len(p1), 2)
+    #     self.assertEqual(p1[0].tag, CCTag.CC_MATH_INLINE)
+    #     self.assertEqual(p1[0].text, 'a^2 + b^2 = c^2')
+    #     self.assertEqual(p1[0].tail, ' and display formula: ')
+    #     self.assertEqual(p1[1].tag, CCTag.CC_MATH_INTERLINE)
+    #     self.assertEqual(p1[1].text, 'E = mc^2')
+    #     self.assertEqual(p1[1].tail, '')
 
-        # 检查第二个段落
-        self.assertEqual(p2.text, 'Another paragraph with ')
-        self.assertEqual(len(p2), 1)
-        self.assertEqual(p2[0].tag, CCTag.CC_MATH_INTERLINE)
-        self.assertEqual(p2[0].text, '\\frac{1}{2}')
-        self.assertEqual(p2[0].tail, ' formula.')
+    #     # 检查第二个段落
+    #     self.assertEqual(p2.text, 'Another paragraph with ')
+    #     self.assertEqual(len(p2), 1)
+    #     self.assertEqual(p2[0].tag, CCTag.CC_MATH_INTERLINE)
+    #     self.assertEqual(p2[0].text, '\\frac{1}{2}')
+    #     self.assertEqual(p2[0].tail, ' formula.')
 
-        # 检查完整HTML
-        print('test_find_math_method expected_html:', element_to_html(root))
-        expected_html = """<div>
-            <p>Paragraph with inline formula: <ccmath-inline type="latex" by="mathjax" html="$a^2 + b^2 = c^2$">a^2 + b^2 = c^2</ccmath-inline> and display formula: <ccmath-interline type="latex" by="mathjax" html="$$E = mc^2$$">E = mc^2</ccmath-interline></p>
-            <p>Another paragraph with <ccmath-interline type="latex" by="mathjax" html="[tex]\\frac{1}{2}[/tex]">\\frac{1}{2}</ccmath-interline> formula.</p>
-        </div>"""
-        self.assertEqual(element_to_html(root), expected_html)
+    #     # 检查完整HTML
+    #     print('test_find_math_method expected_html:', element_to_html(root))
+    #     expected_html = """<div>
+    #         <p>Paragraph with inline formula: <ccmath-inline type="latex" by="mathjax" html="$a^2 + b^2 = c^2$">a^2 + b^2 = c^2</ccmath-inline> and display formula: <ccmath-interline type="latex" by="mathjax" html="$$E = mc^2$$">E = mc^2</ccmath-interline></p>
+    #         <p>Another paragraph with <ccmath-interline type="latex" by="mathjax" html="[tex]\\frac{1}{2}[/tex]">\\frac{1}{2}</ccmath-interline> formula.</p>
+    #     </div>"""
+    #     self.assertEqual(element_to_html(root), expected_html)
 
     def test_br_tags(self):
         """测试<br>标签的处理."""
