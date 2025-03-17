@@ -238,20 +238,28 @@ class BaseHTMLElementRecognizer(ABC):
             el: str|HtmlElement: html片段或HtmlElement对象
             tag_name: str|list: cc标签，如ccmath, cccode, 如果指定了那么就只检查这几个标签是否在html里，否则检查所有cc标签
         """
-        # cc标签是指自定义标签，例如<ccmath>，<ccimage>，<ccvideo>等，输入html片段，判断是否是cc标签
-        # el = html_to_element(html)
         if el is None:
             return False
 
+        # 默认cc标签列表
+        default_tag_names = [
+            CCTag.CC_CODE, CCTag.CC_MATH_INTERLINE, CCTag.CC_IMAGE, CCTag.CC_VIDEO,
+            CCTag.CC_AUDIO, CCTag.CC_TABLE, CCTag.CC_LIST, CCTag.CC_TEXT, CCTag.CC_TITLE
+        ]
+
+        # 确定需要检查的标签集合
         if tag_name:
             if isinstance(tag_name, str):
-                tag_to_check = [tag_name]
+                tags = {tag_name}
             else:
-                tag_to_check = tag_name
+                tags = set(tag_name)
         else:
-            tag_to_check = [CCTag.CC_CODE, CCTag.CC_MATH_INTERLINE, CCTag.CC_IMAGE, CCTag.CC_VIDEO, CCTag.CC_AUDIO, CCTag.CC_TABLE, CCTag.CC_LIST, CCTag.CC_TEXT, CCTag.CC_TITLE]
+            tags = set(default_tag_names)
 
-        for tag in tag_to_check:
-            if el.tag == tag or el.xpath(f'.//{tag}') :
-                return True
-        return False
+        # 如果当前元素的标签匹配，直接返回True
+        if el.tag in tags:
+            return True
+
+        # 构建XPath表达式，检查子元素是否包含目标标签
+        xpath_expr = ' or '.join([f'self::{tag}' for tag in tags])
+        return bool(el.xpath(f'.//*[{xpath_expr}]'))

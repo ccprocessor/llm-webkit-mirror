@@ -128,7 +128,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url, precision=False, html_type=page_layout_type)
         return dict_result['html'], dict_result['xp_num']
 
-    # def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
     def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement,HtmlElement]]:
         """从html文本中提取代码.
 

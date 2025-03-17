@@ -11,7 +11,6 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
 
 class CodeRecognizer(BaseHTMLElementRecognizer):
     """解析代码元素."""
-
     @override
     def recognize(
         self,
