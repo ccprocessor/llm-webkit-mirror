@@ -160,7 +160,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         result = []
         for math_item in math_res_parts:
             ele_item = math_item[0]
-            
+
             def process_node(node):
                 """处理行内公式、行间公式、行间代码、行内代码."""
                 if node.tag == CCTag.CC_MATH_INLINE:
