@@ -126,9 +126,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     stack.append((child, current_level))
         return max_level
 
-    def __extract_tables(self, ele: HtmlElement) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def __extract_tables(self, tree: HtmlElement) -> List[Tuple[HtmlElement, HtmlElement]]:
         """提取html中的table元素."""
-        tree = ele
         self.__do_extract_tables(tree)
         new_html = tree
         lst = self.html_split_by_tags(new_html, CCTag.CC_TABLE)
@@ -160,9 +159,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         )
         result = []
         for math_item in math_res_parts:
-            # ele_item = self._build_html_tree(math_item[0])
             ele_item = math_item[0]
-
+            
             def process_node(node):
                 """处理行内公式、行间公式、行间代码、行内代码."""
                 if node.tag == CCTag.CC_MATH_INLINE:

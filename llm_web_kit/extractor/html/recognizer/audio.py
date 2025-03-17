@@ -5,7 +5,6 @@ from overrides import override
 
 from llm_web_kit.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
-from llm_web_kit.libs.doc_element_type import DocElementType
 
 
 class AudioRecognizer(BaseHTMLElementRecognizer):
