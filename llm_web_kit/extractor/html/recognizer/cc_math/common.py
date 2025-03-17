@@ -92,10 +92,6 @@ latex_config = {
         ['\\[', '\\]'],
         ['$$', '$$'],
         ['[tex]', '[/tex]'],  # 这个网站自定义的分割，https://www.physicsforums.com/threads/turning-to-a-single-logarithm-then-simply.269419/
-        ['\\begin{equation}', '\\end{equation}'],
-        ['\\begin{align}', '\\end{align}'],
-        ['\\begin{alignat}', '\\end{alignat}'],
-        ['\\begin{array}', '\\end{array}'],
         # ['\\begin{equation}', '\\end{equation}'],
         # ['\\begin{align}', '\\end{align}'],
         # ['\\begin{alignat}', '\\end{alignat}'],
