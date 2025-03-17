@@ -10,15 +10,8 @@ from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 
 
 def __get_html_element(root: HtmlElement, node_path: list[str]) -> HtmlElement:
-    path_parts = []
-    for element in node_path:
-        path_parts.extend(element.split('/'))
-    start_idx = 0
-    if path_parts:
-        start_idx = 1
-        while start_idx <= len(path_parts) and path_parts[start_idx - 1] in ('', '/'):
-            start_idx += 1
-    path = '/'.join(path_parts[start_idx:])
+    path = '/'.join(node_path)
+    path = '/'.join(path.removeprefix('/').split('/')[1:])
     if not path:
         return root
     node = root.find(path, {'og': 'http://ogp.me/ns'})
