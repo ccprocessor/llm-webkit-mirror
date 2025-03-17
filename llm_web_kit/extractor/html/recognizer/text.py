@@ -76,8 +76,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         new_html_lst = []
         for html_element, raw_html_element in main_html_lst:
             # 如果是字符串则转换为 HtmlElement
-            # html_element = html_to_element(html) if isinstance(html, str) else html
-            # raw_html_element = html_to_element(raw_html) if isinstance(raw_html, str) else raw_html
             if self.is_cc_html(html_element):
                 new_html_lst.append((html_element, raw_html_element))
             else:

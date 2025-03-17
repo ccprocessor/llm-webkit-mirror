@@ -96,6 +96,10 @@ latex_config = {
         ['\\begin{align}', '\\end{align}'],
         ['\\begin{alignat}', '\\end{alignat}'],
         ['\\begin{array}', '\\end{array}'],
+        # ['\\begin{equation}', '\\end{equation}'],
+        # ['\\begin{align}', '\\end{align}'],
+        # ['\\begin{alignat}', '\\end{alignat}'],
+        # ['\\begin{array}', '\\end{array}'],
         # 添加通用的begin/end匹配
         ['\\begin{.*?}', '\\end{.*?}'],
     ],
