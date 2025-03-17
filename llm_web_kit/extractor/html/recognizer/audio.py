@@ -35,13 +35,4 @@ class AudioRecognizer(BaseHTMLElementRecognizer):
         Returns:
 
         """
-        node = {
-            'type': DocElementType.AUDIO,
-            'raw_content': parsed_content.attrib.get('html', ''),
-            'content': {
-                'url': parsed_content.attrib.get('url', ''),
-                'path': parsed_content.attrib.get('path', ''),
-                'data': parsed_content.attrib.get('data', '')
-            }
-        }
-        return node
+        raise NotImplementedError

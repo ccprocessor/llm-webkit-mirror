@@ -347,7 +347,6 @@ class TestMathRecognizer(unittest.TestCase):
                     [(html_to_element(test_case['input'][0][0]), html_to_element(test_case['input'][0][1]))],
                     test_case['raw_html']
                 )
-                print(output_html)
                 expect_len = len(test_case['expected'])
                 self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
                 for i in range(len(output_html)):
@@ -367,7 +366,6 @@ class TestMathRecognizer(unittest.TestCase):
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
-            print(parts)
             # 检查行间公式抽取正确性
             new_parts = []
             for part in parts:
@@ -389,7 +387,6 @@ class TestMathRecognizer(unittest.TestCase):
             # self.write_to_html(answers, test_case['input'][0])
             # 检查行内公式抽取正确性
             if test_case.get('expected_inline', None):
-                print('expected_inline::::::::', test_case['expected_inline'])
                 parts = [part[0] for part in parts if CCTag.CC_MATH_INLINE in part[0]]
 
     def write_to_html(self, answers, file_name):
