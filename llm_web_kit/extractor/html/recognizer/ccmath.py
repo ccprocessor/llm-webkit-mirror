@@ -7,7 +7,7 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
-                                                           tag_script)
+                                                           tag_mjx, tag_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -143,8 +143,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 tag_asciimath.modify_tree(self.cm, math_render, original_html, node, parent)
 
             # Remove any .MathJax_Preview spans
-            if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
-                pass
+            if node.tag == 'mjx-container':
+                tag_mjx.modify_tree(self.cm, math_render, original_html, node)
 
             # img中的latex
             if node.tag == 'img':

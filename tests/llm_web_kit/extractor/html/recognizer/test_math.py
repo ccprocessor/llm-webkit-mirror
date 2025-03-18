@@ -185,6 +185,13 @@ TEST_CASES_HTML = [
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_prefix_1.html'
     },
+    {
+        'input': [
+            'assets/ccmath/math_physicsforums_2.html',
+        ],
+        'base_url': 'https://physicshelpforum.com/t/latex-upgrade-physics-forum-powered-by-mathjax-v3.17489/',
+        'expected': 'assets/ccmath/math_physicsforums_2_1.html'
+    }
 ]
 
 TEST_EQUATION_TYPE = [
@@ -415,6 +422,7 @@ class TestMathRecognizer(unittest.TestCase):
                 # print('answer::::::::', answer)
                 # answers.append(answer)
                 self.assertEqual(expect, answer)
+            # print('answers::::::::', answers)
             # self.write_to_html(answers, test_case['input'][0])
             # 检查行内公式抽取正确性
             if test_case.get('expected_inline', None):
@@ -509,7 +517,7 @@ class TestCCMATH(unittest.TestCase):
 if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
-    r.test_math_recognizer()
+    # r.test_math_recognizer()
     r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()

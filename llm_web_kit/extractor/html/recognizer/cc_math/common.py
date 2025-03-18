@@ -235,6 +235,7 @@ class CCMATH():
             >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
             ('equation-interline', 'latex')
         """
+
         def check_delimiters(delims_list, s):
             for start, end in delims_list:
                 escaped_start = re.escape(start)
