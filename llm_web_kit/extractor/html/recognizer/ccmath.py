@@ -142,7 +142,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if node.tag in ('p','div') and node.text and '`' in node.text:
                 tag_asciimath.modify_tree(self.cm, math_render, original_html, node, parent)
 
-            # Remove any .MathJax_Preview spans
             if node.tag == 'mjx-container':
                 tag_mjx.modify_tree(self.cm, math_render, original_html, node)
 
