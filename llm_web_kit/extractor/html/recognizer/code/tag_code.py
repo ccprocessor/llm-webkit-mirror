@@ -135,7 +135,7 @@ def __group_code(root: HtmlElement, node_paths: list[list[str]]) -> list[str]:
 
     while len(node_paths):
         code_node = __get_html_element(root, node_paths[0])
-        code_tags = 1
+        code_tags = len(code_node.xpath('.//code'))
 
         parent, new_code_tags = next_parent(code_node, code_tags)
         while parent is not None:
