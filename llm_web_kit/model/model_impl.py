@@ -91,7 +91,7 @@ class PoliticalCPUModel(BaseModelResource):
 
     def get_batch_config(self) -> BatchProcessConfig:
         return BatchProcessConfig(
-            max_batch_size=128, optimal_batch_size=64, min_batch_size=8
+            max_batch_size=1000, optimal_batch_size=512, min_batch_size=8
         )
 
     def predict_batch(self, contents: List[str]) -> List[dict]:
@@ -112,7 +112,7 @@ class PoliticalCPUModel(BaseModelResource):
         # raise NotImplementedError
         # TODO convert result to response ensure the threshold
         return PoliticalResponse(
-            remained=result['political_prob'] > 0.5, details=result
+            is_remained=result['political_prob'] > 0.99, details=result
         )
 
 
@@ -165,16 +165,16 @@ class PornEnGPUModel(BaseModelResource):
 
             return PornEnModel()
         except Exception as e:
-            raise ModelInitException(f'Failed to init the en pron model: {e}')
+            raise ModelInitException(f'Failed to init the en porn model: {e}')
 
     def get_resource_requirement(self):
-        # S2 cluster has 128 CPUs, 1TB memory, 8 GPUs
-        # so we can use 16 CPUs, 64GB memory, 1 GPU for this model
-        return ResourceRequirement(num_cpus=16, memory_GB=64, num_gpus=1)
+        # S2 cluster has 96 CPUs, 1TB memory, 8 GPUs
+        # so we can use 12 CPUs, 64GB memory, 1 GPU for this model
+        return ResourceRequirement(num_cpus=12, memory_GB=64, num_gpus=1)
 
     def get_batch_config(self) -> BatchProcessConfig:
         return BatchProcessConfig(
-            max_batch_size=128, optimal_batch_size=64, min_batch_size=8
+            max_batch_size=1000, optimal_batch_size=512, min_batch_size=8
         )
 
     def predict_batch(self, contents: List[str]) -> List[dict]:
@@ -193,7 +193,7 @@ class PornEnGPUModel(BaseModelResource):
     def convert_result_to_response(self, result: dict) -> ModelResponse:
         # raise NotImplementedError
         # TODO convert result to response ensure the threshold
-        return PornResponse(remained=result['porn_prob'] < 0.5, details=result)
+        return PornResponse(is_remained=result['porn_prob'] < 0.2, details=result)
 
 
 class PornZhGPUModel(BaseModelResource):
@@ -202,9 +202,9 @@ class PornZhGPUModel(BaseModelResource):
     def _load_model(self):
         try:
             from llm_web_kit.model.porn_detector import \
-                XlmrModel as PronZhModel
+                XlmrModel as PornZhModel
 
-            return PronZhModel()
+            return PornZhModel()
         except Exception as e:
             raise ModelInitException(f'Failed to init the zh porn model: {e}')
 
@@ -215,7 +215,7 @@ class PornZhGPUModel(BaseModelResource):
 
     def get_batch_config(self) -> BatchProcessConfig:
         return BatchProcessConfig(
-            max_batch_size=128, optimal_batch_size=64, min_batch_size=8
+            max_batch_size=300, optimal_batch_size=256, min_batch_size=8
         )
 
     def predict_batch(self, contents: List[str]) -> List[dict]:
@@ -234,7 +234,7 @@ class PornZhGPUModel(BaseModelResource):
     def convert_result_to_response(self, result: dict) -> ModelResponse:
         # raise NotImplementedError
         # TODO convert result to response ensure the threshold
-        return PornResponse(remained=result['porn_prob'] < 0.5, details=result)
+        return PornResponse(is_remained=result['porn_prob'] > 0.95, details=result)
 
 
 class PornPredictorImpl(BasePredictor):
