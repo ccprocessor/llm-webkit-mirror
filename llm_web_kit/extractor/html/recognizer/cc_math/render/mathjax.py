@@ -3,8 +3,7 @@ from typing import Any, Dict, List
 
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
-from llm_web_kit.libs.html_utils import (HtmlElement, element_to_html,
-                                         html_to_element)
+from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
 
 # 添加MATHJAX_OPTIONS变量定义
 MATHJAX_OPTIONS = {
@@ -462,30 +461,30 @@ if __name__ == '__main__':
     else:
         print('No renderer detected')
 
-    # 测试find_math方法
-    print('\n测试find_math方法 - MathJax:')
-    mathjax_html = open('tests/llm_web_kit/extractor/html/recognizer/assets/ccmath/math_physicsforums.html', 'r').read()
-    mathjax_tree = html_to_element(mathjax_html)
-    mathjax_render = BaseMathRender.create_render(mathjax_tree)
-    print(f'mathjax_render options: {mathjax_render.get_options(mathjax_html)}')
-    if mathjax_render:
-        # 处理前的HTML
-        print('处理前的HTML:')
-        print(element_to_html(mathjax_tree)[:500] + '...')
+    # # 测试find_math方法
+    # print('\n测试find_math方法 - MathJax:')
+    # mathjax_html = open('tests/llm_web_kit/extractor/html/recognizer/assets/ccmath/math_physicsforums.html', 'r').read()
+    # mathjax_tree = html_to_element(mathjax_html)
+    # mathjax_render = BaseMathRender.create_render(mathjax_tree)
+    # print(f'mathjax_render options: {mathjax_render.get_options(mathjax_html)}')
+    # if mathjax_render:
+    #     # 处理前的HTML
+    #     print('处理前的HTML:')
+    #     print(element_to_html(mathjax_tree)[:500] + '...')
 
-        # 使用find_math处理数学公式
-        mathjax_render.find_math(mathjax_tree)
+    #     # 使用find_math处理数学公式
+    #     mathjax_render.find_math(mathjax_tree)
 
-        # 处理后的HTML
-        print('\n处理后的HTML:')
-        processed_html = element_to_html(mathjax_tree)
-        print(processed_html[:500] + '...')
+    #     # 处理后的HTML
+    #     print('\n处理后的HTML:')
+    #     processed_html = element_to_html(mathjax_tree)
+    #     print(processed_html[:500] + '...')
 
-        # 查找处理后的ccmath节点
-        ccmath_nodes = mathjax_tree.xpath('.//*[self::ccmath-inline or self::ccmath-interline]')
-        print(f'\n找到 {len(ccmath_nodes)} 个数学公式节点:')
-        for i, node in enumerate(ccmath_nodes, 1):
-            print(f"{i}. <{node.tag}> {node.text[:30]}{'...' if len(node.text) > 30 else ''}")
+    #     # 查找处理后的ccmath节点
+    #     ccmath_nodes = mathjax_tree.xpath('.//*[self::ccmath-inline or self::ccmath-interline]')
+    #     print(f'\n找到 {len(ccmath_nodes)} 个数学公式节点:')
+    #     for i, node in enumerate(ccmath_nodes, 1):
+    #         print(f"{i}. <{node.tag}> {node.text[:30]}{'...' if len(node.text) > 30 else ''}")
 
     # # 测试[tex]...[/tex]格式的数学公式
     # print('\n测试[tex]...[/tex]格式的数学公式:')

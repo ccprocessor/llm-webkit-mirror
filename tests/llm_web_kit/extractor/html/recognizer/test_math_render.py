@@ -3,8 +3,6 @@ import unittest
 import warnings
 from pathlib import Path
 
-from lxml.html import fromstring
-
 from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
 from llm_web_kit.extractor.html.recognizer.cc_math.render.katex import \
     KaTeXRender
@@ -980,7 +978,7 @@ class TestMathRender(unittest.TestCase):
 
     def test_detect_render_type_empty(self):
         """测试检测空内容的HTML."""
-        tree = fromstring('<html><body></body></html>')
+        tree = html_to_element('<html><body></body></html>')
         self.assertIsNone(BaseMathRender.detect_render_type(tree))
 
     def test_detect_render_type_katex(self):
@@ -995,7 +993,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         self.assertEqual(
             BaseMathRender.detect_render_type(tree),
             MathRenderType.KATEX
@@ -1010,7 +1008,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         self.assertEqual(
             BaseMathRender.detect_render_type(tree),
             MathRenderType.KATEX
@@ -1028,7 +1026,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         self.assertEqual(
             BaseMathRender.detect_render_type(tree),
             MathRenderType.MATHJAX
@@ -1043,7 +1041,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         self.assertEqual(
             BaseMathRender.detect_render_type(tree),
             MathRenderType.MATHJAX
@@ -1060,7 +1058,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         # 应该返回第一个检测到的渲染器类型
         self.assertEqual(
             BaseMathRender.detect_render_type(tree),
@@ -1069,7 +1067,7 @@ class TestMathRender(unittest.TestCase):
 
     def test_create_render_none(self):
         """测试创建渲染器（无渲染器类型）."""
-        tree = fromstring('<html><body></body></html>')
+        tree = html_to_element('<html><body></body></html>')
         render = BaseMathRender.create_render(tree)
         self.assertIsInstance(render, BaseMathRender)
 
@@ -1083,7 +1081,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         render = BaseMathRender.create_render(tree)
         self.assertIsInstance(render, KaTeXRender)
 
@@ -1097,7 +1095,7 @@ class TestMathRender(unittest.TestCase):
             <body></body>
         </html>
         """
-        tree = fromstring(html)
+        tree = html_to_element(html)
         render = BaseMathRender.create_render(tree)
         self.assertIsInstance(render, MathJaxRender)
 
