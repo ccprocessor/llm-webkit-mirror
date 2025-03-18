@@ -99,7 +99,15 @@ TEST_CASES = [
         ],
         'raw_html': '<script type="math/tex"></script>',
         'expected': []
+    },
+    {
+        'input': [
+            ('<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>', '<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>')
+        ],
+        'raw_html': '<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>',
+        'expected': [('<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>', '<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>')]
     }
+
 ]
 
 TEST_CASES_HTML = [
@@ -311,6 +319,28 @@ TEST_WRAP_MATH_MD = [
     {
         'input': r'\[a^2 + b^2 = c^2\]',
         'expected': r'a^2 + b^2 = c^2'
+    },
+    {
+        'input': r'`E=mc^2`',
+        'expected': r'E=mc^2'
+    },
+    {
+        'input': '',
+        'expected': ''
+    },
+    {
+        'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
+        'url': 'mathhelpforum.com',
+        'expected': r'\begin{align} a^2+b=c\end{align}'
+    },
+    {
+        'input': r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />',
+        'url': 'mathhelpforum.com',
+        'expected': r'dz=\frac{1}{2}\frac{dx}{\cos ^2 x}'
+    },
+    {
+        'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
+        'expected': r'<br />\begin{align} a^2+b=c\end{align}\<br />'
     }
 ]
 
@@ -457,6 +487,7 @@ class TestCCMATH(unittest.TestCase):
     def test_wrap_math_md(self):
         for test_case in TEST_WRAP_MATH_MD:
             with self.subTest(input=test_case['input']):
+                self.ccmath.url = test_case.get('url', '')
                 output_math = self.ccmath.wrap_math_md(test_case['input'])
                 self.assertEqual(output_math, test_case['expected'])
 

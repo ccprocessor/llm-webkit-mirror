@@ -103,7 +103,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         return data_json
 
-    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> (str, str):
+    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str]:
         """从html文本中提取主要的内容.
 
         Args:
@@ -126,7 +126,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             base_url (str): html文本的网页地址
             html_lst (List[Tuple[str,str]]): html文本
             raw_html (str): html文本
-
         Returns:
         """
 

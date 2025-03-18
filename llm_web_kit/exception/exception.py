@@ -366,3 +366,16 @@ class CleanModelException(ModelBaseException):
         if error_code is None:
             error_code = ErrorMsg.get_error_code('Model', 'CleanModelException')
         super().__init__(custom_message, error_code)
+
+
+##############################################################################
+#
+#  Model Exceptions
+#
+##############################################################################
+class CleanModelUnsupportedLanguageException(CleanModelException):
+    """Exception raised for clean model unsupported language."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'CleanModelUnsupportedLanguageException')
+        super().__init__(custom_message, error_code)

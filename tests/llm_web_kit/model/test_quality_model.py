@@ -4,7 +4,8 @@ import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, mock_open, patch
 
-from llm_web_kit.exception.exception import ModelInputException  # noqa: E402
+from llm_web_kit.exception.exception import (  # noqa: E402
+    CleanModelUnsupportedLanguageException, ModelInputException)
 from llm_web_kit.model.quality_model import QualityModel  # noqa: E402
 from llm_web_kit.model.quality_model import get_quality_model  # noqa: E402
 from llm_web_kit.model.quality_model import quality_prober  # noqa: E402
@@ -320,7 +321,7 @@ class TestQualityFilter(unittest.TestCase):
     @patch.dict('llm_web_kit.model.quality_model._model_resource_map', {}, clear=True)
     def test_filter_unsupported_combination(self):
         """测试不支持的语言风格组合."""
-        with self.assertRaises(ValueError) as context:
+        with self.assertRaises(CleanModelUnsupportedLanguageException) as context:
             self.filter.filter('content', 'jp', 'details', 'novel')
 
         self.assertIn(

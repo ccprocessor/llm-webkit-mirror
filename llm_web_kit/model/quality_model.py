@@ -8,7 +8,8 @@ import pandas as pd
 
 import llm_web_kit.model.basic_functions as bfuncs
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import ModelInputException
+from llm_web_kit.exception.exception import (
+    CleanModelUnsupportedLanguageException, ModelInputException)
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.basic_functions.features import (
@@ -386,15 +387,13 @@ class QualityFilter:
             content_style (str): the content style of the content
 
         Raises:
-            TODO use custom exception instead of
-            ValueError: raise ValueError if the language and content_style are not supported
+            CleanModelUnsupportedLanguageException: raise  if the language and content_style are not supported
 
         Returns:
             bool: True if the content should remain, False if the content should be filtered out
         """
         if not self.check_supported(language, content_style):
-            # TODO move the exception to the upper level
-            raise ValueError(
+            raise CleanModelUnsupportedLanguageException(
                 f"Unsupport language '{language}' with content_style '{content_style}'"
             )
         else:

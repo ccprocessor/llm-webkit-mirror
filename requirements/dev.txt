@@ -1,6 +1,9 @@
+flask==3.0.2 # for html_layout_classify
 pre-commit==3.8.0
 pydantic==2.10.6
 pytest==8.3.3
 # coverage tools
 pytest-cov==6.0.0
 pytest-xdist==3.6.1
+requests==2.31.0 # for html_layout_classify
+retry==0.9.2 # for html_layout_classify
