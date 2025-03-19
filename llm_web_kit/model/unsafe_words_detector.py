@@ -212,55 +212,9 @@ def decide_content_unsafe_word_by_data_checker(
     return unsafe_word_min_level
 
 
-def unsafe_words_filter(
-    data_dict: Dict[str, Any], language: str, content_style: str
-) -> str:
-    if language in xyz_language_lst:
-        language = 'xyz'
-    elif language in [
-        'zh',
-        'en',
-        'yue',
-        'zho',
-        'eng',
-        'zho_Hans',
-        'zho_Hant',
-        'yue_Hant',
-        'eng_Latn',
-    ]:
-        language = 'zh-en'
-    else:
-        raise SafeModelException(f'Unsupported language: {language}')
-
-    unsafeWordChecker = get_unsafe_words_checker(language)
-    unsafe_word_min_level = decide_data_unsafe_word_by_data_checker(
-        data_dict, unsafeWordChecker
-    )
-
-    return unsafe_word_min_level
-
-
-def unsafe_words_filter_overall(
-    data_dict: Dict[str, Any],
-    language: str,
-    content_style: str,
-    from_safe_source,
-    from_domestic_source,
-):
-    if from_safe_source:
-        return {'hit_unsafe_words': False}
-    if from_domestic_source:
-        unsafe_range = ('L1',)
-    else:
-        unsafe_range = ('L1', 'L2')
-    unsafe_word_min_level = unsafe_words_filter(data_dict, language, content_style)
-    hit = unsafe_word_min_level in unsafe_range
-    return {'hit_unsafe_words': hit}
-
-
 class UnsafeWordsFilter:
-    def __init__(self):
-        pass
+    def __init__(self,raise_not_support_language_exception: bool = False):
+        self.raise_not_support_language_exception = raise_not_support_language_exception
 
     def filter(
         self,
@@ -286,7 +240,10 @@ class UnsafeWordsFilter:
         ]:
             language = 'zh-en'
         else:
-            raise SafeModelException(f'Unsupported language: {language}')
+            if self.raise_not_support_language_exception:
+                raise SafeModelException(f'Unsupported language: {language}')
+            else:
+                return True, {'hit_unsafe_words': False}
 
         if from_safe_source:
             return True, {'hit_unsafe_words': False}
