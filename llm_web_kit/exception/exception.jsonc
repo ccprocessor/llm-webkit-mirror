@@ -146,6 +146,10 @@
     "CleanModelUnsupportedLanguageException": {
       "code": 46100000,
       "message": "Clean model unsupported language exception"
+    },
+    "ModelRuntimeException": {
+      "code": 47000000,
+      "message": "Model runtime exception"
     }
   }
 }

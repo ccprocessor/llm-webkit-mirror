@@ -6,7 +6,7 @@ import commentjson as json
 
 class ErrorMsg:
     """Error message manager class."""
-    _errors = {'10001': {'module': 'Model', 'error_name': 'ModelRuntimeException', 'message': 'Model runtime exception'}}
+    _errors = {}
 
     @classmethod
     def _load_errors(cls):
