@@ -379,5 +379,5 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
 
         """
-        config = load_config()
+        config = load_config(suppress_error=True)
         return config.get('magic-html-custom-rule', {})

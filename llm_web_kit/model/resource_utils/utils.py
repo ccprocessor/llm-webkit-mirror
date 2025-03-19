@@ -14,12 +14,11 @@ def decide_cache_dir():
 
     if 'WEB_KIT_CACHE_DIR' in os.environ:
         cache_dir = os.environ['WEB_KIT_CACHE_DIR']
-
     try:
         config = load_config()
         cache_dir = config['resources']['common']['cache_path']
     except Exception:
-        pass
+        pass  # ignore this exception
 
     if cache_dir.startswith('~/'):
         cache_dir = os.path.expanduser(cache_dir)

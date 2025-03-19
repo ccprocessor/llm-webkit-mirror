@@ -1,12 +1,13 @@
 import os
 
 import commentjson as json
+from loguru import logger
 
 from llm_web_kit.exception.exception import ModelResourceException
 from llm_web_kit.libs.path_lib import get_py_pkg_root_dir
 
 
-def load_config() -> dict:
+def load_config(suppress_error: bool = False) -> dict:
     """Load the configuration file for the web kit. First try to read the
     configuration file from the environment variable LLM_WEB_KIT_CFG_PATH. If
     the environment variable is not set, use the default configuration file
@@ -27,12 +28,24 @@ def load_config() -> dict:
     if env_cfg_path:
         cfg_path = env_cfg_path
         if not os.path.exists(cfg_path):
+            if suppress_error:
+                return {}
+
+            logger.warning(
+                f'environment variable LLM_WEB_KIT_CFG_PATH points to a non-exist file: {cfg_path}'
+            )
             raise ModelResourceException(
                 f'environment variable LLM_WEB_KIT_CFG_PATH points to a non-exist file: {cfg_path}'
             )
     else:
         cfg_path = os.path.expanduser('~/.llm-web-kit.jsonc')
         if not os.path.exists(cfg_path):
+            if suppress_error:
+                return {}
+
+            logger.warning(
+                f'{cfg_path} does not exist, please create one or set environment variable LLM_WEB_KIT_CFG_PATH to a valid file path'
+            )
             raise ModelResourceException(
                 f'{cfg_path} does not exist, please create one or set environment variable LLM_WEB_KIT_CFG_PATH to a valid file path'
             )
