@@ -91,7 +91,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         base_url:str = data_json['url']
         page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
 
-        main_html, method = self._extract_main_html(raw_html, base_url, page_layout_type)
+        main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
         parsed_html = [(main_html,raw_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
@@ -100,10 +100,11 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
         data_json['content_list'] = content_list
+        data_json['title'] = title
 
         return data_json
 
-    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str]:
+    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str, str]:
         """从html文本中提取主要的内容.
 
         Args:
@@ -115,9 +116,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             str1: 主要的内容
             str2: 获得内容的方式，可对质量进行评估
         """
-        # TODO: 从html文本中提取主要的内容
         dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url, precision=False, html_type=page_layout_type)
-        return dict_result['html'], dict_result['xp_num']
+        return dict_result['html'], dict_result['xp_num'], dict_result.get('title', '')
 
     def _extract_code(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
         """从html文本中提取代码.
