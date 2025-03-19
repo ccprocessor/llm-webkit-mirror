@@ -134,55 +134,6 @@ class KaTeXRender(BaseMathRender):
             root: HTML根节点
         """
         raise NotImplementedError('KaTeXRender.find_math is not implemented')
-        # 获取分隔符配置
-        # delimiters = self.options.get('delimiters', [])
-        # if not delimiters:
-        #     # 使用常见的默认分隔符
-        #     delimiters = [
-        #         {'left': '$$', 'right': '$$', 'display': True},
-        #         {'left': '$', 'right': '$', 'display': False},
-        #         {'left': '\\(', 'right': '\\)', 'display': False},
-        #         {'left': '\\[', 'right': '\\]', 'display': True}
-        #     ]
-
-        # # 分离行内和行间分隔符
-        # inline_delimiters = []
-        # display_delimiters = []
-
-        # for delimiter in delimiters:
-        #     start = delimiter.get('left', '')
-        #     end = delimiter.get('right', '')
-        #     is_display = delimiter.get('display', False)
-
-        #     if start and end:
-        #         if is_display:
-        #             display_delimiters.append([start, end])
-        #         else:
-        #             inline_delimiters.append([start, end])
-
-        # # 处理所有文本节点
-        # self._process_text_nodes(
-        #     root, inline_delimiters, display_delimiters
-        # )
-
-        # # 处理特殊的KaTeX元素
-        # for elem in root.xpath('.//*[@class="katex"]'):
-        #     math_text = elem.get('data-katex-expression')
-        #     if math_text:
-        #         is_display = 'katex-display' in elem.get('class', '')
-        #         tag_name = 'ccmath-interline' if is_display else 'ccmath-inline'
-
-        #         # 创建新节点，使用build_cc_element
-        #         math_node = build_cc_element(
-        #             html_tag_name=tag_name,
-        #             text=math_text,
-        #             tail=elem.tail or '',
-        #             type=MathType.LATEX,  # 使用MathType枚举
-        #             by=self.render_type,
-        #             html=element_to_html(elem)  # 使用完整的原始HTML
-        #         )
-        #         # 替换原节点
-        #         replace_element(elem, math_node)
 
 
 # if __name__ == '__main__':

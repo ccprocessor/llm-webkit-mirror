@@ -235,9 +235,9 @@ if __name__ == '__main__':
     #     raw_html,
     #     ['ccmath']
     # ))
-    raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
-    print(math_recognizer.recognize(
-        'https://www.baidu.com',
-        [(raw_html, raw_html)],
-        raw_html
-    ))
+    # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
+    # print(math_recognizer.recognize(
+    #     'https://www.baidu.com',
+    #     [(raw_html, raw_html)],
+    #     raw_html
+    # ))
