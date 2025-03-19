@@ -51,10 +51,11 @@ def __extract_html(url:str, html_content: str) -> DataJson:
 def extract_html_to_md(url:str, html_content: str) -> str:
     """extract html to markdown without images."""
     result = __extract_html(url, html_content)
-    return result.get_content_list().to_mm_md()
+    return result.get_content_list().to_nlp_md()
 
 
 def extract_html_to_mm_md(url:str, html_content: str) -> str:
     """extract html to markdown with images."""
+
     result = __extract_html(url, html_content)
     return result.get_content_list().to_mm_md()

@@ -83,6 +83,7 @@ from loguru import logger
 def extract(url:str, html:str) -> str:
     try:
         nlp_md = extract_html_to_md(url, html)
+        # or mm_nlp_md = extract_html_to_mm_md(url, html)
         return nlp_md
     except Exception as e:
         logger.exception(e)
