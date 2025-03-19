@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 20
+        assert len(self.data_json) == 21
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -419,3 +419,13 @@ DEF
         result_md = result.get_content_list().to_mm_md()
         assert '&amp;' not in result_md
         assert '&nbsp;' not in result_md
+
+    def test_xml_tag(self):
+        """测试xml标签."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[20]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        self.assertIn('Every child that attends a CHICKS break has a deserving story', result_md)
