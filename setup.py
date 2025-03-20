@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup
 
+
 def parse_requirements(filename):
     with open(filename) as f:
         lines = f.read().splitlines()
