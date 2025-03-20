@@ -93,7 +93,7 @@ class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
         for segment in paragraph:
             text = segment['c']
             text_type = segment['t']
-            if text_type == ParagraphTextType.TEXT:
+            if text_type not in [ParagraphTextType.CODE_INLINE]:  # skip code
                 segment['c'] = normalize_text_segment(text)
         return paragraph
 

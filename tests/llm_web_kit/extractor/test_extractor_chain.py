@@ -16,6 +16,7 @@ import unittest
 
 from lxml import html
 
+from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
 from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
 from llm_web_kit.input.datajson import DataJson
@@ -59,47 +60,10 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 23
+        assert len(self.data_json) == 24
 
         # Config for HTML extraction
-        self.config = {
-            'extractor_pipe': {
-                'enable': True,
-                'validate_input_format': False,
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {
-                            'html_parent_dir': 'tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/',
-                        },
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor',
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.post_extractor.HTMLFileFormatPostExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-            }
-        }
+        self.config = load_pipe_tpl('html-test')
 
     def test_html_pipeline(self):
         """Test HTML extractor with sample data."""
@@ -488,4 +452,15 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
-        assert len(content_txt) == 3985
+        print('content_txt', content_txt)
+        assert len(content_txt) == 3983
+
+    def test_xml_tag(self):
+        """测试xml标签."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[23]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        self.assertIn('Every child that attends a CHICKS break has a deserving story', result_md)

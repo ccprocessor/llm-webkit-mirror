@@ -16,7 +16,7 @@ def init_logger(config: dict = None):
         logger_cfg = config.get('logger', [])
 
     if not logger_cfg:
-        logger_cfg = load_config().get('logger', [])
+        logger_cfg = load_config(suppress_error=True).get('logger', [])
 
     if not logger_cfg:
         return logger

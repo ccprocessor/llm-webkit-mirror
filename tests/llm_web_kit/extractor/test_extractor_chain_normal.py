@@ -3,6 +3,7 @@ import os
 import unittest
 from unittest.mock import MagicMock, patch
 
+from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.exception.exception import (ExtractorChainBaseException,
                                              ExtractorChainConfigException,
                                              ExtractorChainInputException,
@@ -21,90 +22,13 @@ class TestExtractorChainNormal(unittest.TestCase):
         self.base_path = os.path.dirname(os.path.abspath(__file__))
 
         # Basic HTML config
-        self.html_config = {
-            'extractor_pipe': {
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {},
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.post_extractor.HTMLFileFormatPostExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-            }
-        }
+        self.html_config = load_pipe_tpl('html')
 
         # Basic PDF config
-        self.pdf_config = {
-            'extractor_pipe': {
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.pdf.pre_extractor.PDFFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.pdf.extractor.PDFFileFormatExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.pdf.post_extractor.PDFFileFormatPostExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-            }
-        }
+        self.pdf_config = load_pipe_tpl('pdf')
 
         # Basic EBOOK config
-        self.ebook_config = {
-            'extractor_pipe': {
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.ebook.pre_extractor.EBOOKFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.ebook.extractor.EBOOKFileFormatExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.ebook.post_extractor.EBOOKFileFormatPostExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-            }
-        }
+        self.ebook_config = load_pipe_tpl('ebook')
 
     def test_factory_create(self):
         """Test factory creation with different inputs."""

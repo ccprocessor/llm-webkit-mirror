@@ -1,0 +1,37 @@
+{
+    "extractor_pipe": {
+        "enable": true,
+        "validate_input_format": false,
+        "pre_extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor",
+                "class_init_kwargs": {
+                    "html_parent_dir": "tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/"
+                }
+            },
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor"
+            },
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "post_extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.post_extractor.HTMLStripSpacePostExtractor"
+            }
+        ]
+    }
+}

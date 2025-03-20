@@ -1,4 +1,3 @@
-
 import unittest
 
 from lxml.html import HtmlElement
@@ -182,6 +181,55 @@ class TestHtmlUtils(unittest.TestCase):
         """
         cell_count = table_cells_count(html)
         self.assertEqual(cell_count, 33)
+
+    def test_html_to_element_without_xml_declaration(self):
+        """测试普通HTML解析（无XML声明）"""
+        # 普通HTML字符串
+        html_simple = '<html><body><p>普通HTML</p></body></html>'
+
+        # 解析HTML
+        element = html_to_element(html_simple)
+
+        # 验证解析结果
+        self.assertIsInstance(element, HtmlElement)
+        self.assertEqual(element.tag, 'html')
+        self.assertEqual(element.find('.//p').text, '普通HTML')
+
+    def test_html_to_element_with_complex_xml_declaration(self):
+        """测试带有复杂DOCTYPE和XML声明的HTML解析."""
+        # 复杂HTML字符串
+        complex_html = '''<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr">
+<head>
+  <title>测试标题</title>
+</head>
+<body>
+  <p>复杂HTML测试</p>
+</body>
+</html>'''
+
+        # 解析HTML
+        element = html_to_element(complex_html)
+
+        # 验证解析结果
+        self.assertIsInstance(element, HtmlElement)
+        self.assertEqual(element.find('.//title').text, '测试标题')
+        self.assertEqual(element.find('.//p').text, '复杂HTML测试')
+
+    def test_html_to_element_with_malformed_xml(self):
+        """测试畸形XML处理."""
+        # 带有不完整XML声明的HTML
+        malformed_html = '<?xml version="1.0" encoding="utf-8"?><html><unclosed><p>畸形XML</p></html>'
+
+        # 解析HTML (不应抛出异常)
+        element = html_to_element(malformed_html)
+
+        # 验证解析结果 (应该尽可能解析)
+        self.assertIsInstance(element, HtmlElement)
+        # self.assertEqual(element.tag, 'html')
+        self.assertIsNotNone(element.find('.//p'))
+        self.assertEqual(element.find('.//p').text, '畸形XML')
 
 
 # 测试用例数据

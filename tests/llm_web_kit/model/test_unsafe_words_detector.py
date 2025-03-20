@@ -2,10 +2,10 @@ import unittest
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
 from llm_web_kit.exception.exception import SafeModelException
-from llm_web_kit.model.unsafe_words_detector import (
-    UnsafeWordChecker, auto_download, decide_unsafe_word_by_data_checker,
-    get_ac, get_unsafe_words, get_unsafe_words_checker, unsafe_words_filter,
-    unsafe_words_filter_overall)
+from llm_web_kit.model.unsafe_words_detector import (UnsafeWordChecker,
+                                                     auto_download, get_ac,
+                                                     get_unsafe_words,
+                                                     get_unsafe_words_checker)
 
 
 class TestUnsafeWordChecker(unittest.TestCase):
@@ -36,18 +36,6 @@ class TestUnsafeWordChecker(unittest.TestCase):
         result = checker.check_unsafe_words(content)
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 0)
-
-    @patch('llm_web_kit.model.unsafe_words_detector.get_unsafe_words_checker')
-    def test_decide_unsafe_word_by_data_checker(self, mock_get_checker):
-        mock_checker = MagicMock()
-        mock_checker.check_unsafe_words.return_value = [
-            {'word': 'unsafe', 'level': 'L2', 'count': 1}
-        ]
-        mock_get_checker.return_value = mock_checker
-
-        data_dict = {'content': 'Some content with unsafe elements.'}
-        result = decide_unsafe_word_by_data_checker(data_dict, mock_checker)
-        self.assertEqual(result, 'L2')
 
     def test_standalone_word_detection(self):
         """测试独立存在的子词能被正确识别[2,6](@ref)"""
@@ -81,92 +69,6 @@ class TestUnsafeWordChecker(unittest.TestCase):
         checker1 = get_unsafe_words_checker('zh-en')
         checker2 = get_unsafe_words_checker('zh-en')
         self.assertIs(checker1, checker2)  # Should return the same instance
-
-    @patch('llm_web_kit.model.unsafe_words_detector.get_unsafe_words_checker')
-    def test_unsafe_words_filter(self, mock_get_checker):
-        mock_checker = MagicMock()
-        mock_checker.check_unsafe_words.return_value = [
-            {'word': '', 'level': 'L3', 'count': 1}
-        ]
-        mock_get_checker.return_value = mock_checker
-
-        data_dict = {'content': 'Test content'}
-        result = unsafe_words_filter(data_dict, 'en', 'text')
-        self.assertEqual(result, 'L3')
-        result = unsafe_words_filter(data_dict, 'ko', 'text')
-        self.assertEqual(result, 'L3')
-        with self.assertRaises(SafeModelException):
-            unsafe_words_filter(data_dict, 'unk', 'text')
-
-    def test_unsafe_words_filter_with_unsupported_language(self):
-        data_dict = {'content': 'Test content'}
-        with self.assertRaises(SafeModelException):
-            unsafe_words_filter(data_dict, 'unsupported_language', 'text')
-
-    @patch('llm_web_kit.model.unsafe_words_detector.unsafe_words_filter')
-    def test_unsafe_words_filter_overall(self, mock_filter):
-        mock_filter.return_value = 'L1'
-
-        data_dict = {'content': 'Content with unsafe words.'}
-
-        result = unsafe_words_filter_overall(
-            data_dict,
-            language='en',
-            content_style='text',
-            from_safe_source=False,
-            from_domestic_source=False,
-        )
-        self.assertIsInstance(result, dict)
-        self.assertTrue(result['hit_unsafe_words'])
-
-        result = unsafe_words_filter_overall(
-            data_dict,
-            language='en',
-            content_style='text',
-            from_safe_source=False,
-            from_domestic_source=True,
-        )
-        self.assertIsInstance(result, dict)
-        self.assertTrue(result['hit_unsafe_words'])
-
-        result = unsafe_words_filter_overall(
-            data_dict,
-            language='en',
-            content_style='text',
-            from_safe_source=True,
-            from_domestic_source=True,
-        )
-        self.assertIsInstance(result, dict)
-        self.assertFalse(result['hit_unsafe_words'])
-
-        result = unsafe_words_filter_overall(
-            data_dict,
-            language='en',
-            content_style='text',
-            from_safe_source=True,
-            from_domestic_source=False,
-        )
-        self.assertIsInstance(result, dict)
-        self.assertFalse(result['hit_unsafe_words'])
-
-        result = unsafe_words_filter_overall(
-            data_dict,
-            language='ru',
-            content_style='text',
-            from_safe_source=False,
-            from_domestic_source=False,
-        )
-        self.assertIsInstance(result, dict)
-        self.assertTrue(result['hit_unsafe_words'])
-
-        with self.assertRaises(SafeModelException):
-            result = unsafe_words_filter_overall(
-                data_dict,
-                language='unknown',
-                content_style='text',
-                from_safe_source=False,
-                from_domestic_source=False,
-            )
 
     @patch('llm_web_kit.model.unsafe_words_detector.load_config')
     @patch('llm_web_kit.model.unsafe_words_detector.download_auto_file')
