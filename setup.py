@@ -24,7 +24,7 @@ def parse_requirements(filename):
 if __name__ == '__main__':
     setup(
         name='llm_web_kit',
-        version=__version__,  # 版本号
+        version="3.1.0",
         description='LLM Web Kit for processing web content',
         packages=find_packages(exclude=['tests*']),
         install_requires=parse_requirements('requirements/runtime.txt') + parse_requirements('requirements/dev.txt'),  # 项目依赖的第三方库
