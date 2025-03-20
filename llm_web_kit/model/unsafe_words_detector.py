@@ -6,7 +6,6 @@ import ahocorasick
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import SafeModelException
-from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.standard_utils import json_loads
 from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
                                                             is_pure_en_word)
@@ -176,24 +175,6 @@ def get_unsafe_words_checker(language='zh-en') -> UnsafeWordChecker:
     if not singleton_resource_manager.has_name(language):
         singleton_resource_manager.set_resource(language, UnsafeWordChecker(language))
     return singleton_resource_manager.get_resource(language)
-
-
-def decide_data_unsafe_word_by_data_checker(
-    data_dict: dict, unsafeWordChecker: UnsafeWordChecker
-) -> str:
-    data_obj = DataJson(data_dict)
-    content_str = data_obj.get_content_list().to_txt()
-    unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
-    unsafe_word_levels = []
-    for w in unsafe_words_list:
-        _, level, _ = w['word'], w['level'], w['count']
-        # "涉政|观测|L4|带头人"
-        unsafe_word_levels.append(level)
-
-    unsafe_word_levels = list(set(unsafe_word_levels))
-    unsafe_word_min_level = min(unsafe_word_levels + ['NF'])
-
-    return unsafe_word_min_level
 
 
 def decide_content_unsafe_word_by_data_checker(

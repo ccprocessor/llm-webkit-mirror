@@ -2,9 +2,10 @@ import unittest
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
 from llm_web_kit.exception.exception import SafeModelException
-from llm_web_kit.model.unsafe_words_detector import (
-    UnsafeWordChecker, auto_download, decide_data_unsafe_word_by_data_checker,
-    get_ac, get_unsafe_words, get_unsafe_words_checker)
+from llm_web_kit.model.unsafe_words_detector import (UnsafeWordChecker,
+                                                     auto_download, get_ac,
+                                                     get_unsafe_words,
+                                                     get_unsafe_words_checker)
 
 
 class TestUnsafeWordChecker(unittest.TestCase):
@@ -35,18 +36,6 @@ class TestUnsafeWordChecker(unittest.TestCase):
         result = checker.check_unsafe_words(content)
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 0)
-
-    @patch('llm_web_kit.model.unsafe_words_detector.get_unsafe_words_checker')
-    def test_decide_unsafe_word_by_data_checker(self, mock_get_checker):
-        mock_checker = MagicMock()
-        mock_checker.check_unsafe_words.return_value = [
-            {'word': 'unsafe', 'level': 'L2', 'count': 1}
-        ]
-        mock_get_checker.return_value = mock_checker
-
-        data_dict = {'content': 'Some content with unsafe elements.'}
-        result = decide_data_unsafe_word_by_data_checker(data_dict, mock_checker)
-        self.assertEqual(result, 'L2')
 
     def test_standalone_word_detection(self):
         """测试独立存在的子词能被正确识别[2,6](@ref)"""
