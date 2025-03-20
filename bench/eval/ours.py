@@ -18,9 +18,8 @@ def eval_ours_extract_html(chain_config: dict, test_data: dict) -> Tuple[str, Li
     result = chain.extract(input_data)
     content_list = result.get_content_list()
     statics = result.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {})
-    main_html = content_list.to_main_html()
     content = content_list.to_nlp_md()
-    return content, content_list._get_data(), main_html, statics
+    return content, content_list._get_data(), statics
 
 
 if __name__ == '__main__':

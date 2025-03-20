@@ -9,6 +9,7 @@ from bench.common.result import Result_Detail, Result_Summary
 from bench.eval.ours import eval_ours_extract_html
 from llm_web_kit.dataio.filebase import (FileBasedDataReader,
                                          FileBasedDataWriter)
+from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
 from llm_web_kit.libs.statics import Statics
 
 
@@ -72,7 +73,7 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
                     data_json = json.loads(line.strip())
 
                     # 执行评估
-                    content, content_list, main_html, statics = eval_ours_extract_html(
+                    content, content_list, statics = eval_ours_extract_html(
                         config_path_str, data_json
                     )
 
@@ -93,6 +94,12 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
                             print(f'读取HTML文件失败: {e}')
                     else:
                         print(f'文件不存在或路径为空: {file_path}')
+
+                    # 提取main_html
+                    htmlExtractor = HTMLFileFormatExtractor(config_path_str)
+                    main_html, method, title = htmlExtractor._extract_main_html(
+                        html_content, data_json.get('url', ''), data_json.get('page_layout_type', 'article')
+                    )
 
                     # 准备输出内容
                     out = {
