@@ -124,10 +124,6 @@ do
 
         if [ "$PD_COUNT" -lt "$MAX_PENDING_JOBS" ] && [ $spot_count -lt $MAX_JOBS ]; then
             # 如果PD任务数小于最大限制，则提交新任务
-            # tt=$(date '+%Y-%m-%d %H:%M:%S')
-            # total_spot_used=$(calculate_total_spot_used)
-            # total_reserved_idle=$(calculate_total_reserved_idle)
-            # echo -e "check  $partation spot \n tt:$tt \n total_spot_used: $total_spot_used\n total_reserved_idle: $total_reserved_idle \n PD_COUNT: $PD_COUNT"
             if [ $DEBUG -eq 1 ]; then
                 LOG_LEVEL=ERROR srun -p ${partation} --quotatype=spot --output=${SLURM_LOG_DIR}/logs/output_%j.out --export=ALL  --error=${SLURM_LOG_DIR}/error/error_%j.err -N 1 -n${TASK_NUM} --gres=gpu:1   python main.py  ${SERVER_ADDR} --result-save-dir ${RESULT_SAVE_DIR}
             else

@@ -5,7 +5,7 @@ import uuid
 from pathlib import Path
 
 from bench.common.metrics import Metrics
-from bench.common.result import Error_Item, Result_Detail, Result_Summary
+from bench.common.result import Result_Detail, Result_Summary
 from bench.eval.ours import eval_ours_extract_html
 from llm_web_kit.dataio.filebase import (FileBasedDataReader,
                                          FileBasedDataWriter)
@@ -23,10 +23,34 @@ root = Path(__file__).parent
 sourcePath = os.path.join(root, 'data/all.json')
 outputPath = os.path.join(root, 'output')
 pipelineConfigPath = os.path.join(root, 'config/ours_config.jsonc')
-pipeline_data_path = os.path.join(root, 'config/ours_data_config.jsonl')
+pipeline_data_path = os.path.join(root, 'config/data_config.jsonl')
 
 reader = FileBasedDataReader('')
 writer = FileBasedDataWriter('')
+
+
+def run_ours(pipelineConfigPath, pipeline_data_path, outputPath, statics_pre):
+    with open(pipeline_data_path, 'r') as f:
+        for line in f:
+            print(line)
+            data_json = json.loads(line.strip())
+            content, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, data_json)
+            out = {
+                'url': data_json.get('url'),
+                'content': content,
+                'main_html': main_html,
+                'content_list': content_list,
+                'html': reader.read(
+                    f'{root}/{data_json.get("path")}'
+                ).decode('utf-8'),
+                'statics': statics
+            }
+            Statics(statics).print()
+            statics_pre.merge_statics(statics)
+            writer.write(
+                f'{outputPath}/{args.tool}/{data_json.get("track_id")}.jsonl',
+                json.dumps(out).encode('utf-8') + b'\n'
+            )
 
 
 def main():
@@ -71,33 +95,27 @@ def main():
             if args.tool == 'magic_html':
                 from bench.eval.magic_html import eval_magic_html
                 output = eval_magic_html(html, fileName)
+                out = {
+                    'url': url,
+                    'content': output,
+                    'html': html,
+                }
+                writer.write(
+                    f'{outputPath}/{args.tool}/{fileName}.jsonl',
+                    json.dumps(out).encode('utf-8') + b'\n'
+                )
             elif args.tool == 'unstructured':
                 from bench.eval.unstructured_eval import eval_unstructured
                 output = eval_unstructured(html, fileName)
-            elif args.tool == 'ours':
-                try:
-                    print(pipelineConfigPath)
-                    print(pipeline_data_path)
-                    print(f'{root}/data/{origin_filepath}')
-                    output, content_list, main_html, statics = eval_ours_extract_html(pipelineConfigPath, pipeline_data_path, f'{root}/data/{origin_filepath}', layout_type, url)
-                    out['content_list'] = content_list
-                    out['main_html'] = main_html
-                    out['statics'] = statics
-                    Statics(statics).print()
-                    statics_pre.merge_statics(statics)
-                except Exception as e:
-                    summary.error_summary['count'] += 1
-                    detail.result_detail['error_result'].append(Error_Item(
-                        file_path=origin_filepath,
-                        error_detail=str(e)
-                    ))
-            else:
-                raise ValueError(f'Invalid tool: {args.tool}')
+                out = {
+                    'url': url,
+                    'content': output,
+                    'html': html,
+                }
+                writer.write(f'{outputPath}/{args.tool}/{fileName}.jsonl', json.dumps(out).encode('utf-8') + b'\n')
+    if args.tool == 'ours':
+        run_ours(pipelineConfigPath, pipeline_data_path, outputPath, statics_pre)
 
-            out['url'] = url
-            out['content'] = output
-            out['html'] = html
-            writer.write(f'{outputPath}/{args.tool}/{fileName}.jsonl', json.dumps(out).encode('utf-8') + b'\n')
     summary.finish()
     detail.finish()
     statics_gt.print()

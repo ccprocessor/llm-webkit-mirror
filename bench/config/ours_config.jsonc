@@ -25,7 +25,7 @@
                 "enable": true,
                 "python_class": "llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor",
                 "class_init_kwargs": {
-                    "html_parent_dir": "bench/data/"
+                    "html_parent_dir": "bench/"
                 }
             },
             {

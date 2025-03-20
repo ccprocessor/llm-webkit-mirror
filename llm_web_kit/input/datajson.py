@@ -97,8 +97,11 @@ class StructureMapper(ABC):
         md = md.strip() + self.__text_end  # 加上结尾换行符
         return md
 
-    def to_nlp_md(self):
-        md = self.__to_md(exclude_nodes=DocElementType.MM_NODE_LIST)
+    def to_nlp_md(self, MM_NODE_LIST=[]):
+        if MM_NODE_LIST:
+            md = self.__to_md(exclude_nodes=MM_NODE_LIST)
+        else:
+            md = self.__to_md(exclude_nodes=DocElementType.MM_NODE_LIST)
         return md
 
     def to_mm_md(self):

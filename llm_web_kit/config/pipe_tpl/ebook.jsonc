@@ -1,0 +1,25 @@
+{
+    "extractor_pipe": {
+        "pre_extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.ebook.pre_extractor.EBOOKFileFormatFilterPreExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.ebook.extractor.EBOOKFileFormatExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "post_extractor": [
+            {
+                "enable": false,
+                "python_class": "llm_web_kit.extractor.ebook.post_extractor.EBOOKFileFormatPostExtractor",
+                "class_init_kwargs": {}
+            }
+        ]
+    }
+}

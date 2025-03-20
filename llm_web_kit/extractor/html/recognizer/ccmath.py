@@ -3,12 +3,15 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerException
+from llm_web_kit.exception.exception import (
+    HtmlMathMathjaxRenderRecognizerException, HtmlMathRecognizerException)
 from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
-                                                           tag_script)
+                                                           tag_mjx, tag_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
+from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
+    BaseMathRender, MathRenderType)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -36,10 +39,17 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         result = []
         self.cm.url = base_url
         # 获取数学公式渲染器
-        math_render = self.cm.get_math_render(raw_html)
+        base_render = BaseMathRender()
+        math_render = base_render.get_math_render(raw_html)
         for cc_html, o_html in main_html_lst:
             if not self.is_cc_html(cc_html):
-                result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
+                # 对于自定义的mathjax，需要单独处理
+                if math_render and math_render.render_type == MathRenderType.MATHJAX and math_render.is_customized_options():
+                    math_render.get_options(raw_html)
+                    print(f'处理mathjax，有自定义配置, options: {math_render.options}')
+                    result.extend(self.process_mathjax_html(cc_html, o_html, math_render, base_url))
+                else:
+                    result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
 
@@ -103,7 +113,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         else:
             raise HtmlMathRecognizerException(f'No ccmath element found in content: {parsed_content}')
 
-    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: str, base_url: str) -> List[Tuple[str, str]]:
+    def process_ccmath_html(self, cc_html: str, o_html: str, math_render: BaseMathRender, base_url: str) -> List[Tuple[str, str]]:
         """处理数学公式，将外层标签修改为 ccmath.
 
         Args:
@@ -114,7 +124,9 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             List[Tuple[str, str]]: 处理后的HTML对
         """
         # node是从cc_html中解析出来的lxml节点
+        self.cm.url = base_url
         tree = self._build_html_tree(cc_html)
+        math_render_type = math_render.get_render_type()
         if tree is None:
             raise HtmlMathRecognizerException(f'Failed to load html: {cc_html}')
 
@@ -127,38 +139,51 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
             if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
-                tag_common_modify.modify_tree(self.cm, math_render, original_html, node, parent)
+                tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
             # script[type="math/tex"]
             # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-            #     tag_common_modify.modify_tree(cm, math_render, original_html, node, parent)
+                # tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
 
             # math tags
             if node.tag == 'math' or node.tag.endswith(':math'):
-                tag_math.modify_tree(self.cm, math_render, original_html, node, parent)
+                tag_math.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
             # script[type="math/asciimath"]
             # if node.tag == 'script' and node.get('type') == 'math/asciimath':
             if node.tag in ('p','div') and node.text and '`' in node.text:
-                tag_asciimath.modify_tree(self.cm, math_render, original_html, node, parent)
+                tag_asciimath.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
-            # Remove any .MathJax_Preview spans
-            if node.tag == 'span' and node.get('class') and 'MathJax_Preview' in node.get('class'):
-                pass
+            if node.tag == 'mjx-container':
+                tag_mjx.modify_tree(self.cm, math_render, original_html, node)
 
             # img中的latex
             if node.tag == 'img':
-                tag_img.modify_tree(self.cm, math_render, original_html, node, parent)
+                tag_img.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
             # span.katex
             if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
-                tag_script.modify_tree(self.cm, math_render, original_html, node, parent)
+                tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
             # 14. 只处理只有一层的p标签
             if node.tag == 'p' and len(node.getchildren()) == 0:
-                tag_common_modify.modify_tree(self.cm, math_render, original_html, node, parent)
-        # 打印处理后的html
-        # print(self._element_to_html(tree))
+                tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
+        # 保存处理后的html
+        # with open('math_physicsforums_1_processed.html', 'w') as f:
+        #     f.write(self._element_to_html(tree))
+        return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
+
+    def process_mathjax_html(self, cc_html: str, o_html: str, math_render: BaseMathRender, base_url: str) -> List[Tuple[str, str]]:
+        """处理mathjax有自定义标识符的数学公式."""
+        self.cm.url = base_url
+        try:
+            tree = self._build_html_tree(cc_html)
+            math_render.find_math(tree)
+
+            # with open('math_physicsforums_1_processed.html', 'w') as f:
+            #     f.write(self._element_to_html(tree))
+        except Exception as e:
+            raise HtmlMathMathjaxRenderRecognizerException(f'处理mathjax有自定义标识符的数学公式失败: {e}')
         return self.html_split_by_tags(self._element_to_html(tree), [CCTag.CC_MATH_INTERLINE])
 
 
@@ -189,11 +214,17 @@ if __name__ == '__main__':
         '</head> '
         '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
-    print(math_recognizer.recognize(
-        'https://www.baidu.com',
-        test_html,
-        raw_html
-    ))
+    # print(math_recognizer.recognize(
+    #     'https://www.baidu.com',
+    #     test_html,
+    #     raw_html
+    # ))
+    # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
+    # print(math_recognizer.recognize(
+    #     'https://www.baidu.com',
+    #     [(raw_html, raw_html)],
+    #     raw_html
+    # ))
     # print(math_recognizer.to_content_list_node(
     #     'https://www.baidu.com',
     #     '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
@@ -203,4 +234,10 @@ if __name__ == '__main__':
     # print(math_recognizer.html_split_by_tags(
     #     raw_html,
     #     ['ccmath']
+    # ))
+    # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
+    # print(math_recognizer.recognize(
+    #     'https://www.baidu.com',
+    #     [(raw_html, raw_html)],
+    #     raw_html
     # ))

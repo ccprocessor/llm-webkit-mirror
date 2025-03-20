@@ -257,6 +257,12 @@
         "groundtruth_filepath":"groundtruth/math_physicsforums_1.jsonl",
         "layout_type": "forum"
     },
+    "math_physicsforums_2": {
+        "url": "https://physicshelpforum.com/t/latex-upgrade-physics-forum-powered-by-mathjax-v3.17489/",
+        "origin_filepath":"origin/math_physicsforums_2.html",
+        "groundtruth_filepath":"groundtruth/math_physicsforums_2.jsonl",
+        "layout_type": "forum"
+    },
     "table_1":{
         "url": "https://grondwerken-overzicht.nl/noordwolde/gwy",
         "origin_filepath":"origin/table_1.html",

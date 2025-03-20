@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 
+from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
 from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
@@ -202,32 +203,7 @@ base_dir = Path(__file__).parent
 class TestCodeRecognizer(unittest.TestCase):
     def setUp(self):
         self.rec = CodeRecognizer()
-        self.chain_config = {
-            'extractor_pipe': {
-                'enable': True,
-                'validate_input_format': True,
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {}
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
-                        'class_init_kwargs': {}
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.post_extractor.HTMLFileFormatPostExtractor'
-                    }
-                ]
-            },
-        }
+        self.chain_config = load_pipe_tpl('html')
 
     def compare_code(self, expect: str, answer: str) -> None:
         self.assertEqual(expect, answer)

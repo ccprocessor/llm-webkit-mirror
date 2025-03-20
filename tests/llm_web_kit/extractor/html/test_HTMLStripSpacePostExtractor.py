@@ -58,7 +58,7 @@ class TestHTMLStripSpacePostExtractor(unittest.TestCase):
         self.assertEqual(text_1_processed, text_1_expected)
 
         text_2_processed = processed[0][0]['content']['items'][0][0][1]['c']
-        text_2_expected = 'E=mc^2   '
+        text_2_expected = 'E=mc^2 '
         self.assertEqual(text_2_processed, text_2_expected)
 
         text_3_processed = processed[0][0]['content']['items'][0][0][2]['c']
@@ -71,7 +71,7 @@ class TestHTMLStripSpacePostExtractor(unittest.TestCase):
         self.assertEqual(text_4_processed, text_4_expected)
 
         text_5_processed = processed[0][1]['content'][1]['c']
-        text_5_expected = 'E=mc^2  '
+        text_5_expected = 'E=mc^2 '
         self.assertEqual(text_5_processed, text_5_expected)
 
         text_6_processed = processed[0][1]['content'][2]['c']

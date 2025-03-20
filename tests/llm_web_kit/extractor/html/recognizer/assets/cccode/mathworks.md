@@ -54,7 +54,7 @@ your MATLAB code, add the `%#codegen` pragma
 to the top of your MATLAB file. When you edit your code in the MATLAB editor,
 the MATLAB Code Analyzer flags functions and constructs that
 are not supported for code generation. See Check Code Using the MATLAB Code Analyzer. When you use the MATLAB
-            Coder™ app,
+ Coder™ app,
 the app screens your code for code generation readiness. At the function
 line, you can use the Code Generation Readiness Tool. See Check Code Using the Code Generation Readiness Tool.
 
@@ -68,7 +68,7 @@ However, running the test file can slow the code generation. It is
 a best practice to pass the properties to the `-args` option
 so that `convertToSingle` does not run the test
 file to determine the argument properties. If you have a MATLAB
-            Coder license,
+ Coder license,
 you can use `coder.getArgTypes` to determine the
 argument properties. For example:
 

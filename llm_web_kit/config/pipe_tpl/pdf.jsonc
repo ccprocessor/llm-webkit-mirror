@@ -1,0 +1,25 @@
+{
+    "extractor_pipe": {
+        "pre_extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.pdf.pre_extractor.PDFFileFormatFilterPreExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "extractor": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.pdf.extractor.PDFFileFormatExtractor",
+                "class_init_kwargs": {}
+            }
+        ],
+        "post_extractor": [
+            {
+                "enable": false,
+                "python_class": "llm_web_kit.extractor.pdf.post_extractor.PDFFileFormatPostExtractor",
+                "class_init_kwargs": {}
+            }
+        ]
+    }
+}

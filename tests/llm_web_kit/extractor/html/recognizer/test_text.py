@@ -3,6 +3,7 @@ import os
 import unittest
 from pathlib import Path
 
+from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
 from llm_web_kit.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
@@ -14,44 +15,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
     def setUp(self):
         self.text_recognize = TextParagraphRecognizer()
         # Config for HTML extraction
-        self.config = {
-            'extractor_pipe': {
-                'enable': True,
-                'validate_input_format': False,
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {
-                            'html_parent_dir': 'tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/',
-                        },
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor',
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.post_extractor.HTMLFileFormatPostExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-            }
-        }
+        self.config = load_pipe_tpl('html-test')
 
     def test_text_1(self):
         """
@@ -87,7 +51,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[:130] == '''For Swivel Hand Rivet Squeezer or any snap Type .187 Shank Diameter Squeezer\n  \n\n Instructions for Selecting Rivet Sets:\n\nTo devel'''
+        assert content_md[:130] == '''For Swivel Hand Rivet Squeezer or any snap Type .187 Shank Diameter Squeezer\n \n\n Instructions for Selecting Rivet Sets:\n\nTo develo'''
 
     def test_text_3(self):
         """
@@ -109,7 +73,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[443:669] == '''2.\n    The speed of light in a material is 2.50x10^8 meters per second. What is the index of refraction of the\n    material?\n\n\n\n\n\n 2. Relevant equations\n\n\n\n\n\n\n\n 3. The\n        attempt at a solution\n\n1. di=22.22\n\n\n\n2. Dont know'''
+        assert content_md[371:584] == '''2.\n The speed of light in a material is 2.50x10^8 meters per second. What is the index of refraction of the\n material?\n\n\n\n\n\n 2. Relevant equations\n\n\n\n\n\n\n\n 3. The\n attempt at a solution\n\n1. di=22.22\n\n\n\n2. Dont know'''
 
     def test_text_4(self):
         """
