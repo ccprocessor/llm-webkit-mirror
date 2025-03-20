@@ -87,7 +87,7 @@ class TestST(unittest.TestCase):
                 summary.total += 1
                 print(f'开始抽取:{fileName}...')
                 try:
-                    output, content_list, main_html, statics = eval_ours_extract_html(self.chainConfig, data_json)
+                    output, content_list, statics = eval_ours_extract_html(self.chainConfig, data_json)
                     # 断言statics中的元素数量和groundtruth_filepath中的元素数量一致
                     with open(groundtruth_filepath, 'r') as f:
                         groundtruth = json.loads(f.readline().strip())
