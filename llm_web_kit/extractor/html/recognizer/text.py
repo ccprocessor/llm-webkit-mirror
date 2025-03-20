@@ -37,6 +37,10 @@ special_symbols = [  # TODO 从文件读取
     '☁'    # 云符号
 ]
 
+LINE_BREAK_WINDOWS = '\\r\\n'
+LINE_BREAK_UNIX = '\\n'
+PARAGRAPH_SEPARATOR = '\n\n'
+
 
 class TextParagraphRecognizer(BaseHTMLElementRecognizer):
     """解析文本段落元素."""
@@ -112,11 +116,11 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         text2 = text2.strip(' ') if text2 else ''
         if lang == 'zh':
             txt = text1 + text2
-            return txt.strip().replace('\\r\\n', '\n').replace('\\n', '\n')
+            return txt.strip().replace(LINE_BREAK_WINDOWS, PARAGRAPH_SEPARATOR).replace(LINE_BREAK_UNIX, PARAGRAPH_SEPARATOR)
         else:
             words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
             txt = text1 + words_sep + text2
-            return txt.strip().replace('\\r\\n', '\n').replace('\\n', '\n')
+            return txt.strip().replace(LINE_BREAK_WINDOWS, PARAGRAPH_SEPARATOR).replace(LINE_BREAK_UNIX, PARAGRAPH_SEPARATOR)
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
         """
@@ -145,7 +149,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     text = ''
                 para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag in ['br']:
-                text += '\n'
+                text += PARAGRAPH_SEPARATOR
             else:
                 if el.text and el.text.strip():
                     text = self.__combine_text(text, el.text.strip())
