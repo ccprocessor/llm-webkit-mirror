@@ -11,6 +11,8 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import element_to_html
 
+from .constant import LINE_BREAK_UNIX, LINE_BREAK_WINDOWS, PARAGRAPH_SEPARATOR
+
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
     '™',  # 商标符号
@@ -110,16 +112,13 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         """
         text1 = text1.strip(' ') if text1 else ''
         text2 = text2.strip(' ') if text2 else ''
-        replaced_text1 = '\\r\\n'
-        replaced_text2 = '\\n'
-        line_str = '\n\n'
         if lang == 'zh':
             txt = text1 + text2
-            return txt.strip().replace(replaced_text1, line_str).replace(replaced_text2, line_str)
+            return txt.strip().replace(LINE_BREAK_WINDOWS, PARAGRAPH_SEPARATOR).replace(LINE_BREAK_UNIX, PARAGRAPH_SEPARATOR)
         else:
             words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
             txt = text1 + words_sep + text2
-            return txt.strip().replace(replaced_text1, line_str).replace(replaced_text2, line_str)
+            return txt.strip().replace(LINE_BREAK_WINDOWS, PARAGRAPH_SEPARATOR).replace(LINE_BREAK_UNIX, PARAGRAPH_SEPARATOR)
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
         """
@@ -135,7 +134,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             el: 代表一个段落的html元素
         """
         para_text = []
-        line_str = '\n\n'
 
         def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
             if el.tag == CCTag.CC_MATH_INLINE:
@@ -149,7 +147,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     text = ''
                 para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag in ['br']:
-                text += line_str
+                text += PARAGRAPH_SEPARATOR
             else:
                 if el.text and el.text.strip():
                     text = self.__combine_text(text, el.text.strip())
