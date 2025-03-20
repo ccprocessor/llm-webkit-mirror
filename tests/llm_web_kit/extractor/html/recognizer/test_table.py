@@ -130,6 +130,7 @@ class TestTableRecognizer(unittest.TestCase):
             result = self.rec.to_content_list_node(base_url, html_to_element(parsed_content), raw_html)
             expect = base_dir.joinpath(test_case['expected'][0])
             expect_json = expect.read_text(encoding='utf-8')
+            print(result)
             assert result['type'] == json.loads(expect_json)['type']
             assert result['content']['is_complex'] == json.loads(expect_json)['content']['is_complex']
             assert result['raw_content'] == json.loads(expect_json)['raw_content']

@@ -95,14 +95,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
 
         main_html, method = self._extract_main_html(raw_html, base_url, page_layout_type)
         main_html_element = html_to_element(main_html)
-        # parsed_html = [(main_html,raw_html)]
         parsed_html = [(main_html_element, raw_html)]
-        """
-        for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
-                             self._extract_image,
-                             self._extract_title, self._extract_paragraph]:
-            parsed_html = extract_func(base_url, parsed_html, raw_html)
-        """
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
@@ -266,7 +259,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         if not node:
             raise HtmlFileExtractorException('node is empty')
         node_type = node.get('type')
-        valid_types = {DocElementType.TITLE, DocElementType.LIST, DocElementType.CODE, DocElementType.EQUATION_INTERLINE, DocElementType.IMAGE, DocElementType.TABLE, DocElementType.IMAGE, DocElementType.PARAGRAPH}
+        valid_types = {DocElementType.TITLE, DocElementType.LIST, DocElementType.CODE, DocElementType.EQUATION_INTERLINE, DocElementType.IMAGE, DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.IMAGE, DocElementType.PARAGRAPH}
         if node_type not in valid_types:
             raise HtmlFileExtractorException(f'Invalid node type: {node_type}')
         # 检查列表类型的节点
@@ -292,7 +285,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             # 检查url、path或data字段是否至少有一个不为空
             return bool(content.get('url') or content.get('path') or content.get('data'))
         # 检测table类型的节点
-        if node.get('type') == DocElementType.TABLE:
+        if node.get('type') == DocElementType.SIMPLE_TABLE or node.get('type') == DocElementType.COMPLEX_TABLE:
             html = node.get('content', {}).get('html')
             # 如果表格的html内容为None或空字符串，则视为无效节点
             return bool(html and html.strip())

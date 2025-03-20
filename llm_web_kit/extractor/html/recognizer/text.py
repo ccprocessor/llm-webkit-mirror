@@ -225,6 +225,12 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 path[-1].append(copied)
 
             path.append(copied)
+            # elem直接有text，则直接添加返回
+            if has_direct_text(elem):
+                rebuild_path()
+                path[-1].append(copy_helper(elem))
+                yield path[0], path[0]
+                rebuild_path()
             for sub_elem in elem:
                 if has_direct_text(sub_elem) or (sub_elem.tag == 'p' and has_text(sub_elem)):
                     rebuild_path()

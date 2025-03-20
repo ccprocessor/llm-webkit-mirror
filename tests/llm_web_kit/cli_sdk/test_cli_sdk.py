@@ -78,6 +78,7 @@ class TestCliSDK:
 
         assert result.exit_code == 0
         assert result.output
+        print('result.output', result.output)
         output_data = json.loads(result.output)
         assert 'content_list' in output_data
         assert isinstance(output_data['content_list'], list)

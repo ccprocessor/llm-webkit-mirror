@@ -59,7 +59,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 20
+        assert len(self.data_json) == 23
 
         # Config for HTML extraction
         self.config = {
@@ -141,13 +141,13 @@ class TestExtractorChain(unittest.TestCase):
 
         # 然后是simple table
         html_content = html_content_list[4]
-        self.assertEqual(html_content['type'], DocElementType.TABLE)
+        self.assertEqual(html_content['type'], DocElementType.SIMPLE_TABLE)
         self.assertEqual(html_content['content']['is_complex'], False)
         assert html_content['content']['html'].startswith('<table')
 
         # 然后是complex table
         html_content = html_content_list[5]
-        self.assertEqual(html_content['type'], DocElementType.TABLE)
+        self.assertEqual(html_content['type'], DocElementType.COMPLEX_TABLE)
         self.assertEqual(html_content['content']['is_complex'], True)
 
         # 然后是list
@@ -210,6 +210,7 @@ class TestExtractorChain(unittest.TestCase):
 
         # md格式
         md_content = result.get_content_list().to_nlp_md()
+        print('md_content', md_content)
         self.assertEqual(md_content, self.md_expected_content)
         self.assertNotEqual(md_content[-2], '\n')
         self.assertEqual(md_content[-1], '\n')
@@ -299,8 +300,9 @@ DEF
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
+        print(result.get_content_list()._get_data())
         self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
-        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt([]))
+        self.assertNotIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt())
 
     def test_lineno_detect(self):
         chain = ExtractSimpleFactory.create(self.config)
@@ -445,3 +447,45 @@ DEF
         result = chain.extract(input_data)
         result_content_list = result.get_content_list()._get_data()
         assert int(result_content_list[0][0]['content']['list_nest_level']) == 3
+
+    def test_table_include_entity(self):
+        """测试table包含实体."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[19]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        assert '&amp;' not in result_md
+        assert '&nbsp;' not in result_md
+
+    def test_content_list_empty(self):
+        """测试content_list为空."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[20]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_mmd = result.get_content_list().to_mm_md()
+        assert '京大平层，奶油风浪漫到家！' in content_mmd
+
+    def test_nlp_md_exclude_node_types(self):
+        """测试nlp_md排除节点类型."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[21]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_txt = result.get_content_list().to_nlp_md(exclude_nodes=[DocElementType.COMPLEX_TABLE])
+        assert '<table>' not in content_txt
+        assert '</table>' not in content_txt
+
+    def test_para_is_short(self):
+        """测试para识别后内容太短."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[22]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_txt = result.get_content_list().to_nlp_md()
+        assert len(content_txt) == 3985

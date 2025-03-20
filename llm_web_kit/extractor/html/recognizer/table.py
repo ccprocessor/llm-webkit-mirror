@@ -53,8 +53,12 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         # 确保 table_body 不为 None 且是字符串类型
         html_content = table_body if table_body is not None else ''
         # 使用传入的 raw_html_segment 或将 parsed_content 转换为字符串
+        if table_type:
+            cc_table_type = DocElementType.COMPLEX_TABLE
+        else:
+            cc_table_type = DocElementType.SIMPLE_TABLE
         d = {
-            'type': DocElementType.TABLE,
+            'type': cc_table_type,
             'raw_content': raw_html_segment,
             'content': {
                 'html': html_content,
@@ -88,10 +92,11 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __is_simple_table(self, tree: HtmlElement) -> bool:
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
+        print('tree', self._element_to_html(tree))
         cells = tree.xpath('.//td | .//th')
         for cell in cells:
-            colspan_str = cell.get('colspan', '1')
-            rowspan_str = cell.get('rowspan', '1')
+            colspan_str = cell.get('colspan', '1').strip('"\'\\')
+            rowspan_str = cell.get('rowspan', '1').strip('"\'\\')
             try:
                 colspan = int(colspan_str)
                 rowspan = int(rowspan_str)

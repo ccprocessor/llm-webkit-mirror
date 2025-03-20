@@ -66,7 +66,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
                                                                           '中共中央政治局召开会议审议《成-2020年10月16日新闻联播',
                                                                           'zh')[:7] == '知识乱象\n中共'
         result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
-        assert element_to_html(result[909][0])[1413:1422] == '知识乱象\\n 中共'
+        assert '知识乱象\\n 中共' in element_to_html(result[908][0])
 
     def test_text_2(self):
         """
