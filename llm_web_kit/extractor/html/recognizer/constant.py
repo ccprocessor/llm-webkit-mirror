@@ -1,3 +1,0 @@
-LINE_BREAK_WINDOWS = '\\r\\n'
-LINE_BREAK_UNIX = '\\n'
-PARAGRAPH_SEPARATOR = '\n\n'
