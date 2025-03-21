@@ -148,7 +148,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             # 这里 遍历列表的每个直接子元素，每个子元素作为一个段落。 TODO 列表里有列表、图片、表格的情况先不考虑。
             # 获取到每个子元素的全部文本，忽略其他标签
             text_paragraph = self.__extract_list_item_text(item)
-            content_list.append(text_paragraph)
+            if len(text_paragraph) > 0:
+                content_list.append(text_paragraph)
 
         return list_nest_level, is_ordered, content_list, raw_html, tail_text
 
@@ -203,13 +204,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             elif el.tag == CCTag.CC_CODE_INLINE:
                 paragraph.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag == 'br':
-                text_paragraph.append(paragraph)
-                paragraph = []
+                if len(paragraph) > 0:
+                    text_paragraph.append(paragraph)
+                    paragraph = []
             else:
                 if el.text and el.text.strip():
                     paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
                 for child in el.getchildren():
-                    paragraph.extend(__extract_list_item_text_recusive(child))
+                    p = __extract_list_item_text_recusive(child)
+                    if len(p) > 0:
+                        paragraph.extend(p)
 
             # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
             if el.tag != 'li' and el.tail and el.tail.strip():
@@ -218,7 +222,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             return paragraph
 
         if paragraph := __extract_list_item_text_recusive(root):
-            text_paragraph.append(paragraph)
+            if len(paragraph) > 0:
+                text_paragraph.append(paragraph)
 
         return text_paragraph
 
@@ -240,4 +245,4 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             list_nest_level = ele.attrib.get('list_nest_level', 0)
             return ordered, content_list, raw_html, list_nest_level
         else:
-            raise HtmlListRecognizerException(f'{html}中没有cctitle标签')
+            raise HtmlListRecognizerException(f'{html}中没有cclist标签')

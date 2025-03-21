@@ -453,7 +453,7 @@ DEF
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
         print('content_txt', content_txt)
-        assert len(content_txt) == 2028
+        assert len(content_txt) == 2022
 
     def test_xml_tag(self):
         """测试xml标签."""
