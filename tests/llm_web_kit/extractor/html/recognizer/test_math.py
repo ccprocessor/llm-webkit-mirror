@@ -369,7 +369,7 @@ class TestMathRecognizer(unittest.TestCase):
                     [(html_to_element(test_case['input'][0][0]), html_to_element(test_case['input'][0][1]))],
                     test_case['raw_html']
                 )
-                # self.assertEqual(len(output_html), len(test_case['expected']), msg=f'input is: {test_case["input"]}')
+                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'input is: {test_case["input"]}')
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
                     self.assertEqual(element_to_html(output_html[i][0]), expect, msg=f'result is: {element_to_html(output_html[i][0])}, expected is: {expect}')
