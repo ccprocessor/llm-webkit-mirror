@@ -74,7 +74,7 @@ def build_data_source_map():
 def get_data_source_map():
     resource_name = "data_source_safety_map"
     if not singleton_resource_manager.has_name(resource_name):
-        singleton_resource_manager.set_resource(resource_name, build_data_source_map)
+        singleton_resource_manager.set_resource(resource_name, build_data_source_map())
     return singleton_resource_manager.get_resource(resource_name)
 
 def lookup_safe_type_by_data_source(data_source: str) -> str:

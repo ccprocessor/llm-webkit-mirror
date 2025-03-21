@@ -37,7 +37,6 @@ class TestPoliticalCPUModel(TestCase):
         with self.assertRaises(RuntimeError):
             model._load_model()
 
-
     @patch.object(PoliticalCPUModel, '_load_model')
     def test_get_resource_requirement(self, mock_load_model):
         """Test resource requirements."""
@@ -427,7 +426,6 @@ class TestBaseModelResource(TestCase):
         model._cleanup_model()  # Should not raise any error
         assert model.model is None
 
-
     @patch.object(PoliticalCPUModel, '_load_model')
     def test_cleanup(self, mock_load_model):
         """Test cleanup functionality."""
@@ -481,7 +479,6 @@ class TestBasePredictor(TestCase):
         assert requirement.num_cpus == 12
         assert requirement.memory_GB == 64
         assert requirement.num_gpus == 1
-
 
 
 if __name__ == '__main__':

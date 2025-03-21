@@ -128,7 +128,7 @@ def get_domain_dict():
 
 def get_domain_level_checker() -> DomainChecker:
     if not singleton_resource_manager.has_name("domain_level_checker"):
-        singleton_resource_manager.add_resource("domain_level_checker", DomainChecker())
+        singleton_resource_manager.set_resource("domain_level_checker", DomainChecker())
     return singleton_resource_manager.get_resource("domain_level_checker")
 
 
