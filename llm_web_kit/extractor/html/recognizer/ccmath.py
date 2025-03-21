@@ -171,8 +171,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                     # TODO: 待优化，渲染器通用方案兜底
-                    # if math_render_type == MathRenderType.MATHJAX:
-                    #     math_render.find_math(node)
+                    if math_render_type == MathRenderType.MATHJAX:
+                        math_render.find_math(node)
             # 保存处理后的html
             # with open('math_courses_processed.html', 'w') as f:
             #     f.write(self._element_to_html(tree))

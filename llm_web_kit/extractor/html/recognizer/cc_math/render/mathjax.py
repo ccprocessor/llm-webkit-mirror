@@ -249,6 +249,11 @@ class MathJaxRender(BaseMathRender):
         skip_tags = MATHJAX_OPTIONS.get('skipTags', ['script', 'noscript', 'style', 'textarea', 'pre', 'code'])
         if element.tag in skip_tags:
             return
+        # 跳过ccmath标签
+        from llm_web_kit.extractor.html.recognizer.recognizer import \
+            BaseHTMLElementRecognizer
+        if BaseHTMLElementRecognizer.is_cc_html(element):
+            return
 
         # 检查是否应该忽略该元素
         if self._should_ignore_element(element):
