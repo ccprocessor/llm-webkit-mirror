@@ -149,11 +149,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if node.tag == 'math' or node.tag.endswith(':math'):
                 tag_math.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
-            # script[type="math/asciimath"]
-            # if node.tag == 'script' and node.get('type') == 'math/asciimath':
-            if node.tag in ('p','div') and node.text and '`' in node.text:
-                tag_asciimath.modify_tree(self.cm, math_render_type, original_html, node, parent)
-
             if node.tag == 'mjx-container':
                 tag_mjx.modify_tree(self.cm, math_render, original_html, node)
 
@@ -165,11 +160,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
                 tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
-            # 14. 只处理只有一层的p标签
-            if node.tag == 'p' and len(node.getchildren()) == 0:
-                tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
+            # 只有有渲染器的网站才会走下面文本匹配逻辑
+            if math_render_type:
+                # script[type="math/asciimath"]
+                # if node.tag == 'script' and node.get('type') == 'math/asciimath':
+                if node.tag in ('p','div') and node.text and '`' in node.text:
+                    tag_asciimath.modify_tree(self.cm, math_render_type, original_html, node, parent)
+
+                # 14. 只处理只有一层的p标签
+                if node.tag == 'p' and len(node.getchildren()) == 0:
+                    tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
         # 保存处理后的html
-        # with open('math_physicsforums_1_processed.html', 'w') as f:
+        # with open('math_courses_processed.html', 'w') as f:
         #     f.write(self._element_to_html(tree))
         return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
 
@@ -214,11 +216,15 @@ if __name__ == '__main__':
         '</head> '
         '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
-    # print(math_recognizer.recognize(
-    #     'https://www.baidu.com',
-    #     test_html,
-    #     raw_html
-    # ))
+    # with open('math_courses.html', 'r') as f:
+    #     raw_html = f.read()
+    # from llm_web_kit.libs.html_utils import html_to_element
+    # root = html_to_element(raw_html)
+    # math_recognizer.recognize(
+    #         'https://www.baidu.com',
+    #         [(root, root)],
+    #         raw_html
+    #     )
     # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
     # print(math_recognizer.recognize(
     #     'https://www.baidu.com',

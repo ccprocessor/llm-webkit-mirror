@@ -46,12 +46,12 @@ TEST_CASES = [
             ('<p>$x = 5$,$$x=6$$</p>',
              '<p>$x = 5$,$$x=6$$</p>')
         ],
-        'raw_html': '<p>$x = 5$,$$x=6$$</p>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script><p>$x = 5$,$$x=6$$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>',
-             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>'),
-             ('<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>',
-              '<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>')
+            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>')
         ]
     },
     {
@@ -59,10 +59,10 @@ TEST_CASES = [
             ('<p>$x = 5$,$$x=6$$,$x=4$</p>',
              '<p>$x = 5$,$$x=6$$,$x=4$</p>')
         ],
-        'raw_html': '<p>$x = 5$,$$x=6$$,$x=4$</p>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script> <p>$x = 5$,$$x=6$$,$x=4$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>',
-             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>'),
+            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>',
+             '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>'),
         ]
     },
     {
@@ -70,16 +70,16 @@ TEST_CASES = [
             ('<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
              '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>')
         ],
-        'raw_html': '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script> <p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
         'expected': [
             ('<p>By substituting </p>',
              '<p>By substituting </p>'),
-            ('<p><ccmath-interline type="latex" by="None" html="x">x</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="None" html="x">x</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>'),
             ('<p> with </p>',
              '<p> with </p>'),
-            ('<p><ccmath-interline type="latex" by="None" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="None" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
             ('<p>, the general</p>',
              '<p>, the general</p>')
         ]
@@ -88,9 +88,9 @@ TEST_CASES = [
         'input': [
             ('<script type="math/tex">x^2 + y^2 = z^2</script>', '<script type="math/tex">x^2 + y^2 = z^2</script>')
         ],
-        'raw_html': '<script type="math/tex">x^2 + y^2 = z^2</script>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script><script type="math/tex">x^2 + y^2 = z^2</script>',
         'expected': [
-            ('<html><head><ccmath-inline type="latex" by="None" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>', '<html><head><ccmath-inline type="latex" by="None" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>')
+            ('<html><head><ccmath-inline type="latex" by="mathjax" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>', '<html><head><ccmath-inline type="latex" by="mathjax" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>')
         ]
     },
     {
@@ -368,8 +368,7 @@ class TestMathRecognizer(unittest.TestCase):
                     [(html_to_element(test_case['input'][0][0]), html_to_element(test_case['input'][0][1]))],
                     test_case['raw_html']
                 )
-                expect_len = len(test_case['expected'])
-                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
+                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'input is: {test_case["input"]}')
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
                     self.assertEqual(element_to_html(output_html[i][0]), expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
@@ -492,8 +491,8 @@ class TestCCMATH(unittest.TestCase):
 if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
-    # r.test_math_recognizer()
-    r.test_math_recognizer_html()
+    r.test_math_recognizer()
+    # r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()
     # html = r'<p class="lt-math-15120">\[\begin{array} {ll} {5 \cdot 3 = 15} &amp;{-5(3) = -15} \\ {5(-3) = -15} &amp;{(-5)(-3) = 15} \end{array}\]</p>'
