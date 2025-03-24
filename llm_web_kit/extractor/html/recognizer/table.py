@@ -10,6 +10,7 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import remove_element
+from llm_web_kit.libs.text_utils import normalize_text_segment
 
 
 class TableRecognizer(BaseHTMLElementRecognizer):
@@ -92,7 +93,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __is_simple_table(self, tree: HtmlElement) -> bool:
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
-        print('tree', self._element_to_html(tree))
         cells = tree.xpath('.//td | .//th')
         for cell in cells:
             colspan_str = cell.get('colspan', '1').strip('"\'\\')
@@ -225,7 +225,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                         remove_element(child)
                 # 将非表格内容拼接后放在表格前面
                 if parse_res:
-                    elem.text = ' '.join(parse_res)
+                    elem.text = ' '.join(normalize_text_segment(item) for item in parse_res)
             else:
                 # 没有嵌套表格，直接简化
                 math_res = self.__check_table_include_math_code(elem)
@@ -233,7 +233,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 for item in list(elem.iterchildren()):
                     remove_element(item)
                 if parse_res:
-                    elem.text = ' '.join(parse_res)
+                    elem.text = ' '.join(normalize_text_segment(item) for item in parse_res)
             return
         # 非 td/th 元素继续递归处理
         for child in elem.iterchildren():
