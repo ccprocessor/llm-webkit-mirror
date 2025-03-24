@@ -165,26 +165,16 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                     # TODO: 待优化，渲染器通用方案兜底
-                    if math_render_type == MathRenderType.MATHJAX:
-                        math_render.find_math(node)
+                    try:
+                        if math_render_type == MathRenderType.MATHJAX:
+                            math_render.find_math(node)
+                    except Exception as e:
+                        raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
             # 保存处理后的html
             # with open('math_courses_processed.html', 'w') as f:
             #     f.write(self._element_to_html(tree))
         except Exception as e:
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
-        return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
-
-    def process_mathjax_html(self, cc_html: HtmlElement, o_html: HtmlElement, math_render: BaseMathRender, base_url: str) -> List[Tuple[HtmlElement, HtmlElement]]:
-        """处理mathjax有自定义标识符的数学公式."""
-        self.cm.url = base_url
-        try:
-            tree = cc_html
-            math_render.find_math(tree)
-
-            # with open('math_physicsforums_1_processed.html', 'w') as f:
-            #     f.write(self._element_to_html(tree))
-        except Exception as e:
-            raise HtmlMathMathjaxRenderRecognizerException(f'处理mathjax有自定义标识符的数学公式失败: {e}')
         return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
 
 
