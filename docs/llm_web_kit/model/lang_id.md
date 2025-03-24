@@ -65,7 +65,6 @@ print(update_language_by_str(text, is_cn_specific=True))
 
 使用单cpu进行推理
 
-
 ### 默认参数，使用lid176和lid218e模型（俄文文本）
 
 共有 2099 条数据

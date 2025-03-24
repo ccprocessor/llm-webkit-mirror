@@ -206,7 +206,6 @@ def test_update_language_by_str():
         # 验证返回结果
         expected_result = {
             'language': 'en',
-            'language_details': 'eng_Latn'
         }
         assert result == expected_result, f'Expected {expected_result}, but got {result}'
         print('Test passed!')
