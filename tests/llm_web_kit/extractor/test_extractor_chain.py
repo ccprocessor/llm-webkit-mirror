@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 24
+        assert len(self.data_json) == 26
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -453,7 +453,7 @@ DEF
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
         print('content_txt', content_txt)
-        assert len(content_txt) == 2028
+        assert len(content_txt) == 2022
 
     def test_xml_tag(self):
         """测试xml标签."""
@@ -464,3 +464,23 @@ DEF
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_mm_md()
         self.assertIn('Every child that attends a CHICKS break has a deserving story', result_md)
+
+    def test_math_dollar(self):
+        """测试math美元符号."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[24]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_nlp_md()
+        self.assertIn(r'\$16.8 million', result_md)
+
+    def test_math_non_asciimath(self):
+        """测试普通文本中的``不应该被识别为asciimath."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[25]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_nlp_md()
+        self.assertIn(r'\`Queen Helena\`', result_md)

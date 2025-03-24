@@ -149,7 +149,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     text = ''
                 para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag in ['br']:
-                text += PARAGRAPH_SEPARATOR
+                text += PARAGRAPH_SEPARATOR  # TODO 这个地方直接加换行是错误点做法，需要利用数据结构来保证段落。
             else:
                 if el.text and el.text.strip():
                     text = self.__combine_text(text, el.text.strip())
