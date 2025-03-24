@@ -350,7 +350,7 @@ if __name__ == '__main__':
     print(update_language_by_str(text))
 
     text = '你好，这是一个测试。这个语言是中文'
-    print(update_language_by_str(text,is_cn_specific=True))
+    print(update_language_by_str(text))
 
     text = "```python\nprint('hello world')\n``` 这是一个中文的文档，包含了一些代码"
     print(update_language_by_str(text))
@@ -359,7 +359,4 @@ if __name__ == '__main__':
     print(update_language_by_str(text))
 
     text = '\\begin{equation}\n x^2 + y^2 = 1 \n\\end{equation} This is a test document, including some math equations'
-    print(update_language_by_str(text))
-
-    text = 'Это русский текст.'
     print(update_language_by_str(text))
