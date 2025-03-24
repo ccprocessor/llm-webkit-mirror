@@ -3,55 +3,20 @@ import os
 import unittest
 from pathlib import Path
 
+from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
 from llm_web_kit.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 from llm_web_kit.extractor.html.recognizer.text import TextParagraphRecognizer
 from llm_web_kit.input.datajson import DataJson
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 
 class TestTextParagraphRecognize(unittest.TestCase):
     def setUp(self):
         self.text_recognize = TextParagraphRecognizer()
         # Config for HTML extraction
-        self.config = {
-            'extractor_pipe': {
-                'enable': True,
-                'validate_input_format': False,
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {
-                            'html_parent_dir': 'tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/',
-                        },
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor',
-                    },
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.post_extractor.HTMLFileFormatPostExtractor',
-                        'class_init_kwargs': {},
-                    }
-                ],
-            }
-        }
+        self.config = load_pipe_tpl('html-test')
 
     def test_text_1(self):
         """
@@ -63,9 +28,9 @@ class TestTextParagraphRecognize(unittest.TestCase):
             html_content = file.read()
         assert self.text_recognize._TextParagraphRecognizer__combine_text('知识乱象\n',
                                                                           '中共中央政治局召开会议审议《成-2020年10月16日新闻联播',
-                                                                          'zh')[:7] == '知识乱象\n中共'
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert result[909][0][1413:1422] == '知识乱象\\n 中共'
+                                                                          'zh') == '知识乱象\n中共中央政治局召开会议审议《成-2020年10月16日新闻联播'
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert '知识乱象\\n\\n 中共中央政治局' in element_to_html(result[908][0])
 
     def test_text_2(self):
         """
@@ -87,7 +52,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[:130] == '''For Swivel Hand Rivet Squeezer or any snap Type .187 Shank Diameter Squeezer\n  \n\n Instructions for Selecting Rivet Sets:\n\nTo devel'''
+        assert 'Selecting Rivet Sets:\n\n To develop maximum power' in content_md
 
     def test_text_3(self):
         """
@@ -109,7 +74,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[443:669] == '''2.\n    The speed of light in a material is 2.50x10^8 meters per second. What is the index of refraction of the\n    material?\n\n\n\n\n\n 2. Relevant equations\n\n\n\n\n\n\n\n 3. The\n        attempt at a solution\n\n1. di=22.22\n\n\n\n2. Dont know'''
+        assert "1. The problem statement, all variables and given/known data\n\n A woman of height 1.7 meters stands directly in front of a convex mirror 2.0 meters away. The mirror has a radius of curvature, R=-50cm. Find the location and size of a woman's image using the ray diagram and mirror/lens equation.\n\n----------\n\n 2. The speed of light in a material is 2.50x10^8 meters per second. What is the index of refraction of the material?\n\n 2. Relevant equations\n\n 3. The attempt at a solution\n\n 1. di=22.22\n\n 2. Dont know" in content_md
 
     def test_text_4(self):
         """
@@ -131,7 +96,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[46:475] == '''1. The problem statement, all variables and given/known data\n\n 2. Relevant equations\n\n\n\nSee attachment\n\n\n\n 3. The attempt at a solution\n\nI solved the problem (on the same page as problem, written in pencil) but the direction of the acceleration that I calculated is different, I dont understand why my answer is wrong if the normal acceleration always towards the center and the tangent acceleration is suppossed to be clockwise.'''
+        assert '1. The problem statement, all variables and given/known data\n\n 2. Relevant equations\n\n See attachment\n\n 3. The attempt at a solution\n\n I solved the problem' in content_md
 
     def test_text_5(self):
         """
@@ -153,7 +118,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[1214:1449] == '''Please Note:\n\n 1. Charge the battery on receiving even if it will not be used soon.\n\n 2. Charge the battery EVERY MONTH if not in use for long periods to prevent over-discharging of the battery. This can cause irreparable damage to it.'''
+        assert 'Please Note:\n\n 1. Charge the battery on receiving even if it will not be used soon.\n\n 2. Charge the battery EVERY MONTH if not in use for long periods to prevent over-discharging of the battery. This can cause irreparable damage to it.' in content_md
 
     def test_text_6(self):
         """
@@ -175,7 +140,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[255:450] == '''1813 года\n\n5864.\\t Лабиринт волшебства, или удивительные приключения восточных принцев, сочинение В. Протопоповича; Москва, 1786 г. - в 8°. \n\n\n\n\n\n 5865.\\t Лакировальщик, или ясное и подробное нас'''
+        assert '1813 года\n\n5864. Лабиринт волшебства, или удивительные приключения восточных принцев, сочинение В. Протопоповича; Москва, 1786 г. - в 8°.\n\n 5865. Лакировальщик' in content_md
 
     def test_text_7(self):
         """
@@ -186,8 +151,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         """
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text7.html', 'r') as file:
             html_content = file.read()
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in result[0][0] and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in element_to_html(result[51][0]) and BaseHTMLElementRecognizer.is_cc_html(result[51][0])
 
     def test_text_8(self):
         """
@@ -198,8 +163,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         """
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text8.html', 'r') as file:
             html_content = file.read()
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert "40xy' -ln(x^8) = 0\\n\\n\\nInitial Condition: y(1)=31" in result[0][0] and BaseHTMLElementRecognizer.is_cc_html(result[0][0])
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert "40xy\' -ln(x^8) = 0\\n\\n\\n\\n Initial Condition: y(1)=31\\n\\n\\n\\n Work:" in element_to_html(result[54][0]) and BaseHTMLElementRecognizer.is_cc_html(result[54][0])
 
     def test_text_9(self):
         """
@@ -210,8 +175,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         """
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text9.html', 'r') as file:
             html_content = file.read()
-        result = self.text_recognize.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
-        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in result[50][0] and BaseHTMLElementRecognizer.is_cc_html(result[50][0])
+        result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in element_to_html(result[50][0]) and BaseHTMLElementRecognizer.is_cc_html(result[50][0])
 
     def test_text_10(self):
         """
@@ -233,4 +198,4 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert content_md[306:450] == '''So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![\\":smile:\\"]( "\\"Smile")\n\n)\n\n\n\n1)\n\nIn the book, Michio Kaku says the '''
+        assert 'So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![:smile:]( "Smile    :smile:")\n\n)\n\n 1)\n\n In the book' in content_md

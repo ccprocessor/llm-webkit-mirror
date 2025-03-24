@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 
+from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
 from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
@@ -202,32 +203,7 @@ base_dir = Path(__file__).parent
 class TestCodeRecognizer(unittest.TestCase):
     def setUp(self):
         self.rec = CodeRecognizer()
-        self.chain_config = {
-            'extractor_pipe': {
-                'enable': True,
-                'validate_input_format': True,
-                'pre_extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterPreExtractor',
-                        'class_init_kwargs': {}
-                    }
-                ],
-                'extractor': [
-                    {
-                        'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
-                        'class_init_kwargs': {}
-                    }
-                ],
-                'post_extractor': [
-                    {
-                        'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.post_extractor.HTMLFileFormatPostExtractor'
-                    }
-                ]
-            },
-        }
+        self.chain_config = load_pipe_tpl('html')
 
     def compare_code(self, expect: str, answer: str) -> None:
         self.assertEqual(expect, answer)
@@ -269,12 +245,12 @@ class TestCodeRecognizer(unittest.TestCase):
             base_url = test_case['input'][1]
             print(base_url)
             raw_html = raw_html_path.read_text()
-            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            parts = [
-                part[0]
-                for part in parts
-                if CCTag.CC_CODE in part[0] or CCTag.CC_CODE_INLINE in part[0]
-            ]
+            parts = self.rec.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
+            # parts = [
+            #    part[0]
+            #    for part in parts
+            #    if CCTag.CC_CODE in part[0] or CCTag.CC_CODE_INLINE in part[0]
+            # ]
             # for part in parts:
             #     part_el = html_to_element(part)
             #     answer = get_element_text(part_el).strip()
@@ -283,7 +259,7 @@ class TestCodeRecognizer(unittest.TestCase):
             #     print("--------------------------------------------------")
             answers = []
             for part in parts:
-                part_el = html_to_element(part)
+                part_el = part[0]
                 cccodes = part_el.xpath(f'.//{CCTag.CC_CODE}') + part_el.xpath(
                     f'.//{CCTag.CC_CODE_INLINE}'
                 )
@@ -556,4 +532,4 @@ import com.dao.UsersDao;
 </div>
 """
         # 无须检查内容，只要不爆错就可以了
-        _ = self.rec.recognize('', [(html, html)], html)
+        _ = self.rec.recognize('', [(html_to_element(html), html_to_element(html))], html)

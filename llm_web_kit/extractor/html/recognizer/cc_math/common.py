@@ -61,12 +61,6 @@ class MathType:
     HTMLMATH = 'htmlmath'  # sub, sup, etc.
 
 
-# 数学公式渲染器
-class MathRender:
-    MATHJAX = 'mathjax'
-    KATEX = 'katex'
-
-
 # node.text匹配结果：
 class MathMatchRes:
     ALLMATCH = 'all_match'
@@ -92,12 +86,20 @@ latex_config = {
         ['\\[', '\\]'],
         ['$$', '$$'],
         ['[tex]', '[/tex]'],  # 这个网站自定义的分割，https://www.physicsforums.com/threads/turning-to-a-single-logarithm-then-simply.269419/
-        ['\\begin{equation}', '\\end{equation}'],
-        ['\\begin{align}', '\\end{align}'],
-        ['\\begin{alignat}', '\\end{alignat}'],
-        ['\\begin{array}', '\\end{array}'],
+        # ['\\begin{equation}', '\\end{equation}'],
+        # ['\\begin{align}', '\\end{align}'],
+        # ['\\begin{alignat}', '\\end{alignat}'],
+        # ['\\begin{array}', '\\end{array}'],
         # 添加通用的begin/end匹配
         ['\\begin{.*?}', '\\end{.*?}'],
+    ],
+}
+
+# 兼容一些网站有错误的公式起始结尾
+MATH_MD_CUSTOM_CONFIG = {
+    'mathhelpforum.com': [
+        ['<br />', '\\<br />'],  # 使用双反斜杠
+        ['<br />', '<br />'],
     ],
 }
 
@@ -129,6 +131,10 @@ transform = etree.XSLT(xslt)
 
 
 class CCMATH():
+    def __init__(self):
+        self.url = ''
+
+    # end def
     def wrap_math(self, s, display=False):
         """根据行间行内公式加上$$或$"""
         s = re.sub(r'\s+', ' ', s)
@@ -147,17 +153,31 @@ class CCMATH():
 
     def wrap_math_md(self, s):
         """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
+        if not s:
+            return s
         s = s.strip()
         if s.startswith('$$') and s.endswith('$$'):
-            return s.replace('$$', '')
+            return s.replace('$$', '').strip()
         if s.startswith('$') and s.endswith('$'):
-            return s.replace('$', '')
+            return s.replace('$', '').strip()
         if s.startswith('\\(') and s.endswith('\\)'):
-            return s.replace('\\(', '').replace('\\)', '')
+            return s.replace('\\(', '').replace('\\)', '').strip()
         if s.startswith('\\[') and s.endswith('\\]'):
-            return s.replace('\\[', '').replace('\\]', '')
+            return s.replace('\\[', '').replace('\\]', '').strip()
         if s.startswith('`') and s.endswith('`'):
-            return s.replace('`', '')
+            return s.replace('`', '').strip()
+        s = self.wrap_math_md_custom(s)
+        return s.strip()
+
+    # 循环MATH_MD_CUSTOM_CONFIG，如果url匹配，则去掉特殊网站的公式奇怪的起始结尾
+    def wrap_math_md_custom(self, s):
+        """去掉特殊网站的公式奇怪的起始结尾."""
+        for url, config in MATH_MD_CUSTOM_CONFIG.items():
+            if url in self.url:
+                for start, end in config:
+                    if s.startswith(start) and s.endswith(end):
+                        # 去除 start 和 end
+                        s = s[len(start):-len(end)]
         return s
 
     def wrap_math_space(self, s):
@@ -168,31 +188,6 @@ class CCMATH():
     def extract_asciimath(self, s: str) -> str:
         parsed = asciimath2tex.translate(s)
         return parsed
-
-    def get_math_render(self, html: str) -> str:
-        """获取数学公式渲染器.
-        示例:
-        MathJax:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
-        Katex:
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-        """
-        tree = html_to_element(html)
-        if tree is None:
-            return None
-        # 检查 KaTeX
-        for link in tree.iter('link'):
-            if link.get('href') and 'katex' in link.get('href', '').lower():
-                return MathRender.KATEX
-        # 查找head标签
-        # head = tree.find('head')
-        # if head is not None:
-        # 检查 MathJax
-        for script in tree.iter('script'):
-            src = script.get('src', '').lower()
-            if src and ('mathjax' in src or 'asciimath' in src):
-                return MathRender.MATHJAX
-        return None
 
     def get_equation_type(self, html: str) -> List[Tuple[str, str]]:
         """根据latex_config判断数学公式是行内还是行间公式.
@@ -209,6 +204,7 @@ class CCMATH():
             >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
             ('equation-interline', 'latex')
         """
+
         def check_delimiters(delims_list, s):
             for start, end in delims_list:
                 escaped_start = re.escape(start)
@@ -439,3 +435,6 @@ if __name__ == '__main__':
     print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True))
     print(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False))
     print(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False))
+    # cm.url = 'mathhelpforum.com'
+    # print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))
+    # print(cm.wrap_math_md_custom(r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />'))

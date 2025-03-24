@@ -1,3 +1,5 @@
+from typing import Optional
+
 from lxml.html import HtmlElement
 
 from llm_web_kit.extractor.html.recognizer.code.common import (
@@ -27,111 +29,6 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
             if not c.isspace() and not c.isdigit():
                 code_text += c
     return full_text == code_text
-
-
-def __group_code_by_distance(
-    root: HtmlElement,
-    node_paths: list[list[str]],
-    dist: list[list[int]],
-) -> list[str]:
-    father = list(range(len(node_paths)))
-
-    def get_father(x: int) -> int:
-        if father[x] == x:
-            return x
-        father[x] = get_father(father[x])
-        return father[x]
-
-    edges: list[tuple[int, int, int]] = []
-    root_paths: list[list[str]] = []
-    for i in range(len(node_paths)):
-        root_paths.append(node_paths[i])
-        for j in range(i + 1, len(node_paths)):
-            edges.append((dist[i][j], i, j))
-    edges = sorted(edges)
-
-    used_edge = 0
-    meet = set()
-    for edge in edges:
-        _, i, j = edge
-        i = get_father(i)
-        j = get_father(j)
-        if i != j and (i, j) not in meet:
-            common_node_idx = min(len(root_paths[i]), len(root_paths[j]))
-            for idx, (x, y) in enumerate(zip(root_paths[i], root_paths[j])):
-                if idx == 0:
-                    continue
-                if x != y:
-                    common_node_idx = idx
-                    break
-            maybe_tree_root = __get_html_element(root, root_paths[i][:common_node_idx])
-
-            if len(maybe_tree_root.xpath(f'.//{CCTag.CC_CODE}|.//{CCTag.CC_CODE_INLINE}')) > 0:
-                meet.add((i, j))
-                continue
-
-            if not __is_all_chars_in_code_element(maybe_tree_root):
-                meet.add((i, j))
-                continue
-
-            root_paths[i] = root_paths[i][:common_node_idx]
-            used_edge += 1
-            father[j] = i
-
-    root_paths = [
-        root_path for i, root_path in enumerate(root_paths) if i == get_father(i)
-    ]
-
-    removed = set()
-    root_paths_joined = sorted(
-        list(set(['/'.join(root_path) for root_path in root_paths]))
-    )
-    for x in root_paths_joined:
-        for y in root_paths_joined:
-            if len(x) < len(y) and y.startswith(x):
-                removed.add(y)
-    return [x for x in root_paths_joined if x not in removed]
-
-
-def __compute_distance_matrix(node_paths: list[list[str]]) -> list[list[int]]:
-    """
-    计算节点路径的距离矩阵，具体步骤：
-    1. 创建距离矩阵，计算每两个节点之间的距离
-    2. 距离计算方法：从共同祖先节点到两个节点的路径长度之和
-    例如：
-    节点1路径：/html/body/div/code
-    节点2路径：/html/body/pre/code
-    共同祖先到 body，距离为 2（div->code) + 2(pre->code) = 4
-    节点1和节点2的距离为 4
-
-    距离矩阵（对称矩阵）：
-    [0, 1, 2, 3],
-    [1, 0, 1, 2],
-    [2, 1, 0, 1],
-    [3, 2, 1, 0]
-
-    Args:
-        node_paths: 节点路径
-
-    Returns:
-        list[list[int]]: 距离矩阵
-    """
-    def get_lca_depth(path1: list[str], path2: list[str]) -> int:
-        for i, (x, y) in enumerate(zip(path1, path2)):
-            if x != y:
-                return i
-        return min(len(path1), len(path2))
-
-    n = len(node_paths)
-    dist = [[0] * n for _ in range(n)]
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            lca_depth = get_lca_depth(node_paths[i], node_paths[j])
-            d = len(node_paths[i]) + len(node_paths[j]) - 2 * lca_depth
-            dist[i][j] = dist[j][i] = d
-
-    return dist
 
 
 def __get_code_node_paths(html_el: HtmlElement) -> list[list[str]]:
@@ -223,6 +120,49 @@ def __detect_inline_code(root: HtmlElement, node_paths: list[list[str]]) -> tupl
     return new_node_paths, inline_code
 
 
+def __group_code(root: HtmlElement, node_paths: list[list[str]]) -> list[str]:
+    root_paths = []
+
+    def next_parent(code_node: HtmlElement, code_tags: int) -> tuple[Optional[HtmlElement], int]:
+        parent: Optional[HtmlElement] = code_node.getparent()
+        while parent is not None:
+            new_code_tags = len(parent.xpath('.//code'))
+            if new_code_tags == code_tags:
+                parent = parent.getparent()
+            else:
+                return parent, new_code_tags
+        return None, 0
+
+    while len(node_paths):
+        code_node = __get_html_element(root, node_paths[0])
+        code_tags = len(code_node.xpath('.//code'))
+
+        parent, new_code_tags = next_parent(code_node, code_tags)
+        while parent is not None:
+            if not __is_all_chars_in_code_element(parent):
+                break
+
+            if len(parent.xpath(f'.//{CCTag.CC_CODE}|.//{CCTag.CC_CODE_INLINE}')) > 0:
+                break
+
+            code_node = parent
+            code_tags = new_code_tags
+
+            parent, new_code_tags = next_parent(code_node, code_tags)
+
+        root_path = code_node.getroottree().getpath(code_node)
+        root_paths.append(root_path)
+
+        new_node_path = []
+        for node_path in node_paths:
+            if '/'.join(node_path).startswith(root_path):
+                continue
+            new_node_path.append(node_path)
+        node_paths = new_node_path
+
+    return root_paths
+
+
 def modify_tree(root: HtmlElement) -> None:
     """将 html 树中所有 code 标签转换为代码块.
 
@@ -239,8 +179,8 @@ def modify_tree(root: HtmlElement) -> None:
     elif len(node_paths) == 1:
         tree_roots = ['/'.join(node_paths[0])]
     else:
-        dist_matrix = __compute_distance_matrix(node_paths)  # 计算距离矩阵
-        tree_roots = __group_code_by_distance(root, node_paths, dist_matrix)  # 根据距离矩阵，对code标签进行分组
+        tree_roots = __group_code(root, node_paths)  # 根据距离矩阵，对code标签进行分组
+        tree_roots = sorted(tree_roots)
 
     nodes = __get_code_blocks_nodes(root, tree_roots)  # 获取所有需要被转换为代码块的节点，并进行标签替换
     for node in nodes:

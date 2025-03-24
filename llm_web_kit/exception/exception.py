@@ -234,6 +234,14 @@ class HtmlMathRecognizerException(HtmlRecognizerException):
         super().__init__(custom_message, error_code)
 
 
+class HtmlMathMathjaxRenderRecognizerException(HtmlRecognizerException):
+    """Exception raised during math render."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('HtmlRecognizer', 'HtmlMathMathjaxRenderRecognizerException')
+        super().__init__(custom_message, error_code)
+
+
 class HtmlCodeRecognizerException(HtmlRecognizerException):
     """Exception raised during code content recognition."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
@@ -336,6 +344,14 @@ class ModelInputException(ModelBaseException):
         super().__init__(custom_message, error_code)
 
 
+class ModelRuntimeException(ModelBaseException):
+    """Exception raised for model input data format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'ModelRuntimeException')
+        super().__init__(custom_message, error_code)
+
+
 class ModelOutputException(ModelBaseException):
     """Exception raised for model output data format."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
@@ -357,4 +373,17 @@ class CleanModelException(ModelBaseException):
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
             error_code = ErrorMsg.get_error_code('Model', 'CleanModelException')
+        super().__init__(custom_message, error_code)
+
+
+##############################################################################
+#
+#  Model Exceptions
+#
+##############################################################################
+class CleanModelUnsupportedLanguageException(CleanModelException):
+    """Exception raised for clean model unsupported language."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('Model', 'CleanModelUnsupportedLanguageException')
         super().__init__(custom_message, error_code)

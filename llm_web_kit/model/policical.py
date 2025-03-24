@@ -90,7 +90,7 @@ def decide_political_by_prob(
 ) -> float:
     idx = predictions.index('__label__normal')
     normal_score = probabilities[idx]
-    return normal_score
+    return float(normal_score)
 
 
 def decide_political_func(

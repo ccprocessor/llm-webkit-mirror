@@ -65,10 +65,9 @@ class TestConnections:
 
 class TestDownloadCoreFunctionality(unittest.TestCase):
 
-    @patch('llm_web_kit.model.resource_utils.download_assets.CACHE_TMP_DIR')
+    @patch('llm_web_kit.model.resource_utils.download_assets.CACHE_TMP_DIR', '/tmp')
     @patch('llm_web_kit.model.resource_utils.download_assets.S3Connection')
-    def test_successful_download(self, mock_conn, mock_cache_tmp_dir):
-        mock_cache_tmp_dir.return_value = '/tmp'
+    def test_successful_download(self, mock_conn):
         # Mock connection
         download_data = b'data'
         mock_instance = MagicMock()
@@ -83,10 +82,9 @@ class TestDownloadCoreFunctionality(unittest.TestCase):
             assert result == target
             assert os.path.exists(target)
 
-    @patch('llm_web_kit.model.resource_utils.download_assets.CACHE_TMP_DIR')
+    @patch('llm_web_kit.model.resource_utils.download_assets.CACHE_TMP_DIR', '/tmp')
     @patch('llm_web_kit.model.resource_utils.download_assets.HttpConnection')
-    def test_size_mismatch(self, mock_conn, mock_cache_tmp_dir):
-        mock_cache_tmp_dir.return_value = '/tmp'
+    def test_size_mismatch(self, mock_conn):
         download_data = b'data'
         mock_instance = MagicMock()
         mock_instance.read_stream.return_value = [download_data]

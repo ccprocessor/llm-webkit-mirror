@@ -48,10 +48,10 @@ class TestTextUtils(unittest.TestCase):
 
     def test_collapse_dup_newlines(self):
         # Test basic newline collapsing
-        self.assertEqual(collapse_dup_newlines('hello\n\nworld'), 'hello\nworld')
+        self.assertEqual(collapse_dup_newlines('hello\n\nworld'), 'hello\n\nworld')
 
         # Test multiple consecutive newlines
-        self.assertEqual(collapse_dup_newlines('hello\n\n\n\nworld'), 'hello\nworld')
+        self.assertEqual(collapse_dup_newlines('hello\n\n\n\nworld'), 'hello\n\nworld')
 
         # Test no duplicate newlines
         self.assertEqual(collapse_dup_newlines('hello\nworld'), 'hello\nworld')
@@ -60,10 +60,10 @@ class TestTextUtils(unittest.TestCase):
         self.assertEqual(collapse_dup_newlines(''), '')
 
         # Test string with only newlines
-        self.assertEqual(collapse_dup_newlines('\n\n\n'), '\n')
+        self.assertEqual(collapse_dup_newlines('\n\n\n'), '\n\n')
 
         # Test newlines at start and end
-        self.assertEqual(collapse_dup_newlines('\n\nhello\n\n'), '\nhello\n')
+        self.assertEqual(collapse_dup_newlines('\n\nhello\n\n'), '\n\nhello\n\n')
 
 
 if __name__ == '__main__':

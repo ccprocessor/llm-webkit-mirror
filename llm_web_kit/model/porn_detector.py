@@ -154,3 +154,88 @@ class BertModel:
             outputs.append(output)
 
         return outputs
+
+
+class XlmrModel(BertModel):
+    def __init__(self, model_path: str = None) -> None:
+        if not model_path:
+            model_path = self.auto_download()
+
+        transformers_module = import_transformer()
+
+        self.model = transformers_module.AutoModelForSequenceClassification.from_pretrained(
+            os.path.join(model_path, 'porn_classifier/classifier_hf')
+        )
+        with open(
+            os.path.join(model_path, 'porn_classifier/extra_parameters.json')
+        ) as reader:
+            model_config = json.load(reader)
+
+        self.clip = bool(model_config.get('clip', False))
+        self.max_tokens = int(model_config.get('max_tokens', 300))
+        self.remain_tail = min(
+            self.max_tokens - 1, int(model_config.get('remain_tail', -1))
+        )
+        self.device = model_config.get('device', 'cpu')
+
+        self.model.eval()
+        self.model.to(self.device, dtype=torch.float16)
+
+        self.tokenizer = transformers_module.AutoTokenizer.from_pretrained(
+            os.path.join(model_path, 'porn_classifier/classifier_hf')
+        )
+        self.tokenizer_config = {
+            'padding': True,
+            'truncation': self.remain_tail <= 0,
+            'max_length': self.max_tokens if self.remain_tail <= 0 else None,
+            'return_tensors': 'pt' if self.remain_tail <= 0 else None,
+        }
+
+        self.output_prefix = str(model_config.get('output_prefix', '')).rstrip('_')
+        self.output_postfix = str(model_config.get('output_postfix', '')).lstrip('_')
+
+        self.model_name = str(model_config.get('model_name', 'porn-24m5'))
+
+    def auto_download(self) -> str:
+        """Default download the 23w44.zip model."""
+        resource_name = 'porn-24m5'
+        resource_config = load_config()['resources']
+        porn_24m5_config: Dict = resource_config[resource_name]
+        porn_24m5_s3 = porn_24m5_config['download_path']
+        porn_24m5_md5 = porn_24m5_config.get('md5', '')
+        # get the zip path calculated by the s3 path
+        zip_path = os.path.join(CACHE_DIR, f'{resource_name}.zip')
+        # the unzip path is calculated by the zip path
+        unzip_path = get_unzip_dir(zip_path)
+        logger.info(f'try to make unzip_path: {unzip_path}')
+        # if the unzip path does not exist, download the zip file and unzip it
+        if not os.path.exists(unzip_path):
+            logger.info(f'unzip_path: {unzip_path} does not exist')
+            logger.info(f'try to unzip from zip_path: {zip_path}')
+            if not os.path.exists(zip_path):
+                logger.info(f'zip_path: {zip_path} does not exist')
+                logger.info(f'downloading {porn_24m5_s3}')
+                zip_path = download_auto_file(porn_24m5_s3, zip_path, porn_24m5_md5)
+            logger.info(f'unzipping {zip_path}')
+            unzip_path = unzip_local_file(zip_path, unzip_path)
+        else:
+            logger.info(f'unzip_path: {unzip_path} exist')
+        return unzip_path
+
+    def predict(self, texts: Union[List[str], str]):
+        inputs_dict = self.pre_process(texts)
+        with torch.no_grad():
+            logits = self.model(**inputs_dict['inputs']).logits
+
+            if self.clip:
+                probs = logits.detach().cpu().numpy().clip(min=0, max=1)
+            else:
+                probs = logits.detach().cpu().numpy()
+
+        outputs = []
+        for prob in probs:
+            prob = round(float(prob[0]), 6)
+            output = {self.get_output_key('prob'): prob}
+            outputs.append(output)
+
+        return outputs

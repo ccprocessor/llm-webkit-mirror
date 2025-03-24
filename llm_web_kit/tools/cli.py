@@ -58,7 +58,6 @@ def cli(input_path, output_path, debug_mode):
         extractor = HTMLFileFormatExtractor({})
         data_e = extractor.extract(DataJson(input_data))
         output_json = data_e.to_json()
-
         if output_path:
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)

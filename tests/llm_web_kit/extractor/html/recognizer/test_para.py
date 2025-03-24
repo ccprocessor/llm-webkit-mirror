@@ -20,21 +20,21 @@ class TestTextParagraphRecognizer(unittest.TestCase):
             html = f.read()
 
         # 执行识别
-        result = self.recognizer.recognize('', [(html, html)], html)
+        result = self.recognizer.recognize('', [(html_to_element(html), html_to_element(html))], html)
 
         # 验证结果
         self.assertEqual(len(result), 2)  # 应该识别出2个段落
 
         # 验证第一个段落
         first_para = result[0][0]
-        ccel = html_to_element(first_para)
+        ccel = first_para
         jso = json.loads(ccel.text)
         self.assertEqual(jso[0]['c'], '质量方程')
         self.assertEqual(jso[0]['t'], 'text')
 
         # 验证第二个段落
         second_para = result[1][0]
-        text = html_to_element(second_para).text
+        text = second_para.text
         jso = json.loads(text)
         self.assertEqual(jso[0]['c'], '爱因斯坦的方程')
         self.assertEqual(jso[0]['t'], 'text')

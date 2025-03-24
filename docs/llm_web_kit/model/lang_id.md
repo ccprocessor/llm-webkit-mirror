@@ -15,10 +15,6 @@ huggingface版本：
         "common":{
             "cache_path": "~/.llm_web_kit_cache"
         },
-        "lang-id-176": {
-            "download_path": "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin",
-            "md5": "01810bc59c6a3d2b79c79e6336612f65"
-        },
         "lang-id-218": {
             "download_path": "https://huggingface.co/facebook/fasttext-language-identification/resolve/main/model.bin?download=true",
             "sha256": "8ded5749a2ad79ae9ab7c9190c7c8b97ff20d54ad8b9527ffa50107238fc7f6a"
@@ -32,10 +28,6 @@ s3版本：
 "resources": {
         "common":{
             "cache_path": "~/.llm_web_kit_cache"
-        },
-        "lang-id-176": {
-            "download_path": "s3://web-parse-huawei/shared_resource/language/lid176.bin",
-            "md5": "01810bc59c6a3d2b79c79e6336612f65"
         },
         "lang-id-218": {
             "download_path": "s3://web-parse-huawei/shared_resource/language/lid218e.bin",
@@ -72,6 +64,7 @@ print(update_language_by_str(text, is_cn_specific=True))
 ## 运行时间
 
 使用单cpu进行推理
+
 
 ### 默认参数，使用lid176和lid218e模型（俄文文本）
 

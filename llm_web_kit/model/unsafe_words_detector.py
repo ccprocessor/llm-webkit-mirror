@@ -1,12 +1,11 @@
 import os
 import time
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import ahocorasick
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import SafeModelException
-from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.standard_utils import json_loads
 from llm_web_kit.model.basic_functions.format_check import (is_en_letter,
                                                             is_pure_en_word)
@@ -178,11 +177,9 @@ def get_unsafe_words_checker(language='zh-en') -> UnsafeWordChecker:
     return singleton_resource_manager.get_resource(language)
 
 
-def decide_unsafe_word_by_data_checker(
-    data_dict: dict, unsafeWordChecker: UnsafeWordChecker
+def decide_content_unsafe_word_by_data_checker(
+    content_str: str, unsafeWordChecker: UnsafeWordChecker
 ) -> str:
-    data_obj = DataJson(data_dict)
-    content_str = data_obj.get_content_list().to_txt()
     unsafe_words_list = unsafeWordChecker.check_unsafe_words(content_str=content_str)
     unsafe_word_levels = []
     for w in unsafe_words_list:
@@ -196,64 +193,47 @@ def decide_unsafe_word_by_data_checker(
     return unsafe_word_min_level
 
 
-def unsafe_words_filter(
-    data_dict: Dict[str, Any], language: str, content_style: str
-) -> str:
-    if language in xyz_language_lst:
-        language = 'xyz'
-    elif language in [
-        'zh',
-        'en',
-        'yue',
-        'zho',
-        'eng',
-        'zho_Hans',
-        'zho_Hant',
-        'yue_Hant',
-        'eng_Latn',
-    ]:
-        language = 'zh-en'
-    else:
-        raise SafeModelException(f'Unsupported language: {language}')
+class UnsafeWordsFilter:
+    def __init__(self,raise_not_support_language_exception: bool = False):
+        self.raise_not_support_language_exception = raise_not_support_language_exception
 
-    unsafeWordChecker = get_unsafe_words_checker(language)
-    unsafe_word_min_level = decide_unsafe_word_by_data_checker(
-        data_dict, unsafeWordChecker
-    )
+    def filter(
+        self,
+        content_str: str,
+        language: str,
+        language_details: str,
+        content_style: str,
+        from_safe_source: bool,
+        from_domestic_source: bool,
+    ) -> Tuple[bool, Dict[str, Any]]:
+        if language in xyz_language_lst:
+            language = 'xyz'
+        elif language in [
+            'zh',
+            'en',
+            'yue',
+            'zho',
+            'eng',
+            'zho_Hans',
+            'zho_Hant',
+            'yue_Hant',
+            'eng_Latn',
+        ]:
+            language = 'zh-en'
+        else:
+            if self.raise_not_support_language_exception:
+                raise SafeModelException(f'Unsupported language: {language}')
+            else:
+                return True, {'hit_unsafe_words': False}
 
-    return unsafe_word_min_level
-
-
-def unsafe_words_filter_overall(
-    data_dict: Dict[str, Any],
-    language: str,
-    content_style: str,
-    from_safe_source,
-    from_domestic_source,
-):
-    unsafe_word_min_level = unsafe_words_filter(data_dict, language, content_style)
-
-    if language in xyz_language_lst:
-        language = 'xyz'
-    elif language in [
-        'zh',
-        'en',
-        'yue',
-        'zho',
-        'eng',
-        'zho_Hans',
-        'zho_Hant',
-        'yue_Hant',
-        'eng_Latn',
-    ]:
-        language = 'zh-en'
-    else:
-        raise SafeModelException(f'Unsupported language: {language}')
-    if from_safe_source:
-        return {'hit_unsafe_words': False}
-    if from_domestic_source:
-        unsafe_range = ('L1',)
-    else:
-        unsafe_range = ('L1', 'L2')
-    hit = unsafe_word_min_level in unsafe_range
-    return {'hit_unsafe_words': hit}
+        if from_safe_source:
+            return True, {'hit_unsafe_words': False}
+        if from_domestic_source:
+            unsafe_range = ('L1',)
+        else:
+            unsafe_range = ('L1', 'L2')
+        unsafe_word_min_level = decide_content_unsafe_word_by_data_checker(
+            content_str, get_unsafe_words_checker(language)
+        )
+        hit = unsafe_word_min_level in unsafe_range
+        return not hit, {'hit_unsafe_words': hit}

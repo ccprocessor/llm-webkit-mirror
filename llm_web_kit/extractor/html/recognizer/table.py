@@ -9,6 +9,7 @@ from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import remove_element
 
 
 class TableRecognizer(BaseHTMLElementRecognizer):
@@ -16,12 +17,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __init__(self):
         super().__init__()
+        self.math_recognizer = MathRecognizer()
 
     @override
     def recognize(self,
                   base_url: str,
-                  main_html_lst: List[Tuple[str, str]],
-                  raw_html: str) -> List[Tuple[str, str]]:
+                  main_html_lst: List[Tuple[HtmlElement, HtmlElement]],
+                  raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析表格元素.
 
         Args:
@@ -30,6 +32,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             raw_html: 原始完整的html
 
         Returns:
+            List[Tuple[HtmlElement, HtmlElement]]: 处理后的HTML元素列表
         """
         final_result = list()
         for cc_html, o_html in main_html_lst:
@@ -41,66 +44,59 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         return final_result
 
     @override
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
-        if not parsed_content:
-            raise HtmlTableRecognizerException(f'table parsed_content{parsed_content}为空')
+    def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
+        if not isinstance(parsed_content, HtmlElement):
+            raise HtmlTableRecognizerException(f'parsed_content 必须是 HtmlElement 类型，而不是 {type(parsed_content)}')
+
         table_type, table_nest_level, table_body = self.__get_attribute(parsed_content)
+
+        # 确保 table_body 不为 None 且是字符串类型
+        html_content = table_body if table_body is not None else ''
+        # 使用传入的 raw_html_segment 或将 parsed_content 转换为字符串
+        if table_type:
+            cc_table_type = DocElementType.COMPLEX_TABLE
+        else:
+            cc_table_type = DocElementType.SIMPLE_TABLE
         d = {
-            'type': DocElementType.TABLE,
-            # "bbox": [],
+            'type': cc_table_type,
             'raw_content': raw_html_segment,
             'content': {
-                'html': table_body,
-            },
+                'html': html_content,
+                'is_complex': table_type,
+                'table_nest_level': table_nest_level
+            }
         }
-        d['content']['is_complex'] = table_type
-        d['content']['table_nest_level'] = table_nest_level
         return d
 
-    def __is_contain_cc_html(self, cc_html: str) -> bool:
+    def __is_contain_cc_html(self, cc_html: HtmlElement) -> bool:
         """判断html片段是否是cc标签."""
         return BaseHTMLElementRecognizer.is_cc_html(cc_html)
 
-    def __is_table_empty(self, table) -> bool:
-        """检查表格是否为空（递归检查嵌套元素）
-
-        :param table: lxml.html.HtmlElement 对象，表示一个 <table> 元素
-        :return: 如果表格为空，返回 True；否则返回 False
-        """
-        def is_element_empty(elem):
-            # 检查元素本身的文本内容
-            if elem.text and elem.text.strip():
-                return False
-            # 检查所有子元素
-            for child in elem.iterchildren():
-                # 如果是嵌套表格，递归检查表格是否为空
-                if child.tag == 'table':
-                    if not self.__is_table_empty(child):
-                        return False
-                # 其他元素需要递归检查
-                elif not is_element_empty(child):
-                    return False
-            # 检查尾部文本（如 </div> 后的文本）
-            if elem.tail and elem.tail.strip():
-                return False
-            return True
-
-        # 检查所有单元格
-        for cell in table.xpath('.//td | .//th'):
-            # 检查单元格内容
+    def __is_table_empty(self, table: HtmlElement) -> bool:
+        """table是否为空."""
+        # 合并单元格查询
+        cells = table.xpath('.//td | .//th')
+        for cell in cells:
             if cell.text and cell.text.strip():
                 return False
-            # 递归检查子元素
-            if not is_element_empty(cell):
-                return False
+            stack = [cell]
+            while stack:
+                elem = stack.pop()
+                if elem.text and elem.text.strip():
+                    return False
+                if elem.tail and elem.tail.strip():
+                    return False
+                # 添加子元素到栈中(倒序保证处理顺序)
+                stack.extend(reversed(elem.getchildren()))
         return True
 
-    def __is_simple_table(self, tree) -> bool:
+    def __is_simple_table(self, tree: HtmlElement) -> bool:
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
-        cells = tree.xpath('.//td') + tree.xpath('.//th')
+        print('tree', self._element_to_html(tree))
+        cells = tree.xpath('.//td | .//th')
         for cell in cells:
-            colspan_str = cell.get('colspan', '1')
-            rowspan_str = cell.get('rowspan', '1')
+            colspan_str = cell.get('colspan', '1').strip('"\'\\')
+            rowspan_str = cell.get('rowspan', '1').strip('"\'\\')
             try:
                 colspan = int(colspan_str)
                 rowspan = int(rowspan_str)
@@ -111,34 +107,44 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 return False
         return True
 
-    def __is_table_nested(self, element) -> int:
-        """计算表格的嵌套层级（非表格返回0，根据原始table判断的."""
+    def __is_table_nested(self, element: HtmlElement) -> int:
+        """计算表格的嵌套层级."""
         if element.tag != 'table':
             return 0
-        # 获取当前表格下所有的表格（包括自身）
-        all_tables = [element] + element.xpath('.//table')
-        max_level = 1  # 初始层级为1（当前表格）
-        # 计算每个表格的层级，取最大值
-        for table in all_tables:
-            ancestor_count = len(table.xpath('ancestor::table'))
-            level = ancestor_count + 1
-            max_level = max(max_level, level)
+
+        # 初始化栈结构：存储(当前元素, 当前层级)
+        stack = [(element, 1)]
+        max_level = 1
+
+        # 深度优先遍历
+        while stack:
+            current, current_level = stack.pop()
+            # 更新最大层级
+            max_level = max(max_level, current_level)
+            # 遍历子元素（倒序保证处理顺序）
+            for child in reversed(current.getchildren()):
+                if child.tag == 'table':
+                    # 遇到子表格时层级+1
+                    stack.append((child, current_level + 1))
+                else:
+                    # 非表格元素保持当前层级
+                    stack.append((child, current_level))
         return max_level
 
-    def __extract_tables(self, ele: str) -> List[Tuple[str, str]]:
+    def __extract_tables(self, tree: HtmlElement) -> List[Tuple[HtmlElement, HtmlElement]]:
         """提取html中的table元素."""
-        tree = self._build_html_tree(ele)
         self.__do_extract_tables(tree)
-        new_html = self._element_to_html(tree)
+        new_html = tree
         lst = self.html_split_by_tags(new_html, CCTag.CC_TABLE)
         return lst
 
     def __get_table_type(self, child: HtmlElement) -> str:
         """获取table的类型."""
+        assert isinstance(child, HtmlElement)
         empty_flag = self.__is_table_empty(child)
-        level = self.__is_table_nested(child)
         if empty_flag:
             return 'empty'
+        level = self.__is_table_nested(child)
         # 是否跨行跨列
         flag = (self.__is_simple_table(child) and level < 2)
         if flag:
@@ -149,16 +155,16 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __check_table_include_math_code(self, raw_html: HtmlElement):
         """检查table中的内容，包括普通文本、数学公式和代码."""
-        math_html = self._element_to_html(raw_html)
-        math_recognizer = MathRecognizer()
-        math_res_parts = math_recognizer.recognize(
+        math_raw_html = self._element_to_html(raw_html)
+        math_html = raw_html
+        math_res_parts = self.math_recognizer.recognize(
             base_url='',
             main_html_lst=[(math_html, math_html)],
-            raw_html=math_html
+            raw_html=math_raw_html
         )
         result = []
         for math_item in math_res_parts:
-            ele_item = self._build_html_tree(math_item[0])
+            ele_item = math_item[0]
 
             def process_node(node):
                 """处理行内公式、行间公式、行间代码、行内代码."""
@@ -216,16 +222,16 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                         # 处理非表格元素
                         math_res = self.__check_table_include_math_code(child)
                         parse_res.extend(math_res)
-                        elem.remove(child)
+                        remove_element(child)
                 # 将非表格内容拼接后放在表格前面
                 if parse_res:
-                    elem.text = ' '.join(parse_res) + (elem.text or '')
+                    elem.text = ' '.join(parse_res)
             else:
                 # 没有嵌套表格，直接简化
                 math_res = self.__check_table_include_math_code(elem)
                 parse_res.extend(math_res)
                 for item in list(elem.iterchildren()):
-                    elem.remove(item)
+                    remove_element(item)
                 if parse_res:
                     elem.text = ' '.join(parse_res)
             return
@@ -244,7 +250,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_root.attrib.clear()
             table_root.attrib.update(cleaned_attrs)
         # text进行strip操作,tail保留（部分内容留在tail中）
-        for elem in chain([table_root], table_root.iterdescendants()):
+        for elem in chain([table_root], table_root.iterchildren()):
             if elem.text is not None:
                 elem.text = elem.text.strip().replace('\\n', '')
             if elem.tail is not None:
@@ -273,9 +279,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for child in root.iterchildren():
             self.__do_extract_tables(child)
 
-    def __get_attribute(self, html: str) -> Tuple[bool, Any, Any]:
+    def __get_attribute(self, ele: HtmlElement) -> Tuple[bool, Any, Any]:
         """获取element的属性."""
-        ele = self._build_html_tree(html)
+        # ele = self._build_html_tree(html)
         if ele is not None and ele.tag == CCTag.CC_TABLE:
             table_type = ele.attrib.get('table_type')
             table_nest_level = ele.attrib.get('table_nest_level')
@@ -283,7 +289,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_body = ele.text
             return table_flag, table_nest_level, table_body
         else:
-            raise HtmlTableRecognizerException(f'{html}中没有cctable标签')
+            raise HtmlTableRecognizerException(f'{ele}中没有cctable标签')
 
     def __get_content_list_table_type(self, table_type):
         """complex|simple 转为True|False."""

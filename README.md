@@ -75,6 +75,26 @@ llm-web-kit is a python library that ..
 
 ## Quick Start
 
+```python
+from llm_web_kit.simple import extract_html_to_md
+import traceback
+from loguru import logger
+
+def extract(url:str, html:str) -> str:
+    try:
+        nlp_md = extract_html_to_md(url, html)
+        # or mm_nlp_md = extract_html_to_mm_md(url, html)
+        return nlp_md
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    markdown = extract(url, html)
+```
+
 ## Usage
 
 # TODO

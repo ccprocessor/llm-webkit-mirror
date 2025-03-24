@@ -1,7 +1,7 @@
 import json
 from typing import Any, List, Tuple
 
-from lxml.etree import _Element as HtmlElement
+from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlListRecognizerException
@@ -13,7 +13,7 @@ from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 class ListRecognizer(BaseHTMLElementRecognizer):
     """解析列表元素."""
 
-    def to_content_list_node(self, base_url: str, parsed_content: str, raw_html_segment: str) -> dict:
+    def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
         """专化为列表元素的解析.
 
         Args:
@@ -23,6 +23,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         Returns:
         """
+        if not isinstance(parsed_content, HtmlElement):
+            raise HtmlListRecognizerException(f'parsed_content 必须是 HtmlElement 类型，而不是 {type(parsed_content)}')
         ordered, content_list, _, list_nest_level = self.__get_attribute(parsed_content)
         ele_node = {
             'type': DocElementType.LIST,
@@ -37,7 +39,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         return ele_node
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[str, str]], raw_html: str) -> List[Tuple[str, str]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析列表元素.
 
         Args:
@@ -57,7 +59,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 new_html_lst.extend(lst)
         return new_html_lst
 
-    def _extract_list(self, raw_html: str) -> List[Tuple[str, str]]:
+    def _extract_list(self, raw_html: HtmlElement) -> List[Tuple[HtmlElement, HtmlElement]]:
         """提取列表元素. 不支持嵌套列表，如果有嵌套的情况，则内部列表将作为一个单独的段落，内部列表的每个列表项作为一个单独的句子，使用句号结尾。
         列表在html中有以下几个标签：
 
@@ -70,12 +72,13 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         Returns:
             List[Tuple[str, str]]: 列表元素, 第一个str是<cc-list>xxx</cc-list>, 第二个str是原始的html内容
         """
-        tree = self._build_html_tree(raw_html)
+        # tree = self._build_html_tree(raw_html)
+        tree = raw_html
         self.__do_extract_list(tree)
         # 最后切割html
-        new_html = self._element_to_html(tree)
+        # new_html = self._element_to_html(tree)
+        new_html = tree
         lst = self.html_split_by_tags(new_html, CCTag.CC_LIST)
-
         return lst
 
     def __do_extract_list(self, root:HtmlElement) -> None:
@@ -145,7 +148,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             # 这里 遍历列表的每个直接子元素，每个子元素作为一个段落。 TODO 列表里有列表、图片、表格的情况先不考虑。
             # 获取到每个子元素的全部文本，忽略其他标签
             text_paragraph = self.__extract_list_item_text(item)
-            content_list.append(text_paragraph)
+            if len(text_paragraph) > 0:
+                content_list.append(text_paragraph)
 
         return list_nest_level, is_ordered, content_list, raw_html, tail_text
 
@@ -200,13 +204,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             elif el.tag == CCTag.CC_CODE_INLINE:
                 paragraph.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag == 'br':
-                text_paragraph.append(paragraph)
-                paragraph = []
+                if len(paragraph) > 0:
+                    text_paragraph.append(paragraph)
+                    paragraph = []
             else:
                 if el.text and el.text.strip():
                     paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
                 for child in el.getchildren():
-                    paragraph.extend(__extract_list_item_text_recusive(child))
+                    p = __extract_list_item_text_recusive(child)
+                    if len(p) > 0:
+                        paragraph.extend(p)
 
             # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
             if el.tag != 'li' and el.tail and el.tail.strip():
@@ -215,11 +222,12 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             return paragraph
 
         if paragraph := __extract_list_item_text_recusive(root):
-            text_paragraph.append(paragraph)
+            if len(paragraph) > 0:
+                text_paragraph.append(paragraph)
 
         return text_paragraph
 
-    def __get_attribute(self, html:str) -> Tuple[bool, dict, str]:
+    def __get_attribute(self, html:HtmlElement) -> Tuple[bool, dict, str]:
         """获取element的属性.
 
         Args:
@@ -228,7 +236,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         Returns:
             Tuple[str]: 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
         """
-        ele = self._build_html_tree(html)
+        # ele = self._build_html_tree(html)
+        ele = html
         if ele is not None and ele.tag == CCTag.CC_LIST:
             ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
             content_list = json.loads(ele.text)
@@ -236,4 +245,4 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             list_nest_level = ele.attrib.get('list_nest_level', 0)
             return ordered, content_list, raw_html, list_nest_level
         else:
-            raise HtmlListRecognizerException(f'{html}中没有cctitle标签')
+            raise HtmlListRecognizerException(f'{html}中没有cclist标签')

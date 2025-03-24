@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-from llm_web_kit.libs.version import __version__
+# from llm_web_kit.libs.version import __version__
 
 
 def parse_requirements(filename):
@@ -24,10 +24,10 @@ def parse_requirements(filename):
 if __name__ == '__main__':
     setup(
         name='llm_web_kit',
-        version=__version__,  # 版本号
+        version='3.1.0',
         description='LLM Web Kit for processing web content',
         packages=find_packages(exclude=['tests*']),
-        install_requires=parse_requirements('requirements/runtime.txt'),  # 项目依赖的第三方库
+        install_requires=parse_requirements('requirements/runtime.txt'),
         extras_require={
             'dev': parse_requirements('requirements/dev.txt'),
         },
@@ -37,7 +37,10 @@ if __name__ == '__main__':
             'console_scripts': [
                 'magic-html = llm_web_kit.tools.cli:cli'
             ],
-        },  # 项目提供的可执行命令
-        include_package_data=True,  # 是否包含非代码文件，如数据文件、配置文件等
-        zip_safe=False,  # 是否使用 zip 文件格式打包，一般设为 False
+        },
+        include_package_data=True,
+        package_data={
+            'llm_web_kit': ['**/*.*'],
+        },
+        zip_safe=False,
     )

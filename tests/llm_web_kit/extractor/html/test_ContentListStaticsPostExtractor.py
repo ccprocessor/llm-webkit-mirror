@@ -54,7 +54,7 @@ class TestContentListStaticsPostExtractor(unittest.TestCase):
                         }
                     },
                     {
-                        'type': 'table',
+                        'type': 'complex_table',
                         'raw_content': '',
                         'content': {
                             'html': '<table><tr><td>1</td><td>2</td></tr></table>',
@@ -75,5 +75,5 @@ class TestContentListStaticsPostExtractor(unittest.TestCase):
         self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('paragraph.text'), 2)
         self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('paragraph.equation-inline'), 1)
         self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('equation-interline'), 1)
-        self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('table'), 1)
-        self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('table.complex'), 1)
+        self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('complex_table'), 1)
+        self.assertEqual(data_json.get(DataJsonKey.METAINFO, {}).get(DataJsonKey.STATICS, {}).get('complex_table.complex'), 1)

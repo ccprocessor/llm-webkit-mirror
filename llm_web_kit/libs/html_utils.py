@@ -15,7 +15,9 @@ def html_to_element(html:str) -> HtmlElement:
         element: lxml.html.HtmlElement: element
     """
     parser = HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
-    root = fromstring(html, parser=parser)
+    # 将 HTML 字符串编码为字节类型, 兼容html中有 XML 声明（如 <?xml version="1.0" encoding="utf-8"?>）
+    html_bytes = html.encode('utf-8')
+    root = fromstring(html_bytes, parser=parser)
     standalone = deepcopy(root)  # 通过拷贝才能去掉自动加入的<html><body>等标签， 非常奇怪的表现。
     return standalone
 

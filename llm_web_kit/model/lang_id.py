@@ -279,6 +279,7 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification, 
         raise ValueError(f'Unsupported version: {lang_detect.version}. Supported versions: {LANG_ID_SUPPORTED_VERSIONS}')
 
     predictions, probabilities = lang_detect.predict(content_str)
+
     lid_176_pre = decide_language_by_prob_v176(predictions, probabilities)
     if lid_176_pre in ['zh', 'en', 'ja', 'ko']:
         if is_cn_specific and lid_176_pre == 'zh':

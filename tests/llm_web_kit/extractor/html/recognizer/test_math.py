@@ -4,7 +4,7 @@ from pathlib import Path
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
-from llm_web_kit.libs.html_utils import html_to_element
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 TEST_CASES = [
     # 基本公式测试用例
@@ -32,8 +32,8 @@ TEST_CASES = [
                 '<p>这是p的text<span class="mathjax_display"></span></p>'
             ),
             (
-                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>',
-                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="a^2 + b^2 = c^2">a^2 + b^2 = c^2</ccmath-interline></span></p>'
+                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="$$a^2 + b^2 = c^2$$">a^2 + b^2 = c^2</ccmath-interline></span></p>',
+                '<p><span class="mathjax_display"><ccmath-interline type="latex" by="mathjax" html="$$a^2 + b^2 = c^2$$">a^2 + b^2 = c^2</ccmath-interline></span></p>'
             ),
             (
                 '<p><span class="mathjax_display"></span>这是span的tail<b>这是b的text</b>这是b的tail</p>',
@@ -46,12 +46,12 @@ TEST_CASES = [
             ('<p>$x = 5$,$$x=6$$</p>',
              '<p>$x = 5$,$$x=6$$</p>')
         ],
-        'raw_html': '<p>$x = 5$,$$x=6$$</p>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script><p>$x = 5$,$$x=6$$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>',
-             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,</p>'),
-             ('<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>',
-              '<p><ccmath-interline type="latex" by="None" html="x=6">x=6</ccmath-interline></p>')
+            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>')
         ]
     },
     {
@@ -59,10 +59,11 @@ TEST_CASES = [
             ('<p>$x = 5$,$$x=6$$,$x=4$</p>',
              '<p>$x = 5$,$$x=6$$,$x=4$</p>')
         ],
-        'raw_html': '<p>$x = 5$,$$x=6$$,$x=4$</p>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script> <p>$x = 5$,$$x=6$$,$x=4$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>',
-             '<p><ccmath-inline type="latex" by="None" html="x = 5">x = 5</ccmath-inline>,$$x=6$$,<ccmath-inline type="latex" by="None" html="x=4">x=4</ccmath-inline></p>'),
+            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>', '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>', '<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>'),
+            ('<p>,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>', '<p>,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>')
         ]
     },
     {
@@ -70,16 +71,16 @@ TEST_CASES = [
             ('<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
              '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>')
         ],
-        'raw_html': '<p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script> <p>By substituting $$x$$ with $$t - \\dfrac{b}{3a}$$, the general</p>',
         'expected': [
             ('<p>By substituting </p>',
              '<p>By substituting </p>'),
-            ('<p><ccmath-interline type="latex" by="None" html="x">x</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="None" html="x">x</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>'),
             ('<p> with </p>',
              '<p> with </p>'),
-            ('<p><ccmath-interline type="latex" by="None" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="None" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
             ('<p>, the general</p>',
              '<p>, the general</p>')
         ]
@@ -88,9 +89,9 @@ TEST_CASES = [
         'input': [
             ('<script type="math/tex">x^2 + y^2 = z^2</script>', '<script type="math/tex">x^2 + y^2 = z^2</script>')
         ],
-        'raw_html': '<script type="math/tex">x^2 + y^2 = z^2</script>',
+        'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script><script type="math/tex">x^2 + y^2 = z^2</script>',
         'expected': [
-            ('<html><head><ccmath-inline type="latex" by="None" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>', '<html><head><ccmath-inline type="latex" by="None" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>')
+            ('<html><head><ccmath-inline type="latex" by="mathjax" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>', '<html><head><ccmath-inline type="latex" by="mathjax" html=\'&lt;script type="math/tex"&gt;x^2 + y^2 = z^2&lt;/script&gt;\'>x^2 + y^2 = z^2</ccmath-inline></head></html>')
         ]
     },
     {
@@ -99,7 +100,15 @@ TEST_CASES = [
         ],
         'raw_html': '<script type="math/tex"></script>',
         'expected': []
+    },
+    {
+        'input': [
+            ('<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>', '<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>')
+        ],
+        'raw_html': '<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>',
+        'expected': [('<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>', '<p>保证生活，可能会影响自己的身心健康。当然，在 不打工的情况下考虑创业， 但是创业是有风险的，在自己没有经济$ $③收入的情况下，考虑打工也会让自己的压力倍增，所以是否选择打工，需要根据自己的实际情况决定!</p>')]
     }
+
 ]
 
 TEST_CASES_HTML = [
@@ -177,6 +186,20 @@ TEST_CASES_HTML = [
         'base_url': 'https://mathjax.github.io/MathJax-demos-web/tex-chtml.html',
         'expected': 'assets/ccmath/mathjax-mml-chtml_prefix_1.html'
     },
+    {
+        'input': [
+            'assets/ccmath/math_physicsforums.html',
+        ],
+        'base_url': 'https://www.physicsforums.com/threads/probability-theoretic-inequality.246150/',
+        'expected': 'assets/ccmath/math_physicsforums_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/math_physicsforums_2.html',
+        ],
+        'base_url': 'https://physicshelpforum.com/t/latex-upgrade-physics-forum-powered-by-mathjax-v3.17489/',
+        'expected': 'assets/ccmath/math_physicsforums_2_1.html'
+    }
 ]
 
 TEST_EQUATION_TYPE = [
@@ -249,29 +272,6 @@ TEST_CONTENT_LIST_NODE = [
     }
 ]
 
-TEST_GET_MATH_RENDER = [
-    {
-        'input': [
-            'assets/ccmath/stackexchange_1_span-math-container_latex_mathjax.html'
-        ],
-        'base_url': 'https://worldbuilding.stackexchange.com/questions/162264/is-there-a-safe-but-weird-distance-from-black-hole-merger',
-        'expected': 'mathjax',
-    },
-    {
-        'input': [
-            'assets/ccmath/libretexts_1_p_latex_mathjax.html',
-        ],
-        'base_url': 'https://math.libretexts.org/Under_Construction/Purgatory/Remixer_University/Username%3A_pseeburger/MTH_098_Elementary_Algebra/1%3A_Foundations/1.5%3A_Multiply_and_Divide_Integers',
-        'expected': 'mathjax',
-    },
-    {
-        'input': [
-            'assets/ccmath/math_katex_latex_2.html',
-        ],
-        'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
-        'expected': 'katex',
-    }
-]
 
 TEST_WRAP_MATH = [
     {
@@ -311,6 +311,28 @@ TEST_WRAP_MATH_MD = [
     {
         'input': r'\[a^2 + b^2 = c^2\]',
         'expected': r'a^2 + b^2 = c^2'
+    },
+    {
+        'input': r'`E=mc^2`',
+        'expected': r'E=mc^2'
+    },
+    {
+        'input': '',
+        'expected': ''
+    },
+    {
+        'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
+        'url': 'mathhelpforum.com',
+        'expected': r'\begin{align} a^2+b=c\end{align}'
+    },
+    {
+        'input': r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />',
+        'url': 'mathhelpforum.com',
+        'expected': r'dz=\frac{1}{2}\frac{dx}{\cos ^2 x}'
+    },
+    {
+        'input': r'<br />\begin{align} a^2+b=c\end{align}\<br />',
+        'expected': r'<br />\begin{align} a^2+b=c\end{align}\<br />'
     }
 ]
 
@@ -344,17 +366,13 @@ class TestMathRecognizer(unittest.TestCase):
             with self.subTest(input=test_case['input'], raw_html=test_case['raw_html']):
                 output_html = self.math_recognizer.recognize(
                     'https://www.baidu.com',
-                    test_case['input'],
+                    [(html_to_element(test_case['input'][0][0]), html_to_element(test_case['input'][0][1]))],
                     test_case['raw_html']
                 )
-                print(output_html)
-                expect_len = len(test_case['expected'])
-                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'result is: {len(output_html)}, expected is: {expect_len}')
+                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'input is: {test_case["input"]}')
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
-                    print(output_html[i][0])
-                    print(expect)
-                    self.assertEqual(output_html[i][0], expect, msg=f'result is: {output_html[i][0]}, expected is: {expect}')
+                    self.assertEqual(element_to_html(output_html[i][0]), expect, msg=f'result is: {element_to_html(output_html[i][0])}, expected is: {expect}')
 
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
@@ -362,7 +380,7 @@ class TestMathRecognizer(unittest.TestCase):
             # print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text()
-            parts = self.math_recognizer.recognize(base_url, [(raw_html, raw_html)], raw_html)
+            parts = self.math_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
             # print(parts)
             # 将parts列表中第一个元素拼接保存到文件，带随机数
             # import random
@@ -370,8 +388,10 @@ class TestMathRecognizer(unittest.TestCase):
             #     for part in parts:
             #         f.write(str(part[0]))
             # 检查行间公式抽取正确性
-            parts = [part[0] for part in parts if CCTag.CC_MATH_INTERLINE in part[0]]
-            print(len(parts))
+            new_parts = []
+            for part in parts:
+                new_parts.append((element_to_html(part[0]), element_to_html(part[1])))
+            parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
             expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
             self.assertEqual(len(parts), len(expect_formulas))
@@ -385,13 +405,11 @@ class TestMathRecognizer(unittest.TestCase):
                 # print('answer::::::::', answer)
                 # answers.append(answer)
                 self.assertEqual(expect, answer)
+            # print('answers::::::::', answers)
             # self.write_to_html(answers, test_case['input'][0])
             # 检查行内公式抽取正确性
             if test_case.get('expected_inline', None):
-                print('expected_inline::::::::', test_case['expected_inline'])
                 parts = [part[0] for part in parts if CCTag.CC_MATH_INLINE in part[0]]
-                print(len(parts))
-                print(parts)
 
     def write_to_html(self, answers, file_name):
         file_name = file_name.split('.')[0]
@@ -405,9 +423,11 @@ class TestMathRecognizer(unittest.TestCase):
             with self.subTest(input=test_case['input']):
                 output_node = self.math_recognizer.to_content_list_node(
                     test_case['input'][0],
-                    test_case['input'][1],
+                    html_to_element(test_case['input'][1]),
                     test_case['input'][2]
                 )
+                print('output_node::::::::', output_node)
+                print(test_case['expected'])
                 self.assertEqual(output_node, test_case['expected'])
 
         # 测试没有ccmath标签的情况
@@ -419,7 +439,7 @@ class TestMathRecognizer(unittest.TestCase):
         with self.assertRaises(HtmlMathRecognizerException) as exc_info:
             self.math_recognizer.to_content_list_node(
                 invalid_content[0],
-                invalid_content[1],
+                html_to_element(invalid_content[1]),
                 invalid_content[2]
             )
         self.assertIn('No ccmath element found in content', str(exc_info.exception))
@@ -441,13 +461,6 @@ class TestCCMATH(unittest.TestCase):
                         self.assertEqual(tag_math_type_list[i][0], expect0, msg=f'result is: {tag_math_type_list[i][0]}, expected is: {expect0}')
                         self.assertEqual(tag_math_type_list[i][1], expect1, msg=f'result is: {tag_math_type_list[i][1]}, expected is: {expect1}')
 
-    def test_get_math_render(self):
-        for test_case in TEST_GET_MATH_RENDER:
-            raw_html_path = base_dir.joinpath(test_case['input'][0])
-            raw_html = raw_html_path.read_text()
-            output_render = self.ccmath.get_math_render(raw_html)
-            self.assertEqual(output_render, test_case['expected'])
-
     def test_wrap_math(self):
         for test_case in TEST_WRAP_MATH:
             with self.subTest(input=test_case['input']):
@@ -457,6 +470,7 @@ class TestCCMATH(unittest.TestCase):
     def test_wrap_math_md(self):
         for test_case in TEST_WRAP_MATH_MD:
             with self.subTest(input=test_case['input']):
+                self.ccmath.url = test_case.get('url', '')
                 output_math = self.ccmath.wrap_math_md(test_case['input'])
                 self.assertEqual(output_math, test_case['expected'])
 
@@ -479,7 +493,7 @@ if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
     r.test_math_recognizer()
-    r.test_math_recognizer_html()
+    # r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()
     # html = r'<p class="lt-math-15120">\[\begin{array} {ll} {5 \cdot 3 = 15} &amp;{-5(3) = -15} \\ {5(-3) = -15} &amp;{(-5)(-3) = 15} \end{array}\]</p>'
