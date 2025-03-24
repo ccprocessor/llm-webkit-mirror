@@ -84,11 +84,8 @@ def collapse_dup_newlines(text:str) -> str:
     return re.sub(r'\n{2,}', '\n\n', text)
 
 
-def normalize_text_segment(text:str) -> str:
-    """对文本进行处理，将连续的空格字符转换为1个空格字符.
-    2. \t, \r, \f, \v 换成空格
-    3. 连续的多个空格换成1个
-    4. 连续的多个\n换成2个
+def normalize_ctl_text(text: str) -> str:
+    """处理空白字符，将各种空白字符规范化处理.
 
     Args:
         text: 文本
@@ -102,7 +99,22 @@ def normalize_text_segment(text:str) -> str:
             ret += __normalize_ctl_char(text[i], '')
         else:
             ret += __normalize_ctl_char(text[i], text[i - 1])
+    return ret
 
+
+def normalize_text_segment(text:str) -> str:
+    """对文本进行处理，将连续的空格字符转换为1个空格字符.
+    2. \t, \r, \f, \v 换成空格
+    3. 连续的多个空格换成1个
+    4. 连续的多个\n换成2个
+
+    Args:
+        text: 文本
+
+    Returns:
+        str: 处理后的文本
+    """
+    ret = normalize_ctl_text(text)  # 处理空白字符，将各种空白字符规范化处理
     ret = __ctl_char_to_space(ret)  # 将控制字符转换为空格
     ret = __blank_sequence_to_space(ret)  # 将连续的空格字符转换为1个空格字符
     ret = collapse_dup_newlines(ret)  # 将连续的\n转换为2个

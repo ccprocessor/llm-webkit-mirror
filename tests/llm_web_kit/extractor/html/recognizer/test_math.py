@@ -360,6 +360,7 @@ base_dir = Path(__file__).parent
 class TestMathRecognizer(unittest.TestCase):
     def setUp(self):
         self.math_recognizer = MathRecognizer()
+        self.maxDiff = None  # 显示完整的diff
 
     def test_math_recognizer(self):
         for test_case in TEST_CASES:

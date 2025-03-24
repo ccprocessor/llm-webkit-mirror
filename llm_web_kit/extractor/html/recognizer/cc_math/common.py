@@ -12,6 +12,7 @@ from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
                                          element_to_html_unescaped,
                                          html_to_element)
+from llm_web_kit.libs.text_utils import normalize_ctl_text
 
 asciimath2tex = ASCIIMath2Tex(log=False)
 color_regex = re.compile(r'\\textcolor\[.*?\]\{.*?\}')
@@ -166,6 +167,7 @@ class CCMATH():
             return s.replace('\\[', '').replace('\\]', '').strip()
         if s.startswith('`') and s.endswith('`'):
             return s.replace('`', '').strip()
+        s = normalize_ctl_text(s)
         s = self.wrap_math_md_custom(s)
         return s.strip()
 
