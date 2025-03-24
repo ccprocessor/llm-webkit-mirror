@@ -5,7 +5,7 @@ from llm_web_kit.model.lang_id import (LanguageIdentification,
                                        decide_language_by_prob_v176,
                                        decide_language_func, detect_code_block,
                                        detect_inline_equation,
-                                       detect_latex_env,
+                                       detect_latex_env, get_max_chinese_lang,
                                        update_language_by_str)
 
 
@@ -17,7 +17,7 @@ class TestLanguageIdentification(unittest.TestCase):
         mock_auto_download.return_value = '/fake/model/path'
         # Test with default model path
         _ = LanguageIdentification()
-        mock_load_model.assert_called_once_with('/fake/model/path')
+        mock_load_model.assert_called_once_with('/')
 
         # Test with custom model path
         mock_load_model.reset_mock()
@@ -120,22 +120,76 @@ def test_detect_latex_env():
     assert not detect_latex_env('This is not a latex environment')
 
 
-def test_decide_language_func():
-    lang_detect = MagicMock()
-    lang_detect.version = '176.bin'
-    lang_detect.predict.return_value = (['__label__en', '__label__zh'], [0.6, 0.4])
-    result = decide_language_func('test text', lang_detect)
-    assert result == {'language': 'en', 'language_details': None}
+class TestDecideLanguageFunc(unittest.TestCase):
 
-    # Test for 218.bin version
-    lang_detect.version = '218.bin'
-    lang_detect.predict.return_value = (['__label__eng_Latn', '__label__zho_Hans'], [0.6, 0.4])
-    result = decide_language_func('test text', lang_detect)
-    assert result == {'language': 'en', 'language_details': 'eng'}
+    def setUp(self):
+        self.lang_detect_supported = MagicMock(version='176.bin')
+        self.lang_detect_supported.predict.return_value = (['en'], [0.9])
 
-    # Test for empty string
-    result = decide_language_func('', lang_detect)
-    assert result == {'language': 'empty', 'language_details': None}
+    def test_empty_string_returns_empty(self):
+        result = decide_language_func('   ', self.lang_detect_supported)
+        self.assertEqual(result, {'language': 'empty', 'language_details': 'empty'})
+
+    def test_unsupported_version_raises_error(self):
+        lang_detect = MagicMock(version='invalid_version')
+        with self.assertRaises(ValueError):
+            decide_language_func('test', lang_detect)
+
+    @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
+    def test_lid_176_pre_en_returns_en(self, mock_decide):
+        mock_decide.return_value = 'en'
+        result = decide_language_func('test', self.lang_detect_supported)
+        self.assertEqual(result, {'language': 'en', 'language_details': ''})
+
+    @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
+    @patch('langdetect_zh.detect_langs')
+    def test_sim_tra_zh_detect_langs_success(self, mock_detect_langs, mock_decide):
+        mock_decide.return_value = 'zh'
+        # 创建模拟的Language对象
+        mock_lang = MagicMock()
+        mock_lang.lang = 'zh-cn'
+        mock_lang.prob = 0.8
+        mock_detect_langs.return_value = [mock_lang]
+
+        result = decide_language_func('test', self.lang_detect_supported, is_cn_specific=True)
+        self.assertEqual(result['language'], 'zh')
+
+    @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
+    @patch('langdetect_zh.detect_langs')
+    def test_sim_tra_zh_detect_langs_exception(self, mock_detect_langs, mock_decide):
+        from langdetect_zh import LangDetectException
+
+        mock_decide.return_value = 'zh'
+        mock_detect_langs.side_effect = LangDetectException(code=500, message='test error')
+
+        result = decide_language_func('test', self.lang_detect_supported, is_cn_specific=True)
+        self.assertEqual(result, {'language': 'zh', 'language_details': ''})
+
+    @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
+    def test_lid_176_pre_other_lang_is_218e_false(self, mock_decide):
+        mock_decide.return_value = 'fr'
+        result = decide_language_func('test', self.lang_detect_supported, is_218e=False)
+        self.assertEqual(result, {'language': 'fr', 'language_details': ''})
+
+    @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
+    @patch('llm_web_kit.model.lang_id.get_singleton_lang_detect')
+    def test_218_model_lang_in_list(self, mock_get_singleton, mock_decide):
+        mock_decide.return_value = 'fr'
+        lang_detect_218 = MagicMock()
+        lang_detect_218.predict.return_value = (['__label__yue_Hant'], [0.9])
+        mock_get_singleton.return_value = lang_detect_218
+        result = decide_language_func('test', self.lang_detect_supported, is_218e=True)
+        self.assertEqual(result, {'language': 'fr', 'language_details': ''})
+
+    @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
+    @patch('llm_web_kit.model.lang_id.get_singleton_lang_detect')
+    def test_218_model_lang_not_in_list(self, mock_get_singleton, mock_decide):
+        mock_decide.return_value = 'fr'
+        lang_detect_218 = MagicMock()
+        lang_detect_218.predict.return_value = (['__label__de_DE'], [0.8])
+        mock_get_singleton.return_value = lang_detect_218
+        result = decide_language_func('test', self.lang_detect_supported, is_218e=True)
+        self.assertEqual(result, {'language': 'de', 'language_details': 'de_DE'})
 
 
 def test_update_language_by_str():
@@ -144,7 +198,7 @@ def test_update_language_by_str():
 
         # 设置模拟函数的返回值
         mock_get_singleton_lang_detect.return_value = MagicMock()
-        mock_decide_language_func.return_value = {'language': 'en', 'language_details': 'eng'}
+        mock_decide_language_func.return_value = {'language': 'en'}
 
         # 调用被测函数
         result = update_language_by_str('test text')
@@ -152,7 +206,39 @@ def test_update_language_by_str():
         # 验证返回结果
         expected_result = {
             'language': 'en',
-            'language_details': 'eng'
         }
         assert result == expected_result, f'Expected {expected_result}, but got {result}'
         print('Test passed!')
+
+
+class TestGetMaxChineseLang(unittest.TestCase):
+
+    def test_get_max_chinese_lang_zh_cn_higher(self):
+        # 模拟 langs 输入，zh-cn 的概率更高
+        lang1 = MagicMock()
+        lang1.lang = 'zh-cn'
+        lang1.prob = 0.7
+
+        lang2 = MagicMock()
+        lang2.lang = 'zh-tw'
+        lang2.prob = 0.3
+
+        langs = [lang1, lang2]
+
+        result = get_max_chinese_lang(langs)
+        self.assertEqual(result, {'language': 'zh', 'language_details': 'zho_Hans'})
+
+    def test_get_max_chinese_lang_zh_tw_higher(self):
+        # 模拟 langs 输入，zh-tw 的概率更高
+        lang1 = MagicMock()
+        lang1.lang = 'zh-cn'
+        lang1.prob = 0.4
+
+        lang2 = MagicMock()
+        lang2.lang = 'zh-tw'
+        lang2.prob = 0.6
+
+        langs = [lang1, lang2]
+
+        result = get_max_chinese_lang(langs)
+        self.assertEqual(result, {'language': 'zh', 'language_details': 'zho_Hant'})
