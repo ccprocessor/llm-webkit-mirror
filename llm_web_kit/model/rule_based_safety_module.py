@@ -124,7 +124,7 @@ class RuleBasedSafetyModule:
             return data_pack
 
         source_type_dict = self.source_filter.filter(
-            content_str, language, data_source, content_style
+            content_str, language, data_source, language_details,content_style
         )
 
         from_safe_source = source_type_dict['from_safe_source']
