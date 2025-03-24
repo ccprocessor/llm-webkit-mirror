@@ -104,12 +104,19 @@ def __detect_inline_code(root: HtmlElement, node_paths: list[list[str]]) -> tupl
     for node_path in node_paths:
         ele = __get_html_element(root, node_path)
 
+        ele_text = ''.join(ele.itertext(None))
+        # 行内代码不能有换行
+        if '\r' in ele_text or '\n' in ele_text:
+            new_node_paths.append(node_path)
+            continue
+
         parent = ele
         while parent.tag not in _BLOCK_ELES and parent.getparent() is not None:
             parent = parent.getparent()
 
         """
         并非所有 inline code 都可以识别出来
+        这里认为在父 block ele 中如果参杂了非 code 的可见文字，那这段 code 应该是行内的
         """
         if not __is_all_chars_in_code_element(parent):
             inline_code.append(ele)
