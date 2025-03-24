@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 27
+        assert len(self.data_json) == 28
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -496,3 +496,13 @@ DEF
         result = result_content_list[0][2]['content']['html']
         assert '\n\t' not in result
         assert len(result) == 1878
+
+    def test_math_physicsforums(self):
+        """测试math_physicsforums网页中数学公式是[tex]和[itex]包裹的，且中间还有<br>标签分割."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[26]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_nlp_md()
+        print('result_md:', result_md)

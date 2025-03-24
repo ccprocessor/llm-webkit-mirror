@@ -7,8 +7,8 @@ from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
 
 # 添加MATHJAX_OPTIONS变量定义
 MATHJAX_OPTIONS = {
-    'inlineMath': [['$', '$'], ['\\(', '\\)'], ['\\\\(', '\\\\)']],
-    'displayMath': [['$$', '$$'], ['\\[', '\\]'], ['\\\\[', '\\\\]']],
+    'inlineMath': [['$', '$'], ['\\(', '\\)'], ['\\\\(', '\\\\)'], ['[itex]', '[/itex]']],
+    'displayMath': [['$$', '$$'], ['\\[', '\\]'], ['\\\\[', '\\\\]'], ['[tex]', '[/tex]']],
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,

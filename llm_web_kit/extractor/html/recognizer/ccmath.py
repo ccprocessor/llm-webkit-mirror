@@ -43,13 +43,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         math_render = base_render.get_math_render(raw_html)
         for cc_html, o_html in main_html_lst:
             if not self.is_cc_html(cc_html):
-                # 对于自定义的mathjax，需要单独处理
-                if math_render and math_render.render_type == MathRenderType.MATHJAX and math_render.is_customized_options():
-                    math_render.get_options(raw_html)
-                    print(f'处理mathjax，有自定义配置, options: {math_render.options}')
-                    result.extend(self.process_mathjax_html(cc_html, o_html, math_render, base_url))
-                else:
-                    result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
+                result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
 
@@ -221,7 +215,7 @@ if __name__ == '__main__':
         '</head> '
         '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
-    # with open('math_courses.html', 'r') as f:
+    # with open('aa.html', 'r') as f:
     #     raw_html = f.read()
     # from llm_web_kit.libs.html_utils import html_to_element
     # root = html_to_element(raw_html)
