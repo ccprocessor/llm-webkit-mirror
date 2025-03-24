@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
+from llm_web_kit.model.lang_id import CACHE_DIR  # 添加这行导入语句
 from llm_web_kit.model.lang_id import (LanguageIdentification,
                                        decide_language_by_prob_v176,
                                        decide_language_func, detect_code_block,
@@ -24,20 +25,89 @@ class TestLanguageIdentification(unittest.TestCase):
         _ = LanguageIdentification('custom_model_path')
         mock_load_model.assert_called_once_with('custom_model_path')
 
-    @patch('llm_web_kit.model.lang_id.load_config', return_value={'resources': {'lang-id-218': {'download_path': 'mock_download_path', 'sha256': 'mock_sha256'}}})
-    @patch('llm_web_kit.model.lang_id.LanguageIdentification.auto_download', return_value='mock_model_path')
+    @patch('llm_web_kit.model.lang_id.load_config')
+    @patch('llm_web_kit.model.lang_id.download_auto_file')
     @patch('llm_web_kit.model.lang_id.logger')
-    @patch('os.path.join', return_value='mock_target_path')
+    @patch('os.path.join')
+    @patch('os.makedirs')
     @patch('llm_web_kit.model.lang_id.fasttext.load_model')
-    def test_auto_download(self, mock_load_model, mock_os_path_join, mock_logger, mock_auto_download, mock_load_config):
-        # 创建实例，触发auto_download调用
-        _ = LanguageIdentification()
+    def test_auto_download(self, mock_load_model, mock_os_makedirs, mock_os_path_join, mock_logger, mock_download_auto_file, mock_load_config):
+        # 准备测试数据
+        mock_load_config.return_value = {
+            'resources': {
+                'lang-id-176': {'download_path': 'mock_url_176', 'md5': 'mock_md5_176'},
+                'lang-id-218': {'download_path': 'mock_url_218', 'sha256': 'mock_sha256_218'}
+            }
+        }
+        mock_os_path_join.side_effect = lambda *args: '/'.join(args)  # 模拟os.path.join的行为
+        mock_download_auto_file.return_value = 'mock_downloaded_path'  # 模拟download_auto_file的返回值
+        mock_load_model.return_value = None  # 模拟fasttext.load_model的返回值
+
+        # 创建LanguageIdentification实例
+        lang_id = LanguageIdentification()
+
+        # 测试场景1：默认参数，下载lang-id-176
+        result = lang_id.auto_download()
+        assert result == ['mock_downloaded_path']  # 验证返回值
+        assert mock_load_config.call_count == 2  # 验证load_config被调用两次（一次在初始化，一次在auto_download）
+        mock_logger.info.assert_any_call(f'开始下载模型 lang-id-176 -> {CACHE_DIR}/lang-id-176/model.bin')  # 验证日志输出
+        mock_logger.info.assert_any_call('模型 lang-id-176 下载完成')  # 验证日志输出
+        assert mock_download_auto_file.call_count == 2  # 验证download_auto_file被调用一次
+        assert mock_os_makedirs.call_count == 2
+
+        # 重置mock对象的调用记录，准备下一个测试场景
+        mock_load_config.reset_mock()
+        mock_logger.reset_mock()
+        mock_download_auto_file.reset_mock()
+        mock_os_makedirs.reset_mock()
+
+        # 测试场景2：下载lang-id-218
+        result = lang_id.auto_download(resource_names='lang-id-218')
+        assert result == ['mock_downloaded_path']  # 验证返回值
+        mock_download_auto_file.assert_called_once_with(
+            resource_path='mock_url_218',
+            target_path=f'{CACHE_DIR}/lang-id-218/model.bin',
+            sha256_sum='mock_sha256_218'
+        )  # 验证download_auto_file的调用参数
+
+        # 重置mock对象的调用记录，准备下一个测试场景
+        mock_load_config.reset_mock()
+        mock_logger.reset_mock()
+        mock_download_auto_file.reset_mock()
+        mock_os_makedirs.reset_mock()
+
+        # 测试场景3：下载多个资源
+        result = lang_id.auto_download(resource_names=['lang-id-176', 'lang-id-218'])
+        assert len(result) == 2  # 验证返回值长度
+        assert result[0] == 'mock_downloaded_path'  # 验证第一个资源的下载路径
+        assert result[1] == 'mock_downloaded_path'  # 验证第二个资源的下载路径
+
+        # 验证download_auto_file的调用次数和参数
+        mock_download_auto_file.assert_any_call(
+            resource_path='mock_url_176',
+            target_path=f'{CACHE_DIR}/lang-id-176/model.bin',
+            md5_sum='mock_md5_176'
+        )
+        mock_download_auto_file.assert_any_call(
+            resource_path='mock_url_218',
+            target_path=f'{CACHE_DIR}/lang-id-218/model.bin',
+            sha256_sum='mock_sha256_218'
+        )
+
+        # 重置mock对象的调用记录，准备下一个测试场景
+        mock_load_config.reset_mock()
+        mock_logger.reset_mock()
+        mock_download_auto_file.reset_mock()
+        mock_os_makedirs.reset_mock()
+
+        # 测试场景4：资源未找到的情况
+        result = lang_id.auto_download(resource_names='non-existent-resource')
+        assert result == []  # 验证返回值
+        mock_logger.error.assert_called_once_with("资源 'non-existent-resource' 未在配置中找到，跳过下载。")  # 验证日志输出
 
         # 打印实际调用参数以调试
-        print('Actual call args:', mock_auto_download.call_args)
-
-        # 断言mock_download_auto_file被调用且参数正确
-        mock_auto_download.assert_called_once()
+        print('Actual call args for download_auto_file:', mock_download_auto_file.call_args)
+        print('Actual call args for os.makedirs:', mock_os_makedirs.call_args)
 
     @patch('llm_web_kit.model.lang_id.fasttext.load_model')
     @patch('llm_web_kit.model.lang_id.LanguageIdentification.auto_download')
