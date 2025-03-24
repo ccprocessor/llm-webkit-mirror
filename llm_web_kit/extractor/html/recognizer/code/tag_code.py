@@ -181,6 +181,7 @@ def modify_tree(root: HtmlElement) -> None:
     for node in inline_code:
         replace_node_by_cccode(node, 'tag_code', False, True)
 
+    node_paths = __get_code_node_paths(root)
     if len(node_paths) == 0:
         tree_roots = []
     elif len(node_paths) == 1:
