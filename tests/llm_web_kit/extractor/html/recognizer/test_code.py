@@ -11,6 +11,16 @@ from llm_web_kit.libs.html_utils import get_element_text, html_to_element
 TEST_CASES = [
     {
         'input': (
+            'assets/cccode/cprograming.html',
+            'https://cboard.cprogramming.com/c-programming/96288-one-question-about-array-function-prototype-declaration-printable-thread.html',
+        ),
+        'expected': [
+            'assets/cccode/cprograming.c',
+            'int a[]',
+        ],
+    },
+    {
+        'input': (
             'assets/cccode/geeksforgeeks.html',
             'https://www.geeksforgeeks.org/output-java-program-set-7/?ref=rp',
         ),

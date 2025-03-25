@@ -244,27 +244,22 @@ class TestExtractorChainNormal(unittest.TestCase):
 
     def test_exception_propagation(self):
         """测试不同类型异常的传播."""
-        # 创建一个会抛出 LlmWebKitBaseException 的 Mock 提取器
         mock_base_error = MagicMock()
         base_exception = LlmWebKitBaseException('Base error')
         mock_base_error.extract.side_effect = base_exception
 
-        # 创建一个会抛出 ExtractorChainBaseException 的 Mock 提取器
         mock_chain_error = MagicMock()
         chain_exception = ExtractorChainBaseException('Chain error')
         mock_chain_error.extract.side_effect = chain_exception
 
-        # 创建一个会抛出一般异常的 Mock 提取器
         mock_general_error = MagicMock()
         mock_general_error.extract.side_effect = ValueError('General error')
 
-        # 创建一个测试用的 ExtractorChain 子类
         class TestExtractorChain(ExtractorChain):
             """用于测试的 ExtractorChain 子类，使用类变量存储 mock 对象."""
             current_mock = None
 
             def __init__(self, config, mock_extractor):
-                # 先设置类变量
                 TestExtractorChain.current_mock = mock_extractor
                 super().__init__(config)
 
@@ -283,7 +278,6 @@ class TestExtractorChainNormal(unittest.TestCase):
             }
         }
 
-        # 创建包含所有必要字段的 DataJson 对象
         data = DataJson({
             'dataset_name': 'test_dataset',
             'data_source_category': 'html',
@@ -291,7 +285,7 @@ class TestExtractorChainNormal(unittest.TestCase):
             'url': 'https://example.com'
         })
 
-        # 测试 LlmWebKitBaseException 传播
+        # 测试 LlmWebKitBaseException
         chain = TestExtractorChain(config, mock_base_error)
         with self.assertRaises(LlmWebKitBaseException) as context:
             chain.extract(data)
@@ -299,7 +293,7 @@ class TestExtractorChainNormal(unittest.TestCase):
         self.assertIsInstance(context.exception, LlmWebKitBaseException)
         self.assertIn('Base error', str(context.exception))
 
-        # 测试 ExtractorChainBaseException 传播
+        # 测试 ExtractorChainBaseException
         chain = TestExtractorChain(config, mock_chain_error)
         with self.assertRaises(ExtractorChainBaseException) as context:
             chain.extract(data)
@@ -332,24 +326,96 @@ class TestExtractorChainNormal(unittest.TestCase):
     @patch('llm_web_kit.libs.class_loader.load_python_class_by_name')
     def test_post_extractor_exceptions(self, mock_load):
         """测试后处理阶段的异常处理."""
-        # 创建一个正常的提取器
         mock_extractor = MagicMock()
         mock_extractor.extract = lambda data: data
 
-        # 创建会抛出 KeyError 的后处理器
         mock_key_error_post = MagicMock()
         mock_key_error_post.post_extract.side_effect = KeyError('post_required_field')
 
-        # 创建会抛出 ExtractorChainBaseException 的后处理器
         mock_chain_error_post = MagicMock()
         chain_exception = ExtractorChainBaseException('Post chain error')
         mock_chain_error_post.post_extract.side_effect = chain_exception
 
-        # 创建会抛出 LlmWebKitBaseException 的后处理器
         mock_base_error_post = MagicMock()
         base_exception = LlmWebKitBaseException('Post base error')
         mock_base_error_post.post_extract.side_effect = base_exception
 
-        # 创建会抛出一般异常的后处理器
         mock_general_error_post = MagicMock()
         mock_general_error_post.post_extract.side_effect = ValueError('Post general error')
+
+    def test_exception_traceback_info(self):
+        """测试异常中的 traceback_info 属性是否正确设置."""
+        mock_key_error = MagicMock()
+        mock_key_error.extract.side_effect = KeyError('required_field')
+
+        mock_chain_error = MagicMock()
+        chain_exception = ExtractorChainBaseException('Chain error')
+        mock_chain_error.extract.side_effect = chain_exception
+
+        mock_base_error = MagicMock()
+        base_exception = LlmWebKitBaseException('Base error')
+        mock_base_error.extract.side_effect = base_exception
+
+        mock_general_error = MagicMock()
+        mock_general_error.extract.side_effect = ValueError('General error')
+
+        class TestExtractorChain(ExtractorChain):
+            """用于测试的 ExtractorChain 子类，使用类变量存储 mock 对象."""
+            current_mock = None
+
+            def __init__(self, config, mock_extractor):
+                TestExtractorChain.current_mock = mock_extractor
+                super().__init__(config)
+
+            def _ExtractorChain__create_extractor(self, config):
+                return self.current_mock
+
+        config = {'extractor_pipe': {'extractor': [{'enable': True}]}}
+
+        data = DataJson({
+            'dataset_name': 'test_dataset',
+            'data_source_category': 'html',
+            'html': '<h1>Test</h1>',
+            'url': 'https://example.com'
+        })
+
+        # 1. 测试 KeyError 异常
+        chain = TestExtractorChain(config, mock_key_error)
+        try:
+            chain.extract(data)
+            self.fail('Expected ExtractorChainInputException was not raised')
+        except ExtractorChainInputException as e:
+            self.assertIsNotNone(e.traceback_info)
+            self.assertIn('Traceback', e.traceback_info)
+            self.assertIn('KeyError', e.traceback_info)
+
+        # 2. 测试 ExtractorChainBaseException 异常
+        chain = TestExtractorChain(config, mock_chain_error)
+        try:
+            chain.extract(data)
+            self.fail('Expected ExtractorChainBaseException was not raised')
+        except ExtractorChainBaseException as e:
+            self.assertIsNotNone(e.traceback_info)
+            self.assertIn('Traceback', e.traceback_info)
+            self.assertIn('Chain error', e.traceback_info)
+
+        # 3. 测试 LlmWebKitBaseException 异常
+        chain = TestExtractorChain(config, mock_base_error)
+        try:
+            chain.extract(data)
+            self.fail('Expected LlmWebKitBaseException was not raised')
+        except LlmWebKitBaseException as e:
+            self.assertIsNotNone(e.traceback_info)
+            self.assertIn('Traceback', e.traceback_info)
+            self.assertIn('Base error', e.traceback_info)
+
+        # 4. 测试一般异常包装为 ExtractorChainBaseException
+        chain = TestExtractorChain(config, mock_general_error)
+        try:
+            chain.extract(data)
+            self.fail('Expected ExtractorChainBaseException was not raised')
+        except ExtractorChainBaseException as e:
+            self.assertIsNotNone(e.traceback_info)
+            self.assertIn('Traceback', e.traceback_info)
+            self.assertIn('ValueError', e.traceback_info)
+            self.assertIn('General error', e.traceback_info)

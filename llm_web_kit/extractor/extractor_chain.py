@@ -1,3 +1,4 @@
+import traceback
 from typing import List, Union
 
 import commentjson as json
@@ -58,16 +59,20 @@ class ExtractorChain:
         except KeyError as e:
             exc = ExtractorChainInputException(f'Required field missing: {str(e)}')
             exc.dataset_name = data.get_dataset_name()
+            exc.traceback_info = traceback.format_exc()
             raise exc
         except ExtractorChainBaseException as e:
             e.dataset_name = data.get_dataset_name()
+            e.traceback_info = traceback.format_exc()
             raise
         except LlmWebKitBaseException as e:
             e.dataset_name = data.get_dataset_name()
+            e.traceback_info = traceback.format_exc()
             raise
         except Exception as e:
             wrapped = ExtractorChainBaseException(f'Error during extraction: {str(e)}')
             wrapped.dataset_name = data.get_dataset_name()
+            wrapped.traceback_info = traceback.format_exc()
             raise wrapped from e
 
         return data
