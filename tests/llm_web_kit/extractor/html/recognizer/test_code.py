@@ -11,6 +11,16 @@ from llm_web_kit.libs.html_utils import get_element_text, html_to_element
 TEST_CASES = [
     {
         'input': (
+            'assets/cccode/cprograming.html',
+            'https://cboard.cprogramming.com/c-programming/96288-one-question-about-array-function-prototype-declaration-printable-thread.html',
+        ),
+        'expected': [
+            'assets/cccode/cprograming.c',
+            'int a[]',
+        ],
+    },
+    {
+        'input': (
             'assets/cccode/geeksforgeeks.html',
             'https://www.geeksforgeeks.org/output-java-program-set-7/?ref=rp',
         ),
@@ -245,12 +255,12 @@ class TestCodeRecognizer(unittest.TestCase):
             base_url = test_case['input'][1]
             print(base_url)
             raw_html = raw_html_path.read_text()
-            parts = self.rec.recognize(base_url, [(raw_html, raw_html)], raw_html)
-            parts = [
-                part[0]
-                for part in parts
-                if CCTag.CC_CODE in part[0] or CCTag.CC_CODE_INLINE in part[0]
-            ]
+            parts = self.rec.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
+            # parts = [
+            #    part[0]
+            #    for part in parts
+            #    if CCTag.CC_CODE in part[0] or CCTag.CC_CODE_INLINE in part[0]
+            # ]
             # for part in parts:
             #     part_el = html_to_element(part)
             #     answer = get_element_text(part_el).strip()
@@ -259,7 +269,7 @@ class TestCodeRecognizer(unittest.TestCase):
             #     print("--------------------------------------------------")
             answers = []
             for part in parts:
-                part_el = html_to_element(part)
+                part_el = part[0]
                 cccodes = part_el.xpath(f'.//{CCTag.CC_CODE}') + part_el.xpath(
                     f'.//{CCTag.CC_CODE_INLINE}'
                 )
@@ -532,4 +542,4 @@ import com.dao.UsersDao;
 </div>
 """
         # 无须检查内容，只要不爆错就可以了
-        _ = self.rec.recognize('', [(html, html)], html)
+        _ = self.rec.recognize('', [(html_to_element(html), html_to_element(html))], html)

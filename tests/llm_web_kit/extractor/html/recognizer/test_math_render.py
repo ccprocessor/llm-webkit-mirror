@@ -385,7 +385,7 @@ class TestMathRender(unittest.TestCase):
         html = """
         <div>
             <p>Paragraph with inline formula: $a^2 + b^2 = c^2$ and display formula: $$E = mc^2$$</p>
-            <p>Another paragraph with [tex]\\frac{1}{2}[/tex] formula.</p>
+            <p>Another paragraph with [textex]\\frac{1}{2}[/textex] formula.</p>
         </div>
         """
         root = html_to_element(html)
@@ -408,14 +408,14 @@ class TestMathRender(unittest.TestCase):
         self.assertEqual(p1[1].tail, '')
 
         # 检查第二个段落
-        self.assertEqual(p2.text, 'Another paragraph with [tex]\\frac{1}{2}[/tex] formula.')
+        self.assertEqual(p2.text, 'Another paragraph with [textex]\\frac{1}{2}[/textex] formula.')
         self.assertEqual(len(p2), 0)
 
         # 检查完整HTML
         print('test_find_math_method expected_html:', element_to_html(root))
         expected_html = """<div>
             <p>Paragraph with inline formula: <ccmath-inline type="latex" by="mathjax" html="$a^2 + b^2 = c^2$">a^2 + b^2 = c^2</ccmath-inline> and display formula: <ccmath-interline type="latex" by="mathjax" html="$$E = mc^2$$">E = mc^2</ccmath-interline></p>
-            <p>Another paragraph with [tex]\\frac{1}{2}[/tex] formula.</p>
+            <p>Another paragraph with [textex]\\frac{1}{2}[/textex] formula.</p>
         </div>
         """
         self.assertEqual(element_to_html(root), expected_html)
@@ -570,23 +570,23 @@ class TestMathRender(unittest.TestCase):
             <script type="text/x-mathjax-config">
                 MathJax.Hub.Config({
                     tex2jax: {
-                        inlineMath: [['[itex]', '[/itex]']],
-                        displayMath: [['[tex]', '[/tex]']]
+                        inlineMath: [['[itexitex]', '[/itexitex]']],
+                        displayMath: [['[textex]', '[/textex]']]
                     }
                 });
             </script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
         </head>
         <body>
-            <p>Some math: [itex]E=mc^2[/itex]</p>
+            <p>Some math: [itexitex]E=mc^2[/itexitex]</p>
         </body>
         </html>
         """
         options_custom = self.mathjax_render.get_options(html_custom)
         self.assertEqual(len(options_custom['inlineMath']), 1)
-        self.assertEqual(options_custom['inlineMath'][0], ['[itex]', '[/itex]'])
+        self.assertEqual(options_custom['inlineMath'][0], ['[itexitex]', '[/itexitex]'])
         self.assertEqual(len(options_custom['displayMath']), 1)
-        self.assertEqual(options_custom['displayMath'][0], ['[tex]', '[/tex]'])
+        self.assertEqual(options_custom['displayMath'][0], ['[textex]', '[/textex]'])
         self.assertTrue(self.mathjax_render.is_customized_options())
 
     def test_katex_get_options(self):

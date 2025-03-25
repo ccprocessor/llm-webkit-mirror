@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html
+    xmlns=\"http://www.w3.org/1999/xhtml\">\n \n \n\n \n\n\n
+
+<head>\n <title>\n WikiProcessors – smartmontools\n </title>\n
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n
+    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n
+    <!--[if IE]><script type=\"text/javascript\">\n      if (/^#__msie303:/.test(window.location.hash))\n        window.location.replace(window.location.hash.replace(/^#__msie303:/, '#'));\n    </script><![endif]-->\n
+    <link rel=\"search\" href=\"/search\" />\n
+    <link rel=\"help\" href=\"/wiki/TracGuide\" />\n
+    <link rel=\"alternate\" href=\"/wiki/WikiProcessors?version=3&amp;format=txt\" type=\"text/x-trac-wiki\"
+        title=\"Plain Text\" />\n
+    <link rel=\"up\" href=\"/wiki/WikiProcessors\" title=\"View latest version\" />\n
+    <link rel=\"start\" href=\"/wiki\" />\n
+    <link rel=\"stylesheet\" href=\"/chrome/common/css/trac.css\" type=\"text/css\" />\n
+    <link rel=\"stylesheet\" href=\"/chrome/common/css/wiki.css\" type=\"text/css\" />\n
+    <link rel=\"prev\" href=\"/wiki/WikiProcessors?version=2\" title=\"Version 2\" />\n
+    <link rel=\"icon\" href=\"/chrome/common/trac.ico\" type=\"image/x-icon\" />\n <style id=\"trac-noscript\"
+        type=\"text/css\">
+        .trac-noscript {
+            display: none !important
+        }
+    </style>\n
+    <link type=\"application/opensearchdescription+xml\" rel=\"search\" href=\"/search/opensearch\" title=\"Search
+        smartmontools\" />\n
+    <script type=\"text/javascript\" charset=\"utf-8\" src=\"/chrome/common/js/jquery.js\"></script>\n
+    <script type=\"text/javascript\" charset=\"utf-8\" src=\"/chrome/common/js/babel.js\"></script>\n
+    <script type=\"text/javascript\" charset=\"utf-8\" src=\"/chrome/common/js/trac.js\"></script>\n
+    <script type=\"text/javascript\" charset=\"utf-8\" src=\"/chrome/common/js/search.js\"></script>\n
+    <script type=\"text/javascript\" charset=\"utf-8\" src=\"/chrome/common/js/folding.js\"></script>\n
+    <script
+        type=\"text/javascript\">\n      jQuery(\"#trac-noscript\").remove();\n      jQuery(document).ready(function($) {\n        $(\".trac-autofocus\").focus();\n        $(\".trac-target-new\").attr(\"target\", \"_blank\");\n        if ($.ui) { /* is jquery-ui added? */\n          $(\".trac-datepicker:not([readonly])\").prop(\"autocomplete\", \"off\").datepicker();\n          $(\".trac-datetimepicker:not([readonly])\").prop(\"autocomplete\", \"off\").datetimepicker();\n          $(\"#main\").addClass(\"trac-nodatetimehint\");\n        }\n        $(\".trac-disable\").disableSubmit(\".trac-disable-determinant\");\n        setTimeout(function() { $(\".trac-scroll\").scrollToTop() }, 1);\n        $(\".trac-disable-on-submit\").disableOnSubmit();\n      });\n    </script>
+    \n
+    <meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\" />\n
+    <script
+        type=\"text/javascript\">\n      jQuery(document).ready(function($) {\n        $(\"#content\").find(\"h1,h2,h3,h4,h5,h6\").addAnchor(_(\"Link to this section\"));\n        $(\"#content\").find(\".wikianchor\").each(function() {\n          $(this).addAnchor(babel.format(_(\"Link to #%(id)s\"), {id: $(this).attr('id')}));\n        });\n        $(\".foldable\").enableFolding(true, true);\n      });\n    </script>
+    \n
+</head>\n
+
+<body>\n\t<div id=\"doc3\" class=\"yui-t6\">\n\t\t<div id=\"bd\">\n\t\t\t<a name=\"content\"></a>\n<!-- End Header -->\n
+            <div id=\"banner\">\n <div id=\"header\">\n <h1><a href=\"http://www.smartmontools.org\">smartmontools</a>
+                    </h1>\n </div>\n <form id=\"search\" action=\"/search\" method=\"get\">\n <div>\n <label
+                            for=\"proj-search\">Search:</label>\n <input type=\"text\" id=\"proj-search\" name=\"q\"
+                            size=\"18\" value=\"\" />\n <input type=\"submit\" value=\"Search\" />\n </div>\n </form>\n
+                <div id=\"metanav\" class=\"nav\">\n <ul>\n <li class=\"first\"><a href=\"/login\">Login</a></li>
+                        <li><a href=\"/prefs\">Preferences</a></li>
+                        <li><a href=\"/wiki/TracGuide\">Help/Guide</a></li>
+                        <li><a href=\"/about\">About Trac</a></li>
+                        <li><a href=\"/register\">Register</a></li>
+                        <li class=\"last\"><a href=\"/reset_password\">Forgot your password?</a></li>\n
+                    </ul>\n </div>\n </div>\n <div id=\"mainnav\" class=\"nav\">\n <ul>\n <li class=\"first active\"><a
+                            href=\"/wiki\">Wiki</a></li>
+                    <li><a href=\"/timeline\">Timeline</a></li>
+                    <li><a href=\"/roadmap\">Roadmap</a></li>
+                    <li><a href=\"/report\">View Tickets</a></li>
+                    <li><a href=\"/browser\">Browse Source</a></li>
+                    <li class=\"last\"><a href=\"/search\">Search</a></li>\n
+                </ul>\n </div>\n <div id=\"main\">\n <div id=\"pagepath\" class=\"noprint\">\n <a class=\"pathentry
+                        first\" title=\"View WikiStart\" href=\"/wiki\">wiki:</a><a class=\"pathentry\"
+                        href=\"/wiki/WikiProcessors\" title=\"View WikiProcessors\">WikiProcessors</a>\n</div>\n <div
+                    id=\"ctxtnav\" class=\"nav\">\n <h2>Context Navigation</h2>\n <ul>\n <li class=\"first\">
+                            <span>&larr; <a class=\"prev\" href=\"/wiki/WikiProcessors?version=2\" title=\"Version
+                                    2\">Previous Version</a></span></li>
+                        <li><a href=\"/wiki/WikiProcessors\" title=\"View latest version\">View Latest Version</a></li>
+                        <li class=\"last\"><span class=\"missing\">Next Version &rarr;</span></li>\n
+                    </ul>\n
+                    <hr />\n
+                </div>\n <div id=\"content\" class=\"wiki\">\n <br />\n <table id=\"info\" summary=\"Revision info\">\n
+                        <tr>
+                            <th scope=\"row\">Version 3 (modified by <span class=\"trac-author\">trac</span>, <a
+                                    class=\"timeline\"
+                                    href=\"/timeline?from=2017-11-12T14%3A15%3A51%2B01%3A00&amp;precision=second\"
+                                    title=\"See timeline at Nov 12, 2017, 2:15:51 PM\">5 years ago</a>)\n (<a
+                                    href=\"/wiki/WikiProcessors?action=diff&amp;version=3\">diff</a>)</th>
+                        </tr>\n <tr>
+                            <td class=\"message\">\n <p>\n--\n</p>\n\n </td>
+                        </tr>\n </table>\n <div class=\"wikipage searchable\">\n \n <div id=\"wikipage\"
+                            class=\"trac-content\">
+                            <h1 id=\"WikiProcessors\">Wiki Processors</h1>\n<p>\nProcessors are <a class=\"wiki\"
+                                    href=\"/wiki/WikiMacros\">WikiMacros</a> designed to provide alternative markup
+                                formats for the <a class=\"wiki\" href=\"/wiki/TracWiki\">Wiki engine</a>. Processors
+                                can be thought of as <em>macro functions to process user-edited text</em>. \n</p>\n<p>
+                                \nWiki processors can be used in any Wiki text throughout Trac, such as:\n</p>\n<ul>
+                                <li><a class=\"wiki\" href=\"/wiki/WikiProcessors#CodeHighlightingSupport\">syntax
+                                        highlighting</a> or for rendering text verbatim\n</li>
+                                <li>rendering <a class=\"wiki\" href=\"/wiki/WikiProcessors#HTMLrelated\">Wiki markup
+                                        inside a context</a>, like inside &lt;div&gt; blocks or &lt;span&gt; or within
+                                    &lt;td&gt; or &lt;th&gt; table cells\n</li>
+                                <li>using an alternative markup syntax, like <a class=\"wiki\"
+                                        href=\"/wiki/WikiHtml\">raw HTML</a> and <a class=\"wiki\"
+                                        href=\"/wiki/WikiRestructuredText\">Restructured Text</a> or <a
+                                        class=\"ext-link\" href=\"http://www.textism.com/tools/textile/\"><span
+                                            class=\"icon\">​</span>textile</a>\n</li>
+                            </ul>
+                            <h2 id=\"UsingProcessors\">Using Processors</h2>\n<p>\nTo use a processor on a block of
+                                text, first delimit the lines using a Wiki <em>code block</em>:\n</p>\n
+                            <pre class=\"wiki\">{{{\nThe lines\nthat should be processed...\n}}}\n</pre>
+                            <p>\nImmediately after the <code>{{{</code> or on the line just below, add <code>#!</code>
+                                followed by the <em>processor name</em>:\n</p>\n
+                            <pre
+                                class=\"wiki\">{{{\n#!processorname\nThe lines\nthat should be processed...\n}}}\n</pre>
+                            <p>\nThis is the \"shebang\" notation, familiar to most UNIX users.\n</p>\n<p>\nBesides
+                                their content, some Wiki processors can also accept <em>parameters</em>, which are then
+                                given as <code>key=value</code> pairs after the processor name and on the same line. If
+                                <code>value</code> has to contain space, as it's often the case for the style parameter,
+                                a quoted string can be used (<code>key=\"value with space\"</code>).\n</p>\n<p>\nAs some
+                                processors are meant to process Wiki markup, it's quite possible to <em>nest</em>
+                                processor blocks.\nYou may want to indent the content of nested blocks for increased
+                                clarity, this extra indentation will be ignored when processing the content.\n</p>\n<h2
+                                id=\"Examples\">Examples</h2>\n<table class=\"wiki\">\n<tr>
+                                    <th> Wiki Markup </th>
+                                    <th> Display \n</th>
+                                </tr>
+                                <tr>
+                                    <td colspan=\"2\" align=\"center\" style=\"border: none\">
+                                        <blockquote>\n<p>\n<span class=\"underline\">Example 1</span>: Inserting raw
+                                                HTML\n</p>\n</blockquote>\n
+                                    </td>
+                                </tr>
+                                <tr>\n<td style=\"border: none\">
+                                        <pre
+                                            class=\"wiki\">{{{\n#!html\n&lt;h1 style=\"color: grey\"&gt;This is raw HTML&lt;/h1&gt;\n}}}\n</pre>
+                                    </td>
+                                    <td style=\"border: none; padding-left: 2em\" valign=\"top\">
+                                        <h1 style=\"color: grey\">This is raw HTML</h1>\n
+                                    </td>
+                                </tr>
+                                <tr>\n<td colspan=\"2\" align=\"center\" style=\"border: none\">
+                                        <blockquote>\n<p>\n<span class=\"underline\">Example 2</span>: Highlighted
+                                                Python code in a &lt;div&gt; block with custom style\n</p>\n
+                                        </blockquote>\n
+                                    </td>
+                                </tr>
+                                <tr>\n<td style=\"border: none\">
+                                        <pre
+                                            class=\"wiki\">{{{#!div style=\"background: #ffd; border: 3px ridge\"\n\nThis is an example of embedded \"code\" block:\n\n  {{{\n  #!python\n  def hello():\n      return \"world\"\n  }}}\n\n}}}\n</pre>
+                                    </td>
+                                    <td style=\"border: none; padding: 1em\" valign=\"top\">
+                                        <div style=\"background: #ffd; border: 3px ridge\" class=\"wikipage\">
+                                            <p>\nThis is an example of embedded \"code\" block:\n</p>\n<div
+                                                class=\"wiki-code\">
+                                                <div class=\"code\">
+                                                    <pre><span class=\"k\">def</span> <span class=\"nf\">hello</span><span class=\"p\">():</span>\n    <span class=\"k\">return</span> <span class=\"s2\">\"world\"</span>\n</pre>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>\n<td colspan=\"2\" align=\"center\" style=\"border: none\">
+                                        <blockquote>\n<p>\n<span class=\"underline\">Example 3</span>: Searching tickets
+                                                from a wiki page, by keywords.\n</p>\n</blockquote>\n
+                                    </td>
+                                </tr>
+                                <tr>\n<td style=\"border: none\">
+                                        <pre
+                                            class=\"wiki\">{{{\n#!html\n&lt;form action=\"/query\" method=\"get\"&gt;&lt;div&gt;\n&lt;input type=\"text\" name=\"keywords\" value=\"~\" size=\"30\"/&gt;\n&lt;input type=\"submit\" value=\"Search by Keywords\"/&gt;\n&lt;!-- To control what fields show up use hidden fields\n&lt;input type=\"hidden\" name=\"col\" value=\"id\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"summary\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"status\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"milestone\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"version\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"owner\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"priority\"/&gt;\n&lt;input type=\"hidden\" name=\"col\" value=\"component\"/&gt;\n--&gt;\n&lt;/div&gt;&lt;/form&gt;\n}}}\n</pre>
+                                    </td>
+                                    <td style=\"border: none; padding: 1em\" valign=\"top\">
+                                        <form action=\"/query\" method=\"get\">
+                                            <div>\n<input type=\"text\" name=\"keywords\" value=\"~\"
+                                                    size=\"30\" />\n<input type=\"submit\" value=\"Search by
+                                                    Keywords\" />\n</div>
+                                        </form>\n
+                                    </td>
+                                </tr>
+                            </table>\n<h2 id=\"AvailableProcessors\">Available Processors</h2>\n<p>\nThe following
+                                processors are included in the Trac distribution:\n</p>\n<table class=\"wiki\">\n<tr>
+                                    <td> <strong><code>#!default</code></strong> </td>
+                                    <td> Present the text verbatim in a preformatted text block. This is the same as
+                                        specifying <em>no</em> processor name (and no <code>#!</code>). \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!comment</code></strong> </td>
+                                    <td> Do not process the text in this section, i.e. contents exist only in the plain
+                                        text - not in the rendered page. \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!rtl</code></strong> </td>
+                                    <td> Introduce a Right-To-Left block with appropriate CSS direction and styling.
+                                        <em>(since 0.12.2)</em> \n</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=\"2\"> \n</td>
+                                </tr>
+                                <tr>
+                                    <th colspan=\"2\"> <strong><span class=\"wikianchor\" id=\"HTMLrelated\">HTML
+                                                related</span></strong> \n</th>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!html</code></strong> </td>
+                                    <td> Insert custom HTML in a wiki page. \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!htmlcomment</code></strong> </td>
+                                    <td> Insert an HTML comment in a wiki page. (<em>since 0.12</em>) \n</td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td> Note that <code>#!html</code> blocks have to be <em>self-contained</em>, i.e.
+                                        you can't start an HTML element in one block and close it later in a second
+                                        block. Use the following processors for achieving a similar effect. \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!div</code></strong> </td>
+                                    <td> Wrap wiki content inside a &lt;div&gt; element. \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!span</code></strong> </td>
+                                    <td> Wrap wiki content inside a &lt;span&gt; element. \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!td</code></strong> </td>
+                                    <td> Wrap wiki content inside a &lt;td&gt; element. (<em>since 0.12</em>) \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!th</code></strong> </td>
+                                    <td> Wrap wiki content inside a &lt;th&gt; element. (<em>since 0.12</em>) \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!tr</code></strong> </td>
+                                    <td> Can optionally be used for wrapping <code>#!td</code> and <code>#!th</code>
+                                        blocks, either for specifying row attributes or better visual grouping.
+                                        (<em>since 0.12</em>) \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!table</code></strong> </td>
+                                    <td> Can optionally be used for wrapping <code>#!tr</code>, <code>#!td</code> and
+                                        <code>#!th</code> blocks, for specifying table attributes. One current
+                                        limitation however is that tables cannot be nested. (<em>since 0.12</em>) \n
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td> See <a class=\"wiki\" href=\"/wiki/WikiHtml\">WikiHtml</a> for example usage
+                                        and more details about these processors. \n</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=\"2\"> \n</td>
+                                </tr>
+                                <tr>
+                                    <th colspan=\"2\"> <strong>Other Markups</strong> \n</th>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!rst</code></strong> </td>
+                                    <td> Trac support for Restructured Text. See <a class=\"wiki\"
+                                            href=\"/wiki/WikiRestructuredText\">WikiRestructuredText</a>. \n</td>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!textile</code></strong> </td>
+                                    <td> Supported if <a class=\"ext-link\"
+                                            href=\"http://cheeseshop.python.org/pypi/textile\"><span
+                                                class=\"icon\">​</span>Textile</a> is installed. See <a
+                                            class=\"ext-link\" href=\"http://www.textism.com/tools/textile/\"><span
+                                                class=\"icon\">​</span>a Textile reference</a>. \n</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=\"2\"> \n</td>
+                                </tr>
+                                <tr>
+                                    <th colspan=\"2\"> <strong><span class=\"wikianchor\"
+                                                id=\"CodeHighlightingSupport\">Code Highlighting Support</span></strong>
+                                        \n</th>
+                                </tr>
+                                <tr>
+                                    <td> <strong><code>#!c</code></strong> <br /> <strong><code>#!cpp</code></strong>
+                                        (C++) <br /> <strong><code>#!python</code></strong> <br />
+                                        <strong><code>#!perl</code></strong> <br /> <strong><code>#!ruby</code></strong>
+                                        <br /> <strong><code>#!php</code></strong> <br />
+                                        <strong><code>#!asp</code></strong> <br /> <strong><code>#!java</code></strong>
+                                        <br /> <strong><code>#!js</code></strong> (Javascript) <br />
+                                        <strong><code>#!sql</code></strong> <br /> <strong><code>#!xml</code></strong>
+                                        (XML or HTML) <br /> <strong><code>#!sh</code></strong> (Bourne/Bash shell)
+                                        <br /> <strong>etc.</strong> <br /> </td>
+                                    <td> Trac includes processors to provide inline syntax highlighting for source code
+                                        in various languages. <br /> <br /> Trac relies on <a class=\"ext-link\"
+                                            href=\"http://pygments.org\"><span class=\"icon\">​</span>Pygments</a> for
+                                        syntax coloring. <br /> <br /> See <a class=\"wiki\"
+                                            href=\"/wiki/TracSyntaxColoring\">TracSyntaxColoring</a> for information
+                                        about which languages are supported and how to enable support for more
+                                        languages. \n</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=\"2\"> \n</td>
+                                </tr>
+                            </table>\n<p>\nSince 1.1.2 the default, coding highlighting and MIME-type processors support
+                                the argument <code>lineno</code> for adding line numbering to the code block. When a
+                                value is specified, as in <code>lineno=3</code>, the numbering will start at the
+                                specified value. When used in combination with the <code>lineno</code> argument, the
+                                <code>marks</code> argument is also supported for highlighting lines. A single line
+                                number, set of line numbers and range of line numbers are allowed. For example,
+                                <code>marks=3</code>, <code>marks=3-6</code>, <code>marks=3,5,7</code> and
+                                <code>marks=3-5,7</code> are all allowed. The specified values are relative to the
+                                numbered lines, so if <code>lineno=2</code> is specified to start the line numbering at
+                                2, <code>marks=2</code> will result in the first line being highlighted.\n</p>\n<p>
+                                \nUsing the MIME type as processor, it is possible to syntax-highlight the same
+                                languages that are supported when browsing source code.\n</p>\n<table class=\"wiki\">\n
+                                <tr>
+                                    <th colspan=\"2\"> <strong>MIME Type Processors</strong> \n</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>\nSome examples:\n</p>\n
+                                        <pre class=\"wiki\">{{{#!text/html\n&lt;h1&gt;text&lt;/h1&gt;\n}}}\n</pre>
+                                    </td>
+                                    <td>
+                                        <p>\nThe result will be syntax highlighted HTML code:\n</p>\n<div
+                                            class=\"wiki-code\">
+                                            <div class=\"code\">
+                                                <pre><span class=\"p\">&lt;</span><span class=\"nt\">h1</span><span class=\"p\">&gt;</span>text<span class=\"p\">&lt;/</span><span class=\"nt\">h1</span><span class=\"p\">&gt;</span>\n</pre>
+                                            </div>
+                                        </div>
+                                        <p>\nThe same is valid for all other <a class=\"wiki\"
+                                                href=\"/wiki/TracSyntaxColoring#SyntaxColoringSupport\">mime types
+                                                supported</a>.\n</p>\n
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <pre
+                                            class=\"wiki\">{{{#!diff\n--- Version 55\n+++ Version 56\n@@ -115,8 +115,9 @@\n     name='TracHelloWorld', version='1.0',\n     packages=find_packages(exclude=['*.tests*']),\n-    entry_points = \"\"\"\n-        [trac.plugins]\n-        helloworld = myplugs.helloworld\n-    \"\"\",\n+    entry_points = {\n+        'trac.plugins': [\n+            'helloworld = myplugs.helloworld',\n+        ],\n+    },\n )\n}}}\n</pre>
+                                    </td>
+                                    <td>
+                                        <p>\n<strong><code>#!diff</code></strong> has a particularly nice renderer:\n
+                                        </p>\n<div class=\"wiki-code\">
+                                            <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"diff\">\n\n <ul
+                                                    class=\"entries\">\n \n <li class=\"entry\">\n <h2>\n
+                                                            <a>Version</a>\n \n </h2>\n \n \n <table class=\"trac-diff
+                                                            inline\" summary=\"Differences\" cellspacing=\"0\">\n \n \n
+                                                            \n <colgroup>
+                                                                <col class=\"lineno\" />
+                                                                <col class=\"lineno\" />
+                                                                <col class=\"content\" />
+                                                            </colgroup>\n <thead>\n <tr>\n <th title=\"File Version
+                                                                        55\">\n \n \n </th>\n <th title=\"File Version
+                                                                        56\">\n \n \n </th>\n <td><em></em> </td>\n
+                                                                </tr>\n </thead>\n \n \n \n <tbody class=\"unmod\">\n
+                                                                \n\n \n <tr>\n \n \n \n \n <th>115</th>
+                                                                    <th>115</th>
+                                                                    <td class=\"l\"><span>&nbsp; &nbsp;
+                                                                            name='TracHelloWorld', version='1.0',</span>
+                                                                    </td>\n \n \n \n
+                                                                </tr>
+                                                                <tr>\n \n \n \n \n <th>116</th>
+                                                                    <th>116</th>
+                                                                    <td class=\"l\"><span>&nbsp; &nbsp;
+                                                                            packages=find_packages(exclude=['*.tests*']),</span>
+                                                                    </td>\n \n \n \n
+                                                                </tr>\n \n\n \n\n \n\n \n\n \n
+                                                            </tbody>
+                                                            <tbody class=\"mod\">\n \n\n \n\n \n\n \n\n \n \n \n \n \n
+                                                                <tr class=\"first\">\n <th>117</th>
+                                                                    <th> </th>
+                                                                    <td class=\"l\"><span>&nbsp; &nbsp; entry_points =
+                                                                            \"\"\"</span></td>\n
+                                                                </tr>
+                                                                <tr>\n <th>118</th>
+                                                                    <th> </th>
+                                                                    <td class=\"l\"><span>&nbsp; &nbsp; &nbsp; &nbsp;
+                                                                            [trac.plugins]</span></td>\n
+                                                                </tr>
+                                                                <tr>\n <th>119</th>
+                                                                    <th> </th>
+                                                                    <td class=\"l\"><span>&nbsp; &nbsp; &nbsp; &nbsp;
+                                                                            helloworld = myplugs.helloworld</span></td>
+                                                                    \n
+                                                                </tr>
+                                                                <tr>\n <th>120</th>
+                                                                    <th> </th>
+                                                                    <td class=\"l\"><span>&nbsp; &nbsp; \"\"\",</span>
+                                                                    </td>\n
+                                                                </tr>\n \n <tr>\n <th> </th>
+                                                                    <th>117</th>
+                                                                    <td class=\"r\"><span>&nbsp; &nbsp; entry_points =
+                                                                            {</span></td>\n
+                                                                </tr>
+                                                                <tr>\n <th> </th>
+                                                                    <th>118</th>
+                                                                    <td class=\"r\"><span>&nbsp; &nbsp; &nbsp; &nbsp;
+                                                                            'trac.plugins': [</span></td>\n
+                                                                </tr>
+                                                                <tr>\n <th> </th>
+                                                                    <th>119</th>
+                                                                    <td class=\"r\"><span>&nbsp; &nbsp; &nbsp; &nbsp;
+                                                                            &nbsp; &nbsp; 'helloworld =
+                                                                            myplugs.helloworld',</span></td>\n
+                                                                </tr>
+                                                                <tr>\n <th> </th>
+                                                                    <th>120</th>
+                                                                    <td class=\"r\"><span>&nbsp; &nbsp; &nbsp; &nbsp;
+                                                                            ],</span></td>\n
+                                                                </tr>
+                                                                <tr class=\"last\">\n <th> </th>
+                                                                    <th>121</th>
+                                                                    <td class=\"r\"><span>&nbsp; &nbsp; },</span></td>\n
+                                                                </tr>\n \n \n \n\n \n
+                                                            </tbody>
+                                                            <tbody class=\"unmod\">\n \n\n \n <tr>\n \n \n \n \n <th>121
+                                                                    </th>
+                                                                    <th>122</th>
+                                                                    <td class=\"l\"><span>)</span></td>\n \n \n \n
+                                                                </tr>\n \n\n \n\n \n\n \n\n \n </tbody>\n \n \n
+                                                        </table>\n </li>\n \n </ul>\n\n</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>\n<p>\nLine numbers can be added to code blocks and lines can be highlighted
+                                <em>(since 1.1.2)</em>.\n</p>\n
+                            <pre
+                                class=\"wiki\">{{{#!python lineno=3 marks=3,9-10,16\ndef expand_markup(stream, ctxt=None):\n    \"\"\"A Genshi stream filter for expanding `genshi.Markup` events.\n\n    Note: Expansion may not be possible if the fragment is badly\n    formed, or partial.\n    \"\"\"\n    for event in stream:\n        if isinstance(event[1], Markup):\n            try:\n                for subevent in HTML(event[1]):\n                    yield subevent\n            except ParseError:\n                yield event\n        else:\n            yield event\n}}}\n</pre>
+                            <div class=\"wiki-code\">
+                                <table class=\"code\">
+                                    <thead>
+                                        <tr>
+                                            <th class=\"lineno\" title=\"Line numbers\">Line</th>
+                                            <th class=\"content\"> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class=\"hilite\">
+                                            <th id=\"a-L3\"><a href=\"#a-L3\">3</a></th>
+                                            <td><span class=\"k\">def</span> <span
+                                                    class=\"nf\">expand_markup</span><span
+                                                    class=\"p\">(</span>stream<span class=\"p\">,</span> ctxt<span
+                                                    class=\"o\">=</span><span class=\"kc\">None</span><span
+                                                    class=\"p\">):</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L4\"><a href=\"#a-L4\">4</a></th>
+                                            <td>    <span class=\"sd\">\"\"\"A Genshi stream filter for expanding
+                                                    `genshi.Markup` events.</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L5\"><a href=\"#a-L5\">5</a></th>
+                                            <td><span class=\"sd\"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L6\"><a href=\"#a-L6\">6</a></th>
+                                            <td><span class=\"sd\">    Note: Expansion may not be possible if the
+                                                    fragment is badly</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L7\"><a href=\"#a-L7\">7</a></th>
+                                            <td><span class=\"sd\">    formed, or partial.</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L8\"><a href=\"#a-L8\">8</a></th>
+                                            <td><span class=\"sd\">    \"\"\"</span></td>
+                                        </tr>
+                                        <tr class=\"hilite\">
+                                            <th id=\"a-L9\"><a href=\"#a-L9\">9</a></th>
+                                            <td>    <span class=\"k\">for</span> event <span
+                                                    class=\"ow\">in</span> stream<span class=\"p\">:</span></td>
+                                        </tr>
+                                        <tr class=\"hilite\">
+                                            <th id=\"a-L10\"><a href=\"#a-L10\">10</a></th>
+                                            <td>        <span class=\"k\">if</span> <span
+                                                    class=\"nb\">isinstance</span><span class=\"p\">(</span>event<span
+                                                    class=\"p\">[</span><span class=\"mi\">1</span><span
+                                                    class=\"p\">],</span> Markup<span class=\"p\">):</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L11\"><a href=\"#a-L11\">11</a></th>
+                                            <td>            <span class=\"k\">try</span><span class=\"p\">:</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L12\"><a href=\"#a-L12\">12</a></th>
+                                            <td>                <span class=\"k\">for</span> subevent <span
+                                                    class=\"ow\">in</span> HTML<span class=\"p\">(</span>event<span
+                                                    class=\"p\">[</span><span class=\"mi\">1</span><span
+                                                    class=\"p\">]):</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L13\"><a href=\"#a-L13\">13</a></th>
+                                            <td>                    <span class=\"k\">yield</span> subevent</td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L14\"><a href=\"#a-L14\">14</a></th>
+                                            <td>            <span class=\"k\">except</span> ParseError<span
+                                                    class=\"p\">:</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L15\"><a href=\"#a-L15\">15</a></th>
+                                            <td>                <span class=\"k\">yield</span> event</td>
+                                        </tr>
+                                        <tr class=\"hilite\">
+                                            <th id=\"a-L16\"><a href=\"#a-L16\">16</a></th>
+                                            <td>        <span class=\"k\">else</span><span class=\"p\">:</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th id=\"a-L17\"><a href=\"#a-L17\">17</a></th>
+                                            <td>            <span class=\"k\">yield</span> event</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>\nFor more processor macros developed and/or contributed by users, visit the <a
+                                    class=\"ext-link\" href=\"https://trac-hacks.org\"><span class=\"icon\">​</span>Trac
+                                    Hacks</a> community site.\n</p>\n<p>\nDeveloping processors is no different from
+                                Wiki macros. In fact, they work the same way, only the usage syntax differs. See <a
+                                    class=\"wiki\"
+                                    href=\"/wiki/WikiMacros#DevelopingCustomMacros\">WikiMacros#DevelopingCustomMacros</a>
+                                for more information.\n</p>\n
+                            <hr />\n<p>\nSee also: <a class=\"wiki\" href=\"/wiki/WikiMacros\">WikiMacros</a>, <a
+                                    class=\"wiki\" href=\"/wiki/WikiHtml\">WikiHtml</a>, <a class=\"wiki\"
+                                    href=\"/wiki/WikiRestructuredText\">WikiRestructuredText</a>, <a class=\"wiki\"
+                                    href=\"/wiki/TracSyntaxColoring\">TracSyntaxColoring</a>, <a class=\"wiki\"
+                                    href=\"/wiki/WikiFormatting\">WikiFormatting</a>, <a class=\"wiki\"
+                                    href=\"/wiki/TracGuide\">TracGuide</a>\n</p>\n
+                        </div>\n \n \n \n \n </div>\n \n\n </div>\n
+                <script
+                    type=\"text/javascript\">\n        jQuery.loadStyleSheet(\"/pygments/trac.css\", \"text/css\");\n        jQuery.loadStyleSheet(\"/chrome/common/css/diff.css\", \"text/css\");\n    </script>
+                \n
+                <script
+                    type=\"text/javascript\">jQuery.loadScript(\"/chrome/common/js/diff.js\", \"text/javascript\", \"utf-8\");</script>
+                \n <div id=\"altlinks\">\n <h3>Download in other formats:</h3>\n <ul>\n <li class=\"last first\">\n <a
+                                rel=\"nofollow\" href=\"/wiki/WikiProcessors?version=3&amp;format=txt\">Plain Text</a>\n
+                        </li>\n </ul>\n </div>\n
+            </div>\n <div id=\"footer\" lang=\"en\" xml:lang=\"en\">
+                <hr />\n <a id=\"tracpowered\" href=\"https://trac.edgewall.org/\"><img
+                        src=\"/chrome/common/trac_logo_mini.png\" height=\"30\" width=\"107\" alt=\"Trac
+                        Powered\" /></a>\n <p class=\"left\">Powered by <a href=\"/about\"><strong>Trac
+                            1.2.5</strong></a><br />\n By <a href=\"http://www.edgewall.org/\">Edgewall Software</a>.
+                </p>\n <p class=\"right\">Validator: <a href=\"http://validator.w3.org/check?uri=referer\">Check
+                        XHTML</a></p>\n
+            </div>\n<!-- Footer -->\n\t\t</div>\n </div>\n<!-- End Footer -->\n<div><a
+            href=\"http://www.smartmontools.org/partisanfrosted.php\"></a><!-- this is for harvester --></div>\n</body>
+\n
+
+</html>

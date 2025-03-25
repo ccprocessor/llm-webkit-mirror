@@ -7,19 +7,17 @@ from llm_web_kit.extractor.html.recognizer.code import (tag_code, tag_pre,
                                                         tag_pre_code)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
-from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 
 class CodeRecognizer(BaseHTMLElementRecognizer):
     """解析代码元素."""
-
     @override
     def recognize(
         self,
         base_url: str,
-        main_html_lst: List[Tuple[str, str]],
-        raw_html: str,
-    ) -> List[Tuple[str, str]]:
+        main_html_lst: List[Tuple[HtmlElement, HtmlElement]],
+        raw_html: str
+    ) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析代码元素.
 
         Args:
@@ -38,7 +36,8 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
             if self.is_cc_html(html):
                 rtn.append((html, raw_html))
                 continue
-            root: HtmlElement = html_to_element(html)
+            # root: HtmlElement = html_to_element(html)
+            root = html
             while True:
                 # 最常见:
                 # <pre><code></code></pre>
@@ -77,31 +76,36 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                         remove_empty_code(x)
 
             remove_empty_code(root)
-
-            html_str: str = element_to_html(root)
-
-            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(html_str, CCTag.CC_CODE))
-
+            # html_str: str = element_to_html(root)
+            rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(root, CCTag.CC_CODE))
         return rtn
 
     @override
-    def to_content_list_node(self, base_url:str, parsed_content: str, raw_html_segment:str) -> dict:
-        code_node: HtmlElement = html_to_element(parsed_content)
+    def to_content_list_node(self, base_url:str, parsed_content: HtmlElement, raw_html_segment:str) -> dict:
+        """
+        把代码元素转换为content list node.
+        Args:
+            base_url:
+            parsed_content: HtmlElement对象
+            raw_html_segment:
 
+        Returns:
+
+        """
         d = {
             'type': 'code',
             # "bbox": [],
             'raw_content': raw_html_segment,
-            'inline': code_node.get('inline', 'false') == 'true',
+            'inline': parsed_content.get('inline', 'false') == 'true',
             'content': {
-                'code_content': code_node.text,
+                'code_content': parsed_content.text,
             },
         }
 
-        if lang := code_node.get('language', None):
+        if lang := parsed_content.get('language', None):
             d['content']['language'] = lang
 
-        if by := code_node.get('by', None):
+        if by := parsed_content.get('by', None):
             d['content']['by'] = by
 
         return d
