@@ -188,19 +188,32 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
 
 def table_cells_count(table_html_source: str) -> int:
-    """获取表格的单元格数量.
-    当只有1个单元格时，这个table就要被当做普通的一个段落处理。
+    """获取表格的单元格数量. 当只有1个单元格时，这个table就要被当做普通的一个段落处理。 只计算有实际内容的单元格数量。
+
     Args:
         table_html_source: str: 被<table>标签包裹的html代码片段(含<table>标签)
 
     Returns:
-        int: 单元格数量
+        int: 有内容的单元格数量
     """
     table_el = html_to_element(table_html_source)
-    # 计算 <table> 中的 <td> 和 <th> 单元格数量
-    cells = table_el.xpath('.//td | .//th')
-    number_of_cells = len(cells)
-    return number_of_cells
+    cell_count = 0
+
+    # 获取所有行
+    rows = table_el.xpath('.//tr')
+    for row in rows:
+        # 先检查是否有 td 或 th
+        cells = row.xpath('.//td | .//th')
+        if cells:
+            # 如果有 td 或 th，计算有内容的单元格
+            cell_count += sum(1 for cell in cells if cell.text_content().strip())
+        else:
+            # 如果没有 td 或 th，检查 tr 是否直接包含内容
+            row_content = row.text_content().strip()
+            if row_content:
+                cell_count += 1
+
+    return cell_count
 
 
 def convert_html_to_entity(html_source) -> str:
