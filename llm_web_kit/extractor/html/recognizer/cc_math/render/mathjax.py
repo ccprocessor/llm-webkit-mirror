@@ -4,11 +4,12 @@ from typing import Any, Dict, List
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
+from llm_web_kit.libs.text_utils import normalize_ctl_text
 
 # 添加MATHJAX_OPTIONS变量定义
 MATHJAX_OPTIONS = {
-    'inlineMath': [['$', '$'], ['\\(', '\\)'], ['\\\\(', '\\\\)']],
-    'displayMath': [['$$', '$$'], ['\\[', '\\]'], ['\\\\[', '\\\\]']],
+    'inlineMath': [['$', '$'], ['\\(', '\\)'], ['\\\\(', '\\\\)'], ['[itex]', '[/itex]']],
+    'displayMath': [['$$', '$$'], ['\\[', '\\]'], ['\\\\[', '\\\\]'], ['[tex]', '[/tex]']],
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
@@ -350,6 +351,7 @@ class MathJaxRender(BaseMathRender):
                     break
 
             formula = match.group(group_idx)
+            formula = normalize_ctl_text(formula)
             if not formula.strip():
                 continue  # 跳过空公式
 

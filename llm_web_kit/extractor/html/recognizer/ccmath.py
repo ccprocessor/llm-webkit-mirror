@@ -41,15 +41,12 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # 获取数学公式渲染器
         base_render = BaseMathRender()
         math_render = base_render.get_math_render(raw_html)
+        # TODO: 自定义配置目前只支持mathjax
+        if math_render and math_render.render_type == MathRenderType.MATHJAX:
+            math_render.get_options(raw_html)
         for cc_html, o_html in main_html_lst:
             if not self.is_cc_html(cc_html):
-                # 对于自定义的mathjax，需要单独处理
-                if math_render and math_render.render_type == MathRenderType.MATHJAX and math_render.is_customized_options():
-                    math_render.get_options(raw_html)
-                    print(f'处理mathjax，有自定义配置, options: {math_render.options}')
-                    result.extend(self.process_mathjax_html(cc_html, o_html, math_render, base_url))
-                else:
-                    result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
+                result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
 
@@ -171,26 +168,16 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                     # TODO: 待优化，渲染器通用方案兜底
-                    if math_render_type == MathRenderType.MATHJAX:
-                        math_render.find_math(node)
+                    try:
+                        if math_render_type == MathRenderType.MATHJAX:
+                            math_render.find_math(node)
+                    except Exception as e:
+                        raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
             # 保存处理后的html
             # with open('math_courses_processed.html', 'w') as f:
             #     f.write(self._element_to_html(tree))
         except Exception as e:
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
-        return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
-
-    def process_mathjax_html(self, cc_html: HtmlElement, o_html: HtmlElement, math_render: BaseMathRender, base_url: str) -> List[Tuple[HtmlElement, HtmlElement]]:
-        """处理mathjax有自定义标识符的数学公式."""
-        self.cm.url = base_url
-        try:
-            tree = cc_html
-            math_render.find_math(tree)
-
-            # with open('math_physicsforums_1_processed.html', 'w') as f:
-            #     f.write(self._element_to_html(tree))
-        except Exception as e:
-            raise HtmlMathMathjaxRenderRecognizerException(f'处理mathjax有自定义标识符的数学公式失败: {e}')
         return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
 
 
@@ -221,7 +208,7 @@ if __name__ == '__main__':
         '</head> '
         '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     )
-    # with open('math_courses.html', 'r') as f:
+    # with open('aa.html', 'r') as f:
     #     raw_html = f.read()
     # from llm_web_kit.libs.html_utils import html_to_element
     # root = html_to_element(raw_html)
