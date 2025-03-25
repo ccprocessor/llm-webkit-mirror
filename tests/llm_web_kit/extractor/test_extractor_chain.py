@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 28
+        assert len(self.data_json) == 29
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -506,3 +506,13 @@ DEF
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
         print('result_md:', result_md)
+
+    def test_table_only_include_tr(self):
+        """测试table的表头只包含tr标签."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[28]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_nlp_md()
+        assert 'List Price:$11.80' in result_md

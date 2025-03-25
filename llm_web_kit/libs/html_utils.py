@@ -152,10 +152,14 @@ def html_to_markdown_table(table_html_source: str) -> str:
     if max_cols == 0:
         return ''
     markdown_table = []
-
+    first_row = rows[0]
     # 检查第一行是否是表头并获取表头内容
-    first_row_tags = rows[0].xpath('.//th | .//td')
-    headers = [_escape_table_cell(tag.text_content().strip()) for tag in first_row_tags]
+    first_row_tags = first_row.xpath('.//th | .//td')
+    if not first_row_tags:
+        # 如果第一行没有td/th，则取整行内容作为表头
+        headers = [_escape_table_cell(first_row.text_content().strip())]
+    else:
+        headers = [_escape_table_cell(tag.text_content().strip()) for tag in first_row_tags]
     # 如果表头存在，添加表头和分隔符，并保证表头与最大列数对齐
     if headers:
         while len(headers) < max_cols:
@@ -170,8 +174,11 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
     # 添加表格内容，跳过已被用作表头的第一行（如果有的话）
     for row in rows[1:]:
-        columns = [_escape_table_cell(td.text_content().strip()) for td in row.xpath('.//td | .//th')]
-        # 如果这一行的列数少于最大列数，则补充空白单元格
+        cells = row.xpath('.//td | .//th')
+        if not cells:  # 无td/th时取整行内容，放到第一个单元格
+            columns = [_escape_table_cell(row.text_content().strip())]
+        else:
+            columns = [_escape_table_cell(cell.text_content().strip()) for cell in cells]
         while len(columns) < max_cols:
             columns.append('')
         markdown_table.append('| ' + ' | '.join(columns) + ' |')
