@@ -501,11 +501,12 @@ DEF
         """测试math_physicsforums网页中数学公式是[tex]和[itex]包裹的，且中间还有<br>标签分割."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[26]
+        test_data = self.data_json[27]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
-        print('result_md:', result_md)
+        self.assertIn('$\\Delta K = (dd^{\\dagger} + d^{\\dagger}d)K$', result_md)
+        self.assertIn('$$\\Delta K = \\Bigl( \\frac{1}{3!}\\epsilon^{klm}\\epsilon^n_{\\ ij}\\partial_k \\partial_n K_{lm} - \\frac{1}{4}\\partial_{i}\\partial^k K_{jk} \\Bigr) dx^i \\wedge dx^j$$', result_md)
 
     def test_table_only_include_tr(self):
         """测试table的表头只包含tr标签."""

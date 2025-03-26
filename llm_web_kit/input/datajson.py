@@ -11,6 +11,7 @@ from llm_web_kit.libs.html_utils import (element_to_html, get_element_text,
                                          html_to_element,
                                          html_to_markdown_table,
                                          table_cells_count)
+from llm_web_kit.libs.text_utils import normalize_math_delimiters
 
 
 class DataJsonKey(object):
@@ -77,6 +78,7 @@ class StructureMapper(ABC):
                         text_blocks.append(txt_content)
 
         txt = self.__txt_para_splitter.join(text_blocks)
+        txt = normalize_math_delimiters(txt)
         txt = txt.strip() + self.__text_end  # 加上结尾换行符
         return txt
 
@@ -98,6 +100,7 @@ class StructureMapper(ABC):
                         md_blocks.append(txt_content)
 
         md = self.__md_para_splitter.join(md_blocks)
+        md = normalize_math_delimiters(md)
         md = md.strip() + self.__text_end  # 加上结尾换行符
         return md
 
