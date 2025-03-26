@@ -118,11 +118,17 @@ class TestTextUtils(unittest.TestCase):
         result4 = normalize_math_delimiters(test4)
         self.assertEqual(result4, expected4, '测试用例4失败')
 
-        # 测试用例5
+        # 测试用例5: 空math
         test5 = r'[tex][/tex]'
         expected5 = r"""$$$$"""
         result5 = normalize_math_delimiters(test5)
         self.assertEqual(result5, expected5, '测试用例5失败')
+
+        # 测试用例6: 只有[tex]
+        test6 = r'[tex] just [tex]'
+        expected6 = r"""[tex] just [tex]"""
+        result6 = normalize_math_delimiters(test6)
+        self.assertEqual(result6, expected6, '测试用例6失败')
 
 
 if __name__ == '__main__':
