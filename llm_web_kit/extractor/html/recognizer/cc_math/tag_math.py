@@ -30,14 +30,14 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 if 'display: none' in normalized_style_value:
                     parent.style = ''
             text = cm.wrap_math_md(text)
-            if text_strip(text):
+            if text:
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
         elif text_strip(node.get('alttext')):
             # Get the alttext attribute
             text = node.get('alttext')
             text = cm.wrap_math_md(text)
-            if text_strip(text):
+            if text:
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)
         else:
@@ -54,8 +54,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
 
             latex = cm.mml_to_latex(mathml)
             text = cm.wrap_math_md(latex)
-            # 确保 latex 不为空
-            if text_strip(text):
+            if text:
                 # Set the html of the new span tag to the text
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
                 replace_element(node, new_span)

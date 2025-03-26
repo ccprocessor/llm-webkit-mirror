@@ -248,10 +248,3 @@ def remove_element(element: HtmlElement):
             previous.tail = (previous.tail or '') + element.tail
 
     parent.remove(element)
-
-
-if __name__ == '__main__':
-    # root = build_cc_element('cctitle', '', 'tail', level='1', html='')
-    root = html_to_element('<cctitle level="1" html=""></cctitle>tail')
-    print(element_to_html(root))
-    print(len(root.text))

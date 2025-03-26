@@ -535,4 +535,4 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
-        self.assertIn('$alpha = (alpha_1, alpha_2, ldots, alpha_n) ,!$', result_md)
+        self.assertIn(r'$alpha = \left(alpha_1, alpha_2, ldots, alpha_n\right) ,!$', result_md)
