@@ -306,15 +306,16 @@ class CCMATH():
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
         mml_ns = re.sub(r'<mspace[^>]*>.*?</mspace>', '', mml_ns, flags=re.DOTALL)
-        mml_ns = self.fix_mathml_superscript(mml_ns)
-        mml_dom = etree.fromstring(mml_ns)
+        parser = etree.HTMLParser(recover=True)  # 启用错误恢复
+        mml_ns = self.fix_mathml_superscript(mml_ns, parser)
+        mml_dom = etree.fromstring(mml_ns, parser)
         mmldom = transform(mml_dom)
         latex_code = str(mmldom)
         return latex_code
 
-    def fix_mathml_superscript(self, mathml_str):
+    def fix_mathml_superscript(self, mathml_str, parser):
         # 解析输入的MathML字符串
-        root = etree.fromstring(mathml_str)
+        root = etree.fromstring(mathml_str, parser)
         namespace = {'m': 'http://www.w3.org/1998/Math/MathML'}
         mathml_ns = namespace['m']
         for msup in root.xpath('//m:msup', namespaces=namespace):

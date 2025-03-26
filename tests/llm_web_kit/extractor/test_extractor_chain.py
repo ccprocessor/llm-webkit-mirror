@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 30
+        assert len(self.data_json) == 31
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -526,3 +526,13 @@ DEF
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
         assert '|  | Shooting on DEWEY AVENUE AND GLENDALE PARK., ROCHESTER |\n|---|---|' not in result_md
+
+    def test_math_broken_label(self):
+        """测试math标签包含属性缺失的情况."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[30]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_nlp_md()
+        self.assertIn('$alpha = (alpha_1, alpha_2, ldots, alpha_n) ,!$', result_md)
