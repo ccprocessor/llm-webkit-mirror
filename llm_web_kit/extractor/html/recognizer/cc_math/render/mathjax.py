@@ -4,11 +4,12 @@ from typing import Any, Dict, List
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
+from llm_web_kit.libs.text_utils import normalize_ctl_text
 
 # 添加MATHJAX_OPTIONS变量定义
 MATHJAX_OPTIONS = {
-    'inlineMath': [['$', '$'], ['\\(', '\\)'], ['\\\\(', '\\\\)']],
-    'displayMath': [['$$', '$$'], ['\\[', '\\]'], ['\\\\[', '\\\\]']],
+    'inlineMath': [['$', '$'], ['\\(', '\\)'], ['\\\\(', '\\\\)'], ['[itex]', '[/itex]']],
+    'displayMath': [['$$', '$$'], ['\\[', '\\]'], ['\\\\[', '\\\\]'], ['[tex]', '[/tex]']],
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
@@ -245,9 +246,22 @@ class MathJaxRender(BaseMathRender):
         if element is None:
             return
 
+        # 先处理tail，再处理text，text的判断会多一些
+        if element.tail:
+            # 处理行间公式（优先处理，因为可能包含行内公式）
+            element.tail = self._process_math_in_text(element, element.tail, display_pattern, True, True)
+            # 处理行内公式
+            if element.tail:  # 检查是否还有文本需要处理
+                element.tail = self._process_math_in_text(element, element.tail, inline_pattern, False, True)
+
         # 跳过特定标签
         skip_tags = MATHJAX_OPTIONS.get('skipTags', ['script', 'noscript', 'style', 'textarea', 'pre', 'code'])
         if element.tag in skip_tags:
+            return
+        # 跳过ccmath标签
+        from llm_web_kit.extractor.html.recognizer.recognizer import \
+            BaseHTMLElementRecognizer
+        if BaseHTMLElementRecognizer.is_cc_html(element):
             return
 
         # 检查是否应该忽略该元素
@@ -261,13 +275,6 @@ class MathJaxRender(BaseMathRender):
             # 处理行内公式
             if element.text:  # 检查是否还有文本需要处理
                 element.text = self._process_math_in_text(element, element.text, inline_pattern, False)
-
-        if element.tail:
-            # 处理行间公式（优先处理，因为可能包含行内公式）
-            element.tail = self._process_math_in_text(element, element.tail, display_pattern, True, True)
-            # 处理行内公式
-            if element.tail:  # 检查是否还有文本需要处理
-                element.tail = self._process_math_in_text(element, element.tail, inline_pattern, False, True)
 
         # 获取子节点的副本，以避免在迭代过程中修改列表
         children = list(element)
@@ -344,6 +351,7 @@ class MathJaxRender(BaseMathRender):
                     break
 
             formula = match.group(group_idx)
+            formula = normalize_ctl_text(formula)
             if not formula.strip():
                 continue  # 跳过空公式
 

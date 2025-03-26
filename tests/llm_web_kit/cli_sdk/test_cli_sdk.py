@@ -73,11 +73,12 @@ class TestCliSDK:
 
     def test_stdout_output(self, runner, json_with_html_path):
         """测试输出到标准输出."""
+        print('json_with_html_path', json_with_html_path)
         result = runner.invoke(cli, ['-i', str(json_with_html_path)])
 
         assert result.exit_code == 0
         assert result.output
-
+        print('result.output', result.output)
         output_data = json.loads(result.output)
         assert 'content_list' in output_data
         assert isinstance(output_data['content_list'], list)

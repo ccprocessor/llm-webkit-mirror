@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" id="vbulletin_html">
+<head>
+<base href="https://cboard.cprogramming.com/" /><!--[if IE]></base><![endif]-->
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<base href="https://cboard.cprogramming.com/" /><!--[if IE]></base><![endif]-->
+	<meta name="generator" content="vBulletin 4.2.5" />
+
+	
+	<link rel="stylesheet" type="text/css" href="https://cboard.cprogramming.com/clientscript/vbulletin_css/style00006l/main-rollup.css?d=1672249496" />
+	<link rel="stylesheet" type="text/css" href="https://cboard.cprogramming.com/clientscript/vbulletin_css/style00006l/printthread.css?d=1672249496" />
+	
+
+
+
+	<title> One question about array and function prototype declaration</title>
+	<link rel="stylesheet" type="text/css" href="https://cboard.cprogramming.com/clientscript/vbulletin_css/style00006l/additional.css?d=1672249496" />
+
+<link rel="stylesheet" type="text/css" href="https://cboard.cprogramming.com/clientscript/vbulletin_css/style00006l/additional.css?d=1672249496" />
+
+
+
+<script type="text/javascript">
+	(function(){
+		var bsa_optimize=document.createElement('script');
+		bsa_optimize.type='text/javascript';
+		bsa_optimize.async=true;
+		bsa_optimize.src='https://cdn4.buysellads.net/pub/cprogramming.js?'+(new Date()-new Date()%600000);
+		(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa_optimize);
+	})();
+</script>
+
+
+					<script type="text/javascript">
+					<!--
+						var _gaq = _gaq || [];
+						var inPagePlugin = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+
+						_gaq.push(['_setAccount', 'UA-7820175-1']);
+
+_gaq.push(['_trackPageview']);
+
+						(function() {
+							var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+							ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+							var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+						})();
+					//-->
+					</script>
+				</head>
+<body>
+
+<div class="above_body">
+<div id="header" class="floatcontainer">
+<div><a name="top" href="https://cboard.cprogramming.com/?s=588a23c86d59c946f08f4e83b778f5d8" class="logo-image"><img src="https://cboard.cprogramming.com/head/cprog.png" alt="C Board" /></a></div>
+</div>
+</div>
+<div class="body_wrapper">
+<div id="pagetitle">
+	<h1><a href="https://cboard.cprogramming.com/c-programming/96288-one-question-about-array-function-prototype-declaration.html?s=588a23c86d59c946f08f4e83b778f5d8">One question about array and function prototype declaration</a></h1>
+	<p class="description">Printable View</p>
+</div>
+
+
+
+<ul id="postlist">
+	<li class="postbit blockbody" id="post_1">
+	<div class="header">
+		<div class="datetime">11-27-2007</div>
+		<span class="username">whichet</span>
+	</div>
+	
+	
+		<div class="title">One question about array and function prototype declaration</div>
+	
+	<div class="content">
+		<blockquote class="restore">Hello all, do you think this below code will be compiled and work???<br />
+I used VS 2005 and it did not work. but I haven't tried any other compiler yet!!.<br />
+I will have to take exam about C programming. and the exam instruction says that I am not allowed to make change to any function signature!!<br />
+<br />
+<div class="bbcode_container">
+	<div class="bbcode_description">Code:</div>
+	<hr /><code class="bbcode_code">#include &lt;stdio.h&gt;<br />
+<br />
+int foo (int [] a);<br />
+<br />
+int main()<br />
+{<br />
+&nbsp; &nbsp;  //... more code...<br />
+&nbsp; &nbsp;  return 0;<br />
+}<br />
+<br />
+int foo (int[] a)<br />
+{<br />
+<br />
+}</code><hr />
+</div></blockquote>
+	</div>
+</li><li class="postbit blockbody" id="post_2">
+	<div class="header">
+		<div class="datetime">11-27-2007</div>
+		<span class="username">MacGyver</span>
+	</div>
+	
+	
+	<div class="content">
+		<blockquote class="restore">Try putting the [] after the variable name.<br />
+<br />
+Edit:  And return an int from your function.</blockquote>
+	</div>
+</li><li class="postbit blockbody" id="post_3">
+	<div class="header">
+		<div class="datetime">11-27-2007</div>
+		<span class="username">whichet</span>
+	</div>
+	
+	
+	<div class="content">
+		<blockquote class="restore"><div class="bbcode_container">
+	<div class="bbcode_description">Quote:</div>
+	<div class="bbcode_quote printable">
+		<hr />
+		
+			<div>
+				Originally Posted by <strong>MacGyver</strong>
+				<a href="https://cboard.cprogramming.com/c-programming/96288-one-question-about-array-function-prototype-declaration-post691965.html?s=588a23c86d59c946f08f4e83b778f5d8#post691965" rel="nofollow"><img class="inlineimg" src="https://cboard.cprogramming.com/images/buttons/viewpost.gif" alt="View Post" /></a>
+			</div>
+			<div class="message">Try putting the [] after the variable name.<br />
+<br />
+Edit:  And return an int from your function.</div>
+			
+		<hr />
+	</div>
+</div><br />
+yeah, RIGHT!!! <div class="bbcode_container">
+	<div class="bbcode_description">Code:</div>
+	<hr /><code class="bbcode_code">int a[]</code><hr />
+</div> is the correct form in C!<br />
+<br />
+However, I am asking them to clarify about that.</blockquote>
+	</div>
+</li>
+</ul>
+
+
+</div>
+<div class="below_body">
+<div id="footer_time" class="footer_time">All times are GMT -6. The time now is <span class="time">07:41 PM</span>.</div>
+
+<div id="footer_copyright" class="footer_copyright">
+	<!-- Do not remove this copyright notice -->
+	Powered by <a href="https://www.vbulletin.com" id="vbulletinlink">vBulletin&reg;</a> Version 4.2.5 <br />Copyright &copy; 2025 vBulletin Solutions Inc. All rights reserved. 
+	<!-- Do not remove this copyright notice -->	
+</div>
+<div id="footer_morecopyright" class="footer_morecopyright">
+	<!-- Do not remove cronimage or your scheduled tasks will cease to function -->
+	
+	<!-- Do not remove cronimage or your scheduled tasks will cease to function -->
+	Search Engine Optimisation provided by 
+			<a rel="nofollow" href="https://www.dragonbyte-tech.com/vbecommerce.php?productid=303&amp;do=product&amp;utm_source=cboard.cprogramming.com&amp;utm_campaign=product&amp;utm_medium=DragonByte%2BSEO&amp;utm_content=Pro" target="_blank">DragonByte SEO v2.0.40 (Pro)</a> -
+			<a rel="nofollow" href="https://www.dragonbyte-tech.com/?utm_source=cboard.cprogramming.com&amp;utm_campaign=site&amp;utm_medium=DragonByte%2BSEO&amp;utm_content=Pro" target="_blank">vBulletin Mods &amp; Addons</a> Copyright &copy; 2025 DragonByte Technologies Ltd.
+</div>
+ 
+</div>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'925277cefecce8bd',t:'MTc0Mjc4MDUwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"925277cefecce8bd","version":"2025.1.0","r":1,"token":"2664cb82241b4ecb8eb7deef95defedb","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

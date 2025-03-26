@@ -5,8 +5,10 @@ from typing import Dict, List
 
 from overrides import override
 
+from llm_web_kit.exception.exception import ExtractorChainInputException
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import (get_element_text, html_to_element,
+from llm_web_kit.libs.html_utils import (element_to_html, get_element_text,
+                                         html_to_element,
                                          html_to_markdown_table,
                                          table_cells_count)
 
@@ -50,12 +52,14 @@ class StructureMapper(ABC):
         self.__text_end = '\n'
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
-        self.__md_special_chars = ['#', '`', ]  # TODO: 先去掉$，会影响行内公式，后面再处理
+        self.__md_special_chars = ['#', '`', '$']  # TODO: 先去掉$，会影响行内公式，后面再处理
+        self.__nodes_document_type = [DocElementType.MM_NODE_LIST, DocElementType.PARAGRAPH, DocElementType.LIST, DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.TITLE, DocElementType.IMAGE, DocElementType.AUDIO, DocElementType.VIDEO, DocElementType.CODE, DocElementType.EQUATION_INTERLINE]
+        self.__inline_types_document_type = [ParagraphTextType.EQUATION_INLINE, ParagraphTextType.CODE_INLINE]
 
     def to_html(self):
         raise NotImplementedError('This method must be implemented by the subclass.')
 
-    def to_txt(self, exclude_nodes=DocElementType.MM_NODE_LIST):
+    def to_txt(self, exclude_nodes=DocElementType.MM_NODE_LIST, exclude_inline_types=[]):
         """把content_list转化为txt格式.
 
         Args:
@@ -68,7 +72,7 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 if content_lst_node['type'] not in exclude_nodes:
-                    txt_content = self.__content_lst_node_2_txt(content_lst_node)
+                    txt_content = self.__content_lst_node_2_txt(content_lst_node, exclude_inline_types)
                     if txt_content and len(txt_content) > 0:
                         text_blocks.append(txt_content)
 
@@ -76,7 +80,7 @@ class StructureMapper(ABC):
         txt = txt.strip() + self.__text_end  # 加上结尾换行符
         return txt
 
-    def __to_md(self, exclude_nodes=[]):
+    def __to_md(self, exclude_nodes=[], exclude_inline_types=[]):
         """把content_list转化为md格式.
 
         Args:
@@ -89,7 +93,7 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 if content_lst_node['type'] not in exclude_nodes:
-                    txt_content = self.__content_lst_node_2_md(content_lst_node)
+                    txt_content = self.__content_lst_node_2_md(content_lst_node, exclude_inline_types)
                     if txt_content and len(txt_content) > 0:
                         md_blocks.append(txt_content)
 
@@ -97,15 +101,31 @@ class StructureMapper(ABC):
         md = md.strip() + self.__text_end  # 加上结尾换行符
         return md
 
-    def to_nlp_md(self, MM_NODE_LIST=[]):
-        if MM_NODE_LIST:
-            md = self.__to_md(exclude_nodes=MM_NODE_LIST)
-        else:
-            md = self.__to_md(exclude_nodes=DocElementType.MM_NODE_LIST)
+    def __validate_exclude_nodes(self, exclude_nodes, exclude_inline_types):
+        if isinstance(exclude_nodes, str):
+            exclude_nodes = [exclude_nodes]
+        if isinstance(exclude_inline_types, str):
+            exclude_inline_types = [exclude_inline_types]
+        if not isinstance(exclude_nodes, list):
+            raise ExtractorChainInputException('exclude_nodes must be a list type.')
+        if not isinstance(exclude_inline_types, list):
+            raise ExtractorChainInputException('exclude_inline_types must be a list type.')
+        for node in exclude_nodes:
+            if node not in self.__nodes_document_type:
+                raise ExtractorChainInputException(f'exclude_nodes contains invalid element type: {node}')
+        for inline_type in exclude_inline_types:
+            if inline_type not in self.__inline_types_document_type:
+                raise ExtractorChainInputException(f'exclude_inline_types contains invalid inline type: {inline_type}')
+        return exclude_nodes, exclude_inline_types
+
+    def to_nlp_md(self, exclude_nodes=[], exclude_inline_types=[]):
+        exclude_nodes, exclude_inline_types = self.__validate_exclude_nodes(exclude_nodes, exclude_inline_types)
+        md = self.__to_md(exclude_nodes + DocElementType.MM_NODE_LIST, exclude_inline_types)
         return md
 
-    def to_mm_md(self):
-        md = self.__to_md()
+    def to_mm_md(self, exclude_nodes=[], exclude_inline_types=[]):
+        self.__validate_exclude_nodes(exclude_nodes, exclude_inline_types)
+        md = self.__to_md(exclude_nodes, exclude_inline_types)
         return md
 
     def to_main_html(self) -> str:
@@ -121,9 +141,11 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 raw_html = content_lst_node['raw_content']
-                if raw_html:
-                    html += raw_html
-
+                if isinstance(raw_html, str):
+                    html_segment = raw_html  # 直接使用字符串
+                else:
+                    html_segment = element_to_html(raw_html)  # 转换HtmlElement为字符串
+                html += html_segment
         return html
 
     def to_json(self, pretty=False) -> str:
@@ -140,7 +162,7 @@ class StructureMapper(ABC):
     def _get_data(self) -> List[Dict]:
         raise NotImplementedError('This method must be implemented by the subclass.')
 
-    def __content_lst_node_2_md(self, content_lst_node: dict) -> str:
+    def __content_lst_node_2_md(self, content_lst_node: dict, exclude_inline_types: list = []) -> str:
         """把content_list里定义的每种元素块转化为markdown格式.
 
         Args:
@@ -202,7 +224,7 @@ class StructureMapper(ABC):
             return md_title
         elif node_type == DocElementType.PARAGRAPH:
             paragraph_el_lst = content_lst_node['content']
-            one_para = self.__join_one_para(paragraph_el_lst)
+            one_para = self.__join_one_para(paragraph_el_lst, exclude_inline_types)
             return one_para
         elif node_type == DocElementType.LIST:
             items_paras = []
@@ -210,7 +232,7 @@ class StructureMapper(ABC):
             for item_idx, item in enumerate(content_lst_node['content']['items']):
                 paras_of_item = []
                 for para in item:
-                    one_para = self.__join_one_para(para)
+                    one_para = self.__join_one_para(para, exclude_inline_types)
                     paras_of_item.append(one_para)
                 # 由于markdown的列表项里可以有多个段落，这里拼装成md列表段落格式
                 list_prefix = f'{item_idx + 1}.' if is_ordered else self.__list_item_start  # 有序列表和无需列表前缀
@@ -218,7 +240,7 @@ class StructureMapper(ABC):
                 items_paras.append(item_paras_md)
             md_list = '\n'.join(items_paras)
             return md_list
-        elif node_type == DocElementType.TABLE:
+        elif node_type == DocElementType.SIMPLE_TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
             if html_table is not None:
@@ -227,12 +249,15 @@ class StructureMapper(ABC):
                 if cells_count <= 1:  # 单个单元格的表格，直接返回文本
                     text = get_element_text(html_to_element(html_table)).strip()
                     return text
-                is_complex = content_lst_node['content']['is_complex']
-                if is_complex:
-                    return html_table
-                else:
-                    md_table = html_to_markdown_table(html_table)
-                    return md_table
+                md_table = html_to_markdown_table(html_table)
+                return md_table
+            else:
+                return ''
+        elif node_type == DocElementType.COMPLEX_TABLE:
+            html_table = content_lst_node['content']['html']
+            if html_table is not None:
+                html_table = html_table.strip()
+                return html_table
             else:
                 return ''
         else:
@@ -274,7 +299,7 @@ class StructureMapper(ABC):
 
         return md_list_item
 
-    def __content_lst_node_2_txt(self, content_lst_node: dict) -> str:
+    def __content_lst_node_2_txt(self, content_lst_node: dict, exclude_inline_types=[]) -> str:
         """把content_list里定义的每种元素块转化为纯文本格式.
 
         Args:
@@ -330,35 +355,38 @@ class StructureMapper(ABC):
             return title_content
         elif node_type == DocElementType.PARAGRAPH:
             paragraph_el_lst = content_lst_node['content']
-            one_para = self.__join_one_para(paragraph_el_lst)
+            one_para = self.__join_one_para(paragraph_el_lst, exclude_inline_types)
             return one_para
         elif node_type == DocElementType.LIST:
             items_paras = []
             for item in content_lst_node['content']['items']:
                 paras_of_item = []
                 for para in item:
-                    one_para = self.__join_one_para(para)
+                    one_para = self.__join_one_para(para, exclude_inline_types)
                     paras_of_item.append(one_para)
                 items_paras.append(paras_of_item)
             items_paras = [self.__txt_para_splitter.join(item) for item in items_paras]
             return self.__txt_para_splitter.join(items_paras)   # 对于txt格式来说一个列表项里多个段落没啥问题，但是对于markdown来说，多个段落要合并成1个，否则md格式无法表达。
-        elif node_type == DocElementType.TABLE:
+        elif node_type == DocElementType.SIMPLE_TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
             if html_table is not None:
                 html_table = html_table.strip()
-                is_complex = content_lst_node['content']['is_complex']
-                if is_complex:
-                    return html_table
-                else:
-                    md_table = html_to_markdown_table(html_table)
-                    return md_table
+                md_table = html_to_markdown_table(html_table)
+                return md_table
+            else:
+                return ''
+        elif node_type == DocElementType.COMPLEX_TABLE:
+            html_table = content_lst_node['content']['html']
+            if html_table is not None:
+                html_table = html_table.strip()
+                return html_table
             else:
                 return ''
         else:
             raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
 
-    def __join_one_para(self, para: list) -> str:
+    def __join_one_para(self, para: list, exclude_inline_types: list = []) -> str:
         """把一个段落的元素块连接起来.
 
         Args:
@@ -368,6 +396,8 @@ class StructureMapper(ABC):
         """
         one_para = []
         for el in para:
+            if el['t'] in exclude_inline_types:
+                continue
             if el['t'] == ParagraphTextType.TEXT:
                 c = el['c']
                 if not c or not c.strip():
@@ -393,10 +423,10 @@ class StructureChecker(object):
             json_obj (dict): _description_
         """
         if not isinstance(json_obj, dict):
-            raise ValueError('json_obj must be a dict type.')
+            raise ExtractorChainInputException('json_obj must be a dict type.')
         if DataJsonKey.CONTENT_LIST in json_obj:
             if not isinstance(json_obj.get(DataJsonKey.CONTENT_LIST, ''), list):
-                raise ValueError('content_list must be a list type.')
+                raise ExtractorChainInputException('content_list must be a list type.')
 
 
 class ContentList(StructureMapper):

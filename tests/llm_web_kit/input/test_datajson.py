@@ -2,7 +2,9 @@ import copy
 
 import pytest
 
+from llm_web_kit.exception.exception import ExtractorChainInputException
 from llm_web_kit.input.datajson import ContentList, DataJson, DataJsonKey
+from llm_web_kit.libs.doc_element_type import DocElementType
 
 
 def test_datajson_init():
@@ -98,12 +100,69 @@ def test_datajson_serialization():
 
 def test_datajson_validation():
     # Test invalid input type
-    with pytest.raises(ValueError):
+    with pytest.raises(ExtractorChainInputException):
         DataJson([])  # List instead of dict
 
     # Test invalid content_list type
-    with pytest.raises(ValueError):
+    with pytest.raises(ExtractorChainInputException):
         DataJson({DataJsonKey.CONTENT_LIST: 'invalid'})  # String instead of list
+
+
+def test_datajson_exclude_nodes_to_nlp_md():
+    data = {
+        DataJsonKey.DATASET_NAME: 'test_dataset',
+        DataJsonKey.FILE_FORMAT: 'html',
+        DataJsonKey.CONTENT_LIST: [[{
+            'type': 'simple_table',
+            'raw_content': "<table class=\"table itemDisplayTable\"><tr><td class=\"metadataFieldLabel dc_title\">Title: </td><td class=\"metadataFieldValue dc_title\">T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_contributor\">Authors: </td><td class=\"metadataFieldValue dc_contributor\"><a class=\"author\" href=\"/browse?type=author&amp;value=T.J.%2C+Byrne\">T.J., Byrne</a><br><a class=\"author\" href=\"/browse?type=author&amp;value=Fewer%2C+Michael\">Fewer, Michael</a></td></tr><tr><td class=\"metadataFieldLabel dc_subject\">Keywords: </td><td class=\"metadataFieldValue dc_subject\">T.J. Byrne<br>Cottages<br>Poor Law Commission</td></tr><tr><td class=\"metadataFieldLabel dc_date_issued\">Issue Date: </td><td class=\"metadataFieldValue dc_date_issued\">2011<br>2011</td></tr><tr><td class=\"metadataFieldLabel dc_description\">Description: </td><td class=\"metadataFieldValue dc_description\">T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_identifier_uri\">URI: </td><td class=\"metadataFieldValue dc_identifier_uri\"><a href=\"https://hdl.handle.net/10599/5719\">https://hdl.handle.net/10599/5719</a></td></tr><tr><td class=\"metadataFieldLabel\">Appears in Collections:</td><td class=\"metadataFieldValue\"><a href=\"/handle/10599/3\">Published Items</a><br><a href=\"/handle/10599/5553\">T.J. Byrne Collection</a><br></td></tr></table>",
+            'content': {
+                'html': "<table><tr><td>Title:</td><td>T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td>Authors:</td><td>T.J., Byrne Fewer, Michael</td></tr><tr><td>Keywords:</td><td>T.J. Byrne Cottages Poor Law Commission</td></tr><tr><td>Issue Date:</td><td>2011 2011</td></tr><tr><td>Description:</td><td>T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td>URI:</td><td>https://hdl.handle.net/10599/5719</td></tr><tr><td>Appears in Collections:</td><td>Published Items T.J. Byrne Collection</td></tr></table>",
+                'is_complex': False,
+                'table_nest_level': '1'
+            }
+        }]]
+    }
+    datajson = DataJson(data)
+    md = datajson.get_content_list().to_nlp_md(exclude_nodes=DocElementType.COMPLEX_TABLE)
+    assert '<table>' not in md
+
+
+def test_datajson_exclude_nodes_to_mmd():
+    data = {
+        DataJsonKey.DATASET_NAME: 'test_dataset',
+        DataJsonKey.FILE_FORMAT: 'html',
+        DataJsonKey.CONTENT_LIST: [[{
+            'type': 'simple_table',
+            'raw_content': "<table class=\"table itemDisplayTable\"><tr><td class=\"metadataFieldLabel dc_title\">Title: </td><td class=\"metadataFieldValue dc_title\">T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_contributor\">Authors: </td><td class=\"metadataFieldValue dc_contributor\"><a class=\"author\" href=\"/browse?type=author&amp;value=T.J.%2C+Byrne\">T.J., Byrne</a><br><a class=\"author\" href=\"/browse?type=author&amp;value=Fewer%2C+Michael\">Fewer, Michael</a></td></tr><tr><td class=\"metadataFieldLabel dc_subject\">Keywords: </td><td class=\"metadataFieldValue dc_subject\">T.J. Byrne<br>Cottages<br>Poor Law Commission</td></tr><tr><td class=\"metadataFieldLabel dc_date_issued\">Issue Date: </td><td class=\"metadataFieldValue dc_date_issued\">2011<br>2011</td></tr><tr><td class=\"metadataFieldLabel dc_description\">Description: </td><td class=\"metadataFieldValue dc_description\">T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_identifier_uri\">URI: </td><td class=\"metadataFieldValue dc_identifier_uri\"><a href=\"https://hdl.handle.net/10599/5719\">https://hdl.handle.net/10599/5719</a></td></tr><tr><td class=\"metadataFieldLabel\">Appears in Collections:</td><td class=\"metadataFieldValue\"><a href=\"/handle/10599/3\">Published Items</a><br><a href=\"/handle/10599/5553\">T.J. Byrne Collection</a><br></td></tr></table>",
+            'content': {
+                'html': "<table><tr><td>Title:</td><td>T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td>Authors:</td><td>T.J., Byrne Fewer, Michael</td></tr><tr><td>Keywords:</td><td>T.J. Byrne Cottages Poor Law Commission</td></tr><tr><td>Issue Date:</td><td>2011 2011</td></tr><tr><td>Description:</td><td>T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td>URI:</td><td>https://hdl.handle.net/10599/5719</td></tr><tr><td>Appears in Collections:</td><td>Published Items T.J. Byrne Collection</td></tr></table>",
+                'is_complex': False,
+                'table_nest_level': '1'
+            }
+        }, {
+            'type': 'complex_table',
+            'raw_content': "<table class=\"table itemDisplayTable\"><tr><td class=\"metadataFieldLabel dc_title\">Title: </td><td class=\"metadataFieldValue dc_title\">T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_contributor\">Authors: </td><td class=\"metadataFieldValue dc_contributor\"><a class=\"author\" href=\"/browse?type=author&amp;value=T.J.%2C+Byrne\">T.J., Byrne</a><br><a class=\"author\" href=\"/browse?type=author&amp;value=Fewer%2C+Michael\">Fewer, Michael</a></td></tr><tr><td class=\"metadataFieldLabel dc_subject\">Keywords: </td><td class=\"metadataFieldValue dc_subject\">T.J. Byrne<br>Cottages<br>Poor Law Commission</td></tr><tr><td class=\"metadataFieldLabel dc_date_issued\">Issue Date: </td><td class=\"metadataFieldValue dc_date_issued\">2011<br>2011</td></tr><tr><td class=\"metadataFieldLabel dc_description\">Description: </td><td class=\"metadataFieldValue dc_description\">T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_identifier_uri\">URI: </td><td class=\"metadataFieldValue dc_identifier_uri\"><a href=\"https://hdl.handle.net/10599/5719\">https://hdl.handle.net/10599/5719</a></td></tr><tr><td class=\"metadataFieldLabel\">Appears in Collections:</td><td class=\"metadataFieldValue\"><a href=\"/handle/10599/3\">Published Items</a><br><a href=\"/handle/10599/5553\">T.J. Byrne Collection</a><br></td></tr></table>",
+            'content': {
+                'html': "<table><tr><td>Title:</td><td>T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td>Authors:</td><td>T.J., Byrne Fewer, Michael</td></tr><tr><td>Keywords:</td><td>T.J. Byrne Cottages Poor Law Commission</td></tr><tr><td>Issue Date:</td><td>2011 2011</td></tr><tr><td>Description:</td><td>T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td>URI:</td><td>https://hdl.handle.net/10599/5719</td></tr><tr><td>Appears in Collections:</td><td>Published Items T.J. Byrne Collection</td></tr></table>",
+                'is_complex': True,
+                'table_nest_level': '1'
+            }
+        }, {
+            'type': 'image',
+            'raw_content': "<img decoding=\"async\" loading=\"lazy\" aria-describedby=\"caption-attachment-17269\" class=\"wp-image-17269 size-full\" title=\"Curtindo o apartamento com piscina no centro de SP. \" src=\"https://naproadavida.com/wp-content/uploads/2020/11/20201024-Airbnb-SP-Consolacao_getaway_manha_Sony-1.jpg\" alt=\"Curtindo o apartamento com piscina no centro de SP. \" width=\"765\" height=\"510\" srcset=\"https://naproadavida.com/wp-content/uploads/2020/11/20201024-Airbnb-SP-Consolacao_getaway_manha_Sony-1.jpg 765w, https://naproadavida.com/wp-content/uploads/2020/11/20201024-Airbnb-SP-Consolacao_getaway_manha_Sony-1-480x320.jpg 480w\" sizes=\"(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) 765px, 100vw\">",
+            'content': {
+                'url': 'https://naproadavida.com/wp-content/uploads/2020/11/20201024-Airbnb-SP-Consolacao_getaway_manha_Sony-1.jpg',
+                'data': None,
+                'alt': 'Curtindo o apartamento com piscina no centro de SP. ',
+                'title': 'Curtindo o apartamento com piscina no centro de SP. ',
+                'caption': None
+            }
+        }]]
+    }
+    datajson = DataJson(data)
+    md = datajson.get_content_list().to_mm_md(exclude_nodes=DocElementType.COMPLEX_TABLE)
+    assert '<table>' not in md
+    assert 'Curtindo o apartamento com piscina no centro de SP.' in md
 
 
 def test_data_json_deepcopy():
@@ -174,7 +233,7 @@ def test_data_json_to_nlp_md():
                     }
                 },
                 {
-                    'type': 'table',
+                    'type': 'simple_table',
                     'raw_content': '<table class=\"table table-hover\" id=\"table-visitinghours\"><tr class=\"\"><td>\n\t\t\t\tMaandag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr><tr class=\"\"><td>\n\t\t\t\tDinsdag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr><tr class=\"\"><td>\n\t\t\t\tWoensdag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr><tr class=\"\"><td>\n\t\t\t\tDonderdag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr><tr class=\"\"><td>\n\t\t\t\tVrijdag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr><tr class=\"\"><td>\n\t\t\t\tZaterdag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr><tr class=\"\"><td>\n\t\t\t\tZondag\n\t\t\t</td><td class=\"text-right\">\n\n\t\t\t\t\t\t\t\t\t\t\t\t-\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td></tr></table>',
                     'content': {
                         'html': '<table><tr><td>Maandag</td><td>-</td></tr><tr><td>Dinsdag</td><td>-</td></tr><tr><td>Woensdag</td><td>-</td></tr><tr><td>Donderdag</td><td>-</td></tr><tr><td>Vrijdag</td><td>-</td></tr><tr><td>Zaterdag</td><td>-</td></tr><tr><td>Zondag</td><td>-</td></tr></table>',
@@ -205,7 +264,7 @@ def test_data_json_to_nlp_md():
 
     def test_custom_exclude():
         datajson = DataJson(d)
-        md = datajson.get_content_list().to_nlp_md(MM_NODE_LIST=['table'])
+        md = datajson.get_content_list().to_nlp_md(exclude_nodes=[DocElementType.COMPLEX_TABLE, DocElementType.SIMPLE_TABLE])
         assert 'Ziet u iets wat niet hoort of niet klopt?' in md
         assert 'Openingstijden' in md
         assert 'Maandag' not in md
