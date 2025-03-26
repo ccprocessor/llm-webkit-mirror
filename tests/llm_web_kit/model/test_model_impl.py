@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 from llm_web_kit.exception.exception import (ModelInitException,
                                              ModelRuntimeException)
-from llm_web_kit.model.model_impl import (ModelFactory, ModelType,
-                                          PoliticalCPUModel,
+from llm_web_kit.model.model_impl import (DeviceType, ModelFactory, ModelType,
+                                          PoliticalCPUModel, PoliticalGPUModel,
                                           PoliticalPredictorImpl,
                                           PornEnGPUModel, PornPredictorImpl,
                                           PornZhGPUModel)
@@ -109,70 +109,138 @@ class TestPoliticalPredictorImpl(TestCase):
     """Test cases for PoliticalPredictorImpl."""
 
     @patch.object(PoliticalCPUModel, '_load_model')
-    def test_init(self, mock_load_model):
-        """Test PoliticalPredictorImpl initialization."""
-        mock_load_model.return_value = MagicMock()
-        predictor = PoliticalPredictorImpl('en')
-        assert predictor.language == 'en'
-        assert predictor.model is not None
-        assert mock_load_model.call_count == 1
+    @patch.object(PoliticalGPUModel, '_load_model')
+    @patch.object(PoliticalGPUModel, 'predict_batch')
+    @patch.object(PoliticalCPUModel, 'predict_batch')
+    def test_predict_batch(self, mock_predict_batch_cpu, mock_predict_batch_gpu,
+                         mock_load_model_gpu, mock_load_model_cpu):
+        """Test batch prediction."""
+        mock_load_model_cpu.return_value = MagicMock()
+        mock_load_model_gpu.return_value = MagicMock()
+        mock_predict_batch_cpu.return_value = [{'political_prob': 0.19}, {'political_prob': 0.99}]
+        mock_predict_batch_gpu.return_value = [{'political_prob': 0.19}, {'political_prob': 0.9}]
 
-    @patch.object(PoliticalCPUModel, '_load_model')
-    def test_create_model(self, mock_load_model):
-        """Test model creation for different languages."""
-        mock_load_model.return_value = MagicMock()
-        predictor = PoliticalPredictorImpl('en')
-
-        # Test supported languages
-        model_en = predictor._create_model('en')
-        assert isinstance(model_en, PoliticalCPUModel)
-        model_zh = predictor._create_model('zh')
-        assert isinstance(model_zh, PoliticalCPUModel)
-
-        # Test unsupported language
-        with self.assertRaises(ModelInitException) as context:
-            predictor._create_model('fr')
-        self.assertIn('Poltical model does not support language: fr', str(context.exception))
-
-    @patch.object(PoliticalCPUModel, '_load_model')
-    def test_predict_batch(self, mock_load_model):
-        """Test batch prediction functionality."""
-        # Create a mock model with predict_batch method
-        mock_model = MagicMock()
-        mock_model.predict_batch.return_value = [
-            {'political_prob': 0.995},
-        ]
-        mock_model.convert_result_to_response.return_value = PoliticalResponse(is_remained=True, details={'political_prob': 0.995}),
-        mock_load_model.return_value = mock_model
-
-        predictor = PoliticalPredictorImpl('en')
-        predictor.model = mock_model
-
-        # Test with mixed language requests
+        predictor = PoliticalPredictorImpl(['en', 'zh'], DeviceType.GPU)
+        assert predictor.language == ['en', 'zh']
         with self.assertRaises(ModelRuntimeException):
             predictor.predict_batch([
                 PoliticalRequest(content='Hello, world!', language='en'),
-                PoliticalRequest(content='你好', language='zh')
+                PoliticalRequest(content='Marhaba', language='ar'),
             ])
+            assert mock_predict_batch_gpu.call_count == 1
 
-        # Test with correct language requests
         results = predictor.predict_batch([
             PoliticalRequest(content='Hello, world!', language='en'),
+            PoliticalRequest(content='nihao', language='en')
         ])
-        assert len(results) == 1
-        assert results[0][0].is_remained  # political_prob > 0.99
+        assert not results[0].is_remained
+        assert results[1].is_remained
 
     @patch.object(PoliticalCPUModel, '_load_model')
-    def test_model_not_initialized(self, mock_load_model):
-        """Test behavior when model is not initialized."""
-        mock_load_model.return_value = MagicMock()
-        predictor = PoliticalPredictorImpl('en')
-        predictor.model = None
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_create_model(self, mock_load_model_gpu, mock_load_model_cpu):
+        """Test model creation."""
+        mock_load_model_gpu.return_value = MagicMock()
+        mock_load_model_cpu.return_value = MagicMock()
+        predictor = PoliticalPredictorImpl('en', DeviceType.GPU)
+        assert predictor.language == 'en'
+        assert predictor.model is not None
+        assert mock_load_model_gpu.call_count == 1
 
-        with self.assertRaises(ModelRuntimeException):
-            predictor.predict_batch([
-                PoliticalRequest(content='Hello, world!', language='en')
-            ])
+        predictor = PoliticalPredictorImpl('zh', DeviceType.CPU)
+        assert predictor.language == 'zh'
+        assert predictor.model is not None
+        assert mock_load_model_cpu.call_count == 1
+        with self.assertRaises(ModelInitException):
+            predictor = PoliticalPredictorImpl('ar', DeviceType.CPU)
+
+        with self.assertRaises(ModelInitException):
+            predictor = PoliticalPredictorImpl('zh', 'TPU')
+
+
+class TestPoliticalGPUModel(TestCase):
+    """Test cases for PoliticalGPUModel."""
+
+    @patch('llm_web_kit.model.model_impl.GTEModel')
+    def test_load_model(self, mock_model):
+        """Test model loading."""
+        mock_model.return_value = MagicMock()
+        model = PoliticalGPUModel()
+        model._load_model()
+        assert mock_model.call_count == 1
+
+        mock_model.reset_mock()
+
+        mock_model.return_value = None
+        with self.assertRaises(RuntimeError):
+            model._load_model()
+        assert mock_model.call_count == 1
+
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_get_resource_requirement(self, mock_load_model):
+        """Test resource requirements."""
+        mock_load_model.return_value = MagicMock()
+        model = PoliticalGPUModel()
+        resource_requirement = model.get_resource_requirement()
+        assert resource_requirement.num_cpus == 12
+        assert resource_requirement.memory_GB == 64
+        assert resource_requirement.num_gpus == 1
+
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_get_batch_config(self, mock_load_model):
+        """Test batch configuration."""
+        mock_load_model.return_value = MagicMock()
+        model = PoliticalGPUModel()
+        batch_config = model.get_batch_config()
+        assert batch_config.max_batch_size == 256
+        assert batch_config.optimal_batch_size == 32
+        assert batch_config.min_batch_size == 8
+
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_predict_batch(self, mock_load_model):
+        """Test batch prediction."""
+        mock_model = MagicMock()
+        mock_model.get_output_key.return_value = 'prob'
+        mock_model.predict.return_value = [{'prob': 0.26}, {'prob': 0.74}]
+        mock_load_model.return_value = mock_model
+
+        model = PoliticalGPUModel()
+        model.model = mock_model
+
+        results = model.predict_batch(['test1', 'test2'])
+        assert len(results) == 2
+        assert results[0]['political_prob'] == 0.26
+        assert results[1]['political_prob'] == 0.74
+
+        mock_model.reset_mock()
+        mock_model.predict.return_value = None
+        with self.assertRaises(RuntimeError):
+            model.predict_batch(['test'])
+
+        # Test model not initialized
+        model.model = None
+        with self.assertRaises(RuntimeError):
+            model.predict_batch(['test'])
+
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_convert_result_to_response(self, mock_load_model):
+        """Test result conversion to response."""
+        mock_load_model.return_value = MagicMock()
+        model = PoliticalGPUModel()
+
+        # Test case where political_prob > 0.99 (should be flagged)
+        result = {'political_prob': 0.995}
+        response = model.convert_result_to_response(result)
+        assert isinstance(response, PoliticalResponse)
+        assert response.is_remained
+        assert response.details == result
+
+        # Test case where political_prob <= 0.99 (should not be flagged)
+        result = {'political_prob': 0.45}
+        response = model.convert_result_to_response(result)
+        assert isinstance(response, PoliticalResponse)
+        assert not response.is_remained
+        assert response.details == result
 
 
 class TestPornEnGPUModel(TestCase):
@@ -336,7 +404,7 @@ class TestPornPredictorImpl(TestCase):
         mock_predict_batch_en.return_value = [{'porn_prob': 0.19}, {'porn_prob': 0.3}]
         mock_predict_batch_zh.return_value = [{'porn_prob': 0.19}, {'porn_prob': 0.3}]
 
-        predictor = PornPredictorImpl('en')
+        predictor = PornPredictorImpl('en', DeviceType.GPU)
         assert predictor.language == 'en'
         with self.assertRaises(ModelRuntimeException):
             predictor.predict_batch([
@@ -358,9 +426,11 @@ class TestPornPredictorImpl(TestCase):
         """Test model creation."""
         mock_load_model_en.return_value = MagicMock()
         mock_load_model_zh.return_value = MagicMock()
-        predictor = PornPredictorImpl('en')
+        predictor = PornPredictorImpl('en', DeviceType.GPU)
         assert predictor.language == 'en'
         assert predictor.model is not None
+        with self.assertRaises(ModelInitException):
+            predictor = PornPredictorImpl('zh', DeviceType.CPU)
 
 
 def test_model_factory():
@@ -374,11 +444,17 @@ class TestModelFactory(TestCase):
 
     @patch.object(PoliticalPredictorImpl, '_create_model')
     @patch.object(PoliticalCPUModel, '_load_model')
-    def test_create_predictor(self, mock_load_model, mock_create_model):
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_create_predictor(self, mock_load_model_gpu, mock_load_model_cpu, mock_create_model):
         """Test ModelFactory.create_predictor method."""
-        mock_load_model.return_value = MagicMock()
+        mock_load_model_gpu.return_value = MagicMock()
+        mock_load_model_cpu.return_value = MagicMock()
         mock_create_model.return_value = MagicMock()
-        predictor = ModelFactory.create_predictor(ModelType.POLITICAL, 'en')
+        predictor = ModelFactory.create_predictor(ModelType.POLITICAL, 'en', DeviceType.GPU)
+        assert isinstance(predictor, PoliticalPredictorImpl)
+        assert mock_create_model.call_count == 1
+        mock_create_model.reset_mock()
+        predictor = ModelFactory.create_predictor(ModelType.POLITICAL, 'zh', DeviceType.CPU)
         assert isinstance(predictor, PoliticalPredictorImpl)
         assert mock_create_model.call_count == 1
 
@@ -388,7 +464,7 @@ class TestModelFactory(TestCase):
         """Test ModelFactory.create_predictor method for porn model."""
         mock_load_model.return_value = MagicMock()
         mock_create_model.return_value = MagicMock()
-        predictor = ModelFactory.create_predictor(ModelType.PORN, 'en')
+        predictor = ModelFactory.create_predictor(ModelType.PORN, 'en', DeviceType.GPU)
         assert isinstance(predictor, PornPredictorImpl)
         assert mock_create_model.call_count == 1
 
@@ -398,7 +474,7 @@ class TestModelFactory(TestCase):
         """Test ModelFactory.create_predictor method for porn model."""
         mock_load_model.return_value = MagicMock()
         mock_create_model.return_value = MagicMock()
-        predictor = ModelFactory.create_predictor(ModelType.PORN, 'zh')
+        predictor = ModelFactory.create_predictor(ModelType.PORN, 'zh', DeviceType.GPU)
         assert isinstance(predictor, PornPredictorImpl)
         assert mock_create_model.call_count == 1
 
@@ -451,20 +527,30 @@ class TestBasePredictor(TestCase):
     """Test cases for BasePredictor."""
 
     @patch.object(PoliticalCPUModel, '_load_model')
-    def test_get_resource_requirement_political(self, mock_load_model):
-        """Test resource requirements for political model."""
+    def test_get_resource_requirement_political_cpu(self, mock_load_model):
+        """Test resource requirements for political cpu model."""
         mock_load_model.return_value = MagicMock()
-        predictor = PoliticalPredictorImpl('en')
+        predictor = PoliticalPredictorImpl('en', DeviceType.CPU)
         requirement = predictor.get_resource_requirement()
         assert requirement.num_cpus == 1
         assert requirement.memory_GB == 4
         assert requirement.num_gpus == 0
 
+    @patch.object(PoliticalGPUModel, '_load_model')
+    def test_get_resource_requirement_political_gpu(self, mock_load_model):
+        """Test resource requirements for political gpu model."""
+        mock_load_model.return_value = MagicMock()
+        predictor = PoliticalPredictorImpl('en', DeviceType.GPU)
+        requirement = predictor.get_resource_requirement()
+        assert requirement.num_cpus == 12
+        assert requirement.memory_GB == 64
+        assert requirement.num_gpus == 1
+
     @patch.object(PornEnGPUModel, '_load_model')
     def test_get_resource_requirement_porn_en(self, mock_load_model):
         """Test resource requirements for English porn model."""
         mock_load_model.return_value = MagicMock()
-        predictor = PornPredictorImpl('en')
+        predictor = PornPredictorImpl('en', DeviceType.GPU)
         requirement = predictor.get_resource_requirement()
         assert requirement.num_cpus == 12
         assert requirement.memory_GB == 64
@@ -474,7 +560,7 @@ class TestBasePredictor(TestCase):
     def test_get_resource_requirement_porn_zh(self, mock_load_model):
         """Test resource requirements for Chinese porn model."""
         mock_load_model.return_value = MagicMock()
-        predictor = PornPredictorImpl('zh')
+        predictor = PornPredictorImpl('zh', DeviceType.GPU)
         requirement = predictor.get_resource_requirement()
         assert requirement.num_cpus == 12
         assert requirement.memory_GB == 64
