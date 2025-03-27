@@ -97,10 +97,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for cell in cells:
             colspan_str = cell.get('colspan', '1').strip('"\'\\,.:')
             rowspan_str = cell.get('rowspan', '1').strip('"\'\\,.:')
-            try:
-                colspan = int(colspan_str)
-            except ValueError:
-                colspan = 1
 
             # 判断是否为百分数格式（以%结尾且前面是数字）
             def is_percentage(value: str) -> bool:
