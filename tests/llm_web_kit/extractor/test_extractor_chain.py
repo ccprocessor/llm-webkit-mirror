@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 31
+        assert len(self.data_json) == 34
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -537,3 +537,33 @@ DEF
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
         self.assertIn(r'$alpha = \left(alpha_1, alpha_2, ldots, alpha_n\right) ,!$', result_md)
+
+    def test_table_span_error(self):
+        """测试table的span标签错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[31]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
+        assert result_flag is True
+
+    def test_table_colspan_error(self):
+        """测试table的colspan标签为字符串引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[32]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][15]['content']['is_complex']
+        assert result_flag is False
+
+    def test_table_colspan_percent_err(self):
+        """测试table的colspan标签为百分数引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[33]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
+        assert result_flag is True
