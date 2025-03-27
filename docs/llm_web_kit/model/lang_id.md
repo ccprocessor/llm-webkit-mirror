@@ -57,7 +57,7 @@ print(update_language_by_str(text))
 {'language': 'ru', 'language_details': 'rus_Cyrl'}
 
 text = 'Это русский текст.'
-print(update_language_by_str(text, is_218e=False))
+print(update_language_by_str(text, use_218e=False))
 {'language': 'ru', 'language_details': ''}
 
 text = '这是一段简体中文文本'

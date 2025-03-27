@@ -236,9 +236,9 @@ class TestDecideLanguageFunc(unittest.TestCase):
         self.assertEqual(result, {'language': 'zh', 'language_details': ''})
 
     @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
-    def test_lid_176_pre_other_lang_is_218e_false(self, mock_decide):
+    def test_lid_176_pre_other_lang_use_218e_false(self, mock_decide):
         mock_decide.return_value = 'fr'
-        result = decide_language_func('test', self.lang_detect_supported, is_218e=False)
+        result = decide_language_func('test', self.lang_detect_supported, use_218e=False)
         self.assertEqual(result, {'language': 'fr', 'language_details': ''})
 
     @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
@@ -248,7 +248,7 @@ class TestDecideLanguageFunc(unittest.TestCase):
         lang_detect_218 = MagicMock()
         lang_detect_218.predict.return_value = (['__label__yue_Hant'], [0.9])
         mock_get_singleton.return_value = lang_detect_218
-        result = decide_language_func('test', self.lang_detect_supported, is_218e=True)
+        result = decide_language_func('test', self.lang_detect_supported, use_218e=True)
         self.assertEqual(result, {'language': 'fr', 'language_details': ''})
 
     @patch('llm_web_kit.model.lang_id.decide_language_by_prob_v176')
@@ -258,7 +258,7 @@ class TestDecideLanguageFunc(unittest.TestCase):
         lang_detect_218 = MagicMock()
         lang_detect_218.predict.return_value = (['__label__de_DE'], [0.8])
         mock_get_singleton.return_value = lang_detect_218
-        result = decide_language_func('test', self.lang_detect_supported, is_218e=True)
+        result = decide_language_func('test', self.lang_detect_supported, use_218e=True)
         self.assertEqual(result, {'language': 'de', 'language_details': 'de_DE'})
 
 

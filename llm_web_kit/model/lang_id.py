@@ -233,7 +233,7 @@ def detect_latex_env(content_str: str) -> bool:
     return latex_env_pattern.search(content_str) is not None
 
 
-def decide_language_func(content_str: str, lang_detect: LanguageIdentification, is_cn_specific=False, is_218e=True,) -> Dict[str, str]:
+def decide_language_func(content_str: str, lang_detect: LanguageIdentification, is_cn_specific=False, use_218e=True,) -> Dict[str, str]:
     """Decide language based on the content string. This function will truncate
     the content string if it is too long. This function will return "empty" if
     the content string is empty.
@@ -291,7 +291,7 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification, 
                 return {'language': 'zh', 'language_details': ''}
         else:
             return {'language': lid_176_pre, 'language_details': ''}
-    elif is_218e is False:
+    elif use_218e is False:
         return {'language': lid_176_pre, 'language_details': ''}
     else:
         lang_detect_218 = get_singleton_lang_detect(model_name='lid_218',resource_names='lang-id-218')
@@ -332,11 +332,11 @@ def get_max_chinese_lang(langs):
         return {'language': 'zh', 'language_details': 'zho_Hant'}
 
 
-def update_language_by_str(content_str: str, is_cn_specific=False, is_218e=True, model_name: str = None) -> Dict[str, str]:
+def update_language_by_str(content_str: str, is_cn_specific=False, use_218e=True, model_name: str = None) -> Dict[str, str]:
     """Decide language based on the content string and return a dictionary with
     language and details."""
     lang_detect = get_singleton_lang_detect(model_name)
-    return decide_language_func(content_str, lang_detect, is_cn_specific , is_218e)
+    return decide_language_func(content_str, lang_detect, is_cn_specific , use_218e)
 
 
 if __name__ == '__main__':
