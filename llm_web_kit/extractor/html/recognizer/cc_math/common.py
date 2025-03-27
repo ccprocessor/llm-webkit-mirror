@@ -157,6 +157,7 @@ class CCMATH():
         if not s:
             return s
         s = s.strip()
+        s = normalize_ctl_text(s)
         if s.startswith('$$') and s.endswith('$$'):
             return s.replace('$$', '').strip()
         if s.startswith('$') and s.endswith('$'):
@@ -167,7 +168,6 @@ class CCMATH():
             return s.replace('\\[', '').replace('\\]', '').strip()
         if s.startswith('`') and s.endswith('`'):
             return s.replace('`', '').strip()
-        s = normalize_ctl_text(s)
         s = self.wrap_math_md_custom(s)
         return s.strip()
 
@@ -306,9 +306,15 @@ class CCMATH():
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
         mml_ns = re.sub(r'<mspace[^>]*>.*?</mspace>', '', mml_ns, flags=re.DOTALL)
-        mml_ns = self.fix_mathml_superscript(mml_ns)
-        mml_dom = etree.fromstring(mml_ns)
-        mmldom = transform(mml_dom)
+        # 先将mml_ns转换为HtmlElement，兼容一些有错误的html解析
+        mml_dom = html_to_element(mml_ns)
+        # 再将 HtmlElement 转换为 etree._Element 以兼容 XSLT 转换
+        mml_str = etree.tostring(mml_dom)
+        # 提前修复已知的一些利用XSLT方法转换的错误
+        mml_str = self.fix_mathml_superscript(mml_str)
+        mml_element = etree.fromstring(mml_str)
+        # 使用兼容的元素进行转换
+        mmldom = transform(mml_element)
         latex_code = str(mmldom)
         return latex_code
 
@@ -348,7 +354,6 @@ class CCMATH():
             mrow.append(base)
             parent.insert(left_paren, new_msup)
             parent.remove(msup)
-
         return etree.tostring(root, encoding='unicode', pretty_print=True)
 
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:

@@ -370,7 +370,7 @@ class TestMathRecognizer(unittest.TestCase):
                     [(html_to_element(test_case['input'][0][0]), html_to_element(test_case['input'][0][1]))],
                     test_case['raw_html']
                 )
-                self.assertEqual(len(output_html), len(test_case['expected']), msg=f'input is: {test_case["input"]}')
+                self.assertEqual(len(output_html), len(test_case['expected']))
                 for i in range(len(output_html)):
                     expect = test_case['expected'][i][0]
                     self.assertEqual(element_to_html(output_html[i][0]), expect, msg=f'result is: {element_to_html(output_html[i][0])}, expected is: {expect}')
@@ -493,8 +493,8 @@ class TestCCMATH(unittest.TestCase):
 if __name__ == '__main__':
     r = TestMathRecognizer()
     r.setUp()
-    r.test_math_recognizer()
-    # r.test_math_recognizer_html()
+    # r.test_math_recognizer()
+    r.test_math_recognizer_html()
     # r.test_math_recognizer()
     # r.test_to_content_list_node()
     # html = r'<p class="lt-math-15120">\[\begin{array} {ll} {5 \cdot 3 = 15} &amp;{-5(3) = -15} \\ {5(-3) = -15} &amp;{(-5)(-3) = 15} \end{array}\]</p>'
