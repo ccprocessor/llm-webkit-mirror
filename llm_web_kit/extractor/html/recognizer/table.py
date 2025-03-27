@@ -91,28 +91,32 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 stack.extend(reversed(elem.getchildren()))
         return True
 
+    def __is_percentage(self, value: str) -> bool:
+        """百分数判断."""
+        if not value.endswith('%'):
+            return False
+        num_part = value.rstrip('%').strip()
+        try:
+            float(num_part)  # 检查%前面是否为有效数字
+            return True
+        except ValueError:
+            return False
+
     def __is_simple_table(self, tree: HtmlElement) -> bool:
         """处理table元素，判断是是否复杂：是否包含合并单元格."""
         cells = tree.xpath('.//td | .//th')
         for cell in cells:
             colspan_str = cell.get('colspan', '1').strip('"\'\\,.:')
             rowspan_str = cell.get('rowspan', '1').strip('"\'\\,.:')
-
-            # 判断是否为百分数格式（以%结尾且前面是数字）
-            def is_percentage(value: str) -> bool:
-                """百分数判断."""
-                if not value.endswith('%'):
-                    return False
-                num_part = value.rstrip('%').strip()
-                try:
-                    float(num_part)  # 检查%前面是否为有效数字
-                    return True
-                except ValueError:
-                    return False
-
             # colspan和rowspan的值为百分数时设置为100，否则尝试转为整数，默认为1
-            colspan = 100 if is_percentage(colspan_str) else int(colspan_str or 1)
-            rowspan = 100 if is_percentage(rowspan_str) else int(rowspan_str or 1)
+            try:
+                colspan = 100 if self.__is_percentage(colspan_str) else int(colspan_str or 1)
+            except HtmlTableRecognizerException:
+                colspan = 1
+            try:
+                rowspan = 100 if self.__is_percentage(rowspan_str) else int(rowspan_str or 1)
+            except HtmlTableRecognizerException:
+                rowspan = 1
             if (colspan > 1) or (rowspan > 1):
                 return False
         return True
