@@ -111,11 +111,11 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             # colspan和rowspan的值为百分数时设置为100，否则尝试转为整数，默认为1
             try:
                 colspan = 100 if self.__is_percentage(colspan_str) else int(colspan_str or 1)
-            except HtmlTableRecognizerException:
+            except ValueError:
                 colspan = 1
             try:
                 rowspan = 100 if self.__is_percentage(rowspan_str) else int(rowspan_str or 1)
-            except HtmlTableRecognizerException:
+            except ValueError:
                 rowspan = 1
             if (colspan > 1) or (rowspan > 1):
                 return False
