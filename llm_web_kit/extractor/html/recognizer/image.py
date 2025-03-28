@@ -106,6 +106,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             '//svg[not(ancestor::figure)]',  # svg标签，用于矢量图形
             '//video',
             '//audio',
+            '//article',
             '//img[not(ancestor::noscript) and not(ancestor::picture) and not(ancestor::figure) and not(ancestor::object) and not(ancestor::table)]',
         ]
         # 合并XPath表达式
@@ -158,6 +159,11 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                     self.__parse_img_attr(base_url, elem.xpath('.//img|.//image')[0], attributes)
                 else:
                     continue
+            elif tag == 'article':
+                if elem.xpath('.//header'):
+                    self.__parse_img_attr(base_url, elem.xpath('.//header')[0], attributes)
+                else:
+                    continue
             else:
                 self.__parse_img_attr(base_url, elem, attributes)
             if not attributes.get('text'):
@@ -186,15 +192,30 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 attributes['format'] = 'base64'
             else:
                 attributes['text'] = self.__get_full_image_url(base_url, text)
-        common_attributes = ['alt', 'title', 'width', 'height']  # , 'src', 'style', 'data-src', 'srcset'
+        common_attributes = ['alt', 'title', 'width', 'height', 'style']  # , 'src', 'style', 'data-src', 'srcset'
         attributes.update({attr: elem_attributes.get(attr) for attr in common_attributes if elem_attributes.get(attr)})
         if elem.tail and elem.tail.strip():
             attributes['tail'] = elem.tail.strip()
 
     def __parse_img_text(self, elem_attributes: dict):
         text = ''
+        # 获取并清理 style 属性值
+        style = elem_attributes.get('style', '').replace('\\"', '"').strip()
+        
+        # 处理 background-image URL
+        if 'background-image' in style:
+            try:
+                url_part = style.partition('background-image:')[2]  # 获取 url(...) 部分
+                bg_url = url_part.partition('url(')[2].split(')')[0].strip(" '\"")
+                if any(img_label for img_label in self.IMG_LABEL if img_label in bg_url.lower()):
+                    return bg_url
+            except HtmlImageRecognizerException:
+                pass
+
+        # 原有的 src 处理逻辑
         src = elem_attributes.get('src')
         data_src = [v.split(' ')[0] for k, v in elem_attributes.items() if k.startswith('data')]
+        
         if src and data_src:
             src = src if not src.startswith('data:image') else data_src[0]
         if src and any(img_label for img_label in self.IMG_LABEL if img_label in src.lower()):
