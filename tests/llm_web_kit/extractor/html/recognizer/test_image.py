@@ -3,7 +3,7 @@ from pathlib import Path
 
 from llm_web_kit.extractor.html.recognizer.image import ImageRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
-from llm_web_kit.libs.html_utils import html_to_element, element_to_html
+from llm_web_kit.libs.html_utils import html_to_element
 
 TEST_CASES_HTML = [
     {

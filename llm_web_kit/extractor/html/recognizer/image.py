@@ -201,7 +201,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         text = ''
         # 获取并清理 style 属性值
         style = elem_attributes.get('style', '').replace('\\"', '"').strip()
-        
+
         # 处理 background-image URL
         if 'background-image' in style:
             try:
@@ -215,7 +215,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         # 原有的 src 处理逻辑
         src = elem_attributes.get('src')
         data_src = [v.split(' ')[0] for k, v in elem_attributes.items() if k.startswith('data')]
-        
+
         if src and data_src:
             src = src if not src.startswith('data:image') else data_src[0]
         if src and any(img_label for img_label in self.IMG_LABEL if img_label in src.lower()):
