@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 35
+        assert len(self.data_json) == 36
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -576,4 +576,14 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_flag = result.get_content_list()._get_data()[0][37]['content']['is_complex']
+        assert result_flag is False
+
+    def test_table_invalid_percent(self):
+        """测试table的colspan标签为百分数引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[35]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
         assert result_flag is False
