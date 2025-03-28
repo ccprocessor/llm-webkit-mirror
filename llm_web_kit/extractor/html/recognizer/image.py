@@ -49,7 +49,6 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         if html_obj.tag == CCTag.CC_IMAGE:
             return self.__ccimg_to_content_list(raw_html_segment, html_obj)
         else:
-            HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}')
             raise HtmlImageRecognizerException(f'No ccimage element found in content: {parsed_content}')
 
     def __ccimg_to_content_list(self, raw_html_segment: str, html_obj: HtmlElement) -> dict:
@@ -266,7 +265,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
     def __svg_to_base64(self, svg_content: str) -> str:
         try:
             if not svg_content.strip().endswith('svg>'):
-                svg_content = re.search(r'(<svg.*svg>)', svg_content).group(1)
+                svg_content = re.search(r'(<svg.*svg>)', svg_content, re.DOTALL).group(1)
             image_data = cairosvg.svg2png(bytestring=svg_content)
             base64_data = base64.b64encode(image_data).decode('utf-8')
             mime_type = 'image/png'
