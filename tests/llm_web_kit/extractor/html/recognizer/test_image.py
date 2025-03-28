@@ -53,6 +53,11 @@ TEST_CASES_HTML = [
         'expected': 3,
         'ccimg_html': """<html lang="ua"><body><div class="wrapper"><footer class="footer" id="layout-footer"><div class="footer_top row justify-content-md-between"><div class="col-md-6 col-lg-5"><div class="item first"><ccimage by="img" html=\'&lt;img src="/storage/app/sites/23/logo.svg" alt="" class="footer_logo lowvision_image_filter"&gt;\n\n                    \' format="url">https://bukoda.gov.ua/storage/app/sites/23/logo.svg</ccimage></div></div></div></footer></div></body></html>"""
     },
+    {
+        'input': 'assets/ccimage/svg_e.html',
+        'base_url': 'https://onlinelibrary.wiley.com/doi/10.1155/2012/387626',
+        'expected': 47,
+    },
 ]
 
 TEST_CC_CASE = [
