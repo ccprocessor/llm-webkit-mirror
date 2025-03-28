@@ -197,7 +197,7 @@ class XlmrModel(BertModel):
         self.model_name = str(model_config.get('model_name', 'porn-24m5'))
 
     def auto_download(self) -> str:
-        """Default download the 23w44.zip model."""
+        """Default download the 24m5.zip model."""
         resource_name = 'porn-24m5'
         resource_config = load_config()['resources']
         porn_24m5_config: Dict = resource_config[resource_name]
