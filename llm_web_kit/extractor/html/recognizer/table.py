@@ -46,9 +46,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     @override
     def to_content_list_node(self, base_url: str, parsed_content: HtmlElement, raw_html_segment: str) -> dict:
-        if not isinstance(parsed_content, HtmlElement):
-            raise HtmlTableRecognizerException(f'parsed_content 必须是 HtmlElement 类型，而不是 {type(parsed_content)}')
-
         table_type, table_nest_level, table_body = self.__get_attribute(parsed_content)
 
         # 确保 table_body 不为 None 且是字符串类型
