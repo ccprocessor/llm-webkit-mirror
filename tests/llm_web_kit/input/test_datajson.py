@@ -270,5 +270,253 @@ def test_data_json_to_nlp_md():
         assert 'Maandag' not in md
         assert 'frame.open();\nframe.write(html);\nframe.close();' in md
 
-    test_default_exclude()
-    test_custom_exclude()
+
+def test_to_txt_with_math_delimiters():
+    """测试 to_txt 方法对数学公式分隔符的处理."""
+    test_cases = [
+        # 基本场景：单个公式
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '这是一个公式 [itex]x^2[/itex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '这是一个公式 $x^2$\n'
+        },
+        # 多个公式组合
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '行内公式 [itex]x^2[/itex] 和行间公式 [tex]y^3[/tex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '行内公式 $x^2$ 和行间公式 $$y^3$$\n'
+        },
+        # 多行文本中的公式
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '第一行文本\n包含公式 [itex]x^2[/itex]\n第三行文本\n包含公式 [tex]y^3[/tex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '第一行文本\n包含公式 $x^2$\n第三行文本\n包含公式 $$y^3$$\n'
+        },
+        # 多个段落
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '第一个段落 [itex]x^2[/itex]',
+                                't': 'text'
+                            }
+                        ]
+                    },
+                    {
+                        'type': 'list',
+                        'content': {
+                            'items': [
+                                [
+                                    [
+                                        {
+                                            'c': '第二个段落 [tex]y^3[/tex]',
+                                            't': 'text'
+                                        }
+                                    ]
+                                ]
+                            ],
+                            'ordered': True,
+                            'list_nest_level': 1,
+                        }
+                    }
+                ]]
+            },
+            'expected': '第一个段落 $x^2$\n第二个段落 $$y^3$$\n'
+        },
+        # 复杂公式
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'list',
+                        'content': {
+                            'items': [
+                                [
+                                    [
+                                        {
+                                            'c': '复杂公式 [tex]\\frac{x^2 + y^3}{z^4}[/tex] 和 [itex]\\sqrt{x^2 + y^2}[/itex]',
+                                            't': 'text'
+                                        }
+                                    ]
+                                ]
+                            ],
+                            'ordered': True,
+                            'list_nest_level': 1,
+                        }
+                    }
+                ]]
+            },
+            'expected': '复杂公式 $$\\frac{x^2 + y^3}{z^4}$$ 和 $\\sqrt{x^2 + y^2}$\n'
+        }
+    ]
+
+    for case in test_cases:
+        doc = DataJson(case['data'])
+        result = doc.get_content_list().to_txt()
+        assert result == case['expected'], f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result}'"
+
+
+def test_to_nlp_md_with_math_delimiters():
+    """测试 to_nlp_md 方法对数学特殊公式分隔符的处理."""
+    test_cases = [
+        # 基本场景：单个公式
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '这是一个公式 [itex]x^2[/itex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '这是一个公式 $x^2$\n'
+        },
+        # 多个公式组合
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '行内公式 [itex]x^2[/itex] 和行间公式 [tex]y^3[/tex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '行内公式 $x^2$ 和行间公式 $$y^3$$\n'
+        },
+        # 多行文本中的公式
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '第一行文本\n包含公式 [itex]x^2[/itex]\n第三行文本\n包含公式 [tex]y^3[/tex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '第一行文本\n包含公式 $x^2$\n第三行文本\n包含公式 $$y^3$$\n'
+        },
+        # 多个段落
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '第一个段落 [itex]x^2[/itex]',
+                                't': 'text'
+                            }
+                        ]
+                    },
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '第二个段落 [tex]y^3[/tex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '第一个段落 $x^2$\n\n第二个段落 $$y^3$$\n'
+        },
+        # 复杂公式
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'paragraph',
+                        'content': [
+                            {
+                                'c': '复杂公式 [tex]\\frac{x^2 + y^3}{z^4}[/tex] 和 [itex]\\sqrt{x^2 + y^2}[/itex]',
+                                't': 'text'
+                            }
+                        ]
+                    }
+                ]]
+            },
+            'expected': '复杂公式 $$\\frac{x^2 + y^3}{z^4}$$ 和 $\\sqrt{x^2 + y^2}$\n'
+        },
+        # 包含其他格式的文本
+        {
+            'data': {
+                'content_list': [[
+                    {
+                        'type': 'list',
+                        'content': {
+                            'items': [
+                                [
+                                    [
+                                        {
+                                            'c': '**加粗文本** 和 *斜体文本* 中的公式 [itex]x^2[/itex]',
+                                            't': 'text'
+                                        }
+                                    ]
+                                ]
+                            ],
+                            'ordered': True,
+                            'list_nest_level': 1,
+                        }
+                    }
+                ]]
+            },
+            'expected': '1. **加粗文本** 和 *斜体文本* 中的公式 $x^2$\n'
+        }
+    ]
+
+    for case in test_cases:
+        doc = DataJson(case['data'])
+        result = doc.get_content_list().to_nlp_md()
+        assert result == case['expected'], f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result}'"

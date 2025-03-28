@@ -102,6 +102,33 @@ def normalize_ctl_text(text: str) -> str:
     return ret
 
 
+def normalize_math_delimiters(text: str) -> str:
+    """将[tex][/tex]和[itex][/itex]格式的数学公式转换为$$..$$和$..$ 格式.
+
+    这是兜底处理，针对公式被br标签分割后没有识别为公式的情况.
+    处理两种情况:
+    1. 行间公式: [tex]...[/tex] -> $$...$$
+    2. 行内公式: [itex]...[/itex] -> $...$
+    该方法保留公式内容的原始格式，包括换行符和空格。
+    Args:
+        text (str): 包含数学公式的文本
+    Returns:
+        str: 替换数学公式标记后的文本
+    """
+    import re
+
+    # 替换行间公式 [tex]...[/tex] -> $$...$$
+    # 使用非贪婪匹配和DOTALL标志以匹配跨行公式
+    display_pattern = re.compile(r'\[tex\](.*?)\[/tex\]', re.DOTALL)
+    text = display_pattern.sub(lambda m: f'$${m.group(1).strip()}$$', text)
+
+    # 替换行内公式 [itex]...[/itex] -> $...$
+    inline_pattern = re.compile(r'\[itex\](.*?)\[/itex\]', re.DOTALL)
+    text = inline_pattern.sub(lambda m: f'${m.group(1).strip()}$', text)
+
+    return text
+
+
 def normalize_text_segment(text:str) -> str:
     """对文本进行处理，将连续的空格字符转换为1个空格字符.
     2. \t, \r, \f, \v 换成空格
