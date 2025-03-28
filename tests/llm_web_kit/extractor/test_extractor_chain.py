@@ -575,5 +575,5 @@ DEF
         test_data = self.data_json[34]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        result_flag = result.get_content_list()._get_data()[0][37]["content"]["is_complex"]
+        result_flag = result.get_content_list()._get_data()[0][37]['content']['is_complex']
         assert result_flag is False
