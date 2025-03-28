@@ -1,9 +1,14 @@
 import copy
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
-from llm_web_kit.exception.exception import ExtractorChainInputException
-from llm_web_kit.input.datajson import ContentList, DataJson, DataJsonKey
+from llm_web_kit.exception.exception import (ExtractorChainInputException,
+                                             MagicHtmlExtractorException)
+from llm_web_kit.extractor.html.extractor import HTMLPageLayoutType
+from llm_web_kit.input.datajson import (ContentList, DataJson, DataJsonKey,
+                                        DataSourceCategory)
 from llm_web_kit.libs.doc_element_type import DocElementType
 
 
@@ -180,31 +185,32 @@ def test_data_json_deepcopy():
     cl = copied.get('content_list')  # 不该变外部变量d
     assert cl is None
 
-    def test_datajson_to_dict_immutable():
-        """测试to_dict()返回的dict修改不会影响原DataJson对象."""
-        data = {
-            DataJsonKey.DATASET_NAME: 'test_dataset',
-            DataJsonKey.FILE_FORMAT: 'html',
-            DataJsonKey.CONTENT_LIST: [
-                {'type': 'text', 'content': 'test content'}
-            ]
-        }
-        datajson = DataJson(data)
 
-        # Get dict representation
-        dict_data = datajson.to_dict()
+def test_datajson_to_dict_immutable():
+    """测试to_dict()返回的dict修改不会影响原DataJson对象."""
+    data = {
+        DataJsonKey.DATASET_NAME: 'test_dataset',
+        DataJsonKey.FILE_FORMAT: 'html',
+        DataJsonKey.CONTENT_LIST: [
+            {'type': 'text', 'content': 'test content'}
+        ]
+    }
+    datajson = DataJson(data)
 
-        # Modify the returned dict
-        dict_data[DataJsonKey.DATASET_NAME] = 'modified_dataset'
-        dict_data[DataJsonKey.CONTENT_LIST][0]['content'] = 'modified content'
+    # Get dict representation
+    dict_data = datajson.to_dict()
 
-        # Original DataJson should remain unchanged
-        assert datajson.get_dataset_name() == 'test_dataset'
-        assert datajson.get_content_list()._get_data()[0]['content'] == 'test content'
+    # Modify the returned dict
+    dict_data[DataJsonKey.DATASET_NAME] = 'modified_dataset'
+    dict_data[DataJsonKey.CONTENT_LIST][0]['content'] = 'modified content'
 
-        # Verify the modifications only affected the dict copy
-        assert dict_data[DataJsonKey.DATASET_NAME] == 'modified_dataset'
-        assert dict_data[DataJsonKey.CONTENT_LIST][0]['content'] == 'modified content'
+    # Original DataJson should remain unchanged
+    assert datajson.get_dataset_name() == 'test_dataset'
+    assert datajson.get_content_list()._get_data()[0]['content'] == 'test content'
+
+    # Verify the modifications only affected the dict copy
+    assert dict_data[DataJsonKey.DATASET_NAME] == 'modified_dataset'
+    assert dict_data[DataJsonKey.CONTENT_LIST][0]['content'] == 'modified content'
 
 
 def test_data_json_to_nlp_md():
@@ -520,3 +526,86 @@ def test_to_nlp_md_with_math_delimiters():
         doc = DataJson(case['data'])
         result = doc.get_content_list().to_nlp_md()
         assert result == case['expected'], f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result}'"
+
+
+class TestDataJsonGetMagicHtml:
+    base_dir = Path(__file__).parent
+
+    test_cases = [
+        {
+            'input': (
+                'assets/html/magic_main_html_input.html',
+                'http://plainblogaboutpolitics.blogspot.com/2011/12/acceptable.html?m=1'
+            ),
+            'expected': [
+                'assets/output_expected/magic_main_html_output.html'
+            ]
+        }
+    ]
+
+    def setup_method(self):
+        sample_case_one = self.test_cases[0]
+        raw_html_path = self.base_dir.joinpath(sample_case_one['input'][0])
+
+        self.data = {
+            DataJsonKey.DATASET_NAME: 'test_dataset',
+            DataJsonKey.FILE_FORMAT: DataSourceCategory.HTML,
+            'html': raw_html_path.read_text(),
+            'url': sample_case_one['input'][1]
+        }
+        self.data_json = DataJson(self.data)
+
+    def test_get_magic_html_success(self):
+        # Mock the extract_magic_html function to return a known response
+        expected_html_path = self.base_dir.joinpath(self.test_cases[0]['expected'][0])
+        expected_html = expected_html_path.read_text() if expected_html_path.exists() else "<div class='main'>Test Content</div>"
+
+        with patch('llm_web_kit.libs.html_utils.extract_magic_html') as mock_extractor:
+            mock_extractor.return_value = expected_html
+
+            # Call the method being tested
+            result = self.data_json.get_magic_html()
+
+            # Verify the result
+            assert result == expected_html
+
+            # Verify the extractor was called with correct arguments
+            mock_extractor.assert_called_once_with(
+                self.data['html'],
+                self.data['url'],
+                HTMLPageLayoutType.LAYOUT_ARTICLE
+            )
+
+    def test_get_magic_html_error_handling(self):
+        # Test error handling
+        with patch('llm_web_kit.libs.html_utils.extract_magic_html') as mock_extractor:
+            mock_extractor.side_effect = MagicHtmlExtractorException('Test error')
+
+            # Verify that the appropriate exception is raised
+            with pytest.raises(MagicHtmlExtractorException) as excinfo:
+                self.data_json.get_magic_html()
+
+            # Check the error message
+            assert 'Test error' in str(excinfo.value)
+
+    def test_get_magic_html_missing_html(self):
+        # Test with missing HTML content
+        data_without_html = {
+            DataJsonKey.DATASET_NAME: 'test_dataset',
+            DataJsonKey.FILE_FORMAT: DataSourceCategory.HTML,
+            'url': self.data['url']
+        }
+        data_json = DataJson(data_without_html)
+
+        with patch('llm_web_kit.libs.html_utils.extract_magic_html') as mock_extractor:
+            mock_extractor.return_value = ''
+
+            # Should work with None HTML
+            result = data_json.get_magic_html()
+            assert result == ''
+
+            mock_extractor.assert_called_once_with(
+                None,
+                self.data['url'],
+                HTMLPageLayoutType.LAYOUT_ARTICLE
+            )
