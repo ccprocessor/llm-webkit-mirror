@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from enum import Enum
-from typing import Dict, List, Type
+from typing import Dict, List, Type, Union
 
 from llm_web_kit.exception.exception import (ModelInitException,
                                              ModelInputException,
@@ -11,8 +11,8 @@ from llm_web_kit.model.model_interface import (BatchProcessConfig,
                                                PoliticalResponse, PornRequest,
                                                PornResponse,
                                                ResourceRequirement)
-from llm_web_kit.model.policical import (get_singleton_political_detect,
-                                         update_political_by_str)
+from llm_web_kit.model.politics_detector import (
+    GTEModel, get_singleton_political_detect, update_political_by_str)
 
 
 class ModelType(Enum):
@@ -58,15 +58,15 @@ class BaseModelResource(ModelResource):
 class BasePredictor(ModelPredictor):
     """基础预测器类."""
 
-    def __init__(self, language: str):
+    def __init__(self, language: Union[str, List[str]], device_type: DeviceType):
         self.language = language
-        self.model = self._create_model(language)
+        self.model = self._create_model(language, device_type)
 
         # 初始化模型
         self.model.initialize()
 
     @abstractmethod
-    def _create_model(self, language) -> ModelResource:
+    def _create_model(self, language: Union[str, List[str]]) -> ModelResource:
         pass
 
     def get_resource_requirement(self):
@@ -116,16 +116,64 @@ class PoliticalCPUModel(BaseModelResource):
         )
 
 
+class PoliticalGPUModel(BaseModelResource):
+    """涉政检测GPU模型."""
+
+    def _load_model(self):
+        try:
+            model = GTEModel()
+            if model is None:
+                raise RuntimeError('Failed to load political model')
+            return model
+        except Exception as e:
+            raise RuntimeError(f'Failed to load political GPU model: {e}')
+
+    def get_resource_requirement(self):
+        return ResourceRequirement(num_cpus=12, memory_GB=64, num_gpus=1)
+
+    def get_batch_config(self) -> BatchProcessConfig:
+        return BatchProcessConfig(
+            max_batch_size=256, optimal_batch_size=32, min_batch_size=8
+        )
+
+    def predict_batch(self, contents: List[str]) -> List[dict]:
+        if not self.model:
+            raise RuntimeError('Model not initialized')
+        try:
+            # 批量处理
+            results = self.model.predict(contents)
+            return [
+                {'political_prob': result[self.model.get_output_key('prob')]}
+                for result in results
+            ]
+
+        except Exception as e:
+            raise RuntimeError(f'Prediction failed: {e}')
+
+    def convert_result_to_response(self, result: dict) -> ModelResponse:
+        return PoliticalResponse(
+            is_remained=result['political_prob'] > 0.63, details=result
+        )
+
+
 class PoliticalPredictorImpl(BasePredictor):
     """涉政检测预测器实现."""
 
-    def _create_model(self, language: str) -> ModelResource:
-
-        if language in ['zh', 'en']:
+    def _create_model(self, language: Union[str, List[str]], device_type: DeviceType) -> ModelResource:
+        lang_list = language if isinstance(language, list) else [language]
+        for lang in lang_list:
+            if lang not in ['zh', 'en']:
+                raise ModelInitException(
+                    f'Poltical model does not support language: {lang}'
+                )
+        if device_type == DeviceType.CPU:
             return PoliticalCPUModel()
-        raise ModelInitException(
-            f'Poltical model does not support language: {language}'
-        )
+        elif device_type == DeviceType.GPU:
+            return PoliticalGPUModel()
+        else:
+            raise ModelInitException(
+                f'Poltical model does not support device type: {device_type}'
+            )
 
     def predict_batch(
         self, requests: List[PoliticalRequest]
@@ -138,9 +186,9 @@ class PoliticalPredictorImpl(BasePredictor):
 
             for req in requests:
                 # 验证语言支持
-                if req.language != self.language:
+                if req.language not in self.language:
                     raise ModelInputException(
-                        f'Language mismatch: {req.language} vs {self.language}'
+                        f'Language mismatch: {req.language} not in {self.language}'
                     )
                 batch_contents.append(req.content)
 
@@ -240,7 +288,9 @@ class PornZhGPUModel(BaseModelResource):
 class PornPredictorImpl(BasePredictor):
     """色情检测预测器实现."""
 
-    def _create_model(self, language: str) -> ModelResource:
+    def _create_model(self, language: str, device_type: DeviceType) -> ModelResource:
+        if device_type == DeviceType.CPU:
+            raise ModelInitException(f'Porn model does not support device type: {device_type}')
         if language == 'en':
             return PornEnGPUModel()
         elif language == 'zh':
@@ -280,10 +330,10 @@ class ModelFactory:
     }
 
     @classmethod
-    def create_predictor(cls, model_type: ModelType, language: str) -> BasePredictor:
+    def create_predictor(cls, model_type: ModelType, language: Union[str, List[str]], device_type: DeviceType) -> BasePredictor:
         """创建预测器实例."""
         predictor_class = cls._predictor_registry.get(model_type)
         print(predictor_class)
         if not predictor_class:
             raise ValueError(f'No predictor registered for type: {model_type}')
-        return predictor_class(language=language)
+        return predictor_class(language=language, device_type=device_type)

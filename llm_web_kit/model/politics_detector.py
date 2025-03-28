@@ -1,7 +1,10 @@
+import json
 import os
-from typing import Any, Dict, Tuple
+import re
+from typing import Any, Dict, List, Tuple, Union
 
 import fasttext
+import torch
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import ModelInputException
@@ -72,6 +75,110 @@ class PoliticalDetector:
         """
         predictions, probabilities = self.model.predict(token, k=-1)
         return predictions, probabilities
+
+
+class GTEModel():
+    def __init__(self, model_path: str = None) -> None:
+        if not model_path:
+            model_path = self.auto_download()
+        ckpt_path = os.path.join(model_path, 'politics_classifier', 'best_ckpt')
+
+        with open(
+            os.path.join(model_path, 'politics_classifier', 'extra_parameters.json')
+        ) as reader:
+            model_config = json.load(reader)
+
+        using_xformers = model_config.get('using_xformers', True)
+
+        transformers_module = import_transformer()
+        self.tokenizer = transformers_module.AutoTokenizer.from_pretrained(ckpt_path)
+        config = transformers_module.AutoConfig.from_pretrained(ckpt_path, trust_remote_code=True)
+
+        if not using_xformers:
+            config.unpad_inputs = False
+            config.use_memory_efficient_attention = False
+        else:
+            config.unpad_inputs = True
+            config.use_memory_efficient_attention = True
+
+        self.model = transformers_module.AutoModelForSequenceClassification.from_pretrained(
+            ckpt_path,
+            trust_remote_code=True,
+            config=config
+        )
+
+        self.max_tokens = int(model_config.get('max_tokens', 8192))
+        self.device = model_config.get('device', 'cuda')
+        self.cls_index = int(model_config.get('cls_index', 1))
+
+        self.model.eval()
+        self.model.to(self.device, dtype=torch.float16)
+
+        self.tokenizer_config = {
+            'padding': True,
+            'truncation': True,
+            'max_length': self.max_tokens,
+            'return_tensors': 'pt',
+        }
+
+        self.output_prefix = str(model_config.get('output_prefix', '')).rstrip('_')
+        self.output_postfix = str(model_config.get('output_postfix', '')).lstrip('_')
+
+        self.model_name = str(model_config.get('model_name', 'political-25m3'))
+
+    def auto_download(self) -> str:
+        """Default download the 25m3.zip model."""
+        resource_name = 'political-25m3'
+        resource_config = load_config()['resources']
+        political_25m3_config: Dict = resource_config[resource_name]
+        political_25m3_s3 = political_25m3_config['download_path']
+        political_25m3_md5 = political_25m3_config.get('md5', '')
+        # get the zip path calculated by the s3 path
+        zip_path = os.path.join(CACHE_DIR, f'{resource_name}.zip')
+        # the unzip path is calculated by the zip path
+        unzip_path = get_unzip_dir(zip_path)
+        logger.info(f'try to make unzip_path: {unzip_path}')
+        # if the unzip path does not exist, download the zip file and unzip it
+        if not os.path.exists(unzip_path):
+            logger.info(f'unzip_path: {unzip_path} does not exist')
+            logger.info(f'try to unzip from zip_path: {zip_path}')
+            if not os.path.exists(zip_path):
+                logger.info(f'zip_path: {zip_path} does not exist')
+                logger.info(f'downloading {political_25m3_s3}')
+                zip_path = download_auto_file(political_25m3_s3, zip_path, political_25m3_md5)
+            logger.info(f'unzipping {zip_path}')
+            unzip_path = unzip_local_file(zip_path, unzip_path)
+        else:
+            logger.info(f'unzip_path: {unzip_path} exist')
+        return unzip_path
+
+    def pre_process(self, samples: Union[List[str], str]) -> Dict:
+        contents = samples if isinstance(samples, list) else [samples]
+        contents = [re.sub('</s>', '', content) for content in contents]
+
+        inputs = self.tokenizer(contents, **self.tokenizer_config)
+
+        inputs = {name: tensor.to(self.device) for name, tensor in inputs.items()}
+        return {'inputs': inputs}
+
+    def get_output_key(self, f: str):
+        prefix = self.output_prefix if self.output_prefix else self.model_name
+        postfix = f'_{self.output_postfix}' if self.output_postfix else ''
+        return f'{prefix}_{f}{postfix}'
+
+    def predict(self, texts: Union[List[str], str]):
+        inputs_dict = self.pre_process(texts)
+        with torch.no_grad():
+            logits = self.model(**inputs_dict['inputs'])['logits']
+            probs = torch.softmax(logits, dim=-1)[:, self.cls_index].cpu().detach().numpy()
+
+        outputs = []
+        for prob in probs:
+            prob = round(float(prob), 6)
+            output = {self.get_output_key('prob'): prob}
+            outputs.append(output)
+
+        return outputs
 
 
 def get_singleton_political_detect() -> PoliticalDetector:

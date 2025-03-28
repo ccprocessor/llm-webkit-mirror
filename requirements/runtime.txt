@@ -19,3 +19,4 @@ pyahocorasick==2.0.0
 torch>=2.3.0
 tqdm==4.67.1
 transformers==4.40.2
+xformers>=0.0.27
