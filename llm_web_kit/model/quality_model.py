@@ -182,7 +182,7 @@ class QualityModel:
         # 标点长度和占比
         punc_list = bfuncs.character.get_common_punc_list()
         punc_pattern_str = re.escape(''.join(punc_list))
-        punc_pattern = re.compile(r'[' + punc_pattern_str + ']')
+        punc_pattern = re.compile('[' + punc_pattern_str + ']')
         puncs = punc_pattern.findall(content)
         punc_len = sum([len(x) for x in puncs])
         punc_frac = div_zero(punc_len, content_len)

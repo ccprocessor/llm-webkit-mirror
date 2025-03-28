@@ -3,15 +3,19 @@ import re
 from typing import Dict, Tuple
 
 import fasttext
+from langdetect_zh import DetectorFactory, detect_langs
+from langdetect_zh.lang_detect_exception import LangDetectException
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.model.resource_utils import (CACHE_DIR, download_auto_file,
                                               singleton_resource_manager)
 
+DetectorFactory.seed = 0
+
 language_dict = {
     'srp': 'sr', 'swe': 'sv', 'dan': 'da', 'ita': 'it', 'spa': 'es', 'pes': 'fa', 'slk': 'sk', 'hun': 'hu', 'bul': 'bg', 'cat': 'ca',
-    'tur': 'tr', 'ell': 'el', 'eng': 'en', 'nob': 'no', 'fra': 'fr', 'rus': 'ru', 'hrv': 'hr', 'nld': 'nl', 'ind': 'id', 'hye': 'hy',
+    'tur': 'tr', 'ell': 'el', 'eng': 'en', 'nob': 'no', 'fra': 'fr', 'rus': 'ru', 'hrv': 'sr', 'nld': 'nl', 'ind': 'id', 'hye': 'hy',
     'heb': 'he', 'ceb': 'ceb', 'ron': 'ro', 'pol': 'pl', 'kor': 'ko', 'vie': 'vi', 'deu': 'de', 'slv': 'sl', 'por': 'pt', 'ces': 'cs',
     'ukr': 'uk', 'fin': 'fi', 'arb': 'ar', 'tgl': 'tl', 'afr': 'af', 'est': 'et', 'war': 'war', 'zul': 'zu', 'lit': 'lt', 'ilo': 'ilo',
     'kat': 'ka', 'hin': 'hi', 'mkd': 'mk', 'swh': 'sw', 'epo': 'eo', 'sot': 'st', 'tsn': 'tn', 'xho': 'xh', 'lvs': 'lv', 'als': 'als',
@@ -38,7 +42,7 @@ language_dict = {
 class LanguageIdentification:
     """Language Identification model using fasttext."""
 
-    def __init__(self, model_path: str = None):
+    def __init__(self, model_path: str = None, resource_names=None):
         """Initialize LanguageIdentification model Will download the 218.bin
         model if model_path is not provided.
 
@@ -47,21 +51,56 @@ class LanguageIdentification:
         """
 
         if model_path is None:
-            model_path = self.auto_download()
+            downloaded_paths = self.auto_download(resource_names)
+            model_path = downloaded_paths[0]
         self.model = fasttext.load_model(model_path)
 
-    def auto_download(self):
-        """Default download the 218.bin model."""
-        resource_name = 'lang-id-218'
+    def auto_download(self, resource_names=None):
+        """下载指定的模型资源，默认下载'lang-id-218'，支持多模型。"""
+        if resource_names is None:
+            resource_names = ['lang-id-176']  # 保持默认行为
+        elif isinstance(resource_names, str):
+            resource_names = [resource_names]  # 单个资源名转为列表
+
         resource_config = load_config()['resources']
-        lang_id_218_config: dict = resource_config[resource_name]
-        lang_id_218_url = lang_id_218_config['download_path']
-        lang_id_218_sha256 = lang_id_218_config.get('sha256', '')
-        target_path = os.path.join(CACHE_DIR, resource_name, 'model.bin')
-        logger.info(f'try to make target_path: {target_path} exist')
-        target_path = download_auto_file(lang_id_218_url, target_path, sha256_sum=lang_id_218_sha256)
-        logger.info(f'target_path: {target_path} exist')
-        return target_path
+        target_paths = []
+
+        for name in resource_names:
+            if name not in resource_config:
+                logger.error(f"资源 '{name}' 未在配置中找到，跳过下载。")
+                continue
+
+            # 获取资源配置
+            config = resource_config[name]
+            model_url = config['download_path']
+            if name == 'lang-id-176':
+                model_md5 = config.get('md5', '')
+            elif name == 'lang-id-218':
+                model_sha256 = config.get('sha256', '')
+
+            # 构建目标路径（每个模型存放在独立目录）
+            target_dir = os.path.join(CACHE_DIR, name)
+            os.makedirs(target_dir, exist_ok=True)
+            target_path = os.path.join(target_dir, 'model.bin')
+
+            # 下载并验证
+            logger.info(f'开始下载模型 {name} -> {target_path}')
+            if name == 'lang-id-176':
+                downloaded_path = download_auto_file(
+                    resource_path=model_url,
+                    target_path=target_path,
+                    md5_sum=model_md5
+                )
+            elif name == 'lang-id-218':
+                downloaded_path = download_auto_file(
+                    resource_path=model_url,
+                    target_path=target_path,
+                    sha256_sum=model_sha256
+                )
+            target_paths.append(downloaded_path)
+            logger.info(f'模型 {name} 下载完成')
+
+        return target_paths  # 返回所有下载路径的列表
 
     @property
     def version(self) -> str:
@@ -107,7 +146,7 @@ class LanguageIdentification:
         return predictions, probabilities
 
 
-def get_singleton_lang_detect(model_path: str = None) -> LanguageIdentification:
+def get_singleton_lang_detect(resource_names=None, model_name=None) -> LanguageIdentification:
     """Get the singleton language identification model.
 
     Args:
@@ -116,10 +155,10 @@ def get_singleton_lang_detect(model_path: str = None) -> LanguageIdentification:
     Returns:
         LanguageIdentification: The language identification model
     """
-    singleton_name = f'lang_detect_{model_path}' if model_path else 'lang_detect_default'
+    singleton_name = f'lang_detect_{model_name}' if model_name else 'lang_detect_default'
 
     if not singleton_resource_manager.has_name(singleton_name):
-        singleton_resource_manager.set_resource(singleton_name, LanguageIdentification(model_path))
+        singleton_resource_manager.set_resource(singleton_name, LanguageIdentification(resource_names=resource_names))
     return singleton_resource_manager.get_resource(singleton_name)
 
 
@@ -194,7 +233,7 @@ def detect_latex_env(content_str: str) -> bool:
     return latex_env_pattern.search(content_str) is not None
 
 
-def decide_language_func(content_str: str, lang_detect: LanguageIdentification) -> Dict[str, str]:
+def decide_language_func(content_str: str, lang_detect: LanguageIdentification, is_cn_specific=False, use_218e=True,) -> Dict[str, str]:
     """Decide language based on the content string. This function will truncate
     the content string if it is too long. This function will return "empty" if
     the content string is empty.
@@ -240,27 +279,64 @@ def decide_language_func(content_str: str, lang_detect: LanguageIdentification) 
         raise ValueError(f'Unsupported version: {lang_detect.version}. Supported versions: {LANG_ID_SUPPORTED_VERSIONS}')
 
     predictions, probabilities = lang_detect.predict(content_str)
-    language = decide_language_by_prob_v176(predictions, probabilities)
 
-    if lang_detect.version == '218.bin':
-        first_pred = predictions[0]
-        # Extract the full label (e.g., __label__eng_Latn -> eng_Latn)
-        if first_pred.startswith('__label__'):
-            language_details = first_pred.replace('__label__', '')
+    lid_176_pre = decide_language_by_prob_v176(predictions, probabilities)
+    if lid_176_pre in ['zh', 'en', 'ja', 'ko']:
+        if is_cn_specific and lid_176_pre == 'zh':
+            try:
+                lang_probabilities = detect_langs(content_str)
+                return get_max_chinese_lang(lang_probabilities)
+            except LangDetectException:
+                # 可选：添加空字符串检查
+                return {'language': 'zh', 'language_details': ''}
+        else:
+            return {'language': lid_176_pre, 'language_details': ''}
+    elif use_218e is False:
+        return {'language': lid_176_pre, 'language_details': ''}
     else:
-        language_details = 'not_defined'
+        lang_detect_218 = get_singleton_lang_detect(model_name='lid_218',resource_names='lang-id-218')
+        predictions, probabilities = lang_detect_218.predict(content_str)
+        lid_218_pre = predictions[0]
+        label_without_prefix = lid_218_pre.replace('__label__', '')
+        lang_code = label_without_prefix.split('_')[0]
+        lang = language_dict.get(lang_code, lang_code)
+        if lang in ['yue','ko','ja','zh','en']:
+            return {'language': lid_176_pre, 'language_details': ''}
+        else:
+            return {'language': lang, 'language_details': label_without_prefix}
 
-    return {
-        'language': language,
-        'language_details': language_details
-    }
+    # language_details = None
+    # if lang_detect.version == '218.bin':
+    #     first_pred = predictions[0]
+    #     # Extract the full label (e.g., __label__eng_Latn -> eng_Latn)
+    #     if first_pred.startswith('__label__'):
+    #         language_details = first_pred.replace('__label__', '')
 
 
-def update_language_by_str(content_str: str, model_path: str = None) -> Dict[str, str]:
+def get_max_chinese_lang(langs):
+    zh_cn_score = 0
+    zh_tw_score = 0
+
+    for lang in langs:
+        code = lang.lang
+        score = lang.prob
+
+        if code == 'zh-cn':
+            zh_cn_score = score
+        elif code == 'zh-tw':
+            zh_tw_score = score
+
+    if zh_cn_score >= zh_tw_score:
+        return {'language': 'zh', 'language_details': 'zho_Hans'}
+    else:
+        return {'language': 'zh', 'language_details': 'zho_Hant'}
+
+
+def update_language_by_str(content_str: str, is_cn_specific=False, use_218e=True, model_name: str = None) -> Dict[str, str]:
     """Decide language based on the content string and return a dictionary with
     language and details."""
-    lang_detect = get_singleton_lang_detect(model_path)
-    return decide_language_func(content_str, lang_detect)
+    lang_detect = get_singleton_lang_detect(model_name)
+    return decide_language_func(content_str, lang_detect, is_cn_specific , use_218e)
 
 
 if __name__ == '__main__':
