@@ -500,6 +500,18 @@ class DataJson(StructureChecker):
     def get(self, key:str, default=None):
         return self.__json_data.get(key, default)
 
+    def get_magic_html(self, page_layout_type=None):
+        from llm_web_kit.extractor.html.extractor import HTMLPageLayoutType
+        from llm_web_kit.libs.html_utils import extract_magic_html
+
+        if page_layout_type is None:
+            page_layout_type = HTMLPageLayoutType.LAYOUT_ARTICLE
+
+        raw_html = self.get('html')
+        base_url = self.get('url')
+
+        return extract_magic_html(raw_html, base_url, page_layout_type)
+
     def to_json(self, pretty=False) -> str:
         """
         把datajson对象转化为json字符串， content_list对象作为json的content_list键值
