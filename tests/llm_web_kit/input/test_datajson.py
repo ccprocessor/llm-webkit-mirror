@@ -185,31 +185,32 @@ def test_data_json_deepcopy():
     cl = copied.get('content_list')  # 不该变外部变量d
     assert cl is None
 
-    def test_datajson_to_dict_immutable():
-        """测试to_dict()返回的dict修改不会影响原DataJson对象."""
-        data = {
-            DataJsonKey.DATASET_NAME: 'test_dataset',
-            DataJsonKey.FILE_FORMAT: 'html',
-            DataJsonKey.CONTENT_LIST: [
-                {'type': 'text', 'content': 'test content'}
-            ]
-        }
-        datajson = DataJson(data)
 
-        # Get dict representation
-        dict_data = datajson.to_dict()
+def test_datajson_to_dict_immutable():
+    """测试to_dict()返回的dict修改不会影响原DataJson对象."""
+    data = {
+        DataJsonKey.DATASET_NAME: 'test_dataset',
+        DataJsonKey.FILE_FORMAT: 'html',
+        DataJsonKey.CONTENT_LIST: [
+            {'type': 'text', 'content': 'test content'}
+        ]
+    }
+    datajson = DataJson(data)
 
-        # Modify the returned dict
-        dict_data[DataJsonKey.DATASET_NAME] = 'modified_dataset'
-        dict_data[DataJsonKey.CONTENT_LIST][0]['content'] = 'modified content'
+    # Get dict representation
+    dict_data = datajson.to_dict()
 
-        # Original DataJson should remain unchanged
-        assert datajson.get_dataset_name() == 'test_dataset'
-        assert datajson.get_content_list()._get_data()[0]['content'] == 'test content'
+    # Modify the returned dict
+    dict_data[DataJsonKey.DATASET_NAME] = 'modified_dataset'
+    dict_data[DataJsonKey.CONTENT_LIST][0]['content'] = 'modified content'
 
-        # Verify the modifications only affected the dict copy
-        assert dict_data[DataJsonKey.DATASET_NAME] == 'modified_dataset'
-        assert dict_data[DataJsonKey.CONTENT_LIST][0]['content'] == 'modified content'
+    # Original DataJson should remain unchanged
+    assert datajson.get_dataset_name() == 'test_dataset'
+    assert datajson.get_content_list()._get_data()[0]['content'] == 'test content'
+
+    # Verify the modifications only affected the dict copy
+    assert dict_data[DataJsonKey.DATASET_NAME] == 'modified_dataset'
+    assert dict_data[DataJsonKey.CONTENT_LIST][0]['content'] == 'modified content'
 
 
 def test_data_json_to_nlp_md():

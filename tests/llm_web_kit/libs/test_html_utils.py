@@ -1,8 +1,12 @@
 import unittest
+from unittest.mock import MagicMock, patch
 
+import pytest
 from lxml.html import HtmlElement
 
-from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
+from llm_web_kit.exception.exception import MagicHtmlExtractorException
+from llm_web_kit.libs.html_utils import (element_to_html, extract_magic_html,
+                                         html_to_element,
                                          html_to_markdown_table,
                                          remove_element, replace_element,
                                          table_cells_count)
@@ -327,3 +331,39 @@ class TestRemoveElement(unittest.TestCase):
                 # 验证结果
                 result = element_to_html(root)
                 self.assertEqual(result, case['expect'])
+
+
+class TestExtractMagicHtml(unittest.TestCase):
+
+    @patch('llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor')
+    def test_extract_magic_html_success(self, mock_extractor_class):
+        mock_extractor_instance = MagicMock()
+        mock_extractor_class.return_value = mock_extractor_instance
+
+        expected_html = '<body><div>Test Content</div></body>'
+        mock_extractor_instance._extract_main_html.return_value = (expected_html, 'metadata', 'content_type')
+
+        html = '<html><body><div>Test Content</div></body></html>'
+        base_url = 'https://example.com'
+        page_layout_type = 'article'
+
+        result = extract_magic_html(html, base_url, page_layout_type)
+
+        mock_extractor_class.assert_called_once_with({})
+        mock_extractor_instance._extract_main_html.assert_called_once_with(html, base_url, page_layout_type)
+        self.assertEqual(result, expected_html)
+
+    @patch('llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor')
+    def test_extract_magic_html_exception(self, mock_extractor_class):
+        mock_extractor_instance = MagicMock()
+        mock_extractor_class.return_value = mock_extractor_instance
+        mock_extractor_instance._extract_main_html.side_effect = MagicHtmlExtractorException('Test error')
+
+        html = '<html><body><div>Test Content</div></body></html>'
+        base_url = 'https://example.com'
+        page_layout_type = 'article'
+
+        with pytest.raises(MagicHtmlExtractorException) as excinfo:
+            extract_magic_html(html, base_url, page_layout_type)
+
+        self.assertIn('Magic HTML extractor exception#Test error', str(excinfo.value))
