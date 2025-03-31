@@ -145,7 +145,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __extract_tables(self, tree: HtmlElement) -> List[Tuple[HtmlElement, HtmlElement]]:
         """提取html中的table元素."""
         self.__do_extract_tables(tree)
-        print('tree', self._element_to_html(tree))
         new_html = tree
         lst = self.html_split_by_tags(new_html, CCTag.CC_TABLE)
         return lst

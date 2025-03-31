@@ -7,8 +7,7 @@ from overrides import override
 
 from llm_web_kit.exception.exception import ExtractorChainInputException
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import (element_to_html, get_element_text,
-                                         html_to_element,
+from llm_web_kit.libs.html_utils import (get_element_text, html_to_element,
                                          html_to_markdown_table,
                                          table_cells_count)
 from llm_web_kit.libs.text_utils import normalize_math_delimiters
@@ -144,11 +143,7 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 raw_html = content_lst_node['raw_content']
-                if isinstance(raw_html, str):
-                    html_segment = raw_html  # 直接使用字符串
-                else:
-                    html_segment = element_to_html(raw_html)  # 转换HtmlElement为字符串
-                html += html_segment
+                html += raw_html
         return html
 
     def to_json(self, pretty=False) -> str:
