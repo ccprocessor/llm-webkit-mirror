@@ -11,6 +11,15 @@ from llm_web_kit.libs.html_utils import get_element_text, html_to_element
 TEST_CASES = [
     {
         'input': (
+            'assets/cccode/mathorg.html',
+            'https://www.mathorg.cn/forum.php?mod=viewthread&tid=36798&extra=page%3D1',
+        ),
+        'expected': [
+            'assets/cccode/mathorg-0.py',
+        ],
+    },
+    {
+        'input': (
             'assets/cccode/cprograming.html',
             'https://cboard.cprogramming.com/c-programming/96288-one-question-about-array-function-prototype-declaration-printable-thread.html',
         ),
@@ -216,6 +225,8 @@ class TestCodeRecognizer(unittest.TestCase):
         self.chain_config = load_pipe_tpl('html')
 
     def compare_code(self, expect: str, answer: str) -> None:
+        if expect != answer:
+            print(expect, answer)
         self.assertEqual(expect, answer)
         # expect_lines = [line for line in expect.split('\n') if line]
         # answer_lines = [line for line in answer.split('\n') if line]
