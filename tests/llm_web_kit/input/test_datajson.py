@@ -276,6 +276,9 @@ def test_data_json_to_nlp_md():
         assert 'Maandag' not in md
         assert 'frame.open();\nframe.write(html);\nframe.close();' in md
 
+    test_default_exclude()
+    test_custom_exclude()
+
 
 def test_to_txt_with_math_delimiters():
     """测试 to_txt 方法对数学公式分隔符的处理."""
