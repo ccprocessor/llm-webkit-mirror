@@ -21,7 +21,7 @@ class ExtractorFactory:
     ebook_extractor = None
 
     @staticmethod
-    def get_extractor(extractor_type: str):
+    def get_extractor(extractor_type: ExtractorType):
         if extractor_type == ExtractorType.HTML:
             if ExtractorFactory.html_extractor is None:
                 extractor_cfg = load_pipe_tpl('html')

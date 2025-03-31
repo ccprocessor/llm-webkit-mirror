@@ -40,10 +40,6 @@ def test_general_extractor():
         html = f.read()
         general_extractor.extract(html, base_url='http://test.com', html_type='forum', precision=False)
 
-    with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/unicode_exception.html', 'r', encoding='utf-8') as f:
-        html = f.read()
-        general_extractor.extract(html, base_url='http://test.com')
-
 
 def main():
     test_general_extractor()

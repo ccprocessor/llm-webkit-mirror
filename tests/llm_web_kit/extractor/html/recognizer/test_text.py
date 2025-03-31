@@ -74,7 +74,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert "1. The problem statement, all variables and given/known data\n\n A woman of height 1.7 meters stands directly in front of a convex mirror 2.0 meters away. The mirror has a radius of curvature, R=-50cm. Find the location and size of a woman's image using the ray diagram and mirror/lens equation.\n\n----------\n\n 2. The speed of light in a material is 2.50x10^8 meters per second. What is the index of refraction of the material?\n\n 2. Relevant equations\n\n 3. The attempt at a solution\n\n 1. di=22.22\n\n 2. Dont know" in content_md
+        assert "1. The problem statement, all variables and given/known data\n\n A woman of height 1.7 meters stands directly in front of a convex mirror 2.0 meters away. The mirror has a radius of curvature, R=-50cm. Find the location and size of a woman's image using the ray diagram and mirror/lens equation.\n\n\n\n----------\n\n\n\n 2. The speed of light in a material is 2.50x10^8 meters per second. What is the index of refraction of the material?\n\n\n\n\n\n 2. Relevant equations\n\n\n\n\n\n\n\n 3. The attempt at a solution\n\n 1. di=22.22\n\n\n\n 2. Dont know" in content_md
 
     def test_text_4(self):
         """
@@ -96,7 +96,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert '1. The problem statement, all variables and given/known data\n\n 2. Relevant equations\n\n See attachment\n\n 3. The attempt at a solution\n\n I solved the problem' in content_md
+        assert '1. The problem statement, all variables and given/known data\n\n 2. Relevant equations\n\n\n\n See attachment\n\n\n\n 3. The attempt at a solution\n\n I solved the problem' in content_md
 
     def test_text_5(self):
         """
@@ -140,7 +140,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert '1813 года\n\n5864. Лабиринт волшебства, или удивительные приключения восточных принцев, сочинение В. Протопоповича; Москва, 1786 г. - в 8°.\n\n 5865. Лакировальщик' in content_md
+        assert '1813 года\n\n5864. Лабиринт волшебства, или удивительные приключения восточных принцев, сочинение В. Протопоповича; Москва, 1786 г. - в 8°.\n\n\n\n 5865. Лакировальщик' in content_md
 
     def test_text_7(self):
         """
@@ -198,4 +198,4 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert 'So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![:smile:](d80757e36ca9835f7237339959a1fa1d929bb5c5297acb457475459d6da12278 "Smile    :smile:")\n\n)\n\n 1)\n\n In the book' in content_md
+        assert 'So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![:smile:]( "Smile    :smile:")\n\n)\n\n\n\n 1)\n\n In the book' in content_md

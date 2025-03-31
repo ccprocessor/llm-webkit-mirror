@@ -40,7 +40,7 @@ if __name__ == '__main__':
     with open(f'{root}/bench/config/data_math_config.jsonl', 'r') as f:
         for line in f:
             test_data = json.loads(line.strip())
-            content, content_list, statics = eval_ours_extract_html(
+            content, content_list, main_html, statics = eval_ours_extract_html(
                 chain_config,
                 test_data
             )
@@ -48,25 +48,14 @@ if __name__ == '__main__':
             print('URL:', test_data.get('url'))
             print('统计信息:', statics)
 
-            # 读取html
-            html_content = reader.read(
-                f'{root}/bench/{test_data.get("path")}'
-            ).decode('utf-8')
-
-            # 提取main_html
-            from llm_web_kit.extractor.html.extractor import \
-                HTMLFileFormatExtractor
-            htmlExtractor = HTMLFileFormatExtractor(chain_config)
-            main_html, method, title = htmlExtractor._extract_main_html(
-                html_content, test_data.get('url', ''), test_data.get('page_layout_type', 'article')
-            )
-
             out = {
                 'url': test_data.get('url'),
                 'content': content,
                 'main_html': main_html,
                 'content_list': content_list,
-                'html': html_content,
+                'html': reader.read(
+                    f'{root}/bench/{test_data.get("path")}'
+                ).decode('utf-8'),
                 'statics': statics
             }
 
@@ -80,9 +69,10 @@ if __name__ == '__main__':
 
             # 创建对应的输出目录
             output_dir = f'{root}/bench/output/ours/{output_subdir}'
+            os.makedirs(output_dir, exist_ok=True)
 
             # 追加写入结果
-            output_file = f'{output_dir}.jsonl'
+            output_file = f'{output_dir}/data_math_output.jsonl'
             writer.append_write(
                 output_file,
                 json.dumps(out).encode('utf-8') + b'\n'

@@ -16,4 +16,4 @@ class TestSimple(unittest.TestCase):
     def test_extract_html_to_mm_md(self):
         # Setup mock
         mm_md = extract_html_to_mm_md(self.url, self.html_content)
-        self.assertEqual(mm_md, '# Test Content\n\nThis is a test paragraph.\n\n![Test Image](e5db82b5bf63d49d80c5533616892d3386f43955369520986d67653c700fc53c)\n')
+        self.assertEqual(mm_md, '# Test Content\n\nThis is a test paragraph.\n\n![Test Image]( "")\n')

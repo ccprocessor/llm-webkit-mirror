@@ -170,8 +170,8 @@ class XlmrModel(BertModel):
             os.path.join(model_path, 'porn_classifier/extra_parameters.json')
         ) as reader:
             model_config = json.load(reader)
-        self.cls_index = int(model_config.get('cls_index', 1))
-        self.use_sigmoid = bool(model_config.get('use_sigmoid', False))
+
+        self.clip = bool(model_config.get('clip', False))
         self.max_tokens = int(model_config.get('max_tokens', 300))
         self.remain_tail = min(
             self.max_tokens - 1, int(model_config.get('remain_tail', -1))
@@ -197,7 +197,7 @@ class XlmrModel(BertModel):
         self.model_name = str(model_config.get('model_name', 'porn-24m5'))
 
     def auto_download(self) -> str:
-        """Default download the 24m5.zip model."""
+        """Default download the 23w44.zip model."""
         resource_name = 'porn-24m5'
         resource_config = load_config()['resources']
         porn_24m5_config: Dict = resource_config[resource_name]
@@ -221,3 +221,21 @@ class XlmrModel(BertModel):
         else:
             logger.info(f'unzip_path: {unzip_path} exist')
         return unzip_path
+
+    def predict(self, texts: Union[List[str], str]):
+        inputs_dict = self.pre_process(texts)
+        with torch.no_grad():
+            logits = self.model(**inputs_dict['inputs']).logits
+
+            if self.clip:
+                probs = logits.detach().cpu().numpy().clip(min=0, max=1)
+            else:
+                probs = logits.detach().cpu().numpy()
+
+        outputs = []
+        for prob in probs:
+            prob = round(float(prob[0]), 6)
+            output = {self.get_output_key('prob'): prob}
+            outputs.append(output)
+
+        return outputs

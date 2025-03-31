@@ -3,8 +3,8 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.extractor.html.recognizer.code import (classes, tag_code,
-                                                        tag_pre, tag_pre_code)
+from llm_web_kit.extractor.html.recognizer.code import (tag_code, tag_pre,
+                                                        tag_pre_code)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 
@@ -38,33 +38,34 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                 continue
             # root: HtmlElement = html_to_element(html)
             root = html
+            while True:
+                # 最常见:
+                # <pre><code></code></pre>
+                # <code><pre></pre></code>
+                # 使用 pre 来保证 code 内部格式
+                # 所以每一个 code 就是一段代码，只需要切分出code，合并text
+                if tag_pre_code.detect(root):
+                    tag_pre_code.modify_tree(root)
 
-            take_code = False
-            # 最常见:
-            # <pre><code></code></pre>
-            # <code><pre></pre></code>
-            # 使用 pre 来保证 code 内部格式
-            # 所以每一个 code 就是一段代码，只需要切分出code，合并text
-            if tag_pre_code.detect(root):
-                tag_pre_code.modify_tree(root)
-                take_code = True
+                # 次常见:
+                # 只有 code 没有 pre
+                # 网站使用一些 div\span\p\br 来自己控制格式，每个 code 块只有一个单词或者符号。
+                # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
+                if tag_code.detect(root):
+                    tag_code.modify_tree(root)
 
-            # 次常见:
-            # 只有 code 没有 pre
-            # 网站使用一些 div\span\p\br 来自己控制格式，每个 code 块只有一个单词或者符号。
-            # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
-            if tag_code.detect(root):
-                tag_code.modify_tree(root)
-                take_code = True
+                # 只有 pre 没有 code
+                if tag_pre.detect(root):
+                    tag_pre.modify_tree(root)
 
-            # 只有 pre 没有 code
-            if tag_pre.detect(root):
-                tag_pre.modify_tree(root)
-                take_code = True
+                # 最后手段：用fasttext看看又没有可能是代码的
+                # TODO:
 
-            # 如果这个网站没有一种情况 match 到了，那就看看 class 里面又没有带 code 的
-            if not take_code and classes.detect(root):
-                classes.modify_tree(root)
+                # 现在已知两种情况无法处理：
+                # 1. 在线代码编辑器里的代码 (react testcase)
+                # 2. 使用 table 模拟的代码展示 (telerik testcase)
+
+                break
 
             def remove_empty_code(r: HtmlElement):
                 for x in r:

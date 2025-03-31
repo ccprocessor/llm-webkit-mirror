@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import sys
@@ -8,8 +7,7 @@ from unittest.mock import MagicMock, mock_open, patch
 
 from transformers import logging as transformers_logging
 
-from llm_web_kit.model.porn_detector import BertModel, XlmrModel  # noqa: E402
-from llm_web_kit.model.resource_utils import CACHE_DIR
+from llm_web_kit.model.porn_detector import BertModel  # noqa: E402
 
 current_file_path = os.path.abspath(__file__)
 parent_dir_path = os.path.join(current_file_path, *[os.pardir] * 4)
@@ -181,78 +179,6 @@ class TestBertModel(TestCase):
 
         # 验证结果
         self.assertEqual(result, [{'porn-23w44_prob': 0.2}])
-
-
-class TestXlmrModel(TestCase):
-    @patch('llm_web_kit.model.porn_detector.XlmrModel.auto_download')
-    @patch('llm_web_kit.model.porn_detector.import_transformer')
-    @patch('llm_web_kit.model.porn_detector.open', new_callable=mock_open, read_data=json.dumps({
-        'max_tokens': 512,
-        'batch_size':300,
-        'device': 'cuda'
-    }))
-    def setUp(self, mock_open, mock_import, mock_auto_download):
-        mock_auto_download.return_value = '/fake/model/path'
-
-        mock_module = MagicMock()
-        mock_tokenizer = MagicMock()
-        mock_seqcls = MagicMock()
-
-        mock_module.AutoTokenizer.from_pretrained.return_value = mock_tokenizer
-        mock_module.AutoModelForSequenceClassification.from_pretrained.return_value = mock_seqcls
-        mock_import.return_value = mock_module
-
-        self.model_obj = XlmrModel()
-
-        mock_auto_download.assert_called_once()
-        mock_import.assert_called_once()
-        mock_module.AutoTokenizer.from_pretrained.assert_called_once_with('/fake/model/path/porn_classifier/classifier_hf')
-        mock_module.AutoModelForSequenceClassification.from_pretrained.assert_called_once_with(
-            '/fake/model/path/porn_classifier/classifier_hf',
-        )
-
-        mock_open.assert_called_with('/fake/model/path/porn_classifier/extra_parameters.json')
-
-    @patch('llm_web_kit.model.porn_detector.load_config')
-    @patch('llm_web_kit.model.porn_detector.get_unzip_dir')
-    @patch('llm_web_kit.model.porn_detector.download_auto_file')
-    @patch('llm_web_kit.model.porn_detector.unzip_local_file')
-    def test_auto_download(
-        self,
-        mock_unzip_local_file,
-        mock_download_auto_file,
-        mock_get_unzip_dir,
-        mock_load_config,
-    ):
-        mock_load_config.return_value = {
-            'resources': {
-                'porn-24m5': {
-                    'download_path': '/fake/download/path',
-                    'md5': 'fakemd5'
-                }
-            },
-        }
-        mock_get_unzip_dir.return_value = '/fake/unzip/path'
-        zip_path = os.path.join(CACHE_DIR, 'porn-24m5.zip')
-        mock_download_auto_file.return_value = zip_path
-        mock_unzip_local_file.return_value = '/fake/unzip/path'
-
-        result = self.model_obj.auto_download()
-
-        mock_load_config.assert_called_once()
-        mock_get_unzip_dir.assert_called_once_with(zip_path)
-        mock_download_auto_file.assert_called_once_with(
-            '/fake/download/path',
-            zip_path,
-            'fakemd5',
-        )
-        mock_unzip_local_file.assert_called_once_with(zip_path, '/fake/unzip/path')
-
-        self.assertEqual(result, '/fake/unzip/path')
-
-    def test_get_output_key(self):
-        result = self.model_obj.get_output_key('test')
-        self.assertEqual(result, 'porn-24m5_test')
 
 
 if __name__ == '__main__':

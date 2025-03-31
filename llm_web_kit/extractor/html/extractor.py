@@ -103,6 +103,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
         data_json['content_list'] = content_list
         data_json['title'] = title
+
         return data_json
 
     def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str, str]:

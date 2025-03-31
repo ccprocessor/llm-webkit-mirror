@@ -65,8 +65,7 @@ def load_html(html_str: str) -> HtmlElement:
     """
     beginning = html_str[:50].lower()
     html_str = strip_faulty_doctypes(html_str, beginning)
-    html_bytes = html_str.encode('utf-8')
-    tree = fromstring(html_bytes, parser=HTML_PARSER)
+    tree = fromstring(html_str, parser=HTML_PARSER)
     return tree
 
 

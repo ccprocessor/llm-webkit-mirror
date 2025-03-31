@@ -179,26 +179,6 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
         _detect_and_remove_subling_lineno(node.getparent(), depth - 1)
 
 
-def get_full_text(sub_tree: HtmlElement) -> tuple[bool, str, str]:
-    t = ''
-    last_tail = sub_tree.text or ''
-    is_block = False
-    for child in sub_tree.iterchildren(None):
-        is_block, text, tail = get_full_text(child)
-        if not last_tail.isspace() or not is_block:
-            t += last_tail
-        t += text
-        last_tail = tail
-
-    if not last_tail.isspace() or sub_tree.tag not in _BLOCK_ELES:
-        t += last_tail
-
-    if not is_block and sub_tree.tag in _BLOCK_ELES:
-        return True, (t or '') + '\n', sub_tree.tail or ''
-
-    return sub_tree.tag in _BLOCK_ELES or is_block, t, sub_tree.tail or ''
-
-
 def replace_node_by_cccode(
     node: HtmlElement, by: str, in_pre_tag: bool = True, inline: bool = False
 ) -> None:
@@ -227,23 +207,19 @@ def replace_node_by_cccode(
             if sub_node.tail:
                 sub_node.tail = remove_html_newline_and_spaces(sub_node.tail)
 
-    if in_pre_tag:
-        for block_ele in _BLOCK_ELES:
-            x = f'.//{block_ele}'
-            for ele in node.xpath(x):
-                assert isinstance(ele, HtmlElement)
+    for block_ele in _BLOCK_ELES:
+        x = f'.//{block_ele}'
+        for ele in node.xpath(x):
+            assert isinstance(ele, HtmlElement)
 
-                # 如果树最右链的一个子元素是分块元素,那分块就没有必要换行
-                if hit_last_leaf(ele):
-                    continue
+            # 如果树最右链的一个子元素是分块元素,那分块就没有必要换行
+            if hit_last_leaf(ele):
+                continue
 
-                ele.tail = ('\n' + ele.tail) if ele.tail else ('\n')  # type: ignore
-        full_text = ''.join(node.itertext(None))
-    else:
-        _, full_text, _ = get_full_text(node)
+            ele.tail = ('\n' + ele.tail) if ele.tail else ('\n')  # type: ignore
 
-    full_text = full_text.replace('\r\n', '\n').replace('\r', '\n').replace(' ', ' ')
-    chunks = [sub_text.rstrip() for sub_text in full_text.split('\n')]
+    full_text = ''.join(node.itertext(None)).replace('\r\n', '\n').replace('\r', '\n')
+    chunks = [sub_text.replace(' ', ' ').rstrip() for sub_text in full_text.split('\n')]
 
     while len(chunks) > 0 and not chunks[0]:
         chunks = chunks[1:]

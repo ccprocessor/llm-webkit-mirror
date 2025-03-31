@@ -152,14 +152,10 @@ def html_to_markdown_table(table_html_source: str) -> str:
     if max_cols == 0:
         return ''
     markdown_table = []
-    first_row = rows[0]
+
     # 检查第一行是否是表头并获取表头内容
-    first_row_tags = first_row.xpath('.//th | .//td')
-    if not first_row_tags:
-        # 如果第一行没有td/th，则取整行内容作为表头
-        headers = [_escape_table_cell(first_row.text_content().strip())]
-    else:
-        headers = [_escape_table_cell(tag.text_content().strip()) for tag in first_row_tags]
+    first_row_tags = rows[0].xpath('.//th | .//td')
+    headers = [_escape_table_cell(tag.text_content().strip()) for tag in first_row_tags]
     # 如果表头存在，添加表头和分隔符，并保证表头与最大列数对齐
     if headers:
         while len(headers) < max_cols:
@@ -174,11 +170,8 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
     # 添加表格内容，跳过已被用作表头的第一行（如果有的话）
     for row in rows[1:]:
-        cells = row.xpath('.//td | .//th')
-        if not cells:  # 无td/th时取整行内容，放到第一个单元格
-            columns = [_escape_table_cell(row.text_content().strip())]
-        else:
-            columns = [_escape_table_cell(cell.text_content().strip()) for cell in cells]
+        columns = [_escape_table_cell(td.text_content().strip()) for td in row.xpath('.//td | .//th')]
+        # 如果这一行的列数少于最大列数，则补充空白单元格
         while len(columns) < max_cols:
             columns.append('')
         markdown_table.append('| ' + ' | '.join(columns) + ' |')
@@ -188,32 +181,19 @@ def html_to_markdown_table(table_html_source: str) -> str:
 
 
 def table_cells_count(table_html_source: str) -> int:
-    """获取表格的单元格数量. 当只有1个单元格时，这个table就要被当做普通的一个段落处理。 只计算有实际内容的单元格数量。
-
+    """获取表格的单元格数量.
+    当只有1个单元格时，这个table就要被当做普通的一个段落处理。
     Args:
         table_html_source: str: 被<table>标签包裹的html代码片段(含<table>标签)
 
     Returns:
-        int: 有内容的单元格数量
+        int: 单元格数量
     """
     table_el = html_to_element(table_html_source)
-    cell_count = 0
-
-    # 获取所有行
-    rows = table_el.xpath('.//tr')
-    for row in rows:
-        # 先检查是否有 td 或 th
-        cells = row.xpath('.//td | .//th')
-        if cells:
-            # 如果有 td 或 th，计算有内容的单元格
-            cell_count += sum(1 for cell in cells if cell.text_content().strip())
-        else:
-            # 如果没有 td 或 th，检查 tr 是否直接包含内容
-            row_content = row.text_content().strip()
-            if row_content:
-                cell_count += 1
-
-    return cell_count
+    # 计算 <table> 中的 <td> 和 <th> 单元格数量
+    cells = table_el.xpath('.//td | .//th')
+    number_of_cells = len(cells)
+    return number_of_cells
 
 
 def convert_html_to_entity(html_source) -> str:
@@ -248,22 +228,3 @@ def remove_element(element: HtmlElement):
             previous.tail = (previous.tail or '') + element.tail
 
     parent.remove(element)
-
-
-def extract_magic_html(html, base_url, page_layout_type):
-    """提取magic html.
-
-    Args:
-        html: str: html字符串
-        base_url: str: 基础url
-        page_layout_type: str: 页面布局类型
-    """
-    from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
-
-    extractor = HTMLFileFormatExtractor({})
-    try:
-        main_html, _, _ = extractor._extract_main_html(html, base_url, page_layout_type)
-        return main_html
-    except Exception as e:
-        from llm_web_kit.exception.exception import MagicHtmlExtractorException
-        raise MagicHtmlExtractorException(f'extract_magic_html error: {e}')

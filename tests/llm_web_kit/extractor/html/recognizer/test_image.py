@@ -53,17 +53,6 @@ TEST_CASES_HTML = [
         'expected': 3,
         'ccimg_html': """<html lang="ua"><body><div class="wrapper"><footer class="footer" id="layout-footer"><div class="footer_top row justify-content-md-between"><div class="col-md-6 col-lg-5"><div class="item first"><ccimage by="img" html=\'&lt;img src="/storage/app/sites/23/logo.svg" alt="" class="footer_logo lowvision_image_filter"&gt;\n\n                    \' format="url">https://bukoda.gov.ua/storage/app/sites/23/logo.svg</ccimage></div></div></div></footer></div></body></html>"""
     },
-    {
-        'input': 'assets/ccimage/figure_airtical.html',
-        'base_url': 'https://www.d-pt.pl/kadry/k/r/1/e1/e2/5c3e22422788a_o.jpg?1579181095',
-        'expected': 4,
-        'ccimg_html': """<html lang="pl-PL" prefix="og: https://ogp.me/ns#"><body class="product-template-default single single-product postid-2386 theme-starter woocommerce woocommerce-page woocommerce-no-js tinvwl-theme-style"><header class="Header bg-white py-8 lg:py-0 sticky lg:fixed lg:w-full left-0 top-0 transition-all duration-300 z-50"><div class="Container flex justify-between items-center"><div class="Header__logo"><a href="http://15.demooo.pl"><ccimage by="img" html=\'&lt;img src="http://15.demooo.pl/wp-content/themes/starter/dist/images/logos/janser-logo.svg" alt="Janser Logo"&gt;\' format="url" alt="Janser Logo">http://15.demooo.pl/wp-content/themes/starter/dist/images/logos/janser-logo.svg</ccimage></a></div></div></header></body></html>"""
-    },
-    {
-        'input': 'assets/ccimage/svg_e.html',
-        'base_url': 'https://onlinelibrary.wiley.com/doi/10.1155/2012/387626',
-        'expected': 27,
-    },
 ]
 
 TEST_CC_CASE = [

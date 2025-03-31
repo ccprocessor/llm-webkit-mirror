@@ -45,7 +45,6 @@ class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
     4. 连续的\r转换成1个
     5. 连续的\f转换成1个
     6. 连续的\v转换成1个
-    7. 去掉不可见字符、乱码
 
     Args:
         BaseFileFormatPostExtractor (_type_): 一个基础的规则过滤提取器
@@ -80,8 +79,6 @@ class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
                     for item in content_node['content']['items']:
                         for para_idx, para in enumerate(item):
                             item[para_idx] = self.__do_normalize_text(para)
-                elif content_node['type'] == DocElementType.TITLE:
-                    content_node['content']['title_content'] = normalize_text_segment(content_node['content']['title_content'])
         return data_json
 
     def __do_normalize_text(self, paragraph: list[dict]) -> list[dict]:
@@ -96,7 +93,7 @@ class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
         for segment in paragraph:
             text = segment['c']
             text_type = segment['t']
-            if text_type not in [ParagraphTextType.CODE_INLINE]:  # skip code & math
+            if text_type not in [ParagraphTextType.CODE_INLINE]:  # skip code
                 segment['c'] = normalize_text_segment(text)
         return paragraph
 

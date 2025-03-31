@@ -396,7 +396,7 @@
 <b>content字段说明</b>
 
 - content是一个数组，每个元素是一个对象，包含3个字段，`c`和`t`,`bbox`。 c是内容，t是类型，bbox是坐标。
-- t的取值有3种，`text`和`equation-inline`和`md`, `code-inline`，分别表示纯文本和行内公式和markdown。
+- t的取值有3种，`text`和`equation-inline`和`md`，分别表示纯文本和行内公式和markdown。
 - `bbox`是一个数组，表示元素的坐标，\[x1, y1, x2, y2\]。 (x1, y1)左上角坐标，(x2, y2)右下角坐标。
 
 ## 参考
