@@ -179,6 +179,26 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
         _detect_and_remove_subling_lineno(node.getparent(), depth - 1)
 
 
+def get_full_text(sub_tree: HtmlElement) -> tuple[bool, str, str]:
+    t = ''
+    last_tail = sub_tree.text or ''
+    is_block = False
+    for child in sub_tree.iterchildren(None):
+        is_block, text, tail = get_full_text(child)
+        if not last_tail.isspace() or not is_block:
+            t += last_tail
+        t += text
+        last_tail = tail
+
+    if not last_tail.isspace() or sub_tree.tag not in _BLOCK_ELES:
+        t += last_tail
+
+    if not is_block and sub_tree.tag in _BLOCK_ELES:
+        return True, (t or '') + '\n', sub_tree.tail or ''
+
+    return sub_tree.tag in _BLOCK_ELES or is_block, t, sub_tree.tail or ''
+
+
 def replace_node_by_cccode(
     node: HtmlElement, by: str, in_pre_tag: bool = True, inline: bool = False
 ) -> None:
@@ -206,25 +226,6 @@ def replace_node_by_cccode(
                 sub_node.text = remove_html_newline_and_spaces(sub_node.text)
             if sub_node.tail:
                 sub_node.tail = remove_html_newline_and_spaces(sub_node.tail)
-
-    def get_full_text(sub_tree: HtmlElement) -> tuple[bool, str, str]:
-        t = ''
-        last_tail = sub_tree.text or ''
-        is_block = False
-        for child in sub_tree.iterchildren(None):
-            is_block, text, tail = get_full_text(child)
-            if not last_tail.isspace() or not is_block:
-                t += last_tail
-            t += text
-            last_tail = tail
-
-        if not last_tail.isspace() or sub_tree.tag not in _BLOCK_ELES:
-            t += last_tail
-
-        if not is_block and sub_tree.tag in _BLOCK_ELES:
-            return True, (t or '') + '\n', sub_tree.tail or ''
-
-        return sub_tree.tag in _BLOCK_ELES or is_block, t, sub_tree.tail or ''
 
     if in_pre_tag:
         for block_ele in _BLOCK_ELES:
