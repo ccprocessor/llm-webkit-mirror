@@ -145,6 +145,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __extract_tables(self, tree: HtmlElement) -> List[Tuple[HtmlElement, HtmlElement]]:
         """提取html中的table元素."""
         self.__do_extract_tables(tree)
+        print('tree', self._element_to_html(tree))
         new_html = tree
         lst = self.html_split_by_tags(new_html, CCTag.CC_TABLE)
         return lst
@@ -280,7 +281,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             table_raw_html = self._element_to_html(root)
             table_type = self.__get_table_type(root)
             table_nest_level = self.__is_table_nested(root)
-            tail_text = root.tail
+            tail_text = None
             table_body = self.__get_table_body(table_type, table_nest_level, root)
             cc_element = self._build_cc_element(
                 CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, table_nest_level=table_nest_level,

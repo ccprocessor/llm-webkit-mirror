@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 36
+        assert len(self.data_json) == 39
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -315,7 +315,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         main_html = result.get_content_list().to_main_html()
-        assert 'public int hashCode()' in main_html
+        assert 'public int hashCode()' in main_html
 
     def test_table_involve_inline_code(self):
         """
@@ -587,3 +587,36 @@ DEF
         result = chain.extract(input_data)
         result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
         assert result_flag is False
+
+    def test_maigc_html(self):
+        """测试magic-html."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[36]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_magic_html()
+        assert len(result_md) > 0
+
+    def test_table_tail_repeat(self):
+        """测试table的tail重复."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[37]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        text = """
+A few explanations on why certain things in business are so.
+        """
+        assert result_md.count(text.strip()) == 1
+
+    def test_title_include_special_char(self):
+        """测试title包含特殊字符."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[38]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list()._get_data()
+        assert result_md[0][0]['content']['title_content'] == 'View source for Semi-continuous decomposition'

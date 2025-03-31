@@ -80,6 +80,8 @@ class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
                     for item in content_node['content']['items']:
                         for para_idx, para in enumerate(item):
                             item[para_idx] = self.__do_normalize_text(para)
+                elif content_node['type'] == DocElementType.TITLE:
+                    content_node['content']['title_content'] = normalize_text_segment(content_node['content']['title_content'])
         return data_json
 
     def __do_normalize_text(self, paragraph: list[dict]) -> list[dict]:
