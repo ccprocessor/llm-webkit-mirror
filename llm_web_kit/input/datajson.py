@@ -7,6 +7,7 @@ from overrides import override
 
 from llm_web_kit.exception.exception import ExtractorChainInputException
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
+from llm_web_kit.libs.encode import sha256_hash
 from llm_web_kit.libs.html_utils import (get_element_text, html_to_element,
                                          html_to_markdown_table,
                                          table_cells_count)
@@ -52,7 +53,7 @@ class StructureMapper(ABC):
         self.__text_end = '\n'
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
-        self.__md_special_chars = ['#', '`', '$']  # TODO: 先去掉$，会影响行内公式，后面再处理
+        self.__md_special_chars = ['#', '`', '$']  # TODO 拼装table的时候还应该转义掉|符号
         self.__nodes_document_type = [DocElementType.MM_NODE_LIST, DocElementType.PARAGRAPH, DocElementType.LIST, DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.TITLE, DocElementType.IMAGE, DocElementType.AUDIO, DocElementType.VIDEO, DocElementType.CODE, DocElementType.EQUATION_INTERLINE]
         self.__inline_types_document_type = [ParagraphTextType.EQUATION_INLINE, ParagraphTextType.CODE_INLINE]
 
@@ -153,7 +154,7 @@ class StructureMapper(ABC):
         else:
             return json.dumps(content_lst, ensure_ascii=False)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> list[dict]:
         return copy.deepcopy(self._get_data())
 
     @abstractmethod
@@ -192,6 +193,9 @@ class StructureMapper(ABC):
             image_alt = content_lst_node['content'].get('alt', '')
             image_title = content_lst_node['content'].get('title', '')
             image_caption = content_lst_node['content'].get('caption', '')
+            image_url = content_lst_node['content'].get('url', '')
+            if not image_path and not image_data:
+                image_path = sha256_hash(image_url)
 
             if image_alt:
                 image_alt = image_alt.strip()
@@ -202,11 +206,15 @@ class StructureMapper(ABC):
             image_des = image_title if image_title else image_caption if image_caption else ''
             # 优先使用data, 其次path.其中data是base64编码的图片，path是图片的url
             if image_data:
-                image = f'![{image_alt}]({image_data} "{image_des}")'
-            elif image_path:
-                image = f'![{image_alt}]({image_path} "{image_des}")'
+                if image_des:
+                    image = f'![{image_alt}]({image_data} "{image_des}")'
+                else:
+                    image = f'![{image_alt}]({image_data})'
             else:
-                image = f'![{image_alt}]({image_path} "{image_des}")'
+                if image_des:
+                    image = f'![{image_alt}]({image_path} "{image_des}")'
+                else:
+                    image = f'![{image_alt}]({image_path})'
             return image
         elif node_type == DocElementType.AUDIO:
             return ''  # TODO: 音频格式

@@ -265,8 +265,8 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         print(result.get_content_list()._get_data())
-        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
-        self.assertNotIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt())
+        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)](dda09be3795fa0df88c094ca906adf77086f1741b4d5634536997146deeda777)', result.get_content_list().to_mm_md())
+        self.assertNotIn('![點(diǎn)擊進(jìn)入下一頁(yè)](dda09be3795fa0df88c094ca906adf77086f1741b4d5634536997146deeda777)', result.get_content_list().to_txt())
 
     def test_lineno_detect(self):
         chain = ExtractSimpleFactory.create(self.config)
