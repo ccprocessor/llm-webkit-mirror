@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 31
+        assert len(self.data_json) == 39
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -265,8 +265,8 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         print(result.get_content_list()._get_data())
-        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_mm_md())
-        self.assertNotIn('![點(diǎn)擊進(jìn)入下一頁(yè)]( "")', result.get_content_list().to_txt())
+        self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)](dda09be3795fa0df88c094ca906adf77086f1741b4d5634536997146deeda777)', result.get_content_list().to_mm_md())
+        self.assertNotIn('![點(diǎn)擊進(jìn)入下一頁(yè)](dda09be3795fa0df88c094ca906adf77086f1741b4d5634536997146deeda777)', result.get_content_list().to_txt())
 
     def test_lineno_detect(self):
         chain = ExtractSimpleFactory.create(self.config)
@@ -314,8 +314,8 @@ DEF
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        main_html = result.get_content_list().to_main_html()
-        assert 'public int hashCode()' in main_html
+        main_html = result.get_content_list().to_mm_md()
+        assert 'public int hashCode()' in main_html
 
     def test_table_involve_inline_code(self):
         """
@@ -537,3 +537,86 @@ DEF
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
         self.assertIn(r'$alpha = \left(alpha_1, alpha_2, ldots, alpha_n\right) ,!$', result_md)
+
+    def test_table_span_error(self):
+        """测试table的span标签错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[31]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
+        assert result_flag is True
+
+    def test_table_colspan_error(self):
+        """测试table的colspan标签为字符串引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[32]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][15]['content']['is_complex']
+        assert result_flag is False
+
+    def test_table_colspan_percent_err(self):
+        """测试table的colspan标签为百分数引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[33]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
+        assert result_flag is True
+
+    def test_table_colspan_str_error(self):
+        """测试table的colspan标签为字符串引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[34]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][37]['content']['is_complex']
+        assert result_flag is False
+
+    def test_table_invalid_percent(self):
+        """测试table的colspan标签为百分数引起的异常错误."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[35]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_flag = result.get_content_list()._get_data()[0][0]['content']['is_complex']
+        assert result_flag is False
+
+    def test_maigc_html(self):
+        """测试magic-html."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[36]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_magic_html()
+        assert len(result_md) > 0
+
+    def test_table_tail_repeat(self):
+        """测试table的tail重复."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[37]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        text = """
+A few explanations on why certain things in business are so.
+        """
+        assert result_md.count(text.strip()) == 1
+
+    def test_title_include_special_char(self):
+        """测试title包含特殊字符."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[38]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list()._get_data()
+        assert result_md[0][0]['content']['title_content'] == 'View source for Semi-continuous decomposition'

@@ -4,6 +4,7 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
+from llm_web_kit.exception.exception import HtmlTitleRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
@@ -148,5 +149,4 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             text = ele.text
             return level, text
         else:
-            # TODO 抛出异常, 需要自定义
-            raise ValueError(f'{html}中没有cctitle标签')
+            raise HtmlTitleRecognizerException(f'{html}中没有cctitle标签')
