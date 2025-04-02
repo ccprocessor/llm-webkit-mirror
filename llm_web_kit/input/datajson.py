@@ -7,8 +7,8 @@ from overrides import override
 
 from llm_web_kit.exception.exception import ExtractorChainInputException
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import (element_to_html, get_element_text,
-                                         html_to_element,
+from llm_web_kit.libs.encode import sha256_hash
+from llm_web_kit.libs.html_utils import (get_element_text, html_to_element,
                                          html_to_markdown_table,
                                          table_cells_count)
 from llm_web_kit.libs.text_utils import normalize_math_delimiters
@@ -53,7 +53,7 @@ class StructureMapper(ABC):
         self.__text_end = '\n'
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
-        self.__md_special_chars = ['#', '`', '$']  # TODO: 先去掉$，会影响行内公式，后面再处理
+        self.__md_special_chars = ['#', '`', '$']  # TODO 拼装table的时候还应该转义掉|符号
         self.__nodes_document_type = [DocElementType.MM_NODE_LIST, DocElementType.PARAGRAPH, DocElementType.LIST, DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.TITLE, DocElementType.IMAGE, DocElementType.AUDIO, DocElementType.VIDEO, DocElementType.CODE, DocElementType.EQUATION_INTERLINE]
         self.__inline_types_document_type = [ParagraphTextType.EQUATION_INLINE, ParagraphTextType.CODE_INLINE]
 
@@ -144,11 +144,7 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 raw_html = content_lst_node['raw_content']
-                if isinstance(raw_html, str):
-                    html_segment = raw_html  # 直接使用字符串
-                else:
-                    html_segment = element_to_html(raw_html)  # 转换HtmlElement为字符串
-                html += html_segment
+                html += raw_html
         return html
 
     def to_json(self, pretty=False) -> str:
@@ -158,7 +154,7 @@ class StructureMapper(ABC):
         else:
             return json.dumps(content_lst, ensure_ascii=False)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> list[dict]:
         return copy.deepcopy(self._get_data())
 
     @abstractmethod
@@ -197,6 +193,9 @@ class StructureMapper(ABC):
             image_alt = content_lst_node['content'].get('alt', '')
             image_title = content_lst_node['content'].get('title', '')
             image_caption = content_lst_node['content'].get('caption', '')
+            image_url = content_lst_node['content'].get('url', '')
+            if not image_path and not image_data:
+                image_path = sha256_hash(image_url)
 
             if image_alt:
                 image_alt = image_alt.strip()
@@ -207,11 +206,15 @@ class StructureMapper(ABC):
             image_des = image_title if image_title else image_caption if image_caption else ''
             # 优先使用data, 其次path.其中data是base64编码的图片，path是图片的url
             if image_data:
-                image = f'![{image_alt}]({image_data} "{image_des}")'
-            elif image_path:
-                image = f'![{image_alt}]({image_path} "{image_des}")'
+                if image_des:
+                    image = f'![{image_alt}]({image_data} "{image_des}")'
+                else:
+                    image = f'![{image_alt}]({image_data})'
             else:
-                image = f'![{image_alt}]({image_path} "{image_des}")'
+                if image_des:
+                    image = f'![{image_alt}]({image_path} "{image_des}")'
+                else:
+                    image = f'![{image_alt}]({image_path})'
             return image
         elif node_type == DocElementType.AUDIO:
             return ''  # TODO: 音频格式
@@ -499,6 +502,18 @@ class DataJson(StructureChecker):
 
     def get(self, key:str, default=None):
         return self.__json_data.get(key, default)
+
+    def get_magic_html(self, page_layout_type=None):
+        from llm_web_kit.extractor.html.extractor import HTMLPageLayoutType
+        from llm_web_kit.libs.html_utils import extract_magic_html
+
+        if page_layout_type is None:
+            page_layout_type = HTMLPageLayoutType.LAYOUT_ARTICLE
+
+        raw_html = self.get('html')
+        base_url = self.get('url')
+
+        return extract_magic_html(raw_html, base_url, page_layout_type)
 
     def to_json(self, pretty=False) -> str:
         """

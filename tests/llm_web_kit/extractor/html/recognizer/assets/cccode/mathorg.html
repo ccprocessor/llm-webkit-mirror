@@ -1,0 +1,187 @@
+<div>
+  <tr>
+    <td class="pls" rowspan="2">
+      <div id="favatar165560" class="pls cl favatar">
+        <div class="pi">
+          <div class="authi"><a href="https://www.mathorg.cn/home.php?mod=space&amp;uid=2683" target="_blank"
+              class="xw1">xida</a></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi"><strong><a href="https://www.mathorg.cn/forum.php?mod=viewthread&amp;tid=36795" id="postnum165560"
+            onclick="setCopy(this.href, '帖子地址复制成功');return false;"><em>1</em></a></strong></div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi"><strong><a href="https://www.mathorg.cn/forum.php?mod=viewthread&amp;tid=36795" id="postnum165560"
+            onclick="setCopy(this.href, '帖子地址复制成功');return false;"><sup>#</sup></a></strong></div>
+    </td>
+  </tr>
+</div><img class="authicn vm" id="authicon165560" src="static/image/common/online_member.gif">
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><em id="authorposton165560">发表于 2016-10-13 20:38:01</em></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><span class="pipe">|</span></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><a
+              href="https://www.mathorg.cn/forum.php?mod=viewthread&amp;tid=36795&amp;page=1&amp;authorid=2683"
+              rel="nofollow">只看该作者</a></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><span class="pipe show">|</span></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><a
+              href="https://www.mathorg.cn/forum.php?mod=viewthread&amp;tid=36795&amp;extra=page%3D1&amp;ordertype=1"
+              class="show">倒序浏览</a></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><span class="pipe show">|</span></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pi">
+        <div class="pti">
+          <div class="authi"><a href="javascript:;" onclick="readmode($('thread_subject').innerHTML, 165560);"
+              class="show">阅读模式</a></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<table cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="t_f" id="postmessage_165560">
+      Newton 分形也是分形里面比较基本的一种，我一直没有写它也是因为觉得可能太容易了。按习惯我写之前先去网上搜索了一下代码，发现居然没有一个能看的。只好自己动手做了一个，效果如下：<br><br>
+      多项式 ，染色方案 'hot'：<br><br><br><br>
+      这里有两个关键：<br><br>
+      第一是要使用合适的公式来平滑；第二是要使用 matplotlib 提供的 colormap，而不是自己造轮子定义一个。matplotlib 在显示图像的时候默认会有一个 bilinear 插值，帮你再平滑一次，所以效果比用
+      PIL 好多了。<br><br><br>
+      图形版只有我一个人支撑是不够的，希望大家都积极 po 出自己作品，形成讨论和交流的气氛。<br><br>
+      还有，不知道有没有童鞋是受到这个版块的帖子吸引，开始学习 Python 的呢？有的话可以来报个到。<br><br><br>
+      上面这幅图像的代码如下：<div class="blockcode">
+        <div id="code_W2c">
+          <ol>
+            <li>import numpy as np<br></li>
+            <li>import matplotlib.pyplot as plt<br></li>
+            <li><br></li>
+            <li><br></li>
+            <li>f = np.poly1d([1, 0, 0, -1])<br></li>
+            <li>df = np.polyder(f)<br></li>
+            <li><br></li>
+            <li>def iterate(z):<br></li>
+            <li>    i = 0<br></li>
+            <li>    while abs(f(z)) &gt; 0.0001:<br></li>
+            <li>        with np.errstate(all='ignore'):<br></li>
+            <li>            w = z - f(z)/df(z)<br></li>
+            <li>            i += np.exp(-1/abs(w-z))<br></li>
+            <li>            z = w<br></li>
+            <li>    return i<br></li>
+            <li><br></li>
+            <li>y, x = np.ogrid[1:-1:600j, -1:1:600j]<br></li>
+            <li>z = x + y*1j<br></li>
+            <li>img = np.frompyfunc(iterate, 1, 1)(z).astype(np.float)<br></li>
+            <li>fig = plt.figure(figsize=(4, 4), dpi=100)<br></li>
+            <li>ax = fig.add_axes([0, 0, 1, 1], aspect=1)<br></li>
+            <li>ax.axis('off')<br></li>
+            <li>ax.imshow(img, cmap='hot')<br></li>
+            <li>fig.savefig('newton.png')</li>
+          </ol>
+        </div><em onclick="copycode($('code_W2c'));">复制代码</em>
+      </div>
+    </td>
+  </tr>
+</table>
+<h3><strong>本帖子中包含更多资源</strong></h3>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pct">
+        <div class="pcb">
+          <div class="t_fsz">
+            <div class="attach_nopermission attach_tips">
+              <div>
+                <p>您需要 <a href="member.php?mod=logging&amp;action=login"
+                    onclick="showWindow('login', this.href);return false;">登录</a> 才可以下载或查看，没有账号？<a
+                    href="member.php?mod=register" title="注册账号">邀请</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>
+<div>
+  <tr>
+    <td class="plc">
+      <div class="pct">
+        <div class="pcb">
+          <div class="t_fsz">
+            <div class="attach_nopermission attach_tips"><span class="atips_close"
+                onclick="this.parentNode.style.display='none'">×</span></div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</div>

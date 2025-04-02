@@ -248,3 +248,22 @@ def remove_element(element: HtmlElement):
             previous.tail = (previous.tail or '') + element.tail
 
     parent.remove(element)
+
+
+def extract_magic_html(html, base_url, page_layout_type):
+    """提取magic html.
+
+    Args:
+        html: str: html字符串
+        base_url: str: 基础url
+        page_layout_type: str: 页面布局类型
+    """
+    from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
+
+    extractor = HTMLFileFormatExtractor({})
+    try:
+        main_html, _, _ = extractor._extract_main_html(html, base_url, page_layout_type)
+        return main_html
+    except Exception as e:
+        from llm_web_kit.exception.exception import MagicHtmlExtractorException
+        raise MagicHtmlExtractorException(f'extract_magic_html error: {e}')

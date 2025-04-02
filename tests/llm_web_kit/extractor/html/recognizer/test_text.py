@@ -198,4 +198,4 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert 'So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![:smile:]( "Smile    :smile:")\n\n)\n\n 1)\n\n In the book' in content_md
+        assert 'So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![:smile:](d80757e36ca9835f7237339959a1fa1d929bb5c5297acb457475459d6da12278 "Smile    :smile:")\n\n)\n\n 1)\n\n In the book' in content_md
