@@ -554,3 +554,45 @@ import com.dao.UsersDao;
 """
         # 无须检查内容，只要不爆错就可以了
         _ = self.rec.recognize('', [(html_to_element(html), html_to_element(html))], html)
+
+    def test_url_rules(self):
+        chain = ExtractSimpleFactory.create(self.chain_config)
+        self.assertIsNotNone(chain)
+
+        raw_html = base_dir.joinpath('assets/cccode/android-googlesource.html').read_text()
+        answer = base_dir.joinpath('assets/cccode/android-googlesource-0.kt').read_text()
+
+        dj = DataJson({
+            'track_id': 'f7b3b1b4-0b1b',
+            'dataset_name': 'news',
+            'url': 'https://android.googlesource.com/platform/frameworks/support/+/4431302d43ed58e0ac918aa141a3a88768684272/camera/integration-tests/timingtestapp/src/main/java/androidx/camera/integration/antelope/cameracontrollers/CameraXDeviceStateCallback.kt',
+            'data_source_category': 'HTML',
+            'html': raw_html,
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+        })
+
+        resp = chain.extract(dj)
+        self.assertEqual(resp.get_content_list().length(), 1)
+        self.assertEqual(len(resp.get_content_list()[0]), 1)
+        self.assertEqual(resp.get_content_list()[0][0]['content']['code_content'], answer)
+
+        html = '''<html>
+    <body>
+        <div><span>and you're interested only in <p class="code-style">foo.bar.x</p> and <p class="code-style">foo.bar.z</p> (non-existent):</span></div>
+    </body>
+</html>
+'''
+        eles = self.rec.recognize(
+            'http://www.test-inline-code-rules.com',
+            [
+                (html_to_element(html), html_to_element(html))
+            ],
+            html,
+        )
+
+        self.assertEqual(len(eles), 1)
+        inline_codes = eles[0][0].xpath(f'.//{CCTag.CC_CODE_INLINE}')
+        self.assertEqual(len(inline_codes), 2)
+        self.assertEqual(inline_codes[0].text, 'foo.bar.x')
+        self.assertEqual(inline_codes[1].text, 'foo.bar.z')
