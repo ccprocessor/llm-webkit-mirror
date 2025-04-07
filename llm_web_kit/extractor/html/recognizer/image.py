@@ -11,6 +11,7 @@ from llm_web_kit.exception.exception import HtmlImageRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import remove_element
 
 
 class ImageRecognizer(BaseHTMLElementRecognizer):
@@ -121,6 +122,27 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             if img_tag:
                 return self.html_split_by_tags(update_html, CCTag.CC_IMAGE)
 
+    def __is_under_heading(self, elem: HtmlElement) -> bool:
+        """检查元素是否在标题(h1-h6)标签下."""
+        # 使用while循环一直往上找parent
+        current = elem
+        heading_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+
+        # 检查元素自身的属性，是否已经被标记为内联图像
+        if elem.get('inline') == 'true':
+            return True
+
+        while current is not None:
+            parent = current.getparent()
+            if parent is None:
+                return False
+            if parent.tag in heading_tags:
+                return True
+
+            current = parent
+
+        return False
+
     def __parse_img_elements(self, base_url: str, img_elements: HtmlElement, html_obj: HtmlElement) -> HtmlElement:
         """解析img标签."""
         img_tag = []
@@ -168,11 +190,19 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             if not attributes.get('text'):
                 continue
 
-            img_tag.append(CCTag.CC_IMAGE)
             is_valid_img = True
-            img_text, img_tail = self.__parse_text_tail(attributes)
-            new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
-            self._replace_element(elem, new_ccimage)
+
+            # 处理标题中的图像
+            is_under_heading = self.__is_under_heading(elem)
+            if is_under_heading:
+                # 保留标题的原始结构，只移除图像
+                img_tag.append(CCTag.CC_IMAGE)
+                remove_element(elem)
+            else:
+                img_tag.append(CCTag.CC_IMAGE)
+                img_text, img_tail = self.__parse_text_tail(attributes)
+                new_ccimage = self._build_cc_element(CCTag.CC_IMAGE, img_text, img_tail, **attributes)
+                self._replace_element(elem, new_ccimage)
 
         if is_valid_img:
             # updated_html = self._element_to_html(html_obj)

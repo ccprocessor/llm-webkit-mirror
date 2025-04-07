@@ -3,7 +3,7 @@ from pathlib import Path
 
 from llm_web_kit.extractor.html.recognizer.image import ImageRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
-from llm_web_kit.libs.html_utils import html_to_element
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 TEST_CASES_HTML = [
     {
@@ -38,7 +38,7 @@ TEST_CASES_HTML = [
     {
         'input': 'assets/ccimage/unescape_img.html',
         'base_url': 'http://www.aspengreencbd.net/category.php?id=47',
-        'expected': 60,
+        'expected': 28,
         'ccimg_html': """<html xmlns="http://www.w3.org/1999/xhtml"><body><div class="header-main"><div class="block"><div class="header-logo header-logo-index"><a href="index.php"><ccimage by="img" html=\'&lt;img src="themes/ecmoban_kaola2016/images/logo.gif" alt=""&gt;\' format="url">http://www.aspengreencbd.net/themes/ecmoban_kaola2016/images/logo.gif</ccimage></a></div></div></div></body></html>"""
     },
     {
@@ -64,6 +64,12 @@ TEST_CASES_HTML = [
         'base_url': 'https://onlinelibrary.wiley.com/doi/10.1155/2012/387626',
         'expected': 27,
     },
+    {
+        'input': 'assets/ccimage/inline_image.html',
+        'base_url': 'https://community.wikia.com/wiki/Help:Theme_designer',
+        'expected': 104,
+        'description': '测试标题中的图片被正确处理',
+    }
 ]
 
 TEST_CC_CASE = [
@@ -128,3 +134,212 @@ class TestImageRecognizer(unittest.TestCase):
                 self.assertEqual(res['content']['url'], test_case['img_url'])
             except Exception as e:
                 self.assertEqual(e.error_code, test_case['expected'])
+
+    def test_is_under_heading(self):
+        """测试识别标题中的图片功能."""
+        # 测试一个有标题标签的HTML元素
+        html_in_heading = """
+        <h1>This is a heading with <img src="test.jpg" alt="Test Image"/> image</h1>
+        """
+        element = html_to_element(html_in_heading)
+        img_element = element.xpath('.//img')[0]
+
+        is_under_heading = self.img_recognizer._ImageRecognizer__is_under_heading(img_element)
+        self.assertTrue(is_under_heading, '应该识别出图片在标题标签中')
+
+        # 测试普通图片
+        html_normal = """
+        <div>This is a normal <img src="test.jpg" alt="Test Image"/> image</div>
+        """
+        element = html_to_element(html_normal)
+        img_element = element.xpath('.//img')[0]
+
+        is_under_heading = self.img_recognizer._ImageRecognizer__is_under_heading(img_element)
+        self.assertFalse(is_under_heading, '应该识别出图片不在标题标签中')
+
+    def test_heading_image_removal(self):
+        """测试从标题中删除图片的功能."""
+        # 创建一个有标题标签的HTML元素
+        html_in_heading = """
+        <h1>This is a heading with <img src="test.jpg" alt="Test Image"/> image</h1>
+        """
+        element = html_to_element(html_in_heading)
+
+        base_url = 'http://example.com'
+        parts = self.img_recognizer.recognize(base_url, [(element, element)], html_in_heading)
+
+        heading = parts[0][0].xpath('//h1')
+        if heading:
+            img_in_heading = heading[0].xpath('.//img')
+            self.assertEqual(len(img_in_heading), 0, '标题中应该没有img标签')
+
+        if heading:
+            heading_text = heading[0].text_content().strip()
+            self.assertTrue('This is a heading with' in heading_text, '标题文本应该保留')
+            self.assertTrue('image' in heading_text, '标题文本应该保留')
+
+    def test_parse_img_elements_with_various_tags(self):
+        """测试解析不同类型的图像标签."""
+        # 测试SVG图像
+        svg_html = """
+        <svg width="100" height="100">
+            <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"/>
+        </svg>
+        """
+        element = html_to_element(svg_html)
+        base_url = 'http://example.com'
+        parts = self.img_recognizer.recognize(base_url, [(element, element)], svg_html)
+        self.assertTrue(len(parts) > 0, '应该识别SVG图像')
+
+        # 测试picture标签
+        picture_html = """
+        <picture>
+            <source media="(min-width: 800px)" srcset="large.jpg">
+            <source media="(min-width: 450px)" srcset="medium.jpg">
+            <img src="small.jpg" alt="Test Image">
+        </picture>
+        """
+        element = html_to_element(picture_html)
+        parts = self.img_recognizer.recognize(base_url, [(element, element)], picture_html)
+        self.assertTrue(len(parts) > 0, '应该识别picture标签中的图像')
+
+        # 测试带有图像URL的iframe标签
+        iframe_html = """
+        <iframe src="https://example.com/embed/image.jpg"></iframe>
+        """
+        element = html_to_element(iframe_html)
+        self.img_recognizer._ImageRecognizer__parse_img_attr(base_url, element, {})
+
+    def test_parse_svg_img_attr(self):
+        """测试SVG图像处理."""
+        svg_html = """
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+            <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"/>
+        </svg>
+        """
+        element = html_to_element(svg_html)
+        attributes = {'html': svg_html}
+
+        # 调用私有方法处理SVG
+        self.img_recognizer._ImageRecognizer__parse_svg_img_attr(element, attributes)
+
+        # 验证结果
+        self.assertEqual(attributes['format'], 'base64', 'SVG应该被转换为base64格式')
+        self.assertTrue(attributes['text'].startswith('data:image/png;base64,'), 'SVG应该被转换为base64格式的PNG')
+
+    def test_get_full_image_url(self):
+        """测试获取完整图像URL的方法."""
+        base_url = 'https://example.com/page/index.html'
+
+        # 测试相对路径
+        relative_src = 'images/test.jpg'
+        full_url = self.img_recognizer._ImageRecognizer__get_full_image_url(base_url, relative_src)
+        self.assertEqual(full_url, 'https://example.com/page/images/test.jpg')
+
+        # 测试根路径
+        root_src = '/images/test.jpg'
+        full_url = self.img_recognizer._ImageRecognizer__get_full_image_url(base_url, root_src)
+        self.assertEqual(full_url, 'https://example.com/images/test.jpg')
+
+        # 测试绝对路径
+        absolute_src = 'https://another.com/images/test.jpg'
+        full_url = self.img_recognizer._ImageRecognizer__get_full_image_url(base_url, absolute_src)
+        self.assertEqual(full_url, 'https://another.com/images/test.jpg')
+
+        # 测试协议相对路径
+        protocol_src = '//cdn.example.com/images/test.jpg'
+        full_url = self.img_recognizer._ImageRecognizer__get_full_image_url(base_url, protocol_src)
+        self.assertEqual(full_url, 'https://cdn.example.com/images/test.jpg')
+
+    def test_parse_text_tail(self):
+        """测试解析图像文本和尾部文本的方法."""
+        attributes = {
+            'text': 'https://example.com/image.jpg',
+            'tail': '这是尾部文本',
+            'format': 'url'
+        }
+
+        text, tail = self.img_recognizer._ImageRecognizer__parse_text_tail(attributes)
+
+        self.assertEqual(text, 'https://example.com/image.jpg')
+        self.assertEqual(tail, '这是尾部文本')
+
+        # 验证attributes中已移除text和tail
+        self.assertNotIn('text', attributes)
+        self.assertNotIn('tail', attributes)
+
+    def test_parse_img_text_with_background_image(self):
+        """测试解析带有背景图像的样式属性."""
+        # 创建一个带有背景图像的样式属性
+        elem_attributes = {
+            'style': 'background-image: url("https://example.com/bg.jpg"); color: red;'
+        }
+
+        text = self.img_recognizer._ImageRecognizer__parse_img_text(elem_attributes)
+        self.assertEqual(text, 'https://example.com/bg.jpg')
+
+        # 测试带有src属性的情况
+        elem_attributes = {
+            'src': 'https://example.com/image.jpg',
+            'data-src': 'https://example.com/hires.jpg'
+        }
+
+        text = self.img_recognizer._ImageRecognizer__parse_img_text(elem_attributes)
+        self.assertEqual(text, 'https://example.com/image.jpg')
+
+        # 测试带有非图像src的情况
+        elem_attributes = {
+            'src': 'javascript:void(0)',
+            'data-img': 'https://example.com/image.jpg'
+        }
+
+        text = self.img_recognizer._ImageRecognizer__parse_img_text(elem_attributes)
+        self.assertEqual(text, 'https://example.com/image.jpg')
+
+    def test_complex_heading_image_removal(self):
+        """测试更复杂的标题中图像删除场景."""
+        # 创建一个有多层嵌套和多个图像的标题
+        complex_html = """
+        <div>
+            <h1>This is a <span>heading <img src="first.jpg" alt="First Image"/></span> with
+            <a href="#"><img src="second.jpg" alt="Second Image"/></a> multiple images</h1>
+            <p>This is a paragraph with <img src="third.jpg" alt="Third Image"/> image</p>
+        </div>
+        """
+        element = html_to_element(complex_html)
+        base_url = 'http://example.com'
+
+        # 处理HTML
+        parts = self.img_recognizer.recognize(base_url, [(element, element)], complex_html)
+
+        h1_elements = parts[0][0].xpath('//h1')
+        if h1_elements:
+            img_in_h1 = h1_elements[0].xpath('.//img')
+            self.assertEqual(len(img_in_h1), 0, '标题中不应该有img标签')
+
+        # 验证标题文本仍然存在
+        if h1_elements:
+            heading_text = h1_elements[0].text_content().strip()
+            self.assertTrue('This is a heading' in heading_text, '标题文本应该保留')
+            self.assertTrue('multiple images' in heading_text, '标题文本应该保留')
+
+        # 检查所有部分，是否包含ccimage标签
+        ccimage_found = False
+        for part in parts:
+            html = element_to_html(part[0])
+            if CCTag.CC_IMAGE in html:
+                ccimage_found = True
+                break
+
+        self.assertTrue(ccimage_found, '应该至少找到一个ccimage标签')
+
+        # 验证原始HTML中的段落图片不再存在为img标签
+        p_elements = []
+        for part in parts:
+            p_elements.extend(part[0].xpath('//p'))
+
+        img_in_p = []
+        for p in p_elements:
+            img_in_p.extend(p.xpath('.//img'))
+
+        self.assertEqual(len(img_in_p), 0, '段落中不应该有img标签')
