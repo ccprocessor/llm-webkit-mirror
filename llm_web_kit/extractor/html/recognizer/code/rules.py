@@ -27,4 +27,4 @@ def modify_tree(domain: str, root: HtmlElement):
     if 'inline-code' in RULES_MAP[domain]:
         rule = RULES_MAP[domain]['inline-code']
         for code_node in root.xpath(rule['content-xpath']):
-            replace_node_by_cccode(code_node, 'preset_rules', rule.get('pre-formatted', False))
+            replace_node_by_cccode(code_node, 'preset_rules', False, True)
