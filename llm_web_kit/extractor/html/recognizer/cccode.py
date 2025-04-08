@@ -12,6 +12,15 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
 
 
 class CodeRecognizer(BaseHTMLElementRecognizer):
+    @staticmethod
+    def remove_empty_code(r: HtmlElement):
+        for x in r:  # type: ignore
+            if x.tag == CCTag.CC_CODE or x.tag == CCTag.CC_CODE_INLINE:
+                if not x.text:
+                    r.remove(x)
+            else:
+                CodeRecognizer.remove_empty_code(x)
+
     """解析代码元素."""
     @override
     def recognize(
@@ -32,11 +41,10 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         domain = urlparse(base_url).hostname
 
         rtn: List[Tuple[HtmlElement, HtmlElement]] = []
-        for html, chunk_raw_html in main_html_lst:
-            if self.is_cc_html(html):
-                rtn.append((html, chunk_raw_html))
+        for root, root_raw_html in main_html_lst:
+            if self.is_cc_html(root):
+                rtn.append((root, root_raw_html))
                 continue
-            root = html
 
             while True:
                 # 命中规则，直接处理并跳出
@@ -73,15 +81,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
                 break
 
-            def remove_empty_code(r: HtmlElement):
-                for x in r:  # type: ignore
-                    if x.tag == CCTag.CC_CODE or x.tag == CCTag.CC_CODE_INLINE:
-                        if not x.text:
-                            r.remove(x)
-                    else:
-                        remove_empty_code(x)
-
-            remove_empty_code(root)
+            CodeRecognizer.remove_empty_code(root)
             rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(root, CCTag.CC_CODE))
         return rtn
 
