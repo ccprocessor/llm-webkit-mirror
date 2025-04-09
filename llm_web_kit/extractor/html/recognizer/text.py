@@ -166,7 +166,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             # 处理尾部文本
             if el.tail and el.tail.strip():
                 if is_sub_sup:
-                    text += el.tail.strip()
+                    text += el.tail
                 else:
                     text = self.__combine_text(text, el.tail.strip())
 

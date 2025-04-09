@@ -339,13 +339,13 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
         # 获取内容并规范化空白 - 去除所有换行符，将多个连续空格替换为单个空格
         content = element.text_content()
         content = re.sub(r'\s+', ' ', content).strip()
-        result = f'{current_text}~{content}~'
+        result = f'{current_text.rstrip()}~{content}~'
         return result
     elif element.tag == 'sup':
         content = element.text_content()
         # 使用正则表达式规范化空白
         content = re.sub(r'\s+', ' ', content).strip()
-        result = f'{current_text}^{content}^'
+        result = f'{current_text.rstrip()}^{content}^'
         return result
 
     # 检查是否包含sub或sup子元素，如果不包含且不是sub/sup上下文，则按照普通文本处理
