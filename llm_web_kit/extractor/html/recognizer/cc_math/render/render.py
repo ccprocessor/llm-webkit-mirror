@@ -92,7 +92,6 @@ class BaseMathRender():
             tree = html_to_element(html)
             if tree is None:
                 return None
-
             # 首先检查 KaTeX（优先级更高）
             katex_detected = False
             for link in tree.iter('link'):
@@ -134,7 +133,6 @@ class BaseMathRender():
                 render = MathJaxRender()
                 render.get_options(html)
                 return render
-
             # 如果没有检测到任何渲染器，返回基础渲染器
             return BaseMathRender()
 
@@ -185,7 +183,6 @@ class BaseMathRender():
             MathJaxRender
 
         render_type = BaseMathRender.detect_render_type(tree)
-
         if render_type == MathRenderType.MATHJAX:
             return MathJaxRender()
         elif render_type == MathRenderType.KATEX:

@@ -125,7 +125,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             self.cm.url = base_url
             tree = cc_html
             math_render_type = math_render.get_render_type()
-
             # 打印遍历node次数
             # count = 0
             for node in iter_node(tree):
@@ -155,7 +154,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 # span.katex
                 if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
                     tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
-
                 # 只有有渲染器的网站才会走下面文本匹配逻辑
                 if math_render_type:
                     # script[type="math/asciimath"]

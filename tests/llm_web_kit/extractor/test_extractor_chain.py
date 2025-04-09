@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 40
+        assert len(self.data_json) == 43
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -174,7 +174,6 @@ class TestExtractorChain(unittest.TestCase):
 
         # md格式
         md_content = result.get_content_list().to_nlp_md()
-        print('md_content', md_content)
         self.assertEqual(md_content, self.md_expected_content)
         self.assertNotEqual(md_content[-2], '\n')
         self.assertEqual(md_content[-1], '\n')
@@ -264,7 +263,6 @@ DEF
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        print(result.get_content_list()._get_data())
         self.assertIn('![點(diǎn)擊進(jìn)入下一頁(yè)](dda09be3795fa0df88c094ca906adf77086f1741b4d5634536997146deeda777)', result.get_content_list().to_mm_md())
         self.assertNotIn('![點(diǎn)擊進(jìn)入下一頁(yè)](dda09be3795fa0df88c094ca906adf77086f1741b4d5634536997146deeda777)', result.get_content_list().to_txt())
 
@@ -390,7 +388,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()
-        assert content_list[0][2]['content']['html'] == '<table><tr><td>单位换算：</td><td>$1 \\text{km} = 10^3 \\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>$1m=10^2cm$</td><td>$1kg=10^3g$</td><td>$1h=3600s$</td></tr></table></td></tr><tr><td>运动学：</td><td>$v = \\frac{dx}{dt}$ $a = \\frac{dv}{dt}$</td></tr></table>'
+        assert content_list[0][2]['content']['html'] == '<table><tr><td>单位换算：</td><td>数学公式区块： $1 \\text{km} = 10^3 \\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>数学公式 $1m=10^2cm$</td></tr>td><td>数学公式 $1kg=10^3g$</td><td>数学公式 $1h=3600s$</td></table></td></tr><tr><td>运动学：</td><td>数学公式 $v = \\frac{dx}{dt}$ 数学公式 $a = \\frac{dv}{dt}$</td></tr></table>'
 
     def test_clean_tags(self):
         """测试clean_tag的preExtractor是否生效."""
@@ -452,7 +450,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
-        print('content_txt', content_txt)
         assert len(content_txt) == 2022
 
     def test_xml_tag(self):
@@ -631,3 +628,27 @@ A few explanations on why certain things in business are so.
         result_md = result.get_content_list().to_nlp_md()
         assert '猜你感兴趣' in result_md
         assert '友情链接' in result_md
+
+    def test_table_lack_pre_content(self):
+        """测试table缺少td标签前面的内容."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[40]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_content_list = result.get_content_list()._get_data()
+        assert result_content_list[0][22]['content']['html'] == r"""<table><colgroup><col><col><col><col></colgroup><tr><th>お名前 【必須】</th><td></td><th>お名前（カナ）</th><td></td></tr><tr><th>ご連絡先 【いずれか必須】</th><td colspan="3">※メール受信制限をしている方は、@chintai.co.jpからのメールを受信できるよう設定の変更をお願い致します。<table><td>メールアドレス</td><td>電話番号</td></table></td></tr></table>"""
+
+    def test_td_include_specila_symbol(self):
+        """测试td包含特殊符号|，需要转义."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[42]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        result_md = result.get_content_list().to_mm_md()
+        assert result_md == r"""| \| 你好 | 字 | 字 |
+|---|---|---|
+| \| 字 | 字 | 字 |
+| 字 | 字 | 字 |
+"""
