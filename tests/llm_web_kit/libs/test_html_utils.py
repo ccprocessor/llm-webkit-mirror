@@ -2,14 +2,14 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 import pytest
-from lxml.html import HtmlElement
+from lxml.html import HtmlElement, fromstring
 
 from llm_web_kit.exception.exception import MagicHtmlExtractorException
 from llm_web_kit.libs.html_utils import (element_to_html, extract_magic_html,
                                          html_to_element,
                                          html_to_markdown_table,
-                                         remove_element, replace_element,
-                                         table_cells_count)
+                                         process_sub_sup_tags, remove_element,
+                                         replace_element, table_cells_count)
 
 
 class TestHtmlUtils(unittest.TestCase):
@@ -234,6 +234,65 @@ class TestHtmlUtils(unittest.TestCase):
         # self.assertEqual(element.tag, 'html')
         self.assertIsNotNone(element.find('.//p'))
         self.assertEqual(element.find('.//p').text, '畸形XML')
+
+    def test_process_sub_sup_tags(self):
+        """测试处理HTML中的上标和下标标签."""
+        # 测试基本情况
+        # 1. 测试单个sub标签
+        html_el = fromstring('<sub>2</sub>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, '~2~')
+
+        # 2. 测试单个sup标签
+        html_el = fromstring('<sup>2</sup>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, '^2^')
+
+        # 3. 测试非sub/sup标签 - 递归处理
+        html_el = fromstring('<div>普通文本</div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, '')  # 应该返回空字符串，因为不包含sub/sup标签
+
+        # 4. 测试带初始文本的process_sub_sup_tags
+        html_el = fromstring('<sub>2</sub>')
+        result = process_sub_sup_tags(html_el, 'H')
+        self.assertEqual(result, 'H~2~')
+
+        # 5. 测试包含sub标签的父元素 - 递归处理
+        html_el = fromstring('<div>H<sub>2</sub>O</div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'H~2~O')
+
+        # 6. 测试包含sub标签的父元素 - 非递归处理
+        html_el = fromstring('<div>H<sub>2</sub>O</div>')
+        result = process_sub_sup_tags(html_el, recursive=False)
+        self.assertEqual(result, '')  # 非递归模式下，不处理子元素
+
+        # 测试复杂情况
+        # 7. 测试带运算符的公式
+        html_el = fromstring('<div>x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'x^2^ + y^2^ = z^2^')
+
+        # 8. 测试混合公式
+        html_el = fromstring('<div>f(x) = x<sup>2</sup> - 3x + 2</div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'f(x) = x^2^ - 3x + 2')
+
+        # 9. 测试复杂的化学公式
+        html_el = fromstring('<div>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'C~6~H~12~O~6~')
+
+        # 10. 测试混合上下标
+        html_el = fromstring('<div>∫<sub>a</sub><sup>b</sup> f(x) dx</div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, '∫~a~^b^ f(x) dx')
+
+        # 11. 测试电路公式
+        html_el = fromstring('<div>RI = R<sub>S</sub>R<sub>P</sub>/(R<sub>S</sub> - R<sub>P</sub>)</div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'RI = R~S~R~P~/(R~S~ - R~P~)')
 
 
 # 测试用例数据

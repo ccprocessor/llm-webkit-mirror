@@ -9,7 +9,8 @@ from overrides import override
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import element_to_html, html_to_element
+from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
+                                         process_sub_sup_tags)
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -138,11 +139,15 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         para_text = []
 
         def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
+
+            # 标记当前元素是否是sub或sup类型
+            is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
+
             if el.tag == CCTag.CC_MATH_INLINE:
                 if text:
-                    para_text.append({'c':text, 't':ParagraphTextType.TEXT})
+                    para_text.append({'c': text, 't': ParagraphTextType.TEXT})
                     text = ''
-                para_text.append({'c':el.text, 't':ParagraphTextType.EQUATION_INLINE})
+                para_text.append({'c': el.text, 't': ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE:
                 if text:
                     para_text.append({'c': text, 't': ParagraphTextType.TEXT})
@@ -150,19 +155,25 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag in ['br']:
                 text += PARAGRAPH_SEPARATOR  # TODO 这个地方直接加换行是错误点做法，需要利用数据结构来保证段落。
+            elif el.tag == 'sub' or el.tag == 'sup':
+                text = process_sub_sup_tags(el, text, recursive=False)
             else:
                 if el.text and el.text.strip():
                     text = self.__combine_text(text, el.text.strip())
                 for child in el:
                     text = __get_paragraph_text_recusive(child, text)
 
+            # 处理尾部文本
             if el.tail and el.tail.strip():
-                text = self.__combine_text(text, el.tail.strip())
+                if is_sub_sup:
+                    text += el.tail.strip()
+                else:
+                    text = self.__combine_text(text, el.tail.strip())
 
             return text
 
         if final := __get_paragraph_text_recusive(root, ''):
-            para_text.append({'c':final, 't':ParagraphTextType.TEXT})
+            para_text.append({'c': final, 't': ParagraphTextType.TEXT})
 
         return para_text
 
