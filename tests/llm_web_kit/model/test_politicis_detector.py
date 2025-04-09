@@ -34,7 +34,7 @@ class TestPoliticalDetector:
         _ = PoliticalDetector()
         mock_load_model.assert_called_once_with('/fake/model/path/model.bin')
         mock_auto_tokenizer.assert_called_once_with(
-            '/fake/model/path/internlm2-chat-20b',
+            '/fake/model/path/qwen2.5_7b_tokenizer',
             use_fast=False,
             trust_remote_code=True,
         )
@@ -45,7 +45,7 @@ class TestPoliticalDetector:
         _ = PoliticalDetector('custom_model_path')
         mock_load_model.assert_called_once_with(os.path.join('custom_model_path', 'model.bin'))
         mock_auto_tokenizer.assert_called_once_with(
-            os.path.join('custom_model_path', 'internlm2-chat-20b'),
+            os.path.join('custom_model_path', 'qwen2.5_7b_tokenizer'),
             use_fast=False,
             trust_remote_code=True,
         )
@@ -228,11 +228,11 @@ class TestGTEModel(TestCase):
 
 
 def test_decide_political_by_prob():
-    predictions = ['__label__normal', '__label__political']
+    predictions = ['__label__positive', '__label__negative']
     probabilities = [0.6, 0.4]
     assert decide_political_by_prob(predictions, probabilities) == 0.6
 
-    predictions = ['__label__political', '__label__normal']
+    predictions = ['__label__negative', '__label__positive']
     probabilities = [0.7, 0.3]
     assert decide_political_by_prob(predictions, probabilities) == 0.3
 
@@ -240,7 +240,7 @@ def test_decide_political_by_prob():
 def test_decide_political_func():
     political_detect = MagicMock()
     political_detect.predict.return_value = (
-        ['__label__normal', '__label__political'],
+        ['__label__positive', '__label__negative'],
         [0.6, 0.4],
     )
     test_str = 'test text'

@@ -21,6 +21,10 @@
             "download_path": "s3://web-parse-huawei/shared_resource/political/25m3.zip",
             "md5": "d0d14a561f987763d654165b536b5858",
         },
+        "political-25m3_cpu":{
+            "download_path": "s3://web-parse-huawei/shared_resource/political/25m3_cpu.zip",
+            "md5": "926359a393de6a36c1b4be403711767f",
+        },
     },
 ```
 
