@@ -81,7 +81,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         lst = self.html_split_by_tags(new_html, CCTag.CC_LIST)
         return lst
 
-    def __do_extract_list(self, root:HtmlElement) -> None:
+    def __do_extract_list(self, root: HtmlElement) -> None:
         """提取列表元素.
 
         Args:
@@ -157,7 +157,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         return list_nest_level, is_ordered, content_list, raw_html, tail_text
 
-    def __get_list_type(self, list_ele:HtmlElement) -> int:
+    def __get_list_type(self, list_ele: HtmlElement) -> int:
         """获取list嵌套的层级。
 
         计算一个列表元素的最大嵌套深度，通过递归遍历所有子元素。
@@ -188,7 +188,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             return max_child_depth
         return get_max_depth(list_ele) + 1
 
-    def __extract_list_item_text(self, root:HtmlElement) -> list[list]:
+    def __extract_list_item_text(self, root: HtmlElement) -> list[list]:
         """提取列表项的文本.
         列表项里的文本的分段策略采用最简单的方式：
         1. 遇到<br/>标签，则认为是一个段落结束。
@@ -230,7 +230,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 text_paragraph.append(paragraph)
         return text_paragraph
 
-    def __get_attribute(self, html:HtmlElement) -> Tuple[bool, dict, str]:
+    def __get_attribute(self, html: HtmlElement) -> Tuple[bool, dict, str]:
         """获取element的属性.
 
         Args:

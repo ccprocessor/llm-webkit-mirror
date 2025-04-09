@@ -1,15 +1,26 @@
 from typing import List, Tuple
+from urllib.parse import urlparse
 
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.extractor.html.recognizer.code import (classes, tag_code,
-                                                        tag_pre, tag_pre_code)
+from llm_web_kit.extractor.html.recognizer.code import (classes, rules,
+                                                        tag_code, tag_pre,
+                                                        tag_pre_code)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 
 
 class CodeRecognizer(BaseHTMLElementRecognizer):
+    @staticmethod
+    def remove_empty_code(r: HtmlElement):
+        for x in r:  # type: ignore
+            if x.tag == CCTag.CC_CODE or x.tag == CCTag.CC_CODE_INLINE:
+                if not x.text:
+                    r.remove(x)
+            else:
+                CodeRecognizer.remove_empty_code(x)
+
     """解析代码元素."""
     @override
     def recognize(
@@ -27,55 +38,50 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
         Returns:
         """
+        domain = urlparse(base_url).hostname
 
-        # assert len(main_html_lst) == 1
-        # assert main_html_lst[0][0] == main_html_lst[0][1]
-
-        rtn: List[Tuple[str, str]] = []
-        for html, raw_html in main_html_lst:
-            if self.is_cc_html(html):
-                rtn.append((html, raw_html))
+        rtn: List[Tuple[HtmlElement, HtmlElement]] = []
+        for root, root_raw_html in main_html_lst:
+            if self.is_cc_html(root):
+                rtn.append((root, root_raw_html))
                 continue
-            # root: HtmlElement = html_to_element(html)
-            root = html
 
-            take_code = False
-            # 最常见:
-            # <pre><code></code></pre>
-            # <code><pre></pre></code>
-            # 使用 pre 来保证 code 内部格式
-            # 所以每一个 code 就是一段代码，只需要切分出code，合并text
-            if tag_pre_code.detect(root):
-                tag_pre_code.modify_tree(root)
-                take_code = True
+            while True:
+                # 命中规则，直接处理并跳出
+                if domain in rules.RULES_MAP:
+                    rules.modify_tree(domain, root)
+                    break
 
-            # 次常见:
-            # 只有 code 没有 pre
-            # 网站使用一些 div\span\p\br 来自己控制格式，每个 code 块只有一个单词或者符号。
-            # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
-            if tag_code.detect(root):
-                tag_code.modify_tree(root)
-                take_code = True
+                take_code = False
+                # 最常见:
+                # <pre><code></code></pre>
+                # <code><pre></pre></code>
+                # 使用 pre 来保证 code 内部格式
+                # 所以每一个 code 就是一段代码，只需要切分出code，合并text
+                if tag_pre_code.detect(root):
+                    tag_pre_code.modify_tree(root)
+                    take_code = True
 
-            # 只有 pre 没有 code
-            if tag_pre.detect(root):
-                tag_pre.modify_tree(root)
-                take_code = True
+                # 次常见:
+                # 只有 code 没有 pre
+                # 网站使用一些 div\span\p\br 来自己控制格式，每个 code 块只有一个单词或者符号。
+                # 对 code tag 之间做距离排序，做不完整的最小生成树，挑选出完整的代码块的根节点，再合并内部的 text
+                if tag_code.detect(root):
+                    tag_code.modify_tree(root)
+                    take_code = True
 
-            # 如果这个网站没有一种情况 match 到了，那就看看 class 里面又没有带 code 的
-            if not take_code and classes.detect(root):
-                classes.modify_tree(root)
+                # 只有 pre 没有 code
+                if tag_pre.detect(root):
+                    tag_pre.modify_tree(root)
+                    take_code = True
 
-            def remove_empty_code(r: HtmlElement):
-                for x in r:
-                    if x.tag == CCTag.CC_CODE or x.tag == CCTag.CC_CODE_INLINE:
-                        if not x.text:
-                            r.remove(x)
-                    else:
-                        remove_empty_code(x)
+                # 如果这个网站没有一种情况 match 到了，那就看看 class 里面又没有带 code 的
+                if not take_code and classes.detect(root):
+                    classes.modify_tree(root)
 
-            remove_empty_code(root)
-            # html_str: str = element_to_html(root)
+                break
+
+            CodeRecognizer.remove_empty_code(root)
             rtn.extend(BaseHTMLElementRecognizer.html_split_by_tags(root, CCTag.CC_CODE))
         return rtn
 

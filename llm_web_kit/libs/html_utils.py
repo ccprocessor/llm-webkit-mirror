@@ -246,7 +246,6 @@ def remove_element(element: HtmlElement):
             parent.text = (parent.text or '') + element.tail
         else:
             previous.tail = (previous.tail or '') + element.tail
-
     parent.remove(element)
 
 

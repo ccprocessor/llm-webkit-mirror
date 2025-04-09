@@ -224,6 +224,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             parse_res = []
             # 检查是否存在嵌套的表格
             if table_nest_level > 1:
+                if elem.text and elem.text.strip():
+                    parse_res.append(elem.text.strip())
+                    elem.text = None  # 防止后续重复处理
                 # 存在嵌套表格，递归处理子节点
                 for child in elem.iterchildren():
                     if child.tag == 'table':
