@@ -237,7 +237,6 @@ class TestHtmlUtils(unittest.TestCase):
 
     def test_process_sub_sup_tags(self):
         """测试处理HTML中的上标和下标标签."""
-        # 测试基本情况
         # 1. 测试单个sub标签
         html_el = fromstring('<sub>2</sub>')
         result = process_sub_sup_tags(html_el)
@@ -248,10 +247,10 @@ class TestHtmlUtils(unittest.TestCase):
         result = process_sub_sup_tags(html_el)
         self.assertEqual(result, '^2^')
 
-        # 3. 测试非sub/sup标签 - 递归处理
+        # 3. 测试非sub/sup标签
         html_el = fromstring('<div>普通文本</div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, '')  # 应该返回空字符串，因为不包含sub/sup标签
+        self.assertEqual(result, '')
 
         # 4. 测试带初始文本的process_sub_sup_tags
         html_el = fromstring('<sub>2</sub>')
@@ -266,9 +265,8 @@ class TestHtmlUtils(unittest.TestCase):
         # 6. 测试包含sub标签的父元素 - 非递归处理
         html_el = fromstring('<div>H<sub>2</sub>O</div>')
         result = process_sub_sup_tags(html_el, recursive=False)
-        self.assertEqual(result, '')  # 非递归模式下，不处理子元素
+        self.assertEqual(result, '')
 
-        # 测试复杂情况
         # 7. 测试带运算符的公式
         html_el = fromstring('<div>x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup></div>')
         result = process_sub_sup_tags(html_el)
@@ -293,6 +291,104 @@ class TestHtmlUtils(unittest.TestCase):
         html_el = fromstring('<div>RI = R<sub>S</sub>R<sub>P</sub>/(R<sub>S</sub> - R<sub>P</sub>)</div>')
         result = process_sub_sup_tags(html_el)
         self.assertEqual(result, 'RI = R~S~R~P~/(R~S~ - R~P~)')
+
+    def test_process_sub_sup_tags_recursive_false(self):
+        """测试process_sub_sup_tags函数的recursive=False参数."""
+        # 测试带有子元素的元素，但recursive=False，应该不处理子元素
+        html_el = fromstring('<div><sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el, current_text='', lang='en', recursive=False)
+        self.assertEqual(result, '')
+
+        html_el = fromstring('<div>test</div>')
+        result = process_sub_sup_tags(html_el, current_text='prefix ', lang='en', recursive=False)
+        self.assertEqual(result, 'prefix')
+
+    def test_process_sub_sup_tags_with_children(self):
+        """测试process_sub_sup_tags函数处理包含子元素的元素."""
+        # 测试包含非sub/sup子元素的元素
+        html_el = fromstring('<div>parent<span>child</span><sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'parent~test~')
+
+        # 非sub/sup上下文下，子元素没有处理结果的情况
+        html_el = fromstring('<div>parent<span></span><sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'parent~test~')
+
+        # is_sub_sup_context为真的情况下处理子元素结果
+        html_el = fromstring('<sup>parent<span><sub>nested</sub></span></sup>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, '^parentnested^')
+
+    def test_process_sub_sup_tags_with_tail(self):
+        """测试process_sub_sup_tags函数处理带有尾部文本的子元素."""
+        # 子元素有尾部文本但is_sub_sup_context为假的情况
+        html_el = fromstring('<div><span>child</span> tail text<sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, ' tail text~test~')
+
+        # 子元素有尾部文本且is_sub_sup_context为真的情况
+        html_el = fromstring('<sub><span>child</span> tail text</sub>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, '~child tail text~')
+
+    def test_process_sub_sup_tags_edge_cases(self):
+        """测试process_sub_sup_tags函数的边缘情况，特别针对代码覆盖行数367, 382, 389."""
+        # 使用sub/sup上下文中处理非sub/sup子元素并确保结果为空
+        div_el = fromstring('<sub>parent<span></span></sub>')
+        result = process_sub_sup_tags(div_el)
+        self.assertEqual(result, '~parent~')
+
+        # 确保子元素的处理结果在is_sub_sup_context下被添加
+        div_el = fromstring('<div><span><sub>test</sub></span>after</div>')
+        span_el = div_el.find('.//span')
+        span_result = process_sub_sup_tags(span_el)
+        self.assertTrue(span_result)  # 确保span的处理有结果
+        result = process_sub_sup_tags(div_el)
+        self.assertEqual(result, '~test~after')
+
+        # 测试当子元素的处理结果为空的情况
+        # 注意：这个测试的div_el没有任何sub/sup标签，所以函数会返回空字符串
+        div_el = fromstring('<div>parent<span></span>after</div>')
+        result = process_sub_sup_tags(div_el)
+        self.assertEqual(result, '')  # 没有sub/sup元素，返回空字符串
+
+        # 尝试使用有sub标签的元素
+        div_el = fromstring('<div>parent<span><sub></sub></span>after<sub>x</sub></div>')
+        result = process_sub_sup_tags(div_el)
+        self.assertEqual(result, 'parent~~after~x~')
+
+        # 确保子元素尾部文本在非sub/sup上下文中得到处理
+        div_el = fromstring('<div><span></span> tail text</div>')
+        result = process_sub_sup_tags(div_el)
+        self.assertEqual(result, '')
+
+        # 测试子元素有尾巴文本且有sub/sup元素
+        div_el = fromstring('<div>text<span></span> tail<sub>x</sub></div>')
+        result = process_sub_sup_tags(div_el)
+        self.assertEqual(result, 'text tail~x~')
+
+    def test_process_sub_sup_tags_text_combining(self):
+        """测试process_sub_sup_tags函数处理文本拼接的情况."""
+        # 非sub/sup上下文下的文本拼接
+        html_el = fromstring('<div>prefix<sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'prefix~test~')
+
+        # 中文文本拼接
+        html_el = fromstring('<div>前缀<span>子元素</span><sub>测试</sub></div>')
+        result = process_sub_sup_tags(html_el, lang='zh')
+        self.assertEqual(result, '前缀~测试~')
+
+        # 测试标点符号情况
+        html_el = fromstring('<div>prefix<span>!child</span><sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'prefix~test~')
+
+        # 测试仅处理标点符号
+        html_el = fromstring('<div>prefix!<sub>test</sub></div>')
+        result = process_sub_sup_tags(html_el)
+        self.assertEqual(result, 'prefix!~test~')
 
 
 # 测试用例数据
