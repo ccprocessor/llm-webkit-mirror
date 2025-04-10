@@ -8,6 +8,7 @@ from llm_web_kit.exception.exception import HtmlListRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
+from llm_web_kit.libs.html_utils import process_sub_sup_tags
 
 
 class ListRecognizer(BaseHTMLElementRecognizer):
@@ -203,6 +204,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
 
         def __extract_list_item_text_recusive(el: HtmlElement) -> list[list]:
             paragraph = []
+
+            # 标记当前元素是否是sub或sup类型
+            is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
+
             if el.tag == CCTag.CC_MATH_INLINE:
                 paragraph.append({'c': el.text, 't': ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE:
@@ -211,6 +216,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 if len(paragraph) > 0:
                     text_paragraph.append(paragraph)
                     paragraph = []
+            elif el.tag == 'sub' or el.tag == 'sup':
+                # 处理sub和sup标签，转换为GitHub Flavored Markdown格式
+                current_text = ''
+                if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
+                    current_text = paragraph[-1]['c']
+                    paragraph.pop()
+
+                processed_text = process_sub_sup_tags(el, current_text, recursive=False)
+                if processed_text:
+                    paragraph.append({'c': processed_text, 't': ParagraphTextType.TEXT})
             else:
                 if el.text and el.text.strip():
                     paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
@@ -219,9 +234,16 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     if len(p) > 0:
                         paragraph.extend(p)
 
-            # NOTE： li一般没有tail，如果有，那么是网页语法错误了。所以这里不处理tail
+            # 处理尾部文本
             if el.tag != 'li' and el.tail and el.tail.strip():
-                paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+                if is_sub_sup:
+                    # 如果尾部文本跟在sub/sup后面，直接附加到最后一个文本段落中
+                    if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
+                        paragraph[-1]['c'] += el.tail
+                    else:
+                        paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+                else:
+                    paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
 
             return paragraph
 
