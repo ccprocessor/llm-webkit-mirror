@@ -373,10 +373,8 @@ class TestSimpleListRecognize(unittest.TestCase):
 
     def test_get_attribute_direct_exception(self):
         """直接测试__get_attribute方法的异常，覆盖行239的异常抛出."""
-        # 创建一个非cclist元素
         non_cclist_element = html_to_element('<div>这不是一个cclist元素</div>')
 
-        # 使用Python的反射机制直接访问私有方法
         try:
             private_method_name = f'_{type(self.__list_recognize).__name__}__get_attribute'
             private_method = getattr(self.__list_recognize, private_method_name)
@@ -384,3 +382,24 @@ class TestSimpleListRecognize(unittest.TestCase):
             assert False, '应该抛出HtmlListRecognizerException异常'
         except HtmlListRecognizerException as e:
             assert '没有cclist标签' in str(e), '异常消息不正确'
+
+    def test_get_attribute_standalone(self):
+        """单独测试__get_attribute方法抛出异常的情况."""
+        get_attribute_method = getattr(self.__list_recognize, '_ListRecognizer__get_attribute')
+
+        # 创建各种非cclist元素进行测试
+        test_elements = [
+            html_to_element('<div>普通div元素</div>'),
+            html_to_element('<p>段落元素</p>'),
+            html_to_element('<ul><li>列表元素</li></ul>'),
+            html_to_element('<span>行内元素</span>')
+        ]
+
+        for i, element in enumerate(test_elements):
+            try:
+                get_attribute_method(element)
+                self.fail(f'元素 {element.tag} 应该抛出异常但没有')
+            except HtmlListRecognizerException as e:
+                error_msg = str(e)
+                self.assertIn('中没有cclist标签', error_msg, f'异常消息不包含预期文本: {error_msg}')
+                self.assertIn(element.tag, error_msg, f'异常消息中应包含元素标签 {element.tag}')
