@@ -19,6 +19,10 @@ class TestSimpleListRecognize(unittest.TestCase):
         self.__list_with_sub_sup_tail_content = None
         self.__list_with_ul_text_content = None
         self.__list_with_sub_no_prefix_content = None
+        self.__list_sub_with_reset_paragraph_content = None
+        self.__list_sub_with_current_text_content = None
+        self.__list_sub_with_tail_handling_content = None
+        self.__list_span_with_tail_append_content = None
 
         with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/simple_list.html', 'r') as file:
             self.__simple_list_content = file.read()
@@ -46,6 +50,18 @@ class TestSimpleListRecognize(unittest.TestCase):
 
         with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/list_with_sub_no_prefix.html', 'r') as file:
             self.__list_with_sub_no_prefix_content = file.read()
+
+        with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/list_sub_with_reset_paragraph.html', 'r') as file:
+            self.__list_sub_with_reset_paragraph_content = file.read()
+
+        with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/list_sub_with_current_text.html', 'r') as file:
+            self.__list_sub_with_current_text_content = file.read()
+
+        with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/list_sub_with_tail_handling.html', 'r') as file:
+            self.__list_sub_with_tail_handling_content = file.read()
+
+        with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/list_span_with_tail_append.html', 'r') as file:
+            self.__list_span_with_tail_append_content = file.read()
 
     def test_simple_list(self):
         html_part = self.__list_recognize.recognize('http://url.com', [(html_to_element(self.__simple_list_content), html_to_element(self.__simple_list_content))], self.__simple_list_content)
@@ -285,3 +301,83 @@ class TestSimpleListRecognize(unittest.TestCase):
 
         # 验证没有前缀的sub/sup标签被正确处理
         assert marker_found, '未正确处理没有前缀的sub/sup标签'
+
+    def test_paragraph_reset_after_sub_sup(self):
+        """测试处理sub/sup标签后paragraph正确重置."""
+        html_part = self.__list_recognize.recognize(
+            'http://url.com',
+            [(html_to_element(self.__list_sub_with_reset_paragraph_content), html_to_element(self.__list_sub_with_reset_paragraph_content))],
+            self.__list_sub_with_reset_paragraph_content
+        )
+
+        assert len(html_part) > 0, '没有识别出任何HTML部分'
+
+        # 检查是否包含预期内容
+        contains_expected_format = False
+        for element, _ in html_part:
+            element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
+            if '前缀' in element_text and '2' in element_text and '后缀' in element_text:
+                contains_expected_format = True
+                break
+
+        assert contains_expected_format, '没有正确处理sub标签并重置paragraph'
+
+    def test_current_text_from_paragraph(self):
+        """测试从paragraph[-1]['c']获取current_text."""
+        html_part = self.__list_recognize.recognize(
+            'http://url.com',
+            [(html_to_element(self.__list_sub_with_current_text_content), html_to_element(self.__list_sub_with_current_text_content))],
+            self.__list_sub_with_current_text_content
+        )
+
+        assert len(html_part) > 0, '没有识别出任何HTML部分'
+
+        # 检查是否包含预期内容
+        contains_expected_format = False
+        for element, _ in html_part:
+            element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
+            if '前文' in element_text and '下标' in element_text:
+                contains_expected_format = True
+                break
+
+        assert contains_expected_format, '没有正确从paragraph[-1][\'c\']获取current_text'
+
+    def test_is_sub_sup_tail_handling(self):
+        """测试is_sub_sup变量用于尾部文本处理."""
+        html_part = self.__list_recognize.recognize(
+            'http://url.com',
+            [(html_to_element(self.__list_sub_with_tail_handling_content), html_to_element(self.__list_sub_with_tail_handling_content))],
+            self.__list_sub_with_tail_handling_content
+        )
+
+        assert len(html_part) > 0, '没有识别出任何HTML部分'
+
+        # 检查是否包含预期内容
+        contains_expected_format = False
+        for element, _ in html_part:
+            element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
+            if '这是' in element_text and '下标' in element_text and '后面的文本' in element_text:
+                contains_expected_format = True
+                break
+
+        assert contains_expected_format, '没有正确处理sub标签的尾部文本'
+
+    def test_paragraph_append_tail_text(self):
+        """测试在else分支中正确附加尾部文本."""
+        html_part = self.__list_recognize.recognize(
+            'http://url.com',
+            [(html_to_element(self.__list_span_with_tail_append_content), html_to_element(self.__list_span_with_tail_append_content))],
+            self.__list_span_with_tail_append_content
+        )
+
+        assert len(html_part) > 0, '没有识别出任何HTML部分'
+
+        # 检查是否包含预期内容
+        contains_expected_text = False
+        for element, _ in html_part:
+            element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
+            if '这是' in element_text and '普通元素' in element_text and '后面的文本' in element_text:
+                contains_expected_text = True
+                break
+
+        assert contains_expected_text, '没有正确附加非sub/sup元素的尾部文本'
