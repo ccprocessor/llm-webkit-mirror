@@ -7,8 +7,8 @@ def get_version():
     try:
         version = subprocess.check_output(command).decode().strip()
         version_parts = version.split('-')
-        if len(version_parts) > 1 and version_parts[0].startswith('llm-web-kit'):
-            return version_parts[1]
+        if len(version_parts) > 1 and version_parts[0].startswith('v'):
+            return version_parts[0].strip('v')
         else:
             raise ValueError(f'Invalid version tag {version}. Expected format is llm-web-kit-<version>-released.')
     except Exception as e:
