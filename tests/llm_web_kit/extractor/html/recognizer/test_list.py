@@ -375,16 +375,21 @@ class TestSimpleListRecognize(unittest.TestCase):
         """直接测试__get_attribute方法的异常，覆盖行239的异常抛出."""
         non_cclist_element = html_to_element('<div>这不是一个cclist元素</div>')
 
-        try:
-            private_method_name = f'_{type(self.__list_recognize).__name__}__get_attribute'
-            private_method = getattr(self.__list_recognize, private_method_name)
-            private_method(non_cclist_element)
-            assert False, '应该抛出HtmlListRecognizerException异常'
-        except HtmlListRecognizerException as e:
-            assert '没有cclist标签' in str(e), '异常消息不正确'
+        # 获取私有方法
+        private_method_name = f'_{type(self.__list_recognize).__name__}__get_attribute'
+        private_method = getattr(self.__list_recognize, private_method_name)
 
-    def test_get_attribute_standalone(self):
-        """单独测试__get_attribute方法抛出异常的情况."""
+        # 使用 assertRaises 上下文管理器
+        with self.assertRaises(HtmlListRecognizerException) as context:
+            private_method(non_cclist_element)
+
+        # 验证异常消息
+        error_msg = str(context.exception)
+        self.assertIn('没有cclist标签', error_msg)
+
+    def test_get_attribute_standalone_improved(self):
+        """单独测试__get_attribute方法抛出异常的情况 - 改进版"""
+        # 获取私有方法 __get_attribute
         get_attribute_method = getattr(self.__list_recognize, '_ListRecognizer__get_attribute')
 
         # 创建各种非cclist元素进行测试
@@ -396,10 +401,9 @@ class TestSimpleListRecognize(unittest.TestCase):
         ]
 
         for i, element in enumerate(test_elements):
-            try:
+            with self.assertRaises(HtmlListRecognizerException) as context:
                 get_attribute_method(element)
-                self.fail(f'元素 {element.tag} 应该抛出异常但没有')
-            except HtmlListRecognizerException as e:
-                error_msg = str(e)
-                self.assertIn('中没有cclist标签', error_msg, f'异常消息不包含预期文本: {error_msg}')
-                self.assertIn(element.tag, error_msg, f'异常消息中应包含元素标签 {element.tag}')
+
+            error_msg = str(context.exception)
+            self.assertIn('中没有cclist标签', error_msg)
+            self.assertIn(element.tag, error_msg)
