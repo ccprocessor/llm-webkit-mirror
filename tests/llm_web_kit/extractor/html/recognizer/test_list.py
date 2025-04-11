@@ -290,6 +290,7 @@ class TestSimpleListRecognize(unittest.TestCase):
         assert br_processed, 'br标签没有被正确处理为段落分隔'
 
     def test_sup_with_text_prefix(self):
+        """测试带有文本前缀的上标/下标标签的处理。"""
         html_content = """
         <ul>
             <li>E=mc<sup>2</sup> is Einstein's equation</li>
@@ -306,39 +307,39 @@ class TestSimpleListRecognize(unittest.TestCase):
 
         assert len(html_part) > 0, '未能识别带有sup/sub标签的列表'
 
-        keywords = ['E=mc', 'Einstein', 'H', 'O']
-        found = False
-
+        # 检查是否有cclist元素
+        cclist_element = None
         for element, _ in html_part:
             if element.tag == CCTag.CC_LIST:
-                element_text = element.text
-                if all(k in element_text for k in keywords):
-                    found = True
-                    break
+                cclist_element = element
+                break
 
-                try:
-                    import json
-                    data = json.loads(element_text)
-                    text_content = []
+        assert cclist_element is not None, '未找到cclist元素'
 
-                    # 扁平化处理JSON数据，提取所有'c'字段
-                    def extract_text(obj):
-                        if isinstance(obj, dict) and 'c' in obj:
-                            text_content.append(obj['c'])
-                        elif isinstance(obj, list):
-                            for item in obj:
-                                extract_text(item)
+        # 直接处理JSON文本
+        import json
+        data = json.loads(cclist_element.text)
 
-                    extract_text(data)
-                    combined_text = ' '.join(text_content)
+        # 扁平化处理JSON数据，提取所有文本内容
+        text_content = []
 
-                    if all(k in combined_text for k in keywords):
-                        found = True
-                        break
-                except Exception:
-                    pass
+        def extract_text(obj):
+            if isinstance(obj, dict) and 'c' in obj:
+                text_content.append(obj['c'])
+            elif isinstance(obj, list):
+                for item in obj:
+                    extract_text(item)
 
-        assert found, '带有前缀文本的sup/sub标签没有被正确处理'
+        extract_text(data)
+        combined_text = ' '.join(text_content)
+
+        # 验证关键文本和标记
+        assert 'E=mc' in combined_text, '未找到公式前缀 E=mc'
+        assert '^2^' in combined_text, '未找到上标 ^2^'
+        assert 'Einstein' in combined_text, '未找到 Einstein'
+        assert 'H' in combined_text, '未找到 H'
+        assert '~2~' in combined_text, '未找到下标 ~2~'
+        assert 'O' in combined_text, '未找到 O'
 
     def test_non_li_tail_with_sub_sup(self):
         """测试带有sub/sup的非li元素尾部文本，覆盖行239-244的if is_sub_sup条件分支."""
