@@ -23,7 +23,7 @@ class TestTextParagraphRecognizer(unittest.TestCase):
         result = self.recognizer.recognize('', [(html_to_element(html), html_to_element(html))], html)
 
         # 验证结果
-        self.assertEqual(len(result), 2)  # 应该识别出2个段落
+        self.assertEqual(len(result), 4)  # 应该识别出4个段落
 
         # 验证第一个段落
         first_para = result[0][0]
@@ -40,7 +40,19 @@ class TestTextParagraphRecognizer(unittest.TestCase):
         self.assertEqual(jso[0]['t'], 'text')
         self.assertEqual(jso[1]['c'], 'E=MC^2')
         self.assertEqual(jso[1]['t'], 'equation-inline')
-        self.assertTrue(jso[2]['c'].endswith('请访问'))
-        self.assertEqual(jso[3]['c'], 'https://abc.com')
-        self.assertEqual(jso[3]['t'], 'code-inline')
-        self.assertEqual(jso[4]['c'], '.')
+
+        # 验证第三个段落
+        second_para = result[2][0]
+        text = second_para.text
+        jso = json.loads(text)
+        self.assertEqual(jso[0]['c'], '其中E是能量。')
+        self.assertEqual(jso[0]['t'], 'text')
+
+        # 验证第四个段落
+        second_para = result[3][0]
+        text = second_para.text
+        jso = json.loads(text)
+        self.assertTrue(jso[0]['c'].endswith('请访问'))
+        self.assertEqual(jso[1]['c'], 'https://abc.com')
+        self.assertEqual(jso[1]['t'], 'code-inline')
+        self.assertEqual(jso[2]['c'], '.')

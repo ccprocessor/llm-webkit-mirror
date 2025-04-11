@@ -450,7 +450,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
-        assert len(content_txt) == 2022
+        assert len(content_txt) == 1982
 
     def test_xml_tag(self):
         """测试xml标签."""
@@ -572,7 +572,7 @@ DEF
         test_data = self.data_json[34]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        result_flag = result.get_content_list()._get_data()[0][37]['content']['is_complex']
+        result_flag = result.get_content_list()._get_data()[0][28]['content']['is_complex']
         assert result_flag is False
 
     def test_table_invalid_percent(self):
