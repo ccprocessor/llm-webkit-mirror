@@ -11,7 +11,7 @@ __pycache__
 *.pyc
 .vscode
 debug/
-*.ipynb
+# *.ipynb
 .idea
 .python-version
 
