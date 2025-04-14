@@ -11,8 +11,8 @@ from overrides import override
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
-                                         process_sub_sup_tags)
+from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
+                                         html_to_element, process_sub_sup_tags)
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -114,7 +114,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
 
             para_text = self.__get_paragraph_text(el_element)
             if para_text:
-                cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html(raw_html_element))
+                cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html_unescaped(raw_html_element))
                 new_lst.append((cctext_el, raw_html_element))
         return new_lst
 
