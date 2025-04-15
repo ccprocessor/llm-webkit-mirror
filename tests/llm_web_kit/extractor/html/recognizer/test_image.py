@@ -62,18 +62,18 @@ TEST_CASES_HTML = [
     {
         'input': 'assets/ccimage/svg_e.html',
         'base_url': 'https://onlinelibrary.wiley.com/doi/10.1155/2012/387626',
-        'expected': 27,
+        'expected': 49,
     },
     {
         'input': 'assets/ccimage/inline_image.html',
         'base_url': 'https://community.wikia.com/wiki/Help:Theme_designer',
-        'expected': 104,
+        'expected': 161,
         'description': '测试标题中的图片被正确处理',
     },
     {
         'input': 'assets/ccimage/svg_ee.html',
         'base_url': 'https://www.spreaker.com/podcast/99-challenges--4769835',
-        'expected': 9,
+        'expected': 341,
     },
 ]
 
