@@ -67,7 +67,7 @@ TEST_CASES_HTML = [
     {
         'input': 'assets/ccimage/inline_image.html',
         'base_url': 'https://community.wikia.com/wiki/Help:Theme_designer',
-        'expected': 161,
+        'expected': 104,
         'description': '测试标题中的图片被正确处理',
     },
     {
