@@ -67,7 +67,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
         return result
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[
+        Tuple[HtmlElement, HtmlElement]]:
         """父类，解析图片元素.
 
         Args:
@@ -89,7 +90,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                     ccimg_html.append(html_li)
         return ccimg_html
 
-    def __parse_html_img(self, base_url: str, html_str: Tuple[HtmlElement, HtmlElement]) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def __parse_html_img(self, base_url: str, html_str: Tuple[HtmlElement, HtmlElement]) -> List[
+        Tuple[HtmlElement, HtmlElement]]:
         """解析html，获取img标签."""
         # html_obj = self._build_html_tree(html_str[0])
         html_obj = html_str[0]
@@ -305,3 +307,8 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
             )
         except ValueError:
             pass
+        except Exception as e:
+            if 'not well-formed (invalid token)' in str(e):  # 原svg数据异常，这里过滤掉不做处理
+                pass
+            else:
+                HtmlImageRecognizerException(f'parse svg error: {e}, svg data: {svg_content}')
