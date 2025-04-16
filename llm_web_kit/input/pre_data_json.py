@@ -1,5 +1,6 @@
 import copy
 import json
+from ast import List
 from typing import Any, Dict
 
 
@@ -63,17 +64,6 @@ class PreDataJson:
         """
         self.__pre_data[key] = value
 
-    def __delitem__(self, key: str) -> None:
-        """通过del obj[key]方式删除数据.
-
-        Args:
-            key (str): 键名
-
-        Raises:
-            KeyError: 如果key不存在
-        """
-        del self.__pre_data[key]
-
     def get(self, key: str, default: Any = None) -> Any:
         """获取数据.
 
@@ -85,38 +75,6 @@ class PreDataJson:
             返回key对应的值，如果key不存在返回default
         """
         return self._data.get(key, default)
-
-    def to_dict(self) -> Dict[str, Any]:
-        """将PreDataJson转换为字典.
-
-        Returns:
-            Dict[str, Any]: 包含所有数据的字典
-        """
-        return copy.deepcopy(self.__pre_data)
-
-    def __contains__(self, key: str) -> bool:
-        """通过key in obj方式判断键是否存在.
-
-        Args:
-            key (str): 键名
-
-        Returns:
-            bool: 如果key存在返回True，否则返回False
-        """
-        return key in self.__pre_data
-
-    def to_json(self, pretty: bool = False) -> str:
-        """将PreDataJson转换为JSON字符串.
-
-        Args:
-            pretty (bool): 是否美化输出的JSON字符串
-
-        Returns:
-            str: JSON字符串
-        """
-        if pretty:
-            return json.dumps(self.__pre_data, ensure_ascii=False, indent=2)
-        return json.dumps(self.__pre_data, ensure_ascii=False)
 
     def keys(self):
         """返回所有键名的迭代器.
@@ -141,3 +99,47 @@ class PreDataJson:
             Iterator[Tuple[str, Any]]: 键值对迭代器
         """
         return self.__pre_data.items()
+
+    def __contains__(self, key: str) -> bool:
+        """通过key in obj方式判断键是否存在.
+
+        Args:
+            key (str): 键名
+
+        Returns:
+            bool: 如果key存在返回True，否则返回False
+        """
+        return key in self.__pre_data
+
+    def get_layout_file_list(self) -> List[str]:
+        """获取layout_file_list.
+
+        Returns:
+            List[str]: layout_file_list
+        """
+        return self.__pre_data[PreDataJsonKey.LAYOUT_FILE_LIST]
+
+    def to_json(self, pretty: bool = False) -> str:
+        """将PreDataJson转换为JSON字符串.
+
+        Args:
+            pretty (bool): 是否美化输出的JSON字符串
+
+        Returns:
+            str: JSON字符串
+        """
+        json_dict = self.__pre_data.copy()
+        json_dict[PreDataJsonKey.LAYOUT_FILE_LIST] = self.get_layout_file_list()
+        if pretty:
+            return json.dumps(json_dict, ensure_ascii=False, indent=2)
+        return json.dumps(json_dict, ensure_ascii=False)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """将PreDataJson转换为字典.
+
+        Returns:
+            Dict[str, Any]: 包含所有数据的字典
+        """
+        json_dict = self.__pre_data.copy()
+        json_dict[PreDataJsonKey.LAYOUT_FILE_LIST] = self.get_layout_file_list().to_dict()
+        return json_dict
