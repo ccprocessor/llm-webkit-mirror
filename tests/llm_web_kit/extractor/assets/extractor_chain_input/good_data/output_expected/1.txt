@@ -5,10 +5,14 @@ Paragraph 2
 |---|---|
 | 3 | 4 |
 <table><tr><td rowspan="2">1</td><td>2</td><td>3</td></tr><tr><td colspan="2">4</td></tr><tr><td>5</td><td>6</td><td>7</td></tr></table>
-1
-2
-1 1.1 1.2
-2 2.1 2.2
+- 1
+- 2
+- 1
+  - 1.1
+  - 1.2
+- 2
+  - 2.1
+  - 2.2
 $$
 x=\frac{-b±\sqrt{{b}^{2}-4ac}}{2a}\text{.}
 $$
@@ -21,6 +25,6 @@ const Prism = require('prismjs');
     // Returns a highlighted HTML string
     const html = Prism.highlight(code, Prism.languages.javascript, 'javascript');
 ```
-100
-200
+1. 100
+2. 200
 reference: `#include<xxxx.hpp>`

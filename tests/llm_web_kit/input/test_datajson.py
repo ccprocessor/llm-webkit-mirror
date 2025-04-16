@@ -352,13 +352,13 @@ class TestDataJsonInit(unittest.TestCase):
                                         ]
                                     ]
                                 ],
-                                'ordered': True,
+                                'list_attribute': 'ordered',
                                 'list_nest_level': 1,
                             }
                         }
                     ]]
                 },
-                'expected': '第一个段落 $x^2$\n第二个段落 $$y^3$$\n'
+                'expected': '第一个段落 $x^2$\n1. 第二个段落 $$y^3$$\n'
             },
             # 复杂公式
             {
@@ -377,20 +377,20 @@ class TestDataJsonInit(unittest.TestCase):
                                         ]
                                     ]
                                 ],
-                                'ordered': True,
+                                'list_attribute': 'ordered',
                                 'list_nest_level': 1,
                             }
                         }
                     ]]
                 },
-                'expected': '复杂公式 $$\\frac{x^2 + y^3}{z^4}$$ 和 $\\sqrt{x^2 + y^2}$\n'
+                'expected': r'1. 复杂公式 $$\frac{x^2 + y^3}{z^4}$$ 和 $\sqrt{x^2 + y^2}$'
             }
         ]
 
         for case in test_cases:
             doc = DataJson(case['data'])
             result = doc.get_content_list().to_txt()
-            assert result == case['expected'], f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result}'"
+            assert result.strip() == case['expected'].strip(), f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result.strip()}'"
 
     def test_to_nlp_md_with_math_delimiters(self):
         """测试 to_nlp_md 方法对数学特殊公式分隔符的处理."""
@@ -506,7 +506,7 @@ class TestDataJsonInit(unittest.TestCase):
                                         ]
                                     ]
                                 ],
-                                'ordered': True,
+                                'list_attribute': 'ordered',
                                 'list_nest_level': 1,
                             }
                         }

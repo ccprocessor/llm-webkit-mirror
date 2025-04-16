@@ -1,4 +1,6 @@
+import copy
 import json
+import re
 import string
 from typing import List, Tuple
 
@@ -9,8 +11,8 @@ from overrides import override
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
-                                         process_sub_sup_tags)
+from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
+                                         html_to_element, process_sub_sup_tags)
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -39,6 +41,17 @@ special_symbols = [  # TODO 从文件读取
 ]
 
 PARAGRAPH_SEPARATOR = '\n\n'
+
+# 需要保留的html实体，例如：'>' 直接在markdown中无法渲染，需要替换为html实体
+entities_map = {'>': 'gt'}
+
+# 行内元素
+inline_tags = {
+    'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'br', 'button', 'cite', 'code',
+    'dfn', 'em', 'i', 'img', 'input', 'kbd', 'label', 'map', 'object', 'q',
+    'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
+    'textarea', 'time', 'var', 'u', 's', 'code', 'cccode-inline', 'ccmath-inline'
+}
 
 
 class TextParagraphRecognizer(BaseHTMLElementRecognizer):
@@ -101,9 +114,25 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
 
             para_text = self.__get_paragraph_text(el_element)
             if para_text:
-                cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html(raw_html_element))
+                cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html_unescaped(raw_html_element))
                 new_lst.append((cctext_el, raw_html_element))
         return new_lst
+
+    def replace_entities(self, text, entities_map):
+        """使用正则表达式同时替换文本中的多个特定字符为其对应的HTML实体。
+
+        :param text: 需要处理的文本。
+        :param entities_map: 一个字典，键是需要替换的字符，值是对应的HTML实体名
+        :return: 替换后的文本。
+        """
+        # 创建正则表达式模式，匹配所有需要替换的字符
+        rx = re.compile('|'.join(re.escape(str(key)) for key in entities_map.keys()))
+
+        def one_xlat(match):
+            """回调函数，用于将匹配到的字符替换为对应的HTML实体。"""
+            return f'&{entities_map[match.group(0)]};'
+
+        return rx.sub(one_xlat, text)
 
     def __combine_text(self, text1:str, text2:str, lang='en') -> str:
         """将两段文本合并，中间加空格.
@@ -117,11 +146,11 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         text2 = text2.strip(' ') if text2 else ''
         if lang == 'zh':
             txt = text1 + text2
-            return txt.strip()
+            return self.replace_entities(txt.strip(), entities_map)
         else:
             words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
             txt = text1 + words_sep + text2
-            return txt.strip()
+            return self.replace_entities(txt.strip(), entities_map)
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
         """
@@ -178,85 +207,118 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         return para_text
 
     def __extract_paragraphs(self, root: HtmlElement):
-        """解析文本段落元素.
+        """解析HtmlElement为段落元素列表.
 
-        Args:
-            root: 根元素
-
-        Returns:
-            解析后的文本段落元素
+        :param root: 根元素
+        :return: 段落元素列表
         """
-        path: List[HtmlElement] = []
-        parser = html.HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
 
-        def is_contain_readable_text(text):
-            return text.strip() if text else text
+        def is_block_element(node) -> bool:
+            """如果标签不在内联元素集合中，默认为块级元素。 但是，如果一个内联元素包含块级元素，则该内联元素被视为块级元素。"""
+            if node.tag in inline_tags:
+                return any(is_block_element(child) for child in node.iterchildren())
+            return isinstance(node, html.HtmlElement)
 
-        def rebuild_path():
-            """rebuild path with only tag & attrib."""
-            for i in range(len(path)):
-                elem = path[i]
-                copied = parser.makeelement(elem.tag, elem.attrib)
-                if i > 0:
-                    path[i - 1].append(copied)
-                path[i] = copied
+        def has_block_children(node) -> bool:
+            return any(is_block_element(child) for child in node.iterchildren())
 
-        def copy_helper(elem: HtmlElement):
-            """deep copy w/o root's tail."""
-            copied = parser.makeelement(elem.tag, elem.attrib)
-            copied.text = elem.text
-            for sub_elem in elem:
-                sub_copied = copy_helper(sub_elem)
-                sub_copied.tail = sub_elem.tail
-                copied.append(sub_copied)
-            return copied
+        def clone_structure(path: List[html.HtmlElement]) -> Tuple[html.HtmlElement, html.HtmlElement]:
+            if not path:
+                raise ValueError('Path cannot be empty')
+            root = html.Element(path[0].tag, **path[0].attrib)
+            current = root
+            for node in path[1:-1]:
+                new_node = html.Element(node.tag, **node.attrib)
+                current.append(new_node)
+                current = new_node
+            last_node = html.Element(path[-1].tag, **path[-1].attrib)
+            current.append(last_node)
+            return root, last_node
 
-        def has_direct_text(elem: HtmlElement):
-            # hr is not considered
-            # <br> return false
-            # &nbsp; return false
-            if is_contain_readable_text(elem.text):
-                return True
-            for sub_elem in elem:
-                if is_contain_readable_text(sub_elem.tail):
-                    return True
-            return False
+        paragraphs = []
 
-        def has_text(elem: HtmlElement):
-            if has_direct_text(elem):
-                return True
-            for sub_elem in elem:
-                if has_text(sub_elem):
-                    return True
-            return False
+        def process_node(node: html.HtmlElement, path: List[html.HtmlElement]):
+            current_path = path + [node]
+            inline_content = []  # 累积内联内容和未包裹文本
 
-        def helper(elem: HtmlElement):
-            copied = parser.makeelement(elem.tag, elem.attrib)
-            copied.text = elem.text
+            # 首先处理父节点下的直接文本内容（node.text）
+            if node.text and node.text.strip():
+                inline_content.append(('direct_text', node.text.strip()))
 
-            if path:
-                path[-1].append(copied)
+            # 处理所有子节点
+            for child in node:
+                if is_block_element(child):
+                    # 遇到块级元素，先处理之前累积的内容
+                    if inline_content:
+                        try:
+                            root, last_node = clone_structure(current_path)
+                            merge_inline_content(last_node, inline_content)
+                            paragraphs.append(root)
+                        except ValueError:
+                            pass
+                        inline_content = []
 
-            path.append(copied)
-            # elem直接有text，则直接添加返回
-            if has_direct_text(elem):
-                rebuild_path()
-                path[-1].append(copy_helper(elem))
-                yield path[0], path[0]
-                rebuild_path()
-            for sub_elem in elem:
-                if has_direct_text(sub_elem) or (sub_elem.tag == 'p' and has_text(sub_elem)):
-                    rebuild_path()
-                    path[-1].append(copy_helper(sub_elem))
-                    # yield path[0], element_to_html(path[0])
-                    yield path[0], path[0]
-                    # detach the yielded tree
-                    rebuild_path()
-                    continue
+                    # 处理块级元素本身
+                    if not has_block_children(child):
+                        # 没有子块级元素，作为独立段落
+                        try:
+                            root, last_node = clone_structure(current_path + [child])
+                            last_node.text = child.text if child.text else None
+                            for grandchild in child:
+                                last_node.append(copy.deepcopy(grandchild))
+                            paragraphs.append(root)
+                        except ValueError:
+                            pass
+                    else:
+                        # 有子块级元素，递归处理
+                        process_node(child, current_path)
 
-                yield from helper(sub_elem)
+                    # 处理当前块级元素的tail文本（与块级元素同级）
+                    if child.tail and child.tail.strip():
+                        inline_content.append(('tail_text', child.tail.strip()))
+                else:
+                    # 非块级元素
+                    inline_content.append(('element', child))
+                    # 处理非块级元素的tail文本
+                    if child.tail and child.tail.strip():
+                        inline_content.append(('tail_text', child.tail.strip()))
 
-            copied = path.pop()
-            copied.tail = elem.tail
+            # 处理剩余的内联内容（没有更多块级元素的情况）
+            if inline_content:
+                try:
+                    root, last_node = clone_structure(current_path)
+                    merge_inline_content(last_node, inline_content)
+                    paragraphs.append(root)
+                except ValueError:
+                    pass
 
-        return helper(root)
+        def merge_inline_content(parent: html.HtmlElement, content_list: List[Tuple[str, str]]):
+            """将inline_content列表中的内容合并到给定的parent节点中。
+
+            :param parent: 目标父节点
+            :param content_list: 包含('direct_text'|'tail_text'|'element', content)元组的列表
+            """
+            last_inserted = None
+            for item_type, item in content_list:
+                if item_type in ('direct_text', 'tail_text'):
+                    if last_inserted is None:
+                        if not parent.text:
+                            parent.text = item
+                        else:
+                            parent.text += ' ' + item
+                    else:
+                        if last_inserted.tail is None:
+                            last_inserted.tail = item
+                        else:
+                            last_inserted.tail += ' ' + item
+                else:  # element
+                    parent.append(copy.deepcopy(item))
+                    last_inserted = item
+
+        process_node(root, [])
+
+        unique_paragraphs = []
+        for p in paragraphs:
+            unique_paragraphs.append((p, p))
+
+        return unique_paragraphs
