@@ -6,7 +6,6 @@ from llm_web_kit.input.pre_data_json import PreDataJson
 from llm_web_kit.libs.logger import mylogger as logger
 
 
-# 抽象基类定义
 class AbstractMainHtmlProcessor(ABC):
     """MAIN HTML提取处理器的抽象基类，定义了处理MAIN HTML内容的标准接口."""
 
@@ -17,7 +16,6 @@ class AbstractMainHtmlProcessor(ABC):
             config (Dict[str, Any], optional): 配置信息
         """
         self.config = config or {}
-        self.name = self.__class__.__name__
 
     @abstractmethod
     def process(self, pre_data: PreDataJson) -> PreDataJson:

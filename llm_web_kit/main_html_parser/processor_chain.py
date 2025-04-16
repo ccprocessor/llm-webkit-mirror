@@ -3,15 +3,14 @@ from typing import Any, Dict, List, Union
 
 import commentjson as json
 
-from llm_web_kit.exception.exception import (ExtractorChainBaseException,
-                                             ExtractorChainConfigException,
-                                             ExtractorChainInputException,
-                                             ExtractorInitException,
-                                             ExtractorNotFoundException,
-                                             LlmWebKitBaseException)
+from llm_web_kit.exception.exception import (LlmWebKitBaseException,
+                                             ProcessorChainBaseException,
+                                             ProcessorChainConfigException,
+                                             ProcessorChainInitException,
+                                             ProcessorChainInputException,
+                                             ProcessorNotFoundException)
 from llm_web_kit.input.pre_data_json import PreDataJson
 from llm_web_kit.libs.class_loader import load_python_class_by_name
-from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.main_html_parser.processor import (AbstractMainHtmlProcessor,
                                                     AbstractPostProcessor,
                                                     AbstractPreProcessor)
@@ -48,46 +47,29 @@ class MainHtmlProcessorChain:
         """
         try:
             # 执行预处理
-            if self.__pre_processors:
-                logger.info(f'开始执行预处理阶段，共有{len(self.__pre_processors)}个预处理器')
-                for i, pre_processor in enumerate(self.__pre_processors):
-                    pre_processor_name = pre_processor.get_name()
-                    logger.info(f'开始执行第{i+1}个预处理器: {pre_processor_name}')
-                    pre_data = pre_processor.pre_process(pre_data)
-                    logger.info(f'第{i+1}个预处理器执行完成: {pre_processor_name}')
+            for pre_processor in self.__pre_processors:
+                pre_data = pre_processor.pre_process(pre_data)
 
             # 执行主处理
-            if self.__processors:
-                logger.info(f'开始执行主处理阶段，共有{len(self.__processors)}个处理器')
-                for i, processor in enumerate(self.__processors):
-                    processor_name = processor.get_name()
-                    logger.info(f'开始执行第{i+1}个处理器: {processor_name}')
-                    pre_data = processor.execute(pre_data)
-                    logger.info(f'第{i+1}个处理器执行完成: {processor_name}')
+            for processor in self.__processors:
+                pre_data = processor.execute(pre_data)
 
             # 执行后处理
-            if self.__post_processors:
-                logger.info(f'开始执行后处理阶段，共有{len(self.__post_processors)}个后处理器')
-                for i, post_processor in enumerate(self.__post_processors):
-                    post_processor_name = post_processor.get_name()
-                    logger.info(f'开始执行第{i+1}个后处理器: {post_processor_name}')
-                    pre_data = post_processor.post_process(pre_data)
-                    logger.info(f'第{i+1}个后处理器执行完成: {post_processor_name}')
-
-            logger.info('处理链执行完成')
+            for post_processor in self.__post_processors:
+                pre_data = post_processor.post_process(pre_data)
 
         except KeyError as e:
-            exc = ExtractorChainInputException(f'必要字段缺失: {str(e)}')
+            exc = ProcessorChainInputException(f'必要字段缺失: {str(e)}')
             exc.traceback_info = traceback.format_exc()
             raise exc
-        except ExtractorChainBaseException as e:
+        except ProcessorChainBaseException as e:
             e.traceback_info = traceback.format_exc()
             raise
         except LlmWebKitBaseException as e:
             e.traceback_info = traceback.format_exc()
             raise
         except Exception as e:
-            wrapped = ExtractorChainBaseException(f'处理过程中发生错误: {str(e)}')
+            wrapped = ProcessorChainBaseException(f'处理过程中发生错误: {str(e)}')
             wrapped.traceback_info = traceback.format_exc()
             raise wrapped from e
 
@@ -102,7 +84,7 @@ class MainHtmlProcessorChain:
         # 加载预处理器
         for pre_processor_config in config.get('pre_processor', []):
             if pre_processor_config.get('enable', False):
-                pre_processor = self.__create_pre_processor(pre_processor_config)
+                pre_processor = self.__create_processor(pre_processor_config)
                 self.__pre_processors.append(pre_processor)
 
         # 加载主处理器
@@ -114,7 +96,7 @@ class MainHtmlProcessorChain:
         # 加载后处理器
         for post_processor_config in config.get('post_processor', []):
             if post_processor_config.get('enable', False):
-                post_processor = self.__create_post_processor(post_processor_config)
+                post_processor = self.__create_processor(post_processor_config)
                 self.__post_processors.append(post_processor)
 
     def __create_processor(self, config: Dict[str, Any]) -> AbstractMainHtmlProcessor:
@@ -128,13 +110,13 @@ class MainHtmlProcessorChain:
         """
         python_class = config.get('python_class')
         if not python_class:
-            raise ExtractorChainConfigException('处理器配置缺少python_class字段')
+            raise ProcessorChainConfigException('处理器配置缺少python_class字段')
 
         try:
             # 加载处理器类
             processor_cls = load_python_class_by_name(python_class)
             if not issubclass(processor_cls, AbstractMainHtmlProcessor):
-                raise ExtractorChainConfigException(f'类 {python_class} 不是AbstractMainHtmlProcessor的子类')
+                raise ProcessorChainConfigException(f'类 {python_class} 不是AbstractMainHtmlProcessor的子类')
 
             # 创建处理器实例
             kwargs = config.get('class_init_kwargs', {})
@@ -143,69 +125,9 @@ class MainHtmlProcessorChain:
             return processor
 
         except ImportError:
-            raise ExtractorNotFoundException(f'处理器类未找到: {python_class}')
+            raise ProcessorNotFoundException(f'处理器类未找到: {python_class}')
         except Exception as e:
-            raise ExtractorInitException(f'初始化处理器 {python_class} 失败: {str(e)}')
-
-    def __create_pre_processor(self, config: Dict[str, Any]) -> AbstractPreProcessor:
-        """从配置创建预处理器实例.
-
-        Args:
-            config (Dict[str, Any]): 预处理器配置
-
-        Returns:
-            AbstractPreProcessor: 预处理器实例
-        """
-        python_class = config.get('python_class')
-        if not python_class:
-            raise ExtractorChainConfigException('预处理器配置缺少python_class字段')
-
-        try:
-            # 加载处理器类
-            processor_cls = load_python_class_by_name(python_class)
-            if not issubclass(processor_cls, AbstractPreProcessor):
-                raise ExtractorChainConfigException(f'类 {python_class} 不是AbstractPreProcessor的子类')
-
-            # 创建处理器实例
-            kwargs = config.get('class_init_kwargs', {})
-            processor = processor_cls(config=config, **kwargs)
-
-            return processor
-
-        except ImportError:
-            raise ExtractorNotFoundException(f'预处理器类未找到: {python_class}')
-        except Exception as e:
-            raise ExtractorInitException(f'初始化预处理器 {python_class} 失败: {str(e)}')
-
-    def __create_post_processor(self, config: Dict[str, Any]) -> AbstractPostProcessor:
-        """从配置创建后处理器实例.
-
-        Args:
-            config (Dict[str, Any]): 后处理器配置
-
-        Returns:
-            AbstractPostProcessor: 后处理器实例
-        """
-        python_class = config.get('python_class')
-        if not python_class:
-            raise ExtractorChainConfigException('后处理器配置缺少python_class字段')
-
-        try:
-            # 加载处理器类
-            processor_cls = load_python_class_by_name(python_class)
-            if not issubclass(processor_cls, AbstractPostProcessor):
-                raise ExtractorChainConfigException(f'类 {python_class} 不是AbstractPostProcessor的子类')
-
-            # 创建处理器实例
-            kwargs = config.get('class_init_kwargs', {})
-            processor = processor_cls(config=config, **kwargs)
-
-            return processor
-
-        except ImportError:
-            raise ExtractorNotFoundException(f'后处理器类未找到: {python_class}')
-        except Exception as e:
-            raise ExtractorInitException(f'初始化后处理器 {python_class} 失败: {str(e)}')
+            raise ProcessorChainInitException(f'初始化处理器 {python_class} 失败: {str(e)}')
 
     @classmethod
     def from_config_file(cls, config_file_path: str) -> 'MainHtmlProcessorChain':
@@ -223,7 +145,7 @@ class MainHtmlProcessorChain:
 
             return cls(config)
         except Exception as e:
-            raise ExtractorChainConfigException(f'加载配置文件 {config_file_path} 失败: {str(e)}')
+            raise ProcessorChainConfigException(f'加载配置文件 {config_file_path} 失败: {str(e)}')
 
 
 class HtmlProcessorSimpleFactory:
@@ -245,7 +167,7 @@ class HtmlProcessorSimpleFactory:
                 with open(config, 'r', encoding='utf-8') as f:
                     config = json.load(f)
             except Exception as e:
-                raise ExtractorChainConfigException(f'加载配置文件失败: {str(e)}')
+                raise ProcessorChainConfigException(f'加载配置文件失败: {str(e)}')
 
         # 创建并返回处理器链
         return MainHtmlProcessorChain(config)

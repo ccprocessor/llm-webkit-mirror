@@ -155,5 +155,83 @@
       "code": 47000000,
       "message": "Model runtime exception"
     }
+  },
+  // ProcessorChain相关异常 (50000000)
+  "ProcessorChain": {
+    "ProcessorChainBaseException": {
+      "code": 50000000,
+      "message": "ProcessorChain base exception"
+    },
+    "ProcessorChainInitException": {
+      "code": 51000000,
+      "message": "ProcessorChain initialization exception"
+    },
+    "ProcessorChainConfigException": {
+      "code": 52000000,
+      "message": "ProcessorChain configuration exception"
+    },
+    "ProcessorChainInputException": {
+      "code": 53000000,
+      "message": "ProcessorChain input exception"
+    },
+    "ProcessorNotFoundException": {
+      "code": 54000000,
+      "message": "Processor not found exception"
+    }
+  },
+  // Processor相关异常 (60000000)
+  "Processor": {
+    "ProcessorBaseException": {
+      "code": 60000000,
+      "message": "Processor base exception"
+    },
+    "HtmlPreProcessorException": {
+      "code": 61000000,
+      "message": "HTML pre-processor exception"
+    },
+    "HtmlProcessorException": {
+      "code": 62000000,
+      "message": "HTML processor exception"
+    },
+    "HtmlPostProcessorException": {
+      "code": 63000000,
+      "message": "HTML post-processor exception"
+    },
+    "DomainClusteringProcessorException": {
+      "code": 62010000,
+      "message": "Domain clustering processor exception"
+    },
+    "LayoutClusteringProcessorException": {
+      "code": 62020000,
+      "message": "Layout clustering processor exception"
+    },
+    "TypicalHtmlSelectorProcessorException": {
+      "code": 62030000,
+      "message": "Typical HTML selector processor exception"
+    },
+    "TagSimplifiedProcessorException": {
+      "code": 62040000,
+      "message": "Tag simplified processor exception"
+    },
+    "LimMainIdentifierProcessorException": {
+      "code": 62050000,
+      "message": "Lim main identifier processor exception"
+    },
+    "TagMappingProcessorException": {
+      "code": 62060000,
+      "message": "Tag mapping processor exception"
+    },
+    "LayoutSubtreeParserProcessorException": {
+      "code": 62070000,
+      "message": "Layout subtree parser processor exception"
+    },
+    "LayoutBatchProcessorException": {
+      "code": 62080000,
+      "message": "Layout batch processor exception"
+    },
+    "DomContentFilterProcessorException": {
+      "code": 62090000,
+      "message": "DOM content filter processor exception"
+    }
   }
 }
