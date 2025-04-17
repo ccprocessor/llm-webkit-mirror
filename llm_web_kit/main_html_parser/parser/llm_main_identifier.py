@@ -16,6 +16,6 @@ class LlmMainIdentifierParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.LLM_RESPONSE, {})
+        pre_data[PreDataJsonKey.LLM_RESPONSE] = {}
 
         return pre_data

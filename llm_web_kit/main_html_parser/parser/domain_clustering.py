@@ -18,9 +18,9 @@ class DomainClusteringParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.DOMAIN_NAME, '')
-        pre_data.__setitem__(PreDataJsonKey.DOMAIN_ID, '')
-        pre_data.__setitem__(PreDataJsonKey.RECORD_COUNT, 0)
-        pre_data.__setitem__(PreDataJsonKey.DOMAIN_FILE_LIST, [])
+        pre_data[PreDataJsonKey.DOMAIN_NAME] = ''
+        pre_data[PreDataJsonKey.DOMAIN_ID] = ''
+        pre_data[PreDataJsonKey.RECORD_COUNT] = 0
+        pre_data[PreDataJsonKey.DOMAIN_FILE_LIST] = []
 
         return pre_data

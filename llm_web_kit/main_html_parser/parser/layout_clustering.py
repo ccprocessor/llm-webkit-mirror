@@ -22,7 +22,7 @@ class LayoutClusteringParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.LAYOUT, '')
-        pre_data.__setitem__(PreDataJsonKey.LAYOUT_FILE_LIST, [])
+        pre_data[PreDataJsonKey.LAYOUT] = ''
+        pre_data[PreDataJsonKey.LAYOUT_FILE_LIST] = []
 
         return pre_data

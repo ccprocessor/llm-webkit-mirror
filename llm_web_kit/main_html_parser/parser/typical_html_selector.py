@@ -16,6 +16,6 @@ class TypicalHtmlSelectorParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.TYPICAL_RAW_HTML, '')
+        pre_data[PreDataJsonKey.TYPICAL_RAW_HTML] = ''
 
         return pre_data

@@ -22,7 +22,7 @@ class HtmlTagSimplifierParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, typical_raw_html)  # 保存原始标签HTML
-        pre_data.__setitem__(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')  # 保存简化后的HTML
+        pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML] = typical_raw_html  # 保存原始标签HTML
+        pre_data[PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML] = ''  # 保存简化后的HTML
 
         return pre_data

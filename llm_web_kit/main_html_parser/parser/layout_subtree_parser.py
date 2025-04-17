@@ -16,6 +16,6 @@ class LayoutSubtreeParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.HTML_TARGET_LIST, [])
+        pre_data[PreDataJsonKey.HTML_TARGET_LIST] = []
 
         return pre_data

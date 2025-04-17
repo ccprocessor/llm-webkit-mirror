@@ -16,6 +16,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.HTML_ELEMENT_LIST, [])
+        pre_data[PreDataJsonKey.HTML_ELEMENT_LIST] = []
 
         return pre_data

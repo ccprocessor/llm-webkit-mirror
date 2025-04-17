@@ -16,6 +16,6 @@ class DomContentFilterParser(BaseMainHtmlParser):
         # ...
 
         # 设置输出数据
-        pre_data.__setitem__(PreDataJsonKey.FILTERED_MAIN_HTML, '')
+        pre_data[PreDataJsonKey.FILTERED_MAIN_HTML] = ''
 
         return pre_data
