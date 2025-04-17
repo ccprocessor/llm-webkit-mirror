@@ -1,10 +1,9 @@
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
-from llm_web_kit.main_html_parser.main_html_processor import \
-    AbstractMainHtmlProcessor
+from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 
-class LayoutSubtreeParserProcessor(AbstractMainHtmlProcessor):
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
+class LayoutSubtreeParser(BaseMainHtmlParser):
+    def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """根据上一步映射html的tag，抽取layout代表网页的子树.
 
         Args:

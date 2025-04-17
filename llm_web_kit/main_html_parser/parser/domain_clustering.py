@@ -1,12 +1,11 @@
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
-from llm_web_kit.main_html_parser.main_html_processor import \
-    AbstractMainHtmlProcessor
+from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 
-class DomainClusteringProcessor(AbstractMainHtmlProcessor):
+class DomainClusteringParser(BaseMainHtmlParser):
     """将原始的CC数据按域名domain进行聚类处理器."""
 
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
+    def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """将原始的CC数据按域名domain进行聚类，保证相同domain的html数据在一个或多个文件中.
 
         Args:

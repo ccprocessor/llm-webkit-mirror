@@ -484,73 +484,78 @@ class HtmlPostProcessorException(ProcessorBaseException):
         super().__init__(custom_message, error_code)
 
 
-class DomainClusteringProcessorException(HtmlProcessorException):
+##############################################################################
+#
+#  Parser Exceptions
+#
+##############################################################################
+class DomainClusteringParserException(HtmlProcessorException):
     """Exception raised during domain clustering processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'DomainClusteringProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'DomainClusteringParserException')
         super().__init__(custom_message, error_code)
 
 
-class LayoutClusteringProcessorException(HtmlProcessorException):
+class LayoutClusteringParserException(HtmlProcessorException):
     """Exception raised during layout clustering processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'LayoutClusteringProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'LayoutClusteringParserException')
         super().__init__(custom_message, error_code)
 
 
-class TypicalHtmlSelectorProcessorException(HtmlProcessorException):
+class TypicalHtmlSelectorParserException(HtmlProcessorException):
     """Exception raised during typical HTML selector processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'TypicalHtmlSelectorProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'TypicalHtmlSelectorParserException')
         super().__init__(custom_message, error_code)
 
 
-class TagSimplifiedProcessorException(HtmlProcessorException):
+class TagSimplifiedParserException(HtmlProcessorException):
     """Exception raised during tag simplified processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'TagSimplifiedProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'TagSimplifiedParserException')
         super().__init__(custom_message, error_code)
 
 
-class LimMainIdentifierProcessorException(HtmlProcessorException):
+class LimMainIdentifierParserException(HtmlProcessorException):
     """Exception raised during LIM main identifier processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'LimMainIdentifierProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'LimMainIdentifierParserException')
         super().__init__(custom_message, error_code)
 
 
-class TagMappingProcessorException(HtmlProcessorException):
+class TagMappingParserException(HtmlProcessorException):
     """Exception raised during tag mapping processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'TagMappingProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'TagMappingParserException')
         super().__init__(custom_message, error_code)
 
 
-class LayoutSubtreeParserProcessorException(HtmlProcessorException):
+class LayoutSubtreeParserException(HtmlProcessorException):
     """Exception raised during layout subtree parser processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'LayoutSubtreeParserProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'LayoutSubtreeParserException')
         super().__init__(custom_message, error_code)
 
 
-class LayoutBatchProcessorException(HtmlProcessorException):
+class LayoutBatchParserException(HtmlProcessorException):
     """Exception raised during layout batch processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'LayoutBatchProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'LayoutBatchParserException')
         super().__init__(custom_message, error_code)
 
 
-class DomContentFilterProcessorException(HtmlProcessorException):
+class DomContentFilterParserException(HtmlProcessorException):
     """Exception raised during DOM content filter processing."""
     def __init__(self, custom_message: str | None = None, error_code: int | None = None):
         if error_code is None:
-            error_code = ErrorMsg.get_error_code('Processor', 'DomContentFilterProcessorException')
+            error_code = ErrorMsg.get_error_code('Parser', 'DomContentFilterParserException')
         super().__init__(custom_message, error_code)

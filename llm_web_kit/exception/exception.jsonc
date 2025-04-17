@@ -73,8 +73,8 @@
   // HtmlRecognizer相关异常
   "HtmlRecognizer": {
     "HtmlRecognizerException": {
-        "code": 31031000,
-        "message": "HTML recognizer exception"
+      "code": 31031000,
+      "message": "HTML recognizer exception"
     },
     "HtmlMathRecognizerException": {
       "code": 31031100,
@@ -196,16 +196,19 @@
     "HtmlPostProcessorException": {
       "code": 63000000,
       "message": "HTML post-processor exception"
+    }
+  },
+  // Parser相关异常 (62100000)
+  "Parser": {
+    "DomainClusteringParserException": {
+      "code": 62101000,
+      "message": "Domain clustering parser exception"
     },
-    "DomainClusteringProcessorException": {
-      "code": 62010000,
-      "message": "Domain clustering processor exception"
+    "LayoutClusteringParserException": {
+      "code": 62102000,
+      "message": "Layout clustering parser exception"
     },
-    "LayoutClusteringProcessorException": {
-      "code": 62020000,
-      "message": "Layout clustering processor exception"
-    },
-    "TypicalHtmlSelectorProcessorException": {
+    "LayoutSubtreeParserException": {
       "code": 62030000,
       "message": "Typical HTML selector processor exception"
     },
@@ -213,25 +216,21 @@
       "code": 62040000,
       "message": "Tag simplified processor exception"
     },
-    "LimMainIdentifierProcessorException": {
-      "code": 62050000,
-      "message": "Lim main identifier processor exception"
+    "LlmMainIdentifierParserException": {
+      "code": 62105000,
+      "message": "LLM main identifier parser exception"
     },
-    "TagMappingProcessorException": {
-      "code": 62060000,
-      "message": "Tag mapping processor exception"
+    "TagMappingParserException": {
+      "code": 62106000,
+      "message": "Tag mapping parser exception"
     },
-    "LayoutSubtreeParserProcessorException": {
-      "code": 62070000,
-      "message": "Layout subtree parser processor exception"
+    "LayoutBatchParserException": {
+      "code": 62107000,
+      "message": "Layout batch parser exception"
     },
-    "LayoutBatchProcessorException": {
-      "code": 62080000,
-      "message": "Layout batch processor exception"
-    },
-    "DomContentFilterProcessorException": {
-      "code": 62090000,
-      "message": "DOM content filter processor exception"
+    "DomContentFilterParserException": {
+      "code": 62108000,
+      "message": "Dom content filter parser exception"
     }
   }
 }

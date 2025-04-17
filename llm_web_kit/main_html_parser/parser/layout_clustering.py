@@ -1,12 +1,11 @@
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
-from llm_web_kit.main_html_parser.main_html_processor import \
-    AbstractMainHtmlProcessor
+from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 
-class HtmlLayoutClusteringProcessor(AbstractMainHtmlProcessor):
+class LayoutClusteringParser(BaseMainHtmlParser):
     """将同一domain下的HTML按layout结构进行聚类处理器."""
 
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
+    def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """将同一个domain下layout结构相同的html进行聚类分组.
 
         Args:

@@ -1,7 +1,6 @@
 import copy
 import json
-from ast import List
-from typing import Any, Dict
+from typing import Any, Dict, Iterator, List, Tuple
 
 
 class PreDataJsonKey:
@@ -36,7 +35,7 @@ class PreDataJson:
         Args:
             input_data (dict): 初始数据
         """
-        copied_data = copy.deepcopy(input_data)
+        copied_data = copy.deepcopy(input_data) if input_data else {}
         self.__pre_data = copied_data
         if PreDataJsonKey.LAYOUT_FILE_LIST not in self.__pre_data:
             self.__pre_data[PreDataJsonKey.LAYOUT_FILE_LIST] = []
@@ -74,9 +73,9 @@ class PreDataJson:
         Returns:
             返回key对应的值，如果key不存在返回default
         """
-        return self._data.get(key, default)
+        return self.__pre_data.get(key, default)
 
-    def keys(self):
+    def keys(self) -> Iterator[str]:
         """返回所有键名的迭代器.
 
         Returns:
@@ -84,7 +83,7 @@ class PreDataJson:
         """
         return self.__pre_data.keys()
 
-    def values(self):
+    def values(self) -> Iterator[Any]:
         """返回所有值的迭代器.
 
         Returns:
@@ -92,7 +91,7 @@ class PreDataJson:
         """
         return self.__pre_data.values()
 
-    def items(self):
+    def items(self) -> Iterator[Tuple[str, Any]]:
         """返回所有键值对的迭代器.
 
         Returns:

@@ -1,10 +1,9 @@
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
-from llm_web_kit.main_html_parser.main_html_processor import \
-    AbstractMainHtmlProcessor
+from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 
-class MapItemToHtmlTagsProcessor(AbstractMainHtmlProcessor):
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
+class MapItemToHtmlTagsParser(BaseMainHtmlParser):
+    def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """将item_id与原html网页tag进行映射.
 
         Args:

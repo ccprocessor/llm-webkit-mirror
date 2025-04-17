@@ -1,12 +1,11 @@
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
-from llm_web_kit.main_html_parser.main_html_processor import \
-    AbstractMainHtmlProcessor
+from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 
-class HtmlTagSimplifierProcessor(AbstractMainHtmlProcessor):
+class HtmlTagSimplifierParser(BaseMainHtmlParser):
     """HTML标签简化处理器，用于合并和精简HTML标签，确保标签总数不超过限制."""
 
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
+    def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """简化HTML结构，合并相似标签并确保总标签数不超过200.
 
         Args:

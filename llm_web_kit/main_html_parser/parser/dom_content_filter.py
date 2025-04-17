@@ -1,10 +1,9 @@
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
-from llm_web_kit.main_html_parser.main_html_processor import \
-    AbstractMainHtmlProcessor
+from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 
-class DomContentFilterProcessor(AbstractMainHtmlProcessor):
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
+class DomContentFilterParser(BaseMainHtmlParser):
+    def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """根据头尾、重复率，删除头尾的导航、广告等节点.
 
         Args:

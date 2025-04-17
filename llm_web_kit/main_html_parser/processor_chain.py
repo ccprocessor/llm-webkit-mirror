@@ -11,12 +11,10 @@ from llm_web_kit.exception.exception import (LlmWebKitBaseException,
                                              ProcessorNotFoundException)
 from llm_web_kit.input.pre_data_json import PreDataJson
 from llm_web_kit.libs.class_loader import load_python_class_by_name
-from llm_web_kit.main_html_parser.processor import (AbstractMainHtmlProcessor,
-                                                    AbstractPostProcessor,
-                                                    AbstractPreProcessor)
+from llm_web_kit.main_html_parser.processor import AbstractProcessor
 
 
-class MainHtmlProcessorChain:
+class ProcessorChain:
     """HTML处理器链，串联多个处理器执行HTML处理流程."""
 
     def __init__(self, config: Dict[str, Any]):
@@ -25,9 +23,7 @@ class MainHtmlProcessorChain:
         Args:
             config (Dict[str, Any]): 配置字典，包含processor_pipe配置
         """
-        self.__pre_processors: List[AbstractPreProcessor] = []
-        self.__processors: List[AbstractMainHtmlProcessor] = []
-        self.__post_processors: List[AbstractPostProcessor] = []
+        self.__processors: List[AbstractProcessor] = []
         self.__config = config
 
         # 获取处理器管道配置
@@ -46,18 +42,9 @@ class MainHtmlProcessorChain:
             PreDataJson: 处理后的PreDataJson对象
         """
         try:
-            # 执行预处理
-            for pre_processor in self.__pre_processors:
-                pre_data = pre_processor.pre_process(pre_data)
-
             # 执行主处理
             for processor in self.__processors:
                 pre_data = processor.execute(pre_data)
-
-            # 执行后处理
-            for post_processor in self.__post_processors:
-                pre_data = post_processor.post_process(pre_data)
-
         except KeyError as e:
             exc = ProcessorChainInputException(f'必要字段缺失: {str(e)}')
             exc.traceback_info = traceback.format_exc()
@@ -81,25 +68,12 @@ class MainHtmlProcessorChain:
         Args:
             config (Dict[str, Any]): 处理器配置
         """
-        # 加载预处理器
-        for pre_processor_config in config.get('pre_processor', []):
-            if pre_processor_config.get('enable', False):
-                pre_processor = self.__create_processor(pre_processor_config)
-                self.__pre_processors.append(pre_processor)
-
-        # 加载主处理器
         for processor_config in config.get('processor', []):
             if processor_config.get('enable', False):
                 processor = self.__create_processor(processor_config)
                 self.__processors.append(processor)
 
-        # 加载后处理器
-        for post_processor_config in config.get('post_processor', []):
-            if post_processor_config.get('enable', False):
-                post_processor = self.__create_processor(post_processor_config)
-                self.__post_processors.append(post_processor)
-
-    def __create_processor(self, config: Dict[str, Any]) -> AbstractMainHtmlProcessor:
+    def __create_processor(self, config: Dict[str, Any]) -> AbstractProcessor:
         """从配置创建处理器实例.
 
         Args:
@@ -115,8 +89,8 @@ class MainHtmlProcessorChain:
         try:
             # 加载处理器类
             processor_cls = load_python_class_by_name(python_class)
-            if not issubclass(processor_cls, AbstractMainHtmlProcessor):
-                raise ProcessorChainConfigException(f'类 {python_class} 不是AbstractMainHtmlProcessor的子类')
+            if not issubclass(processor_cls, AbstractProcessor):
+                raise ProcessorChainConfigException(f'类 {python_class} 不是AbstractProcessor的子类')
 
             # 创建处理器实例
             kwargs = config.get('class_init_kwargs', {})
@@ -130,14 +104,14 @@ class MainHtmlProcessorChain:
             raise ProcessorChainInitException(f'初始化处理器 {python_class} 失败: {str(e)}')
 
     @classmethod
-    def from_config_file(cls, config_file_path: str) -> 'MainHtmlProcessorChain':
+    def from_config_file(cls, config_file_path: str) -> 'ProcessorChain':
         """从配置文件创建处理器链.
 
         Args:
             config_file_path (str): 配置文件路径，JSON格式
 
         Returns:
-            MainHtmlProcessorChain: 处理器链实例
+            ProcessorChain: 处理器链实例
         """
         try:
             with open(config_file_path, 'r', encoding='utf-8') as f:
@@ -148,18 +122,18 @@ class MainHtmlProcessorChain:
             raise ProcessorChainConfigException(f'加载配置文件 {config_file_path} 失败: {str(e)}')
 
 
-class HtmlProcessorSimpleFactory:
-    """创建MainHtmlProcessorChain实例的工厂类."""
+class ProcessorSimpleFactory:
+    """创建ProcessorChain实例的工厂类."""
 
     @staticmethod
-    def create(config: Union[str, Dict[str, Any]]) -> MainHtmlProcessorChain:
-        """从配置创建MainHtmlProcessorChain.
+    def create(config: Union[str, Dict[str, Any]]) -> ProcessorChain:
+        """从配置创建ProcessorChain.
 
         Args:
             config: 配置字典或配置文件路径
 
         Returns:
-            MainHtmlProcessorChain实例
+            ProcessorChain实例
         """
         # 如果提供的是文件路径，加载配置
         if isinstance(config, str):
@@ -170,4 +144,4 @@ class HtmlProcessorSimpleFactory:
                 raise ProcessorChainConfigException(f'加载配置文件失败: {str(e)}')
 
         # 创建并返回处理器链
-        return MainHtmlProcessorChain(config)
+        return ProcessorChain(config)

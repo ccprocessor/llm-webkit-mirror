@@ -1,25 +1,23 @@
-import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+
+from overrides import override
 
 from llm_web_kit.input.pre_data_json import PreDataJson
-from llm_web_kit.libs.logger import mylogger as logger
 
 
-class AbstractMainHtmlProcessor(ABC):
+class AbstractProcessor(ABC):
     """MAIN HTML提取处理器的抽象基类，定义了处理MAIN HTML内容的标准接口."""
 
-    def __init__(self, config: Dict[str, Any] = None, *args, **kwargs):
+    def __init__(self, config: dict = None, *args, **kwargs):
         """初始化处理器.
 
         Args:
-            config (Dict[str, Any], optional): 配置信息
+            config (dict, optional): 配置信息. Defaults to None.
         """
-        self.config = config or {}
+        self.__config = config or {}
 
-    @abstractmethod
     def process(self, pre_data: PreDataJson) -> PreDataJson:
-        """处理HTML数据的核心方法，每个子类必须实现.
+        """处理HTML数据的方法，包含通用流程控制.
 
         Args:
             pre_data (PreDataJson): 包含处理数据的PreDataJson对象
@@ -27,182 +25,83 @@ class AbstractMainHtmlProcessor(ABC):
         Returns:
             PreDataJson: 处理后的PreDataJson对象
         """
-        pass
-
-    def get_name(self) -> str:
-        """获取处理器名称.
-
-        Returns:
-            str: 处理器名称
-        """
-        return self.name
-
-
-class AbstractPreProcessor(ABC):
-    """前置处理器抽象类，定义前置处理的标准接口."""
-
-    def __init__(self, config: Dict[str, Any] = None, *args, **kwargs):
-        """初始化前置处理器.
-
-        Args:
-            config (Dict[str, Any], optional): 配置信息
-        """
-        self.config = config or {}
-        self.name = self.__class__.__name__
+        if self._filter_by_rule(pre_data):
+            return self._do_process(pre_data)
+        else:
+            return pre_data
 
     @abstractmethod
-    def pre_process(self, pre_data: PreDataJson) -> PreDataJson:
-        """执行前置处理逻辑.
+    def _filter_by_rule(self, pre_data: PreDataJson) -> bool:
+        """判断是否需要处理当前数据.
 
         Args:
             pre_data (PreDataJson): 包含处理数据的PreDataJson对象
 
         Returns:
-            PreDataJson: 前置处理后的PreDataJson对象
+            bool: 如果需要处理返回True，否则返回False
         """
-        pass
-
-    def get_name(self) -> str:
-        """获取处理器名称.
-
-        Returns:
-            str: 处理器名称
-        """
-        return self.name
-
-
-class AbstractPostProcessor(ABC):
-    """后置处理器抽象类，定义后置处理的标准接口."""
-
-    def __init__(self, config: Dict[str, Any] = None, *args, **kwargs):
-        """初始化后置处理器.
-
-        Args:
-            config (Dict[str, Any], optional): 配置信息
-        """
-        self.config = config or {}
-        self.name = self.__class__.__name__
+        raise NotImplementedError('Subclass must implement abstract method')
 
     @abstractmethod
-    def post_process(self, pre_data: PreDataJson) -> PreDataJson:
-        """执行后置处理逻辑.
+    def _do_process(self, pre_data: PreDataJson) -> PreDataJson:
+        """实现真正的处理逻辑.
 
         Args:
             pre_data (PreDataJson): 包含处理数据的PreDataJson对象
 
         Returns:
-            PreDataJson: 后置处理后的PreDataJson对象
+            PreDataJson: 处理后的PreDataJson对象
         """
-        pass
-
-    def get_name(self) -> str:
-        """获取处理器名称.
-
-        Returns:
-            str: 处理器名称
-        """
-        return self.name
+        raise NotImplementedError('Subclass must implement abstract method')
 
 
-# 具体实现类
-class MainHtmlProcessor(AbstractMainHtmlProcessor):
-    """MAIN HTML处理器基类，实现通用的处理流程和错误处理."""
+class BaseRuleFilterProcessor(AbstractProcessor):
+    """从html网页中筛选数据的处理器.
 
-    def __init__(self, config: Dict[str, Any] = None, *args, **kwargs):
-        """初始化处理器.
+    Args:
+        AbstractProcessor (_type_): _description_
+    """
+
+    def __init__(self, config: dict, *args, **kwargs):
+        """从参数指定的配置中初始化这个流水线链.
 
         Args:
-            config (Dict[str, Any], optional): 配置信息
+            config (dict): 配置字典
         """
         super().__init__(config, *args, **kwargs)
-        self.pre_processors = []
-        self.post_processors = []
 
-    def add_pre_processor(self, pre_processor: AbstractPreProcessor):
-        """添加前置处理器.
 
-        Args:
-            pre_processor (AbstractPreProcessor): 前置处理器实例
-        """
-        self.pre_processors.append(pre_processor)
+class NoOpProcessor(AbstractProcessor):
+    """一个什么都不做的处理器，让架构更加一致。通常在disable某个步骤时使用，充当透传功能."""
 
-    def add_post_processor(self, post_processor: AbstractPostProcessor):
-        """添加后置处理器.
+    def __init__(self, config: dict = None, *args, **kwargs):
+        """初始化处理器.
 
         Args:
-            post_processor (AbstractPostProcessor): 后置处理器实例
+            config (dict, optional): 配置信息. Defaults to None.
         """
-        self.post_processors.append(post_processor)
+        super().__init__(config, *args, **kwargs)
 
-    def execute(self, pre_data: PreDataJson) -> PreDataJson:
-        """执行处理逻辑，包含通用的前后处理和日志记录.
+    @override
+    def _filter_by_rule(self, pre_data: PreDataJson) -> bool:
+        """判断是否需要处理当前数据.
 
         Args:
             pre_data (PreDataJson): 包含处理数据的PreDataJson对象
 
         Returns:
-            PreDataJson: 处理后的PreDataJson对象
+            bool: 始终返回True
         """
-        try:
-            logger.debug(f'开始执行 {self.name} 处理')
+        return True
 
-            # 执行所有前置处理器
-            for pre_processor in self.pre_processors:
-                logger.debug(f'执行前置处理器 {pre_processor.get_name()}')
-                pre_data = pre_processor.pre_process(pre_data)
-
-            # 核心处理逻辑
-            pre_data = self.process(pre_data)
-
-            # 执行所有后置处理器
-            for post_processor in self.post_processors:
-                logger.debug(f'执行后置处理器 {post_processor.get_name()}')
-                pre_data = post_processor.post_process(pre_data)
-
-            logger.debug(f'{self.name} 处理完成')
-
-            return pre_data
-        except Exception as e:
-            e.trace_info = traceback.format_exc()
-            logger.error(f'{self.name} 处理失败: {str(e)}')
-            raise e
-
-
-class MainHtmlProcessorChain:
-    """HTML处理器链，串联多个处理器执行HTML处理流程."""
-
-    def __init__(self, processors=None, config: dict = None):
-        """初始化处理器链.
+    @override
+    def _do_process(self, pre_data: PreDataJson) -> PreDataJson:
+        """实现透传处理逻辑.
 
         Args:
-            processors (list, optional): 处理器列表
-            config (Dict[str, Any], optional): 配置信息
-        """
-        self.processors = processors or []
-        self.config = config or {}
-
-    def add_processor(self, processor: AbstractMainHtmlProcessor):
-        """添加处理器到链中.
-
-        Args:
-            processor (AbstractMainHtmlProcessor): 处理器实例
-        """
-        self.processors.append(processor)
-
-    def process(self, pre_data: PreDataJson) -> PreDataJson:
-        """执行整个处理链.
-
-        Args:
-            pre_data (PreDataJson): 包含初始数据的PreDataJson对象
+            pre_data (PreDataJson): 包含处理数据的PreDataJson对象
 
         Returns:
-            PreDataJson: 处理后的PreDataJson对象
+            PreDataJson: 不作任何修改的PreDataJson对象
         """
-        try:
-            for processor in self.processors:
-                pre_data = processor.execute(pre_data)
-        except Exception as e:
-            logger.error(f'main html处理链执行失败: {str(e)}')
-            raise e
-
         return pre_data
