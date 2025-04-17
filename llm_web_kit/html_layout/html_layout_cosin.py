@@ -90,10 +90,10 @@ def __recursive_extract_tags(doc: HtmlElement) -> Dict:
                     next_el.append(child)
                     tag = child.tag.lower()
                     if tag in TAGS_IGNORE_ATTR:
-                        parent_tag_attr.add(f"<{tag}>")
+                        parent_tag_attr.add(f'<{tag}>')
                     else:
                         attrs_str = ' '.join([f'{k}="{v}"' for k, v in child.attrib.items() if k in ['class', 'id']])
-                        parent_tag_attr.add(f"<{tag} {attrs_str}>" if attrs_str else f"<{tag}>")
+                        parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
 
             el_tag_attr.append(parent_tag_attr)
         layer_tag_attr = __parse_tag_attr(el_tag_attr)
