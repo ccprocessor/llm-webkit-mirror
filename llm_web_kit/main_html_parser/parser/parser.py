@@ -1,5 +1,3 @@
-
-
 from abc import ABC, abstractmethod
 
 from llm_web_kit.input.pre_data_json import PreDataJson
