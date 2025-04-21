@@ -128,6 +128,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                     self.deal_element_direct(item_id, mapp, pre_root)
                     content_list.append(elem.text)
 
+
         # 恢复到原网页结构
         self.process_element(pre_root)
         # 完善父节点路径
