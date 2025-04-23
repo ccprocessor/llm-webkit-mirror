@@ -6,7 +6,6 @@ from html_alg_lib.base_funcs import document_fromstring
 from html_alg_lib.normalize import (
     pre_normalize_html,
 )
-
 from lxml import html
 from hashlib import sha256
 import copy
