@@ -10,6 +10,7 @@ from lxml import html
 from hashlib import sha256
 import copy
 
+
 class MapItemToHtmlTagsParser(BaseMainHtmlParser):
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
         """将正文的item_id与原html网页tag进行映射, 找出正文内容, 并构造出正文树结构的字典html_element_list
@@ -52,12 +53,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             raise TagMappingParserException(e)
         return pre_data
 
-
     def get_element_id(self, element):
         """生成稳定的短哈希ID"""
         element_html = html.tostring(element, encoding='unicode', method='html')
         return f"id{sha256(element_html.encode()).hexdigest()}"  # 10位哈希
-
 
     def find_affected_element_after_drop(self, element):
         prev_sibling = element.getprevious()
@@ -69,7 +68,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             return prev_sibling
         else:
             return parent
-
 
     def process_element(self, element):
         # 前序遍历元素树（先处理子元素）
@@ -89,7 +87,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 del element.attrib[attr]
         return
 
-
     def deal_element_direct(self, item_id, mapp, test_root):
         node_ids = mapp[item_id].split(' ')
         # 对正文内容赋予属性magic_main_html
@@ -97,8 +94,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             elements = test_root.xpath(f'//*[@cc-alg-node-ids="{node_id}"]')
             deal_element = elements[0]
             deal_element.set('magic_main_html', "True")
-
-
 
     def tag_parent(self, pre_root):
         for elem in pre_root.iter():
@@ -127,13 +122,11 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                     self.deal_element_direct(item_id, mapp, pre_root)
                     content_list.append(elem.text)
 
-
         # 恢复到原网页结构
         self.process_element(pre_root)
         # 完善父节点路径
         self.tag_parent(pre_root)
         return content_list
-
 
     def construct_main_tree(self, pre_root):
         all_dict = {}
@@ -141,7 +134,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         self.process_tree(pre_root, 0, layer_index_counter, all_dict)
 
         return all_dict
-
 
     def process_tree(self, element, depth, layer_index_counter, all_dict):
         if element is None:
