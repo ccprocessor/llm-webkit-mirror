@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /opt/conda/etc/profile.d/conda.sh 
+source /opt/conda/etc/profile.d/conda.sh
 conda config --add envs_dirs /share/xuchao/.conda/envs
 conda activate /share/xuchao/.conda/envs/qwen2572b-py12
 
@@ -12,7 +12,7 @@ LOG_LEVEL=${LOG_LEVEL}
 DEBUG=${DEBUG}
 
 WINDOW_SIZE_32K=32768
-WINDOW_SIZE_128K=131072 
+WINDOW_SIZE_128K=131072
 echo "start vllm serve at $HOSTNAME, port: ${PORT}"
 echo "http://${HOSTNAME}:${PORT}" >> qwen_server.log
 
@@ -23,7 +23,7 @@ export VLLM_LOGGING_LEVEL=${LOG_LEVEL}  # https://docs.vllm.ai/en/latest/getting
 
 if [ ${DEBUG} -eq 1 ]; then
     add_params="--no-enable-prefix-caching"
-else 
+else
     add_params=""
 fi
 
