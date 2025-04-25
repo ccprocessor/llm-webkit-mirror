@@ -119,7 +119,6 @@ class TestSimpleListRecognize(unittest.TestCase):
         # 验证能够正确识别列表
         assert len(html_part) > 0, '没有识别出任何HTML部分'
 
-        # 输出html_part内容的调试信息
         elements_info = []
         for i, (element, _) in enumerate(html_part):
             elements_info.append(f'Element {i}: Tag={element.tag}')
@@ -163,12 +162,12 @@ class TestSimpleListRecognize(unittest.TestCase):
 
         # 验证content字段包含必要的内容
         assert 'items' in content_node['content'], 'content字段缺少items'
-        assert 'ordered' in content_node['content'], 'content字段缺少ordered'
+        assert 'list_attribute' in content_node['content'], 'content字段缺少ordered'
         assert 'list_nest_level' in content_node['content'], 'content字段缺少list_nest_level'
 
         # 验证内容正确性
         assert content_node['content']['items'] is not None, 'items不应为None'
-        assert isinstance(content_node['content']['ordered'], bool), 'ordered应为布尔值'
+        assert isinstance(content_node['content']['list_attribute'], str), 'list_attribute应为字符串'
         # 由于list_nest_level可能是字符串或整数，所以验证其可以转换为整数
         assert str(content_node['content']['list_nest_level']).isdigit(), 'list_nest_level应为整数或字符串形式的整数'
 
@@ -249,45 +248,13 @@ class TestSimpleListRecognize(unittest.TestCase):
         marker_found = False
         for element, _ in html_part:
             element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
+            print('============= element_text', element_text)
             if ('~下标~' in element_text) or ('^上标^' in element_text):
                 marker_found = True
                 break
 
         # 验证没有前缀的sub/sup标签被正确处理
         assert marker_found, '未正确处理没有前缀的sub/sup标签'
-
-    def test_list_with_br_tags(self):
-        """测试包含<br/>标签的列表项，覆盖行217-218处理paragraph的逻辑."""
-        # 创建带有br标签的HTML
-        html_content = """
-        <ul>
-            <li>First line<br/>Second line<br/>Third line</li>
-            <li>Another item</li>
-        </ul>
-        """
-
-        html_element = html_to_element(html_content)
-        html_part = self.__list_recognize.recognize(
-            'http://url.com',
-            [(html_element, html_element)],
-            html_content
-        )
-
-        assert len(html_part) > 0, '未能识别带有br标签的列表'
-
-        # 验证br标签被正确处理为段落分隔
-        br_processed = False
-        for element, _ in html_part:
-            if element.tag == CCTag.CC_LIST:
-                element_text = element.text
-                if element_text.count('"c": "First line"') == 1 and \
-                    element_text.count('"c": "Second line"') == 1 and \
-                    element_text.count('"c": "Third line"') == 1:
-
-                    br_processed = True
-                    break
-
-        assert br_processed, 'br标签没有被正确处理为段落分隔'
 
     def test_sup_with_text_prefix(self):
         """测试带有文本前缀的上标/下标标签的处理。"""

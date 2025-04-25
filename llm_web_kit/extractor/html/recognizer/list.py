@@ -9,6 +9,14 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import process_sub_sup_tags
+from llm_web_kit.libs.text_utils import normalize_text_segment
+
+
+class ListAttribute():
+    """列表属性."""
+    UNORDERED = 'unordered'
+    ORDERED = 'ordered'
+    DEFINITION = 'definition'
 
 
 class ListRecognizer(BaseHTMLElementRecognizer):
@@ -26,17 +34,17 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         """
         if not isinstance(parsed_content, HtmlElement):
             raise HtmlListRecognizerException(f'parsed_content 必须是 HtmlElement 类型，而不是 {type(parsed_content)}')
-        ordered, content_list, _, list_nest_level = self.__get_attribute(parsed_content)
+        list_attribute, content_list, _, list_nest_level = self.__get_attribute(parsed_content)
+
         ele_node = {
             'type': DocElementType.LIST,
             'raw_content': raw_html_segment,
             'content': {
                 'items': content_list,
-                'ordered': ordered,
+                'list_attribute': list_attribute,
                 'list_nest_level': list_nest_level
             }
         }
-
         return ele_node
 
     @override
@@ -94,69 +102,130 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         list_tag_names = ['ul', 'ol', 'dl', 'menu', 'dir']
 
         if root.tag in list_tag_names:
-            list_nest_level, is_ordered, content_list, raw_html, tail_text = self.__extract_list_element(root)
+            list_nest_level, list_attribute, content_list, raw_html, tail_text = self.__extract_list_element(root)
             text = json.dumps(content_list, ensure_ascii=False, indent=4)
-            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, ordered=is_ordered, list_nest_level=list_nest_level, html=raw_html)
+            cc_element = self._build_cc_element(CCTag.CC_LIST, text, tail_text, list_attribute=list_attribute, list_nest_level=list_nest_level, html=raw_html)
             self._replace_element(root, cc_element)  # cc_element 替换掉原来的列表元素
             return
 
         for child in root.iterchildren():
             self.__do_extract_list(child)
 
-    def __extract_list_element(self, ele: HtmlElement) -> tuple[int, bool, list[list[list]], str, Any]:
-        """
-        提取列表元素:
-        假如有如下列表：
-        <ul>
-        <li>爱因斯坦的质量方差公式是</li>
-        <li>E=mc^2</li>
-        <li>，其中E是能量，m是质量，c是光速 </li>
-        </ul>
-        则提取出的内容为：
-        ordered = False
-        content_list = [
-            [
-                {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
-                {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
-                {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
-            ]
-        ]
-        raw_html = "<ul><li>爱因斯坦的质量方差公式是</li><li>E=mc^2</li><li>，其中E是能量，m是质量，c是光速 </li></ul>"
-        --------------
-        最终拼接的<cclist>为：
-        <cclist ordered="False" html="raw_html">
-            [
-                [
-                    {"c": "爱因斯坦的质量方程公式是", "t": "text", "bbox": [0, 0, 10, 10]},
-                    {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
-                    {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
-                ]
-            ]
-        </cclist>
+    def __extract_list_item_text(self, child: HtmlElement) -> str:
+        """提取列表项的文本内容.
 
         Args:
-            ele:
+            element: 列表项HTML元素
+        """
+        text_paragraph = []
+
+        def __extract_list_item_text_recusive(el: HtmlElement):
+            list_container_tags = ('ul', 'ol', 'dl', 'menu', 'dir')
+            is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
+            paragraph = []
+            result = {}
+            if el.tag == CCTag.CC_MATH_INLINE and el.text and el.text.strip():
+                paragraph.append({'c': f'${el.text}$', 't': ParagraphTextType.EQUATION_INLINE})
+            elif el.tag == CCTag.CC_CODE_INLINE and el.text and el.text.strip():
+                paragraph.append({'c': f'`{el.text}`', 't': ParagraphTextType.CODE_INLINE})
+            elif el.tag == 'br':
+                paragraph.append({'c': '\n\n', 't': ParagraphTextType.TEXT})
+            elif el.tag == 'sub' or el.tag == 'sup':
+                # 处理sub和sup标签，转换为GitHub Flavored Markdown格式
+                current_text = ''
+                if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
+                    current_text = paragraph[-1]['c']
+                    paragraph.pop()
+                processed_text = process_sub_sup_tags(el, current_text, recursive=False)
+                if processed_text:
+                    paragraph.append({'c': processed_text, 't': ParagraphTextType.TEXT})
+            elif el.tag in list_container_tags:
+                list_attribute = self.__get_list_attribute(el)
+                child_list = {
+                    'list_attribute': list_attribute,
+                    'items': []
+                }
+                for child in el.getchildren():
+                    child_list['items'].append(__extract_list_item_text_recusive(child))
+                result['child_list'] = child_list
+            else:
+                if el.text and el.text.strip():
+                    paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
+                    el.text = None
+                for child in el.getchildren():
+                    p = __extract_list_item_text_recusive(child)
+                    if len(p) > 0:
+                        # 如果子元素有child_list，需要保存
+                        if 'child_list' in p:
+                            result['child_list'] = p['child_list']
+                        # 添加子元素的文本内容
+                        if 'c' in p:
+                            paragraph.append({'c': p['c'], 't': p.get('t', ParagraphTextType.TEXT)})
+            if el.tag != 'li' and el.tail and el.tail.strip():
+                if is_sub_sup:
+                    # 如果尾部文本跟在sub/sup后面，直接附加到最后一个文本段落中
+                    if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
+                        paragraph[-1]['c'] += el.tail
+                    else:
+                        paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+                else:
+                    paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+            if paragraph:
+                result['c'] = ' '.join(normalize_text_segment(item['c'].strip()) for item in paragraph)
+            return result
+        list_item_tags = ('li', 'dd', 'dt')
+        if child.tag in list_item_tags:
+            paragraph = __extract_list_item_text_recusive(child)
+            if len(paragraph) > 0:
+                text_paragraph.append(paragraph)
+        return text_paragraph
+
+    def __get_list_content_list(self, ele: HtmlElement, list_nest_level: int) -> list:
+        """
+        获取列表内容，将ul, ol, dl, menu, dir的子元素内容提取出来，形成列表
+        Args:
+            ele: 列表HTML元素
+            list_nest_level: 列表嵌套层级
 
         Returns:
-            (bool, str, str): 第一个元素是是否有序; 第二个元素是个python list，内部是文本和行内公式，具体格式参考list的content_list定义。第三个元素是列表原始的html内容
+            list: 包含列表项内容的列表，即items
         """
-        is_ordered = ele.tag in ['ol', 'dl']
+        content_list = []
+        # 处理根元素文本
+        if ele.text and ele.text.strip():
+            # 检查元素是否包含数学或代码相关属性
+            text_content = ele.text.strip()
+            root_item = {
+                'c': text_content,
+                't': ParagraphTextType.TEXT,
+                'child_list': {}
+            }
+            content_list.append(root_item)
+        for child in ele.iterchildren():
+            text_paragraph = self.__extract_list_item_text(child)
+            if len(text_paragraph) > 0:
+                content_list.extend(text_paragraph)
+        return content_list
+
+    def __extract_list_element(self, ele: HtmlElement) -> tuple[int, str, list, str, Any]:
+        """提取列表元素，返回列表的属性，嵌套层级，内容列表，原始html，尾部文本."""
+        list_attribute = self.__get_list_attribute(ele)
         list_nest_level = self.__get_list_type(ele)
         tail_text = ele.tail
-        content_list = []
         raw_html = self._element_to_html(ele)
-        # 添加处理ul标签直接文本的逻辑
-        if ele.text and ele.text.strip():
-            content_list.append([[{'c': ele.text.strip(), 't': ParagraphTextType.TEXT}]])
+        content_list = self.__get_list_content_list(ele, list_attribute)
+        return list_nest_level, list_attribute, content_list, raw_html, tail_text
 
-        for item in ele.iterchildren():
-            # 这里 遍历列表的每个直接子元素，每个子元素作为一个段落。 TODO 列表里有列表、图片、表格的情况先不考虑。
-            # 获取到每个子元素的全部文本，忽略其他标签
-            text_paragraph = self.__extract_list_item_text(item)
-            if len(text_paragraph) > 0:
-                content_list.append(text_paragraph)
-
-        return list_nest_level, is_ordered, content_list, raw_html, tail_text
+    def __get_list_attribute(self, list_ele: HtmlElement) -> str:
+        """获取list的属性."""
+        if list_ele.tag in ['dl']:
+            return ListAttribute.DEFINITION
+        elif list_ele.tag in ['ol']:
+            return ListAttribute.ORDERED
+        elif list_ele.tag in ['ul', 'menu', 'dir']:
+            return ListAttribute.UNORDERED
+        else:
+            return ''
 
     def __get_list_type(self, list_ele: HtmlElement) -> int:
         """获取list嵌套的层级。
@@ -189,69 +258,6 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             return max_child_depth
         return get_max_depth(list_ele) + 1
 
-    def __extract_list_item_text(self, root: HtmlElement) -> list[list]:
-        """提取列表项的文本.
-        列表项里的文本的分段策略采用最简单的方式：
-        1. 遇到<br/>标签，则认为是一个段落结束。
-
-        Args:
-            item: 一个列表项。例如<li>
-
-        Returns:
-            list[dict]: 列表项的文本
-        """
-        text_paragraph = []
-
-        def __extract_list_item_text_recusive(el: HtmlElement) -> list[list]:
-            paragraph = []
-
-            # 标记当前元素是否是sub或sup类型
-            is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
-
-            if el.tag == CCTag.CC_MATH_INLINE:
-                paragraph.append({'c': el.text, 't': ParagraphTextType.EQUATION_INLINE})
-            elif el.tag == CCTag.CC_CODE_INLINE:
-                paragraph.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
-            elif el.tag == 'br':
-                if len(paragraph) > 0:
-                    text_paragraph.append(paragraph)
-                    paragraph = []
-            elif el.tag == 'sub' or el.tag == 'sup':
-                # 处理sub和sup标签，转换为GitHub Flavored Markdown格式
-                current_text = ''
-                if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
-                    current_text = paragraph[-1]['c']
-                    paragraph.pop()
-
-                processed_text = process_sub_sup_tags(el, current_text, recursive=False)
-                if processed_text:
-                    paragraph.append({'c': processed_text, 't': ParagraphTextType.TEXT})
-            else:
-                if el.text and el.text.strip():
-                    paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
-                for child in el.getchildren():
-                    p = __extract_list_item_text_recusive(child)
-                    if len(p) > 0:
-                        paragraph.extend(p)
-
-            # 处理尾部文本
-            if el.tag != 'li' and el.tail and el.tail.strip():
-                if is_sub_sup:
-                    # 如果尾部文本跟在sub/sup后面，直接附加到最后一个文本段落中
-                    if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
-                        paragraph[-1]['c'] += el.tail
-                    else:
-                        paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
-                else:
-                    paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
-
-            return paragraph
-
-        if paragraph := __extract_list_item_text_recusive(root):
-            if len(paragraph) > 0:
-                text_paragraph.append(paragraph)
-        return text_paragraph
-
     def __get_attribute(self, html: HtmlElement) -> Tuple[bool, dict, str]:
         """获取element的属性.
 
@@ -264,10 +270,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         # ele = self._build_html_tree(html)
         ele = html
         if ele is not None and ele.tag == CCTag.CC_LIST:
-            ordered = ele.attrib.get('ordered', 'False') in ['True', 'true']
+            list_attribute = ele.attrib.get('list_attribute', ListAttribute.UNORDERED)
             content_list = json.loads(ele.text)
             raw_html = ele.attrib.get('html')
             list_nest_level = ele.attrib.get('list_nest_level', 0)
-            return ordered, content_list, raw_html, list_nest_level
+            return list_attribute, content_list, raw_html, list_nest_level
         else:
             raise HtmlListRecognizerException(f'{html}中没有cclist标签')

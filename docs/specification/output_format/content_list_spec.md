@@ -83,7 +83,7 @@
                 "html": "<table><tr><td>1</td><td>2</td></tr></table>",
                 "title": "example table",
                 "note": "数据来源于...",
-                "is_complex": false // 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false,
+                "is_complex": false, // 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false
                 "table_nest_level": 1 //table的嵌套层级
             }
         },

@@ -19,7 +19,7 @@ def get_version():
 def write_version_to_commons(version):
     commons_path = os.path.join(os.path.dirname(__file__), 'llm_web_kit', 'libs', 'version.py')
     with open(commons_path, 'w') as f:
-        f.write(f'__version__ = "{version}"\n')
+        f.write(f"__version__ = '{version}'\n")
 
 
 if __name__ == '__main__':

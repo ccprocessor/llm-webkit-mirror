@@ -596,3 +596,21 @@ import com.dao.UsersDao;
         self.assertEqual(len(inline_codes), 2)
         self.assertEqual(inline_codes[0].text, 'foo.bar.x')
         self.assertEqual(inline_codes[1].text, 'foo.bar.z')
+
+        raw_html = base_dir.joinpath('assets/cccode/go-googlesource.html').read_text()
+        answer = base_dir.joinpath('assets/cccode/go-googlesource-0.go').read_text()
+
+        dj = DataJson({
+            'track_id': 'f7b3b1b4-0b1b',
+            'dataset_name': 'news',
+            'url': 'https://go.googlesource.com/go/+blame/refs/tags/go1.12.4/test/fixedbugs/issue13319.go',
+            'data_source_category': 'HTML',
+            'html': raw_html,
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+        })
+
+        resp = chain.extract(dj)
+        self.assertEqual(resp.get_content_list().length(), 1)
+        self.assertEqual(len(resp.get_content_list()[0]), 1)
+        self.assertEqual(resp.get_content_list()[0][0]['content']['code_content'], answer)

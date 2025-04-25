@@ -1,0 +1,65 @@
+{
+  "processor_pipe": {
+    "pre_processor": [
+      {
+        "enable": false,
+        "python_class": "llm_web_kit.main_html_parser.pre_processors.html_validator.HtmlValidatorPreProcessor",
+        "class_init_kwargs": {}
+      }
+    ],
+    "processor": [
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.domain_clustering.DomainClusteringProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.layout_clustering.LayoutClusteringProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.typical_html_selector.TypicalHtmlSelectorProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.tag_simplifier.TagSimplifierProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.llm_main_identifier.LlmMainIdentifierProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.tag_mapping.TagMappingProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.layout_subtree_parser.LayoutSubtreeParserProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.layout_batch_processor.LayoutBatchProcessor",
+        "class_init_kwargs": {}
+      },
+      {
+        "enable": true,
+        "python_class": "llm_web_kit.main_html_parser.processor.dom_content_filter.DomContentFilterProcessor",
+        "class_init_kwargs": {}
+      }
+    ],
+    "post_processor": [
+      {
+        "enable": false,
+        "python_class": "llm_web_kit.main_html_parser.post_processors.content_cleaner.ContentCleanerPostProcessor",
+        "class_init_kwargs": {}
+      }
+    ]
+  }
+}

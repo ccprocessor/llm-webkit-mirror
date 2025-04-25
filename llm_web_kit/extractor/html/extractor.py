@@ -263,10 +263,31 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         # 检查列表类型的节点
         if node.get('type') == DocElementType.LIST:
             items = node.get('content', {}).get('items', [])
-            # 过滤掉None、空列表，以及只包含None或空值的列表
-            return bool(items) and any(
-                isinstance(item, (dict, list)) and bool(item)
-                for item in items)
+            if len(items) == 0:
+                return False
+            if items and isinstance(items[0], dict) and 'c' in items[0]:
+                valid_items = []
+                for item in items:
+                    # 检查c是否有内容
+                    has_content = False
+                    if item.get('c'):
+                        if isinstance(item['c'], str) and item['c'].strip():
+                            has_content = True
+                        elif isinstance(item['c'], list) and any(bool(c_item) for c_item in item['c']):
+                            has_content = True
+
+                    # 检查child_list是否有内容
+                    has_child_list = False
+                    child_list = item.get('child_list', {})
+                    if isinstance(child_list, dict) and child_list.get('item') and len(child_list.get('item', [])) > 0:
+                        has_child_list = True
+
+                    # 如果c或child_list有内容，则认为是有效项
+                    if has_content or has_child_list:
+                        valid_items.append(item)
+
+                # 如果没有有效项，则返回False
+                return len(valid_items) > 0
         # 检测code类型的节点
         if node.get('type') == DocElementType.CODE:
             code_content = node.get('content', {}).get('code_content')
@@ -348,8 +369,8 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             nodes = el.xpath(xpath_expr)
             if len(nodes) == 0:
                 raise HtmlFileExtractorException(f'html文本中没有cc标签: {html}')
-            if len(nodes) > 3:
-                raise HtmlFileExtractorException(f'html文本中包含多个cc标签: {html}')
+            # if len(nodes) > 5:
+            #     raise HtmlFileExtractorException(f'html文本中包含多个cc标签: {html}')
             # return element_to_html(nodes[0]), nodes[0].tag
             return nodes[0], nodes[0].tag
 
