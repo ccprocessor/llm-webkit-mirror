@@ -16,7 +16,7 @@ inline_tags = {
 
 # 需要删除的标签
 tags_to_remove = {
-    'head', 'header', 'footer', 'nav', 'style', 'script', 'select', 'noscript', 'link', 'meta', 'iframe', 'frame'
+    'head', 'header', 'footer', 'nav', 'aside', 'style', 'script', 'select', 'noscript', 'link', 'meta', 'iframe', 'frame'
 }
 
 # 需要保留的特殊标签（即使它们是行内标签）
