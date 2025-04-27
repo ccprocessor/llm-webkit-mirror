@@ -5,20 +5,21 @@
 
 程序首先从配置文件里读取结果要写入的目录和模型的server地址。对于多个server地址，程序每次随机选择一个进行请求。
 """
-import json
 import os
 import random
 import socket
 import time
 from io import BytesIO
 from pathlib import Path
+from typing import Dict, Tuple
 
 import click
+import commentjson as json
 import requests
 from loguru import logger
+from openai import OpenAI
 from retry import retry
 
-MODEL_VERESION = 'qwen2.5-72b-instruct'
 GET_FILE_URL = None
 UPDATE_STATUS_URL = None
 
@@ -37,6 +38,70 @@ def __report_status(server_url, file_path, status, msg=''):
     logger.info(f'report status {status} for file {file_path}')
 
 
+def __build_prompt_with_html(simplified_html: str) -> Tuple[str, str]:
+    system_prompt = """
+你是一位网页正文抽取专家，你能阅读HTML的每个带有item_id的节点，联系前后节点内容，判断每个节点里的文字是否围绕着某个正文主题，并进一步判断该节点是否是该页面的主要内容还是其他内容。
+具有以下特征的元素通常是主要内容：
+- 对于新闻，博客，文章，信息发布类网页，正文，正文中的配图，正文中需要被发布的信息属于主要内容，
+- 对于论坛，论坛的每一层，以及每一层的回复属于主要内容，
+- 对于问答类网站，问题和回答，以及针对问题的回复与每一个回答的回复等元素通常是主要内容。
+- 对于列表页，列表的每一项及其描述为主要内容。
+- 对于商品页，商品图片、描述、价格、库存等属于主要内容。
+具有以下特征的元素通常是补充信息：
+- 导航栏、侧边栏、页脚，相关文章，导航链接列表等元素通常属于其它信息。
+- 文章标题、正文的编者信息，评论内容的用户信息，点赞数，发布时间等元素通常是补充信息。注意，评论内容本身属于主要内容。
+
+请针对每一个具有"_item_id"属性的元素，判断该元素的功能，并给出该元素是否是该页面的主要内容，补充信息，其他内容。
+如果是主要内容，你可以将元素记为1，如果是其他内容，你可以将元素记为0。
+
+以下会提供一个经过简化的网页HTML代码，你需要判断出具有"_item_id"属性所在位置的元素的功能，并给出该元素是否是该页面的主要内容或是其他内容。
+不要返回除json字符串外的任何其他内容，严格按照以下json格式返回，不加markdown格式的头尾，回答的格式例如：
+{
+    "item_id 1": 0,
+    "item_id 2": 1,
+    "item_id 3": 0
+}"""
+    user_prompt = f"""以下是HTML代码：
+    ```html
+    {simplified_html}
+    ```
+    注意不要输出解释性内容，json里也不要有注释"""
+    return system_prompt, user_prompt
+
+
+def __chat_with_model(api_key: str, api_url: str, system_prompt: str, user_prompt: str, model_name: str) -> str:
+    client = OpenAI(
+        api_key=api_key,
+        base_url=api_url,
+    )
+    completion = client.chat.completions.create(
+        model=model_name,
+        messages=[
+            {'role': 'system', 'content': system_prompt},
+            {'role': 'user', 'content': user_prompt},
+        ],
+    )
+
+    response_str = completion.model_dump_json()
+    return response_str
+
+
+def __check_model_response(response_str: str) -> Dict[str, str]:
+    try:
+        response_json = json.loads(response_str)
+        response_content = response_json['choices'][0]['message']['content']
+    except Exception:
+        return None
+
+    response = json.loads(response_content)
+    if 'ERROR_RESULT' in response:
+        return None
+
+    # response_key = sorted([''.join(re.findall(r'\d', item)) for item in response])
+    #  TODO check response_key and item_id equals
+    return response
+
+
 def __call_model_server(model_server_url, model_server_sk, model_name, simplified_html: str) -> tuple[str, bool]:
     """调用模型server，返回处理结果。
 
@@ -44,7 +109,17 @@ def __call_model_server(model_server_url, model_server_sk, model_name, simplifie
         rtn: 处理结果
         succ: 是否成功, 如果失败，返回模型返回的全部信息。如果成功则只保留节点选择信息。
     """
-    pass
+    sys_prompt, user_prompt = __build_prompt_with_html(simplified_html)
+    try:
+        response_str = __chat_with_model(model_server_sk, model_server_url, sys_prompt, user_prompt, model_name)
+        rtn = __check_model_response(response_str)
+        if rtn is None:
+            return response_str, False
+        else:
+            return rtn, True
+    except Exception as e:
+        logger.exception(e)
+        return response_str, False
 
 
 def __process_one_input_file(result_save_dir, to_process_file_path, model_servers):
