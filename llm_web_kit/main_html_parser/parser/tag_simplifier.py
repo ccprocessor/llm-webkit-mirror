@@ -23,7 +23,7 @@ class HtmlTagSimplifierParser(BaseMainHtmlParser):
 
         # 执行HTML标签简化逻辑
         try:
-            simplified_html, original_html, _ = simplify_html(typical_raw_html, is_xpath=False)
+            simplified_html, original_html, _ = simplify_html(typical_raw_html)
         except TagSimplifiedParserException as e1:
             raise e1
         except Exception as e2:
