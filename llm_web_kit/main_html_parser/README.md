@@ -38,3 +38,26 @@ else:
 | 7    | layout子树提取         | layout_subtree_parser.py | html_element_list                      | html_target_list                        | LayoutSubtreeParserException       | 根据映射的html tag抽取layout代表网页的子树 |
 | 8    | 同批次layout网页处理   | layout_batch_parser.py   | html_target_list                       | main_html                               | LayoutBatchParserException         | 根据子树结构推理同批次layout的所有网页，输出main_html |
 | 9    | dom内容过滤            | dom_content_filter.py    | main_html                              | filtered_main_html                      | DomContentFilterParserException    | 基于头尾重复率删除导航、广告等非正文节点 |
+
+## 5. 大模型正文识别
+
+- 调用方法：
+
+```python
+from llm_web_kit.main_html_parser.parser.llm_main_identifier import *
+model_name = 'Qwen'
+llm_id = LlmMainIdentifierParser(model_name)
+labeled_data = llm_id.parse(data)
+
+print(labeled_data['llm_response'])
+{'item_id 1': 0, 'item_id 2': 0, 'item_id 3': 1}
+
+print(labeled_data['llm_error'])
+
+```
+
+- 报错: llm_error
+  - 未找到model_name对应的大模型配置
+  - llm响应失败：模型timeout、输入内容违规等
+  - response解析失败：模型没有返回任何回答
+  - response与item_id不能一一对应：模型解读html出现问题
