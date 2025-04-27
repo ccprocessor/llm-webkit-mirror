@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en-US" class="no-js">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width">
+<meta name="robots" content="INDEX, FOLLOW"/>
+
+
+    <meta name="SBC-SEARCH-CATEGORY" content="Communications"/>
+    <meta name="SBC-SEARCH-PUBLISHDATE" content="2019-01-08T10:00:00.000-06:00"/>
+
+    <!-- seo -->
+    <title>Accelerating the Deployment of RAN Open Source</title>
+    <meta property="og:title" content="Accelerating the Deployment of RAN Open Source"/>
+    <meta name="description" content="AT&amp;T and Nokia are co-creating a platform code to accelerate the deployment of open source software for the RAN."/>
+    <meta name="og:description" content="AT&amp;T and Nokia are co-creating a platform code to accelerate the deployment of open source software for the RAN."/>
+    <meta name="keywords" content="5G, Linux Foundation, RAN Intelligent Controller, open source software, RAN network"/>
+
+    <meta property="og:url" content="https://about.att.com/story/2019/open_source.html"/>
+    <link rel="canonical" href="https://about.att.com/story/2019/open_source.html"/>
+
+    <!-- sharing images -->
+
+    <meta property="og:image" content="https://about.att.com/ui/corpcomm_internet_attus/1.0.0/images/logo_att_share.png"/>
+    <link rel="image_src" href="https://about.att.com/ui/corpcomm_internet_attus/1.0.0/images/logo_att_share.png"/>
+
+
+
+<script src="/scripts/adobe/virtual/detm-container-hdr.js"></script>
+<script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/vendor/jquery.min.js"></script>
+
+
+
+<!-- iOS icons -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-57x57.png" sizes="57x57">
+<!-- non-retina iPhone pre iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-72x72.png" sizes="72x72">
+<!-- non-retina iPad pre iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-76x76.png" sizes="76x76">
+<!-- non-retina iPad iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-114x114.png" sizes="114x114">
+<!-- retina iPhone pre iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-120x120.png" sizes="120x120">
+<!-- retina iPhone iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-144x144.png" sizes="144x144">
+<!-- retina iPad pre iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-152x152.png" sizes="152x152">
+<!-- retina iPad iOS 7 -->
+<link rel="apple-touch-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-180x180.png" sizes="180x180">
+
+<!-- Android icon -->
+<link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/android-chrome-192x192.png" sizes="192x192">
+<!-- For iPad with high-resolution Retina display running iOS ≥ 7: -->
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed - 152x152.png">
+<!-- For iPad with high-resolution Retina display running iOS ≤ 6: -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed - 144x144.png">
+<!-- For iPhone with high-resolution Retina display running iOS ≥ 7: -->
+<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed - 120x120.png">
+<!-- For iPhone with high-resolution Retina display running iOS ≤ 6: -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed - 114x114.png">
+<!-- For the iPad mini and the first- and second-generation iPad on iOS ≥ 7: -->
+<link rel="apple-touch-icon-precomposed" sizes="76x76" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed - 76x76.png">
+<!-- For the iPad mini and the first- and second-generation iPad on iOS ≤ 6: -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed - 72x72.png">
+<!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+<link rel="apple-touch-icon-precomposed" href="/ui/corpcomm_internet_attus/1.0.0/images/apple-touch-icon-precomposed.png">
+
+
+
+        <link rel="shortcut icon" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon.ico"/>
+        <link rel="icon" type="image/vnd.microsoft.icon" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon.ico"/>
+        <link rel="icon" type="image/x-icon" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon.ico"/>
+        <link rel="icon" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon.ico"/>
+        <link rel="icon" type="image/gif" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon.gif"/>
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon.png"/>
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon-16.png" sizes="16x16">
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon-32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon-48.png" sizes="48x48">
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon-64.png" sizes="64x64">
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/png" href="/ui/corpcomm_internet_attus/1.0.0/images/favicon-128.png" sizes="128x128">
+
+    <!-- css -->
+    <link rel="stylesheet" href="/ui/corpcomm_internet_attus/1.0.0/styles/global_nav.css">
+    <link rel="stylesheet" href="/ui/corpcomm_internet_attus/1.0.0/styles/main.css">
+
+
+
+</head>
+
+
+    <body class="story  theme--Communications ">
+
+            <header id="att-about-header" class="header " role="presentation"></header>
+
+
+
+            <header id="att-microsite-header" class="header--secondary " role="presentation">
+
+
+            </header>
+
+
+
+
+
+  <main id="page" class="content" role="main">
+
+        <div class="story__header ">
+            <div class="featured-image">
+                 <img src="/ecms/dam/snr/2019/January2019/StoryLevelBanner/01.08.19.Nokia%20RAN%20Open%20Source_STORY_LEVEL_BANNER_1600x483.jpg">
+            </div>
+            <div class="featured-headline">
+                <h1>AT&amp;T and Nokia Accelerate the Deployment of RAN Open Source</h1>
+            </div>
+        </div>
+
+
+    <div class="story__preface">
+
+
+    </div>
+
+    <div class="story__wrap">
+      <div class="row">
+        <div class="row__wrap">
+
+          <!-- Begin Article -->
+          <article class="article col col-8">
+
+            <!-- Begin Header -->
+            <div class="article__header">
+
+              <!-- Begin Meta -->
+              <div class="article__meta">
+
+
+                <div class="meta__info">
+
+                    <span class="date">DALLAS, January 08, 2019</span>
+
+                </div>
+              </div>
+              <!-- End Meta -->
+
+              <!-- Begin Share -->
+              <div class="article__share">
+                <h4>share</h4>
+                <ul>
+                  <li><a href="https://twitter.com/intent/tweet?url=https://about.att.com/story/2019/open_source.html&text=AT%26T%20and%20Nokia%20Accelerate%20the%20Deployment%20of%20RAN%20Open%20Source%20-" aria-label="Share via Twitter" target="_blank"><i class="icon--twitter"></i></a></li>
+
+                  <li><a href="https://www.facebook.com/sharer.php?u=https://about.att.com/story/2019/open_source.html" aria-label="Share via Facebook" target="_blank"><i class="icon--facebook"></i></a></li>
+
+                  <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://about.att.com/story/2019/open_source.html&title=AT%26T%20and%20Nokia%20Accelerate%20the%20Deployment%20of%20RAN%20Open%20Source" aria-label="Share via LinkedIn" target="_blank"><i class="icon--linkedin"></i></a></li>
+
+                  <li><a href="mailto:?subject=AT%26T and Nokia Accelerate the Deployment of RAN Open Source&body=AT%26T%20and%20Nokia%20Accelerate%20the%20Deployment%20of%20RAN%20Open%20Source%20-%20https://about.att.com/story/2019/open_source.html" aria-label="Share via Email"><i class="icon--email"></i></a></li>
+                </ul>
+              </div>
+              <!-- End Share -->
+
+              <!-- Begin Assets -->
+
+              <!-- End Assets -->
+
+            </div>
+            <!-- End Header -->
+
+            <!-- Begin Content -->
+            <div class="article__content" data-ftImg="true">
+
+              <div class="featured-headline">
+                <h1>AT&amp;T and Nokia Accelerate the Deployment of RAN Open Source</h1>
+              </div>
+			  <div class="featured-asset">
+
+
+              </div>
+              <div class="content__wrap">
+
+
+                    <input type="hidden" name="pageIdentifier" value="newarticle"/>
+
+                    <div id="newarticle"><div class="text section">
+
+
+   	<div class="component">
+        <div class="text   ">
+
+                <div class="text__wrap">
+                    <p style="text-align: center;"><i>The companies contribute code to provide open access to 5G under the O-RAN Alliance</i></p>
+<p>In support of 5G, AT&amp;T* will begin development of a software platform for the RAN Intelligent Controller (RIC), to enable the creation of open source software that is aligned with the <a href="https://www.o-ran.org/">O-RAN</a> target architecture. AT&amp;T and Nokia are co-creating the platform code to accelerate the deployment of open source software for the 5G RAN.</p>
+<p>The RIC platform will provide a set of functions and interfaces that allow for increased optimizations through policy-driven closed loop automation and for faster, more flexible service deployments and programmability within the RAN. The intent is to enable an intelligent rapidly evolvable radio network by fostering the creation of a multi-vendor open ecosystem of interoperable components for the disaggregated RAN.</p>
+<p>“We’re delighted to work with Nokia on co-creating an open source implementation of the RIC platform to accelerate innovations and interoperability in the RAN,” said Mazin Gilbert, vice president of advanced technology and systems at AT&amp;T Labs. “We continue to look for opportunities to drive open platforms and open interfaces in the community.&quot;</p>
+<p>“Nokia is a strong proponent of RAN network openness and has been active in numerous open source communities, contributing code and defining open interface specifications,” said Mike Murphy, CTO for North America, Nokia. “We are excited to be partnering with AT&amp;T to co-create RIC software and share with the open-source community to foster further collaboration and innovation.”</p>
+<p>The platform will be architected in the form of an extensible real-time microservices framework coupled with a radio information database and key open control plane interfaces for mobility management, spectrum management, load balancing, radio resource control and RAN slicing to name a few. This will allow implementations of these functions, sourced from multiple vendors, to be mixed and matched on a single network infrastructure. The platform will also enable interfaces to third party applications for enhanced mobility functions such as cross layer optimization and machine learning inferences.</p>
+<p>To further support the company’s 5G initiatives, AT&amp;T will increase its engagement in Akraino Edge Stack, a Linux Foundation project focused on building production ready cloud infrastructure for edge deployment in open source. In particular, AT&amp;T has also signed a multiyear co- development agreement with Nokia to further expand Akraino Edge Stack capabilities supporting the needs of the RIC and other edge cloud platform deployments. This work will support the growing need for virtualized edge environments of various sizes, deployment locations and capabilities.</p>
+
+                </div>
+
+
+       </div>
+    </div>
+</div>
+<div class="SNR_expandable section"><!-- Expandable Content Component HTML -->
+
+<div>&nbsp;</div>
+<div class="component">
+
+    <div class="text expandable-text text--footer ">
+        <div class="text__wrap">
+            <p><b>*About AT&amp;T Communications</b></p>
+<p>We help family, friends and neighbors connect in meaningful ways every day. From the first phone call 140+ years ago to mobile video streaming, we innovate to improve lives. We have the best network according to America’s biggest test.** We’re building <a href="https://www.firstnet.com/"><u>FirstNet</u></a> just for first responders and creating next-generation mobile 5G. With <a href="https://www.directv.com/"><u>DIRECTV</u></a> and <a href="https://www.directvnow.com/"><u>DIRECTV NOW</u></a>, we deliver entertainment people love to talk about. Our smart, highly secure solutions serve over 3 million global businesses – nearly all of the Fortune 1000. And worldwide, our spirit of service drives employees to give back to their communities.</p>
+<p>AT&amp;T Communications is part of AT&amp;T Inc. (<a href="https://www.att.com/"><u>NYSE:T</u></a>). Learn more at <a href="http://about.att.com/category/att_communications_news"><u>att.com/CommunicationsNews</u></a>.</p>
+<p>AT&amp;T products and services are provided or offered by subsidiaries and affiliates of AT&amp;T Inc. under the AT&amp;T brand and not by AT&amp;T Inc. Additional information about AT&amp;T products and services is available at <a href="http://about.att.com/category/all_news.html"><u>about.att.com</u></a>. Follow our news on Twitter at @ATT, on Facebook at <a href="http://www.facebook.com/att"><u>facebook.com/att</u></a> and on YouTube at <a href="http://www.youtube.com/att"><u>youtube.com/att</u></a>.</p>
+<p>© 2018 AT&amp;T Intellectual Property. All rights reserved. AT&amp;T, the Globe logo and other marks are trademarks and service marks of AT&amp;T Intellectual Property and/or AT&amp;T affiliated companies. All other marks contained herein are the property of their respective owners.</p>
+<p>**Based on GWS OneScore Sept. 2018. Excludes crowd sourced studies.</p>
+
+        </div>
+
+
+			<div class="text__cta">
+                <a class="cta--link" data-role="none" data-showtext="View More" data-hidetext="View Less" aria-label="View More" href="javascript:void(0);">View More</a>
+            </div>
+
+    </div>
+</div>
+
+<!-- Expandable Text Component HTML --></div>
+
+</div>
+                    <div id="oldstory">
+</div>
+                    <div id="oldpress">
+</div>
+
+
+              </div>
+            </div>
+            <!-- End Content -->
+
+          </article>
+          <!-- End Article -->
+
+          <!-- Begin Sidebar -->
+          <aside class="sidebar col col-4">
+
+            <!-- Widget -->
+            <div class="sidebar__widget widget--search">
+
+              <!-- Widget Header -->
+              <div class="component">
+                <div class="text">
+                  <div class="text__wrap">
+                    <h2>Search News</h2>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Widget Item -->
+              <div class="component">
+                <div class="search-field">
+                  <script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/custom/search.js"></script>
+<!-- Search Field Component HTML -->
+
+<!-- Search Component starts here -->
+<div class="component">
+
+  <div class="search-field">
+    <form action="/allnews.html" method="get">
+      <fieldset>
+        <label for="search">Search</label>
+        <!-- NOTE: The "value" and "data-placeholder" attributes on the input element below should both populate from the component's Default Search Text field in AEM. -->
+        <input id="search" name="searchkey" class="search__input" type="text" title="Enter search keywords" value="Search News" data-placeholder="Search News" categoryText="all">
+        <input type="hidden" name="page" value="1"/>
+        <input type="hidden" name="category" id="category" value="all"/>
+        <input type="hidden" name="months" value="all"/>
+        <button id="search-submit" class="search__submit" type="button" aria-label="Submit Search"><span class="icon--search"></span></button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+<!-- End Search Field Component HTML-->
+
+				</div>
+              </div>
+			</div>
+            <!-- End Widget -->
+
+			<div id="top-news-videos"></div>
+
+            <div class="sidebar__content">
+
+
+            </div>
+
+          </aside>
+          <!-- End Sidebar -->
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+                  <div class="story__related">
+                  <section class="region region--blue">
+                    <div class="row row--equal-heights">
+                      <div class="row__wrap">
+
+
+
+                        <div class="col col-4">
+                          <!-- Story (Featured Item) HTML -->
+                          <div class="component">
+                            <div class="featured-item">
+                              <div class="item__media">
+
+                                <div class="item__img" data-placeholder="false">
+                                  <a href="/story/2019/2019_and_beyond.html" aria-label="First in the U.S. to Mobile 5G – What’s Next? Defining AT&amp;T’s Network Path in 2019 and Beyond">
+
+                                    	<img src="/ecms/dam/snr/2018/december2018/feature/12_3_18_5G_Announement_FEATURED_STORY_768x575.jpg" alt="Get Faster Streaming">
+
+                                  </a>
+                                </div>
+
+                              </div>
+                              <div class="item__content">
+                                <div class="story__wrap">
+
+
+                                  <!-- <h3 class="item__title">First in the U.S. to Mobile 5G – What’s Next? Defining AT&amp;T’s Network Path in 2019 and Beyond  -- 3 -- open_source   </h3> -->
+                                    <h3 class="item__title">First in the U.S. to Mobile 5G – What’s Next? Defining AT&amp;T’s Network Path in 2019 and Beyond</h3>
+
+                                  <div class="item__description">
+                                    <p>We plan for nationwide 5G Evolution coverage by spring 2019 and nationwide mobile 5G coverage by early 2020.</p>
+                                  </div>
+
+								  <div class="item__cta">
+                                    <a class="cta--link" data-role="none" aria-label="Read More" href="/story/2019/2019_and_beyond.html">Read More</a>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Story (Featured Item) HTML -->
+                        </div>
+                         <!-- End Story (Featured Item) HTML -->
+
+
+                        <div class="col col-4">
+                          <!-- Story (Featured Item) HTML -->
+                          <div class="component">
+                            <div class="featured-item">
+                              <div class="item__media">
+
+                                <div class="item__img" data-placeholder="false">
+                                  <a href="/story/2019/firstnet_footprint_expansion.html" aria-label="More Than 50,000 Square Miles of LTE Coverage Added Nationwide to Support AT&amp;T and FirstNet Users">
+
+                                    	<img src="/ecms/dam/snrprivate/2018/October2018/Feature/firstnet_app_featured_story_768x575.jpg" alt="Get Faster Streaming">
+
+                                  </a>
+                                </div>
+
+                              </div>
+                              <div class="item__content">
+                                <div class="story__wrap">
+
+
+                                  <!-- <h3 class="item__title">More Than 50,000 Square Miles of LTE Coverage Added Nationwide to Support AT&amp;T and FirstNet Users  -- 3 -- open_source   </h3> -->
+                                    <h3 class="item__title">More Than 50,000 Square Miles of LTE Coverage Added Nationwide to Support AT&amp;T and FirstNet Users</h3>
+
+                                  <div class="item__description">
+                                    <p>We increased the LTE coverage area for the AT&amp;T network and FirstNet public safety communications platform nationwide.</p>
+                                  </div>
+
+								  <div class="item__cta">
+                                    <a class="cta--link" data-role="none" aria-label="Read More" href="/story/2019/firstnet_footprint_expansion.html">Read More</a>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Story (Featured Item) HTML -->
+                        </div>
+                         <!-- End Story (Featured Item) HTML -->
+
+
+                        <div class="col col-4">
+                          <!-- Story (Featured Item) HTML -->
+                          <div class="component">
+                            <div class="featured-item">
+                              <div class="item__media">
+
+                                <div class="item__img" data-placeholder="false">
+                                  <a href="/story/2019/ubicquia.html" aria-label="Las Vegas Pilots Smart Lighting Solution with AT&amp;T, Ubicquia">
+
+                                    	<img src="/ecms/dam/snr/2019/January2019/Feature/CES_LAS_VEGAS_FEATURED_STORY_768x575.jpg" alt="Get Faster Streaming">
+
+                                  </a>
+                                </div>
+
+                              </div>
+                              <div class="item__content">
+                                <div class="story__wrap">
+
+
+                                  <!-- <h3 class="item__title">Las Vegas Pilots Smart Lighting Solution with AT&amp;T, Ubicquia  -- 3 -- open_source   </h3> -->
+                                    <h3 class="item__title">Las Vegas Pilots Smart Lighting Solution with AT&amp;T, Ubicquia</h3>
+
+                                  <div class="item__description">
+                                    <p>The City of Las Vegas will pilot a smart lighting solution to help improve public safety and increase energy savings.</p>
+                                  </div>
+
+								  <div class="item__cta">
+                                    <a class="cta--link" data-role="none" aria-label="Read More" href="/story/2019/ubicquia.html">Read More</a>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- End Story (Featured Item) HTML -->
+                        </div>
+                         <!-- End Story (Featured Item) HTML -->
+
+                        </div>
+                      </div>
+
+                  </section>
+                </div>
+
+
+
+
+
+    <script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/custom/getrightrail.js"></script>
+
+	<input type="hidden" name="currentpage" value="/content/snr/pressrelease/2019/open_source/jcr:content"/>
+
+    <div class="story__footer">
+
+
+    </div>
+	<input type="hidden" id="pageType" value="Press Release">
+	<input type="hidden" id="featuredAsset" value="Stock Image">
+	<input type="hidden" id="publishedDate" value="2019/01/08">
+  </main>
+
+
+
+
+
+            <footer id="att-about-footer" class="footer" role="contentinfo"></footer>
+
+
+        <!-- scripts -->
+
+        <script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/vendor/modernizr.min.js"></script>
+
+        <script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/custom/analytics.js"></script>
+        <script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/main.js"></script>
+        <script type="text/javascript" src="/ui/corpcomm_internet_attus/1.0.0/scripts/global_nav.js"></script>
+        <script src="/scripts/adobe/virtual/detm-container-ftr.js"></script>
+
+    </body>
+
+
+</html>
