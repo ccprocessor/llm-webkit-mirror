@@ -323,38 +323,6 @@ def remove_tags(dom):
                 parent.remove(node)
 
 
-def remove_inline_tags_except_img_br(dom):
-    # 定义块级元素列表（不完全，可根据需要扩展）
-
-    # 使用深度优先遍历DOM树
-    for element in dom.iter():
-        if element.tag not in inline_tags:
-            # 处理块元素中的子元素
-            for child in list(element):  # 使用list()创建副本，因为我们会修改原结构
-                if child.tag in inline_tags and child.tag in ['br', 'img']:
-                    # 移除行内元素，但保留其文本内容
-                    parent = child.getparent()
-                    if child.text:
-                        prev = child.getprevious()
-                        if prev is not None:
-                            prev.tail = (prev.tail or '') + child.text
-                        else:
-                            parent.text = (parent.text or '') + child.text
-
-                    # 处理子元素的子元素（如果有）
-                    for subchild in child:
-                        parent.insert(parent.index(child), subchild)
-
-                    if child.tail:
-                        prev = child.getprevious()
-                        if prev is not None:
-                            prev.tail = (prev.tail or '') + child.tail
-                        else:
-                            parent.text = (parent.text or '') + child.tail
-
-                    parent.remove(child)
-
-
 def is_meaningful_content(element) -> bool:
     """严格判断元素是否包含有效内容."""
     if element.text and element.text.strip():
@@ -381,48 +349,6 @@ def clean_attributes(element):
         element.attrib.clear()
     for child in element:
         clean_attributes(child)
-
-
-def _remove_nested_inline_tags_only(element):
-    """只移除嵌套的行内标签，保留当前元素本身（即使是行内标签） 用于处理inline_elements和mixed类型的内容."""
-    # 先处理子元素（深度优先）
-    for child in list(element.iterchildren()):
-        _remove_nested_inline_tags_only(child)
-
-        # 如果子元素是需要移除的行内标签
-        if child.tag in inline_tags and child.tag not in EXCLUDED_TAGS:
-            parent = child.getparent()
-            if parent is None:
-                continue
-
-            # 转移内容到父元素
-            text = child.text or ''
-            tail = child.tail or ''
-            grandchildren = list(child.iterchildren())
-
-            # 处理元素文本
-            if text:
-                prev = child.getprevious()
-                if prev is not None:
-                    prev.tail = (prev.tail or '') + text
-                else:
-                    parent.text = (parent.text or '') + text
-
-            # 转移子节点
-            index = parent.index(child)
-            for grandchild in reversed(grandchildren):
-                parent.insert(index, grandchild)
-
-            # 处理尾部文本
-            if tail:
-                prev = child.getprevious()
-                if prev is not None:
-                    prev.tail = (prev.tail or '') + tail
-                else:
-                    parent.text = (parent.text or '') + tail
-
-            # 移除当前子元素
-            parent.remove(child)
 
 
 def remove_inline_tags(element):
