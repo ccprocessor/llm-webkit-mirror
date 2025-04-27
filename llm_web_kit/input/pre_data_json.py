@@ -20,6 +20,7 @@ class PreDataJsonKey:
     HTML_ELEMENT_LIST = 'html_element_list'
     HTML_TARGET_LIST = 'html_target_list'
     MAIN_HTML = 'main_html'
+    MAIN_HTML_BODY = 'main_html_body'
     FILTERED_MAIN_HTML = 'filtered_main_html'
 
 

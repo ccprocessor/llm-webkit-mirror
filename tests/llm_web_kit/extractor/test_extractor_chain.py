@@ -60,7 +60,7 @@ class TestExtractorChain(unittest.TestCase):
             for line in f:
                 self.data_json.append(json.loads(line.strip()))
 
-        assert len(self.data_json) == 46
+        assert len(self.data_json) == 47
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -682,3 +682,15 @@ A few explanations on why certain things in business are so.
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_nlp_md()
         assert len(content_md) > 0
+
+    def test_not_html(self):
+        """测试not_html."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[46]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        main_html = result.get_magic_html()
+        print(main_html)
+        content_md = result.get_content_list()._get_data()
+        print(json.dumps(content_md, ensure_ascii=False))
