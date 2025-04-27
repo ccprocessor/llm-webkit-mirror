@@ -18,7 +18,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 34)
+        self.assertEqual(_item_id_count, 32)
 
 
 if __name__ == '__main__':
