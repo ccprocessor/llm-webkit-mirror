@@ -75,7 +75,9 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 res = response[option]
                 if res == 1:
                     self.deal_element_direct(item_id, pre_root)
-                    content_list.append(elem.text)
+                    text_nodes = elem.xpath('//text()')  # 获取所有文本节点（包括tail）
+                    all_text = ' '.join([t.strip() for t in text_nodes if t.strip()])
+                    content_list.append(all_text)
         # 完善父节点路径
         self.tag_parent(pre_root)
         return content_list
