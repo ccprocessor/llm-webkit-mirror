@@ -1,8 +1,10 @@
+from hashlib import sha256
+
+from lxml import html
+
 from llm_web_kit.exception.exception import TagMappingParserException
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
-from lxml import html
-from hashlib import sha256
 
 
 class MapItemToHtmlTagsParser(BaseMainHtmlParser):
@@ -40,7 +42,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
     def get_element_id(self, element):
         """生成稳定的短哈希ID"""
         element_html = html.tostring(element, encoding='unicode', method='html')
-        return f"id{sha256(element_html.encode()).hexdigest()}"  # 10位哈希
+        return f'id{sha256(element_html.encode()).hexdigest()}'  # 10位哈希
 
     def deal_element_direct(self, item_id, test_root):
         # 对正文内容赋予属性magic_main_html
@@ -61,14 +63,14 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 parent_main = parent.get('magic_main_html', None)
                 if parent_main:
                     break
-                parent.set('magic_main_html', "True")
+                parent.set('magic_main_html', 'True')
                 cur = parent
 
     def tag_main_html(self, response, pre_root):
         content_list = []
         for elem in pre_root.iter():
-            item_id = elem.get("_item_id")
-            option = f"item_id {item_id}"
+            item_id = elem.get('_item_id')
+            option = f'item_id {item_id}'
             if option in response:
                 res = response[option]
                 if res == 1:

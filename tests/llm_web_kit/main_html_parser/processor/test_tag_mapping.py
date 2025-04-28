@@ -1,7 +1,8 @@
 import json
 import unittest
-from llm_web_kit.main_html_parser.parser.tag_mapping import MapItemToHtmlTagsParser
+
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
+from llm_web_kit.main_html_parser.parser.tag_mapping import MapItemToHtmlTagsParser
 
 
 def parse_tuple_key(key_str):
@@ -9,7 +10,7 @@ def parse_tuple_key(key_str):
         try:
             # Convert "(1, 2)" → (1, 2) using ast.literal_eval (safer than eval)
             return eval(key_str)
-        except:
+        except Exception as e:
             return key_str
     return key_str
 
@@ -21,7 +22,7 @@ class TestTagMapping(unittest.TestCase):
             for line in f:
                 data.append(json.loads(line.strip()))  # 解析每行 JSON
         mock_dict = data[0]
-        pre_data = PreDataJson(mock_dict["pre_data"])
+        pre_data = PreDataJson(mock_dict['pre_data'])
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse(pre_data)
         content_list = pre_data.get(PreDataJsonKey.HTML_TARGET_LIST, [])
