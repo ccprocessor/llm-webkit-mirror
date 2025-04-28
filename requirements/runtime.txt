@@ -21,4 +21,3 @@ torch>=2.3.0
 tqdm==4.67.1
 transformers==4.40.2
 xformers>=0.0.27
-git+https://github.com/darkrush/html-alg-lib.git@5f35e77e7d032fbf5eb33ef5c05670f783e4826d
