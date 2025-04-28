@@ -1,9 +1,12 @@
 import json
 import unittest
+from pathlib import Path
 
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.main_html_parser.parser.tag_mapping import \
     MapItemToHtmlTagsParser
+
+base_dir = Path(__file__).parent.parent
 
 
 def parse_tuple_key(key_str):
@@ -19,7 +22,8 @@ def parse_tuple_key(key_str):
 class TestTagMapping(unittest.TestCase):
     def test_construct_main_tree(self):
         data = []
-        with open('../assets/test_tag_mapping_web.jsonl', 'r', encoding='utf-8') as f:
+        raw_html_path = base_dir.joinpath('assets/test_tag_mapping_web.jsonl')
+        with open(raw_html_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data.append(json.loads(line.strip()))  # 解析每行 JSON
         mock_dict = data[0]
