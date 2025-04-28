@@ -40,7 +40,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         return pre_data
 
     def get_element_id(self, element):
-        """生成稳定的短哈希ID"""
+        """生成稳定的短哈希ID."""
         element_html = html.tostring(element, encoding='unicode', method='html')
         return f'id{sha256(element_html.encode()).hexdigest()}'  # 10位哈希
 
