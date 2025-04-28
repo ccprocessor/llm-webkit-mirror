@@ -1,14 +1,8 @@
 from llm_web_kit.exception.exception import TagMappingParserException
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
-from html_alg_lib.simplify import general_simplify
-from html_alg_lib.base_funcs import document_fromstring
-from html_alg_lib.normalize import (
-    pre_normalize_html,
-)
 from lxml import html
 from hashlib import sha256
-import copy
 
 
 class MapItemToHtmlTagsParser(BaseMainHtmlParser):
@@ -31,22 +25,12 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             PreDataJson: 包含映射结果的PreDataJson对象
         """
         # tag映射逻辑
-        # ...
         try:
-            template_html = pre_data['html_source']
-            response_json = pre_data['response_json']
-            root = document_fromstring(template_html)
-            title, simplified_root = general_simplify(root)
-            root = document_fromstring(template_html)
-            pre_root = pre_normalize_html(root)
-            if isinstance(simplified_root, tuple):
-                simplified_root, mapp = simplified_root
-            test_root = copy.deepcopy(pre_root)
-            test_sim_root = copy.deepcopy(simplified_root)
-            content_list = self.tag_main_html(response_json, mapp, test_root, test_sim_root)
-            element_dict = self.construct_main_tree(test_root)
-
-            # 设置输出数据
+            template_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
+            response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
+            root = html.fromstring(template_html)
+            content_list = self.tag_main_html(response_json, root)
+            element_dict = self.construct_main_tree(root)
             pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
             pre_data[PreDataJsonKey.HTML_ELEMENT_LIST] = element_dict
         except Exception as e:
@@ -87,13 +71,11 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 del element.attrib[attr]
         return
 
-    def deal_element_direct(self, item_id, mapp, test_root):
-        node_ids = mapp[item_id].split(' ')
+    def deal_element_direct(self, item_id, test_root):
         # 对正文内容赋予属性magic_main_html
-        for node_id in node_ids:
-            elements = test_root.xpath(f'//*[@cc-alg-node-ids="{node_id}"]')
-            deal_element = elements[0]
-            deal_element.set('magic_main_html', "True")
+        elements = test_root.xpath(f'//*[@_item_id="{item_id}"]')
+        deal_element = elements[0]
+        deal_element.set('magic_main_html', "True")
 
     def tag_parent(self, pre_root):
         for elem in pre_root.iter():
@@ -111,19 +93,16 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 parent.set('magic_main_html', "True")
                 cur = parent
 
-    def tag_main_html(self, response, mapp, pre_root, sim_root):
+    def tag_main_html(self, response, pre_root):
         content_list = []
-        for elem in sim_root.iter():
-            item_id = elem.get('_item_id')
-            option = f'Option {item_id}'
+        for elem in pre_root.iter():
+            item_id = elem.get("_item_id")
+            option = f"item_id {item_id}"
             if option in response:
-                res = response[option]['isMain']
-                if res.lower() in ['yes', 'may yes']:
-                    self.deal_element_direct(item_id, mapp, pre_root)
+                res = response[option]
+                if res == 1:
+                    self.deal_element_direct(item_id, pre_root)
                     content_list.append(elem.text)
-
-        # 恢复到原网页结构
-        self.process_element(pre_root)
         # 完善父节点路径
         self.tag_parent(pre_root)
         return content_list

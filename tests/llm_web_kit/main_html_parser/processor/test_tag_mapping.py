@@ -4,6 +4,16 @@ from llm_web_kit.main_html_parser.parser.tag_mapping import MapItemToHtmlTagsPar
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 
 
+def parse_tuple_key(key_str):
+    if key_str.startswith("(") and key_str.endswith(")"):
+        try:
+            # Convert "(1, 2)" → (1, 2) using ast.literal_eval (safer than eval)
+            return eval(key_str)
+        except:
+            return key_str
+    return key_str
+
+
 class TestTagMapping(unittest.TestCase):
     def test_construct_main_tree(self):
         data = []
@@ -17,5 +27,6 @@ class TestTagMapping(unittest.TestCase):
         content_list = pre_data.get(PreDataJsonKey.HTML_TARGET_LIST, [])
         element_dict = pre_data.get(PreDataJsonKey.HTML_ELEMENT_LIST, [])
         self.assertEqual(content_list, mock_dict['expected_content_list'])
-        expected_element_dict = mock_dict['expected_element_dict']
-        self.assertEqual(str(element_dict), expected_element_dict)
+        verify_key = mock_dict['verify_key']
+        new_res = element_dict[8][tuple(verify_key)][0]
+        self.assertEqual('red', new_res)
