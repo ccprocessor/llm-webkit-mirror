@@ -42,35 +42,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         element_html = html.tostring(element, encoding='unicode', method='html')
         return f"id{sha256(element_html.encode()).hexdigest()}"  # 10位哈希
 
-    def find_affected_element_after_drop(self, element):
-        prev_sibling = element.getprevious()
-        parent = element.getparent()
-
-        element.drop_tag()
-
-        if prev_sibling is not None:
-            return prev_sibling
-        else:
-            return parent
-
-    def process_element(self, element):
-        # 前序遍历元素树（先处理子元素）
-        for child in list(element):  # 使用list()创建副本，因为我们会修改原元素
-            self.process_element(child)
-
-        # 如果是cc-alg-uc-text标签，用drop_tag()删除标签但保留子元素
-        if element.tag == 'cc-alg-uc-text':
-            is_main = element.get('magic_main_html', None)
-            affected = self.find_affected_element_after_drop(element)
-            if is_main:
-                affected.set('magic_main_html', "True")
-
-        # 删除指定属性
-        for attr in ['cc-alg-node-tags', 'cc-alg-node-ids']:
-            if attr in element.attrib:
-                del element.attrib[attr]
-        return
-
     def deal_element_direct(self, item_id, test_root):
         # 对正文内容赋予属性magic_main_html
         elements = test_root.xpath(f'//*[@_item_id="{item_id}"]')
