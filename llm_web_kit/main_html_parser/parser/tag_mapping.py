@@ -48,7 +48,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # 对正文内容赋予属性magic_main_html
         elements = test_root.xpath(f'//*[@_item_id="{item_id}"]')
         deal_element = elements[0]
-        deal_element.set('magic_main_html', "True")
+        deal_element.set('magic_main_html', 'True')
 
     def tag_parent(self, pre_root):
         for elem in pre_root.iter():

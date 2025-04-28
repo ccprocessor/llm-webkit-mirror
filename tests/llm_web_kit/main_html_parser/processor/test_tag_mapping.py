@@ -6,11 +6,11 @@ from llm_web_kit.main_html_parser.parser.tag_mapping import MapItemToHtmlTagsPar
 
 
 def parse_tuple_key(key_str):
-    if key_str.startswith("(") and key_str.endswith(")"):
+    if key_str.startswith('(') and key_str.endswith(')'):
         try:
             # Convert "(1, 2)" → (1, 2) using ast.literal_eval (safer than eval)
             return eval(key_str)
-        except Exception as e:
+        except Exception:
             return key_str
     return key_str
 
