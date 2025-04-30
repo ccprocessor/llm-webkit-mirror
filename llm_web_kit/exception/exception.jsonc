@@ -73,8 +73,8 @@
   // HtmlRecognizer相关异常
   "HtmlRecognizer": {
     "HtmlRecognizerException": {
-        "code": 31031000,
-        "message": "HTML recognizer exception"
+      "code": 31031000,
+      "message": "HTML recognizer exception"
     },
     "HtmlMathRecognizerException": {
       "code": 31031100,
@@ -154,6 +154,87 @@
     "ModelRuntimeException": {
       "code": 47000000,
       "message": "Model runtime exception"
+    }
+  },
+  // ProcessorChain相关异常 (50000000)
+  "ProcessorChain": {
+    "ProcessorChainBaseException": {
+      "code": 50000000,
+      "message": "ProcessorChain base exception"
+    },
+    "ProcessorChainInitException": {
+      "code": 51000000,
+      "message": "ProcessorChain initialization exception"
+    },
+    "ProcessorChainConfigException": {
+      "code": 52000000,
+      "message": "ProcessorChain configuration exception"
+    },
+    "ProcessorChainInputException": {
+      "code": 53000000,
+      "message": "ProcessorChain input exception"
+    },
+    "ProcessorNotFoundException": {
+      "code": 54000000,
+      "message": "Processor not found exception"
+    }
+  },
+  // Processor相关异常 (60000000)
+  "Processor": {
+    "ProcessorBaseException": {
+      "code": 60000000,
+      "message": "Processor base exception"
+    },
+    "HtmlPreProcessorException": {
+      "code": 61000000,
+      "message": "HTML pre-processor exception"
+    },
+    "HtmlProcessorException": {
+      "code": 62000000,
+      "message": "HTML processor exception"
+    },
+    "HtmlPostProcessorException": {
+      "code": 63000000,
+      "message": "HTML post-processor exception"
+    }
+  },
+  // Parser相关异常 (62100000)
+  "Parser": {
+    "DomainClusteringParserException": {
+      "code": 62101000,
+      "message": "Domain clustering parser exception"
+    },
+    "LayoutClusteringParserException": {
+      "code": 62102000,
+      "message": "Layout clustering parser exception"
+    },
+    "TypicalHtmlSelectorParserException": {
+      "code": 62103000,
+      "message": "Typical HTML selector parser exception"
+    },
+    "TagSimplifiedParserException": {
+      "code": 62104000,
+      "message": "Tag simplified parser exception"
+    },
+    "LlmMainIdentifierParserException": {
+      "code": 62105000,
+      "message": "LLM main identifier parser exception"
+    },
+    "TagMappingParserException": {
+      "code": 62106000,
+      "message": "Tag mapping parser exception"
+    },
+    "LayoutSubtreeParserException": {
+      "code": 62107000,
+      "message": "Layout subtree parser exception"
+    },
+    "LayoutBatchParserException": {
+      "code": 62108000,
+      "message": "Layout batch parser exception"
+    },
+    "DomContentFilterParserException": {
+      "code": 62109000,
+      "message": "Dom content filter parser exception"
     }
   }
 }

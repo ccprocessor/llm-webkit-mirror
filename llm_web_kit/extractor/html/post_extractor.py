@@ -76,10 +76,6 @@ class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
                 # 只对list和paragraph进行处理
                 if content_node['type'] == DocElementType.PARAGRAPH:
                     content_node['content'] = self.__do_normalize_text(content_node['content'])
-                elif content_node['type'] == DocElementType.LIST:
-                    for item in content_node['content']['items']:
-                        for para_idx, para in enumerate(item):
-                            item[para_idx] = self.__do_normalize_text(para)
                 elif content_node['type'] == DocElementType.TITLE:
                     content_node['content']['title_content'] = normalize_text_segment(content_node['content']['title_content'])
         return data_json

@@ -7,8 +7,8 @@ def get_version():
     try:
         version = subprocess.check_output(command).decode().strip()
         version_parts = version.split('-')
-        if len(version_parts) > 1 and version_parts[0].startswith('llm-web-kit'):
-            return version_parts[1]
+        if len(version_parts) > 1 and version_parts[0].startswith('v'):
+            return version_parts[0].strip('v')
         else:
             raise ValueError(f'Invalid version tag {version}. Expected format is llm-web-kit-<version>-released.')
     except Exception as e:
@@ -19,7 +19,7 @@ def get_version():
 def write_version_to_commons(version):
     commons_path = os.path.join(os.path.dirname(__file__), 'llm_web_kit', 'libs', 'version.py')
     with open(commons_path, 'w') as f:
-        f.write(f'__version__ = "{version}"\n')
+        f.write(f"__version__ = '{version}'\n")
 
 
 if __name__ == '__main__':

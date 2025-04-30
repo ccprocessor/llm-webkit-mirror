@@ -1,0 +1,3842 @@
+{
+  "0": {
+    "('html', None, None, 'idfe0c7ca6da108a9f2b0682e21b156fb3bd592e975335d6b55d034a5e251e7a02', 0, 0)": [
+      "red",
+      null
+    ]
+  },
+  "1": {
+    "('head', None, None, 'ida37c725374fcf486f64423c0266579eb268dca86cac8bf5997e714ebc9f9821e', 1, 0)": [
+      "green",
+      [
+        "html",
+        null,
+        null
+      ]
+    ],
+    "('body', 'post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular', None, 'idb421920acb189b3dc92faaf1e0110f837715926e7e940b6fa7bd2eba49379c49', 1, 1)": [
+      "red",
+      [
+        "html",
+        null,
+        null
+      ]
+    ]
+  },
+  "2": {
+    "('meta', None, None, 'id89af9cce90444516574b669014a1c976f4955e37378546a6e855d8429ec2d2b7', 2, 0)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id9d431c1005a829f0c89c0da4fd8bf7895e1b914c29947d0b7bbb4420ca45a264', 2, 1)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id74a974d39580e4cb80bbfcaf132f8e0b54570113be03ee8d1668fc3d90352b8c', 2, 2)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('title', None, None, 'idbd5cfaf663eef533dc4454f3e53963e928abed286437890f60e99b8e9abe76a1', 2, 3)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idfe17e5138c2a206cec78ec4dc9573b3df063cef1f5924c4e027f39b84fe6ac5c', 2, 4)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, None, 'id9009999721ddd25963da358399d136359d7e32a1c7c74572cc89ba6786eb3163', 2, 5)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id93d0b417ab3935eb6ec4f73590dbeca68fa7c23ee4a226bbdd5256e790784c99', 2, 6)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id4029599c76abce59d8bbe2f32bc6dd50c07f162ac3e6b252df1735da69571e7b', 2, 7)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'idfdad38e762f986eeec7cc9cb7eb26baaf8d354842bb13313aaa258616d213cd5', 2, 8)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, 'wp-emoji-styles-inline-css', 'id5a118a318129d3b4872fc40b008bcd70952e4d305adba25eccc12b85ad4a9db9', 2, 9)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'wp-block-library-css', 'id6634bac89f0091ffda716920e6ab9a831959b4b1a5d0e55171e8616f824d160a', 2, 10)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, 'classic-theme-styles-inline-css', 'id820dccfeb8234bb2eeba5ab3fb9b8353b95609d31ca186d37d18513bdc286876', 2, 11)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, 'global-styles-inline-css', 'id68fedf50e9ba543edf01fa117e5cd0622dceaf4853433528497188e1b312503e', 2, 12)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'cookie-law-info-css', 'id4ce580bdaa116f30bdd573997a08fc27ed857ab28e3f6571b6c2ee74945a8b2e', 2, 13)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'cookie-law-info-gdpr-css', 'id809c5c3ea90fc569025b23874b86b1f9517179d958a9422826b87a719ff096a6', 2, 14)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'bootstrap-css', 'id62ab97634cfb3e9660b6bc0b0d31f42018fbb717fffe43b9faab3ff399ce6cba', 2, 15)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'font-awesome-css', 'id5aa22449f1c110f00915072bb634cfee17fda6514037e3e41e2086326bf8a074', 2, 16)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'graphene-css', 'idae17eff9236c70c069a312f9495d576ee7758e3c90eddea00ac0ccb16f0f4661', 2, 17)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'graphene-responsive-css', 'id19599fcdb8220a090960525430886551fa7862d0f9a208896803bcb6396426aa', 2, 18)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'graphene-print-css', 'id44a324aedf6d4f4557978a7e52b079119a50c099e72e02c233b0eb52fb3db6d4', 2, 19)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'graphene-blocks-css', 'ide3dde6c0167a2bdad50bf3c76972c506b55cf5a8ee8cb2316dfc8795d053125c', 2, 20)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'jquery-core-js', 'id0f70bcf57640afe4817ea263f7b730cf7f38a014dcb6131b79f667151cd6eb41', 2, 21)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'jquery-migrate-js', 'idb8d2b55d12a969b14513d4dcccf335aa2a600d9b0cef479094c3ae2f53d10472', 2, 22)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'cookie-law-info-js-extra', 'id4df35a9042e3c76263c0257b7c8a4d7caa4dbd268092bf6b6bfbb2a8f8c29767', 2, 23)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'cookie-law-info-js', 'id2de81e28c2b7df6ea4e36fd476ac089e7d6bba1b6f3f4d9721c06c298940826f', 2, 24)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'bootstrap-js', 'id7b91ab74b7ff957340e8379211c6b03dec623308de17a336f1cfa341fe899897', 2, 25)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'bootstrap-hover-dropdown-js', 'ida2d56b1db5525a19e9568897941ff4851cb6013d20426603215f5d154d525f77', 2, 26)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'bootstrap-submenu-js', 'id166df931e3c56a18dfdd5ddf3fbad54776e64bd8cbf9829c3d973072712bca0d', 2, 27)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'infinite-scroll-js', 'idcc1bb720bf191ab73cc7fd62854796a81a86383aec7fe0ee66443de92138f119', 2, 28)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'graphene-js-extra', 'id2b3ec928d56852e53571a35d9313af6a48a7ac7daced062232dcbb2a4c3f820a', 2, 29)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, 'graphene-js', 'id8447d1b54a21849eef7862e95fc0f1086119a6ed414525012b9a1a3bb067761e', 2, 30)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id72e79b5c58020a2d4f7b9fdcfd1493d8ab616e95d2d15f66e1c2960c2427c016', 2, 31)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'ide5b5ebee9f1f554aac007c7893a70af884870c4fc626fc144c5357ce561b6522', 2, 32)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id00ad8e22da8999053cee92eb0cd920fd5963c6ddd445fa097332c8a2dc3e739f', 2, 33)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id53bc2e4ed4642c855069b15976ca4a4de6d1788bab367a8afe7de01c09753d64', 2, 34)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id5e8e5cd592ff53404cec54e8d5befbf580924f73c0f132ed89a68dfce161b417', 2, 35)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id455a9715c2fd8fe3496217565d5771e77e10e2754ebab7553b46771b48026786', 2, 36)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'idcaf6eda698a59e72581af47049a4821cae0fc469683f266aacd688873a082376', 2, 37)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id8097fa97eca78f24079e9ebc2506f83c26d019546e03f242c11ebe51bfbff675', 2, 38)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id2aae96756fcf10a4634a63adff9500c7f414127b3895cfdc03ad1b17c68bf8b7', 2, 39)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, None, 'ida99d97fd4d05e2d225881be6644f2c7a217e23b47204944479c2de6d0be4c440', 2, 40)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'idc3ba7a9836aea09cbb459286e164046b3cd50702f99037422d4e5e64d3cf06a7', 2, 41)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, 'custom-background-css', 'id7fe3b4b4b44b48fef41702dfa680387ba715c64c2e38130f4632d4a06c4b3e0e', 2, 42)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id6ba8e4b533f6087aa4efffda544f78317120100af386ff6a38ad8b372cbbef0c', 2, 43)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id05a058ab83eb601aef5eaf01f1239b0accf9a66d171c0a2b8d26f13a54e41657', 2, 44)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id95d42968811813a81101ef22a5a907902cd0890c51be763c43046895cf7e249e', 2, 45)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id630063e2b1bbcf4f712cf6203da3ada26ef4075fa2fdb5b7aff2978a2332c2b4', 2, 46)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idaa2fc01421565a5b0c46152295488b67f26c9459d62a8581c22a277c052a0fa2', 2, 47)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id80803fc67c361f98c8106ea9d0b58014a087f15ac9d2f841acb7b747622332ba', 2, 48)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idf3f7d88a6da4603138ec020bad69bcc9080526e753d277ace6ab917c3edfaff8', 2, 49)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idef1ff27f0def5c5e693209de1a2a7a56f564658ad8728b532991f3a6abc05041', 2, 50)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('style', None, 'wp-custom-css', 'id064505bfb64ac5ccd02413b3b10c740b8b136473abf326a1875c1e590ee27675', 2, 51)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('div', 'container boxed-wrapper', None, 'idb39a5514dff4376bfb1df7f776cf2e2923e866e0399adcf7c4b738a445760cba', 2, 52)": [
+      "red",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ],
+    "('div', None, 'cookie-law-info-bar', 'idb7636d706dd9438924fa514957b031461d3870370c50853a97a87046c3722651', 2, 53)": [
+      "green",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ],
+    "('div', None, 'cookie-law-info-again', 'idc7a0b0c32eca8b279439dcf64a21fca25210dcbd8306204c453079ebc73887fa', 2, 54)": [
+      "green",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ],
+    "('div', 'cli-modal', 'cliSettingsPopup', 'id5dd56153aa0ce35688f75e93e00df41e0ea2923e8d0424fc8d6e09c45fb9f716', 2, 55)": [
+      "green",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ],
+    "('div', 'cli-modal-backdrop cli-fade cli-settings-overlay', None, 'id0610dd388208474a72129fc95d20b91a66d6481095f6682f1d2a34a9f9575b18', 2, 56)": [
+      "green",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ],
+    "('div', 'cli-modal-backdrop cli-fade cli-popupbar-overlay', None, 'id68e2d7c7c343fe7816e4d881f21366522f55b812b2cfafeda628fe49b737efed', 2, 57)": [
+      "green",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ],
+    "('a', None, 'back-to-top', 'id3c41f9657ea45b636f3401cfe6f5f230f60a7e175fb8b834f6e824ae5ffc0eed', 2, 58)": [
+      "green",
+      [
+        "body",
+        "post-template-default single single-post postid-25123 single-format-standard custom-background wp-embed-responsive full-width-slider layout-boxed two_col_left two-columns singular",
+        null
+      ]
+    ]
+  },
+  "3": {
+    "('div', 'row clearfix top-bar ', 'top-bar', 'idf15d07d9f5cc3922431a81220248f087541260ace6012427900300a81c74d95d', 3, 0)": [
+      "green",
+      [
+        "div",
+        "container boxed-wrapper",
+        null
+      ]
+    ],
+    "('div', 'row', 'header', 'id0c093ea3ff30cef8c0d02bd5b66aa72cb57850344c68c1b3a44a0f0e1ba6c252', 3, 1)": [
+      "green",
+      [
+        "div",
+        "container boxed-wrapper",
+        null
+      ]
+    ],
+    "('nav', 'navbar row navbar-inverse', None, 'id6fe764f958465fd0c8a0ca9903e222db71544d47e1301e112f7c5217e28cd1d2', 3, 2)": [
+      "green",
+      [
+        "div",
+        "container boxed-wrapper",
+        null
+      ]
+    ],
+    "('div', 'clearfix hfeed row', 'content', 'id3527e00f24f363f4a1163afdd8aa59821e2c50eaee7f790d3c8124d0536261f7', 3, 3)": [
+      "red",
+      [
+        "div",
+        "container boxed-wrapper",
+        null
+      ]
+    ],
+    "('div', 'row default-footer', 'footer', 'idbdbda8265ce2631370c4d411d8529eb7b0549a4d01bd23e4f2b8937d3eadbcd5', 3, 4)": [
+      "green",
+      [
+        "div",
+        "container boxed-wrapper",
+        null
+      ]
+    ],
+    "('span', None, None, 'idfc989d7e7609c9783bacb362333f1d0d168b997e3a1072ae0c4835a1c320223d', 3, 5)": [
+      "green",
+      [
+        "div",
+        null,
+        "cookie-law-info-bar"
+      ]
+    ],
+    "('span', None, 'cookie_hdr_showagain', 'id64367df2a085f62aaf2bc463d47a30c9486916b2deb3d71c2f7063c7b74a365e', 3, 6)": [
+      "green",
+      [
+        "div",
+        null,
+        "cookie-law-info-again"
+      ]
+    ],
+    "('div', 'cli-modal-dialog', None, 'id583fb0485722f8c278bdb9265a9bb5af56341c015a533753bfbb165a34da288f', 3, 7)": [
+      "green",
+      [
+        "div",
+        "cli-modal",
+        "cliSettingsPopup"
+      ]
+    ],
+    "('i', 'fa fa-chevron-up', None, 'idf88fa10b053a3da568e08017c28691e56b0db3d9d92c84526181b86b040546e2', 3, 8)": [
+      "green",
+      [
+        "a",
+        null,
+        "back-to-top"
+      ]
+    ]
+  },
+  "4": {
+    "('div', 'col-md-12 top-bar-items', None, 'id0437c84c34da25e6e385b45db8402ca558cc01574bb099197f277c0fcd5295f4', 4, 0)": [
+      "green",
+      [
+        "div",
+        "row clearfix top-bar ",
+        "top-bar"
+      ]
+    ],
+    "('img', None, None, 'id18a0ae2b33679e21018b9621d7e807442e573bd43604ed51d8fdba4409358ba3', 4, 1)": [
+      "green",
+      [
+        "div",
+        "row",
+        "header"
+      ]
+    ],
+    "('a', None, 'header_img_link', 'id73af2ccc14037bccc88a8598e2b283be0873f979f095291fa7de47ae8d195aa3', 4, 2)": [
+      "green",
+      [
+        "div",
+        "row",
+        "header"
+      ]
+    ],
+    "('div', 'navbar-header align-center', None, 'id3276565fbe9a1adc6a05208755722f8880c8215980bc789b838e5f7ceb50dbc9', 4, 3)": [
+      "green",
+      [
+        "nav",
+        "navbar row navbar-inverse",
+        null
+      ]
+    ],
+    "('div', 'collapse navbar-collapse', 'header-menu-wrap', 'id4fc9b4ad5233a25a7482976a18e29c52fe8070c9af6e381fdf5f270588efbc12', 4, 4)": [
+      "green",
+      [
+        "nav",
+        "navbar row navbar-inverse",
+        null
+      ]
+    ],
+    "('div', 'clearfix content-main col-md-8', 'content-main', 'idfbf06bcef39bc2cbd4187c85c76dbce279daf1ccb7cedc0ba4b8d8cab909a676', 4, 5)": [
+      "red",
+      [
+        "div",
+        "clearfix hfeed row",
+        "content"
+      ]
+    ],
+    "('div', 'sidebar sidebar-right widget-area col-md-4', 'sidebar1', 'id9414011de493738d7730c39199d7c49bd70155e27756e66e86c0d17feacb5b85', 4, 6)": [
+      "green",
+      [
+        "div",
+        "clearfix hfeed row",
+        "content"
+      ]
+    ],
+    "('div', 'copyright-developer', None, 'ida92cf0f16a67606f4f7748693b1fe37d20961658dac33ef5cadd9624972c330c', 4, 7)": [
+      "green",
+      [
+        "div",
+        "row default-footer",
+        "footer"
+      ]
+    ],
+    "('br', None, None, 'id2ca0f018eeb039bfb56850769dd07a4553997ed30b0734563e80837fbdd20770', 4, 8)": [
+      "green",
+      [
+        "span",
+        null,
+        null
+      ]
+    ],
+    "('a', 'medium cli-plugin-button cli-plugin-main-button cookie_action_close_header cli_action_button wt-cli-accept-btn', 'cookie_action_close_header', 'id92316bc382f8e494673aef87aaa87e6c2a53ffa8c78b0b668e0f32dbec02abf8', 4, 9)": [
+      "green",
+      [
+        "span",
+        null,
+        null
+      ]
+    ],
+    "('a', 'cli-plugin-main-link', 'CONSTANT_OPEN_URL', 'id5bf3a567dafaf87a0e056714902521d7d21c693bc6d62ff5ac274235897f116e', 4, 10)": [
+      "green",
+      [
+        "span",
+        null,
+        null
+      ]
+    ],
+    "('div', 'cli-modal-content cli-bar-popup', None, 'id91665da370c92bd35dfe29baa785e457b4464ebaf5a9b4de5a0f7336505f2611', 4, 11)": [
+      "green",
+      [
+        "div",
+        "cli-modal-dialog",
+        null
+      ]
+    ]
+  },
+  "5": {
+    "('ul', 'social-profiles', None, 'idc575a2c1af4aecf99bcfd13cd91e01f1e1a9a8ab8af4b41064790b6bced0c7db', 5, 0)": [
+      "green",
+      [
+        "div",
+        "col-md-12 top-bar-items",
+        null
+      ]
+    ],
+    "('button', 'search-toggle navbar-toggle collapsed', None, 'ide6e0f2eb8c43c2d86138402a88d9b5e04146a9aa2e1d6a3e9997d1cef7a091a5', 5, 1)": [
+      "green",
+      [
+        "div",
+        "col-md-12 top-bar-items",
+        null
+      ]
+    ],
+    "('div', 'top-search-form', 'top_search', 'idd3d0065933c720ed02eadc27f313038f9e82a78332aa5132b0a49ea98137286b', 5, 2)": [
+      "green",
+      [
+        "div",
+        "col-md-12 top-bar-items",
+        null
+      ]
+    ],
+    "('button', 'navbar-toggle collapsed', None, 'iddcdf76b887f94ff52202a9fc7aa98c12fc0b86342c8f2a92f529ce4a27dbee54', 5, 3)": [
+      "green",
+      [
+        "div",
+        "navbar-header align-center",
+        null
+      ]
+    ],
+    "('p', 'header_title', None, 'id3d149c560861280afcebee6b2e0dce478221f95fcca722229d77c5a81531abd7', 5, 4)": [
+      "green",
+      [
+        "div",
+        "navbar-header align-center",
+        null
+      ]
+    ],
+    "('p', 'header_desc', None, 'id4cd47da7b6d64e2da4e8c761508f9b6a777f0ec1423ceb6842d9e73cdeb79944', 5, 5)": [
+      "green",
+      [
+        "div",
+        "navbar-header align-center",
+        null
+      ]
+    ],
+    "('ul', 'nav navbar-nav flip', 'header-menu', 'id19210e5fda3624ef00cf8ec653250980e65ed8a0d3cf738a6571dc4d45125c60', 5, 6)": [
+      "green",
+      [
+        "div",
+        "collapse navbar-collapse",
+        "header-menu-wrap"
+      ]
+    ],
+    "('div', 'post-nav post-nav-top clearfix', None, 'id79d90fdb3636934561cd4d03572652ef5691456c9044eaa8fe371bc2eb5ab5a2', 5, 7)": [
+      "green",
+      [
+        "div",
+        "clearfix content-main col-md-8",
+        "content-main"
+      ]
+    ],
+    "('div', 'clearfix post post-25123 type-post status-publish format-standard hentry category-cultura category-economia category-societa tag-calabresi tag-calabria tag-cosenza tag-cultura-2 tag-economia-2 tag-fondazione tag-giovani tag-impresa tag-innovazione tag-lavoro tag-rendano tag-unical tag-universita tag-villa item-wrap', 'post-25123', 'id37f5b0d175fd9c21fb79a00c075041036dc559e27dd081e1aa925e6cc0ee0ec2', 5, 8)": [
+      "red",
+      [
+        "div",
+        "clearfix content-main col-md-8",
+        "content-main"
+      ]
+    ],
+    "('p', 'printonly', None, 'id6fd24874e043adff24ea89fd59ec3bb926a509d1d245c45edd4968e4ad5f3aa8', 5, 9)": [
+      "green",
+      [
+        "div",
+        "clearfix content-main col-md-8",
+        "content-main"
+      ]
+    ],
+    "('div', 'sidebar-wrap widget_categories', 'categories-2', 'id9344cd239b98a20bea7569b63dd3852ee32fd21ab49c147c31c01a045cdcf906', 5, 10)": [
+      "green",
+      [
+        "div",
+        "sidebar sidebar-right widget-area col-md-4",
+        "sidebar1"
+      ]
+    ],
+    "('div', 'sidebar-wrap widget_calendar', 'calendar-2', 'ide4066e10c24a72093b0fcd463a6745f2fa5d836ee99957345c3562961910e667', 5, 11)": [
+      "green",
+      [
+        "div",
+        "sidebar sidebar-right widget-area col-md-4",
+        "sidebar1"
+      ]
+    ],
+    "('div', 'sidebar-wrap widget_archive', 'archives-2', 'id9c99f85e0fcb3c0d1738b354cd2ec208347f5b4c43f91334bffeac23a1857ff0', 5, 12)": [
+      "green",
+      [
+        "div",
+        "sidebar sidebar-right widget-area col-md-4",
+        "sidebar1"
+      ]
+    ],
+    "('div', None, 'copyright', 'id5ae34c28019c4f24704c36bb908fb94159e2ecfb161bf854634441241a8b6092', 5, 13)": [
+      "green",
+      [
+        "div",
+        "copyright-developer",
+        null
+      ]
+    ],
+    "('div', None, 'developer', 'iddf317123c29ed74d6af25f96d9ab7b6adeb5499d2d1eca2fb967cdb8929e874c', 5, 14)": [
+      "green",
+      [
+        "div",
+        "copyright-developer",
+        null
+      ]
+    ],
+    "('button', 'cli-modal-close', 'cliModalClose', 'id9fe3effdf926d096252eac36696f8f46a44a7668b288f06f04b8cacf3304da89', 5, 15)": [
+      "green",
+      [
+        "div",
+        "cli-modal-content cli-bar-popup",
+        null
+      ]
+    ],
+    "('div', 'cli-modal-body', None, 'idbcfc9c4fe2d1e765abc46f8f3c336ce9c550c7fd5c77855195812452851d314a', 5, 16)": [
+      "green",
+      [
+        "div",
+        "cli-modal-content cli-bar-popup",
+        null
+      ]
+    ],
+    "('div', 'cli-modal-footer', None, 'id9f0ee6d514c621dc21115c33db3813b20934e0e3f5bae26e3f510963a6f54441', 5, 17)": [
+      "green",
+      [
+        "div",
+        "cli-modal-content cli-bar-popup",
+        null
+      ]
+    ]
+  },
+  "6": {
+    "('li', 'social-profile social-profile-facebook', None, 'id841d5dcabc7e4a0e20f537a3c4908cf2c9c8933e456093e941f34fd634310146', 6, 0)": [
+      "green",
+      [
+        "ul",
+        "social-profiles",
+        null
+      ]
+    ],
+    "('li', 'social-profile social-profile-youtube', None, 'idbfae6bfca2caef918e0ea22680c364ddd7a227e12a95886f05427c3ee91a5384', 6, 1)": [
+      "green",
+      [
+        "ul",
+        "social-profiles",
+        null
+      ]
+    ],
+    "('li', 'social-profile social-profile-whatsapp', None, 'id1aa80bc85c25974936a1b7d875e9d2a3c4ec20c9b39fc33304cc8292e938e6d2', 6, 2)": [
+      "green",
+      [
+        "ul",
+        "social-profiles",
+        null
+      ]
+    ],
+    "('li', 'social-profile social-profile-telegram', None, 'id7023c746fc16541141401baa077c1211f8fd9fa1fc395e9385c7327cfc13e5c4', 6, 3)": [
+      "green",
+      [
+        "ul",
+        "social-profiles",
+        null
+      ]
+    ],
+    "('span', 'sr-only', None, 'idc8045ee366663547ec3e91470a64640b95305da1e14e4f048e598b29e2ff88fc', 6, 4)": [
+      "green",
+      [
+        "button",
+        "search-toggle navbar-toggle collapsed",
+        null
+      ]
+    ],
+    "('i', 'fa fa-search-plus', None, 'id1f9679d89c8a8802183aa0a548d71928ef28140b12ed96d6b479dac2277a99cc', 6, 5)": [
+      "green",
+      [
+        "button",
+        "search-toggle navbar-toggle collapsed",
+        null
+      ]
+    ],
+    "('form', 'searchform', None, 'id847afe818cd5bb4dce515d7e0cd1f6520cc6e3da37f097bf54c5b66deec03050', 6, 6)": [
+      "green",
+      [
+        "div",
+        "top-search-form",
+        "top_search"
+      ]
+    ],
+    "('span', 'sr-only', None, 'id83495600332a1f9df4fbc1f0aa51868d8037f66f75924b2743b6f757e1802b12', 6, 7)": [
+      "green",
+      [
+        "button",
+        "navbar-toggle collapsed",
+        null
+      ]
+    ],
+    "('span', 'icon-bar', None, 'id1eca2cf01ab9fc8b06eed9fbbb623f3027e76f7749f6db58a9bc344b2673ec31', 6, 8)": [
+      "green",
+      [
+        "button",
+        "navbar-toggle collapsed",
+        null
+      ]
+    ],
+    "('span', 'icon-bar', None, 'id1eca2cf01ab9fc8b06eed9fbbb623f3027e76f7749f6db58a9bc344b2673ec31', 6, 9)": [
+      "green",
+      [
+        "button",
+        "navbar-toggle collapsed",
+        null
+      ]
+    ],
+    "('span', 'icon-bar', None, 'id1eca2cf01ab9fc8b06eed9fbbb623f3027e76f7749f6db58a9bc344b2673ec31', 6, 10)": [
+      "green",
+      [
+        "button",
+        "navbar-toggle collapsed",
+        null
+      ]
+    ],
+    "('a', None, None, 'id6aa505ca9b46d97d95543657c1318ed58e256b7a0d96756ebc0f87ccaefd4400', 6, 11)": [
+      "green",
+      [
+        "p",
+        "header_title",
+        null
+      ]
+    ],
+    "('li', 'menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-38672', 'menu-item-38672', 'id3b7a6f9e68cfcb4592c20b64730b4117b47773fbe90b12b1f2ed87d6015344d1', 6, 12)": [
+      "green",
+      [
+        "ul",
+        "nav navbar-nav flip",
+        "header-menu"
+      ]
+    ],
+    "('li', 'menu-item menu-item-type-post_type menu-item-object-page menu-item-38673', 'menu-item-38673', 'id6f66cb4bb402cb180109cdcc70a72b98370e731fc1c1e6c3906745fe8198e983', 6, 13)": [
+      "green",
+      [
+        "ul",
+        "nav navbar-nav flip",
+        "header-menu"
+      ]
+    ],
+    "('li', 'menu-item menu-item-type-post_type menu-item-object-page menu-item-38674', 'menu-item-38674', 'ida535b8cbb5506bd7d61523f6251ed8eb046af0a1c668c44cadf4ec4b2ba34508', 6, 14)": [
+      "green",
+      [
+        "ul",
+        "nav navbar-nav flip",
+        "header-menu"
+      ]
+    ],
+    "('li', 'menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-38680', 'menu-item-38680', 'id476683dd0fea7e971823d8afc422a31c6d80197b54f3fafa83a075dbc78330fc', 6, 15)": [
+      "green",
+      [
+        "ul",
+        "nav navbar-nav flip",
+        "header-menu"
+      ]
+    ],
+    "('p', 'previous col-sm-6', None, 'id6d1806f4bb11c2a46b0b7384198a04f4060c1eed21ad0f7ebd485cde6fea9d16', 6, 16)": [
+      "green",
+      [
+        "div",
+        "post-nav post-nav-top clearfix",
+        null
+      ]
+    ],
+    "('p', 'next-post col-sm-6', None, 'idfec38cbd4c7624726836a34dfa7dc0a9f31724afc7c0af3f433fc9bdeac01808', 6, 17)": [
+      "green",
+      [
+        "div",
+        "post-nav post-nav-top clearfix",
+        null
+      ]
+    ],
+    "('div', 'entry clearfix', None, 'id643398c3a65fe8c3796054f78dbbd4892a772f85cf53089b4aa7f353564833c7', 6, 18)": [
+      "red",
+      [
+        "div",
+        "clearfix post post-25123 type-post status-publish format-standard hentry category-cultura category-economia category-societa tag-calabresi tag-calabria tag-cosenza tag-cultura-2 tag-economia-2 tag-fondazione tag-giovani tag-impresa tag-innovazione tag-lavoro tag-rendano tag-unical tag-universita tag-villa item-wrap",
+        "post-25123"
+      ]
+    ],
+    "('span', 'printonly url', None, 'id91d8518bca1f2e6e6aab5544e14f35fc32c32af422b512302a094497078b2f43', 6, 19)": [
+      "green",
+      [
+        "p",
+        "printonly",
+        null
+      ]
+    ],
+    "('h2', 'widget-title', None, 'id2534010a1356728c38bd92f127ce838ad51a9aa3a5d18811b10d6d2846cfda24', 6, 20)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_categories",
+        "categories-2"
+      ]
+    ],
+    "('ul', None, None, 'id2f8f983220a9a80413e50ee75df7e3b4b4875f1ae5806ee87c7ba184846106cd', 6, 21)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_categories",
+        "categories-2"
+      ]
+    ],
+    "('h2', 'widget-title', None, 'id9f7d47b32a71fdbb6ec09fddac599b1f6d9abfedc9c2660c6120b6e36e49960e', 6, 22)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_calendar",
+        "calendar-2"
+      ]
+    ],
+    "('div', 'calendar_wrap', 'calendar_wrap', 'id1d93561e8eee1e99b698478c244e373a8cb3a33d9613ce0aaf23a4464156a3fb', 6, 23)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_calendar",
+        "calendar-2"
+      ]
+    ],
+    "('h2', 'widget-title', None, 'id8c373327cd2bcb7e98bc6a2e758f7a0c9b2a449ec33fa34632d70536716c08e6', 6, 24)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_archive",
+        "archives-2"
+      ]
+    ],
+    "('label', 'screen-reader-text', None, 'idc043049360b151780c851632d94f8a68b6d49090c457307db6a0d374344ada4a', 6, 25)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_archive",
+        "archives-2"
+      ]
+    ],
+    "('select', None, 'archives-dropdown-2', 'ide4060f103fbabbc5e4506a3c493a6a232555118f9aa45f4948f3c8d926abac8e', 6, 26)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_archive",
+        "archives-2"
+      ]
+    ],
+    "('script', None, None, 'id91062b0b5ad91b6e88d830128caad58eb8e9acc81aa0c808b19d9a06a5e570e4', 6, 27)": [
+      "green",
+      [
+        "div",
+        "sidebar-wrap widget_archive",
+        "archives-2"
+      ]
+    ],
+    "('p', None, None, 'id398f1212d6b7cd5eb22b0a141be7e87d83382f423b678450caac804b025aff58', 6, 28)": [
+      "green",
+      [
+        "div",
+        null,
+        "copyright"
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 6, 29)": [
+      "green",
+      [
+        "div",
+        null,
+        "developer"
+      ]
+    ],
+    "('svg', '', None, 'id8ce9850ae6d2ec0a2d8fe930949d5f61c68be081e3e1cfad9c89ac31d2b4bde2', 6, 30)": [
+      "green",
+      [
+        "button",
+        "cli-modal-close",
+        "cliModalClose"
+      ]
+    ],
+    "('span', 'wt-cli-sr-only', None, 'idbab0d3c7c9a72d4151a1d5f815f9e50d82284a10da4651c5447b8245d88dfec6', 6, 31)": [
+      "green",
+      [
+        "button",
+        "cli-modal-close",
+        "cliModalClose"
+      ]
+    ],
+    "('div', 'cli-container-fluid cli-tab-container', None, 'id022b70a1ea954eaf8b24b40a059b7f0b8757c0ce6ce885008f5c906a19c0d384', 6, 32)": [
+      "green",
+      [
+        "div",
+        "cli-modal-body",
+        null
+      ]
+    ],
+    "('div', 'wt-cli-element cli-container-fluid cli-tab-container', None, 'idddde8b58f461ff56c56b65dbd7847606ceb5c6e30eef488ab353aa81fdc9b480', 6, 33)": [
+      "green",
+      [
+        "div",
+        "cli-modal-footer",
+        null
+      ]
+    ]
+  },
+  "7": {
+    "('a', 'mysocial social-facebook', 'social-id-1', 'idcdf23ec5e05ba06181d28456e4b0a7fb077ee7955b771f33f52527a4cee1c74b', 7, 0)": [
+      "green",
+      [
+        "li",
+        "social-profile social-profile-facebook",
+        null
+      ]
+    ],
+    "('a', 'mysocial social-youtube', 'social-id-2', 'id2fdce8f49d9a8bf2c25271ba4dd02bb83541b7eda6ae95d58cddefb9f3181114', 7, 1)": [
+      "green",
+      [
+        "li",
+        "social-profile social-profile-youtube",
+        null
+      ]
+    ],
+    "('a', 'mysocial social-whatsapp', 'social-id-3', 'idc8b7db4787ec6220b110d35de5e1a8a1dec7f1c29af18107d60a6a5901fb5636', 7, 2)": [
+      "green",
+      [
+        "li",
+        "social-profile social-profile-whatsapp",
+        null
+      ]
+    ],
+    "('a', 'mysocial social-telegram', 'social-id-4', 'id084030a2096119608f8307bc8e6090fe9a9841ae008aea455fbba940fb6a9542', 7, 3)": [
+      "green",
+      [
+        "li",
+        "social-profile social-profile-telegram",
+        null
+      ]
+    ],
+    "('div', 'input-group', None, 'idfdfc23f80566f513d29d857686c3dd0a935c1299b1f251b84892658fc403149a', 7, 4)": [
+      "green",
+      [
+        "form",
+        "searchform",
+        null
+      ]
+    ],
+    "('a', None, None, 'id0f4bb6af8baaaa0d40fb7136aad00746ad44cb2da3078c03b3cd6b37f98b96b8', 7, 5)": [
+      "green",
+      [
+        "li",
+        "menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-38672",
+        "menu-item-38672"
+      ]
+    ],
+    "('a', None, None, 'id76d60152e890ffe11ff2ace8b553ec31e2ebe1038f92627409be7bcbdd98a870', 7, 6)": [
+      "green",
+      [
+        "li",
+        "menu-item menu-item-type-post_type menu-item-object-page menu-item-38673",
+        "menu-item-38673"
+      ]
+    ],
+    "('a', None, None, 'id6bd830d25a5ee917eb8d584dd732b13f3ee13b81916f667c7ad1867d3c472687', 7, 7)": [
+      "green",
+      [
+        "li",
+        "menu-item menu-item-type-post_type menu-item-object-page menu-item-38674",
+        "menu-item-38674"
+      ]
+    ],
+    "('a', 'dropdown-toggle', None, 'ida7d084645359e4f712759e02d50524bbf5721c368dd051047d4d06f480120ea7', 7, 8)": [
+      "green",
+      [
+        "li",
+        "menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-38680",
+        "menu-item-38680"
+      ]
+    ],
+    "('ul', 'dropdown-menu', None, 'id237fef5f890379c1e2eebb5c6e2faaec873c3f2f58ad6e158907a1a6ef3596a5', 7, 9)": [
+      "green",
+      [
+        "li",
+        "menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-38680",
+        "menu-item-38680"
+      ]
+    ],
+    "('i', 'fa fa-arrow-circle-left', None, 'id77e6c4ff042f7ed7476f052331be075a9e2871981b03ce22a736ea52f49ecae8', 7, 10)": [
+      "green",
+      [
+        "p",
+        "previous col-sm-6",
+        null
+      ]
+    ],
+    "('a', None, None, 'idcdddd26c483564192faa7c874d591476a7389165638c992cf3c9a24d04e9e2e7', 7, 11)": [
+      "green",
+      [
+        "p",
+        "previous col-sm-6",
+        null
+      ]
+    ],
+    "('a', None, None, 'id25ce8ae85410fe5043786c70bb1925afaea7692ab9731b8d1a56e1386fe02013', 7, 12)": [
+      "green",
+      [
+        "p",
+        "next-post col-sm-6",
+        null
+      ]
+    ],
+    "('i', 'fa fa-arrow-circle-right', None, 'id8719b04f40c56931c8e311c24054b10abb5d58a21647d46a3d738ee5eb556083', 7, 13)": [
+      "green",
+      [
+        "p",
+        "next-post col-sm-6",
+        null
+      ]
+    ],
+    "('div', 'post-date date alpha with-year', None, 'id4ee3817f4fa01b94ca68bab783cd715f05a4e355b394d325857555092ed9c398', 7, 14)": [
+      "red",
+      [
+        "div",
+        "entry clearfix",
+        null
+      ]
+    ],
+    "('h1', 'post-title entry-title', None, 'idbaad4aa3bb07e2008b47999833296c4e8d2a6fb9a49b4eae1388174f4cc52ca9', 7, 15)": [
+      "red",
+      [
+        "div",
+        "entry clearfix",
+        null
+      ]
+    ],
+    "('ul', 'post-meta entry-meta clearfix', None, 'id83a5210108f240fe2b17072a52c945785a13c0b826996ee053e20d2664343e30', 7, 16)": [
+      "red",
+      [
+        "div",
+        "entry clearfix",
+        null
+      ]
+    ],
+    "('div', 'entry-content clearfix', None, 'id209b8691460d0fd6767c5e5522e0aee3465f5e2847d92e15d946f786f82286bb', 7, 17)": [
+      "red",
+      [
+        "div",
+        "entry clearfix",
+        null
+      ]
+    ],
+    "('ul', 'entry-footer', None, 'ida1307d676595cbb9da0d4e6048d8f17438a62923894b0ae9fc2f42ab7ccd1738', 7, 18)": [
+      "green",
+      [
+        "div",
+        "entry clearfix",
+        null
+      ]
+    ],
+    "('strong', None, None, 'id486d1fb664ec3277230b4de3e7f0ce95d4fd9bfaa0809dc960f48d181363c327', 7, 19)": [
+      "green",
+      [
+        "span",
+        "printonly url",
+        null
+      ]
+    ],
+    "('span', None, None, 'idbbec28a133c4c4eaa60bdab47f3f30c8de6c71f67bdcd7d3434b7619e65ada2a', 7, 20)": [
+      "green",
+      [
+        "span",
+        "printonly url",
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-2', None, 'idda7ec40e8f4423f9fcf88f575a8994f1c2cd208d7f2fe3b5b60c944d67e950eb', 7, 21)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-3', None, 'id09cd14271005a3c39782a41bef9b0a582fceca83f5fdaec7bdf952b80b4091c4', 7, 22)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-4', None, 'id0302286662058dcc5621e6e94718dbf841367dd6baa33f31673b72e46e1b2786', 7, 23)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-5', None, 'id13e958bd7e37c2b91d19fa55d365d580865e69e4469a51c30c63b78d7f9ff33a', 7, 24)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-6', None, 'idc0473011293b22471ed4165519785914fe3fa673bc592deed6b30317386b939f', 7, 25)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-7', None, 'idca8012ae4d5141f74065405ab4249ed850ab5f7702ad74fb8340995095a29664', 7, 26)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-8', None, 'id0f6609aee48f3ce3ab47869ee139a514e49b8ef298ef84d29ac75d54aa857f1b', 7, 27)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-6727', None, 'idac6ad5e30075e8c6112500fa4e8be201b2e42c40ad1702c06a626f6094161021', 7, 28)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-6696', None, 'id0bf1c493704ac57a6e3c18d174fd003350bc3671435efa2ee9f35d30b86085c9', 7, 29)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-10', None, 'id4f316f40a6b96e92f102219641341838728f137ea4dcff7c65c990382229b6ad', 7, 30)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-11', None, 'id15457712db63ebe23f0cc909b15363acd54437f3e2263b5d03dfa0cdb85e6677', 7, 31)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', 'cat-item cat-item-1', None, 'idb1ffae2a169227e6f6007ea9d7b5c3c0e239549e12aff112f6c32a51d391e0a7', 7, 32)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('table', 'wp-calendar-table', 'wp-calendar', 'idc23e63b07ae2d78b5f274822edbbe84665efd8041d710c2568ddfe3a7c34387b', 7, 33)": [
+      "green",
+      [
+        "div",
+        "calendar_wrap",
+        "calendar_wrap"
+      ]
+    ],
+    "('nav', 'wp-calendar-nav', None, 'idaa206dcd443407fa8eeddc7424db968607de6a4ad3050390eb9017c90cb5f1a8', 7, 34)": [
+      "green",
+      [
+        "div",
+        "calendar_wrap",
+        "calendar_wrap"
+      ]
+    ],
+    "('option', None, None, 'idc54c835d890c3f8ebf022a5457e7bc282a684fbc4a7a1784cbd5befb50e0a6dd', 7, 35)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id830e141a8e82341f16bd8b8fb1f6831829de9066510457f90c227689a1780b75', 7, 36)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idab7e5ea2c8c962163d603c6e54f73468a835d861f971a05ba882f682cad93ed7', 7, 37)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id06dafed89efe5d8fb113a5ea76c4215448ea2f3780e4aee3c1282419ba35f971', 7, 38)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id6b8186534a599b5c8004ad37b37b84037278a4be3e3b660778d1c569d1e0767f', 7, 39)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id9d30196babc3b758ca7db90562eea0d886ac53c42d9d6d2c1d2c625ae723d277', 7, 40)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id78aa5f45afcb8e38d33d032eaa66aa9c9b812e67778a8122c4698a807f72d881', 7, 41)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3425634e899ad747dc8b1ad30a8b23e56bb5f293e1fd66d5a8d44a253556489c', 7, 42)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'iddb611ce84554b9999a61327bd882ca6fde4b599174d2eb6a1670edf8cefca3e0', 7, 43)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idef2addac3a9a78babeb4d907b920038ae26901df0e6be5b39ac387421242370b', 7, 44)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id5717ddfd55b12f701142a05dc77135980af04d630fadbd037dfea3efa7aa8538', 7, 45)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id962cf970d6d010ec797eafcef5f47c304d3908af13cb680abffcac68d09e5205', 7, 46)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide139bd186beca70dc8080c4fffff1db04e0218d2dfaff58e69b28baa2b56326d', 7, 47)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id00be321f9d8bae24ba3a37565e9ef1812e406f62952202feb7c5ff3821215dbc', 7, 48)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idffc2d7328b6cb69f315b088d619479bc1c19193f5050079fcd69e8ce68d3652d', 7, 49)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id86eacde8a04ca81de80f9bc2aa6dd700cfa19a804807267c9f8deeb931198f41', 7, 50)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8b7f73b42c61140e63d35b01553bb5e530e13485624be4a465b1de690f875ced', 7, 51)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id66c29689c590ae977970bc3e5240082c3ca43e57207a6293649d1b0e372667b2', 7, 52)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id522c9149cc3bde5e366413b94b31fb9a3c2a8b08472a9919f83df57975d1caac', 7, 53)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id98392967f0977a4cf37364b377f77131e79979b27def2b0accab5a302f0ed314', 7, 54)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id335d08ed5326ee85a3fc132a985b96c9611dbfccad2eff9b08d9a543f5661e60', 7, 55)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id647d4541e1e107de0daad967ef9c0a96c192c9bd7d742365e445238b638ef039', 7, 56)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id037e8590ad46af020c3b46f0a996d4454bb2b8a7f88cbb136097c2d3657112cf', 7, 57)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id25820a205efc2af69088c1c3b081f87610ba807fea30bba3555cd6be0d4e469e', 7, 58)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id7166c3029c06278ad0da038c3eb367cef257e9c8df24f95fd71917cad33f3c23', 7, 59)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'iddfdfb98c1fe3d627de3146fa15f97603abc44d927a9f2f3792db00ab1642b58a', 7, 60)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id32346760c9f36aab64104f8fa92655683396f2f979210081b9b87ef9aec24c87', 7, 61)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id41598bf7a0f8346a8e4cabe646039c7c20774abb31ca455f1ca3e8e1d20e85d8', 7, 62)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id36476a5f45cfde72eb8e6da0cb901159854a6226a57d1385e3016c946c304161', 7, 63)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idbec956188f4982472f2e9e7ffa26ff7b9bc3f5a344913886cfa7c7ee85776c11', 7, 64)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id869fd5e602c0cca5ce4196c03f06125769a5bf9fe78acaacec1779f6c11919b6', 7, 65)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idb69ba62da6c3f8be0ebf4f476b768aed4d537c5c88d6ea071bc6a678939e75f3', 7, 66)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id947c3260307c6eacdf90bb3c85199c2cb6ebf5ebdb0b1930cf41446891cbe10a', 7, 67)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id588f583de0497f008c6f5f60da64f755a48c283b08aa394658e21a8382f17d4a', 7, 68)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id6519fbd208411bb5430d6c3fbd798dddbbd44226903adc4d1fd101ab2f458066', 7, 69)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8eea5620cdfd0d83c2ef1e4970e568d209e390747ce6015362ab9ec2848b545a', 7, 70)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf8f39da5ea99a2d1bac3be56b24afab0b32afce9640b4aec3bc90da4cdf3d8fd', 7, 71)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id26ff195a131f2001f27f2df540b5b13a8ac2aaa4ec099d1ce996319acbff3b91', 7, 72)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ideefa822cc4a23a987638c8463f42416e9f7992a4a43e9fb88e34feb71a572ced', 7, 73)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3a09b535efbb70474db357d214137eac5da35b7d3906b7da3882d5a0ea82614f', 7, 74)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idcd549e36742b33b6b019ff6807a82800f50e85d21da76136d49d8cdc943ea3b2', 7, 75)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id029c6f497d4969b05fe1e030fdf568978b2eb4174564a54c0096461de5a6c41a', 7, 76)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf40fa713e86293a0f6efc654cfdc10a132ea408ee75b9d60598cd0c4710f8707', 7, 77)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id6fddb9d81b7ec28b07e72628e8586d117ecaf268011ccd09df48854bb21adccd', 7, 78)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idbe2e6bc4bffc1cd9d7ff8f051b30a4da014b6c5435569f4fa3b1b929987cb362', 7, 79)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf0e6eebf05ad52cbd1c54b5ced1f07c2425e3d2cbcd4ce06a3f4949bd4bb0dcc', 7, 80)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8891030a4faba52410389ce8f5567bf0665fb0a996a0c6bbc017b74abbfadc59', 7, 81)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id7f1b8b5c3947a57096d467affebf9dbf9678ac64d707b571adc2768f245ebca8', 7, 82)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idae9746a6c063efa2685f39d376e64766a6aa0a7ae1f7605e2dc901200532743e', 7, 83)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idae5a4ba4a2ab42a117d02a2ae299ce626738775f663aeb1dbfff29eaaa99992b', 7, 84)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id9da72e53a153e692efa7b86cbafc872a4238215812220219476b8acb4e7ac436', 7, 85)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id4f477ea402f0120128c8a60785313ec0d190f3db57a61beba889d22f1e03add2', 7, 86)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id38d89994431a50c3bb9de1b0f76fcf9cbcd6b077179b9e6ed4f4dfe026027526', 7, 87)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idad34389840b8ec11e626a81794d4551bcbaf971cdda165713c3f9299c20738db', 7, 88)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id002145221acc44b378b084eea95d1657808540a34322546b692d390ec94bc97b', 7, 89)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id90b004382ec7402c189d3c949904bdf234fca74528f96b4f68526189b67cd774', 7, 90)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide14a6fb205fa78d935de51ec2ed98973e57466ec91b1c74d5882ea230001a393', 7, 91)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idced8e226ebfd2f367ea61a0b5f388515afb347a5908b8833788a26a0490e585b', 7, 92)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8327932204be4949aafffc5b960a8f04756fefe3a7ebfdc016059521a2d72fce', 7, 93)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0010501d6264ef94cd2016cc29db52e0aae0b6492091d7e6cf9f7afb66470433', 7, 94)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id167af4fd869aa6bdcce270c572245d4990432e8405385e54ab462af5988407a8', 7, 95)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id7556e80e241ec0d2710dec584192e0f3a9a178508571a5c9657db0461173c0e1', 7, 96)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id69988359411916982a4c80209a3aa3e0d8f935b7cda6c27795703ae60e288e61', 7, 97)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3e6aae18febe40851ad56cfd4eff687f410f0656cf91b99b62ac82b844d695bd', 7, 98)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id47e83ad2ef527ac47454a3606513eb8b086ba5fd4fde4c21e4e89c4237c41c8f', 7, 99)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ida772bae3e9f55aabe72a8ec82ff6b4302651e5e64cc7e603af87c9ca459163c9', 7, 100)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idaa1fa88353bb2c662697899e7c47d82ffee2747d5b91566c506fd82c97138a30', 7, 101)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idaef69a06bdfc1e3eb0b49f0a252ac55bd4769ab2c91b2e86bd76bef7337a445a', 7, 102)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide67754428d319a9b8200cae24047d77932e41234b5cae01c44ed5380186a6ab0', 7, 103)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idb3e34261070b4d9085aa481ff7a5b3ac09ede97159a698c23d7963dba0aeef5d', 7, 104)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id91387651f997c046e11767c8ffee6dad5f4ed465ff672ea70099746d9c7aeb19', 7, 105)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id9cb2c3625eddb4070f062d6045d3d746d562ca5bc748c7a61979e1bcea2d8dd1', 7, 106)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id680f63901e7119b27a1ccc361b96c17334025fc4c7d625c81b6a88db3d646ac9', 7, 107)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id626452badbe504b4e5ad8265a6b0a771a4ac38acd51ccc73a0eea6166a896078', 7, 108)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3e7a8a121e1d9bae067bda095fb52809c6f3d9b635fdcc8e4e701f71b88a70a9', 7, 109)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ida00a1eba407f0714da15413b959b002f13ba8e17d7b2363df07deb682098e100', 7, 110)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id07fba7dd5e08e009df587afbf9d8d7252be434a22709ae17f688766b83ee019e', 7, 111)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id6d2ef048ae6251dcfe210e627f3e581409bf2311495074db234dd1fc781d0b83', 7, 112)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id4667c538cfb56cbc86638e684ed52ee847a43bcbd4f2748d4c25fd3bb041e1d6', 7, 113)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ida8c29821dfed4d9d9ac0c3e57ffd100fdf005e0ee589f54cd7cbc933f595bab2', 7, 114)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id4f91029b56ad0f958996794bdd15f4f7166cf6de74a26fd911821e46dc568a70', 7, 115)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idb6cf3d2d75a66af6d98150f497e2f03cea4c3dae293fff27ec9e52535701ea3e', 7, 116)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id750c89eb07dc17fb5147ddeddf0a60d632543d8a1aa03d83f1da7e83f813d1fc', 7, 117)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id9d99bece4da5bd1cd1c2277d1952be9be424a9827596f1b3f6f591fabf932c3e', 7, 118)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idfa2b94f74629d5ca24764d3d50e6bc1a2635ddb51f1ae6339e70f405f5705302', 7, 119)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id11ad2974e6cf68bfb6defd6ddb4681ebea5a558f0fe735a605baaf00a0d8a1d6', 7, 120)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf2058c394cc581e0473772ad013daf2bcce303dee1843c95cb17e083d1427040', 7, 121)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3eb3ccbcf2553312ab28033433af207539c08f1345f2782833fcd804c8d788db', 7, 122)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idab389869197569287e8e9cc1ffe363dd265df553a9ade81db39a4a68ca0aa144', 7, 123)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id1d91dc4f31dcc8ed6207a31752059b917f16f6c99d7a0ffa51089908de0d82d6', 7, 124)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id37b73cc37b98b4c17782ec62391362baf4a7ac901d9d6080e78fbb29e4e5ea4f', 7, 125)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id20181c72bf5b1c22abb5da1fd3dda75d04a8d72eae59921af4dfe0aee2c1912a', 7, 126)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id295fcdd598d967e7b11f5f80f9d0f5f3f8f3b9c6a38a9351a76f1927bfc3188e', 7, 127)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id448c9fdbb26ab8b17fc17f6f7dc9f26d58a9e54d26ce0add004de17b30113f33', 7, 128)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idc52ce59860dd75f24a8e4d856401b17786f8d4e789d1fc6c7addfb92708acd93', 7, 129)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id2112a7c8e4d3251f89045551c2881871dea7163b884bd548bf56904f08060654', 7, 130)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idbb561c77166a2e5b8cb3f3638fe056de9e360b2cb932462c5903bd001474ed9a', 7, 131)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idfa929c742fa249d7eb2c66a3ee41071f5dd50c523ce2e456e28d16a499b78560', 7, 132)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idab6969986ce37d123ad6fd2460196bfceb1979fd60efea738603eb2dc1e9b6c5', 7, 133)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3a761fdde717bbc859ce2b50424715e0eb796ec6723249a2cfaa9089ff647172', 7, 134)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id840c71cb4a3a63c0c4ecbab08eb241333652c3ac69f7eb2ae294e566d8c2a851', 7, 135)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0471c467d884301d83e2c038d7f864270f8a29fa9b772ef4801dabcf769a2d8f', 7, 136)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id5b30382a7fcbd17c74a5686ca044cc7a6043d893550278fe1579a7e294ae260e', 7, 137)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idcad2fa25113acf78e84f78fe8949399b979a4116f1132bc3d1f70d7dfbd752e2', 7, 138)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id82a8ef158074d352133720e7d9876bab05aceef5e262e00407e06ad78aa94659', 7, 139)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0ce168efc84126a4c5f32462ee9be2174dbc248fe940d2876ebee207644bfc06', 7, 140)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide3063fe0bed8e576d66eb3e84fa574407b7a10a5827163f66c86d7e07b5a39d7', 7, 141)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id563ca56c3f12444e5e159f68ae63c7af0ad7142748531a0459b1550286f519fe', 7, 142)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id898ac8a8f3009e848eee1728455332cceacdc1651e3b507ac45139b84fe07fa3', 7, 143)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id131d49c5a1b90aef9c9daef9d934d7e5e893221fddcce52d5683feeee3889345', 7, 144)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idd3b885317b446c5fc28e3d5bda8afb98eac07b0ee056294cc9730fc7f774f181', 7, 145)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id1315c7fd0b099fb266b8a3d4dec3b0c65b36ccb367560019088a200cd4ee0d06', 7, 146)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id76a4bfc8867b8818c5f028de49ae64ecdfce9e87fca715c32ff54c32e04774c2', 7, 147)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id2ea577a107d1b991e58b8102acca80e1dea16f14bf7fcfea69df090739619d91', 7, 148)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ida26d7ed1ef76801678e45a2561bf7d255d4747a8e2d7992eef79969476ad2630', 7, 149)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide4fc346c35d992c6b66806cbdedfe66658d75d4571d87fea9fdc3e72768e9403', 7, 150)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id5fde26ea5e19bbea707e8c899ae636433f3fe5768ce264f239b4073f67a22196', 7, 151)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id20ee81b56890d87293db4f1048e5df9a9740fe8ccce1f638ff084e63684ac878', 7, 152)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id5da768da45d58f4bea5b3c99da7b9d24b9189a665d4cac339aacf7b969ca2a91', 7, 153)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id5fe7f69ece5644ca9e16bc66e77fbdd694e441fc0c452a0de27ea9e31ddea885', 7, 154)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0b5746f51a5c7dff3f9085e70caf69f7f6e6b87fd6633dbe0058bd2acec98d0e', 7, 155)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ida32722a9596ea41c35c25fef4d3a3bb5c0b606e66f82459b372b06785b7425db', 7, 156)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8d397270532b6cacf4f597a8ab8990e8213d3720521e1aa243a0fd9235efb6c7', 7, 157)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id6fef387f882ac66507aa6311ae8775eb4f77bf1de8fb4ead57e16204b2c04d04', 7, 158)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide01b546eb88c2713fbd86bf4c04ca5f42b10f5cc3a1f531fa871351c61ad9df3', 7, 159)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id9fab9d09acaefef10e5fe0604138e9db80239b568a2e7bdbe80c1e76c136d988', 7, 160)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id721a592df39c6a14fb337ae37a271a056fd1fb0a376cfb403c2a7a840d61b909', 7, 161)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idee88157e445c08c363267198f19fecadf536c9efa3612d2f4e56993008c50811', 7, 162)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8b23ce0cb249d6205a26cf8f54270890f4d6711d4db8279503de990184768893', 7, 163)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id4312eb1acbbbcccff73fa3abbaf59871007f1a364acdf4719996183e1375c31f', 7, 164)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3444f3a3ab430271e9bc01841df215e8c6dc0855e99dcbf8919554da005aaaa8', 7, 165)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3f99c136cb844f839746e7a71f09bd4369720c2392d29973fb18ea72d9f6f2c8', 7, 166)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id578d507f5dbcdf8294840707ec545a88a22ca5044c5b7c05d54a07cf40ea725a', 7, 167)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id04cce1956a7250ae320ceeb47ed5b886b8b805177d63a4b8282594c75262d950', 7, 168)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idef175f87ad55aec03170dfbd7b794069e968974f418dfb838b001c5193efe54d', 7, 169)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idbe33186eba5914521df91c167196403559daf7379402a5449d4e5d0ef6a300c4', 7, 170)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0fb9b3ea42ad699c785e714b5545ae11614aa31122b934e5daf344d78803d4d0', 7, 171)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3f1f6e4c059ffe176144f14a14c3a106a9c643e45a50d2bc1dc7b00fa79e3e1b', 7, 172)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idb85d9117977e5f418088245ae78c3f322e79979b1c74c9aba483955add94cd3a', 7, 173)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id7db796b13dc67b184751b1876da3498108b9bab8b8d15a87d833344cdf792608', 7, 174)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id1bc8ccdb1f125f5ffbc35af78e01ffb7be4f6e15703fa1533d05109dd887c685', 7, 175)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idc7015037a25835fd38d590aae414c71be08dad931a18bced57f44cfa50c90a2f', 7, 176)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8d276a3661b574561f64a7fd111c44b1d03e7886c4793595986b7c7c250dcb4e', 7, 177)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idc3ba5269c0a0f0fca3c90e1127de0edc45663872cf01532320944452a60a6987', 7, 178)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf8af6e0db6c73bce4d9f32f1d7fcf2c7f193d961f3bd191c489eab7ef5f9780c', 7, 179)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id07fecee381018fb64f63ff9fead7a34fba88875d342c1c0fcb920d64c10f9477', 7, 180)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0d4f3321773474c821b87d588290e77d3d6275e39fe108b66db946f0b3cc7f39', 7, 181)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf6e14b395703303d3855d1e92af4166778e1d51f451d30029d7c185fda1a050b', 7, 182)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id0ed328713cf1e87655b9b050723886ae6c8bf87b8b7e9fe8228c3bba81c8afee', 7, 183)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3bda974fd3807f98d5eb8c9bfd1b457d75af28f6ab08abe3ecd0d40b07a01f8f', 7, 184)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id9edf58a22d4d985aac0f90d8d9ebb4153c183fd8fd758ab9c27d6ef8d9cbfc32', 7, 185)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idbb97e44fca612653f4cd2b8313e295f2262ab41451ff4106f829c5ef92bbb43b', 7, 186)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id84bf08bd5d5008d98b1d806ea860e25f84c47b1ddcb0aa0b24fe74e9e7b183d4', 7, 187)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id2fe56ed4e2e65ca1ba91d9ed2b10b263d7c3cd3917365a9afafaad2e98f4d8a9', 7, 188)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id5dbeb9d40598beda6ad107cf2e3d2ec43d48e7ac4bb3f4537fce2527282fa651', 7, 189)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id526ca77a634778ac2e8c03d0566dbde0e574d906fcabd8fb49b902b49be54a4d', 7, 190)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id76d6d2b435eb467e0e3a3804ae534d9c7c486ab5b6e80829910a19aff30a40e4', 7, 191)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id54a310bd4af016bcd2bc75a6accfed06748a48d45d9335218bf72bd5db379163', 7, 192)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id16ae64a550e3e197f0ef21fc0e161975b6a2243c7a768f6330787510f75d0139', 7, 193)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id7a702aaf47e99242fa71724bf0d42856b04c98a866e7fc4ce11d9f87140280c4', 7, 194)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ide3797076574040242828c4d1aaab8cbf1521ef0a1d055df1d6258ca0ce61b9b2', 7, 195)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'ida2edc323b32fa576cbeb6db8a767374a85a33cafe7c79f8abe9774963cf4dd17', 7, 196)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id1f28ae0afd384118292f6ba790db6adefad3d4a297ebe13a37a3511991a0af2e', 7, 197)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf633962dbed8f27b7d3a404f0c5f64357786f2d358b7b5120160510755c8b09d', 7, 198)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id8d00a84b07f78a8b658cb91ac420e3f7189e4f18ae4855ff9358db3200a7fb52', 7, 199)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'idf74ffa5a562482c83874ab5719a092105e46e3eff5503a0b591de6e24a7f6194', 7, 200)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('option', None, None, 'id3e24868b755d97e8d2f4b2d9dba680a203393f6b747917476e0901c73cc282e8', 7, 201)": [
+      "green",
+      [
+        "select",
+        null,
+        "archives-dropdown-2"
+      ]
+    ],
+    "('br', None, None, 'id2c5a974e81ac0a10820da2a08a60006aa77c0667a03c9972edd1293466ede4c0', 7, 202)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id48fdf4f7c0ec43ce2f127cefba276e670aacfff63cb0db580e15c8965ecb636d', 7, 203)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('path', None, None, 'id4d9eceba4331abcf93a1906a6b6de6d7ca93e0b951f2265d33b147658c3e1414', 7, 204)": [
+      "green",
+      [
+        "svg",
+        "",
+        null
+      ]
+    ],
+    "('path', None, None, 'ide11e6181a25dc6146843edb8a0ab023d4e066512076a6d454e0e8dbd4914efb2', 7, 205)": [
+      "green",
+      [
+        "svg",
+        "",
+        null
+      ]
+    ],
+    "('div', 'cli-row', None, 'ida60d0c8766f15bad50daf6c1b05414129e0fcec74b7f81fa835731051ff0620e', 7, 206)": [
+      "green",
+      [
+        "div",
+        "cli-container-fluid cli-tab-container",
+        null
+      ]
+    ],
+    "('div', 'cli-row', None, 'id00de3d0cf829d8e1562e8a9b6bee0708bd2bb9c28f217f6d82019f02e1af74a7', 7, 207)": [
+      "green",
+      [
+        "div",
+        "wt-cli-element cli-container-fluid cli-tab-container",
+        null
+      ]
+    ]
+  },
+  "8": {
+    "('i', 'fa fa-facebook', None, 'id80bb4aa79cb5a50b2ef7cf7921b43d7598213c22f9b8e905a7c9681019438915', 8, 0)": [
+      "green",
+      [
+        "a",
+        "mysocial social-facebook",
+        "social-id-1"
+      ]
+    ],
+    "('i', 'fa fa-youtube', None, 'idbbf15f27bf2c36c5e56c119398dfe8ef67d5778ba679d3c8e0347a894f9b98e3', 8, 1)": [
+      "green",
+      [
+        "a",
+        "mysocial social-youtube",
+        "social-id-2"
+      ]
+    ],
+    "('i', 'fa fa-whatsapp', None, 'id4968adc5424ad7237c6e9356592f08be8f71184fea4b76b1299006912ac5ecce', 8, 2)": [
+      "green",
+      [
+        "a",
+        "mysocial social-whatsapp",
+        "social-id-3"
+      ]
+    ],
+    "('i', 'fa fa-telegram', None, 'id803e9a25d15f3c97acf222817ff3dc594c21bfac87056b7f9a25883eb0267cbd', 8, 3)": [
+      "green",
+      [
+        "a",
+        "mysocial social-telegram",
+        "social-id-4"
+      ]
+    ],
+    "('div', 'form-group live-search-input', None, 'idd5bdec2a07d4caccca5b69a09728c4f3f981c24646af74ecf7b9ed1a5c9c1a3d', 8, 4)": [
+      "green",
+      [
+        "div",
+        "input-group",
+        null
+      ]
+    ],
+    "('span', 'input-group-btn', None, 'id574dcf60cf95347b595effecefca71296bc35588d79a6a5a2dba339292ac24ba', 8, 5)": [
+      "green",
+      [
+        "div",
+        "input-group",
+        null
+      ]
+    ],
+    "('i', 'fa fa-chevron-down', None, 'idcad8025f5ef1e1a7827636cb8b51505b721b6769c0c1eecd49a5461b6b4da7b4', 8, 6)": [
+      "green",
+      [
+        "a",
+        "dropdown-toggle",
+        null
+      ]
+    ],
+    "('li', 'menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-38675', 'menu-item-38675', 'id85b0ee5debcdbc6381eb41f105bfd29b8c2159d4c01f397a9a84614cd987e31f', 8, 7)": [
+      "green",
+      [
+        "ul",
+        "dropdown-menu",
+        null
+      ]
+    ],
+    "('p', 'default_date', None, 'id3cb85912d006da50fdc8cb7bfb6a4539792e902ecf0c2000c438b91a801a5c2d', 8, 8)": [
+      "red",
+      [
+        "div",
+        "post-date date alpha with-year",
+        null
+      ]
+    ],
+    "('li', 'print-date', None, 'id3657533d5a319dabe88d9bd3eaea67f9b6a25942bd2ce78d17e54be1b0cb927d', 8, 9)": [
+      "red",
+      [
+        "ul",
+        "post-meta entry-meta clearfix",
+        null
+      ]
+    ],
+    "('li', 'print', None, 'idc7963d25f93c9cf96a3fe809d6377db49546f0c5944f9a49e086afb6f2565a8d', 8, 10)": [
+      "green",
+      [
+        "ul",
+        "post-meta entry-meta clearfix",
+        null
+      ]
+    ],
+    "('p', None, None, 'id374914e5f3431ee18ddff9a701ef0a641e8086c7025a6ba547e4c553840888e8', 8, 11)": [
+      "green",
+      [
+        "div",
+        "entry-content clearfix",
+        null
+      ]
+    ],
+    "('p', None, None, 'id189dd91a03bdba4e10902cae1146f68f9fa4ecfecc7ec67aad1600804cba5af3', 8, 12)": [
+      "red",
+      [
+        "div",
+        "entry-content clearfix",
+        null
+      ]
+    ],
+    "('li', 'addthis col-sm-8', None, 'id1bbad14fc36576506e40f37ed2afdf5277b4d961f1f67828f8c0c719ba73e33a', 8, 13)": [
+      "green",
+      [
+        "ul",
+        "entry-footer",
+        null
+      ]
+    ],
+    "('a', None, None, 'id03cde34c50881c5e3c31428ad2fe84790504cd4954484489db54981e66b74116', 8, 14)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-2",
+        null
+      ]
+    ],
+    "('a', None, None, 'idd99b9a39762dc4c610d91d626c14a598129a502fea293e2733b30cc81f46548a', 8, 15)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-3",
+        null
+      ]
+    ],
+    "('a', None, None, 'id2b6b98d06a605cad69c73d8498ae591c49542701cfaa8e4ae781b4aa72bde60c', 8, 16)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-4",
+        null
+      ]
+    ],
+    "('a', None, None, 'id95c5e14e5e69531de2774b72bcd039acb466654e692eb0371f45488c418bacd0', 8, 17)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-5",
+        null
+      ]
+    ],
+    "('a', None, None, 'ide5545557bb2b1844eb56560c5d6f367a97041026ff4f7299456f21407355dfab', 8, 18)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-6",
+        null
+      ]
+    ],
+    "('a', None, None, 'id47fc1e7fcafcb8446af6d416af60f466394874245b970ed6e2f9b6922b5478a3', 8, 19)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-7",
+        null
+      ]
+    ],
+    "('a', None, None, 'id8f97f8c2d6987a659f5d6093aaec50e94c6bbe6b9b4f5ee65370f85dcffad0f9', 8, 20)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-8",
+        null
+      ]
+    ],
+    "('a', None, None, 'id209801b44d740c38efbe6fcd864cdeb4f0e466104e6753452e96f405156a8ca7', 8, 21)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-6727",
+        null
+      ]
+    ],
+    "('a', None, None, 'idb37349144470adbb0d8c3baf45c2e72e1fd968ba5c1dbed1e737d112028509c0', 8, 22)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-6696",
+        null
+      ]
+    ],
+    "('a', None, None, 'idabf319b7323a18eb1da0862f03fefdda2207c8e3da7b073178421b954fe47241', 8, 23)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-10",
+        null
+      ]
+    ],
+    "('a', None, None, 'id3ac088cb33649df1ca879e30b9c28678d2582d80ff721e508b17ff8853153a80', 8, 24)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-11",
+        null
+      ]
+    ],
+    "('a', None, None, 'id3efc97707523a016056f502f0bdc67e79348b0462dcb136bcf2c1c370ea15088', 8, 25)": [
+      "green",
+      [
+        "li",
+        "cat-item cat-item-1",
+        null
+      ]
+    ],
+    "('caption', None, None, 'idffa8d7cac0ff77dad67dc3d218aabfac83480d22d1669344b68433927af92b2c', 8, 26)": [
+      "green",
+      [
+        "table",
+        "wp-calendar-table",
+        "wp-calendar"
+      ]
+    ],
+    "('thead', None, None, 'idcf2bd18b49ccec5e4c7328faaf29d2c32f318416a40dfc39269a85b65013e605', 8, 27)": [
+      "green",
+      [
+        "table",
+        "wp-calendar-table",
+        "wp-calendar"
+      ]
+    ],
+    "('tbody', None, None, 'id2d0d1984052d1f677088bf93897ea0f55116324b765525e28a7740f011f4e865', 8, 28)": [
+      "green",
+      [
+        "table",
+        "wp-calendar-table",
+        "wp-calendar"
+      ]
+    ],
+    "('span', 'wp-calendar-nav-prev', None, 'id67ef974eae6565d322afa0da0ba1cda5a4f70bf6f6efd2e60f4426fb48e6cc72', 8, 29)": [
+      "green",
+      [
+        "nav",
+        "wp-calendar-nav",
+        null
+      ]
+    ],
+    "('span', 'pad', None, 'id82f7186efd965402c54a3e3ff39537a245217374b37f4c3d9f2ad64d68eac0ba', 8, 30)": [
+      "green",
+      [
+        "nav",
+        "wp-calendar-nav",
+        null
+      ]
+    ],
+    "('span', 'wp-calendar-nav-next', None, 'idaf939a2cd675e4f2a76d8a75f78fbf4f98ad1e3ef52cc2156644d64978cbeb14', 8, 31)": [
+      "green",
+      [
+        "nav",
+        "wp-calendar-nav",
+        null
+      ]
+    ],
+    "('div', 'cli-col-12 cli-align-items-stretch cli-px-0', None, 'idc4709f048c6191c9263e1f8e92862cae231aa962612382e951099f65c6e8d093', 8, 32)": [
+      "green",
+      [
+        "div",
+        "cli-row",
+        null
+      ]
+    ],
+    "('div', 'cli-col-12 cli-align-items-stretch cli-px-0 cli-tab-section-container', None, 'id315f6637968c06e9b50401dd2e37dc21af08056f80d6e22968b4c00625722ea5', 8, 33)": [
+      "green",
+      [
+        "div",
+        "cli-row",
+        null
+      ]
+    ],
+    "('div', 'cli-col-12 cli-align-items-stretch cli-px-0', None, 'idfa4c1b3849503eb51a9f7be6cd204006b6cbed63373572b041cea32daebeeb0b', 8, 34)": [
+      "green",
+      [
+        "div",
+        "cli-row",
+        null
+      ]
+    ]
+  },
+  "9": {
+    "('label', 'screen-reader-text', None, 'id3f9316654b9d6ea608626ff5dfef6a1929437548c36f4a395f057107a459c54b', 9, 0)": [
+      "green",
+      [
+        "div",
+        "form-group live-search-input",
+        null
+      ]
+    ],
+    "('input', 'form-control', 's', 'idd901087e33f86a937569b6af6635041debf75591557446dc3744a319c9859a33', 9, 1)": [
+      "green",
+      [
+        "div",
+        "form-group live-search-input",
+        null
+      ]
+    ],
+    "('button', 'btn btn-default', None, 'iddefe3b90b0b2878ecc62812a49a429e47697c1135852f29b0258f1367e913934', 9, 2)": [
+      "green",
+      [
+        "span",
+        "input-group-btn",
+        null
+      ]
+    ],
+    "('a', None, None, 'idd83fe816af8b9b1963410fabd34026d2275e1399838eafc832bd5aa6e0d1fed3', 9, 3)": [
+      "green",
+      [
+        "li",
+        "menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-38675",
+        "menu-item-38675"
+      ]
+    ],
+    "('span', 'month', None, 'id63d9227c7d16dcb6ccc5523cabe06a6cac62ab627db03d480083bf343b9181a0', 9, 4)": [
+      "red",
+      [
+        "p",
+        "default_date",
+        null
+      ]
+    ],
+    "('span', 'day', None, 'id7fdfb9d4bd2f49ef08520b88e370ffeeabf9ca0b080c4a9e720c303554d4c226', 9, 5)": [
+      "red",
+      [
+        "p",
+        "default_date",
+        null
+      ]
+    ],
+    "('span', 'year', None, 'id8c4e1a13da2df5b563d9386314e155e173f11b5f13507b50cafe949cfe6cb5e7', 9, 6)": [
+      "red",
+      [
+        "p",
+        "default_date",
+        null
+      ]
+    ],
+    "('p', 'printonly', None, 'idd00f49f1be08965d05e7a6d63fe0d2e33537e1cc35b9fe3bbeee78df5b963a4e', 9, 7)": [
+      "red",
+      [
+        "li",
+        "print-date",
+        null
+      ]
+    ],
+    "('a', None, None, 'id247185e50a55ecd3f2d4589d486a26be4434255cc5a9c302843ac7f4b20fb77f', 9, 8)": [
+      "green",
+      [
+        "li",
+        "print",
+        null
+      ]
+    ],
+    "('iframe', None, None, 'id991fab88f13f4fb9c0326ad45c5c050fc9c5084691683c60e90ace55a491a468', 9, 9)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('div', 'add-this', None, 'id795d2b3da9918bdbf28ef7a55f7bd7e9f6c08f8962e16db1042506b617be818f', 9, 10)": [
+      "green",
+      [
+        "li",
+        "addthis col-sm-8",
+        null
+      ]
+    ],
+    "('tr', None, None, 'id22f1cb7eacd160f7503129aaefb33fcc4e9aa809df6fff4115590708a0ac3861', 9, 11)": [
+      "green",
+      [
+        "thead",
+        null,
+        null
+      ]
+    ],
+    "('tr', None, None, 'id9f61481795f015311d8ef035bb7440e8d3af3d787ad71869ee225c0657681623', 9, 12)": [
+      "green",
+      [
+        "tbody",
+        null,
+        null
+      ]
+    ],
+    "('tr', None, None, 'ida9944375304d65a725a52d78e319c9f9e6356de5e5c59dcaf3f8be493bb6d614', 9, 13)": [
+      "green",
+      [
+        "tbody",
+        null,
+        null
+      ]
+    ],
+    "('tr', None, None, 'id7311002423ed343f870eecae946d3274d19ef4a6fbaae9e0833b64eef897ef73', 9, 14)": [
+      "green",
+      [
+        "tbody",
+        null,
+        null
+      ]
+    ],
+    "('tr', None, None, 'id401b08fd9b235a2501ed33314f325e91beead9fc18cfc4dadb340dae39cce868', 9, 15)": [
+      "green",
+      [
+        "tbody",
+        null,
+        null
+      ]
+    ],
+    "('tr', None, None, 'id736fed4ecab491136d0a01c076a6c9e25d1464c495b28d8a73264c4e8e9257bb', 9, 16)": [
+      "green",
+      [
+        "tbody",
+        null,
+        null
+      ]
+    ],
+    "('tr', None, None, 'ideea7c2e7bc556cff0ff5af4b7ef104960a111d3cc16deffdbd9f3a907eb14267', 9, 17)": [
+      "green",
+      [
+        "tbody",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id935f474fe0605b2f994b1c0316b981268af2246ea473d5713104a3d35e855297', 9, 18)": [
+      "green",
+      [
+        "span",
+        "wp-calendar-nav-prev",
+        null
+      ]
+    ],
+    "('div', 'cli-privacy-overview', None, 'id393c2c06452b6fe5b0a37f333e4d5ad0e1d8396b74eea76031fa2b55abba2f69', 9, 19)": [
+      "green",
+      [
+        "div",
+        "cli-col-12 cli-align-items-stretch cli-px-0",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-section', None, 'iddc9901e2497cdecfbfa18d028371cf6850c4a85d93067548b2a45dc0ad417ab8', 9, 20)": [
+      "green",
+      [
+        "div",
+        "cli-col-12 cli-align-items-stretch cli-px-0 cli-tab-section-container",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-section', None, 'id266ab82d823b268bce8d3e97b4d8f8df1d59ef62b647b7ebd64292a977bb967e', 9, 21)": [
+      "green",
+      [
+        "div",
+        "cli-col-12 cli-align-items-stretch cli-px-0 cli-tab-section-container",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-footer wt-cli-privacy-overview-actions', None, 'id1e3be9ec2bbdd5a984c00a7395b42e00c385d7677f5d8da9d6f840a72fcdae7d', 9, 22)": [
+      "green",
+      [
+        "div",
+        "cli-col-12 cli-align-items-stretch cli-px-0",
+        null
+      ]
+    ]
+  },
+  "10": {
+    "('i', 'fa fa-search', None, 'idf13163c76910c2d52caa2248bc4c59138ba0c6a2a2b4beee059ee3d49de5b45a', 10, 0)": [
+      "green",
+      [
+        "button",
+        "btn btn-default",
+        null
+      ]
+    ],
+    "('em', None, None, 'id9ae03ae1ef373b60a0749ca85f05ca0676b25f9f96f47a52d9b2ede873e960d0', 10, 1)": [
+      "red",
+      [
+        "p",
+        "printonly",
+        null
+      ]
+    ],
+    "('i', 'fa fa-print', None, 'id5744c5d1e95d7ff7ef1c4ef84fb772e153e7f2f3ce3e7f46990ef5f6fc3131b9', 10, 2)": [
+      "green",
+      [
+        "a",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id2fdf5efe5f479cfe9282c2e89559bfff8eb1c195c5328890bcfd9235c192605b', 10, 3)": [
+      "green",
+      [
+        "div",
+        "add-this",
+        null
+      ]
+    ],
+    "('script', None, None, 'idddcb74df1831b5eee97954ead2c2c84c5e8320b7fe74544941eee1d51b9a2d91', 10, 4)": [
+      "green",
+      [
+        "div",
+        "add-this",
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 10, 5)": [
+      "green",
+      [
+        "div",
+        "add-this",
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 10, 6)": [
+      "green",
+      [
+        "div",
+        "add-this",
+        null
+      ]
+    ],
+    "('a', 'twitter-share-button', None, 'id6552e32ce8179db6f461216fab949f00c0290840a029f3fd964e107a09941621', 10, 7)": [
+      "green",
+      [
+        "div",
+        "add-this",
+        null
+      ]
+    ],
+    "('script', None, None, 'id878f7618a8282288b17ee68b567238b316a1cb407455fe21c526b49b1eab4d7d', 10, 8)": [
+      "green",
+      [
+        "div",
+        "add-this",
+        null
+      ]
+    ],
+    "('th', None, None, 'id9bcc1a43077fcec7365548cbc2c6cca9794630feff99c8a7667659c919d56f90', 10, 9)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('th', None, None, 'id4cbdeac7a5515a9e0b4ad3d677395dc355d0bb8819a45f974cbd4d38ea6cb645', 10, 10)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('th', None, None, 'id54dc8891c5df56ab7ebca2a4c943e561910c73fd1e83a4dc60bb14f02d138fc7', 10, 11)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('th', None, None, 'idf95c5549f803b02e885a40c03407744bba4e96415bc5016127bedbdf58803a62', 10, 12)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('th', None, None, 'id510a56ab7e431bbb010fcea976e5fdb159e765f728ada3069fc3a76e3d8e1269', 10, 13)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('th', None, None, 'id22e0619f32fd8437fd7d684fc6851dbe25bd242b8ad7bc9a3126e690a352cb42', 10, 14)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('th', None, None, 'idef3dce9cf60b05195ad91d1c0f102df59aae56225a5f06887db71298864f7317', 10, 15)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', 'pad', None, 'id3303975fc73a5d77e488adaf6075aed684acee4eb0126b2d41ac18659e09907a', 10, 16)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id646085a3a654bf40354e1b07922bd08ce51099338e1acdcd709557e80f687cb8', 10, 17)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id163b73b0871de8db8931394a68772ba037becc438211b56e72c49b2bf3cafbaf', 10, 18)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'ided6654ebae6980157c18fe92ac092148884009b7321063d71120f15ecc819719', 10, 19)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'ida1a2b546c17741d72f27b7a4254936d088ac128eb31dd0244b4908563e72d440', 10, 20)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'ida043b9c09bc648e47364bb342f00d8f955ab1edacfe88256f3602778748f3f49', 10, 21)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'idd71c70d0531c00db167d8aecdd8a8cd7833bbb240a72b09a3dd3efa5cb1b1149', 10, 22)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id95e48b5cf8127a99beaa5e050a11564f7b0062d761aa5e3314030e45be701322', 10, 23)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'idcfad3235128d7970e11946c197eab8633b0f3c692c572209934d485cbf4305e9', 10, 24)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, 'today', 'idc7c1de40ce81fd6fc8d69fd9e0c20655a0aa7b21b1d2afa8fe560dc15aac561e', 10, 25)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id76af2699806a223d8e14a5c55611a77e41f0843c015cd0cf101cc197a98f25d2', 10, 26)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id54256d710a37c74c5ced8277e2ba4bb2a55ee5b2ba7c0a26e29d349fc5c3a95f', 10, 27)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id79171d9fd6118aee09e88d6a65d5f19736f4b2f6998836947ff51e5d57908934', 10, 28)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id6cdf261435e539798295ea6b009d546751b965d9059d1d493ebe113a40a8d1a7', 10, 29)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id76fb10faf473cdda65ffcd2808d6add600ace008f8bec7d0a2acd71ad22e50ef', 10, 30)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id4a39263564897f4802a96fc492972782a19acc8dc84ca7a0e5741ce10b8c3295', 10, 31)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'idd90dca09d2f29ac7ed4604164fb800274f5fa5201d0c8442392aa2c097a16154', 10, 32)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id5fc70ef23f7286286b53c6ffd0a81880170a0b9325c2146b584a32ebc495e55e', 10, 33)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id72ee055392997477e4746acf1b3590e3cf30eba90c2d0caf264a9d88f7e1a3c5', 10, 34)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'idb0c6a980df9a76ec30e9307b272c54ae0a34289456c087daac3b833fb6f4c05f', 10, 35)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id9592de689584117722b16fa5b4d3f944bb1fbe6c77dc0410b41af840d54e6c19', 10, 36)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id5443ae51e512bfcf53b53f0b4bfb30d0a69796312144a71de2c33e5307c49783', 10, 37)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id8bd1b130678b7ef9b0e0711e06c0f8fdbc83f2853fa0dcf23176783a04d5e83d', 10, 38)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id80c9cecc14755b6bae5aec7ca12cae0dbd7814624aaf6775e56b97b5cd815574', 10, 39)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id2c158434b42523f73b227582d1aa759212def822248707f5367fcc1e53499317', 10, 40)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'idf1d87b3ca288c1601b3764d5e3e7a9750afc91f81a6d59611de2494ee153facc', 10, 41)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id84477e566ba7ba20018623e5a956f051e5d9cab2af98a998336c77ad035a498e', 10, 42)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id0e606293cbf4de850e152967162cea0aa837677aecf1bfd91450eb3402fa5349', 10, 43)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id6a90725d454f5553b55db538f6d390911138860da80f687d65ab8ce9ae8b60c2', 10, 44)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'ida134d7d8d6b95c8ecc1775e2c6b4fe7946a61ba47767fdbfd034586431bc0b6b', 10, 45)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'idb7d5a8a75fae677113e3f1a612b78ce38e6e9c3ee1a9f6645a25e25201750354', 10, 46)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', None, None, 'id9a7219fd65506c453440c026e1bce86a292b43fccc97350a855c4c5f2a14be47', 10, 47)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('td', 'pad', None, 'id59256ec2c3942ce1c6595c73667eb0b2d4ef0d1fc15cb3f6a3ce943e76a4e714', 10, 48)": [
+      "green",
+      [
+        "tr",
+        null,
+        null
+      ]
+    ],
+    "('h4', None, None, 'id98a98f8721f3f3a76734f9177c538384e2dc6125918edef8b41dd0e86a35f146', 10, 49)": [
+      "green",
+      [
+        "div",
+        "cli-privacy-overview",
+        null
+      ]
+    ],
+    "('div', 'cli-privacy-content', None, 'id6028e7121a2e864ca177948eee18baac550aeae20ed7fe078ffdfa3933468430', 10, 50)": [
+      "green",
+      [
+        "div",
+        "cli-privacy-overview",
+        null
+      ]
+    ],
+    "('a', 'cli-privacy-readmore', None, 'id6d4aaffae469239a8dd4aca7da59a1e596735961a4affd405dc44f3ac3a9a50d', 10, 51)": [
+      "green",
+      [
+        "div",
+        "cli-privacy-overview",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-header', None, 'idfd9a6fa9cb59b0de45775499c459828563b17819d7014f0c450538415a9061f0', 10, 52)": [
+      "green",
+      [
+        "div",
+        "cli-tab-section",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-content', None, 'id5508cc6ad7aecf8d34f750ad274c96f48de86bfea33ba3a9d999f07a043716fe', 10, 53)": [
+      "green",
+      [
+        "div",
+        "cli-tab-section",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-header', None, 'id2c68c127a584995c00a465e7a7962c63300214577315b20014ffbe5ec48008ec', 10, 54)": [
+      "green",
+      [
+        "div",
+        "cli-tab-section",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-content', None, 'id65cd9c542e4194555a3e39ce34bbc2928208fb557ae0eb0beb6c35ce9fa1c6af', 10, 55)": [
+      "green",
+      [
+        "div",
+        "cli-tab-section",
+        null
+      ]
+    ],
+    "('a', 'wt-cli-privacy-btn cli_setting_save_button wt-cli-privacy-accept-btn cli-btn', 'wt-cli-privacy-save-btn', 'idce390a1931bbdd190d36c138605352845f1703876d8f6e59f50499cb8f859b18', 10, 56)": [
+      "green",
+      [
+        "div",
+        "cli-tab-footer wt-cli-privacy-overview-actions",
+        null
+      ]
+    ]
+  },
+  "11": {
+    "('img', None, None, 'id91d492dbeb4e518e411545d872824cc43985d4fe6375c8d9035edb1fdfd2dd3d', 11, 0)": [
+      "green",
+      [
+        "a",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'idef9d7326f4b915f42ca40a32ffd59a7b8fa704b5caef39e35913cce6f3f3f86e', 11, 1)": [
+      "green",
+      [
+        "td",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id0e39eafb3e2129c4e3f772ea4c6c585702f679b424eb83cd787b5dcae244f532', 11, 2)": [
+      "green",
+      [
+        "td",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id63e4b11a5d2cdba2b19f796404c869a112b76fd8ca9fb49503f1fc5fe554a466', 11, 3)": [
+      "green",
+      [
+        "td",
+        null,
+        null
+      ]
+    ],
+    "('div', 'cli-privacy-content-text', None, 'idabb598a3d47a1e4fdef27531cc0c23c2a2b88eed4a3894618bc641b162c64745', 11, 4)": [
+      "green",
+      [
+        "div",
+        "cli-privacy-content",
+        null
+      ]
+    ],
+    "('a', 'cli-nav-link cli-settings-mobile', None, 'id9a62a5b618e65d936a87f3da135639b104b2d4dfd5e51f633ce2d3fe82dec300', 11, 5)": [
+      "green",
+      [
+        "div",
+        "cli-tab-header",
+        null
+      ]
+    ],
+    "('div', 'wt-cli-necessary-checkbox', None, 'id5178d9622825132e4b2aa059adaa1f39cf730638fcd96c82ac1f45e636d8df4e', 11, 6)": [
+      "green",
+      [
+        "div",
+        "cli-tab-header",
+        null
+      ]
+    ],
+    "('span', 'cli-necessary-caption', None, 'id6be0fe367f4690c0dd2bef864dd1dcf9f89dba8a56c8f77813dc1434b975161f', 11, 7)": [
+      "green",
+      [
+        "div",
+        "cli-tab-header",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-pane cli-fade', None, 'ide4f1b84cd5ec4c7e3c2280572c164b1d0ec13e093be79ed971f507528ea0f36f', 11, 8)": [
+      "green",
+      [
+        "div",
+        "cli-tab-content",
+        null
+      ]
+    ],
+    "('a', 'cli-nav-link cli-settings-mobile', None, 'id2aaf50fa27c9c3005d70f007977fa9b0d68e59e1f5f5283182cfd8869483a0cc', 11, 9)": [
+      "green",
+      [
+        "div",
+        "cli-tab-header",
+        null
+      ]
+    ],
+    "('div', 'cli-switch', None, 'idb9ab1adb84ac2db5b068c0040dc276bc54bfa6c31b85234a9a236e5fc00a5bf7', 11, 10)": [
+      "green",
+      [
+        "div",
+        "cli-tab-header",
+        null
+      ]
+    ],
+    "('div', 'cli-tab-pane cli-fade', None, 'id48f3eb49009f804307e2c15876a9036c79946ba46812ae96624837bf2f8f958c', 11, 11)": [
+      "green",
+      [
+        "div",
+        "cli-tab-content",
+        null
+      ]
+    ]
+  },
+  "12": {
+    "('input', 'cli-user-preference-checkbox', 'wt-cli-checkbox-necessary', 'idbfc0ce98391470192d4ed52c8b400c0534eb20d3db1de1cb209da60e9349cfcd', 12, 0)": [
+      "green",
+      [
+        "div",
+        "wt-cli-necessary-checkbox",
+        null
+      ]
+    ],
+    "('label', 'form-check-label', None, 'id49a059f8056fec9d3c453a360da1614d2efebf31c4c6fe1d1dab95f8ec7ce602', 12, 1)": [
+      "green",
+      [
+        "div",
+        "wt-cli-necessary-checkbox",
+        null
+      ]
+    ],
+    "('div', 'wt-cli-cookie-description', None, 'idad575f7bb9f830119cdadc283ef6879eb0e6c0fb5f73f0044b1d6b19947a1588', 12, 2)": [
+      "green",
+      [
+        "div",
+        "cli-tab-pane cli-fade",
+        null
+      ]
+    ],
+    "('input', 'cli-user-preference-checkbox', 'wt-cli-checkbox-non-necessary', 'idbd90cd349af793960b871ae02fcce655715c848538df3e2cd7fb91f81ed29889', 12, 3)": [
+      "green",
+      [
+        "div",
+        "cli-switch",
+        null
+      ]
+    ],
+    "('label', 'cli-slider', None, 'id73d6744801175ce46dfc187bb657f95a297f266092f42c5fa20fc8240f36c58b', 12, 4)": [
+      "green",
+      [
+        "div",
+        "cli-switch",
+        null
+      ]
+    ],
+    "('div', 'wt-cli-cookie-description', None, 'id795d3f9008108f1d38d4e9d7c8791980baa5abe044bdc448075172b88a27d03f', 12, 5)": [
+      "green",
+      [
+        "div",
+        "cli-tab-pane cli-fade",
+        null
+      ]
+    ]
+  },
+  "13": {
+    "('span', 'wt-cli-sr-only', None, 'id2181f1742fb2002c684c68e96bb7646e0c3eefb2249a89b0370459eca63d619f', 13, 0)": [
+      "green",
+      [
+        "label",
+        "cli-slider",
+        null
+      ]
+    ]
+  }
+}

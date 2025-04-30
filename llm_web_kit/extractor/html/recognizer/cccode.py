@@ -48,7 +48,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
             while True:
                 # 命中规则，直接处理并跳出
-                if domain in rules.RULES_MAP:
+                if rules.detect(domain):
                     rules.modify_tree(domain, root)
                     break
 
