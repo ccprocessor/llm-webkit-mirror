@@ -60,6 +60,49 @@ class TestPoliticalDetector:
         assert predictions == ['label1', 'label2']
         assert probabilities == [0.9, 0.1]
 
+    @patch('llm_web_kit.model.politics_detector.download_auto_file')
+    @patch('llm_web_kit.model.politics_detector.unzip_local_file')
+    @patch('llm_web_kit.model.politics_detector.os.path.exists')
+    @patch('llm_web_kit.model.politics_detector.load_config')
+    @patch('llm_web_kit.model.politics_detector.logger.info')
+    def test_auto_download(self, mock_logger, mock_load_config, mock_exists, mock_unzip, mock_download):
+        # Setup mock behavior
+        mock_exists.side_effect = [False, False]  # unzip_path doesn't exist, zip_path doesn't exist
+        mock_config = {
+            'resources': {
+                'political-25m3_cpu': {
+                    'download_path': 's3://fake/path',
+                    'md5': 'fake_md5'
+                }
+            }
+        }
+        mock_load_config.return_value = mock_config
+        mock_download.return_value = '/fake/cache/political-25m3_cpu.zip'
+        mock_unzip.return_value = '/fake/unzip/path'
+
+        detector = PoliticalDetector()
+        result = detector.auto_download()
+
+        # Assertions
+        mock_load_config.assert_called_once()
+        mock_exists.assert_any_call('/fake/unzip/path')
+        mock_exists.assert_any_call('/fake/cache/political-25m3_cpu.zip')
+        mock_logger.assert_any_call('try to make unzip_path: /fake/unzip/path exist')
+        mock_logger.assert_any_call('unzip_path: /fake/unzip/path does not exist')
+        mock_logger.assert_any_call('try to unzip from zip_path: /fake/cache/political-25m3_cpu.zip')
+        mock_logger.assert_any_call('zip_path: /fake/cache/political-25m3_cpu.zip does not exist')
+        mock_logger.assert_any_call('downloading s3://fake/path')
+        mock_download.assert_called_once_with(
+            's3://fake/path',
+            '/fake/cache/political-25m3_cpu.zip',
+            'fake_md5'
+        )
+        mock_unzip.assert_called_once_with(
+            '/fake/cache/political-25m3_cpu.zip',
+            '/fake/unzip/path'
+        )
+        assert result == '/fake/unzip/path'
+
 class TestGTEModel(TestCase):
     @patch('llm_web_kit.model.politics_detector.GTEModel.auto_download')
     @patch('llm_web_kit.model.politics_detector.import_transformer')

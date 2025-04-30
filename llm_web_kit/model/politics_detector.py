@@ -226,8 +226,6 @@ def political_filter_cpu(data_dict: Dict[str, Any], language: str):
 
 if __name__ == '__main__':
     test_cases = []
-    test_cases.append('China is a beautiful country')
-    test_cases.append('China is a bad country')
     test_cases.append('你好，唔該幫我一個忙？')
     test_cases.append('Bawo ni? Mo nife Yoruba. ')
     test_cases.append(
