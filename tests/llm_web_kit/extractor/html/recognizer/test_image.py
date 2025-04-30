@@ -62,14 +62,19 @@ TEST_CASES_HTML = [
     {
         'input': 'assets/ccimage/svg_e.html',
         'base_url': 'https://onlinelibrary.wiley.com/doi/10.1155/2012/387626',
-        'expected': 27,
+        'expected': 49,
     },
     {
         'input': 'assets/ccimage/inline_image.html',
         'base_url': 'https://community.wikia.com/wiki/Help:Theme_designer',
         'expected': 104,
         'description': '测试标题中的图片被正确处理',
-    }
+    },
+    {
+        'input': 'assets/ccimage/svg_ee.html',
+        'base_url': 'https://www.spreaker.com/podcast/99-challenges--4769835',
+        'expected': 341,
+    },
 ]
 
 TEST_CC_CASE = [
@@ -116,7 +121,8 @@ class TestImageRecognizer(unittest.TestCase):
             raw_html_path = base_dir.joinpath(test_case['input'])
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text(encoding='utf-8')
-            parts = self.img_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
+            parts = self.img_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))],
+                                                  raw_html)
             self.assertEqual(len(parts), test_case['expected'])
             ccimg_datas = [ccimg[0] for ccimg in parts if CCTag.CC_IMAGE in ccimg[0] and 'by="svg"' not in ccimg[0]]
             if ccimg_datas:
@@ -127,7 +133,8 @@ class TestImageRecognizer(unittest.TestCase):
     def test_to_content_list_node(self):
         for test_case in TEST_CC_CASE:
             try:
-                res = self.img_recognizer.to_content_list_node(test_case['url'], html_to_element(test_case['parsed_content']),
+                res = self.img_recognizer.to_content_list_node(test_case['url'],
+                                                               html_to_element(test_case['parsed_content']),
                                                                test_case['html'])
                 self.assertEqual(res, test_case['expected'])
                 self.assertEqual(res['content']['alt'], test_case['alt'])

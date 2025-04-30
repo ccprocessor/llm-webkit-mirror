@@ -1,8 +1,35 @@
 import html
 import re
+import string
 from copy import deepcopy
 
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
+
+special_symbols = [  # TODO 从文件读取
+    '®',  # 注册商标符号
+    '™',  # 商标符号
+    '©',  # 版权符号
+    '$',   # 美元符号
+    '€',   # 欧元符号
+    '£',   # 英镑符号
+    '¥',   # 日元符号
+    '₹',   # 印度卢比符号
+    '∑',   # 求和符号
+    '∞',   # 无穷大符号
+    '√',   # 平方根符号
+    '≠',   # 不等于符号
+    '≤',   # 小于等于符号
+    '•',   # 项目符号
+    '¶',   # 段落符号
+    '†',   # 匕首符号
+    '‡',   # 双匕首符号
+    '—',   # 长破折号
+    '–',   # 短破折号
+    '♥',   # 爱心符号
+    '★',   # 星星符号
+    '☀',   # 太阳符号
+    '☁'    # 云符号
+]
 
 
 def html_to_element(html:str) -> HtmlElement:
@@ -266,3 +293,99 @@ def extract_magic_html(html, base_url, page_layout_type):
     except Exception as e:
         from llm_web_kit.exception.exception import MagicHtmlExtractorException
         raise MagicHtmlExtractorException(f'extract_magic_html error: {e}')
+
+
+def combine_text(text1: str, text2: str, lang='en') -> str:
+    """将两段文本合并，中间加空格.
+
+    Args:
+        text1: str: 第一段文本
+        text2: str: 第二段文本
+        lang: str: 语言
+    """
+    text1 = text1.strip(' ') if text1 else ''
+    text2 = text2.strip(' ') if text2 else ''
+    if lang == 'zh':
+        txt = text1 + text2
+        return txt.strip()
+    else:
+        # 防止字符串为空导致索引错误
+        words_sep = '' if text2 and (text2[0] in string.punctuation or text2[0] in special_symbols) else ' '
+        txt = text1 + words_sep + text2
+        return txt.strip()
+
+
+def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en', recursive=True) -> str:
+    """处理HTML元素中的sub/sup标签，将其转换为GitHub Flavored Markdown格式.
+
+    此函数可以处理直接的sub/sup标签元素，也可以处理包含sub/sup标签的父元素。
+    对于sub/sup相关内容，不进行strip操作，直接拼接文本。
+    对于非sub/sup相关内容，使用combine_text进行文本拼接。
+
+    Args:
+        element: HtmlElement: 要处理的HTML元素
+        current_text: str: 当前已经处理的文本，默认为空字符串
+        lang: str: 语言，用于文本合并时的空格处理，默认为'en'
+        recursive: bool: 是否递归处理子元素，默认为True
+
+    Returns:
+        str: 处理后的文本，包含GitHub Flavored Markdown格式的上标和下标
+    """
+    # 判断是否是sub/sup上下文
+    is_sub_sup_context = element.tag in ('sub', 'sup') or bool(element.xpath('.//sub | .//sup'))
+
+    # 直接处理当前元素是sub或sup的情况
+    if element.tag == 'sub':
+        # 获取内容并规范化空白 - 去除所有换行符，将多个连续空格替换为单个空格
+        content = element.text_content()
+        content = re.sub(r'\s+', ' ', content).strip()
+        result = f'{current_text.rstrip()}~{content}~'
+        return result
+    elif element.tag == 'sup':
+        content = element.text_content()
+        # 使用正则表达式规范化空白
+        content = re.sub(r'\s+', ' ', content).strip()
+        result = f'{current_text.rstrip()}^{content}^'
+        return result
+
+    # 检查是否包含sub或sup子元素，如果不包含且不是sub/sup上下文，则按照普通文本处理
+    if not recursive:
+        if is_sub_sup_context:
+            return current_text  # 不strip
+        else:
+            return combine_text(current_text, '', lang)
+
+    has_sub_sup = element.xpath('.//sub | .//sup')
+    if not has_sub_sup and not is_sub_sup_context:
+        return combine_text(current_text, '', lang)
+
+    result = current_text
+    if element.text:
+        if is_sub_sup_context:
+            result += element.text
+        else:
+            result = combine_text(result, element.text, lang)
+
+    # 处理所有子元素及其尾部文本
+    for child in element:
+        if child.tag == 'sub' or child.tag == 'sup':
+            content = child.text_content()
+            content = re.sub(r'\s+', ' ', content).strip()
+            marker = '~' if child.tag == 'sub' else '^'
+            result += f'{marker}{content}{marker}'
+        else:
+            child_result = process_sub_sup_tags(child, '', lang, recursive)
+            if child_result:
+                if is_sub_sup_context:
+                    result += child_result
+                else:
+                    result = combine_text(result, child_result, lang)
+
+        # 添加尾部文本
+        if child.tail:
+            if is_sub_sup_context:
+                result += child.tail
+            else:
+                result = combine_text(result, child.tail, lang)
+
+    return result

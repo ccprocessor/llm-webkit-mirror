@@ -6,6 +6,7 @@ from typing import Dict, List
 from overrides import override
 
 from llm_web_kit.exception.exception import ExtractorChainInputException
+from llm_web_kit.extractor.html.recognizer.list import ListAttribute
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.encode import sha256_hash
 from llm_web_kit.libs.html_utils import (get_element_text, html_to_element,
@@ -161,6 +162,87 @@ class StructureMapper(ABC):
     def _get_data(self) -> List[Dict]:
         raise NotImplementedError('This method must be implemented by the subclass.')
 
+    def __process_nested_list(self, items, list_attribute, indent_level=0, exclude_inline_types=[]):
+        """处理新格式的嵌套列表结构.
+
+        Args:
+            items: 列表项数组
+            list_attribute: 列表属性（有序/无序/定义）
+            indent_level: 缩进级别
+            exclude_inline_types: 排除的内联类型
+
+        Returns:
+            list: 处理后的列表项段落
+        """
+        result = []
+
+        # 设置缩进
+        indent = '  ' * indent_level
+
+        for item_idx, item in enumerate(items):
+            # 根据列表属性确定前缀格式
+            if list_attribute == ListAttribute.ORDERED:
+                # 有序列表 - 使用数字编号
+                list_prefix = f'{item_idx + 1}.'
+            elif list_attribute == ListAttribute.DEFINITION:
+                # 定义列表
+                item_text = item.get('c', '')
+                term_line = f'{item_text}'
+                result.append(term_line)
+
+                # 处理嵌套子列表，同样不添加特殊缩进
+                child_list = item.get('child_list', {})
+                if child_list and isinstance(child_list, dict) and 'items' in child_list:
+                    child_items = child_list.get('items', [])
+                    child_attribute = child_list.get('list_attribute', ListAttribute.UNORDERED)
+
+                    if child_items:
+                        # 传递原始缩进级别，不额外增加
+                        child_result = self.__process_nested_list(
+                            child_items,
+                            child_attribute,
+                            indent_level,  # 使用相同的缩进级别
+                            exclude_inline_types
+                        )
+                        result.extend(child_result)
+                continue
+            else:
+                # 无序列表 - 使用破折号
+                list_prefix = self.__list_item_start
+            if not isinstance(item, dict):
+                # 尝试处理嵌套列表情况
+                if isinstance(item, list):
+                    # 如果是嵌套列表，转换为标准格式
+                    if item and isinstance(item[0], list) and item[0] and isinstance(item[0][0], dict):
+                        item = item[0][0]  # 取出实际的字典对象
+                    else:
+                        continue  # 跳过无法处理的情况
+                else:
+                    continue  # 如果不是dict也不是list，跳过该项
+
+            item_text = item.get('c', '')
+
+            # 创建列表项行
+            item_line = f'{indent}{list_prefix} {item_text}'
+            result.append(item_line)
+
+            # 处理嵌套子列表
+            child_list = item.get('child_list', {})
+            if child_list and isinstance(child_list, dict) and 'items' in child_list:
+                child_items = child_list.get('items', [])
+                child_attribute = child_list.get('list_attribute', ListAttribute.UNORDERED)
+
+                if child_items:
+                    child_result = self.__process_nested_list(
+                        child_items,
+                        child_attribute,
+                        indent_level + 1,
+                        exclude_inline_types
+                    )
+                    result.extend(child_result)
+
+        return result
+
     def __content_lst_node_2_md(self, content_lst_node: dict, exclude_inline_types: list = []) -> str:
         """把content_list里定义的每种元素块转化为markdown格式.
 
@@ -233,19 +315,11 @@ class StructureMapper(ABC):
             one_para = self.__join_one_para(paragraph_el_lst, exclude_inline_types)
             return one_para
         elif node_type == DocElementType.LIST:
-            items_paras = []
-            is_ordered = content_lst_node['content']['ordered']
-            for item_idx, item in enumerate(content_lst_node['content']['items']):
-                paras_of_item = []
-                for para in item:
-                    one_para = self.__join_one_para(para, exclude_inline_types)
-                    paras_of_item.append(one_para)
-                # 由于markdown的列表项里可以有多个段落，这里拼装成md列表段落格式
-                list_prefix = f'{item_idx + 1}.' if is_ordered else self.__list_item_start  # 有序列表和无需列表前缀
-                item_paras_md = self.__para_2_md_list_item(paras_of_item, list_prefix)
-                items_paras.append(item_paras_md)
-            md_list = '\n'.join(items_paras)
-            return md_list
+            list_content = content_lst_node['content']
+            list_attribute = list_content.get('list_attribute', ListAttribute.UNORDERED)
+            items = list_content.get('items', [])
+            result = self.__process_nested_list(items, list_attribute, 0, exclude_inline_types)
+            return '\n'.join(result)
         elif node_type == DocElementType.SIMPLE_TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
@@ -364,15 +438,11 @@ class StructureMapper(ABC):
             one_para = self.__join_one_para(paragraph_el_lst, exclude_inline_types)
             return one_para
         elif node_type == DocElementType.LIST:
-            items_paras = []
-            for item in content_lst_node['content']['items']:
-                paras_of_item = []
-                for para in item:
-                    one_para = self.__join_one_para(para, exclude_inline_types)
-                    paras_of_item.append(one_para)
-                items_paras.append(paras_of_item)
-            items_paras = [self.__txt_para_splitter.join(item) for item in items_paras]
-            return self.__txt_para_splitter.join(items_paras)   # 对于txt格式来说一个列表项里多个段落没啥问题，但是对于markdown来说，多个段落要合并成1个，否则md格式无法表达。
+            list_content = content_lst_node['content']
+            list_attribute = list_content.get('list_attribute', ListAttribute.UNORDERED)
+            items = list_content.get('items', [])
+            result = self.__process_nested_list(items, list_attribute, 0, exclude_inline_types)
+            return '\n'.join(result)
         elif node_type == DocElementType.SIMPLE_TABLE:
             # 对文本格式来说，普通表格直接转为md表格，复杂表格返还原始html
             html_table = content_lst_node['content']['html']
@@ -390,7 +460,7 @@ class StructureMapper(ABC):
             else:
                 return ''
         else:
-            raise ValueError(f'content_lst_node contains invalid element type: {node_type}')  # TODO: 自定义异常
+            raise ValueError(f'content_lst_node contains invalid element type: {node_type}')
 
     def __join_one_para(self, para: list, exclude_inline_types: list = []) -> str:
         """把一个段落的元素块连接起来.

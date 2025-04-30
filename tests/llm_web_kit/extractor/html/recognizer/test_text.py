@@ -9,7 +9,8 @@ from llm_web_kit.extractor.html.recognizer.recognizer import \
     BaseHTMLElementRecognizer
 from llm_web_kit.extractor.html.recognizer.text import TextParagraphRecognizer
 from llm_web_kit.input.datajson import DataJson
-from llm_web_kit.libs.html_utils import element_to_html, html_to_element
+from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
+                                         html_to_element)
 
 
 class TestTextParagraphRecognize(unittest.TestCase):
@@ -30,7 +31,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
                                                                           '中共中央政治局召开会议审议《成-2020年10月16日新闻联播',
                                                                           'zh') == '知识乱象\n中共中央政治局召开会议审议《成-2020年10月16日新闻联播'
         result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
-        assert '知识乱象\\n\\n 中共中央政治局' in element_to_html(result[908][0])
+        assert '知识乱象\\n\\n 中共中央政治局' in element_to_html_unescaped(result[587][0])
 
     def test_text_2(self):
         """
@@ -152,7 +153,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text7.html', 'r') as file:
             html_content = file.read()
         result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
-        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in element_to_html(result[51][0]) and BaseHTMLElementRecognizer.is_cc_html(result[51][0])
+        assert '1) A man takes 5 hrs and 45 mins to walk to a certain place and ride back' in element_to_html_unescaped(result[66][0]) and BaseHTMLElementRecognizer.is_cc_html(result[66][0])
 
     def test_text_8(self):
         """
@@ -164,7 +165,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text8.html', 'r') as file:
             html_content = file.read()
         result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
-        assert "40xy\' -ln(x^8) = 0\\n\\n\\n\\n Initial Condition: y(1)=31\\n\\n\\n\\n Work:" in element_to_html(result[54][0]) and BaseHTMLElementRecognizer.is_cc_html(result[54][0])
+        assert "40xy\' -ln(x^8) = 0\\n\\n\\n\\n Initial Condition: y(1)=31\\n\\n\\n\\n Work:" in element_to_html_unescaped(result[69][0]) and BaseHTMLElementRecognizer.is_cc_html(result[69][0])
 
     def test_text_9(self):
         """
@@ -176,7 +177,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         with open(Path(__file__).parent.parent.parent / 'assets/extractor_chain_input/good_data/html/text9.html', 'r') as file:
             html_content = file.read()
         result = self.text_recognize.recognize('http://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
-        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in element_to_html(result[50][0]) and BaseHTMLElementRecognizer.is_cc_html(result[50][0])
+        assert '1) Consider the formula f(x)=lim(n--&gt;infinity)((x^n)/(1+x^n)).\\n\\n Let D={x:f(x) is an element of R}. Calculate f(x) for all x elements of D and determine where f: D--&gt;R is continuous.\\n\\n\\n\\n 2) Let f: D--&gt;R and suppose that f(x) greater than equal 0 for all x elements of D. Define sqrt(f)--&gt;R by (sqrt(f))(x) = sqrt(f(x)). If f is continuous at c elements of D, prove that sqrt(f) is continuous at c.' in element_to_html_unescaped(result[63][0]) and BaseHTMLElementRecognizer.is_cc_html(result[63][0])
 
     def test_text_10(self):
         """
@@ -199,3 +200,47 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert 'So far I have 2 sets of questions (but I\'m onlin in the 2nd chapter now\n\n![:smile:](d80757e36ca9835f7237339959a1fa1d929bb5c5297acb457475459d6da12278 "Smile    :smile:")\n\n)\n\n 1)\n\n In the book' in content_md
+
+    def test_text_11(self):
+        """
+        测试11  s3://web-parse-huawei/CC/pre-dedup/v008/unique_html/CC-MAIN-2013-48/part-67a0f2d36291-000157.jsonl.gz?bytes=47048276,27451
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'http://community.wikia.com/wiki/Help_talk:Theme_designer',
+            'data_source_category': 'HTML',
+            'path': 'text11.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert '86,821 pages on' in content_md
+
+    def test_text_12(self):
+        """
+        测试11  s3://llm-pdf-text-1/qa/quyuan/CC3.0/v009/data/part-67e685f42e4c-000000.jsonl?bytes=101642,27293
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://betterexplained.com/~kazad/resources/shorts/karate_old.html',
+            'data_source_category': 'HTML',
+            'path': 'text12.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'For maintaining mount' in content_md
