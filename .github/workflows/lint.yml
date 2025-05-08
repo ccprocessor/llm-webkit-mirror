@@ -23,4 +23,5 @@ jobs:
           pip install pre-commit==3.8.0
           pre-commit install
       - name: Linting
-        run: pre-commit run --all-files
+        run: |
+          pre-commit run --all-files
