@@ -53,7 +53,8 @@ def analyze_file_offsets(file_path):
         ])
 
         # 一次性解析JSON
-        parsed_df = df.withColumn('parsed', F.from_json(F.col('value'), schema))
+        parsed_df = df.withColumn('parsed',
+                                  F.from_json(F.col('value'), schema))
 
         # 提取所需字段
         df = parsed_df.select(
@@ -67,19 +68,15 @@ def analyze_file_offsets(file_path):
         # 然后提取offset和length
         df = df.withColumn(
             'loc_info',
-            extract_offset_length_udf(F.col('doc_loc'))
-        ).withColumn(
-            'offset', F.col('loc_info.offset')
-        ).withColumn(
-            'length', F.col('loc_info.length')
-        ).drop('loc_info', 'doc_loc')
+            extract_offset_length_udf(F.col('doc_loc'))).withColumn(
+                'offset', F.col('loc_info.offset')).withColumn(
+                    'length',
+                    F.col('loc_info.length')).drop('loc_info', 'doc_loc')
 
         # 过滤掉无效记录
-        df = df.filter(
-            (F.col('domain').isNotNull()) &
-            (F.col('offset').isNotNull()) &
-            (F.col('length').isNotNull())
-        )
+        df = df.filter((F.col('domain').isNotNull())
+                       & (F.col('offset').isNotNull())
+                       & (F.col('length').isNotNull()))
 
         # 收集每个域名的记录信息，按文件路径分组
         domain_records_df = df.select(
@@ -88,14 +85,14 @@ def analyze_file_offsets(file_path):
             'filename',  # 文件路径
             'offset',
             'length',
-            F.struct(F.col('offset'), F.col('length')).alias('record_info')
-        ).groupBy('domain', 'filename').agg(  # 按域名和文件路径分组
-            F.collect_list('record_info').alias('records'),
-            F.first('domain_hash_id').alias('domain_hash_id'),
-            F.count('*').alias('record_count'),
-            F.min('offset').alias('min_offset'),
-            F.max('offset').alias('max_offset')  # 添加最大偏移量
-        )
+            F.struct(F.col('offset'),
+                     F.col('length')).alias('record_info')).groupBy(
+                         'domain', 'filename').agg(  # 按域名和文件路径分组
+                             F.collect_list('record_info').alias('records'),
+                             F.first('domain_hash_id').alias('domain_hash_id'),
+                             F.count('*').alias('record_count'),
+                             F.min('offset').alias('min_offset'),
+                             F.max('offset').alias('max_offset'))  # 添加最大偏移量
 
         # 将DataFrame转换为字典格式
         domain_records = {}
@@ -142,7 +139,9 @@ def analyze_file_offsets(file_path):
         print(f"批量分析文件 {file_path} 的偏移量时出错: {str(e)}")
 
     # 将字典转换为列表，并按count降序排列
-    offset_info = sorted(domain_records.values(), key=lambda x: x['count'], reverse=True)
+    offset_info = sorted(domain_records.values(),
+                         key=lambda x: x['count'],
+                         reverse=True)
     return offset_info
 
 
@@ -167,21 +166,32 @@ def process_file_index(file_info):
             index_file_path = f"{output_base_path}/{hash_id}.jsonl"
 
             # 将偏移量信息转换为JSON
-            index_json = '\n'.join(json.dumps(record) for record in domain_offset_info)
+            index_json = '\n'.join(
+                json.dumps(record) for record in domain_offset_info)
 
             # 写入S3
-            put_s3_object_with_retry(index_file_path, index_json.encode('utf-8'))
+            put_s3_object_with_retry(index_file_path,
+                                     index_json.encode('utf-8'))
 
-            return {'status': 'success', 'file': file_path, 'domains': len(domain_offset_info)}
+            return {
+                'status': 'success',
+                'file': file_path,
+                'domains': len(domain_offset_info)
+            }
         else:
-            return {'status': 'empty', 'file': file_path, 'reason': 'no domain records'}
+            return {
+                'status': 'empty',
+                'file': file_path,
+                'reason': 'no domain records'
+            }
 
     except Exception as e:
         error_msg = str(e)
         return {'status': 'error', 'file': file_path, 'error': error_msg}
 
 
-def generate_domain_indices(input_base_path, output_base_path, start_hash_id, end_hash_id):
+def generate_domain_indices(input_base_path, output_base_path, start_hash_id,
+                            end_hash_id):
     """为每个域名生成索引文件，按hash_id顺序处理.
 
     Args:
@@ -204,14 +214,17 @@ def generate_domain_indices(input_base_path, output_base_path, start_hash_id, en
                 input_path = f"{input_base_path}/{hash_id}"
 
                 # 构建参数元组
-                file_info = (input_path, hash_id, input_base_path, output_base_path)
+                file_info = (input_path, hash_id, input_base_path,
+                             output_base_path)
 
                 # 执行process_file_index
                 result = process_file_index(file_info)
 
                 # 输出处理结果
                 if result['status'] == 'success':
-                    print(f"哈希桶 {hash_id} 处理成功，包含 {result.get('domains', 0)} 个域名")
+                    print(
+                        f"哈希桶 {hash_id} 处理成功，包含 {result.get('domains', 0)} 个域名"
+                    )
                 elif result['status'] == 'empty':
                     print(f"哈希桶 {hash_id} 没有域名记录")
                 else:
@@ -245,18 +258,18 @@ config = {
     'spark.task.maxFailures': 8,
 }
 
-
 # 配置参数
 HASH_COUNT = 10000  # 总域名哈希桶数量
 START_HASH_ID = 5  # 起始哈希桶ID
-END_HASH_ID = 10    # 结束哈希桶ID（包含）
+END_HASH_ID = 10  # 结束哈希桶ID（包含）
 MAX_RECORDS_PER_FILE = 100000  # 每个存储文件的最大记录数
 
 # 定义重要域名阈值
 IMPORTANT_DOMAIN_THRESHOLD = 100000  # ≥10万记录的视为重要域名（用于区分hot/cold）
 
 # 创建Spark会话
-spark = new_spark_session(f"cc_domain_index_{START_HASH_ID}_{END_HASH_ID}", config)
+spark = new_spark_session(f"cc_domain_index_{START_HASH_ID}_{END_HASH_ID}",
+                          config)
 sc = spark.sparkContext
 sc.setLogLevel('ERROR')
 sc
@@ -265,9 +278,9 @@ sc
 input_base_path = 's3://cc-store/cc-domain-stage2'  # 输入数据基础路径
 output_base_path = 's3://cc-store/cc-domain-index'  # 输出数据基础路径
 
-
 # 生成域名索引
 print('开始生成域名索引...')
-generate_domain_indices(input_base_path, output_base_path, START_HASH_ID, END_HASH_ID)
+generate_domain_indices(input_base_path, output_base_path, START_HASH_ID,
+                        END_HASH_ID)
 
 print('处理完成')

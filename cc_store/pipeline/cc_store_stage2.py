@@ -37,8 +37,7 @@ def load_domain_stats(hash_id, stats_base_path):
                 csv_df = spark.read.csv(
                     text_df.select('value').rdd.map(lambda r: r.value),
                     header=True,  # 第一行是标题
-                    inferSchema=True
-                )
+                    inferSchema=True)
 
                 stats_df = csv_df
             except Exception as e:
@@ -53,8 +52,7 @@ def load_domain_stats(hash_id, stats_base_path):
         stats_df = stats_df.select(
             F.col('url_host_name').alias('domain'),
             F.lit(hash_id).alias('domain_hash_id'),
-            F.col('count').cast(IntegerType())
-        )
+            F.col('count').cast(IntegerType()))
 
         # 检查是否包含必要的列
         required_columns = ['domain', 'count']
@@ -80,40 +78,36 @@ def calculate_file_indices(stats_df):
         包含域名、domain_hash_id、count和files_needed的DataFrame
     """
     # 1. 按域名出现频率降序排序
-    window_spec = Window.partitionBy('domain_hash_id').orderBy(F.desc('count'), 'domain')
-    stats_df = stats_df.withColumn('row_number', F.row_number().over(window_spec))
+    window_spec = Window.partitionBy('domain_hash_id').orderBy(
+        F.desc('count'), 'domain')
+    stats_df = stats_df.withColumn('row_number',
+                                   F.row_number().over(window_spec))
 
     # 2. 使用累积求和统计记录数
     stats_df = stats_df.withColumn(
         'cumulative_count',
-        F.sum('count').over(Window.partitionBy('domain_hash_id').orderBy('row_number'))
-    )
+        F.sum('count').over(
+            Window.partitionBy('domain_hash_id').orderBy('row_number')))
 
     # 3. 计算基础file_idx (未考虑大域名拆分)
     stats_df = stats_df.withColumn(
         'base_file_idx',
-        F.floor((F.col('cumulative_count') - F.col('count')) / F.lit(MAX_RECORDS_PER_FILE))
-    )
+        F.floor((F.col('cumulative_count') - F.col('count')) /
+                F.lit(MAX_RECORDS_PER_FILE)))
 
     # 4. 计算每个域名需要的文件数量
     stats_df = stats_df.withColumn(
-        'files_needed',
-        F.ceil(F.col('count') / F.lit(MAX_RECORDS_PER_FILE))
-    )
+        'files_needed', F.ceil(F.col('count') / F.lit(MAX_RECORDS_PER_FILE)))
 
     # 5. 保留需要的列
-    result_df = stats_df.select(
-        'domain',
-        'domain_hash_id',
-        'count',
-        'base_file_idx',
-        'files_needed'
-    )
+    result_df = stats_df.select('domain', 'domain_hash_id', 'count',
+                                'base_file_idx', 'files_needed')
 
     return result_df
 
 
-def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path, output_base_path, stats_base_path):
+def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path,
+                                  output_base_path, stats_base_path):
     """并行处理多个哈希桶.
 
     Args:
@@ -153,7 +147,8 @@ def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path, o
         print(f"已计算所有域名的file_idx，共 {domain_file_indices.count()} 条记录")
 
         # 4. 并行读取所有哈希桶的输入数据
-        input_paths = list(f"{input_base_path}/{hash_id}" for hash_id in hash_ids)
+        input_paths = list(f"{input_base_path}/{hash_id}"
+                           for hash_id in hash_ids)
         print(f"正在读取多个哈希桶输入数据: {input_paths}")
 
         # 使用逗号分隔的路径列表一次性读取所有数据
@@ -170,14 +165,13 @@ def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path, o
 
             input_df = input_df.withColumn(
                 'parsed',
-                F.from_json(F.col('value'), schema)
-            ).withColumn(
-                'domain',
-                F.col('parsed.domain')
-            )
+                F.from_json(F.col('value'),
+                            schema)).withColumn('domain',
+                                                F.col('parsed.domain'))
 
         # 提取所有不在统计数据中的域名
-        missing_domains = input_df.select('domain').subtract(domain_file_indices.select('domain'))
+        missing_domains = input_df.select('domain').subtract(
+            domain_file_indices.select('domain'))
 
         # 为缺失的域名计算hash值
         def compute_domain_hash(domain):
@@ -188,32 +182,27 @@ def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path, o
         compute_hash_udf = F.udf(compute_domain_hash, IntegerType())
 
         missing_domain_df = missing_domains.withColumn(
-            'domain_hash_id', compute_hash_udf(F.col('domain'))
-        ).withColumn(
-            'count', F.lit(1)  # 添加缺失的count列，默认设为1
-        ).withColumn(
-            'base_file_idx', F.lit(0)
-        ).withColumn(
-            'files_needed', F.lit(1)
-        )
+            'domain_hash_id', compute_hash_udf(F.col('domain'))).withColumn(
+                'count', F.lit(1)).withColumn('base_file_idx',
+                                              F.lit(0)).withColumn(
+                                                  'files_needed', F.lit(1))
 
         # 合并到domain_file_indices
         domain_file_indices = domain_file_indices.union(missing_domain_df)
 
         # 6. 使用JOIN和内置函数分配file_idx
         processed_df = input_df.join(
-            domain_file_indices.select('domain', 'domain_hash_id', 'base_file_idx', 'files_needed'),
-            'domain',
-            'left'
-        ).withColumn(
-            'file_idx',
-            F.when(
-                F.col('files_needed').isNull() | (F.col('files_needed') <= 1),
-                F.coalesce(F.col('base_file_idx'), F.lit(0))
-            ).otherwise(
-                F.col('base_file_idx') + F.floor(F.rand() * F.col('files_needed'))
-            )
-        ).na.fill(0, ['file_idx'])  # 对可能的NULL值填充0
+            domain_file_indices.select('domain', 'domain_hash_id',
+                                       'base_file_idx', 'files_needed'),
+            'domain', 'left').withColumn(
+                'file_idx',
+                F.when(
+                    F.col('files_needed').isNull() |
+                    (F.col('files_needed') <= 1),
+                    F.coalesce(F.col('base_file_idx'), F.lit(0))).otherwise(
+                        F.col('base_file_idx') +
+                        F.floor(F.rand() * F.col('files_needed')))).na.fill(
+                            0, ['file_idx'])  # 对可能的NULL值填充0
 
         # 7. 更新JSON数据
         def update_json(json_str, file_idx, domain_hash_id):
@@ -234,26 +223,21 @@ def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path, o
         # 应用UDF更新JSON，使用domain_hash_id构建sub_path
         processed_df = processed_df.withColumn(
             'value',
-            update_json_udf(F.col('value'), F.col('file_idx'), F.col('domain_hash_id'))
-        )
+            update_json_udf(F.col('value'), F.col('file_idx'),
+                            F.col('domain_hash_id')))
 
         # 8. 准备输出的sub_path
         processed_df = processed_df.withColumn(
             'sub_path',
             F.concat(
-                F.col('domain_hash_id').cast('string'),
-                F.lit('/'),
-                F.col('file_idx').cast('string')
-            )
-        )
+                F.col('domain_hash_id').cast('string'), F.lit('/'),
+                F.col('file_idx').cast('string')))
 
         # 9. 移除临时列
         processed_df = processed_df.drop('base_file_idx', 'files_needed')
 
         # 10. 按sub_path分区
-        output_df = processed_df.repartition(
-            F.col('sub_path')
-        )
+        output_df = processed_df.repartition(F.col('sub_path'))
         print(f"output_df分区数: {output_df.rdd.getNumPartitions()}")
 
         # 11. 确保每个分区内按domain排序
@@ -275,7 +259,9 @@ def process_hash_bucket_batch(start_hash_id, end_hash_id, batch_size=10):
     for batch_start in range(start_hash_id, end_hash_id + 1, batch_size):
         batch_end = min(batch_start + batch_size - 1, end_hash_id)
         try:
-            process_multiple_hash_buckets(batch_start, batch_end, input_base_path, output_base_path, stats_base_path)
+            process_multiple_hash_buckets(batch_start, batch_end,
+                                          input_base_path, output_base_path,
+                                          stats_base_path)
             print(f"成功处理哈希桶批次 {batch_start} 到 {batch_end}")
         except Exception as e:
             print(f"处理哈希桶批次 {batch_start} 到 {batch_end} 失败: {str(e)}")
@@ -288,21 +274,16 @@ if __name__ == '__main__':
         'spark_conf_name': 'spark_4',
         'skip_success_check': True,
         'spark.yarn.queue': 'pipeline.clean',
-        # "spark.dynamicAllocation.maxExecutors":120,
         'spark.executor.memory': '80g',
         'spark.executor.memoryOverhead': '40g',  # 增加到40GB
-        # "spark.speculation": "true",     # 启用推测执行
-        # "maxRecordsPerFile": 200000,      # 增加每文件记录数以减少总文件数
         'output_compression': 'gz',
         'skip_output_check': True,
-        # "spark.sql.shuffle.partitions": "10000",
-        # "spark.default.parallelism": "10000",
         'spark.network.timeout': '1200s',  # 网络超时
         'spark.broadcast.timeout': '1800s',  # 增加广播超时
         'spark.broadcast.compress': 'true',  # 确保广播压缩
         'spark.task.maxFailures': 8,
-        'spark.shuffle.io.maxRetries': '10',              # 增加shuffle重试次数
-        'spark.shuffle.io.retryWait': '60s',              # 增加重试等待时间
+        'spark.shuffle.io.maxRetries': '10',  # 增加shuffle重试次数
+        'spark.shuffle.io.retryWait': '60s',  # 增加重试等待时间
     }
 
     # 定义要处理的哈希桶范围
@@ -310,7 +291,8 @@ if __name__ == '__main__':
     END_HASH_ID = 9999
 
     # 创建Spark会话
-    spark = new_spark_session(f"cc_domain_stage2_{START_HASH_ID}_{END_HASH_ID}", config)
+    spark = new_spark_session(
+        f"cc_domain_stage2_{START_HASH_ID}_{END_HASH_ID}", config)
     sc = spark.sparkContext
     sc.setLogLevel('ERROR')
 

@@ -15,7 +15,9 @@ numPartitions_subpath = 15000
 
 
 # 优化后的file_idx计算函数
-def process_with_precomputed_stats(df, stats_file_path, target_records_per_file=100000):
+def process_with_precomputed_stats(df,
+                                   stats_file_path,
+                                   target_records_per_file=100000):
     """使用预计算的统计信息分配file_idx，避免使用窗口函数.
 
     Args:
@@ -36,10 +38,14 @@ def process_with_precomputed_stats(df, stats_file_path, target_records_per_file=
     stats_df = pd.read_csv(stats_file_path)
 
     # 2. 计算每个domain_hash_id需要的文件数量
-    stats_df['files_needed'] = (stats_df['count'] / target_records_per_file).apply(math.ceil)
+    stats_df['files_needed'] = (stats_df['count'] /
+                                target_records_per_file).apply(math.ceil)
 
     # 3. 创建映射字典：domain_hash_id -> files_needed
-    hash_to_files = {int(row['domain_hash_id']): int(row['files_needed']) for _, row in stats_df.iterrows()}
+    hash_to_files = {
+        int(row['domain_hash_id']): int(row['files_needed'])
+        for _, row in stats_df.iterrows()
+    }
 
     # 4. 创建映射DataFrame并广播
     # 明确定义schema
@@ -50,18 +56,12 @@ def process_with_precomputed_stats(df, stats_file_path, target_records_per_file=
 
     files_needed_df = spark.createDataFrame(
         [(hash_id, files) for hash_id, files in hash_to_files.items()],
-        schema=schema
-    )
+        schema=schema)
 
     # 5. 使用JOIN和内置函数分配file_idx（替代UDF）
-    result_df = df.join(
-        files_needed_df,
-        'domain_hash_id',
-        'left'
-    ).withColumn(
-        'file_idx',
-        floor(rand() * F.col('files_needed'))
-    ).na.fill(0, ['file_idx'])  # 对可能的NULL值填充0
+    result_df = df.join(files_needed_df, 'domain_hash_id', 'left').withColumn(
+        'file_idx', floor(rand() * F.col('files_needed'))).na.fill(
+            0, ['file_idx'])  # 对可能的NULL值填充0
 
     # 6. 删除files_needed列，只保留需要的列
     result_columns = [col for col in df.columns] + ['file_idx']
@@ -95,7 +95,8 @@ compute_domain_hash_udf = F.udf(compute_domain_hash, IntegerType())
 
 
 # 使用预计算统计的方法处理
-def process_with_df_api_and_file_indices_optimized(df, cc_dump, target_records_per_file=100000):
+def process_with_df_api_and_file_indices_optimized(
+        df, cc_dump, target_records_per_file=100000):
     """优化版的一体化处理函数，使用预计算统计代替窗口函数."""
     # 1. 提取url用于计算域名和哈希
     # 只定义需要提取的字段
@@ -120,10 +121,13 @@ def process_with_df_api_and_file_indices_optimized(df, cc_dump, target_records_p
 
     # 3. 使用预计算统计分配file_idx
     stats_file_path = f"./statics/{cc_dump}_domain_hash_counts.csv"
-    df_with_indices = process_with_precomputed_stats(processed_df, stats_file_path, target_records_per_file)
+    df_with_indices = process_with_precomputed_stats(processed_df,
+                                                     stats_file_path,
+                                                     target_records_per_file)
 
     # 4. 创建新的sub_path字段，包含domain_hash_id和file_idx
-    def update_complete_json(json_str, domain, domain_hash_id, file_idx, original_sub_path):
+    def update_complete_json(json_str, domain, domain_hash_id, file_idx,
+                             original_sub_path):
         """更新JSON，保留所有原始字段."""
         try:
             data = json.loads(json_str)
@@ -132,7 +136,8 @@ def process_with_df_api_and_file_indices_optimized(df, cc_dump, target_records_p
             data['domain_hash_id'] = domain_hash_id
             data['file_idx'] = file_idx
             # 更新sub_path
-            data['sub_path'] = f"{domain_hash_id}/{original_sub_path if original_sub_path else ''}/{file_idx}"
+            data[
+                'sub_path'] = f"{domain_hash_id}/{original_sub_path if original_sub_path else ''}/{file_idx}"
             return json.dumps(data)
         except Exception as e:
             print(f"JSON更新错误: {e}")
@@ -149,18 +154,13 @@ def process_with_df_api_and_file_indices_optimized(df, cc_dump, target_records_p
             F.col('domain'),
             F.col('domain_hash_id'),
             F.col('file_idx'),
-            F.col('original_sub_path')
-        )
-    ).withColumn(
-        'sub_path',
-        F.concat(
-            F.col('domain_hash_id').cast('string'),
-            F.lit('/'),
-            F.col('original_sub_path'),
-            F.lit('/'),
-            F.col('file_idx').cast('string')
-        )
-    ).select('value', 'sub_path')  # 只保留value和sub_path列
+            F.col('original_sub_path'))).withColumn(
+                'sub_path',
+                F.concat(
+                    F.col('domain_hash_id').cast('string'), F.lit('/'),
+                    F.col('original_sub_path'), F.lit('/'),
+                    F.col('file_idx').cast('string'))).select(
+                        'value', 'sub_path')  # 只保留value和sub_path列
 
     return final_df
 
@@ -183,7 +183,6 @@ config = {
     'spark.broadcast.compress': 'true',  # 确保广播压缩
     'spark.task.maxFailures': 8,
 }
-
 
 DUMPS = [
     'CC-MAIN-2015-14',
@@ -232,7 +231,6 @@ DUMPS = [
     'CC-MAIN-2022-49',
 ]
 
-
 for i, cc_dump in enumerate(DUMPS):
     print(f"=== 开始处理 {cc_dump} ===")
 
@@ -249,7 +247,8 @@ for i, cc_dump in enumerate(DUMPS):
     input_df = read_any_path(spark, ','.join(input_paths), config)
 
     # 使用一体化处理函数处理数据
-    prepared_df = process_with_df_api_and_file_indices_optimized(input_df, cc_dump, target_records_per_file)
+    prepared_df = process_with_df_api_and_file_indices_optimized(
+        input_df, cc_dump, target_records_per_file)
 
     regrouped_df = prepared_df.repartition(numPartitions_subpath, 'sub_path')
 
