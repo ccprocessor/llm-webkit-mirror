@@ -33,7 +33,12 @@ class TestTagMapping(unittest.TestCase):
         content_list = pre_data.get(PreDataJsonKey.HTML_TARGET_LIST, [])
         element_dict = pre_data.get(PreDataJsonKey.HTML_ELEMENT_LIST, [])
         self.assertEqual(content_list, mock_dict['expected_content_list'])
-        verify_key = mock_dict['verify_key']
+        verify_key = mock_dict['verify_key1']
         verify_key = (verify_key[0], verify_key[1], verify_key[2], verify_key[4], verify_key[5])
         new_res = element_dict[8][verify_key][0]
+        self.assertEqual('red', new_res)
+
+        verify_key = mock_dict['verify_key2']
+        verify_key = (verify_key[0], verify_key[1], verify_key[2], verify_key[4], verify_key[5])
+        new_res = element_dict[7][verify_key][0]
         self.assertEqual('red', new_res)
