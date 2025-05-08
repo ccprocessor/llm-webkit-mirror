@@ -91,9 +91,9 @@ class LayoutBatchParser(BaseMainHtmlParser):
             if node_parent_keyy == parent_keyy:
                 layer_nodes_list.append((node_keyy[:3], node_label))
                 if self.normalize_key(node_keyy[:3]) in layer_nodes_dict:
-                    layer_nodes_dict[node_keyy[:3]].append(node_label)
+                    layer_nodes_dict[self.normalize_key(node_keyy[:3])].append(node_label)
                 else:
-                    layer_nodes_dict[node_keyy[:3]] = [node_label]
+                    layer_nodes_dict[self.normalize_key(node_keyy[:3])] = [node_label]
             if node_label == 'red' and node_parent_keyy == parent_keyy:
                 has_red = True
         if not has_red and parent_label != 'red':

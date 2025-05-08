@@ -1,0 +1,272 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head>        
+      <meta name="copyright" content="(C) Copyright 2021"><meta name="DC.rights.owner" content="(C) Copyright 2021"><meta name="DC.Type" content="reference"><meta name="DC.Title" content="Databases"><meta name="abstract" content="Design files may reside in different databases. The most common database is the filesystem. VOV offers a generic database interface in the sense that it traces dependencies between named entities residing in persistent databases."><meta name="description" content="Design files may reside in different databases. The most common database is the filesystem. VOV offers a generic database interface in the sense that it traces dependencies between named entities residing in persistent databases."><meta name="indexterms" content="databases, FILE, databases, FILEX, databases, GLOB, databases, JOBSTATUS, databases, LINK, databases, PHANTOM, databases, VOVSETS, databases, ZIP, databases"><meta name="DC.subject" content="databases, FILE, databases, FILEX, databases, GLOB, databases, JOBSTATUS, databases, LINK, databases, PHANTOM, databases, VOVSETS, databases, ZIP, databases"><meta name="keywords" content="databases, FILE, databases, FILEX, databases, GLOB, databases, JOBSTATUS, databases, LINK, databases, PHANTOM, databases, VOVSETS, databases, ZIP, databases"><meta name="DC.Relation" scheme="URI" content="../../topics/shared/workspaces.htm"><meta name="DC.Relation" scheme="URI" content="../../topics/shared/file_names_canonical_logical.htm"><meta name="DC.Relation" scheme="URI" content="../../topics/shared/db_link.htm"><meta name="prodname" content="VOV Admin 8.03"><meta name="prodname" content="FT Developer 10.3"><meta name="DC.Format" content="XHTML"><meta name="DC.Identifier" content="reference_dtf_drw_vfb"><title>Databases</title><meta name="wh-path2root" content="../../"><meta name="wh-toc-id" content="reference_dtf_drw_vfb-d46e7966">
+    	
+        <link rel="preload" href="../../oxygen-webhelp/template/resources/images/unity_gradient_resized.png" as="image">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css">
+
+        
+        <link rel="stylesheet" href="../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css">
+
+        
+        <link rel="stylesheet" type="text/css" href="../../oxygen-webhelp/app/topic-page.css?buildId=2018042310">
+        
+
+        <link rel="stylesheet" type="text/css" href="../../oxygen-webhelp/template/oxygen.css?buildId=2018042310">
+        <link rel="stylesheet" type="text/css" href="../../altair-resources/css/bootstrap-toc.css"><link rel="stylesheet" type="text/css" href="../../altair-resources/css/altair.css">
+        
+        
+        
+        
+    </head>
+
+    <body class="wh_topic_page dita_topic frmBody" id="reference_dtf_drw_vfb" data-target="#toc" data-spy="scroll">
+    	
+        
+        
+        
+        
+<div class="container-fluid">
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <div class="contentbody col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="header">
+                            
+</div>
+
+                        <div class="content_spacer"></div>
+
+                        <div class="wrapper">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 min">
+                                </div>
+
+                            
+                            <div id="wh_topic_body" class="contentarea col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                                <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1">
+    <h1 class="title topictitle1" id="ariaid-title1">Databases</h1>
+
+
+    
+    
+    <div class="body refbody"><p class="shortdesc">Design files may reside in different databases. The most common database is the
+        filesystem. VOV offers a generic database interface in the sense that it traces dependencies
+        between named entities residing in persistent databases. </p>
+
+
+        <section class="section" id="reference_dtf_drw_vfb__section_glx_drw_vfb">
+            
+            <p class="p">VOV requires a method to obtain the timestamp of each named entity in the database.
+                For example, the most common database is called "FILE", its entities are files, and
+                the method to obtain the timestamp of a file is the OS call <code class="ph codeph">stat()</code>. </p>
+
+
+            <p class="p">VOV supports multiple databases. Some are supported internally. Others must be
+                supported externally by special clients called database proxies, which provide the
+                server with the needed timestamp for the entities in a database. </p>
+
+
+            <p class="p">Check the <span class="ph">Databases page</span>
+ to
+                see the list of databases supported by the current project. </p>
+
+
+        </section>
+
+        <section class="section" id="reference_dtf_drw_vfb__section_x2m_3rw_vfb"><h2 class="title sectiontitle">Internally Supported Databases</h2>
+
+            
+            <div class="p">The following databases are currently supported internally: <dl class="dl">
+                    
+                        <dt class="dt dlterm">FILE</dt>
+
+                        <dd class="dd">The entities are files. The names are logical canonical path names. The
+                            timestamp is the modification time of the file. If a file does not
+                            exist, the timestamp is 0. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">FILEX</dt>
+
+                        <dd class="dd">The entities are files, but in this case only the existence of the file,
+                            is important; the timestamp is not important. The names are logical
+                            canonical path names. If the file exists, the timestamp is fixed in the
+                            distant past. If a file does not exist, the timestamp is 0. <div class="p">To
+                                specify a file where you just care about the existence of the file,
+                                regardless of its timestamp, the syntax is different whether the
+                                file is an input or an output:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="reference_dtf_drw_vfb__table_jvk_4rw_vfb" class="table" frame="border" border="1" rules="all"><colgroup><col><col><col></colgroup><thead class="thead" style="text-align:left;">
+                                            <tr>
+                                                <th class="entry nocellnorowborder" id="d51186e131"> </th>
+
+                                                <th class="entry nocellnorowborder" id="d51186e133">FDL</th>
+
+                                                <th class="entry cell-norowborder" id="d51186e136">Instrumentation</th>
+
+                                            </tr>
+
+                                        </thead>
+<tbody class="tbody">
+                                            <tr>
+                                                <td class="entry nocellnorowborder" headers="d51186e131 ">Input</td>
+
+                                                <td class="entry nocellnorowborder" headers="d51186e133 ">I -db FILEX myfile D FILE</td>
+
+                                                <td class="entry cell-norowborder" headers="d51186e136 ">VovInput -db FILEX myfile</td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td class="entry row-nocellborder" headers="d51186e131 ">Output</td>
+
+                                                <td class="entry row-nocellborder" headers="d51186e133 ">O -db FILEX -ignore_timestamp myfile D
+                                                  FILE</td>
+
+                                                <td class="entry cellrowborder" headers="d51186e136 ">VovOutput -db FILEX -ignore_timestamp
+                                                  myfile</td>
+
+                                            </tr>
+
+                                        </tbody>
+</table>
+</div>
+
+</div>
+
+</dd>
+
+                        <dd class="dd ddexpand">The change of database is persistent. Next Inputs &amp; Outputs will use
+                            the FILEX database, unless you add a -db FILEX or a D FILE line in your
+                            flow.</dd>
+
+                    
+                    
+                        <dt class="dt dlterm">GLOB</dt>
+
+                        <dd class="dd">The entities in this database are "glob expressions." The syntax is the
+                            one used by the glob procedure in Tcl and by "globbing" in C-shell, that
+                            is "*" stands for any sequence of zero or more characters and "?" stands
+                            for any single character. If the expression can be expanded into a set
+                            of files, the timestamp of the entity is the timestamp of the most
+                            recent file. If the set of files corresponding to the expression is
+                            empty, the entity is considered non-existing and its timestamp is 0. </dd>
+
+                        <dd class="dd ddexpand">This database is useful to represent the situation where a job depends
+                            on a directory and on all the files in the directory. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">JOBSTATUS</dt>
+
+                        <dd class="dd">This database represents the status of a job. The name of the place has
+                            the form <em class="ph i">TYPE/JOBID</em> where TYPE is one of DONE, FAIL, or SUCCESS
+                            and JOBID is the id of a job. The timestamp of the place is a fixed
+                            timestamp in the past and never changes. What changes is the status of
+                            the place depending on the status of the job it is attached to. For more
+                            information on this database, please refer to <a class="xref" href="db_jobstatus.htm" title="Places in the JOBSTATUS database represent the status of jobs.">The JOBSTATUS Database</a>. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm"><a class="xref" href="db_link.htm" title="To establish dependencies with symbolic links, the LINK database must be used.">LINK</a></dt>
+
+                        <dd class="dd">This database behaves like the FILE database, except that the entities
+                            are symbolic links. An easy way to add links to the flow is to use the
+                            option <span class="keyword cmdname">-links</span>
+ in the calls to VovInput and VovOutput
+                            (either encapsulation or
+                            instrumentation)<pre class="pre codeblock"><code>...
+VovInput -db LINK nameOfLink
+VovInput -links someInputFile
+VovOutput -links someOutputFile
+...</code></pre></dd>
+
+                    
+                    
+                        <dt class="dt dlterm">PHANTOM</dt>
+
+                        <dd class="dd">This database behaves like the FILE database, except that the timestamp
+                            of a missing file is, by convention, a time in the distant past (by
+                            Computer Science standards), i.e. sometime in the year 1970. This
+                            database is useful to represent situations where a job is sensitive to
+                            the fact that a file may exist or not, for example when a tool uses a
+                            search path to locate files. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">VOVSETS</dt>
+
+                        <dd class="dd">The entities in this database are sets of nodes. The timestamp of the
+                            entity is the timestamp of the set creation. Each set in the trace has a
+                            name and a timestamp. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">ZIP</dt>
+
+                        <dd class="dd">The entities in this database are members in an ZIP archive. The name of
+                            the entity has the form <code class="ph codeph">ARCHIVENAME(MEMBERNAME)</code>.</dd>
+
+                        <dd class="dd ddexpand">The timestamp of the entity is the timestamp of the member inside the
+                            archive. In encapsulation scripts, be careful to escape the parentheses
+                            appropriately as in the following example:
+                            <pre class="pre codeblock"><code>...
+VovOutput -db ZIP -ignore_timestamp $archiveName\($memberName\)
+...</code></pre></dd>
+
+                    
+                </dl>
+</div>
+
+
+        </section>
+
+    </div>
+
+
+</article></main></div>
+
+                                
+                                
+                                
+                            </div>
+
+                            
+                            
+                            
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 max">
+                                </div>
+
+                        </div>
+
+                        </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+
+        </div>
+
+        
+        
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+
+            
+            <img class="modal-content" id="modal-img">
+            
+            <div id="caption"></div>
+
+        </div>
+
+        
+        </body>
+</html>
