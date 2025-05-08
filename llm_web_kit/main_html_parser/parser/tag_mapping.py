@@ -51,12 +51,19 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         deal_element.set('magic_main_html', 'True')
 
     def find_affected_element_after_drop(self, element):
-        if element.get('magic_main_html', None):
-            for ele in element:
-                ele.set('magic_main_html', 'True')
         prev_sibling = element.getprevious()
         parent = element.getparent()
 
+        # 包裹子节点的情况返回element父节点
+        if len(element) > 0:
+            if element.get('magic_main_html', None):
+                for ele in element:
+                    ele.set('magic_main_html', 'True')
+
+            element.drop_tag()
+            return parent
+
+        # 只有文本的情况，返回element前面的兄弟节点或者父节点
         element.drop_tag()
 
         if prev_sibling is not None:
