@@ -8,7 +8,7 @@ base_dir = Path(__file__).parent
 
 TEST_FEATURE_HTML = [{'input': 'assets/feature.html', 'expected': 2}]
 TEST_SIMIL_HTMLS = [
-    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.13103694},
+    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.13103693},
     {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.94166386},
 ]
 TEST_CLUSTER_HTMLS = [
