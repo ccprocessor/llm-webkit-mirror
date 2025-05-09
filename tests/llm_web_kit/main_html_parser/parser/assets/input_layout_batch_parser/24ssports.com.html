@@ -1,0 +1,632 @@
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2021" /><meta name="DC.rights.owner" content="(C) Copyright 2021" /><meta name="DC.Type" content="reference" /><meta name="DC.Title" content="Databases" /><meta name="abstract" content="Design files may reside in different databases. The most common database is the filesystem. VOV offers a generic database interface in the sense that it traces dependencies between named entities residing in persistent databases." /><meta name="description" content="Design files may reside in different databases. The most common database is the filesystem. VOV offers a generic database interface in the sense that it traces dependencies between named entities residing in persistent databases." /><meta name="indexterms" content="databases, FILE, databases, FILEX, databases, GLOB, databases, JOBSTATUS, databases, LINK, databases, PHANTOM, databases, VOVSETS, databases, ZIP, databases" /><meta name="DC.subject" content="databases, FILE, databases, FILEX, databases, GLOB, databases, JOBSTATUS, databases, LINK, databases, PHANTOM, databases, VOVSETS, databases, ZIP, databases" /><meta name="keywords" content="databases, FILE, databases, FILEX, databases, GLOB, databases, JOBSTATUS, databases, LINK, databases, PHANTOM, databases, VOVSETS, databases, ZIP, databases" /><meta name="DC.Relation" scheme="URI" content="../../topics/shared/workspaces.htm" /><meta name="DC.Relation" scheme="URI" content="../../topics/shared/file_names_canonical_logical.htm" /><meta name="DC.Relation" scheme="URI" content="../../topics/shared/db_link.htm" /><meta name="prodname" content="VOV Admin 8.03" /><meta name="prodname" content="FT Developer 10.3" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="reference_dtf_drw_vfb" /><title>Databases</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../" /><meta name="wh-toc-id" content="reference_dtf_drw_vfb-d46e7966" />
+    	<!--ZOOMSTOP-->
+        <link rel="preload" href="../../oxygen-webhelp/template/resources/images/unity_gradient_resized.png" as="image" />
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-4424669-1');
+        </script>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>
+          function debug(msg, object){
+              console.log(msg, object);
+          }
+          function executeQuery(){
+              $('#searchForm').submit();
+              return true;
+          }
+      </script>
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"></script>
+
+        <script data-main="../../oxygen-webhelp/app/topic-page.js" src="../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../oxygen-webhelp/template/oxygen.css?buildId=2018042310" />
+        <link rel="stylesheet" type="text/css" href="../../altair-resources/css/bootstrap-toc.css" /><link rel="stylesheet" type="text/css" href="../../altair-resources/css/altair.css" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+        <!--ZOOMRESTART-->
+    </head>
+
+    <body class="wh_topic_page dita_topic frmBody" id="reference_dtf_drw_vfb" data-target="#toc" data-spy="scroll">
+    	<!--ZOOMSTOP-->
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_logo_and_publication_title_container">
+            <div class="wh_logo_and_publication_title">
+                
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url' and 'webhelp.prod.version'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../index.htm" class=" wh_logo "><img src="../../logo_PBSWorks_color_hw.svg" alt="VOV Subsystem Guides" /></a>
+                    <div class=" wh_publication_title "><a href="../../index.htm"><span class="title">VOV Subsystem Guides</span></a></div>
+                    <div class=" wh_version "><p>2021.1.0</p></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                <button type="button" data-target=".wh_top_menu_and_indexterms_link" id="wh_menu_mobile_button" data-toggle="collapse" class="navbar-toggle collapsed wh_toggle_button">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+        <div class="wh_header_flex_container">
+            <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../index.htm"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="reference_y3h_g4h_x2b"><span class="title"><a href="../../topics/overview/vov_subsystem_admin_guide_intro.htm">VOV Subsystem Administrator Guide</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This manual provides information about managing a VOV <span class="keyword">project</span>,         including starting the server and connecting computing resources such as computers and         licenses. 
+                  
+               </p>
+               </span></span></span></li>
+   <li><span class="topicref" data-id="reference_wqg_dqw_vfb"><span class="title"><a href="../../topics/shared/workspaces.htm">Files, Equivalences, Exclusions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The files used in a project reside in one or more directories spread all around your         filesystems. Each logical name
+                  defined in the <span class="ph filepath">equiv.tcl</span> file implicitly         declares the root of a workspace. You can browse the workspaces using the browser interface. 
+                  
+               </p>
+               </span></span></span></li>
+   <li class="active"><span class="topicref" data-id="reference_dtf_drw_vfb"><span class="title"><a href="../../topics/shared/databases.htm">Databases</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Design files may reside in different databases. The most common database is the         filesystem. VOV offers a generic database
+                  interface in the sense that it traces dependencies         between named entities residing in persistent databases. 
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+            <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../topics/shared/file_names_canonical_logical.htm" title="Canonical and Logical File Names"></a></span>  
+<span class="navnext"><a class="link" href="../../topics/shared/db_link.htm" title="The LINK Database"></a></span>  </span></div>
+            <div class=" wh_search_input "><form id="searchForm" method="get" action="../../search.htm"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="zoom_query" /><button type="submit" class="wh_search_button"><span>Search Help</span></button></div></form></div>
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                <div class=" wh_top_menu "><ul>
+   <li class="has-children"><span data-tocid="ch_whats_new-d46e1843" data-state="not-ready" class=" topicref " data-id="ch_whats_new"><span class="title"><a href="../../topics/chapter_heads/whats_new_r.htm">What's New</a></span></span></li>
+   <li><span data-tocid="reference_rnl_kny_5x-d46e4089" data-state="leaf" class=" topicref " data-id="reference_rnl_kny_5x"><span class="title"><a href="../../topics/vov/vov_overview.htm">Overview</a></span></span></li>
+   <li class="has-children"><span data-tocid="ch_tutorials-d46e4106" data-state="not-ready" class=" topicref " data-id="ch_tutorials"><span class="title"><a href="../../topics/chapter_heads/tutorials_r.htm"><span class="keyword">VOV Subsystem</span> Tutorials
+               </a></span></span></li>
+   <li class="has-children"><span data-tocid="reference_y3h_g4h_x2b-d46e6725" data-state="not-ready" class=" topicref " data-id="reference_y3h_g4h_x2b"><span class="title"><a href="../../topics/overview/vov_subsystem_admin_guide_intro.htm">VOV Subsystem Administrator Guide</a></span></span></li>
+   <li class="has-children"><span data-tocid="reference_v5j_y4h_x2b-d46e11252" data-state="not-ready" class=" topicref " data-id="reference_v5j_y4h_x2b"><span class="title"><a href="../../topics/overview/vov_subsystem_ref_guide_intro.htm">VOV Subsystem Reference Guide</a></span></span></li>
+   <li class="has-children"><span data-tocid="reference_hn4_kxh_x2b-d46e18517" data-state="not-ready" class=" topicref " data-id="reference_hn4_kxh_x2b"><span class="title"><a href="../../topics/overview/eda_tool_integration_overview.htm">EDA Tool Integration Guide</a></span></span></li>
+</ul></div>
+                <div class=" wh_indexterms_link "><a href="../../indexTerms.htm" title="Index"><span>Index</span></a></div>
+                <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page" class="print_button"></a></div>
+                
+            </div>
+        </div>
+        <div class="nav_tools">
+            <nav class="wh_tools hidden-print">
+                <div class="wh_right_tools hidden-sm hidden-xs">  
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</nav>
+
+        <div class="container-fluid">
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 col-xs-12 navbar hidden-print">
+                            <div class="wh_logo_and_publication_title_container">
+                                <div class="wh_logo_and_publication_title">
+                                    
+                                    <a href="../../index.htm" class=" wh_logo hidden-xs "><img src="../../logo_PBSWorks_color_hw.svg" alt="VOV Subsystem Guides" /></a>
+                                    <div class=" wh_version "><p>2021.1.0</p></div>
+                                    <div class=" wh_publication_title "><a href="../../index.htm"><span class="title">VOV Subsystem Guides</span></a></div>
+                                    
+                                </div>
+                            </div>
+                            <div class="nav_spacer"></div>
+                            <div class=" wh_publication_toc "><ul>
+   <li><span data-tocid="ch_whats_new-d46e1843" class="topicref" data-id="ch_whats_new" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/whats_new_r.htm">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">View new features for <span class="keyword">VOV Subsystem</span>     <span class="keyword">2021.1.0</span>.
+                  
+               </p>
+               </span></span></span></li>
+   <li><span data-tocid="reference_rnl_kny_5x-d46e4089" class="topicref" data-id="reference_rnl_kny_5x" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/vov/vov_overview.htm">Overview</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Discover the workspace, licensing and installation, and training.</p>
+               </span></span></span></li>
+   <li><span data-tocid="ch_tutorials-d46e4106" class="topicref" data-id="ch_tutorials" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/tutorials_r.htm"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="keyword">VOV Subsystem</span> Tutorials
+               </a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Discover <span class="keyword">VOV Subsystem</span> functionality with interactive       tutorials.
+                  
+               </p>
+               </span></span></span></li>
+   <li><span data-tocid="reference_y3h_g4h_x2b-d46e6725" class="topicref" data-id="reference_y3h_g4h_x2b" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/overview/vov_subsystem_admin_guide_intro.htm">VOV Subsystem Administrator Guide</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This manual provides information about managing a VOV <span class="keyword">project</span>,         including starting the server and connecting computing resources such as computers and         licenses. 
+                  
+               </p>
+               </span></span></span><ul class="nav nav-list">
+         <li><span data-tocid="reference_ctp_ztk_y2b-d46e6739" class="topicref" data-id="reference_ctp_ztk_y2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/admin_client_server.htm#reference_ctp_ztk_y2b">Client/Server Architecture</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> All of <span class="keyword">Altair Accelerator</span>'s products are based on a client/server         architecture to support concurrent activities, team coordination, distributed
+                        data         management, and distributed processing. The program <span class="keyword">vovserver</span> runs in         the background as a service to implement the main product features. It is the server. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_mss_tkl_y2b-d46e6779" class="topicref" data-id="reference_mss_tkl_y2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/admin_vov_projects.htm#reference_mss_tkl_y2b">VOV <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="keyword">Projects</span></a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A "<span class="keyword">project</span>" is a named collection of jobs, together with all the         files that are used and produced by those jobs. The contents
+                        of VOV <span class="keyword">projects</span> can be custom organized.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_bqc_5pm_y2b-d46e6829" class="topicref" data-id="reference_bqc_5pm_y2b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/vov/admin_vov_registry.htm#reference_bqc_5pm_y2b">VOV Registry</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The VOV Registry contains the list of all <span class="keyword">projects</span> known to an         installation of <span class="keyword">Altair Accelerator</span> software. The registry is used by the             <span class="keyword cmdname">vovproject</span> command, and stores metadata such as the host machine and         port number of a <span class="keyword">project</span>. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_tjd_mrq_1fb-d46e6887" class="topicref" data-id="reference_tjd_mrq_1fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/get_started_aa.htm">Get Started</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_bdp_j5f_3fb-d46e7094" class="topicref" data-id="reference_bdp_j5f_3fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/start_config_server.htm">Start and Configure the Server</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_g2z_1dw_zjb-d46e7673" class="topicref" data-id="reference_g2z_1dw_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/project_connect.htm">Connect to a Project</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_pxp_vxc_vfb-d46e7834" class="topicref" data-id="reference_pxp_vxc_vfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/server_stop.htm"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Stop the Server</span></a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_gkv_3tw_zjb-d46e7876" class="topicref" data-id="reference_gkv_3tw_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/recovery_redundancy.htm">Recovery and Redundancy</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_wqg_dqw_vfb-d46e7935" class="topicref" data-id="reference_wqg_dqw_vfb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/workspaces.htm">Files, Equivalences, Exclusions</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The files used in a project reside in one or more directories spread all around your         filesystems. Each logical name
+                        defined in the <span class="ph filepath">equiv.tcl</span> file implicitly         declares the root of a workspace. You can browse the workspaces using the browser interface. 
+                        
+                     </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="reference_trl_bgb_sfb-d46e7952" class="topicref" data-id="reference_trl_bgb_sfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/file_names_canonical_logical.htm">Canonical and Logical File Names</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">VOV clients and server exchange dependency information by using file names; each file         needs a single name that is
+                              valid on both the client and the server. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li class="active"><span data-tocid="reference_dtf_drw_vfb-d46e7966" class="topicref" data-id="reference_dtf_drw_vfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/databases.htm">Databases</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Design files may reside in different databases. The most common database is the         filesystem. VOV offers a generic database
+                              interface in the sense that it traces dependencies         between named entities residing in persistent databases. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_z4x_dvw_vfb-d46e7980" class="topicref" data-id="reference_z4x_dvw_vfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/db_link.htm">The LINK Database</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To establish dependencies with symbolic links, the LINK database must be used. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_ncf_cxw_vfb-d46e7994" class="topicref" data-id="reference_ncf_cxw_vfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/db_jobstatus.htm">The JOBSTATUS Database</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Places in the JOBSTATUS database represent the status of jobs. </p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_udf_g5b_sfb-d46e8008" class="topicref" data-id="reference_udf_g5b_sfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/file_names_define_equiv.htm">Define Equivalences for File Names</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">There are multiple methods to define the equivalences used to compute the canonical         names of files and directories.
+                              
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_t1y_mvz_vfb-d46e8024" class="topicref" data-id="reference_t1y_mvz_vfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/equivalence_cache.htm">Equivalence Cache</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_ard_pwz_vfb-d46e8037" class="topicref" data-id="reference_ard_pwz_vfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/equiv_check_vovequiv.htm">Use vovequiv to Check Equivalences</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_vbs_hgf_wfb-d46e8050" class="topicref" data-id="reference_vbs_hgf_wfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/files_remove_from_graph.htm">Exclude Files From the Graph</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_yln_kjf_wfb-d46e8063" class="topicref" data-id="reference_yln_kjf_wfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/file_exclude_file_change.htm">Change the exclude.tcl File</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="reference_ymg_5jf_wfb-d46e8076" class="topicref" data-id="reference_ymg_5jf_wfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/zip_unzip_files.htm">Automatic Zipping and Unzipping Files</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="reference_nnq_hxy_mfb-d46e8089" class="topicref" data-id="reference_nnq_hxy_mfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/taskers_intro.htm"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="keyword">Taskers</span></a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">A <span class="keyword">tasker</span> is a VOV client that provides computing resources,         specifically CPU cycles, to the <span class="keyword">vovserver</span>. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_kvg_rcp_bkb-d46e8426" class="topicref" data-id="reference_kvg_rcp_bkb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/tasker_policies.htm"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="keyword">Tasker</span> Policies
+                     </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_axk_yvr_xfb-d46e8577" class="topicref" data-id="reference_axk_yvr_xfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/interfaces_bps.htm">Interfaces to <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="keyword">Accelerator</span>, SGE, LSF, and Others
+                     </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="keyword">FlowTracer</span> can be used also as a front end to an existing batch         processing system (BPS), for example, <span class="keyword">Accelerator</span>, LSF, SGE, SGEEE, etc. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_ltk_qsx_xfb-d46e8812" class="topicref" data-id="reference_ltk_qsx_xfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/taskers_advanced.htm">Advanced <span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="keyword">Tasker</span> Topics
+                     </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_zxk_1hd_rfb-d46e8986" class="topicref" data-id="reference_zxk_1hd_rfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/shared/resource_mgmt.htm"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph" id="ph_k1g_q5d_yfb">Resource Management</span></a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"><span class="keyword">Altair Accelerator</span> includes a subsystem for managing computing resources.         This allows the design team to factor in various constraints
+                        regarding hardware and software         resources, as well as site policy constraints. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="reference_fds_p4k_yfb-d46e9274" class="topicref" data-id="reference_fds_p4k_yfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/chapter_heads/admin_topics.htm"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">IT </span>Administrator Topics
+                     </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="reference_v5j_y4h_x2b-d46e11252" class="topicref" data-id="reference_v5j_y4h_x2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/overview/vov_subsystem_ref_guide_intro.htm">VOV Subsystem Reference Guide</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="reference_hn4_kxh_x2b-d46e18517" class="topicref" data-id="reference_hn4_kxh_x2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../topics/overview/eda_tool_integration_overview.htm">EDA Tool Integration Guide</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This document is a collection of techniques that have proven to be useful when         applying FlowTracer in Electronic Design
+                  Automation. 
+                  
+               </p>
+               </span></span></span></li>
+</ul></div>
+                            <div class="helpHome"><p><a href="../../../bookshelf/index.htm">View All Altair Accelerator Help</a></p></div>
+
+                        </nav>
+                    
+                    <div class="contentbody col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="header">
+                            
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_logo_and_publication_title_container">
+            <div class="wh_logo_and_publication_title">
+                
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url' and 'webhelp.prod.version'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="../../index.htm" class=" wh_logo "><img src="../../logo_PBSWorks_color_hw.svg" alt="VOV Subsystem Guides" /></a>
+                    <div class=" wh_publication_title "><a href="../../index.htm"><span class="title">VOV Subsystem Guides</span></a></div>
+                    <div class=" wh_version "><p>2021.1.0</p></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                <button type="button" data-target=".wh_top_menu_and_indexterms_link" id="wh_menu_mobile_button" data-toggle="collapse" class="navbar-toggle collapsed wh_toggle_button">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+        <div class="wh_header_flex_container">
+            <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../index.htm"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="reference_y3h_g4h_x2b"><span class="title"><a href="../../topics/overview/vov_subsystem_admin_guide_intro.htm">VOV Subsystem Administrator Guide</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This manual provides information about managing a VOV <span class="keyword">project</span>,         including starting the server and connecting computing resources such as computers and         licenses. 
+                  
+               </p>
+               </span></span></span></li>
+   <li><span class="topicref" data-id="reference_wqg_dqw_vfb"><span class="title"><a href="../../topics/shared/workspaces.htm">Files, Equivalences, Exclusions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"> The files used in a project reside in one or more directories spread all around your         filesystems. Each logical name
+                  defined in the <span class="ph filepath">equiv.tcl</span> file implicitly         declares the root of a workspace. You can browse the workspaces using the browser interface. 
+                  
+               </p>
+               </span></span></span></li>
+   <li class="active"><span class="topicref" data-id="reference_dtf_drw_vfb"><span class="title"><a href="../../topics/shared/databases.htm">Databases</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Design files may reside in different databases. The most common database is the         filesystem. VOV offers a generic database
+                  interface in the sense that it traces dependencies         between named entities residing in persistent databases. 
+                  
+               </p>
+               </span></span></span></li>
+</ol></div>
+            <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../topics/shared/file_names_canonical_logical.htm" title="Canonical and Logical File Names"></a></span>  
+<span class="navnext"><a class="link" href="../../topics/shared/db_link.htm" title="The LINK Database"></a></span>  </span></div>
+            <div class=" wh_search_input "><form id="searchForm" method="get" action="../../search.htm"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="zoom_query" /><button type="submit" class="wh_search_button"><span>Search Help</span></button></div></form></div>
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                <div class=" wh_top_menu "><ul>
+   <li class="has-children"><span data-tocid="ch_whats_new-d46e1843" data-state="not-ready" class=" topicref " data-id="ch_whats_new"><span class="title"><a href="../../topics/chapter_heads/whats_new_r.htm">What's New</a></span></span></li>
+   <li><span data-tocid="reference_rnl_kny_5x-d46e4089" data-state="leaf" class=" topicref " data-id="reference_rnl_kny_5x"><span class="title"><a href="../../topics/vov/vov_overview.htm">Overview</a></span></span></li>
+   <li class="has-children"><span data-tocid="ch_tutorials-d46e4106" data-state="not-ready" class=" topicref " data-id="ch_tutorials"><span class="title"><a href="../../topics/chapter_heads/tutorials_r.htm"><span class="keyword">VOV Subsystem</span> Tutorials
+               </a></span></span></li>
+   <li class="has-children"><span data-tocid="reference_y3h_g4h_x2b-d46e6725" data-state="not-ready" class=" topicref " data-id="reference_y3h_g4h_x2b"><span class="title"><a href="../../topics/overview/vov_subsystem_admin_guide_intro.htm">VOV Subsystem Administrator Guide</a></span></span></li>
+   <li class="has-children"><span data-tocid="reference_v5j_y4h_x2b-d46e11252" data-state="not-ready" class=" topicref " data-id="reference_v5j_y4h_x2b"><span class="title"><a href="../../topics/overview/vov_subsystem_ref_guide_intro.htm">VOV Subsystem Reference Guide</a></span></span></li>
+   <li class="has-children"><span data-tocid="reference_hn4_kxh_x2b-d46e18517" data-state="not-ready" class=" topicref " data-id="reference_hn4_kxh_x2b"><span class="title"><a href="../../topics/overview/eda_tool_integration_overview.htm">EDA Tool Integration Guide</a></span></span></li>
+</ul></div>
+                <div class=" wh_indexterms_link "><a href="../../indexTerms.htm" title="Index"><span>Index</span></a></div>
+                <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page" class="print_button"></a></div>
+                
+            </div>
+        </div>
+        <div class="nav_tools">
+            <nav class="wh_tools hidden-print">
+                <div class="wh_right_tools hidden-sm hidden-xs">  
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</nav>
+
+                        </div>
+                        <div class="content_spacer"></div>
+                        <div class="wrapper">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 min">
+                                <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+                            </div>
+                            <!--ZOOMRESTART-->
+                            <div id="wh_topic_body" class="contentarea col-lg-10 col-md-10 col-sm-10 col-xs-12">
+                                <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1">
+    <h1 class="title topictitle1" id="ariaid-title1">Databases</h1>
+
+    
+    
+    <div class="body refbody"><p class="shortdesc">Design files may reside in different databases. The most common database is the
+        filesystem. VOV offers a generic database interface in the sense that it traces dependencies
+        between named entities residing in persistent databases. </p>
+
+        <section class="section" id="reference_dtf_drw_vfb__section_glx_drw_vfb">
+            
+            <p class="p">VOV requires a method to obtain the timestamp of each named entity in the database.
+                For example, the most common database is called "FILE", its entities are files, and
+                the method to obtain the timestamp of a file is the OS call <code class="ph codeph">stat()</code>. </p>
+
+            <p class="p">VOV supports multiple databases. Some are supported internally. Others must be
+                supported externally by special clients called database proxies, which provide the
+                server with the needed timestamp for the entities in a database. </p>
+
+            <p class="p">Check the <span class="ph">Databases page</span> to
+                see the list of databases supported by the current project. </p>
+
+        </section>
+
+        <section class="section" id="reference_dtf_drw_vfb__section_x2m_3rw_vfb"><h2 class="title sectiontitle">Internally Supported Databases</h2>
+            
+            <div class="p">The following databases are currently supported internally: <dl class="dl">
+                    
+                        <dt class="dt dlterm">FILE</dt>
+
+                        <dd class="dd">The entities are files. The names are logical canonical path names. The
+                            timestamp is the modification time of the file. If a file does not
+                            exist, the timestamp is 0. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">FILEX</dt>
+
+                        <dd class="dd">The entities are files, but in this case only the existence of the file,
+                            is important; the timestamp is not important. The names are logical
+                            canonical path names. If the file exists, the timestamp is fixed in the
+                            distant past. If a file does not exist, the timestamp is 0. <div class="p">To
+                                specify a file where you just care about the existence of the file,
+                                regardless of its timestamp, the syntax is different whether the
+                                file is an input or an output:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="reference_dtf_drw_vfb__table_jvk_4rw_vfb" class="table" frame="border" border="1" rules="all"><colgroup><col /><col /><col /></colgroup><thead class="thead" style="text-align:left;">
+                                            <tr>
+                                                <th class="entry nocellnorowborder" id="d51186e131"> </th>
+
+                                                <th class="entry nocellnorowborder" id="d51186e133">FDL</th>
+
+                                                <th class="entry cell-norowborder" id="d51186e136">Instrumentation</th>
+
+                                            </tr>
+
+                                        </thead>
+<tbody class="tbody">
+                                            <tr>
+                                                <td class="entry nocellnorowborder" headers="d51186e131 ">Input</td>
+
+                                                <td class="entry nocellnorowborder" headers="d51186e133 ">I -db FILEX myfile D FILE</td>
+
+                                                <td class="entry cell-norowborder" headers="d51186e136 ">VovInput -db FILEX myfile</td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td class="entry row-nocellborder" headers="d51186e131 ">Output</td>
+
+                                                <td class="entry row-nocellborder" headers="d51186e133 ">O -db FILEX -ignore_timestamp myfile D
+                                                  FILE</td>
+
+                                                <td class="entry cellrowborder" headers="d51186e136 ">VovOutput -db FILEX -ignore_timestamp
+                                                  myfile</td>
+
+                                            </tr>
+
+                                        </tbody>
+</table>
+</div>
+</div>
+</dd>
+
+                        <dd class="dd ddexpand">The change of database is persistent. Next Inputs &amp; Outputs will use
+                            the FILEX database, unless you add a -db FILEX or a D FILE line in your
+                            flow.</dd>
+
+                    
+                    
+                        <dt class="dt dlterm">GLOB</dt>
+
+                        <dd class="dd">The entities in this database are "glob expressions." The syntax is the
+                            one used by the glob procedure in Tcl and by "globbing" in C-shell, that
+                            is "*" stands for any sequence of zero or more characters and "?" stands
+                            for any single character. If the expression can be expanded into a set
+                            of files, the timestamp of the entity is the timestamp of the most
+                            recent file. If the set of files corresponding to the expression is
+                            empty, the entity is considered non-existing and its timestamp is 0. </dd>
+
+                        <dd class="dd ddexpand">This database is useful to represent the situation where a job depends
+                            on a directory and on all the files in the directory. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">JOBSTATUS</dt>
+
+                        <dd class="dd">This database represents the status of a job. The name of the place has
+                            the form <em class="ph i">TYPE/JOBID</em> where TYPE is one of DONE, FAIL, or SUCCESS
+                            and JOBID is the id of a job. The timestamp of the place is a fixed
+                            timestamp in the past and never changes. What changes is the status of
+                            the place depending on the status of the job it is attached to. For more
+                            information on this database, please refer to <a class="xref" href="db_jobstatus.htm" title="Places in the JOBSTATUS database represent the status of jobs.">The JOBSTATUS Database</a>. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm"><a class="xref" href="db_link.htm" title="To establish dependencies with symbolic links, the LINK database must be used.">LINK</a></dt>
+
+                        <dd class="dd">This database behaves like the FILE database, except that the entities
+                            are symbolic links. An easy way to add links to the flow is to use the
+                            option <span class="keyword cmdname">-links</span> in the calls to VovInput and VovOutput
+                            (either encapsulation or
+                            instrumentation)<pre class="pre codeblock"><code>...
+VovInput -db LINK nameOfLink
+VovInput -links someInputFile
+VovOutput -links someOutputFile
+...</code></pre></dd>
+
+                    
+                    
+                        <dt class="dt dlterm">PHANTOM</dt>
+
+                        <dd class="dd">This database behaves like the FILE database, except that the timestamp
+                            of a missing file is, by convention, a time in the distant past (by
+                            Computer Science standards), i.e. sometime in the year 1970. This
+                            database is useful to represent situations where a job is sensitive to
+                            the fact that a file may exist or not, for example when a tool uses a
+                            search path to locate files. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">VOVSETS</dt>
+
+                        <dd class="dd">The entities in this database are sets of nodes. The timestamp of the
+                            entity is the timestamp of the set creation. Each set in the trace has a
+                            name and a timestamp. </dd>
+
+                    
+                    
+                        <dt class="dt dlterm">ZIP</dt>
+
+                        <dd class="dd">The entities in this database are members in an ZIP archive. The name of
+                            the entity has the form <code class="ph codeph">ARCHIVENAME(MEMBERNAME)</code>.</dd>
+
+                        <dd class="dd ddexpand">The timestamp of the entity is the timestamp of the member inside the
+                            archive. In encapsulation scripts, be careful to escape the parentheses
+                            appropriately as in the following example:
+                            <pre class="pre codeblock"><code>...
+VovOutput -db ZIP -ignore_timestamp $archiveName\($memberName\)
+...</code></pre></dd>
+
+                    
+                </dl>
+</div>
+
+        </section>
+
+    </div>
+
+</article></main></div>
+                                
+                                
+                                
+                            </div>
+                            <!--ZOOMSTOP-->
+                            <!--Turning off Oxygen Topic TOC, and using Bootstrap Topic Toc instead -->
+                            <!--<whc:webhelp_topic_toc>
+                                <nav role="navigation"  id="wh_topic_toc" 
+                                    class="col-lg-2 col-md-2 col-sm-2 col-xs-12 navbar hidden-print"> 
+                                    <whc:component_content/>
+                                </nav>
+                            </whc:webhelp_topic_toc> -->
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 max">
+                                <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+                            </div>
+                        </div>
+                        <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    
+        
+        <div>
+            <p>Copyright (c) 1994-2020. Altair Engineering, Inc. All Rights Reserved. Contains trade secrets of Altair Engineering, Inc. Copyright notice does not imply publication.</p>
+            <p><a href="../../topics/front_matter/intellectual_property_rights_notice_pbsworks_r.htm" onclick="window.open(this.href, 'windowOpenTab','scrollbars=1, resizable=1,width=740,height=500,left=0,top=0'); return false;">Intellectual Property Rights Notice</a>  |  <a href="../../topics/front_matter/technical_support_pbsworks_r.htm" onclick="window.open(this.href, 'windowOpenTab','scrollbars=1, resizable=1,width=740,height=500,left=0,top=0'); return false;">Technical Support</a></p>   
+        </div>
+    
+  </div>
+</nav>
+
+                    </div>
+            </div>
+        </div>
+        </div>
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../../altair-resources/js/bootstrap-toc.js"></script><script type="text/javascript" src="../../altair-resources/js/breadcrumbs.js"></script><script type="text/javascript" src="../../altair-resources/js/splash.js"></script><script type="text/javascript" src="../../altair-resources/js/homepage.js"></script><script type="text/javascript" src="../../altair-resources/js/topics.js"></script><script type="text/javascript" src="../../altair-resources/js/googleAnalytics.js"></script><script type="text/javascript" src="../../altair-resources/js/fullStory.js"></script>
+        
+        <!--ZOOMRESTART-->
+    </body>
+</html>
