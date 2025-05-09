@@ -3,15 +3,17 @@ import re
 import uuid
 from typing import Dict, List, Tuple
 
+from bs4 import BeautifulSoup
 from lxml import etree, html
 
 # 行内标签
 inline_tags = {
-    'map', 'optgroup', 'span', 'br', 'input', 'time', 'u', 'td', 'strong', 'textarea', 'small', 'sub',
+    'map', 'optgroup', 'span', 'br', 'input', 'time', 'u', 'strong', 'textarea', 'small', 'sub',
     'samp', 'blink', 'b', 'code', 'nobr', 'strike', 'bdo', 'basefont', 'abbr', 'var', 'i', 'cccode-inline',
-    'th', 'select', 's', 'pic', 'label', 'mark', 'object', 'dd', 'dt', 'ccmath-inline', 'svg', 'li',
+    'select', 's', 'pic', 'label', 'mark', 'object', 'dd', 'dt', 'ccmath-inline', 'svg', 'li',
     'button', 'a', 'font', 'dfn', 'sup', 'kbd', 'q', 'script', 'acronym', 'option', 'img', 'big', 'cite',
-    'em'
+    'em',
+    # 'td', 'th'
 }
 
 # 需要删除的标签
@@ -63,46 +65,83 @@ def is_unique_attribute(tree, attr_name, attr_value):
 
 
 def get_relative_xpath(element):
-    path = []
-    root_element = element.getroottree().getroot()
+    root_tree = element.getroottree()
+    current_element = element
+    path_from_element = []
+    found_unique_ancestor = False
 
-    while element is not None and element.getparent() is not None:
-        siblings = [sib for sib in element.getparent() if sib.tag == element.tag]
+    # 从当前元素开始向上查找
+    while current_element is not None and current_element.getparent() is not None:
+        siblings = [sib for sib in current_element.getparent() if sib.tag == current_element.tag]
 
-        found_unique_attr = False  # 初始化变量
+        # 检查当前元素是否有唯一属性
+        unique_attr = None
+        candidate_attrs = [
+            attr for attr in current_element.attrib
+            if not (attr.startswith('data-') or attr == 'style' or
+                    attr == '_item_id' or
+                    (current_element.attrib[attr].startswith('{') and current_element.attrib[attr].endswith('}')))
+        ]
 
-        if len(siblings) > 1:
-            # 如果有多个同名兄弟节点，则尝试使用属性路径来区分
-            candidate_attrs = [
-                attr for attr in element.attrib
-                if not (attr.startswith('data-') or attr == 'style' or
-                        attr == '_item_id' or
-                        (element.attrib[attr].startswith('{') and element.attrib[attr].endswith('}')))
-            ]
+        for attr in candidate_attrs:
+            if is_unique_attribute(root_tree, attr, current_element.attrib[attr]):
+                unique_attr = attr
+                break
 
-            for attr in candidate_attrs:
-                if is_unique_attribute(root_element.getroottree(), attr, element.attrib[attr]):
-                    # 插入唯一属性的XPath片段
-                    path.insert(0, f'*[@{attr}="{element.attrib[attr]}"]')
-                    found_unique_attr = True
-                    break
-
-            if not found_unique_attr:
-                index = siblings.index(element) + 1
-                path.insert(0, f'{element.tag}[{index}]')
+        # 如果有唯一属性，构建相对路径并停止向上查找
+        if unique_attr is not None:
+            path_from_element.insert(0, f'*[@{unique_attr}="{current_element.attrib[unique_attr]}"]')
+            found_unique_ancestor = True
+            break
         else:
-            # 如果没有同名兄弟节点，则直接使用标签名
-            path.insert(0, element.tag)
+            # 没有唯一属性，使用常规方式
+            if len(siblings) > 1:
+                index = siblings.index(current_element) + 1
+                path_from_element.insert(0, f'{current_element.tag}[{index}]')
+            else:
+                path_from_element.insert(0, current_element.tag)
 
-        # 提前返回简化版本的XPath，如果当前元素有一个唯一属性
-        if found_unique_attr:
-            simplified_path = f'//{"/".join(path)}'
-            return simplified_path
+        current_element = current_element.getparent()
 
-        element = element.getparent()
+    # 构建最终的XPath
+    if found_unique_ancestor:
+        return f'//{"/".join(path_from_element)}'
+    else:
+        # 如果没有找到唯一属性祖先，返回完整路径
+        return f'//{"/".join(path_from_element)}'
 
-    # 返回完整路径
-    return f'//{"/".join(path)}'
+
+def is_data_table(table_element: html.HtmlElement) -> bool:
+    """判断表格是否是数据表格而非布局表格."""
+    # 检查表格是否有 caption 标签
+    if table_element.xpath('.//caption'):
+        return True
+
+    # 检查是否有 th 标签
+    if table_element.xpath('.//th'):
+        return True
+
+    # 检查是否有 thead 或 tfoot 标签
+    if table_element.xpath('.//thead') or table_element.xpath('.//tfoot'):
+        return True
+
+    # 检查是否有 colgroup 或 col 标签
+    if table_element.xpath('.//colgroup') or table_element.xpath('.//col'):
+        return True
+
+    # 检查是否有 summary 属性
+    if table_element.get('summary'):
+        return True
+
+    # 检查是否有 role="table" 或 data-table 属性
+    if table_element.get('role') == 'table' or table_element.get('data-table'):
+        return True
+
+    # 检查单元格是否有 headers 属性
+    if table_element.xpath('.//*[@headers]'):
+        return True
+
+    return False
 
 
 def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html.HtmlElement],
@@ -125,8 +164,33 @@ def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html
     :return: 段落列表，每个段落包含html、content_type和_original_element字段
     """
 
+    # 创建表格类型映射，记录每个表格是数据表格还是布局表格
+    table_types = {}
+
+    # 先分析所有表格的类型
+    for table in processing_dom.xpath('.//table'):
+        table_types[table.get('data-uid')] = is_data_table(table)
+
     def is_block_element(node) -> bool:
         """判断是否为块级元素."""
+        # 处理表格单元格特殊情况
+        if node.tag in ('td', 'th'):
+            # 找到最近的祖先table元素
+            table_ancestor = node
+            while table_ancestor is not None and table_ancestor.tag != 'table':
+                table_ancestor = table_ancestor.getparent()
+
+            # 如果是表格单元格，根据表格类型决定是否为块级元素
+            if table_ancestor is not None:
+                table_uid = table_ancestor.get('data-uid')
+                if table_types.get(table_uid, False):
+                    # 数据表格的td/th不作为块级元素
+                    return False
+                else:
+                    # 布局表格的td/th作为块级元素
+                    return True
+
+        # 默认处理其他元素
         if node.tag in inline_tags:
             return False
         return isinstance(node, html.HtmlElement)
@@ -283,7 +347,10 @@ def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html
 def remove_xml_declaration(html_string):
     # 正则表达式匹配 <?xml ...?> 或 <?xml ...>（没有问号结尾的情况）
     pattern = r'<\?xml\s+.*?\??>'
-    return re.sub(pattern, '', html_string, flags=re.DOTALL)
+    html_content = re.sub(pattern, '', html_string, flags=re.DOTALL)
+    # 1. 删除HTML注释
+    html_content = re.sub(r'<!--.*?-->', '', html_content, flags=re.DOTALL)
+    return html_content
 
 
 def post_process_html(html_content: str) -> str:
@@ -352,7 +419,7 @@ def clean_attributes(element):
 
 
 def remove_inline_tags(element):
-    """递归移除所有指定的行内标签（包括嵌套情况），保留img和br标签 优化点：确保文本顺序正确，正确处理嵌套标签的文本转移."""
+    """递归移除所有指定的行内标签（包括嵌套情况），保留img和br等EXCLUDED_TAGS标签."""
     # 先处理子元素（深度优先）
     for child in list(element.iterchildren()):
         remove_inline_tags(child)
@@ -361,6 +428,16 @@ def remove_inline_tags(element):
     if element.tag in inline_tags and element.tag not in EXCLUDED_TAGS:
         parent = element.getparent()
         if parent is None:
+            return
+
+        # 检查是否包含需要保留的标签（如img、br等）
+        has_excluded_tags = any(
+            child.tag in EXCLUDED_TAGS
+            for child in element.iterdescendants()
+        )
+
+        # 如果包含需要保留的标签，则不移除当前元素
+        if has_excluded_tags:
             return
 
         # 保存当前元素的各部分内容
@@ -482,6 +559,13 @@ def should_remove_element(element) -> bool:
             for pattern in ATTR_SUFFIX_TO_REMOVE:
                 if pattern in part:
                     return True
+
+    # 检查style属性
+    style_attr = element.get('style', '')
+    if style_attr:
+        if 'display: none' in style_attr or 'display:none' in style_attr:
+            return True
+
     return False
 
 
@@ -556,9 +640,9 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
 
     for para in paragraphs:
         try:
-            # print(f"para: {para['html']}")
+            html_content = re.sub(r'<!--.*?-->', '', para['html'], flags=re.DOTALL)
             # 解析段落HTML
-            root = html.fromstring(post_process_html(para['html']))
+            root = html.fromstring(html_content)
             root_for_xpath = copy.deepcopy(root)
             content_type = para.get('content_type', 'block_element')
 
@@ -573,11 +657,6 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
 
             # 截断过长的文本内容
             truncate_text_content(root, max_length=1000)
-
-            # 为当前段落和原始元素添加相同的 _item_id
-            current_id = str(item_id)
-            root.set('_item_id', current_id)
-            para['_original_element'].set('_item_id', current_id)
 
             para_xpath = []
             if is_xpath:
@@ -602,10 +681,141 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                         _xpath = None
                     para_xpath.append(_xpath)
 
+            # 为当前段落和原始元素添加相同的 _item_id
+            current_id = str(item_id)
+            root.set('_item_id', current_id)
+
+            # 对于非块级元素（inline_elements, unwrapped_text, mixed）
+            original_parent = para['_original_element']  # 原网页中直接子元素的父节点
+            if content_type != 'block_element':
+                if original_parent is not None:
+                    # root_for_xpath有子元素
+                    if len(root_for_xpath) > 0:
+                        if root_for_xpath.tag in inline_tags and uid_map.get(root_for_xpath.get('data-uid')).tag != 'body':
+                            original_element = uid_map.get(root_for_xpath.get('data-uid'))
+                            original_element.set('_item_id', current_id)
+                        else:
+                            # 收集需要包裹的子元素
+                            children_to_wrap = []
+                            for child in root_for_xpath.iterchildren():
+                                child_uid = child.get('data-uid')
+                                if child_uid and child_uid in uid_map:
+                                    original_child = uid_map[child_uid]
+                                    children_to_wrap.append(original_child)
+
+                            if children_to_wrap:
+                                # 确定包裹范围
+                                first_child = children_to_wrap[0]
+                                last_child = children_to_wrap[-1]
+
+                                # 获取在父节点中的位置
+                                start_idx = original_parent.index(first_child)
+                                end_idx = original_parent.index(last_child)
+
+                                # 收集所有需要移动的节点
+                                nodes_to_wrap = []
+                                for i in range(start_idx, end_idx + 1):
+                                    nodes_to_wrap.append(original_parent[i])
+
+                                # 处理前面的文本
+                                leading_text = original_parent.text if start_idx == 0 else original_parent[
+                                    start_idx - 1].tail
+
+                                # 处理后面的文本
+                                # trailing_text = last_child.tail
+
+                                # 创建wrapper元素
+                                wrapper = etree.Element('cc-alg-uc-tex')
+                                wrapper.set('_item_id', current_id)
+
+                                # 设置前面的文本
+                                if leading_text:
+                                    wrapper.text = leading_text
+                                    if start_idx == 0:
+                                        original_parent.text = None
+                                    else:
+                                        original_parent[start_idx - 1].tail = None
+
+                                # 移动节点到wrapper中
+                                for node in nodes_to_wrap:
+                                    original_parent.remove(node)
+                                    wrapper.append(node)
+
+                                # 插入wrapper
+                                original_parent.insert(start_idx, wrapper)
+
+                                # 设置后面的文本
+                                # if trailing_text:
+                                #     wrapper.tail = trailing_text
+                                #     last_child.tail = None
+                    else:
+                        if content_type == 'inline_elements':
+                            original_element = uid_map.get(root_for_xpath.get('data-uid'))
+                            original_element.set('_item_id', current_id)
+                        else:
+                            # root_for_xpath只有文本内容
+                            if root_for_xpath.text and root_for_xpath.text.strip():
+                                # 1. 在原始DOM中查找匹配的文本节点
+                                found = False
+
+                                # 检查父节点的text
+                                if original_parent.text and original_parent.text.strip() == root_for_xpath.text.strip():
+                                    # 创建wrapper
+                                    wrapper = etree.Element('cc-alg-uc-tex')
+                                    wrapper.set('_item_id', current_id)
+                                    wrapper.text = original_parent.text
+
+                                    # 替换父节点的text
+                                    original_parent.text = None
+
+                                    # 插入wrapper作为第一个子节点
+                                    if len(original_parent) > 0:
+                                        original_parent.insert(0, wrapper)
+                                    else:
+                                        original_parent.append(wrapper)
+
+                                    found = True
+
+                                # 检查子节点的tail
+                                if not found:
+                                    for child in original_parent.iterchildren():
+                                        if child.tail and child.tail.strip() == root_for_xpath.text.strip():
+                                            # 创建wrapper
+                                            wrapper = etree.Element('cc-alg-uc-tex')
+                                            wrapper.set('_item_id', current_id)
+                                            wrapper.text = child.tail
+
+                                            # 替换tail
+                                            child.tail = None
+
+                                            # 插入wrapper到子节点之后
+                                            parent = child.getparent()
+                                            index = parent.index(child)
+                                            parent.insert(index + 1, wrapper)
+
+                                            found = True
+                                            break
+
+                                # 如果没有找到匹配的文本节点，使用父节点作为包裹对象
+                                if not found:
+                                    wrapper = etree.Element('cc-alg-uc-tex')
+                                    wrapper.set('_item_id', current_id)
+                                    wrapper.text = root_for_xpath.text
+                                    # 将父节点的内容移动到wrapper中
+                                    for child in list(original_parent.iterchildren()):
+                                        wrapper.append(child)
+                                        original_parent.remove(child)
+
+                                    # 添加wrapper到父节点
+                                    original_parent.append(wrapper)
+            else:
+                # 块级元素直接设置属性
+                original_parent.set('_item_id', current_id)
+
             item_id += 1
 
             # 保存处理结果
-            cleaned_html = etree.tostring(root, encoding='unicode').strip()
+            cleaned_html = etree.tostring(root, method='html', encoding='unicode').strip()
             result.append({
                 'html': cleaned_html,
                 '_item_id': current_id,
@@ -622,7 +832,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
     simplified_html = '<html><head><meta charset="utf-8"></head><body>' + ''.join(
         p['html'] for p in result) + '</body></html>'
 
-    return simplified_html, result
+    return post_process_html(simplified_html), result
 
 
 def simplify_html(html_str, is_xpath: bool = True) -> etree.Element:
@@ -635,8 +845,12 @@ def simplify_html(html_str, is_xpath: bool = True) -> etree.Element:
     # 预处理
     preprocessed_html = remove_xml_declaration(html_str)
 
+    # 用 BeautifulSoup 修复未闭合标签，lxml 无法完全修复
+    soup = BeautifulSoup(preprocessed_html, 'html.parser')
+    fixed_html = str(soup)
+
     # 解析原始DOM
-    original_dom = html.fromstring(preprocessed_html)
+    original_dom = html.fromstring(fixed_html)
     add_data_uids(original_dom)
     original_uid_map = build_uid_map(original_dom)
 
@@ -653,7 +867,7 @@ def simplify_html(html_str, is_xpath: bool = True) -> etree.Element:
     simplified_html, result = process_paragraphs(paragraphs, original_uid_map, is_xpath)
 
     remove_all_uids(original_dom)
-    original_html = etree.tostring(original_dom, pretty_print=True, encoding='unicode')
+    original_html = etree.tostring(original_dom, pretty_print=True, method='html', encoding='unicode')
 
     _xpath_mapping = {item['_item_id']: {
         '_xpath': item['_xpath'],
