@@ -9,28 +9,7 @@ from xinghe.spark import new_spark_session, read_any_path
 
 # 配置参数
 hash_count = 10000  # 域名哈希桶数量
-max_hosts_per_bucket = 10000  # 每个桶保存的最大域名数量
-
-# Spark配置
-config = {
-    'spark_conf_name': 'spark_4',
-    'skip_success_check': True,
-    'spark.yarn.queue': 'pipeline.clean',
-    'input_format': 'parquet',
-    'spark.executor.memory': '60g',
-    'spark.executor.memoryOverhead': '40g',
-    'spark.sql.shuffle.partitions': '10000',
-    'spark.default.parallelism': '10000',
-    'spark.network.timeout': '1200s',
-    'spark.broadcast.timeout': '1800s',
-    'spark.broadcast.compress': 'true',
-}
-
-
-# 创建Spark会话
-spark = new_spark_session('domain_hash_analysis', config)
-sc = spark.sparkContext
-sc.setLogLevel('ERROR')
+max_hosts_per_bucket = 100000  # 每个桶保存的最大域名数量
 
 
 # 定义计算domain_hash_id的UDF
@@ -159,6 +138,26 @@ def analyze_domain_hash_distribution(input_df, output_dir):
 
 # 执行分析
 if __name__ == '__main__':
+    # Spark配置
+    config = {
+        'spark_conf_name': 'spark_4',
+        'skip_success_check': True,
+        'spark.yarn.queue': 'pipeline.clean',
+        'input_format': 'parquet',
+        'spark.executor.memory': '60g',
+        'spark.executor.memoryOverhead': '40g',
+        'spark.sql.shuffle.partitions': '10000',
+        'spark.default.parallelism': '10000',
+        'spark.network.timeout': '1200s',
+        'spark.broadcast.timeout': '1800s',
+        'spark.broadcast.compress': 'true',
+    }
+
+    # 创建Spark会话
+    spark = new_spark_session('domain_hash_analysis', config)
+    sc = spark.sparkContext
+    sc.setLogLevel('ERROR')
+
     # 读取数据
     input_path = 's3://cc-raw/cc-index/table/cc-main/warc/'
     input_df = read_any_path(spark, ','.join(input_path), config)

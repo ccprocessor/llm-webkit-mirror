@@ -12,7 +12,7 @@
 
 数据生产代码：
 
-- [cc_store_stage1.py](./cc_store_stage1.py) - 实现了 Stage1 的数据处理流程，将原始数据按域名分桶存储
+- [cc_store_stage1.py](./pipeline/cc_store_stage1.py) - 实现了 Stage1 的数据处理流程，将原始数据按域名分桶存储
 
 数据存储结构如下：
 
@@ -39,8 +39,8 @@ s3://cc-store-stage1/
 
 数据生产代码：
 
-- [cc_store_stage2.py](./cc_store_stage2.py) - 实现了 Stage2 的数据处理流程，将分桶数据按域名聚合并生成最终存储格式
-- [cc_domain_index_gen.py](./cc_domain_index_gen.py) - 实现了 Stage2 的最终数据domain维度的索引创建
+- [cc_store_stage2.py](./pipeline/cc_store_stage2.py) - 实现了 Stage2 的数据处理流程，将分桶数据按域名聚合并生成最终存储格式
+- [cc_domain_index_gen.py](./pipeline/cc_domain_index_gen.py) - 实现了 Stage2 的最终数据domain维度的索引创建
 
 数据存储结构如下：
 
@@ -66,11 +66,11 @@ s3://cc-store-stage2/
 # 元数据结构
 {
   "domain": "01-news.ru",                         # 域名
-  "domain_hash_id": "1",                       # domain_hash_id, 按域名hash后分为10000个桶，xxhash.xxh64_intdigest(domain) % 10000
+  "domain_hash_id": "1696",                       # domain_hash_id, 按域名hash后分为10000个桶，xxhash.xxh64_intdigest(domain) % 10000
   "count": 5000, # 该域名下所有的存储数量
   "files": [
     {
-      "filepath": "s3://cc-store/data/1/part-00001.jsonl.gz",  # 文件路径
+      "filepath": "s3://cc-store/data/1696/part-00001.jsonl.gz",  # 文件路径
       "offset": 0,                          # 该domain数据在文件中的起始bytes
       "length": 1250,                         # 该domain数据的偏移大小length
       "record_count": 125,                       # 该offset和length下doc数量
