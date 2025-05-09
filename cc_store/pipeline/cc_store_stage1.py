@@ -1,10 +1,10 @@
 import json
-from urllib.parse import urlparse
 
 import pyspark.sql.functions as F
-import xxhash
 from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 from xinghe.spark import new_spark_session, read_any_path, write_any_path
+
+from cc_store.libs.domain import compute_domain_hash, extract_domain
 
 # 配置参数
 hash_count = 10000  # 域名哈希桶数量10000
@@ -70,25 +70,6 @@ def process_with_precomputed_stats(df,
     return result_df
 
 
-# 定义提取domain的UDF
-def extract_domain(url):
-    if url is None:
-        return None
-    try:
-        hostname = urlparse(url).hostname
-        return hostname.lower() if hostname else None
-    except Exception as e:
-        print(f"提取domain失败: {e}")
-        return None
-
-
-# 定义计算domain_hash_id的UDF
-def compute_domain_hash(domain):
-    if domain is None:
-        return None
-    return xxhash.xxh64_intdigest(domain) % hash_count
-
-
 # 注册UDF以在DataFrame操作中使用
 extract_domain_udf = F.udf(extract_domain, StringType())
 compute_domain_hash_udf = F.udf(compute_domain_hash, IntegerType())
@@ -115,7 +96,7 @@ def process_with_df_api_and_file_indices_optimized(
     # 2. 提取域名和计算哈希ID
     processed_df = extracted_df \
         .withColumn('domain', extract_domain_udf(F.col('url'))) \
-        .withColumn('domain_hash_id', compute_domain_hash_udf(F.col('domain'))) \
+        .withColumn('domain_hash_id', compute_domain_hash_udf(F.col('domain'), F.lit(hash_count))) \
         .filter(F.col('domain_hash_id').isNotNull()) \
         .filter(F.col('original_sub_path').isNotNull())
 

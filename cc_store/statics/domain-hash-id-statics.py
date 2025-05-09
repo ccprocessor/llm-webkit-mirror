@@ -1,22 +1,16 @@
 import io
 
 import pyspark.sql.functions as F
-import xxhash
 from pyspark.sql import Window
 from pyspark.sql.types import IntegerType
 from xinghe.s3 import put_s3_object_with_retry
 from xinghe.spark import new_spark_session, read_any_path
 
+from cc_store.libs.domain import compute_domain_hash
+
 # 配置参数
 hash_count = 10000  # 域名哈希桶数量
 max_hosts_per_bucket = 100000  # 每个桶保存的最大域名数量
-
-
-# 定义计算domain_hash_id的UDF
-def compute_domain_hash(domain):
-    if domain is None:
-        return None
-    return xxhash.xxh64_intdigest(domain) % hash_count
 
 
 compute_domain_hash_udf = F.udf(compute_domain_hash, IntegerType())
@@ -33,7 +27,7 @@ def analyze_domain_hash_distribution(input_df, output_dir):
 
     # 添加domain_hash_id列
     processed_df = input_df \
-        .withColumn('domain_hash_id', compute_domain_hash_udf(F.col('url_host_name'))) \
+        .withColumn('domain_hash_id', compute_domain_hash_udf(F.col('url_host_name'), F.lit(hash_count))) \
         .filter(F.col('domain_hash_id').isNotNull())
 
     # 按domain_hash_id和url_host_name进行分组并计数

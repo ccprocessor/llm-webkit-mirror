@@ -1,10 +1,11 @@
 import json
 
 import pyspark.sql.functions as F
-import xxhash
 from pyspark.sql import Window
 from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 from xinghe.spark import new_spark_session, read_any_path, write_any_path
+
+from cc_store.libs.domain import compute_domain_hash
 
 # 配置参数
 MAX_RECORDS_PER_FILE = 100000  # 每个文件的目标记录数
@@ -173,16 +174,10 @@ def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path,
         missing_domains = input_df.select('domain').subtract(
             domain_file_indices.select('domain'))
 
-        # 为缺失的域名计算hash值
-        def compute_domain_hash(domain):
-            if domain is None:
-                return None
-            return xxhash.xxh64_intdigest(domain) % HASH_COUNT
-
         compute_hash_udf = F.udf(compute_domain_hash, IntegerType())
 
         missing_domain_df = missing_domains.withColumn(
-            'domain_hash_id', compute_hash_udf(F.col('domain'))).withColumn(
+            'domain_hash_id', compute_hash_udf(F.col('domain'), F.lit(HASH_COUNT))).withColumn(
                 'count', F.lit(1)).withColumn('base_file_idx',
                                               F.lit(0)).withColumn(
                                                   'files_needed', F.lit(1))
