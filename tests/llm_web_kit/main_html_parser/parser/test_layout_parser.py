@@ -49,9 +49,6 @@ class TestLayoutParser(unittest.TestCase):
             pre_data = PreDataJson(data_dict)
             parser = LayoutBatchParser(element_dict)
             parts = parser.parse(pre_data)
-            fw = open('test.html', 'w')
-            fw.write(parts.get(PreDataJsonKey.MAIN_HTML_BODY))
-            fw.close()
             assert parts.get(PreDataJsonKey.MAIN_HTML_BODY) == expected_html
 
     def test_layout_batch_parser_answers(self):
@@ -78,6 +75,22 @@ class TestLayoutParser(unittest.TestCase):
         expected_html = base_dir.joinpath('assets/output_layout_batch_parser/24ssports.com_main_html.html').read_text()
         raw_html = raw_html_path.read_text()
         # element_json = json.loads(element_path.read_text())
+        element_dict_str = json.loads(element_path.read_text())
+        element_dict = {}
+        for layer, layer_dict in element_dict_str.items():
+            layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
+            element_dict[int(layer)] = layer_dict_json
+        data_dict = {'HTML': raw_html, 'TEMPLATE_DATA': element_dict, 'ORI_HTML': raw_html}
+        pre_data = PreDataJson(data_dict)
+        parser = LayoutBatchParser(element_dict)
+        parts = parser.parse(pre_data)
+        assert parts.get(PreDataJsonKey.MAIN_HTML_BODY) == expected_html
+
+    def test_layout_batch_parser_sv_m_wiktionary_org(self):
+        raw_html_path = base_dir.joinpath('assets/input_layout_batch_parser/sv.m.wiktionary.org.html')
+        element_path = base_dir.joinpath('assets/input_layout_batch_parser/template_sv.m.wiktionary.org_0.json')
+        expected_html = base_dir.joinpath('assets/output_layout_batch_parser/parser_sv_m_wiktionary_org.html').read_text()
+        raw_html = raw_html_path.read_text()
         element_dict_str = json.loads(element_path.read_text())
         element_dict = {}
         for layer, layer_dict in element_dict_str.items():
