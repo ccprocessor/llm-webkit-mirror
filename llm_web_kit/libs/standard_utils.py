@@ -100,4 +100,4 @@ def compress_and_decompress_str(input_data: Union[str, bytes], compress: bool = 
             return decompressed_bytes.decode('utf-8')  # 假设原始数据是UTF-8编码的字符串
 
     except (zlib.error, base64.binascii.Error, UnicodeDecodeError) as e:
-        raise ValueError(f"Error during compression/decompression: {e}")
+        raise ValueError(f'Error during compression/decompression: {e}')
