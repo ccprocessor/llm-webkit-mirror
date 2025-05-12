@@ -6,6 +6,8 @@ import json
 import zlib
 from typing import Union
 
+from llm_web_kit.exception.exception import LlmWebKitBaseException
+
 try:
     import orjson
 except ModuleNotFoundError:
@@ -76,7 +78,7 @@ def compress_and_decompress_str(input_data: Union[str, bytes], compress: bool = 
             elif isinstance(input_data, bytes):
                 input_bytes = input_data
             else:
-                raise TypeError('Input must be a string or bytes object.')
+                raise LlmWebKitBaseException('Input must be a string or bytes object.')
 
             if base:
                 # 压缩并转换为Base64字符串
@@ -94,10 +96,10 @@ def compress_and_decompress_str(input_data: Union[str, bytes], compress: bool = 
             elif isinstance(input_data, bytes):
                 compressed_bytes = input_data
             else:
-                raise TypeError('Input must be a Base64 encoded string or bytes object.')
+                raise LlmWebKitBaseException('Input must be a Base64 encoded string or bytes object.')
 
             decompressed_bytes = zlib.decompress(compressed_bytes)
             return decompressed_bytes.decode('utf-8')  # 假设原始数据是UTF-8编码的字符串
 
     except (zlib.error, base64.binascii.Error, UnicodeDecodeError) as e:
-        raise ValueError(f'Error during compression/decompression: {e}')
+        raise LlmWebKitBaseException(f'Error during compression/decompression: {e}')

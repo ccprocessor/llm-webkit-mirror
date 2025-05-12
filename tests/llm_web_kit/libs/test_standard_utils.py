@@ -77,10 +77,13 @@ TEST_COMPRESS_CASES = [
     {'input': 'Оренбург, штакетник П-образный узкий, цена',
      'com_expected': b'x\x9c\x1d\x8c\xdb\t\x800\x10\x04[\xb9\x02\xb4\xc7`@\x04{\xd0\x16"\x12b\x02g\rs\x1d\xb9\xf8\xb5\xc3\xbe8"Qq\xae\xc8\xa2{\xb2\xd8b\xa10\xa8R\xe7a\x18\xe7\xcc\xabF\x92\xdf\xf0\xd8\xe9\x16Y8\x14wM\xd6\xff\xa2|\xfer4T',
      'base_expected': 'eJwdjNsJgDAQBFu5ArTHYEAEe9AWIhJiAmcNcx25+LXDvjgiUXGuyKJ7sthioTCoUudhGOfMq0aS3/DY6RZZOBR3Tdb/onz+cjRU'},
+    {'input': 12345, 'expected': 10000000},
 ]
 TEST_DISCOMPRESS_CASES = [
     {'input': b'x\x9c{\xb6\xb5\xfb\xc5\xfa\xa9\xcf\xa6nx\xd6\xbb\x0e\x009C\x08\x9f', 'expected': '测试数据'},
     {'input': 'eJx7trX7xfqpz6ZueNa7DgA5Qwif', 'expected': '测试数据'},
+    {'input': b'x\x9c{\xb6\xb5\xfb\xc5\xfa\xa9\xcf\xa6nx\xd6\xbb\x0e', 'expected': 10000000},
+    {'input': 98877, 'expected': 10000000},
 ]
 
 
@@ -88,10 +91,16 @@ class TestStandardUtils(unittest.TestCase):
 
     def test_compress_and_decompress_str(self):
         for compress_case in TEST_COMPRESS_CASES:
-            com_res = compress_and_decompress_str(compress_case['input'])
-            base_res = compress_and_decompress_str(compress_case['input'], base=True)
-            self.assertEqual(com_res, compress_case['com_expected'])
-            self.assertEqual(base_res, compress_case['base_expected'])
+            try:
+                com_res = compress_and_decompress_str(compress_case['input'])
+                base_res = compress_and_decompress_str(compress_case['input'], base=True)
+                self.assertEqual(com_res, compress_case['com_expected'])
+                self.assertEqual(base_res, compress_case['base_expected'])
+            except Exception as e:
+                self.assertEqual(e.error_code, compress_case['expected'])
         for discompress_case in TEST_DISCOMPRESS_CASES:
-            res = compress_and_decompress_str(discompress_case['input'], compress=False)
-            self.assertEqual(res, discompress_case['expected'])
+            try:
+                res = compress_and_decompress_str(discompress_case['input'], compress=False)
+                self.assertEqual(res, discompress_case['expected'])
+            except Exception as e:
+                self.assertEqual(e.error_code, discompress_case['expected'])
