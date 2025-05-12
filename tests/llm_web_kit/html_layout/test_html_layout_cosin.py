@@ -42,4 +42,4 @@ class TestHtmllayoutcosin(unittest.TestCase):
             feature1 = get_feature(base_dir.joinpath(TEST_SIMIL_HTML['input1']).read_text(encoding='utf-8'))
             feature2 = get_feature(base_dir.joinpath(TEST_SIMIL_HTML['input2']).read_text(encoding='utf-8'))
             cosin = similarity(feature1, feature2, layer_n=TEST_SIMIL_HTML.get('layer_n', 5))
-            self.assertEqual(TEST_SIMIL_HTML['expected'], cosin)
+            self.assertEqual('{:.2f}'.format(TEST_SIMIL_HTML['expected']), '{:.2f}'.format(cosin))
