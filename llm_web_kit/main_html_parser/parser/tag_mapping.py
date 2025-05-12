@@ -1,6 +1,6 @@
 from hashlib import sha256
 
-from lxml import html
+from lxml import etree, html
 
 from llm_web_kit.exception.exception import TagMappingParserException
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
@@ -50,6 +50,41 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         deal_element = elements[0]
         deal_element.set('magic_main_html', 'True')
 
+    def find_affected_element_after_drop(self, element):
+        prev_sibling = element.getprevious()
+        parent = element.getparent()
+
+        # 包裹子节点的情况返回element父节点
+        if len(element) > 0:
+            if element.get('magic_main_html', None):
+                for ele in element:
+                    ele.set('magic_main_html', 'True')
+
+            element.drop_tag()
+            return parent
+
+        # 只有文本的情况，返回element前面的兄弟节点或者父节点
+        element.drop_tag()
+
+        if prev_sibling is not None:
+            return prev_sibling
+        else:
+            return parent
+
+    def process_element(self, element):
+        # 前序遍历元素树（先处理子元素）
+        for child in list(element):  # 使用list()创建副本，因为我们会修改原元素
+            self.process_element(child)
+
+        # 如果是cc-alg-uc-text标签，用drop_tag()删除标签但保留子元素
+        if element.tag == 'cc-alg-uc-text':
+            is_main = element.get('magic_main_html', None)
+            affected = self.find_affected_element_after_drop(element)
+            if is_main:
+                affected.set('magic_main_html', 'True')
+
+        return
+
     def tag_parent(self, pre_root):
         for elem in pre_root.iter():
             magic_main_html = elem.get('magic_main_html', None)
@@ -58,7 +93,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             cur = elem
             while True:
                 parent = cur.getparent()
-                if not parent:
+                if parent is None:
                     break
                 parent_main = parent.get('magic_main_html', None)
                 if parent_main:
@@ -78,19 +113,16 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                     text_nodes = elem.xpath('.//text()[not(ancestor::style or ancestor::script)]')  # 获取所有文本节点（包括tail）
                     all_text = ' '.join([t.strip() for t in text_nodes if t.strip()])
                     content_list.append(all_text)
+        # 恢复到原网页结构
+        self.process_element(pre_root)
         # 完善父节点路径
         self.tag_parent(pre_root)
         return content_list
 
-    def construct_main_tree(self, pre_root):
-        all_dict = {}
-        layer_index_counter = {}
-        self.process_tree(pre_root, 0, layer_index_counter, all_dict)
-
-        return all_dict
-
-    def process_tree(self, element, depth, layer_index_counter, all_dict):
+    def process_main_tree(self, element, depth, layer_index_counter, all_dict, all_set):
         if element is None:
+            return
+        if isinstance(element, etree._Comment):
             return
         if depth not in layer_index_counter:
             layer_index_counter[depth] = 0
@@ -98,26 +130,47 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             layer_index_counter[depth] += 1
         if depth not in all_dict:
             all_dict[depth] = {}
+            all_set[depth] = {}
         is_main_html = element.get('magic_main_html', None)
         current_dict = all_dict[depth]
-        ele_id = self.get_element_id(element)
+        current_set = all_set[depth]
         tag = element.tag
         class_id = element.get('class', None)
         idd = element.get('id', None)
-        keyy = (tag, class_id, idd, ele_id, depth, layer_index_counter[depth])
+        keyy = (tag, class_id, idd, depth, layer_index_counter[depth])
+
         parent = element.getparent()
-        if parent is not None:
+        if parent:
             parent_tag = parent.tag
             parent_class_id = parent.get('class', None)
             parent_idd = parent.get('id', None)
             parent_keyy = (parent_tag, parent_class_id, parent_idd)
         else:
             parent_keyy = None
-        if is_main_html:
-            current_dict[keyy] = ('red', parent_keyy)
+        # 为了让element_dict不过大，简化这个字典
+        keyy_for_sim = (keyy[:3], parent_keyy)
 
+        if is_main_html:
+            color = 'red'
         else:
-            current_dict[keyy] = ('green', parent_keyy)
+            color = 'green'
+
+        # 写入该层元素key，如果有重复的green节点，只保留一个
+        if keyy_for_sim in current_set:
+            if is_main_html and current_set[keyy_for_sim][0] == 'green':
+                current_dict[keyy] = ('red', parent_keyy)
+                current_set[keyy_for_sim] = ('red', parent_keyy)
+        else:
+            current_dict[keyy] = (color, parent_keyy)
+            current_set[keyy_for_sim] = (color, parent_keyy)
 
         for ele in element:
-            self.process_tree(ele, depth + 1, layer_index_counter, all_dict)
+            self.process_main_tree(ele, depth + 1, layer_index_counter, all_dict, all_set)
+
+    def construct_main_tree(self, pre_root):
+        all_dict = {}
+        all_set = {}
+        layer_index_counter = {}
+        self.process_main_tree(pre_root, 0, layer_index_counter, all_dict, all_set)
+
+        return all_dict
