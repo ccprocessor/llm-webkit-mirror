@@ -118,10 +118,12 @@ def __list_to_dict(lst: List[Dict]) -> dict:
     Returns:
         dict {'<body>/div': 1, '<div>[1]/div': 1, '<div>[2]/div': 1, '<div>[3]/ul': 1, ...}
     """
-    res = {}
-    for d in lst:
-        res.update(d)
-    return res
+    res = defaultdict(int)
+    for idx, d in enumerate(lst):
+        for k, v in d.items():
+            res[f'{idx}_{k}'] += 1
+
+    return dict(res)
 
 
 def __cosin_simil(feature1: Dict, feature2: Dict, k: float = 0.7) -> np.float32:
@@ -217,7 +219,7 @@ def __parse_valid_layer(features: List[Dict]) -> int:
     return layer_n if layer_n > 5 else len(features[0]['tags'])
 
 
-def cluster_html_struct(sampled_list: List[Dict], threshold=0.96) -> List[Dict]:
+def cluster_html_struct(sampled_list: List[Dict], threshold=0.95) -> List[Dict]:
     """批量domain数据计算layout
     Args:
         sampled_list: list [{"features": {}}]
