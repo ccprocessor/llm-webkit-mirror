@@ -118,20 +118,22 @@ def __list_to_dict(lst: List[Dict]) -> dict:
     Returns:
         dict {'<body>/div': 1, '<div>[1]/div': 1, '<div>[2]/div': 1, '<div>[3]/ul': 1, ...}
     """
-    res = {}
-    for d in lst:
-        res.update(d)
-    return res
+    res = defaultdict(int)
+    for idx, d in enumerate(lst):
+        for k, v in d.items():
+            res[f'{idx}_{k}'] += 1
+
+    return dict(res)
 
 
-def __cosin_simil(feature1: Dict, feature2: Dict, k: float = 0.5) -> np.float64:
+def __cosin_simil(feature1: Dict, feature2: Dict, k: float = 0.7) -> np.float32:
     """余弦相似度计算，入参为向量化后的数据
     Args:
         feature1: dict {"tags": [0,0,1,1,1,1,0...], "attrs": [1,1,1...]}
         feature2: dict {"tags": [1,0,1,0,1,1,0...], "attrs": [1,0,1...]}
         k: tags 和 attrs 权重占比，默认1:1
     Returns:
-        np.float64: cosine similarity
+        np.float32: cosine similarity
     """
     tag_sim = cosine_similarity(np.array([feature1.get('tags', []), feature2.get('tags', [])]))[0][1]
     if feature1.get('attrs').size == 0 and feature2.get('attrs').size == 0:
@@ -155,7 +157,7 @@ def __simp_tags(d: dict, layer_n: int) -> dict:
     Returns:
         dict {'<body>/div': 1, '<div>[1]/div': 1, '<div>[2]/div': 1, '<div>[3]/ul': 1, ...}
     """
-    return __list_to_dict([{tag: 1 for tag in v} for k, v in d.items() if k < layer_n])
+    return __list_to_dict([{tag: 1 for tag in v} for k, v in d.items() if k <= layer_n])
 
 
 def __simp_features(features_list: List) -> List[Dict]:
@@ -190,7 +192,7 @@ def __parse_vectors(data_lst: List) -> np.array:
         np.array 向量结果
     """
     vectorizer = DictVectorizer(sparse=False)
-    X = vectorizer.fit_transform(data_lst)
+    X = vectorizer.fit_transform(data_lst).astype(np.float32)
     return X
 
 
@@ -240,6 +242,7 @@ def cluster_html_struct(sampled_list: List[Dict], threshold=0.95) -> List[Dict]:
                 simil_rate = __cosin_simil(features_vec[i], features_vec[j])
             similarity_matrix[i, j] = simil_rate
             similarity_matrix[j, i] = simil_rate
+    similarity_matrix = np.clip(similarity_matrix, 0, 1)
     clustering = DBSCAN(eps=1 - threshold, min_samples=2, metric='precomputed')
     layout_ids = clustering.fit_predict(1 - similarity_matrix)
     for idd, data in zip(layout_ids, sampled_list):
@@ -266,7 +269,7 @@ def sum_tags(tags: Dict):
     return l_s, s
 
 
-def similarity(feature1: Dict, feature2: Dict, layer_n=5, k=0.5) -> float:
+def similarity(feature1: Dict, feature2: Dict, layer_n=5, k=0.7) -> float:
     """余弦相似度计算，入参为feature字典
     Args:
         feature1: dict
@@ -282,7 +285,7 @@ def similarity(feature1: Dict, feature2: Dict, layer_n=5, k=0.5) -> float:
         layer_n: 相似度计算DOM树层级深度，默认为5
         k: tags 和 attrs 权重占比，默认1:1
     Return:
-        np.float64: cosine similarity
+        np.float32: cosine similarity
     """
     tag_sim = cosine_similarity(
         __parse_vectors([__simp_tags(feature1['tags'], layer_n), __simp_tags(feature2['tags'], layer_n)]))[0][1]

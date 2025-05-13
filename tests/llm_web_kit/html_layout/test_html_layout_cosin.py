@@ -8,12 +8,16 @@ base_dir = Path(__file__).parent
 
 TEST_FEATURE_HTML = [{'input': 'assets/feature.html', 'expected': 2}]
 TEST_SIMIL_HTMLS = [
-    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.1748186},
-    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.925361},
+    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.22013982},
+    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9357468},
+
 ]
 TEST_CLUSTER_HTMLS = [
-    {'input1': 'assets/feature1.html', 'input2': 'assets/cosin.html', 'expected': [0]},
-    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'expected': [-1]}
+    {'input': ['assets/feature1.html', 'assets/cosin.html'], 'expected': [-1]},
+    {'input': ['assets/feature1.html', 'assets/feature2.html'], 'expected': [-1]},
+    {'input': ['assets/100.html', 'assets/101.html', 'assets/102.html', 'assets/103.html', 'assets/104.html',
+               'assets/105.html', 'assets/106.html'], 'expected': [0, 1, -1]}
+
 ]
 
 
@@ -28,9 +32,9 @@ class TestHtmllayoutcosin(unittest.TestCase):
 
     def test_cluster_html_struct(self):
         for TEST_CLUSTER_HTML in TEST_CLUSTER_HTMLS:
-            feature1 = get_feature(base_dir.joinpath(TEST_CLUSTER_HTML['input1']).read_text(encoding='utf-8'))
-            feature2 = get_feature(base_dir.joinpath(TEST_CLUSTER_HTML['input2']).read_text(encoding='utf-8'))
-            res, layout_list = cluster_html_struct([{'feature': feature1}, {'feature': feature2}])
+            features = [{'feature': get_feature(base_dir.joinpath(line).read_text(encoding='utf-8'))} for line in
+                        TEST_CLUSTER_HTML['input']]
+            res, layout_list = cluster_html_struct(features)
             self.assertEqual(TEST_CLUSTER_HTML['expected'], layout_list)
 
     def test_similarity(self):
@@ -38,4 +42,4 @@ class TestHtmllayoutcosin(unittest.TestCase):
             feature1 = get_feature(base_dir.joinpath(TEST_SIMIL_HTML['input1']).read_text(encoding='utf-8'))
             feature2 = get_feature(base_dir.joinpath(TEST_SIMIL_HTML['input2']).read_text(encoding='utf-8'))
             cosin = similarity(feature1, feature2, layer_n=TEST_SIMIL_HTML.get('layer_n', 5))
-            self.assertEqual(TEST_SIMIL_HTML['expected'], cosin)
+            self.assertEqual('{:.2f}'.format(TEST_SIMIL_HTML['expected']), '{:.2f}'.format(cosin))

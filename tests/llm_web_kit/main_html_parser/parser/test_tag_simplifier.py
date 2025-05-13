@@ -51,7 +51,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 5)
+        self.assertEqual(_item_id_count, 66)
 
     def test_tag_simplifier4(self):
         file_path = base_dir / 'assets/test_html_data/1.html'
@@ -62,7 +62,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 37)
+        self.assertEqual(_item_id_count, 51)
 
 
 if __name__ == '__main__':

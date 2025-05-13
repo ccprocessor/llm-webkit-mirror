@@ -32,5 +32,6 @@ class HtmlTagSimplifierParser(BaseMainHtmlParser):
         # 设置输出数据
         pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML] = original_html  # 保存原始标签HTML
         pre_data[PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML] = simplified_html  # 保存简化后的HTML
+        pre_data[PreDataJsonKey.XPATH_MAPPING] = _  # 保存xpath
 
         return pre_data
