@@ -37,6 +37,21 @@ pip install flashinfer-python==0.2.2.post1  -i https://flashinfer.ai/whl/cu124/t
 
 > 上述步骤中，`flashinfer-python` 如果加代理下载可能很慢，这时可以先手工下载到本地，然后使用`pip install <your-whl-file.whl>` 安装。
 
+## 修改模型配置
+
+修改`Qwen2.5-72b/config.json` 文件，增加下面这个配置，这样才能够支持最大**128K**窗口长度。
+
+```json
+"rope_scaling": {
+    "factor": 4.0,
+    "original_max_position_embeddings": 32768,
+    "type": "yarn"
+}
+```
+
+> 如果你修改这个参数之前曾经启动过vllm server，那么需要先删除vllm cache ，否则会报错，错误如下：
+> `ERROR 04-28 14:33:29 [core.py:387] RuntimeError: ('Worker failed with error %s, please check the stack trace above for the root cause', 'expected size 131072==32768, stride 128==128 at dim=0')`
+
 ## 启动http服务
 
 利用slurm启动http服务，脚本已经封装好。现在假设你的模型放在`/home/user/model/qwen-72b-instruct`，那么启动http服务的命令如下：

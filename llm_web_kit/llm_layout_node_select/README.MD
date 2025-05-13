@@ -8,4 +8,5 @@
 ## 启动
 
 1. 首先启动 llm_web_kit/html_layout_classify/server.py
-2. 启动llm_web_kit/llm_layout_node_select/main.sh
+2. 配置cfg.template.jsonc文件，写上server的服务地址，以及模型服务地址
+3. 启动llm_web_kit/llm_layout_node_select/main.sh

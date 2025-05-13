@@ -17,6 +17,20 @@ function count_used_gpus(){
     echo $gpu_num
 }
 
+function count_used_cpus(){
+    all_jobs=`squeue --me -p $1`
+    cpu_num=0
+    for name in $all_jobs
+    do
+        if [ "$(echo $name | grep ${USER})" != "" ];then
+            num=1
+            cpu_num=$((($cpu_num+$num)))
+        fi
+    done
+    echo $cpu_num
+}
+
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -40,12 +54,8 @@ while [[ $# -gt 0 ]]; do
             DEBUG=1
             shift 1
             ;;
-        --result-save-dir)
-            RESULT_SAVE_DIR="$2"
-            shift 2
-            ;;
-        --server-addr)
-            SERVER_ADDR="$2"
+        --config)
+            CONFIG="$2"
             shift 2
             ;;
         *)
@@ -66,14 +76,13 @@ export SLURM_SUBMIT_DIR=${SLURM_LOG_DIR}
 export LLM_WEB_KIT_CFG_PATH=/share/${MY_NAME}/.llm-web-kit-pageclassify.jsonc
 TASK_NUM="${TASK_NUM:-1}"  # Default to 1 if not provided
 DEBUG="${DEBUG:-0}"
-SERVER_ADDR="${SERVER_ADDR:-http://127.0.0.1:5000}"
 PYTHON=/share/${MY_NAME}/.conda/envs/webkitdev/bin/python
 
 
 
 # Check required arguments
-if [ -z "$PARTATION" ] || [ -z "$MAX_JOB_TOTAL" ] || [ -z "$TAG" ]; then
-    echo "Usage: $0 --partation <partition_name> --max-job <max_job_count> --tag <tag_name> --debug <debug_mode>"
+if [ -z "$PARTATION" ] || [ -z "$MAX_JOB_TOTAL" ] || [ -z "$TAG" ] || [ -z "$CONFIG" ]; then
+    echo "Usage: $0 --partation <partition_name> --max-job <max_job_count> --tag <tag_name> --debug <debug_mode> --config <config_path>"
     exit 1
 fi
 
@@ -82,17 +91,18 @@ submited_job_num=0 # 成功提交的任务数
 
 while [ $submited_job_num -lt $MAX_JOB_TOTAL ]
 do
-    used_gpu=($(count_used_gpus $PARTATION))  # 分区中自己已使用的GPU数
-    avai_gpu=$(svp list -p $PARTATION|grep $PARTATION | awk '{print $5}')  # 分区中可用的GPU数
+    used_gpu=($(count_used_cpus $PARTATION))  # 分区中自己已使用的GPU数
+    # avai_gpu=$(svp list -p $PARTATION|grep $PARTATION | awk '{print $5}')  # 分区中可用的GPU数
+    avai_gpu=10000
     echo -e "check partation $PARTATION \n used_gpu: $used_gpu\n avai_gpu: $avai_gpu"
 
     if [ $avai_gpu -gt 0 ]; then
         # 提交一个任务，睡眠
         if [ $DEBUG -eq 1 ]; then
             # 此处-N 代表提交一个任务（或者理解为只占用多少个GPU）。-n 代表提交的进程数，在满足-N的情况下，每个任务上启动-n个进程。
-            LOG_LEVEL=INFO  srun -p ${PARTATION} --output=${SLURM_LOG_DIR}/logs/output_%j.out --export=ALL  --error=${SLURM_LOG_DIR}/error/error_%j.err  --gres=gpu:1 -N 1 -n ${TASK_NUM}  ${PYTHON} main.py --server-addr ${SERVER_ADDR} --result-save-dir ${RESULT_SAVE_DIR}
+            LOG_LEVEL=INFO  srun -p ${PARTATION} --output=${SLURM_LOG_DIR}/logs/output_%j.out --export=ALL  --error=${SLURM_LOG_DIR}/error/error_%j.err -N 1 -n ${TASK_NUM} --cpus-per-task=1  ${PYTHON} main.py --config ${CONFIG}
         else
-            LOG_LEVEL=ERROR  srun -p ${PARTATION} --output=${SLURM_LOG_DIR}/logs/output_%j.out --export=ALL --error=${SLURM_LOG_DIR}/error/error_%j.err  --gres=gpu:1 --async -N 1 -n ${TASK_NUM}  ${PYTHON}  main.py --server-addr ${SERVER_ADDR} --result-save-dir ${RESULT_SAVE_DIR}
+            LOG_LEVEL=ERROR  srun -p ${PARTATION} --output=${SLURM_LOG_DIR}/logs/output_%j.out --export=ALL --error=${SLURM_LOG_DIR}/error/error_%j.err --async -N 1 -n ${TASK_NUM} --cpus-per-task=1 ${PYTHON}  main.py --config ${CONFIG}
         fi
         # TODO 判断任务是否提交成功
         submited_job_num=$((submited_job_num+1))

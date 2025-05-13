@@ -1,11 +1,12 @@
 {
-    "result_save_dir": "/data/web_kit/layout_node_select/result",
-    "task_server_addr": "http://127.0.0.1:5000",
+    "result_save_dir": "/share/xuchao/layout_node_select/result_v003",
+    "task_server_addr": "http://10.140.0.105:5000",
+    "qwen2.5-72b-tokenizer-path": "/share/xuchao/qwen2.5-72b/Qwen2.5-72b/",
     "model_servers":[
         {
-            "base_url": "http://127.0.0.1:5000/v1",
-            "model_name": "qwen2.5-72b-instruct",
-            "sk": "sk-1234567890"
+            "base_url": "http://10.140.37.135:11434/v1",
+            "model_name": "Qwen2.5-72b",
+            "sk": "EMPTY"
         }
     ]
 }

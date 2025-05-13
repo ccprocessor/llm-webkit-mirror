@@ -7,6 +7,7 @@
 """
 import os
 import random
+import re
 import socket
 import time
 from io import BytesIO
@@ -16,12 +17,17 @@ from typing import Dict, Tuple
 import click
 import commentjson as json
 import requests
+from func_timeout import FunctionTimedOut, func_timeout
 from loguru import logger
-from openai import OpenAI
+from openai import APIConnectionError, BadRequestError, OpenAI
 from retry import retry
+from transformers import AutoTokenizer
+
+logger.add('logs/llm_layout_node_select.log', rotation='120 minutes', retention='1 days', level='ERROR', format='{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} - {message}')
 
 GET_FILE_URL = None
 UPDATE_STATUS_URL = None
+TOKENIZER = None
 
 
 def __get_runtime_id():
@@ -34,7 +40,7 @@ def __get_runtime_id():
 @retry(tries=5, delay=10, max_delay=5)
 def __report_status(server_url, file_path, status, msg=''):
     """更新server上的状态."""
-    requests.post(server_url, json={'file_path': file_path, 'status': status, 'msg': msg})
+    requests.post(server_url, json={'file_path': file_path, 'status': status, 'msg': msg}, timeout=20)
     logger.info(f'report status {status} for file {file_path}')
 
 
@@ -55,7 +61,7 @@ def __build_prompt_with_html(simplified_html: str) -> Tuple[str, str]:
 如果是主要内容，你可以将元素记为1，如果是其他内容，你可以将元素记为0。
 
 以下会提供一个经过简化的网页HTML代码，你需要判断出具有"_item_id"属性所在位置的元素的功能，并给出该元素是否是该页面的主要内容或是其他内容。
-不要返回除json字符串外的任何其他内容，严格按照以下json格式返回，不加markdown格式的头尾，回答的格式例如：
+不要返回除json字符串外的任何其他内容，回答的格式例如：
 {
     "item_id 1": 0,
     "item_id 2": 1,
@@ -86,23 +92,27 @@ def __chat_with_model(api_key: str, api_url: str, system_prompt: str, user_promp
     return response_str
 
 
-def __check_model_response(response_str: str) -> Dict[str, str]:
+def __check_model_response(response_str: str, xpath_cnt: int) -> Dict[str, str]:
     try:
         response_json = json.loads(response_str)
         response_content = response_json['choices'][0]['message']['content']
     except Exception:
-        return None
+        return None, 'raw_model_response_dejson_fail'
 
-    response = json.loads(response_content)
-    if 'ERROR_RESULT' in response:
-        return None
+    try:
+        json_str = re.search(r'\{.*\}', response_content, re.DOTALL).group()
+        response = json.loads(json_str)
+    except Exception:
+        logger.error(f'raw_model_content_response_dejson_fail: {response_content}')
+        return None, 'raw_model_content_response_dejson_fail'
 
-    # response_key = sorted([''.join(re.findall(r'\d', item)) for item in response])
-    #  TODO check response_key and item_id equals
-    return response
+    if len(response) != xpath_cnt:
+        return None, 'raw_model_response_length_not_equal_xpath_cnt'
+
+    return response, None
 
 
-def __call_model_server(model_server_url, model_server_sk, model_name, simplified_html: str) -> tuple[str, bool]:
+def __call_model_server(model_server_url, model_server_sk, model_name, simplified_html: str, xpath_cnt: int) -> tuple[str, bool]:
     """调用模型server，返回处理结果。
 
     Return:
@@ -110,16 +120,23 @@ def __call_model_server(model_server_url, model_server_sk, model_name, simplifie
         succ: 是否成功, 如果失败，返回模型返回的全部信息。如果成功则只保留节点选择信息。
     """
     sys_prompt, user_prompt = __build_prompt_with_html(simplified_html)
+    response_str = None
     try:
         response_str = __chat_with_model(model_server_sk, model_server_url, sys_prompt, user_prompt, model_name)
-        rtn = __check_model_response(response_str)
-        if rtn is None:
-            return response_str, False
+        rtn, err_msg = __check_model_response(response_str, xpath_cnt)
+        if err_msg is None:
+            return rtn, True  # 返回模型打标的Json结果
         else:
-            return rtn, True
+            return err_msg, False
+    except APIConnectionError as e1:
+        logger.error(f'connect model server {model_server_url} fail: {e1}')
+        return err_msg, False
+    except BadRequestError as e2:
+        logger.error(f'bad request to model server {model_server_url}: {e2}')
+        return 'token_length_exceed', False
     except Exception as e:
         logger.exception(e)
-        return response_str, False
+        return err_msg, False
 
 
 def __process_one_input_file(result_save_dir, to_process_file_path, model_servers):
@@ -128,13 +145,15 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
     model_server_url = model_server['base_url']
     model_server_sk = model_server['sk']
     model_name = model_server['model_name']
+    has_call_model_succ = False  # 记录是否有1个成功的调用，如果都失败，就保存这个文件
+    all_err_reason = []
 
     result_file_path = os.path.join(result_save_dir , Path(to_process_file_path).name)
     # 检查如果result_file_path存在，则不进行处理
     if Path(result_file_path).exists():
         logger.info(f'result_file_path {result_file_path} exists, skip')
         __report_status(UPDATE_STATUS_URL, to_process_file_path, 'SUCC')
-        return
+        return True
 
     file_buffer = BytesIO()
     with open(to_process_file_path, 'r', encoding='utf-8') as f:
@@ -142,10 +161,27 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
             if line and line.strip():
                 obj = json.loads(line.strip())
                 simplified_html = obj['simplified_html']
-                rtn, succ = __call_model_server(model_server_url, model_server_sk, model_name, simplified_html)
+                track_id = obj['track_id']
+                logger.warning(f'process {to_process_file_path}, track_id: {track_id}, simplified_html length: {len(simplified_html)}')
+                xpath_cnt = len(obj['xpath_mapping'])
+                try:
+                    chat_with_model_timeout = 60 * 5
+                    rtn, succ = func_timeout(chat_with_model_timeout, __call_model_server, args=(model_server_url, model_server_sk, model_name, simplified_html, xpath_cnt))
+                except FunctionTimedOut:
+                    logger.error(f'call model server {model_server_url} timeout:{chat_with_model_timeout}s, skip')
+                    succ = False
+                    rtn = 'timeout_of_call_model_server'
+                    all_err_reason.append(rtn)
+                except Exception as e:
+                    logger.exception(e)
+                    succ = False
+                    rtn = 'unkonwn_error_of_call_model_server'
+                    all_err_reason.append(rtn)
+
                 if succ:
+                    has_call_model_succ = True
                     obj['model_name'] = model_name
-                    obj['llm_node_select'] = rtn
+                    obj['llm_node_select'] = rtn  # a dict
                     to_save_str = json.dumps(obj, ensure_ascii=False)
                     file_buffer.write(to_save_str.encode('utf-8') + b'\n')
                 else:
@@ -153,6 +189,12 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
                     obj['__error'] = rtn
                     to_save_str = json.dumps(obj, ensure_ascii=False)
                     file_buffer.write(to_save_str.encode('utf-8') + b'\n')
+                    all_err_reason.append(rtn)
+
+    if not has_call_model_succ:
+        logger.error(f'all model call fail, **NOT** save {to_process_file_path}, err_reason: {all_err_reason}')
+
+        return False
 
     file_buffer.seek(0)
     # 一次性写入到磁盘,降低磁盘IO
@@ -160,6 +202,7 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
         f.write(file_buffer.getvalue())
     logger.info(f'finished process {to_process_file_path}, write result to {result_file_path}')
     file_buffer.close()
+    return True
 
 
 @click.command()
@@ -168,30 +211,40 @@ def main(config: str):
     with open(config, 'r', encoding='utf-8') as f:
         cfg = json.load(f)
 
-    global GET_FILE_URL, UPDATE_STATUS_URL
+    global GET_FILE_URL, UPDATE_STATUS_URL, TOKENIZER
     GET_FILE_URL = f'{cfg["task_server_addr"]}/get_file'
     UPDATE_STATUS_URL = f'{cfg["task_server_addr"]}/update_status'
     result_save_dir = cfg['result_save_dir']
     model_servers = cfg['model_servers']
+    tokenizer_path = cfg['qwen2.5-72b-tokenizer-path']
+    # 检查这个路径是否存在，如果不存在则不使用tokenizer检查长度
+    if not os.path.exists(tokenizer_path):
+        TOKENIZER = None
+    else:
+        TOKENIZER = AutoTokenizer.from_pretrained(tokenizer_path)
 
     while True:
         try:
             # 获取待处理的文件路径
             logger.info(f'get layout classify file from {GET_FILE_URL}')
-            to_process_file_path = requests.get(GET_FILE_URL).json()['file_path']
+            to_process_file_path = requests.get(GET_FILE_URL, timeout=20).json()['file_path']
             logger.info(f'get layout classify file: {to_process_file_path}')
             if not to_process_file_path:
                 logger.info('no file to process, sleep 10s')
-                time.sleep(10)
                 continue
             # 处理文件
-            __process_one_input_file(result_save_dir, to_process_file_path, model_servers)
+            succ = __process_one_input_file(result_save_dir, to_process_file_path, model_servers)
+            if not succ:
+                logger.error(f'process {to_process_file_path} fail, sleep 10s')
+                __report_status(UPDATE_STATUS_URL, to_process_file_path, 'FAIL')
+                continue
             # 更新状态
             __report_status(UPDATE_STATUS_URL, to_process_file_path, 'SUCC')
         except Exception as e:
             logger.error(f'get layout classify fail: {e}')
+            __report_status(UPDATE_STATUS_URL, to_process_file_path, 'FAIL')
             logger.exception(e)
-            time.sleep(1)
+            time.sleep(10)
 
 
 if __name__ == '__main__':
