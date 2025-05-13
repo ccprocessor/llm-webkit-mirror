@@ -95,6 +95,15 @@ if __name__=="__main__":
     markdown = extract(url, html)
 ```
 
+## Pipeline
+
+1. [HTML pre-dedup](jupyter/html-pre-dedup/main.ipynb)
+2. [domain clustering](jupyter/domain-clustering/main.ipynb)
+3. [layout clustering](jupyter/layout-clustering/main.ipynb)
+4. [typical layout node selection](jupyter/typical-html-select/main.ipynb)
+5. [HTML node select by LLM](jupyter/html-node-select-llm/main.ipynb)
+6. [html parse layout by layout](jupyter/html-parse-by-layout/main.ipynb)
+
 ## Usage
 
 # TODO
