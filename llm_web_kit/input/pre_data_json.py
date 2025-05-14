@@ -17,10 +17,23 @@ class PreDataJsonKey:
     TYPICAL_RAW_TAG_HTML = 'typical_raw_tag_html'
     XPATH_MAPPING = 'xpath_mapping'
     TYPICAL_SIMPLIFIED_HTML = 'typical_simplified_html'
+    # 模型打标字典
     LLM_RESPONSE = 'llm_response'
-    HTML_ELEMENT_LIST = 'html_element_list'
+    # 映射模版正文树结构的元素字典
+    HTML_ELEMENT_DICT = 'html_element_dict'
+    # 映射模版正文时的文本列表
     HTML_TARGET_LIST = 'html_target_list'
+    # 模版网页提取的正文html
+    TYPICAL_MAIN_HTML = 'typical_main_html'
+    # 模版网页提取正文成功标签, bool类型
+    TYPICAL_MAIN_HTML_SUCCESS = 'typical_main_html_success'
+    # 推广原网页
+    HTML_SOURCE = 'html_source'
+    # 推广网页提取正文成功标签, bool类型
+    MAIN_HTML_SUCCESS = 'main_html_success'
+    # 推广网页提取正文文本
     MAIN_HTML = 'main_html'
+    # 推广网页提取正文树
     MAIN_HTML_BODY = 'main_html_body'
     FILTERED_MAIN_HTML = 'filtered_main_html'
 
