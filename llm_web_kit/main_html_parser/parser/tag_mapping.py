@@ -7,6 +7,8 @@ from llm_web_kit.main_html_parser.parser.layout_batch_parser import \
     LayoutBatchParser
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
+SIMILAR_THRESHOLD = 0.9
+
 
 class MapItemToHtmlTagsParser(BaseMainHtmlParser):
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
@@ -52,7 +54,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             template_sim = similarity(feature1, feature2, layer_n=layer)
 
             # 比较模版正文html与原html相似度
-            if template_sim > PreDataJsonKey.SIMILAR_THRESHOLD:
+            if template_sim > SIMILAR_THRESHOLD:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
             else:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True

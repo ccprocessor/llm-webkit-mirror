@@ -25,8 +25,6 @@ class PreDataJsonKey:
     HTML_TARGET_LIST = 'html_target_list'
     # 模版网页提取的正文html
     TYPICAL_MAIN_HTML = 'typical_main_html'
-    # 模版网页提取正文相似度阈值
-    SIMILAR_THRESHOLD = 0.9
     # 模版网页提取正文成功标签, bool类型
     TYPICAL_MAIN_HTML_SUCCESS = 'typical_main_html_success'
     # 推广原网页
