@@ -52,7 +52,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             template_sim = similarity(feature1, feature2, layer_n=layer)
 
             # 比较模版正文html与原html相似度
-            if template_sim > 0.9:
+            if template_sim > PreDataJsonKey.SIMILAR_THRESHOLD:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
             else:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True
