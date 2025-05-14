@@ -1,4 +1,4 @@
-import ast
+import json
 import re
 from hashlib import sha256
 
@@ -18,13 +18,32 @@ MAX_LENGTH = 10
 
 class LayoutBatchParser(BaseMainHtmlParser):
     """完整处理流程."""
-    def __init__(self, template_data: dict):
+    def __init__(self, template_data: str | dict):
         # 确保模板数据的键是整数类型
         self.template_data = template_data
 
+    def parse_tuple_key(self, key_str):
+        if key_str.startswith('(') and key_str.endswith(')'):
+            try:
+                return eval(key_str)  # WARNING: eval is unsafe for untrusted data!
+            except (SyntaxError, ValueError):
+                return key_str  # Fallback if parsing fails
+        return key_str
+
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
+        # 支持输入字符串和tag mapping后的dict对象
         html_source = pre_data['HTML']
-        template_data = pre_data['TEMPLATE_DATA']
+        template_data_str = pre_data['TEMPLATE_DATA']
+        template_data = dict()
+        if isinstance(template_data_str, str):
+            template_data_str = json.loads(template_data_str)
+            for layer, layer_dict in template_data_str.items():
+                layer_dict_json = {self.parse_tuple_key(k): v for k, v in layer_dict.items()}
+                template_data[int(layer)] = layer_dict_json
+        elif isinstance(template_data_str, dict):
+            template_data = template_data_str
+        else:
+            raise ValueError(f'template_data 类型错误: {type(template_data_str)}')
         pipeline = LayoutBatchParser(template_data)
         content, body = pipeline.process(html_source)
         pre_data[PreDataJsonKey.MAIN_HTML] = content
@@ -65,7 +84,6 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 使用 \1 保留前面的 "post" 或 "postid"，但替换数字部分
         return re.sub(pattern, lambda m: f'{m.group(1)}-', text, flags=re.IGNORECASE)
 
-    # 深度优先搜索html所有有id的节点，构造html tree
     def find_blocks_drop(self, element, depth, element_dict, parent_keyy, parent_label):
         # 判断这个tag是否有id
         if isinstance(element, etree._Comment):
@@ -74,26 +92,30 @@ class LayoutBatchParser(BaseMainHtmlParser):
         length_tail = 0
         if element.tail:
             length_tail = len(element.tail.strip())
-        tag = element.tag
-        layer_nodes = element_dict.get(f'{depth}', {})
-        class_tag = element.get('class')
         idd = element.get('id')
+        tag = element.tag
+        layer_nodes = element_dict[depth]
+        class_tag = element.get('class')
+        element_id = self.get_element_id(element)
+        keyy = (tag, class_tag, idd, element_id)
         keyy = self.normalize_key((tag, class_tag, idd))
+        # 如果有id，则找到root下面一层子节点对应id的节点，如找不到，则新增一个子节点
+        # TODO 目前只搜索下面一层，而不是搜索全部，如果更改搜索逻辑，树结构也会受到影响，当前逻辑可能会导致有多个id相同但层级不同的节点（在这一批html 的id结构不完全一致的情况下），全部从头搜索会产出id唯一的节点
         has_red = False
         layer_nodes_list = []
         layer_nodes_dict = dict()
         for node_keyy, node_value in layer_nodes.items():
-            # key的str转成tuple格式
-            node_keyy = ast.literal_eval(node_keyy)
             node_parent_keyy = self.normalize_key(node_value[1])
+            if node_parent_keyy is not None:
+                node_parent_keyy = tuple(node_parent_keyy)
             node_label = node_value[0]
-            # parent_keyy是待匹配元素的key,node_parent_keyy是模板元素的key
             if node_parent_keyy == parent_keyy:
                 layer_nodes_list.append((node_keyy[:3], node_label))
                 if self.normalize_key(node_keyy[:3]) in layer_nodes_dict:
                     layer_nodes_dict[self.normalize_key(node_keyy[:3])].append(node_label)
                 else:
                     layer_nodes_dict[self.normalize_key(node_keyy[:3])] = [node_label]
+
             if node_label == 'red' and node_parent_keyy == parent_keyy:
                 has_red = True
         if not has_red and parent_label != 'red':
@@ -105,7 +127,6 @@ class LayoutBatchParser(BaseMainHtmlParser):
         elif not has_red and parent_label == 'red':
             return
         label = None
-        # 待推广的keyy在当前层中存在且不是红色的节点，则删除该元素
         if keyy in layer_nodes_dict:
             if 'red' not in layer_nodes_dict[keyy]:
                 parent = element.getparent()
@@ -114,10 +135,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 return
             else:
                 label = 'red'
-        # 匹配不上的key保留
-        if not element.getchildren() and (length > 0 or length_tail > 0):
+        elif length > 0 or length_tail > 0:
             return
-        for child in element.getchildren():
+
+        for child in element:
             self.find_blocks_drop(child, depth + 1, element_dict, keyy, label)
 
     def drop_node_element(self, html_source, element_dict):

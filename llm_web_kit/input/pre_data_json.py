@@ -15,6 +15,7 @@ class PreDataJsonKey:
 
     TYPICAL_RAW_HTML = 'typical_raw_html'
     TYPICAL_RAW_TAG_HTML = 'typical_raw_tag_html'
+    XPATH_MAPPING = 'xpath_mapping'
     TYPICAL_SIMPLIFIED_HTML = 'typical_simplified_html'
     LLM_RESPONSE = 'llm_response'
     HTML_ELEMENT_LIST = 'html_element_list'
