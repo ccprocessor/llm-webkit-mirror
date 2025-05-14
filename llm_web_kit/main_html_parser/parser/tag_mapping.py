@@ -39,9 +39,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
 
             # 模版抽取正文html
             parser = LayoutBatchParser({})
-            pre_data['HTML'] = template_raw_html
-            pre_data['TEMPLATE_DATA'] = element_dict
-            parts = parser.parse(pre_data)
+            extract_info = {PreDataJsonKey.HTML_SOURCE: template_raw_html,
+                            PreDataJsonKey.HTML_ELEMENT_DICT: element_dict}
+            extract_info_json = PreDataJson(extract_info)
+            parts = parser.parse(extract_info_json)
             template_extract_html = parts[PreDataJsonKey.MAIN_HTML_BODY]
 
             # 检验模版抽取效果
