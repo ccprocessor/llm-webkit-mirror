@@ -44,7 +44,7 @@ class TestLayoutParser(unittest.TestCase):
             for layer, layer_dict in element_dict_str.items():
                 layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
                 element_dict[int(layer)] = layer_dict_json
-            data_dict = {'HTML': raw_html, 'TEMPLATE_DATA': element_dict, 'ORI_HTML': raw_html}
+            data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html}
             expected_html = base_dir.joinpath(test_case['expected'][0]).read_text()
             pre_data = PreDataJson(data_dict)
             parser = LayoutBatchParser(element_dict)
@@ -62,7 +62,7 @@ class TestLayoutParser(unittest.TestCase):
             for layer, layer_dict in element_dict_str.items():
                 layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
                 element_dict[int(layer)] = layer_dict_json
-            data_dict = {'HTML': raw_html, 'TEMPLATE_DATA': element_dict, 'ORI_HTML': raw_html}
+            data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html}
             expected_html = base_dir.joinpath(test_case['expected'][1]).read_text()
             pre_data = PreDataJson(data_dict)
             parser = LayoutBatchParser(element_dict)
@@ -80,7 +80,7 @@ class TestLayoutParser(unittest.TestCase):
         for layer, layer_dict in element_dict_str.items():
             layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
             element_dict[int(layer)] = layer_dict_json
-        data_dict = {'HTML': raw_html, 'TEMPLATE_DATA': element_dict, 'ORI_HTML': raw_html}
+        data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html}
         pre_data = PreDataJson(data_dict)
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
@@ -92,7 +92,7 @@ class TestLayoutParser(unittest.TestCase):
         expected_html = base_dir.joinpath('assets/output_layout_batch_parser/parser_sv_m_wiktionary_org.html').read_text()
         raw_html = raw_html_path.read_text()
         element_dict = element_path.read_text()
-        data_dict = {'HTML': raw_html, 'TEMPLATE_DATA': element_dict, 'ORI_HTML': raw_html}
+        data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html}
         pre_data = PreDataJson(data_dict)
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)

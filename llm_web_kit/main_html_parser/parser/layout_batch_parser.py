@@ -32,8 +32,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
 
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
         # 支持输入字符串和tag mapping后的dict对象
-        html_source = pre_data['HTML']
-        template_data_str = pre_data['TEMPLATE_DATA']
+        html_source = pre_data['html_source']
+        template_data_str = pre_data['html_element_dict']
         template_data = dict()
         if isinstance(template_data_str, str):
             template_data_str = json.loads(template_data_str)
