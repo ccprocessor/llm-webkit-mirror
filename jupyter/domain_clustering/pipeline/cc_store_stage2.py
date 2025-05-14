@@ -1,11 +1,10 @@
 import json
 
 import pyspark.sql.functions as F
+from cc_store.libs.domain import compute_domain_hash
 from pyspark.sql import Window
 from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 from xinghe.spark import new_spark_session, read_any_path, write_any_path
-
-from cc_store.libs.domain import compute_domain_hash
 
 # 配置参数
 MAX_RECORDS_PER_FILE = 100000  # 每个文件的目标记录数
@@ -170,34 +169,43 @@ def process_multiple_hash_buckets(start_hash_id, end_hash_id, input_base_path,
                             schema)).withColumn('domain',
                                                 F.col('parsed.domain'))
 
-        # 提取所有不在统计数据中的域名
-        missing_domains = input_df.select('domain').subtract(
-            domain_file_indices.select('domain'))
-
-        compute_hash_udf = F.udf(compute_domain_hash, IntegerType())
-
-        missing_domain_df = missing_domains.withColumn(
-            'domain_hash_id', compute_hash_udf(F.col('domain'), F.lit(HASH_COUNT))).withColumn(
-                'count', F.lit(1)).withColumn('base_file_idx',
-                                              F.lit(0)).withColumn(
-                                                  'files_needed', F.lit(1))
-
-        # 合并到domain_file_indices
-        domain_file_indices = domain_file_indices.union(missing_domain_df)
-
         # 6. 使用JOIN和内置函数分配file_idx
+        # 将domain_file_indices广播给所有执行器
+        domain_file_indices_broadcast = F.broadcast(domain_file_indices.select(
+            'domain', 'domain_hash_id', 'base_file_idx', 'files_needed'
+        ))
+
+        # 使用广播join
         processed_df = input_df.join(
-            domain_file_indices.select('domain', 'domain_hash_id',
-                                       'base_file_idx', 'files_needed'),
-            'domain', 'left').withColumn(
-                'file_idx',
-                F.when(
-                    F.col('files_needed').isNull() |
-                    (F.col('files_needed') <= 1),
-                    F.coalesce(F.col('base_file_idx'), F.lit(0))).otherwise(
-                        F.col('base_file_idx') +
-                        F.floor(F.rand() * F.col('files_needed')))).na.fill(
-                            0, ['file_idx'])  # 对可能的NULL值填充0
+            domain_file_indices_broadcast,
+            'domain',
+            'left'
+        )
+
+        # 为join后domain_hash_id为null的记录(即缺失域名)计算hash值
+        compute_hash_udf = F.udf(lambda domain: compute_domain_hash(domain, HASH_COUNT), IntegerType())
+
+        processed_df = processed_df.withColumn(
+            'domain_hash_id',
+            F.when(F.col('domain_hash_id').isNull(), compute_hash_udf(F.col('domain'))).otherwise(F.col('domain_hash_id'))
+        ).withColumn(
+            'base_file_idx',
+            F.when(F.col('base_file_idx').isNull(), F.lit(0)).otherwise(F.col('base_file_idx'))
+        ).withColumn(
+            'files_needed',
+            F.when(F.col('files_needed').isNull(), F.lit(1)).otherwise(F.col('files_needed'))
+        )
+
+        # 按照原始逻辑计算file_idx
+        processed_df = processed_df.withColumn(
+            'file_idx',
+            F.when(
+                F.col('files_needed') <= 1,
+                F.col('base_file_idx')
+            ).otherwise(
+                F.col('base_file_idx') + F.floor(F.rand() * F.col('files_needed'))
+            )
+        ).na.fill(0, ['file_idx'])  # 对可能的NULL值填充0
 
         # 7. 更新JSON数据
         def update_json(json_str, file_idx, domain_hash_id):

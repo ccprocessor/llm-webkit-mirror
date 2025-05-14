@@ -1,10 +1,9 @@
 import json
 
 import pyspark.sql.functions as F
+from cc_store.libs.domain import compute_domain_hash, extract_domain
 from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 from xinghe.spark import new_spark_session, read_any_path, write_any_path
-
-from cc_store.libs.domain import compute_domain_hash, extract_domain
 
 # 配置参数
 hash_count = 10000  # 域名哈希桶数量10000
