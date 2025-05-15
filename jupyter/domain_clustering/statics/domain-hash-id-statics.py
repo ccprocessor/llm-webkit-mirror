@@ -6,7 +6,7 @@ from pyspark.sql.types import IntegerType
 from xinghe.s3 import put_s3_object_with_retry
 from xinghe.spark import new_spark_session, read_any_path
 
-from cc_store.libs.domain import compute_domain_hash
+from jupyter.domain_clustering.libs.domain import compute_domain_hash
 
 # 配置参数
 hash_count = 10000  # 域名哈希桶数量

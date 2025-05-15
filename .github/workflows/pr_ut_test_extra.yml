@@ -42,7 +42,7 @@ jobs:
       - name: Run tests and collect coverage
         run: |
           pytest --cov --cov-report=xml -n auto ./tests/llm_web_kit
-          pytest --cov --cov-report=xml -n auto ./tests/cc_store
+          pytest -n auto ./tests/jupyter
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:

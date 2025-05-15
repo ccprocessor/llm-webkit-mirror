@@ -2,11 +2,12 @@ import json
 import time
 
 import pyspark.sql.functions as F
-import xxhash
 from pyspark.sql.types import (IntegerType, LongType, StringType, StructField,
                                StructType)
 from xinghe.s3 import put_s3_object_with_retry
 from xinghe.spark import new_spark_session, read_any_path
+
+from jupyter.domain_clustering.libs.domain import compute_domain_hash
 
 
 def analyze_file_offsets(file_path):
@@ -103,7 +104,7 @@ def analyze_file_offsets(file_path):
 
             # 如果domain_hash_id为空，使用计算值
             if domain_hash_id is None:
-                domain_hash_id = xxhash.xxh64_intdigest(domain) % HASH_COUNT
+                domain_hash_id = compute_domain_hash(domain, HASH_COUNT)
 
             # 计算新的length，使用max(offset) - min(offset) + 1
             # 这种方法假设记录是连续的，没有大的空隙
