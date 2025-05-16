@@ -60,6 +60,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True
 
             # 结果返回
+            pre_data[PreDataJsonKey.SIMILARITY_LAYER] = layer
             pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = template_extract_html
             pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
             pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict

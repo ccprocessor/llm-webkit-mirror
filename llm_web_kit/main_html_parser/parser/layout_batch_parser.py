@@ -7,6 +7,7 @@ from lxml import html
 from lxml.html import etree
 from nltk.tokenize import word_tokenize
 
+from llm_web_kit.html_layout.html_layout_cosin import get_feature, similarity
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
@@ -14,10 +15,12 @@ from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 nltk.download('punkt', quiet=True)  # 静默模式避免日志干扰
 
 MAX_LENGTH = 10
+SIMILARITY_THRESHOLD = 0.75
 
 
 class LayoutBatchParser(BaseMainHtmlParser):
     """完整处理流程."""
+
     def __init__(self, template_data: str | dict):
         # 确保模板数据的键是整数类型
         self.template_data = template_data
@@ -32,8 +35,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
 
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
         # 支持输入字符串和tag mapping后的dict对象
-        html_source = pre_data['html_source']
-        template_data_str = pre_data['html_element_dict']
+        html_source = pre_data[PreDataJsonKey.HTML_SOURCE]
+        template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
         template_data = dict()
         if isinstance(template_data_str, str):
             template_data_str = json.loads(template_data_str)
@@ -46,6 +49,23 @@ class LayoutBatchParser(BaseMainHtmlParser):
             raise ValueError(f'template_data 类型错误: {type(template_data_str)}')
         pipeline = LayoutBatchParser(template_data)
         content, body = pipeline.process(html_source)
+
+        # 相似度计算
+        if PreDataJsonKey.TYPICAL_MAIN_HTML in pre_data:
+            template_main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
+            if PreDataJsonKey.SIMILARITY_LAYER in pre_data:
+                layer = pre_data[PreDataJsonKey.SIMILARITY_LAYER]
+            else:
+                layer = self.__get_max_width_layer(template_data)
+            feature1 = get_feature(template_main_html)
+            feature2 = get_feature(body)
+            sim = similarity(feature1, feature2, layer_n=layer)
+            if sim < SIMILARITY_THRESHOLD:
+                pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
+            else:
+                pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = True
+
+        # 结果返回
         pre_data[PreDataJsonKey.MAIN_HTML] = content
         pre_data[PreDataJsonKey.MAIN_HTML_BODY] = body
         return pre_data
@@ -96,11 +116,9 @@ class LayoutBatchParser(BaseMainHtmlParser):
         tag = element.tag
         layer_nodes = element_dict[depth]
         class_tag = element.get('class')
-        element_id = self.get_element_id(element)
-        keyy = (tag, class_tag, idd, element_id)
         keyy = self.normalize_key((tag, class_tag, idd))
-        # 如果有id，则找到root下面一层子节点对应id的节点，如找不到，则新增一个子节点
-        # TODO 目前只搜索下面一层，而不是搜索全部，如果更改搜索逻辑，树结构也会受到影响，当前逻辑可能会导致有多个id相同但层级不同的节点（在这一批html 的id结构不完全一致的情况下），全部从头搜索会产出id唯一的节点
+
+        # 匹配正文节点
         has_red = False
         layer_nodes_list = []
         layer_nodes_dict = dict()
@@ -187,3 +205,13 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 text.append(item.tail)
 
         return ''.join(text)
+
+    def __get_max_width_layer(self, element_dict):
+        max_length = 0
+        max_width_layer = 0
+        for layer_n, layer in element_dict.items():
+            if len(layer) > max_length:
+                max_width_layer = layer_n
+                max_length = len(layer)
+
+        return max_width_layer - 2 if max_width_layer > 4 else 3

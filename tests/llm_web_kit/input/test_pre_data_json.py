@@ -386,6 +386,7 @@ class TestPreDataJsonKey(unittest.TestCase):
         assert hasattr(PreDataJsonKey, 'FILTERED_MAIN_HTML')
         assert hasattr(PreDataJsonKey, 'TYPICAL_MAIN_HTML')
         assert hasattr(PreDataJsonKey, 'TYPICAL_MAIN_HTML_SUCCESS')
+        assert hasattr(PreDataJsonKey, 'SIMILARITY_LAYER')
         assert hasattr(PreDataJsonKey, 'HTML_SOURCE')
         assert hasattr(PreDataJsonKey, 'MAIN_HTML_SUCCESS')
 

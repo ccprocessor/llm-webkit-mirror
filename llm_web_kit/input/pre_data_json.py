@@ -23,6 +23,8 @@ class PreDataJsonKey:
     HTML_ELEMENT_DICT = 'html_element_dict'
     # 映射模版正文时的文本列表
     HTML_TARGET_LIST = 'html_target_list'
+    # 相似度计算层数
+    SIMILARITY_LAYER = 'similarity_layer'
     # 模版网页提取的正文html
     TYPICAL_MAIN_HTML = 'typical_main_html'
     # 模版网页提取正文成功标签, bool类型
