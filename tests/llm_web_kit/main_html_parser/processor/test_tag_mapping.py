@@ -45,6 +45,7 @@ class TestTagMapping(unittest.TestCase):
         verify_key = (verify_key[0], verify_key[1], verify_key[2], verify_key[4], verify_key[5])
         new_res = element_dict[7][verify_key][0]
         self.assertEqual('red', new_res)
+        print(element_dict)
 
     def test_construct_main_tree_fail_by_similarity(self):
         """测试由于抽取正文和原网页相似度过高导致构建失败，模拟模型给出的结果中没有正文标签，根据推广算法会保留全网页."""

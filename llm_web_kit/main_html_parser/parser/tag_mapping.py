@@ -35,9 +35,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
             response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
             root = html.fromstring(template_tag_html)
+            tree = etree.ElementTree(root)
             # 抽取正文树结构
             content_list = self.tag_main_html(response_json, root)
-            element_dict = self.construct_main_tree(root)
+            element_dict = self.construct_main_tree(root, tree)
 
             # 模版抽取正文html
             parser = LayoutBatchParser({})
@@ -153,7 +154,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         self.tag_parent(pre_root)
         return content_list
 
-    def process_main_tree(self, element, depth, layer_index_counter, all_dict, all_set):
+    def process_main_tree(self, element, depth, layer_index_counter, all_dict, all_set, tree):
         if element is None:
             return
         if isinstance(element, etree._Comment):
@@ -188,23 +189,23 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             color = 'red'
         else:
             color = 'green'
-
+        xpath = tree.getpath(element)
         # 写入该层元素key，如果有重复的green节点，只保留一个
         if keyy_for_sim in current_set:
             if is_main_html and current_set[keyy_for_sim][0] == 'green':
-                current_dict[keyy] = ('red', parent_keyy)
+                current_dict[keyy] = ('red', parent_keyy, xpath)
                 current_set[keyy_for_sim] = ('red', parent_keyy)
         else:
-            current_dict[keyy] = (color, parent_keyy)
+            current_dict[keyy] = (color, parent_keyy, xpath)
             current_set[keyy_for_sim] = (color, parent_keyy)
 
         for ele in element:
-            self.process_main_tree(ele, depth + 1, layer_index_counter, all_dict, all_set)
+            self.process_main_tree(ele, depth + 1, layer_index_counter, all_dict, all_set, tree)
 
-    def construct_main_tree(self, pre_root):
+    def construct_main_tree(self, pre_root, tree):
         all_dict = {}
         all_set = {}
         layer_index_counter = {}
-        self.process_main_tree(pre_root, 0, layer_index_counter, all_dict, all_set)
+        self.process_main_tree(pre_root, 0, layer_index_counter, all_dict, all_set, tree)
 
         return all_dict
