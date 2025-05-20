@@ -335,17 +335,33 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
     is_sub_sup_context = element.tag in ('sub', 'sup') or bool(element.xpath('.//sub | .//sup'))
 
     # 直接处理当前元素是sub或sup的情况
-    if element.tag == 'sub':
-        # 获取内容并规范化空白 - 去除所有换行符，将多个连续空格替换为单个空格
-        content = element.text_content()
-        content = re.sub(r'\s+', ' ', content).strip()
-        result = f'{current_text.rstrip()}~{content}~'
-        return result
-    elif element.tag == 'sup':
-        content = element.text_content()
-        # 使用正则表达式规范化空白
-        content = re.sub(r'\s+', ' ', content).strip()
-        result = f'{current_text.rstrip()}^{content}^'
+    if element.tag == 'sub' or element.tag == 'sup':
+        marker = element.tag
+        content = element.text or ''
+
+        # 处理所有子元素
+        for child in element:
+            if child.tag in ('sub', 'sup'):
+                # 对于嵌套的sub/sup标签，保留它们的标签结构
+                child_result = process_sub_sup_tags(child, '', lang, True)
+                content += child_result
+            else:
+                # 处理常规子元素，如span等
+                if child.text:
+                    content += child.text
+
+                # 递归处理子元素的子元素
+                for grandchild in child:
+                    if grandchild.tag in ('sub', 'sup'):
+                        content += process_sub_sup_tags(grandchild, '', lang, True)
+
+                # 处理子元素的尾部文本
+                if child.tail:
+                    content += child.tail
+
+        # 规范化空白并构建最终结果
+        # content = re.sub(r'\s+', ' ', content).strip()
+        result = f'{current_text.rstrip()}<{marker}>{content}</{marker}>'
         return result
 
     # 检查是否包含sub或sup子元素，如果不包含且不是sub/sup上下文，则按照普通文本处理
@@ -368,18 +384,12 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
 
     # 处理所有子元素及其尾部文本
     for child in element:
-        if child.tag == 'sub' or child.tag == 'sup':
-            content = child.text_content()
-            content = re.sub(r'\s+', ' ', content).strip()
-            marker = '~' if child.tag == 'sub' else '^'
-            result += f'{marker}{content}{marker}'
-        else:
-            child_result = process_sub_sup_tags(child, '', lang, recursive)
-            if child_result:
-                if is_sub_sup_context:
-                    result += child_result
-                else:
-                    result = combine_text(result, child_result, lang)
+        child_result = process_sub_sup_tags(child, '', lang, recursive)
+        if child_result:
+            if is_sub_sup_context:
+                result += child_result
+            else:
+                result = combine_text(result, child_result, lang)
 
         # 添加尾部文本
         if child.tail:
