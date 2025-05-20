@@ -1,4 +1,4 @@
-from urllib.parse import parse_qs, unquote
+from urllib.parse import unquote
 
 from lxml.html import HtmlElement
 
@@ -23,21 +23,21 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
 
         # 判断img的公式是否为行间公式
         def is_display_mode(node, src_name):
-            # 1. 检查src中的参数
-            if src_name and '?' in src_name:
-                try:
-                    query_params = parse_qs(src_name.split('?', 1)[1])
-                    # 检查常见参数: displaystyle, mode, display等
-                    if any(query_params.get(param, ['0'])[0] in ['1', 'true', 'display']
-                           for param in ['displaystyle', 'mode', 'display']):
-                        return True
-                except Exception:
-                    pass
+            # # 1. 检查src中的参数
+            # if src_name and '?' in src_name:
+            #     try:
+            #         query_params = parse_qs(src_name.split('?', 1)[1])
+            #         # 检查常见参数: displaystyle, mode, display等
+            #         if any(query_params.get(param, ['0'])[0] in ['1', 'true', 'display']
+            #                for param in ['displaystyle', 'mode', 'display']):
+            #             return True
+            #     except Exception:
+            #         pass
 
-            # 2. 检查样式和类
-            style = node.get('style', '')
-            if 'display:block' in style or 'margin:auto' in style:
-                return True
+            # # 2. 检查样式和类
+            # style = node.get('style', '')
+            # if 'display:block' in style or 'margin:auto' in style:
+            #     return True
 
             # 3. 检查alt文本是否以$$开头结尾
             alt_text = node.get('alt', '')
