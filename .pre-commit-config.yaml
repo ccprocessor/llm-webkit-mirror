@@ -34,7 +34,7 @@ repos:
         exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*'
       - id: requirements-txt-fixer
       - id: double-quote-string-fixer
-        exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*|cc_store/.*'
+        exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*|jupyter/domain_clustering/.*'
       - id: check-merge-conflict
       - id: fix-encoding-pragma
         args: [ "--remove" ]

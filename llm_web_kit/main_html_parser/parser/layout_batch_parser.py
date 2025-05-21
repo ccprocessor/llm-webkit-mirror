@@ -51,9 +51,9 @@ class LayoutBatchParser(BaseMainHtmlParser):
         content, body = pipeline.process(html_source)
 
         # 相似度计算
-        if PreDataJsonKey.TYPICAL_MAIN_HTML in pre_data:
+        if pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, None):
             template_main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
-            if PreDataJsonKey.SIMILARITY_LAYER in pre_data:
+            if pre_data.get(PreDataJsonKey.SIMILARITY_LAYER, None):
                 layer = pre_data[PreDataJsonKey.SIMILARITY_LAYER]
             else:
                 layer = self.__get_max_width_layer(template_data)
@@ -118,24 +118,37 @@ class LayoutBatchParser(BaseMainHtmlParser):
         class_tag = element.get('class')
         keyy = self.normalize_key((tag, class_tag, idd))
 
+        # 获取element的当前子层的所有节点
+        element_parent = element.getparent()
+        current_layer_keys = set()
+        if element_parent is None:
+            current_layer_keys.add(keyy)
+        else:
+            for child in element_parent:
+                child_key = self.normalize_key((child.tag, child.get('class'), child.get('id')))
+                current_layer_keys.add(child_key)
+
         # 匹配正文节点
         has_red = False
         layer_nodes_list = []
         layer_nodes_dict = dict()
+        if class_tag == 'mw-editsection':
+            print('test')
         for node_keyy, node_value in layer_nodes.items():
             node_parent_keyy = self.normalize_key(node_value[1])
             if node_parent_keyy is not None:
                 node_parent_keyy = tuple(node_parent_keyy)
             node_label = node_value[0]
-            if node_parent_keyy == parent_keyy:
+            norm_node_keyy = self.normalize_key(node_keyy[:3])
+            if node_parent_keyy == parent_keyy and norm_node_keyy in current_layer_keys:
                 layer_nodes_list.append((node_keyy[:3], node_label))
-                if self.normalize_key(node_keyy[:3]) in layer_nodes_dict:
-                    layer_nodes_dict[self.normalize_key(node_keyy[:3])].append(node_label)
+                if norm_node_keyy in layer_nodes_dict:
+                    layer_nodes_dict[norm_node_keyy].append(node_label)
                 else:
-                    layer_nodes_dict[self.normalize_key(node_keyy[:3])] = [node_label]
+                    layer_nodes_dict[norm_node_keyy] = [node_label]
 
-            if node_label == 'red' and node_parent_keyy == parent_keyy:
-                has_red = True
+                if node_label == 'red':
+                    has_red = True
         if not has_red and parent_label != 'red':
             parent = element.getparent()
             if parent is not None:

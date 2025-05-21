@@ -175,7 +175,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         keyy = (tag, class_id, idd, depth, layer_index_counter[depth])
 
         parent = element.getparent()
-        if parent:
+        if parent is not None:
             parent_tag = parent.tag
             parent_class_id = parent.get('class', None)
             parent_idd = parent.get('id', None)
