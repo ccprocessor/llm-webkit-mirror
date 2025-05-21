@@ -56,3 +56,11 @@ repos:
     hooks:
       - id: docformatter
         args: [ "--in-place", "--wrap-descriptions", "119" ]
+  - repo: local
+    hooks:
+      - id: clear-jupyter-notebook-output
+        name: Clear Jupyter Notebook Output
+        entry: jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace
+        language: system
+        files: \.ipynb$
+        types: [file]
