@@ -228,50 +228,53 @@ class CCMATH():
         if tree is None:
             raise ValueError(f'Failed to load html: {html}')
         result = []
+        # 1. 收集所有相关元素
+        math_elements = tree.xpath('//math | //*[contains(local-name(), ":math")]')
+        script_elements = tree.xpath('//script')
+        sub_elements = tree.xpath('//sub')
+        sup_elements = tree.xpath('//sup')
+
+        # 2. 收集所有非空文本节点
+        text_nodes = []
         for node in tree.iter():
-            # 先检查mathml
-            math_elements = node.xpath('//math | //*[contains(local-name(), ":math")]')
-            if len(math_elements) > 0:
-                # 检查math标签是否有display属性且值为block，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/math
-                if math_elements[0].get('display') == 'block':
-                    result.append((EQUATION_INTERLINE, MathType.MATHML))
-                else:
-                    # 检查math下的mstyle标签，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/mstyle
-                    # math_mstyle_element = math_elements[0].xpath('.//mstyle')
-                    # if math_mstyle_element and math_mstyle_element[0].get('displaystyle') == 'true':
-                    #     return EQUATION_INTERLINE, MathType.MATHML
-                    result.append((EQUATION_INLINE, MathType.MATHML))
+            if node.text and text_strip(node.text):
+                text_nodes.append(text_strip(node.text))
 
-            # 再检查latex
-            if text := text_strip(node.text):
-                # 优先检查行间公式
-                if check_delimiters(latex_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) != MathMatchRes.NOMATCH:
-                    result.append((EQUATION_INTERLINE, MathType.LATEX))
-                if check_delimiters(latex_config[MATH_TYPE_PATTERN.INLINEMATH], text) != MathMatchRes.NOMATCH:
-                    result.append((EQUATION_INLINE, MathType.LATEX))
+        # 3. 处理MathML公式
+        for math in math_elements:
+            if math.get('display') == 'block':
+                result.append((EQUATION_INTERLINE, MathType.MATHML))
+            else:
+                result.append((EQUATION_INLINE, MathType.MATHML))
+        
+        # 4. 处理LaTeX公式 和 AsciiMath公式
+        for text in text_nodes:
+            ascii_match = check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text)
+            # LaTeX行间
+            if check_delimiters(latex_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) != MathMatchRes.NOMATCH:
+                result.append((EQUATION_INTERLINE, MathType.LATEX))
+            # LaTeX 行内
+            elif check_delimiters(latex_config[MATH_TYPE_PATTERN.INLINEMATH], text) != MathMatchRes.NOMATCH:
+                result.append((EQUATION_INLINE, MathType.LATEX))
+            # AsciiMath 行间
+            
+            elif ascii_match == MathMatchRes.ALLMATCH:
+                result.append((EQUATION_INTERLINE, MathType.ASCIIMATH))
+            elif ascii_match == MathMatchRes.PARTIALMATCH:
+                result.append((EQUATION_INLINE, MathType.ASCIIMATH))
 
-                # 再检查asciimath，通常被包含在`...`中，TODO：先只支持行间公式
-                if check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.ALLMATCH:
-                    result.append((EQUATION_INTERLINE, MathType.ASCIIMATH))
-                if check_delimiters(asciiMath_config[MATH_TYPE_PATTERN.DISPLAYMATH], text) == MathMatchRes.PARTIALMATCH:
-                    result.append((EQUATION_INLINE, MathType.ASCIIMATH))
+        # 5. 处理 Script 标签
+        for script in script_elements:
+            if 'mode=display' in script.get('type', ''):
+                result.append((EQUATION_INTERLINE, MathType.LATEX))
+            else:
+                result.append((EQUATION_INLINE, MathType.LATEX))
 
-            # 检查script标签
-            script_elements = tree.xpath('//script')
-            if script_elements and any(text_strip(elem.text) for elem in script_elements):
-                # 判断type属性，如有包含 mode=display 则认为是行间公式
-                for script in script_elements:
-                    if 'mode=display' in script.get('type', ''):
-                        result.append((EQUATION_INTERLINE, MathType.LATEX))
-                    else:
-                        result.append((EQUATION_INLINE, MathType.LATEX))
+        # 6. 处理 HTML 数学标记
+        if (any(text_strip(sub.text) for sub in sub_elements) or
+            any(text_strip(sup.text) for sup in sup_elements)):
+            result.append((EQUATION_INLINE, MathType.HTMLMATH))
 
-            # 检查 HTML 数学标记（sub 和 sup）
-            sub_elements = tree.xpath('//sub')
-            sup_elements = tree.xpath('//sup')
-            if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
-                (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
-                result.append((EQUATION_INLINE, MathType.HTMLMATH))
         return self.equation_type_to_tag(result)
 
     def equation_type_to_tag(self, type_math_type: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
