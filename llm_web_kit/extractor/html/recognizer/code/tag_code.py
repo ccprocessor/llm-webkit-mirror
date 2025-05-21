@@ -75,48 +75,46 @@ import time
 #     # 所有非空白、非数字字符都在 <code> 标签内，返回 True
 #     return True
 
-                
-def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
-    if node.tag == 'code':
-        return True
-
-    full_chars = (
-        c for text in node.itertext() 
-        for c in text 
-        if not c.isspace() and not c.isdigit()
-    )
-      
-    nodes = node.xpath('.//code')
-    code_chars = (
-        c for code in nodes
-        for text in code.itertext() 
-        for c in text 
-        if not c.isspace() and not c.isdigit()
-    )
-
-    for f, c in zip(full_chars, code_chars):
-        if f != c:
-            return False
-
-    try:
-        next(full_chars)
-        return False
-    except StopIteration:
-        pass
-
-    try:
-        next(code_chars)
-        return False
-    except StopIteration:
-        return True
-
+# 1. 会引发错误       
 # def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
 #     if node.tag == 'code':
 #         return True
 
+#     full_chars = (
+#         c for text in node.itertext() 
+#         for c in text 
+#         if not c.isspace() and not c.isdigit()
+#     )
+      
+#     nodes = node.xpath('.//code')
+#     code_chars = (
+#         c for code in nodes
+#         for text in code.itertext() 
+#         for c in text 
+#         if not c.isspace() and not c.isdigit()
+#     )
+
+#     for f, c in zip(full_chars, code_chars):
+#         if f != c:
+#             return False
+
+#     try:
+#         next(full_chars)
+#         return False
+#     except StopIteration:
+#         pass
+
+#     try:
+#         next(code_chars)
+#         return False
+#     except StopIteration:
+#         return True
+
+# def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
+#     if node.tag == 'code':
+#         return True
 #     # 获取所有文本节点
 #     text_nodes = node.xpath('.//text()')
-
 #     for text_node in text_nodes:
 #         # 检查文本节点的父节点及其祖先是否包含 <code> 标签
 #         parent = text_node.getparent()
@@ -132,8 +130,16 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
 #             text = text_node  # 直接使用 text_node，因为它已经是文本内容
 #             if text and any(not c.isspace() and not c.isdigit() for c in text):
 #                 return False
-
 #     return True
+
+def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
+    full_text = ''.join([x for x in ''.join(node.itertext(None)) if not x.isspace() and not x.isdigit()])
+    code_text = ''
+    for s in node.xpath('.//code//text()'):
+        for c in s:
+            if not c.isspace() and not c.isdigit():
+                code_text += c
+    return full_text == code_text
 
 def __get_code_nodes(html_el: HtmlElement) -> list[HtmlElement]:
     """获取 html_el 中所有 code 标签的路径 只获取最外层的code标签， 如果code标签内还有code标签，则不获取。

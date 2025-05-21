@@ -291,7 +291,9 @@ class TestCodeRecognizer(unittest.TestCase):
                     if not answer:
                         continue
                     answers.append((answer, inline))
-
+            if len(test_case['expected']) == 42:
+                print("-------------------expected: ",test_case['expected'])
+                print("-------------------answers: ",answers)
             self.assertEqual(len(answers), len(test_case['expected']))
             for expect_path, (answer, inline) in zip(test_case['expected'], answers):
                 if expect_path.startswith('assets'):
@@ -614,3 +616,7 @@ import com.dao.UsersDao;
         self.assertEqual(resp.get_content_list().length(), 1)
         self.assertEqual(len(resp.get_content_list()[0]), 1)
         self.assertEqual(resp.get_content_list()[0][0]['content']['code_content'], answer)
+
+tcr = TestCodeRecognizer()
+tcr.setUp()
+tcr.test_code_rec()

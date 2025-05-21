@@ -51,8 +51,8 @@ class TestExtractorChain(unittest.TestCase):
 
         self.md_expected_content = open(self.md_output_file_path, 'r').read()
         self.txt_expected_content = open(self.txt_output_file_path, 'r').read()
-        self.main_html_expected_content = open(self.main_html_output_file_path, 'r', encoding='utf-8-sig').read()
-        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r', encoding='utf-8-sig').read()
+        self.main_html_expected_content = open(self.main_html_output_file_path, 'r').read()
+        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r').read()
         self.oracle_doc_main_html_content = open(self.oracle_doc_main_html_path, 'r').read()
 
         self.data_json = []
@@ -701,7 +701,7 @@ A few explanations on why certain things in business are so.
         """测试timeout异常."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[55] # 55 # 54
+        test_data = self.data_json[52] # 55 # 54
 
         start_time = time.time()  # 开始计时
 
@@ -718,8 +718,8 @@ A few explanations on why certain things in business are so.
         with open('output.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(content_md, ensure_ascii=False))
 
-tec = TestExtractorChain()
-tec.setUp()
+# tec = TestExtractorChain()
+# tec.setUp()
 
 # tec.test_lineno_detect()
 # print('test_lineno_detect')
