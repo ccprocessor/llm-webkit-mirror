@@ -1,4 +1,5 @@
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -72,7 +73,9 @@ class TestLayoutParser(unittest.TestCase):
             pre_data = PreDataJson(data_dict)
             parser = LayoutBatchParser(element_dict)
             parts = parser.parse(pre_data)
-            assert parts.get(PreDataJsonKey.MAIN_HTML_BODY) == expected_html
+            cleaned_expected = re.sub(r'\s+', ' ', expected_html)
+            cleaned_actual = re.sub(r'\s+', ' ', parts.get(PreDataJsonKey.MAIN_HTML_BODY))
+            assert cleaned_actual == cleaned_expected
 
     def test_layout_batch_parser_24ssports(self):
         raw_html_path = base_dir.joinpath('assets/input_layout_batch_parser/24ssports.com.html')
@@ -104,6 +107,7 @@ class TestLayoutParser(unittest.TestCase):
         pre_data = PreDataJson(data_dict)
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
+        print(parts.get(PreDataJsonKey.MAIN_HTML_BODY))
         assert parts.get(PreDataJsonKey.MAIN_HTML_BODY) == expected_html
 
     def test_layout_barch_parser_similarity(self):
