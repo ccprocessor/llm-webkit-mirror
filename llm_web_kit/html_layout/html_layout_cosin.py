@@ -107,7 +107,7 @@ def __recursive_extract_tags(doc: HtmlElement) -> Dict:
     tag_attr = defaultdict(dict)
     layer_n = 1
     __get_children([doc], layer_n, tag_attr)
-    return dict(tag_attr)
+    return dict(tag_attr) if tag_attr.get('tags') else None
 
 
 def __list_to_dict(lst: List[Dict]) -> dict:
@@ -136,7 +136,7 @@ def __cosin_simil(feature1: Dict, feature2: Dict, k: float = 0.7) -> np.float32:
         np.float32: cosine similarity
     """
     tag_sim = cosine_similarity(np.array([feature1.get('tags', []), feature2.get('tags', [])]))[0][1]
-    if feature1.get('attrs').size == 0 and feature2.get('attrs').size == 0:
+    if feature1.get('attrs').size == 0 or feature2.get('attrs').size == 0:
         k = 1
         return round(tag_sim * k, 8)
     else:
@@ -157,7 +157,7 @@ def __simp_tags(d: dict, layer_n: int) -> dict:
     Returns:
         dict {'<body>/div': 1, '<div>[1]/div': 1, '<div>[2]/div': 1, '<div>[3]/ul': 1, ...}
     """
-    return __list_to_dict([{tag: 1 for tag in v} for k, v in d.items() if k <= layer_n])
+    return __list_to_dict([{tag: 1 for tag in v} for k, v in d.items() if int(k) <= layer_n])
 
 
 def __simp_features(features_list: List) -> List[Dict]:
@@ -212,7 +212,7 @@ def __parse_valid_layer(features: List[Dict]) -> int:
     """
     layer_max_l = []
     for data in features:
-        max_key = max(data['tags'], key=lambda k: len(data['tags'][k]))
+        max_key = int(max(data['tags'], key=lambda k: len(data['tags'][k])))
         layer_max_l.append(max_key)
     counter = Counter(layer_max_l)
     layer_n = counter.most_common(1)[0][0]
@@ -289,7 +289,7 @@ def similarity(feature1: Dict, feature2: Dict, layer_n=5, k=0.7) -> float:
     """
     tag_sim = cosine_similarity(
         __parse_vectors([__simp_tags(feature1['tags'], layer_n), __simp_tags(feature2['tags'], layer_n)]))[0][1]
-    if not feature1.get('attrs') and not feature2.get('attrs'):
+    if not feature1.get('attrs') or not feature2.get('attrs'):
         k = 1
         return round(tag_sim * k, 8)
     else:
