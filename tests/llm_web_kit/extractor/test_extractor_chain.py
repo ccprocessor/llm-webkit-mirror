@@ -691,7 +691,7 @@ A few explanations on why certain things in business are so.
         """测试not_html."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[52]
+        test_data = self.data_json[46]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         main_html = result.get_magic_html()
