@@ -292,8 +292,8 @@ class TestCodeRecognizer(unittest.TestCase):
                         continue
                     answers.append((answer, inline))
             if len(test_case['expected']) == 42:
-                print("-------------------expected: ",test_case['expected'])
-                print("-------------------answers: ",answers)
+                print('-------------------expected: ',test_case['expected'])
+                print('-------------------answers: ',answers)
             self.assertEqual(len(answers), len(test_case['expected']))
             for expect_path, (answer, inline) in zip(test_case['expected'], answers):
                 if expect_path.startswith('assets'):

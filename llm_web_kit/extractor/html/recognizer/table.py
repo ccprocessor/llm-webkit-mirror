@@ -274,7 +274,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     #                     parse_res.extend(math_res)
     #                     # remove_element(child)
     #                     children_to_remove.append(child)
-                
+
     #             for child in children_to_remove:
     #                 remove_element(child)
 

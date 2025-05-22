@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
             # 读取html
             html_content = reader.read(
-                f'{root}/bench/{test_data.get("path")}'
+                f'{root}/bench/{test_data.get('path')}'
             ).decode('utf-8')
 
             # 提取main_html

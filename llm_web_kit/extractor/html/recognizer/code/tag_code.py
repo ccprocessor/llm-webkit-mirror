@@ -1,5 +1,5 @@
-from typing import Optional
 from collections import deque
+from typing import Optional
 
 from lxml.html import HtmlElement
 
@@ -15,8 +15,8 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
         return True
 
     full_chars = (
-        c for text in node.itertext() 
-        for c in text 
+        c for text in node.itertext()
+        for c in text
         if not c.isspace() and not c.isdigit()
     )
 
@@ -24,7 +24,7 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
     code_chars = (
         c for code in node_texts
         for text in code
-        for c in text 
+        for c in text
         if not c.isspace() and not c.isdigit()
     )
 
@@ -43,7 +43,7 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
         return False
     except StopIteration:
         return True
-    
+
 def __get_code_nodes(html_el: HtmlElement) -> list[HtmlElement]:
     """获取 html_el 中所有 code 标签的路径 只获取最外层的code标签， 如果code标签内还有code标签，则不获取。
 
@@ -108,9 +108,8 @@ def __detect_inline_code(nodes: list[HtmlElement]) -> tuple[list[HtmlElement], l
 
 
 def __group_code(nodes: list[HtmlElement]) -> list[HtmlElement]:
-    """
-    从 HtmlElement 列表中提取包含 <code> 标签的根节点。
-    
+    """从 HtmlElement 列表中提取包含 <code> 标签的根节点。
+
     Args:
         nodes: 输入的 HtmlElement 列表
     Returns:
@@ -121,9 +120,8 @@ def __group_code(nodes: list[HtmlElement]) -> list[HtmlElement]:
     nodes_deque = deque(nodes)
 
     def next_parent(code_node: HtmlElement, code_tags: int) -> tuple[Optional[HtmlElement], int]:
-        """
-        查找父节点中第一个 <code> 标签数量不同的节点。
-        
+        """查找父节点中第一个 <code> 标签数量不同的节点。
+
         Args:
             code_node: 当前节点
             code_tags: 当前节点的 <code> 标签数量
@@ -140,9 +138,8 @@ def __group_code(nodes: list[HtmlElement]) -> list[HtmlElement]:
         return None, 0
 
     def get_descendants(node: HtmlElement) -> set:
-        """
-        获取节点的所有后代节点的 id 集合。
-        
+        """获取节点的所有后代节点的 id 集合。
+
         Args:
             node: 当前节点
         Returns:

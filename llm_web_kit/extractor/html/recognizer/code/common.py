@@ -174,8 +174,6 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
     # 继续递归父节点
     _detect_and_remove_subling_lineno(parent, depth - 1)
 
-
-
 def get_full_text(sub_tree: HtmlElement) -> tuple[bool, str, str]:
     t = ''
     last_tail = sub_tree.text or ''
