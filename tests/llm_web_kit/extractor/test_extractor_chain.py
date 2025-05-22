@@ -58,7 +58,10 @@ class TestExtractorChain(unittest.TestCase):
         self.data_json = []
         with open(self.html_data_path, 'r') as f:
             for line in f:
-                self.data_json.append(json.loads(line.strip()))
+                line = line.strip()
+                if not line:
+                    continue
+                self.data_json.append(json.loads(line))
 
         # assert len(self.data_json) == 47
         self.maxDiff = None
@@ -696,32 +699,50 @@ A few explanations on why certain things in business are so.
         content_md = result.get_content_list()._get_data()
         print(json.dumps(content_md, ensure_ascii=False))
 
+    # def test_all_timeout_exception(self):
+    #     """测试timeout异常."""
+    #     import time
+    #     def test_timeout_exception(self, index):
+    #         chain = ExtractSimpleFactory.create(self.config)
+    #         self.assertIsNotNone(chain)
+    #         test_data = self.data_json[index] # 55 # 54 76
+
+    #         start_time = time.time()  # 开始计时
+
+    #         input_data = DataJson(test_data)
+    #         result = chain.extract(input_data)
+    #         #main_html = result.get_magic_html()
+    #         #print(main_html)
+    #         content_md = result.get_content_list()._get_data()
+    #         end_time = time.time()    # 结束计时
+    #         elapsed_time = end_time - start_time
+    #         print("index: ", index)
+    #         print(f"程序运行时间: {elapsed_time:.6f} 秒")
+    #         # with open('output.json', 'w', encoding='utf-8') as f:
+    #         #     f.write(json.dumps(content_md, ensure_ascii=False))
+
+    #     for index in range(47, 87): # 47 87
+    #         test_timeout_exception(self, index)
+
     def test_timeout_exception(self):
         import time
         """测试timeout异常."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[52] # 55 # 54
-
-        start_time = time.time()  # 开始计时
-
+        test_data = self.data_json[55]
+        # 开始计时
+        start_time = time.time()  
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         #main_html = result.get_magic_html()
         #print(main_html)
         content_md = result.get_content_list()._get_data()
-        
-
         end_time = time.time()    # 结束计时
         elapsed_time = end_time - start_time
         print(f"程序运行时间: {elapsed_time:.6f} 秒")
-        with open('output.json', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(content_md, ensure_ascii=False))
+        # with open('output.json', 'w', encoding='utf-8') as f:
+        #     f.write(json.dumps(content_md, ensure_ascii=False))
 
-# tec = TestExtractorChain()
-# tec.setUp()
-
-# tec.test_lineno_detect()
-# print('test_lineno_detect')
-# tec.test_timeout_exception()
-# tec.test_html_pipeline()
+tec = TestExtractorChain()
+tec.setUp()
+tec.test_timeout_exception()

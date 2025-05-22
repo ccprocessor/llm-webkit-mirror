@@ -276,6 +276,7 @@ def remove_element(element: HtmlElement):
     parent.remove(element)
 
 
+
 def extract_magic_html(html, base_url, page_layout_type):
     """提取magic html.
 
