@@ -212,8 +212,8 @@ def main(config: str):
         cfg = json.load(f)
 
     global GET_FILE_URL, UPDATE_STATUS_URL, TOKENIZER
-    GET_FILE_URL = f'{cfg["task_server_addr"]}/get_file'
-    UPDATE_STATUS_URL = f'{cfg["task_server_addr"]}/update_status'
+    GET_FILE_URL = f'{cfg['task_server_addr']}/get_file'
+    UPDATE_STATUS_URL = f'{cfg['task_server_addr']}/update_status'
     result_save_dir = cfg['result_save_dir']
     model_servers = cfg['model_servers']
     tokenizer_path = cfg['qwen2.5-72b-tokenizer-path']
