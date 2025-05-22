@@ -729,7 +729,7 @@ A few explanations on why certain things in business are so.
         """测试timeout异常."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[55]
+        test_data = self.data_json[48]
         # 开始计时
         start_time = time.time()  
         input_data = DataJson(test_data)
