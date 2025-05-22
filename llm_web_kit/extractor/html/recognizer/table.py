@@ -253,49 +253,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for child in elem.iterchildren():
             self.__simplify_td_th_content(table_nest_level, child)
 
-    # def __simplify_td_th_content(self, table_nest_level, elem: HtmlElement) -> None:
-    #     """简化 <td> 和 <th> 内容，保留嵌套表格结构."""
-    #     if elem.tag in ['td', 'th']:
-    #         parse_res = []
-    #         # 检查是否存在嵌套的表格
-    #         if table_nest_level > 1:
-    #             if elem.text and elem.text.strip():
-    #                 parse_res.append(elem.text.strip())
-    #                 elem.text = None  # 防止后续重复处理
-    #             # 存在嵌套表格，递归处理子节点
-    #             children_to_remove = []
-    #             for child in elem.iterchildren():
-    #                 if child.tag == 'table':
-    #                     # 对嵌套表格递归调用简化处理
-    #                     self.__simplify_td_th_content(table_nest_level, child)
-    #                 else:
-    #                     # 处理非表格元素
-    #                     math_res = self.__check_table_include_math_code(child)
-    #                     parse_res.extend(math_res)
-    #                     # remove_element(child)
-    #                     children_to_remove.append(child)
-
-    #             for child in children_to_remove:
-    #                 remove_element(child)
-
-    #             # 将非表格内容拼接后放在表格前面
-    #             if parse_res:
-    #                 elem.text = ' '.join(normalize_text_segment(item) for item in parse_res)
-    #         else:
-    #             # 没有嵌套表格，直接简化
-    #             math_res = self.__check_table_include_math_code(elem)
-    #             parse_res.extend(math_res)
-    #             children = list(elem.iterchildren())
-    #             for item in children:
-    #                 remove_element(item)
-    #             if parse_res:
-    #                 elem.text = ' '.join(normalize_text_segment(item) for item in parse_res)
-    #         return
-    #     # 非 td/th 元素继续递归处理
-    #     for child in elem.iterchildren():
-    #         self.__simplify_td_th_content(table_nest_level, child)
-
-
     def __get_table_body(self, table_type, table_nest_level, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
         if table_type == 'empty':
