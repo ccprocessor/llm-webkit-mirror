@@ -27,7 +27,7 @@ class PoliticalDetector:
         if not model_path:
             model_path = self.auto_download()
         model_bin_path = os.path.join(model_path, 'model.bin')
-        tokenizer_path = os.path.join(model_path, 'internlm2-chat-20b')
+        tokenizer_path = os.path.join(model_path, 'qwen2.5_7b_tokenizer')
 
         self.model = fasttext.load_model(model_bin_path)
         self.tokenizer = transformer.AutoTokenizer.from_pretrained(
@@ -35,12 +35,12 @@ class PoliticalDetector:
         )
 
     def auto_download(self):
-        """Default download the 24m7.zip model."""
-        resource_name = 'political-24m7'
+        """Default download the 25m3_cpu.zip model."""
+        resource_name = 'political-25m3_cpu'
         resource_config = load_config()['resources']
-        political_24m7_config: dict = resource_config[resource_name]
-        political_24m7_s3 = political_24m7_config['download_path']
-        political_24m7_md5 = political_24m7_config.get('md5', '')
+        political_25m3_cpu_config: dict = resource_config[resource_name]
+        political_25m3_cpu_s3 = political_25m3_cpu_config['download_path']
+        political_25m3_cpu_md5 = political_25m3_cpu_config.get('md5', '')
         # get the zip path calculated by the s3 path
         zip_path = os.path.join(CACHE_DIR, f'{resource_name}.zip')
         # the unzip path is calculated by the zip path
@@ -52,9 +52,9 @@ class PoliticalDetector:
             logger.info(f'try to unzip from zip_path: {zip_path}')
             if not os.path.exists(zip_path):
                 logger.info(f'zip_path: {zip_path} does not exist')
-                logger.info(f'downloading {political_24m7_s3}')
+                logger.info(f'downloading {political_25m3_cpu_s3}')
                 zip_path = download_auto_file(
-                    political_24m7_s3, zip_path, political_24m7_md5
+                    political_25m3_cpu_s3, zip_path, political_25m3_cpu_md5
                 )
             logger.info(f'unzipping {zip_path}')
             unzip_path = unzip_local_file(zip_path, unzip_path)
@@ -195,7 +195,7 @@ def get_singleton_political_detect() -> PoliticalDetector:
 def decide_political_by_prob(
     predictions: Tuple[str], probabilities: Tuple[float]
 ) -> float:
-    idx = predictions.index('__label__normal')
+    idx = predictions.index('__label__positive')
     normal_score = probabilities[idx]
     return float(normal_score)
 
@@ -226,8 +226,6 @@ def political_filter_cpu(data_dict: Dict[str, Any], language: str):
 
 if __name__ == '__main__':
     test_cases = []
-    test_cases.append('你好，我很高兴见到你！')
-    test_cases.append('hello, nice to meet you!')
     test_cases.append('你好，唔該幫我一個忙？')
     test_cases.append('Bawo ni? Mo nife Yoruba. ')
     test_cases.append(

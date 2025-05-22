@@ -1,8 +1,8 @@
 ## 作用
 
-识别中文或英文文本中的涉政内容，目前包含了新旧两类接口，旧的接口接收单条数据，并返回该数据的涉政分数，分数接近1代表不涉政，分数接近0则代表涉政。目前旧的接口仅支持CPU模型。
+识别中文或英文文本中的涉政内容，目前包含了新旧两类接口，25m3_cpu模型接口接收单条数据，并返回该数据的涉政分数，分数接近1代表不涉政，分数接近0则代表涉政。目前25m3_cpu模型接口仅支持CPU模型。
 
-新的接口检测结果以ModelResponse类返回，该类包含is_remained和details两个字段，其中is_remained代表数据是否需要保留，details则是一个包含涉政分数等详细信息的字典。新的接口支持CPU和GPU两种模型。
+25m3模型接口检测结果以ModelResponse类返回，该类包含is_remained和details两个字段，其中is_remained代表数据是否需要保留，details则是一个包含涉政分数等详细信息的字典。25m3模型接口支持GPU模型。
 
 ## 配置文件需要改动的部分
 
@@ -13,20 +13,20 @@
         "common":{
             "cache_path": "~/.llm_web_kit_cache"
         },
-        "political-24m7":{
-            "download_path": "s3://web-parse-huawei/shared_resource/political/24m7.zip",
-            "md5": "97eabb56268a3af3f68e8a96a50d5f80",
-        },
         "political-25m3":{
             "download_path": "s3://web-parse-huawei/shared_resource/political/25m3.zip",
             "md5": "d0d14a561f987763d654165b536b5858",
+        },
+        "political-25m3_cpu":{
+            "download_path": "s3://web-parse-huawei/shared_resource/political/25m3_cpu.zip",
+            "md5": "926359a393de6a36c1b4be403711767f",
         },
     },
 ```
 
 ## 调用方法
 
-1. 旧的接口调用方法如下：
+1. 25m3_cpu模型接口调用方法如下：
 
 ```python
 from llm_web_kit.model.politics_detector import *
@@ -81,7 +81,7 @@ print(political_filter_cpu(text, "en"))
 # 输出结果为：{'political_prob': 1.0000100135803223}
 ```
 
-2. 新的接口调用方法如下：
+2. 25m3模型接口调用方法如下：
 
 ```python
 from llm_web_kit.model.model_impl import ModelFactory, ModelType, DeviceType
@@ -113,7 +113,7 @@ for i in range(0, len(requests), batch_size):
 
 ## 运行时间
 
-1. 旧的接口（political_filter_cpu）
+1. 25m3_cpu模型接口（political_filter_cpu）
 
    使用型号为`AMD EPYC 7742`的cpu单核进行测试，测试集总共有 77861 条数据（均是中英文的数据），下面只统计了political_filter_cpu接口本身的耗时，排除了数据读取的时间。
 
@@ -127,7 +127,7 @@ for i in range(0, len(requests), batch_size):
 
    每秒可处理: 416.3049条数据
 
-2. 新的接口（predictor.predict_batch）
+2. 25m3模型接口（predictor.predict_batch）
 
    使用单卡NVIDIA A100测试涉政的GPU模型，测试集共有39111条数据，下面统计了不同batch_size下，predictor.predict_batch接口的速度，该接口内部包括tokenize和模型推理操作。
 
@@ -159,3 +159,29 @@ for i in range(0, len(requests), batch_size):
    | 128        | 31.580092769179686 |
    | 256        | 24.26296225431703  |
    | 512        | cuda out of memory |
+
+## 性能说明
+
+25m3_cpu模型（threshold=0.5）：
+
+测试集路径：s3://xyz-process-ylk2/xyz-users/huyucheng1/political_data_202502/test/
+
+| 指标          | 新模型值             | 旧模型值             |
+| ------------- | -------------------- | -------------------- |
+| **F1**        | 0.9089603520041284   | 0.8831507760632497   |
+| **Accuracy**  | 0.8624864742896118   | 0.8013861609546715   |
+| **Precision** | 0.9041776426882809   | 0.7913184992146802   |
+| **Recall**    | 0.9137939273134369   | 0.999095513748191    |
+| **TN**        | 68641                | 19820                |
+| **FP**        | 28373                | 77194                |
+| **FN**        | 25257                | 265                  |
+| **TP**        | 267727               | 292719               |
+| **Prec_Pos**  | 0.9041776426882809   | 0.7913184992146802   |
+| **Recl_Pos**  | 0.9137939273134369   | 0.999095513748191    |
+| **F1_Pos**    | 0.9089603520041284   | 0.8831507760632497   |
+| **Prec_Neg**  | 0.7310166350720995   | 0.986806074184715    |
+| **Recl_Neg**  | 0.7075370565073082   | 0.204300410250067    |
+| **F1_Neg**    | 0.719085232986926    | 0.3385169813576546   |
+| **qps**       | 1493.477337807 条/秒 | 1674.157845704 条/秒 |
+
+注：上述指标均是在集群中得出，单核运行时间请参考运行时间第一小节
