@@ -44,7 +44,7 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
     # except StopIteration:
     #     return True
 
-    return (next(full_chars, None) or next(code_chars, None)) is None
+    return next(full_chars, None) is None and next(code_chars, None) is None
 
 def __get_code_nodes(html_el: HtmlElement) -> list[HtmlElement]:
     """获取 html_el 中所有 code 标签的路径 只获取最外层的code标签， 如果code标签内还有code标签，则不获取。
@@ -173,9 +173,6 @@ def __group_code(nodes: list[HtmlElement]) -> list[HtmlElement]:
         processed.add(id(code_node))
         descendants = get_descendants(code_node)
         processed.update(descendants)
-
-        # 过滤掉已处理的节点
-        # nodes_deque = deque([node for node in nodes_deque if id(node) not in processed])
 
     return root_nodes
 
