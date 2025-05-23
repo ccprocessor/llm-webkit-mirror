@@ -64,7 +64,6 @@ class TestExtractorChain(unittest.TestCase):
                 self.data_json.append(json.loads(line))
 
         # assert len(self.data_json) == 47
-        self.maxDiff = None
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -710,18 +709,10 @@ A few explanations on why certain things in business are so.
             start_time = time.time()
             input_data = DataJson(test_data)
             result = chain.extract(input_data)
-            # main_html = result.get_magic_html()
-            # print(main_html)
-            content_md = result.get_content_list()._get_data()
+            content_md = result.get_content_list().to_mm_md()
             end_time = time.time()    # 结束计时
             elapsed_time = end_time - start_time
-            print('index: ', index)
-            print(f'程序运行时间: {elapsed_time:.6f} 秒')
-            print(json.dumps(content_md, ensure_ascii=False))
-            # with open('output.json', 'w', encoding='utf-8') as f:
-            #     f.write(json.dumps(content_md, ensure_ascii=False))
-
-
-sec = TestExtractorChain()
-sec.setUp()
-sec.test_timeout_exception()
+            with open('output.md', 'w', encoding='utf-8') as f:
+                f.write(content_md)
+            assert elapsed_time > 0
+            assert len(content_md) > 0
