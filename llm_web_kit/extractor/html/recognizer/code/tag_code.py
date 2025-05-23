@@ -10,7 +10,10 @@ from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 """
 处理仅由<code>标签组成的代码块
 """
+
+
 def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
+
     if node.tag == 'code':
         return True
 
@@ -34,6 +37,7 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
 
     return next(full_chars, None) is None and next(code_chars, None) is None
 
+
 def __get_code_nodes(html_el: HtmlElement) -> list[HtmlElement]:
     """获取 html_el 中所有 code 标签的路径 只获取最外层的code标签， 如果code标签内还有code标签，则不获取。
 
@@ -55,7 +59,9 @@ def __get_code_nodes(html_el: HtmlElement) -> list[HtmlElement]:
             nodes.append(code_node)
         else:
             nodes.extend(__get_code_nodes(code_node))
+
     return nodes
+
 
 def detect(body: HtmlElement) -> bool:
     for code_node in body.iter('code'):
@@ -94,7 +100,6 @@ def __detect_inline_code(nodes: list[HtmlElement]) -> tuple[list[HtmlElement], l
         new_nodes.append(ele)
 
     return new_nodes, inline_code
-
 
 
 def __group_code(nodes: list[HtmlElement]) -> list[HtmlElement]:

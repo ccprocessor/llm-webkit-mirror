@@ -710,15 +710,17 @@ A few explanations on why certain things in business are so.
             start_time = time.time()
             input_data = DataJson(test_data)
             result = chain.extract(input_data)
-            #main_html = result.get_magic_html()
-            #print(main_html)
+            # main_html = result.get_magic_html()
+            # print(main_html)
             content_md = result.get_content_list()._get_data()
             end_time = time.time()    # 结束计时
             elapsed_time = end_time - start_time
             print('index: ', index)
             print(f'程序运行时间: {elapsed_time:.6f} 秒')
+            print(json.dumps(content_md, ensure_ascii=False))
             # with open('output.json', 'w', encoding='utf-8') as f:
             #     f.write(json.dumps(content_md, ensure_ascii=False))
+
 
 sec = TestExtractorChain()
 sec.setUp()
