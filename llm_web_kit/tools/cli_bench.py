@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -7,7 +8,7 @@ from loguru import logger
 
 from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
 from llm_web_kit.input.datajson import DataJson
-import os
+
 
 @click.command()
 @click.option(
@@ -54,7 +55,7 @@ def cli(input_path, output_path, debug_mode):
                     raise Exception(f'Failed to read HTML file at {html_path}: {str(e)}')
             else:
                 raise ValueError('Input JSON must contain either html or path field')
-        
+
         extractor = HTMLFileFormatExtractor({})
         print(DataJson(input_data))
         data_e = extractor.extract(DataJson(input_data))
