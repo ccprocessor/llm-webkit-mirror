@@ -63,7 +63,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        # assert len(self.data_json) == 47
+        assert len(self.data_json) == 87
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
