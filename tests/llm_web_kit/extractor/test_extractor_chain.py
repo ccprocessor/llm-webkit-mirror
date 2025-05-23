@@ -717,8 +717,8 @@ A few explanations on why certain things in business are so.
             elapsed_time = end_time - start_time
             print('index: ', index)
             print(f'程序运行时间: {elapsed_time:.6f} 秒')
-            with open('output.json', 'w', encoding='utf-8') as f:
-                f.write(json.dumps(content_md, ensure_ascii=False))
+            # with open('output.json', 'w', encoding='utf-8') as f:
+            #     f.write(json.dumps(content_md, ensure_ascii=False))
 
 sec = TestExtractorChain()
 sec.setUp()
