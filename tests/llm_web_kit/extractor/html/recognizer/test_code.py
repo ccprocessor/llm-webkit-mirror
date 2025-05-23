@@ -291,7 +291,6 @@ class TestCodeRecognizer(unittest.TestCase):
                     if not answer:
                         continue
                     answers.append((answer, inline))
-
             self.assertEqual(len(answers), len(test_case['expected']))
             for expect_path, (answer, inline) in zip(test_case['expected'], answers):
                 if expect_path.startswith('assets'):

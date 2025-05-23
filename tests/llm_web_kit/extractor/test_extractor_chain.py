@@ -58,9 +58,12 @@ class TestExtractorChain(unittest.TestCase):
         self.data_json = []
         with open(self.html_data_path, 'r') as f:
             for line in f:
-                self.data_json.append(json.loads(line.strip()))
+                line = line.strip()
+                if not line:
+                    continue
+                self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 47
+        assert len(self.data_json) == 87
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -694,3 +697,22 @@ A few explanations on why certain things in business are so.
         print(main_html)
         content_md = result.get_content_list()._get_data()
         print(json.dumps(content_md, ensure_ascii=False))
+
+    def test_timeout_exception(self):
+        import time
+        """测试timeout异常."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        for index in range(48, 49):
+            test_data = self.data_json[index]
+            # 开始计时
+            start_time = time.time()
+            input_data = DataJson(test_data)
+            result = chain.extract(input_data)
+            content_md = result.get_content_list().to_mm_md()
+            end_time = time.time()    # 结束计时
+            elapsed_time = end_time - start_time
+            with open('output.md', 'w', encoding='utf-8') as f:
+                f.write(content_md)
+            assert elapsed_time > 0
+            assert len(content_md) > 0
