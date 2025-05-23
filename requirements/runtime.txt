@@ -5,6 +5,7 @@ click==8.1.8
 commentjson==0.9.0
 fasttext-wheel==0.9.2
 filelock==3.16.1
+html-alg-lib==2.0.2
 jieba-fast==0.53
 jupyter==1.1.1
 langdetect_zh==1.0.4
