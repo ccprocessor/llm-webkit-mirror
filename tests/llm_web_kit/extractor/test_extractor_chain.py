@@ -716,7 +716,7 @@ A few explanations on why certain things in business are so.
             end_time = time.time()    # 结束计时
             elapsed_time = end_time - start_time
             print('index: ', index)
-            print(f"程序运行时间: {elapsed_time:.6f} 秒")
+            print(f'程序运行时间: {elapsed_time:.6f} 秒')
             with open('output.json', 'w', encoding='utf-8') as f:
                 f.write(json.dumps(content_md, ensure_ascii=False))
 
