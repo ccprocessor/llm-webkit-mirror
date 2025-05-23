@@ -32,18 +32,6 @@ def __is_all_chars_in_code_element(node: HtmlElement) -> bool:
         if f != c:
             return False
 
-    # try:
-    #     next(full_chars)
-    #     return False
-    # except StopIteration:
-    #     pass
-
-    # try:
-    #     next(code_chars)
-    #     return False
-    # except StopIteration:
-    #     return True
-
     return next(full_chars, None) is None and next(code_chars, None) is None
 
 def __get_code_nodes(html_el: HtmlElement) -> list[HtmlElement]:
