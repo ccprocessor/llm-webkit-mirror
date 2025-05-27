@@ -714,5 +714,5 @@ A few explanations on why certain things in business are so.
             elapsed_time = end_time - start_time
             with open('output.md', 'w', encoding='utf-8') as f:
                 f.write(content_md)
-            assert elapsed_time > 0
+            assert elapsed_time < 30
             assert len(content_md) > 0

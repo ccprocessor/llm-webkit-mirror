@@ -91,6 +91,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         """
         new_html_lst = []
         for html_element, raw_html_element in main_html_lst:
+            
             # 如果是字符串则转换为 HtmlElement
             if self.is_cc_html(html_element):
                 new_html_lst.append((html_element, raw_html_element))
@@ -142,9 +143,10 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             text2: str: 第二段文本
             lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊符号开头的连接不加空格。
         """
-        text1 = text1.strip(' ') if text1 else ''
-        text2 = text2.strip(' ') if text2 else ''
-
+        text1 = re.sub(r'\s+', ' ', text1).strip(' ') if text1 else ''
+        text2 = re.sub(r'\s+', ' ', text2).strip(' ') if text2 else ''
+        # text1 = text1.strip(' ') if text1 else ''
+        # text2 = text2.strip(' ') if text1 else ''
         if lang == 'zh':
             txt = text1 + text2
             return self.replace_entities(txt.strip(), entities_map)
