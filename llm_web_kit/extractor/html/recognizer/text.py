@@ -144,7 +144,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         """
         text1 = text1.strip(' ') if text1 else ''
         text2 = text2.strip(' ') if text2 else ''
-
         if lang == 'zh':
             txt = text1 + text2
             return self.replace_entities(txt.strip(), entities_map)
