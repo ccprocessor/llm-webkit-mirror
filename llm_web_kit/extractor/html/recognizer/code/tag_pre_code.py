@@ -26,7 +26,6 @@ def detect(root: HtmlElement) -> bool:
         bool: 是否存在 pre 标签，且 pre 标签内存在 code 标签
     """
     for pre_node in root.iter('pre'):
-        print('tag_pre_code: ', pre_node)
         assert isinstance(pre_node, HtmlElement)
         for _ in pre_node.iter('code'):
             return True

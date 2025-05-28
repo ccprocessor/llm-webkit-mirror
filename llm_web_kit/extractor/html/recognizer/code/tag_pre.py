@@ -39,7 +39,6 @@ def detect(root: HtmlElement) -> bool:
         if all_p:
             continue  # 跳过全由 <p> 构成的 <pre>
 
-        # 检查该 <pre> 中是否存在 <code> 标签
         has_code = False
         for _ in pre_node.iter(CCTag.CC_CODE):
             has_code = True
