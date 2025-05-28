@@ -19,20 +19,33 @@ def modify_tree(root: HtmlElement) -> None:
 
 
 def detect(root: HtmlElement) -> bool:
-    """检测是否存在 pre 标签.
+    """检测是否存在非全由 <p> 标签构成的 <pre> 标签，并且该 <pre> 中没有 <code> 标签.
 
     Args:
         root: 根节点
 
     Returns:
-        bool: 是否存在 pre 标签
+        bool: 是否存在符合条件的 <pre> 标签
     """
+
     for pre_node in root.iter('pre'):
-        assert isinstance(pre_node, HtmlElement)
-        hit = False
+        # 判断是否所有直接子元素是 <p>
+        all_p = True
+        for child in pre_node.iterchildren():
+            if child.tag.lower() != 'p':
+                all_p = False
+                break
+
+        if all_p:
+            continue  # 跳过全由 <p> 构成的 <pre>
+
+        # 检查该 <pre> 中是否存在 <code> 标签
+        has_code = False
         for _ in pre_node.iter(CCTag.CC_CODE):
-            hit = True
+            has_code = True
             break
-        if not hit:
-            return True
+
+        if not has_code:
+            return True  # 找到一个符合条件的 <pre>
+
     return False

@@ -613,3 +613,28 @@ import com.dao.UsersDao;
         self.assertEqual(resp.get_content_list().length(), 1)
         self.assertEqual(len(resp.get_content_list()[0]), 1)
         self.assertEqual(resp.get_content_list()[0][0]['content']['code_content'], answer)
+
+    def test_code_pre(self):
+        chain = ExtractSimpleFactory.create(self.chain_config)
+        self.assertIsNotNone(chain)
+        raw_html = base_dir.joinpath('assets/cccode/only_pre.html').read_text()
+        input_data = DataJson(
+            {
+                'track_id': 'f7b3b1b4-0b1b',
+                'dataset_name': 'news',
+                'url': 'https://www.telerik.com/forums/set-style-of-root-radmenuitem-when-child-item-is-selected',
+                'data_source_category': 'HTML',
+                'html': raw_html,
+                'file_bytes': 1000,
+                'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            }
+        )
+
+        resp = chain.extract(input_data)
+        answer = resp.get_content_list()
+        count = 0
+        for page in answer:
+            for item in page:
+                if item['type'] == 'code':
+                    count += 1
+        self.assertEqual(count, 0)
