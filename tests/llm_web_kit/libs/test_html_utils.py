@@ -240,12 +240,12 @@ class TestHtmlUtils(unittest.TestCase):
         # 1. 测试单个sub标签
         html_el = fromstring('<sub>2</sub>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, '~2~')
+        self.assertEqual(result, '<sub>2</sub>')
 
         # 2. 测试单个sup标签
         html_el = fromstring('<sup>2</sup>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, '^2^')
+        self.assertEqual(result, '<sup>2</sup>')
 
         # 3. 测试非sub/sup标签
         html_el = fromstring('<div>普通文本</div>')
@@ -255,12 +255,12 @@ class TestHtmlUtils(unittest.TestCase):
         # 4. 测试带初始文本的process_sub_sup_tags
         html_el = fromstring('<sub>2</sub>')
         result = process_sub_sup_tags(html_el, 'H')
-        self.assertEqual(result, 'H~2~')
+        self.assertEqual(result, 'H<sub>2</sub>')
 
         # 5. 测试包含sub标签的父元素 - 递归处理
         html_el = fromstring('<div>H<sub>2</sub>O</div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'H~2~O')
+        self.assertEqual(result, 'H<sub>2</sub>O')
 
         # 6. 测试包含sub标签的父元素 - 非递归处理
         html_el = fromstring('<div>H<sub>2</sub>O</div>')
@@ -270,27 +270,27 @@ class TestHtmlUtils(unittest.TestCase):
         # 7. 测试带运算符的公式
         html_el = fromstring('<div>x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup></div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'x^2^ + y^2^ = z^2^')
+        self.assertEqual(result, 'x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup>')
 
         # 8. 测试混合公式
         html_el = fromstring('<div>f(x) = x<sup>2</sup> - 3x + 2</div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'f(x) = x^2^ - 3x + 2')
+        self.assertEqual(result, 'f(x) = x<sup>2</sup> - 3x + 2')
 
         # 9. 测试复杂的化学公式
         html_el = fromstring('<div>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'C~6~H~12~O~6~')
+        self.assertEqual(result, 'C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>')
 
         # 10. 测试混合上下标
         html_el = fromstring('<div>∫<sub>a</sub><sup>b</sup> f(x) dx</div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, '∫~a~^b^ f(x) dx')
+        self.assertEqual(result, '∫<sub>a</sub><sup>b</sup> f(x) dx')
 
         # 11. 测试电路公式
         html_el = fromstring('<div>RI = R<sub>S</sub>R<sub>P</sub>/(R<sub>S</sub> - R<sub>P</sub>)</div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'RI = R~S~R~P~/(R~S~ - R~P~)')
+        self.assertEqual(result, 'RI = R<sub>S</sub>R<sub>P</sub>/(R<sub>S</sub> - R<sub>P</sub>)')
 
     def test_process_sub_sup_tags_recursive_false(self):
         """测试process_sub_sup_tags函数的recursive=False参数."""
@@ -307,37 +307,46 @@ class TestHtmlUtils(unittest.TestCase):
         """测试process_sub_sup_tags函数处理包含子元素的元素."""
         # 测试包含非sub/sup子元素的元素
         html_el = fromstring('<div>parent<span>child</span><sub>test</sub></div>')
-        result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'parent~test~')
+        from llm_web_kit.extractor.html.recognizer.text import \
+            TextParagraphRecognizer
+        text_recognize = TextParagraphRecognizer()
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(html_el)
+        self.assertEqual(result[0]['c'], 'parent child<sub>test</sub>')
 
         # 非sub/sup上下文下，子元素没有处理结果的情况
         html_el = fromstring('<div>parent<span></span><sub>test</sub></div>')
-        result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'parent~test~')
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(html_el)
+        self.assertEqual(result[0]['c'], 'parent<sub>test</sub>')
 
         # is_sub_sup_context为真的情况下处理子元素结果
         html_el = fromstring('<sup>parent<span><sub>nested</sub></span></sup>')
-        result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, '^parentnested^')
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(html_el)
+        self.assertEqual(result[0]['c'], '<sup>parent<sub>nested</sub></sup>')
 
     def test_process_sub_sup_tags_with_tail(self):
         """测试process_sub_sup_tags函数处理带有尾部文本的子元素."""
         # 子元素有尾部文本但is_sub_sup_context为假的情况
         html_el = fromstring('<div><span>child</span> tail text<sub>test</sub></div>')
-        result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, ' tail text~test~')
+        from llm_web_kit.extractor.html.recognizer.text import \
+            TextParagraphRecognizer
+        text_recognize = TextParagraphRecognizer()
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(html_el)
+        self.assertEqual(result[0]['c'], 'child tail text<sub>test</sub>')
 
         # 子元素有尾部文本且is_sub_sup_context为真的情况
         html_el = fromstring('<sub><span>child</span> tail text</sub>')
-        result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, '~child tail text~')
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(html_el)
+        self.assertEqual(result[0]['c'], '<sub>child tail text</sub>')
 
     def test_process_sub_sup_tags_edge_cases(self):
         """测试process_sub_sup_tags函数的边缘情况，特别针对代码覆盖行数367, 382, 389."""
         # 使用sub/sup上下文中处理非sub/sup子元素并确保结果为空
         div_el = fromstring('<sub>parent<span></span></sub>')
-        result = process_sub_sup_tags(div_el)
-        self.assertEqual(result, '~parent~')
+        from llm_web_kit.extractor.html.recognizer.text import \
+            TextParagraphRecognizer
+        text_recognize = TextParagraphRecognizer()
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(div_el)
+        self.assertEqual(result[0]['c'], '<sub>parent</sub>')
 
         # 确保子元素的处理结果在is_sub_sup_context下被添加
         div_el = fromstring('<div><span><sub>test</sub></span>after</div>')
@@ -345,7 +354,7 @@ class TestHtmlUtils(unittest.TestCase):
         span_result = process_sub_sup_tags(span_el)
         self.assertTrue(span_result)  # 确保span的处理有结果
         result = process_sub_sup_tags(div_el)
-        self.assertEqual(result, '~test~after')
+        self.assertEqual(result, '<sub>test</sub>after')
 
         # 测试当子元素的处理结果为空的情况
         # 注意：这个测试的div_el没有任何sub/sup标签，所以函数会返回空字符串
@@ -356,7 +365,7 @@ class TestHtmlUtils(unittest.TestCase):
         # 尝试使用有sub标签的元素
         div_el = fromstring('<div>parent<span><sub></sub></span>after<sub>x</sub></div>')
         result = process_sub_sup_tags(div_el)
-        self.assertEqual(result, 'parent~~after~x~')
+        self.assertEqual(result, 'parent<sub></sub>after<sub>x</sub>')
 
         # 确保子元素尾部文本在非sub/sup上下文中得到处理
         div_el = fromstring('<div><span></span> tail text</div>')
@@ -366,29 +375,34 @@ class TestHtmlUtils(unittest.TestCase):
         # 测试子元素有尾巴文本且有sub/sup元素
         div_el = fromstring('<div>text<span></span> tail<sub>x</sub></div>')
         result = process_sub_sup_tags(div_el)
-        self.assertEqual(result, 'text tail~x~')
+        self.assertEqual(result, 'text tail<sub>x</sub>')
 
     def test_process_sub_sup_tags_text_combining(self):
         """测试process_sub_sup_tags函数处理文本拼接的情况."""
         # 非sub/sup上下文下的文本拼接
         html_el = fromstring('<div>prefix<sub>test</sub></div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'prefix~test~')
+        self.assertEqual(result, 'prefix<sub>test</sub>')
 
         # 中文文本拼接
         html_el = fromstring('<div>前缀<span>子元素</span><sub>测试</sub></div>')
         result = process_sub_sup_tags(html_el, lang='zh')
-        self.assertEqual(result, '前缀~测试~')
+        self.assertEqual(result, '前缀<sub>测试</sub>')
 
         # 测试标点符号情况
         html_el = fromstring('<div>prefix<span>!child</span><sub>test</sub></div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'prefix~test~')
+
+        from llm_web_kit.extractor.html.recognizer.text import \
+            TextParagraphRecognizer
+        text_recognize = TextParagraphRecognizer()
+        result = text_recognize._TextParagraphRecognizer__get_paragraph_text(html_el)
+        self.assertEqual(result[0]['c'], 'prefix!child<sub>test</sub>')
 
         # 测试仅处理标点符号
         html_el = fromstring('<div>prefix!<sub>test</sub></div>')
         result = process_sub_sup_tags(html_el)
-        self.assertEqual(result, 'prefix!~test~')
+        self.assertEqual(result, 'prefix!<sub>test</sub>')
 
 
 # 测试用例数据

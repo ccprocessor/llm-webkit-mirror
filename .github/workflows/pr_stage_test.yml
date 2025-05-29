@@ -45,7 +45,9 @@ jobs:
           pip install -r requirements/runtime.txt
           pip install -r requirements/dev.txt
       - name: Run tests and collect coverage
-        run: pytest --cov --cov-report=xml ./tests/llm_web_kit
+        run: |
+          pytest --cov --cov-report=xml ./tests/llm_web_kit
+          pytest -n auto ./tests/jupyter
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:

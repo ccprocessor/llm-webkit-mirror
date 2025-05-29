@@ -1,4 +1,4 @@
-import ast
+import json
 import re
 from hashlib import sha256
 
@@ -7,6 +7,7 @@ from lxml import html
 from lxml.html import etree
 from nltk.tokenize import word_tokenize
 
+from llm_web_kit.html_layout.html_layout_cosin import get_feature, similarity
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
@@ -14,19 +15,57 @@ from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 nltk.download('punkt', quiet=True)  # 静默模式避免日志干扰
 
 MAX_LENGTH = 10
+SIMILARITY_THRESHOLD = 0.75
 
 
 class LayoutBatchParser(BaseMainHtmlParser):
     """完整处理流程."""
-    def __init__(self, template_data: dict):
+
+    def __init__(self, template_data: str | dict):
         # 确保模板数据的键是整数类型
         self.template_data = template_data
 
+    def parse_tuple_key(self, key_str):
+        if key_str.startswith('(') and key_str.endswith(')'):
+            try:
+                return eval(key_str)  # WARNING: eval is unsafe for untrusted data!
+            except (SyntaxError, ValueError):
+                return key_str  # Fallback if parsing fails
+        return key_str
+
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
-        html_source = pre_data['HTML']
-        template_data = pre_data['TEMPLATE_DATA']
+        # 支持输入字符串和tag mapping后的dict对象
+        html_source = pre_data[PreDataJsonKey.HTML_SOURCE]
+        template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
+        template_data = dict()
+        if isinstance(template_data_str, str):
+            template_data_str = json.loads(template_data_str)
+            for layer, layer_dict in template_data_str.items():
+                layer_dict_json = {self.parse_tuple_key(k): v for k, v in layer_dict.items()}
+                template_data[int(layer)] = layer_dict_json
+        elif isinstance(template_data_str, dict):
+            template_data = template_data_str
+        else:
+            raise ValueError(f'template_data 类型错误: {type(template_data_str)}')
         pipeline = LayoutBatchParser(template_data)
         content, body = pipeline.process(html_source)
+
+        # 相似度计算
+        if pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, None):
+            template_main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
+            if pre_data.get(PreDataJsonKey.SIMILARITY_LAYER, None):
+                layer = pre_data[PreDataJsonKey.SIMILARITY_LAYER]
+            else:
+                layer = self.__get_max_width_layer(template_data)
+            feature1 = get_feature(template_main_html)
+            feature2 = get_feature(body)
+            sim = similarity(feature1, feature2, layer_n=layer)
+            if sim < SIMILARITY_THRESHOLD:
+                pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
+            else:
+                pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = True
+
+        # 结果返回
         pre_data[PreDataJsonKey.MAIN_HTML] = content
         pre_data[PreDataJsonKey.MAIN_HTML_BODY] = body
         return pre_data
@@ -65,7 +104,6 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 使用 \1 保留前面的 "post" 或 "postid"，但替换数字部分
         return re.sub(pattern, lambda m: f'{m.group(1)}-', text, flags=re.IGNORECASE)
 
-    # 深度优先搜索html所有有id的节点，构造html tree
     def find_blocks_drop(self, element, depth, element_dict, parent_keyy, parent_label):
         # 判断这个tag是否有id
         if isinstance(element, etree._Comment):
@@ -74,28 +112,43 @@ class LayoutBatchParser(BaseMainHtmlParser):
         length_tail = 0
         if element.tail:
             length_tail = len(element.tail.strip())
-        tag = element.tag
-        layer_nodes = element_dict.get(f'{depth}', {})
-        class_tag = element.get('class')
         idd = element.get('id')
+        tag = element.tag
+        layer_nodes = element_dict[depth]
+        class_tag = element.get('class')
         keyy = self.normalize_key((tag, class_tag, idd))
+
+        # 获取element的当前子层的所有节点
+        element_parent = element.getparent()
+        current_layer_keys = set()
+        if element_parent is None:
+            current_layer_keys.add(keyy)
+        else:
+            for child in element_parent:
+                child_key = self.normalize_key((child.tag, child.get('class'), child.get('id')))
+                current_layer_keys.add(child_key)
+
+        # 匹配正文节点
         has_red = False
         layer_nodes_list = []
         layer_nodes_dict = dict()
+        if class_tag == 'mw-editsection':
+            print('test')
         for node_keyy, node_value in layer_nodes.items():
-            # key的str转成tuple格式
-            node_keyy = ast.literal_eval(node_keyy)
             node_parent_keyy = self.normalize_key(node_value[1])
+            if node_parent_keyy is not None:
+                node_parent_keyy = tuple(node_parent_keyy)
             node_label = node_value[0]
-            # parent_keyy是待匹配元素的key,node_parent_keyy是模板元素的key
-            if node_parent_keyy == parent_keyy:
+            norm_node_keyy = self.normalize_key(node_keyy[:3])
+            if node_parent_keyy == parent_keyy and norm_node_keyy in current_layer_keys:
                 layer_nodes_list.append((node_keyy[:3], node_label))
-                if self.normalize_key(node_keyy[:3]) in layer_nodes_dict:
-                    layer_nodes_dict[self.normalize_key(node_keyy[:3])].append(node_label)
+                if norm_node_keyy in layer_nodes_dict:
+                    layer_nodes_dict[norm_node_keyy].append(node_label)
                 else:
-                    layer_nodes_dict[self.normalize_key(node_keyy[:3])] = [node_label]
-            if node_label == 'red' and node_parent_keyy == parent_keyy:
-                has_red = True
+                    layer_nodes_dict[norm_node_keyy] = [node_label]
+
+                if node_label == 'red':
+                    has_red = True
         if not has_red and parent_label != 'red':
             parent = element.getparent()
             if parent is not None:
@@ -105,7 +158,6 @@ class LayoutBatchParser(BaseMainHtmlParser):
         elif not has_red and parent_label == 'red':
             return
         label = None
-        # 待推广的keyy在当前层中存在且不是红色的节点，则删除该元素
         if keyy in layer_nodes_dict:
             if 'red' not in layer_nodes_dict[keyy]:
                 parent = element.getparent()
@@ -114,10 +166,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 return
             else:
                 label = 'red'
-        # 匹配不上的key保留
-        if not element.getchildren() and (length > 0 or length_tail > 0):
+        elif length > 0 or length_tail > 0:
             return
-        for child in element.getchildren():
+
+        for child in element:
             self.find_blocks_drop(child, depth + 1, element_dict, keyy, label)
 
     def drop_node_element(self, html_source, element_dict):
@@ -166,3 +218,13 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 text.append(item.tail)
 
         return ''.join(text)
+
+    def __get_max_width_layer(self, element_dict):
+        max_length = 0
+        max_width_layer = 0
+        for layer_n, layer in element_dict.items():
+            if len(layer) > max_length:
+                max_width_layer = layer_n
+                max_length = len(layer)
+
+        return max_width_layer - 2 if max_width_layer > 4 else 3

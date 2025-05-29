@@ -1,0 +1,1472 @@
+{
+  "0": {
+    "('html', 'client-nojs mf-expand-sections-clientpref-1 mf-font-size-clientpref-small mw-mf-amc-clientpref-0', None, 'id2bdb6d35a8e50ad2d31027b52c3cfbbdf46eaee6bd5e7c55b989ab716d38908c', 0, 0)": [
+      "red",
+      null
+    ]
+  },
+  "1": {
+    "('head', None, None, 'idfa2ab951a0c1443a11562e3cc887675ecbca301a9fe7007495b680e5b95cbc52', 1, 0)": [
+      "green",
+      [
+        "html",
+        "client-nojs mf-expand-sections-clientpref-1 mf-font-size-clientpref-small mw-mf-amc-clientpref-0",
+        null
+      ]
+    ],
+    "('body', 'mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-ninth_s rootpage-ninth_s stable issues-group-B skin-minerva action-view skin--responsive mw-mf-amc-disabled mw-mf', None, 'ide31df0155b000ae67703a72c52bee60e00c017d1861b9002e9f859a6b47bd3de', 1, 1)": [
+      "red",
+      [
+        "html",
+        "client-nojs mf-expand-sections-clientpref-1 mf-font-size-clientpref-small mw-mf-amc-clientpref-0",
+        null
+      ]
+    ]
+  },
+  "2": {
+    "('meta', None, None, 'id89af9cce90444516574b669014a1c976f4955e37378546a6e855d8429ec2d2b7', 2, 0)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('title', None, None, 'idd8d96ec35707818256fa2d349cfbed65f0d4cafa3576fa07d9f6753c515989fa', 2, 1)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id103f88d59d239a88feba1c6b95566fa7fa66f8e002fe0afe5287d38cad0aa3de', 2, 2)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'idf9645ef3daaae4bd12d4fb044af4c678ac8ee881cc9447e5bd30e71f0b140583', 2, 3)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id9f88413e7d251a4afd96c520bec330134b6258b5dcef5678f91b596ac6e2aed7', 2, 4)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id7a13c53a1c6da5fa389b3b84a9ff770ac4e2e8d010295f0134f936b8cc4b181c', 2, 5)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id8cda295642b356321032f62e34b2fc485855c82f1bce16dd7e444792cbae6ee1', 2, 6)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id269ad073ace5a303f7d40a229d050e864d2dde8e6dc52ed7a46affe396cf7f92', 2, 7)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id69ce1967b5774c465063c2ba7130e62fd221e3c52e0a1bdc6a46be6d99f1abac', 2, 8)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idcba7d2824d66baf0e32b92a55505db130e6ca5798aa4de1898b85158b57dd7b2', 2, 9)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id276fbbae74d0cdee595985a5cd7e08fa9f4a7c9c80a8b9b5369b7ec1d49e3893', 2, 10)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'id2ecccb296fe6b73909d67379cb44acde303638b3213e630d8e3cfb8fbeeda19c', 2, 11)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idd09708f89359bb4d7f711e3cf86d0d12a7521e890c8201839a81b36d44882bb4', 2, 12)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idf55febf47cca35bab9cd1c14ca7b3cdd6b2d28848a56d6abcc7a00839bc00754', 2, 13)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idb80fd0ee02f33fad8ac2156733f2d9f071822f9dcb5657a7b939bd2e761ab4fa', 2, 14)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idd94dd50dc4cdd54e8d31383116436d2782dd7af16a8cdd874901aa0687818749', 2, 15)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id56b16a08b8f6fac7488180140ca044034e32d54335e82c1a01b4b931aead8146', 2, 16)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id3f06ff6b6647a83be70a04b72ea68ffeb805cd9b3838dcfa818ce4411316606b', 2, 17)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'idceddffec5f4ab1605d5d709b78deada204ea37aeb7174456afb36e1cd607df89', 2, 18)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id311e286f9b1922f63ac37773a5e992d1162c936251c5ee142fbab5aadafc7266', 2, 19)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id9a5fcc939e45eeb4f5daf40d63ce881a9f341e2bf2b2bad12d4ca13e4120528f', 2, 20)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id51391d123e2951c04da086af2a90adfb7dd0c3d8d42848a21d9945768dec1c68', 2, 21)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'idd8e1068af1f120b07c74c60cbbd83722e31cb0bcd2656873c2367109621c43c5', 2, 22)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id7f521cbe91d3cd45b46d5b5961b16530ab3f60f434c3f7a344fd16089caf766f', 2, 23)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'ida9c41a2a1c70b242090243442975c9aa2a8a0918f2df96775acbe7a8784a00c5', 2, 24)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'ida98ffcc402387b6c9326d871676fb1f7b9df9bdf441337b411af1f8d3d1dd8ce', 2, 25)": [
+      "green",
+      [
+        "head",
+        null,
+        null
+      ]
+    ],
+    "('div', None, 'mw-mf-viewport', 'idf7efac78a0dd1e72da244b69765e62cc990d19fef692a9c513b98c05e1e203eb', 2, 26)": [
+      "red",
+      [
+        "body",
+        "mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-ninth_s rootpage-ninth_s stable issues-group-B skin-minerva action-view skin--responsive mw-mf-amc-disabled mw-mf",
+        null
+      ]
+    ],
+    "('div', 'mw-notification-area', None, 'id06d14e08403f6939c96774218fc9caa174a2f6ee211e6d6d25bad8be12f1cfd6', 2, 27)": [
+      "green",
+      [
+        "body",
+        "mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-ninth_s rootpage-ninth_s stable issues-group-B skin-minerva action-view skin--responsive mw-mf-amc-disabled mw-mf",
+        null
+      ]
+    ],
+    "('script', None, None, 'idf1789fa5090f493966f7341c7d433ee98731b9988ed4b5a00b740d5ccdfe634b', 2, 28)": [
+      "green",
+      [
+        "body",
+        "mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-ninth_s rootpage-ninth_s stable issues-group-B skin-minerva action-view skin--responsive mw-mf-amc-disabled mw-mf",
+        null
+      ]
+    ],
+    "('script', None, None, 'idc09db5e63b0dd45d1b85a561004f5164a50dc403e26d2968a5cf9807b84694a3', 2, 29)": [
+      "green",
+      [
+        "body",
+        "mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject mw-editable page-ninth_s rootpage-ninth_s stable issues-group-B skin-minerva action-view skin--responsive mw-mf-amc-disabled mw-mf",
+        null
+      ]
+    ]
+  },
+  "3": {
+    "('div', None, 'mw-mf-page-center', 'id3f3e1825d43e3fdc6b7d9b1191adb7401db791c6dad7615851d999b2d226f59c', 3, 0)": [
+      "red",
+      [
+        "div",
+        null,
+        "mw-mf-viewport"
+      ]
+    ]
+  },
+  "4": {
+    "('a', 'mw-mf-page-center__mask', None, 'idb436ab792456f5054a946265b873bad456c295899d9ccb310a403347c1e6b8aa', 4, 0)": [
+      "green",
+      [
+        "div",
+        null,
+        "mw-mf-page-center"
+      ]
+    ],
+    "('header', 'header-container header-chrome', None, 'id33f242cc0f3c62b5d6c721422893ce5380d5ff62964b3662c34b6d6749aaca57', 4, 1)": [
+      "green",
+      [
+        "div",
+        null,
+        "mw-mf-page-center"
+      ]
+    ],
+    "('main', 'mw-body', 'content', 'ida9c8c90456cf593efd4341466f1b43493904b69be7a6011073ae31a025c30a6e', 4, 2)": [
+      "red",
+      [
+        "div",
+        null,
+        "mw-mf-page-center"
+      ]
+    ],
+    "('footer', 'mw-footer minerva-footer', None, 'id77eed6de1ccc70d892318658241c9f0ef8ec190c50062d8f4f2a4e2196d60970', 4, 3)": [
+      "green",
+      [
+        "div",
+        null,
+        "mw-mf-page-center"
+      ]
+    ]
+  },
+  "5": {
+    "('div', 'minerva-header', None, 'ide19a040d1d39e242d126987f351fc3de31c8014da78908ff09522a023622dd7c', 5, 0)": [
+      "green",
+      [
+        "header",
+        "header-container header-chrome",
+        null
+      ]
+    ],
+    "('div', 'banner-container', None, 'id6dc1956d31223251e8aa2d2ec69c518833db8e4fed0930d22247e7af1d1a423c', 5, 1)": [
+      "green",
+      [
+        "main",
+        "mw-body",
+        "content"
+      ]
+    ],
+    "('div', 'pre-content heading-holder', None, 'id89408b51766ba136e22f958545de79cfd4e32254bc9ad24ad7a828bfcac5ee7e', 5, 2)": [
+      "red",
+      [
+        "main",
+        "mw-body",
+        "content"
+      ]
+    ],
+    "('div', 'content', 'bodyContent', 'id8d61351d0a10a14c70ab88df4cf3156ee67268688c62b9cb383f5732d8cbf805', 5, 3)": [
+      "red",
+      [
+        "main",
+        "mw-body",
+        "content"
+      ]
+    ],
+    "('div', 'post-content', 'page-secondary-actions', 'idd5877f78be524d896120e4ba644c4dd5c6672f3ffdde3b0645c643f72227753d', 5, 4)": [
+      "green",
+      [
+        "main",
+        "mw-body",
+        "content"
+      ]
+    ],
+    "('a', 'last-modified-bar', None, 'id952c6105d59772ed25a66e646af4c5b654cc28bf201046d3b55af869d5110ffc', 5, 5)": [
+      "green",
+      [
+        "footer",
+        "mw-footer minerva-footer",
+        null
+      ]
+    ],
+    "('div', 'post-content footer-content', None, 'id9b6a0c43f75d32cda93fa1e19270e732b28b676d7d81b87c12bf416f958ac0e7', 5, 6)": [
+      "green",
+      [
+        "footer",
+        "mw-footer minerva-footer",
+        null
+      ]
+    ]
+  },
+  "6": {
+    "('nav', 'navigation-drawer toggle-list view-border-box', None, 'id9023794e7b98be7d3b0b67d963f811286046568b01da0b00f5030c170cf1e8b6', 6, 0)": [
+      "green",
+      [
+        "div",
+        "minerva-header",
+        null
+      ]
+    ],
+    "('div', 'branding-box', None, 'id3365f2d5d017a1eea93106bb3585925552e122d704598db5e8d5412b383b8cdd', 6, 1)": [
+      "green",
+      [
+        "div",
+        "minerva-header",
+        null
+      ]
+    ],
+    "('form', 'minerva-search-form', None, 'id1a746477b5dce429a9da153b6332c35bba0dd3ea6113f6662cef3c20c75f03d8', 6, 2)": [
+      "green",
+      [
+        "div",
+        "minerva-header",
+        null
+      ]
+    ],
+    "('nav', 'minerva-user-navigation', None, 'id2ff518111fa360fe280046efc71127f04e306a2d11cc7bc3cc10dbe9e3e233a9', 6, 3)": [
+      "green",
+      [
+        "div",
+        "minerva-header",
+        null
+      ]
+    ],
+    "('div', None, 'siteNotice', 'id76b60a4bfb509873fd32a03d7a6cae406bbb10ddf9933b80877a746b7e42e21d', 6, 4)": [
+      "green",
+      [
+        "div",
+        "banner-container",
+        null
+      ]
+    ],
+    "('div', 'page-heading', None, 'ida1f070581eccddc530b538beff6dd652ccf830e8fe64d80c5d7655773d9c154e', 6, 5)": [
+      "red",
+      [
+        "div",
+        "pre-content heading-holder",
+        null
+      ]
+    ],
+    "('nav', 'page-actions-menu', None, 'idceccbf2b6ff0b8ec6dde3d6a12feef555ff007faeef785409258907400a55ab8', 6, 6)": [
+      "green",
+      [
+        "div",
+        "pre-content heading-holder",
+        null
+      ]
+    ],
+    "('div', None, 'mw-content-subtitle', 'id59a21757b004ecb335da45680168acba4bea1c720f82cd06f136d890aac4a9a9', 6, 7)": [
+      "green",
+      [
+        "div",
+        "pre-content heading-holder",
+        null
+      ]
+    ],
+    "('div', 'mw-body-content', 'mw-content-text', 'id9d7a8213df4a5e7a2d43cc75447cc579b82035e21b50a491b2e9496ede414ce4', 6, 8)": [
+      "red",
+      [
+        "div",
+        "content",
+        "bodyContent"
+      ]
+    ],
+    "('div', 'post-content last-modified-bar__content', None, 'id3d54ebc1a062cf8e122f7267588b1bd4ace5ec5def2cba9b0e8684ffb71b0f17', 6, 9)": [
+      "green",
+      [
+        "a",
+        "last-modified-bar",
+        null
+      ]
+    ],
+    "('div', None, 'p-lang', 'id193452d98c2b2e905711c29cbbe4f2bb3b9155f8b5ed806493a4f15ee6a44d9e', 6, 10)": [
+      "green",
+      [
+        "div",
+        "post-content footer-content",
+        null
+      ]
+    ],
+    "('div', 'minerva-footer-logo', None, 'idfa16b781969de23fb181f7a8bc2402d98d4892642ac5869dad2099431b82fe5d', 6, 11)": [
+      "green",
+      [
+        "div",
+        "post-content footer-content",
+        null
+      ]
+    ],
+    "('ul', 'footer-info hlist hlist-separated', 'footer-info', 'ide06a453ef9bdde5b18f0d6f833557ffd288469f55fb0a45b7739ca99c12ea237', 6, 12)": [
+      "green",
+      [
+        "div",
+        "post-content footer-content",
+        null
+      ]
+    ],
+    "('ul', 'footer-places hlist hlist-separated', 'footer-places', 'id9cc2ee53dee8220fe544dcfdbdfc186ab971d277456a9c77ea94246e3a9f94be', 6, 13)": [
+      "green",
+      [
+        "div",
+        "post-content footer-content",
+        null
+      ]
+    ]
+  },
+  "7": {
+    "('input', 'toggle-list__checkbox', 'main-menu-input', 'id9b0e3b0e8aee22b666b7968b48339fcc316701dad2aad45aad6bb667ed23381d', 7, 0)": [
+      "green",
+      [
+        "nav",
+        "navigation-drawer toggle-list view-border-box",
+        null
+      ]
+    ],
+    "('label', 'cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet toggle-list__toggle', 'mw-mf-main-menu-button', 'idf40edd08bd17ce07d47c4f083fcf0c08efb21e95c0111cd60f995ae21a598d86', 7, 1)": [
+      "green",
+      [
+        "nav",
+        "navigation-drawer toggle-list view-border-box",
+        null
+      ]
+    ],
+    "('div', 'menu view-border-box', 'mw-mf-page-left', 'idd2b251623780d40da8f1b1ea3b5f50283c4e836368f6578fd6fd75c1c7d23a07', 7, 2)": [
+      "green",
+      [
+        "nav",
+        "navigation-drawer toggle-list view-border-box",
+        null
+      ]
+    ],
+    "('label', 'main-menu-mask', None, 'idad1eafbb4bc5025833ab459d36f50a3cb672944af9419cf6808da7039d958d2d', 7, 3)": [
+      "green",
+      [
+        "nav",
+        "navigation-drawer toggle-list view-border-box",
+        null
+      ]
+    ],
+    "('a', None, None, 'idaa3d920d622501a5c559dad2dffeeebb5b639ac2a5d6b6d90e5440e523a0bbe2', 7, 4)": [
+      "green",
+      [
+        "div",
+        "branding-box",
+        null
+      ]
+    ],
+    "('div', 'search-box', None, 'idf56d179b8adbc11951dadd657c642fd91ae4364ede51e32ad337013656a4886d', 7, 5)": [
+      "green",
+      [
+        "form",
+        "minerva-search-form",
+        null
+      ]
+    ],
+    "('button', 'cdx-button cdx-button--size-large cdx-button--icon-only cdx-button--weight-quiet skin-minerva-search-trigger', 'searchIcon', 'idd940eca9b444a497228c3c310b298cdc044fc298681762d61910d1dec53343c1', 7, 6)": [
+      "green",
+      [
+        "form",
+        "minerva-search-form",
+        null
+      ]
+    ],
+    "('h1', 'firstHeading mw-first-heading', 'firstHeading', 'iddaa435dc3e4302c0f4492623ff08a87d6c92e61c17044152f723d57369cd36f8', 7, 7)": [
+      "red",
+      [
+        "div",
+        "page-heading",
+        null
+      ]
+    ],
+    "('div', 'tagline', None, 'id90572fae04aed3b256364461a9a5282fbd0f47c8b86b1654b259ad0300c0b735', 7, 8)": [
+      "green",
+      [
+        "div",
+        "page-heading",
+        null
+      ]
+    ],
+    "('ul', 'page-actions-menu__list', 'p-views', 'idf7ec5e77576c44f81d107d9ccf86bd62acbe16038e3af33cd06c36ccbbe19037', 7, 9)": [
+      "green",
+      [
+        "nav",
+        "page-actions-menu",
+        null
+      ]
+    ],
+    "('script', None, None, 'id88cfafc84efa98070b767bbe30e7aa29ca4ccdd9811e1e1b6b1854c3d0b40107', 7, 10)": [
+      "green",
+      [
+        "div",
+        "mw-body-content",
+        "mw-content-text"
+      ]
+    ],
+    "('div', 'mw-content-ltr mw-parser-output', None, 'idf61164e56704c92fc406fc9e69406970454d26a3256b93257ae8200c7d933c4a', 7, 11)": [
+      "red",
+      [
+        "div",
+        "mw-body-content",
+        "mw-content-text"
+      ]
+    ],
+    "('noscript', None, None, 'id6232657a0427a631a00e0743fa1737dd6340a246006c2cfd36eade2f1465c07c', 7, 12)": [
+      "green",
+      [
+        "div",
+        "mw-body-content",
+        "mw-content-text"
+      ]
+    ],
+    "('div', 'printfooter', None, 'idb7c3adf9b7f3e352c86b66c1880b1c149c54a49ceef30ec912ca9389dc563acf', 7, 13)": [
+      "green",
+      [
+        "div",
+        "mw-body-content",
+        "mw-content-text"
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon-size-medium minerva-icon--modified-history', None, 'iddda7ebd944c7ade4ba3c029c74fb0b9835f00081fad955fc478c2db55834ee4e', 7, 14)": [
+      "green",
+      [
+        "div",
+        "post-content last-modified-bar__content",
+        null
+      ]
+    ],
+    "('span', 'last-modified-bar__text modified-enhancement', None, 'id39d20ba9cebdde213a6818cecba5156c71c2ba557c6bff3072da9dddeda52a13', 7, 15)": [
+      "green",
+      [
+        "div",
+        "post-content last-modified-bar__content",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon-size-small minerva-icon--expand', None, 'idf207e313e588f067ac8400344db5ddca97dd8858961c0861a3d0dd78a8a14e3b', 7, 16)": [
+      "green",
+      [
+        "div",
+        "post-content last-modified-bar__content",
+        null
+      ]
+    ],
+    "('h4', None, None, 'idff0216fecb94ad80da19b36f61a7f35943337c825280582935a0c62d01efd484', 7, 17)": [
+      "green",
+      [
+        "div",
+        null,
+        "p-lang"
+      ]
+    ],
+    "('section', None, None, 'ida454d175893b079d41820fa0d4b73a98f6a5c3127fce7d879f3a058fdcb821d1', 7, 18)": [
+      "green",
+      [
+        "div",
+        null,
+        "p-lang"
+      ]
+    ],
+    "('img', None, None, 'idd7a9d3839476b061ea2104b3dbdc955f198f5345cc3fa5410c6b87b86051653a', 7, 19)": [
+      "green",
+      [
+        "div",
+        "minerva-footer-logo",
+        null
+      ]
+    ],
+    "('li', None, 'footer-info-lastmod', 'idd706ed3a80b756dae1ff1fc858ed3df07170b5d3e11bc2d2acf3021ff6f9ad0f', 7, 20)": [
+      "green",
+      [
+        "ul",
+        "footer-info hlist hlist-separated",
+        "footer-info"
+      ]
+    ],
+    "('li', None, 'footer-info-copyright', 'id392e08f40111c7e61665a47ae3406ef898e120f323c84d745a5784e95e4b8154', 7, 21)": [
+      "green",
+      [
+        "ul",
+        "footer-info hlist hlist-separated",
+        "footer-info"
+      ]
+    ],
+    "('li', None, 'footer-places-privacy', 'id7efc833ac59d7fb2f4ca628395d32d4252d7eea5fcd72cc3db77013f809e9906', 7, 22)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-about', 'id0e840d585de700fbeb6c43a1325da1520e5230a61f7f4c2a10f6ec88f110a844', 7, 23)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-disclaimers', 'id44622ea3066a12cc704195637750cbd4009478b792b64c666a0a40a114d31a12', 7, 24)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-wm-codeofconduct', 'id9abdc912265eec3147db3d0439a589cc1a457b44258f1979acd9dc9bfd03a730', 7, 25)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-developers', 'id1e847b138bfe20d1d2122fca9654d1f5b9d3ed90777f03d996863102ff41a2aa', 7, 26)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-statslink', 'id8c3c6de5d5ecbc113bedcc0ad99fcac60b5d8430159526e3b766a107e9aad9eb', 7, 27)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-cookiestatement', 'idfb28cf5baeea1c8568300484f9ead6cfb45aa6f8df6e28b7e462cb7b7b1d4a9b', 7, 28)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-terms-use', 'id2983e0798f6f6cd5369390b05f5122f156a237cd4a7205dc5a0a36ad0657e27b', 7, 29)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ],
+    "('li', None, 'footer-places-desktop-toggle', 'id6b55c44476d68a17118776b3fb56dd1490cba737a5c60654204747c7ee25a666', 7, 30)": [
+      "green",
+      [
+        "ul",
+        "footer-places hlist hlist-separated",
+        "footer-places"
+      ]
+    ]
+  },
+  "8": {
+    "('span', 'minerva-icon minerva-icon--menu', None, 'id985836e87133c7c7857653b126554a4342d37372c330e5b9f88110e663b9345a', 8, 0)": [
+      "green",
+      [
+        "label",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet toggle-list__toggle",
+        "mw-mf-main-menu-button"
+      ]
+    ],
+    "('span', None, None, 'idb26695b490c72c5712725ed85e3d66e950776005c17245bfbb6191e57c7f2ced', 8, 1)": [
+      "green",
+      [
+        "label",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet toggle-list__toggle",
+        "mw-mf-main-menu-button"
+      ]
+    ],
+    "('ul', 'toggle-list__list', 'p-navigation', 'id04b0d4ffed312d19827c404476319c59144a83a51bdd063fc368c38e3519d07b', 8, 2)": [
+      "green",
+      [
+        "div",
+        "menu view-border-box",
+        "mw-mf-page-left"
+      ]
+    ],
+    "('ul', 'toggle-list__list', 'p-personal', 'id38f434f6bb17714bf6de96911da6cc6d2ae4e50c19ecd55e4a834798f9c33c99', 8, 3)": [
+      "green",
+      [
+        "div",
+        "menu view-border-box",
+        "mw-mf-page-left"
+      ]
+    ],
+    "('ul', 'toggle-list__list', 'pt-preferences', 'id9d44b80b217a693609f062dde63435b32d891e5b29f365c523895a548b84f320', 8, 4)": [
+      "green",
+      [
+        "div",
+        "menu view-border-box",
+        "mw-mf-page-left"
+      ]
+    ],
+    "('ul', 'toggle-list__list', 'p-donation', 'id3d94b196ceb36cd5417d216dbe24ecb8eec3c3ab3a5dcedbab93430f8d7c41c1', 8, 5)": [
+      "green",
+      [
+        "div",
+        "menu view-border-box",
+        "mw-mf-page-left"
+      ]
+    ],
+    "('ul', 'hlist', None, 'idb3f31167685a7fc28cacc51e60c257dee441a7f9aaf87ef9ce7c7faa6c54276a', 8, 6)": [
+      "green",
+      [
+        "div",
+        "menu view-border-box",
+        "mw-mf-page-left"
+      ]
+    ],
+    "('span', None, None, 'idb5e53edd4d4b83c449d38bc169b666f1d02471837c6e06fd503e68d75a064bc6', 8, 7)": [
+      "green",
+      [
+        "a",
+        null,
+        null
+      ]
+    ],
+    "('input', None, None, 'id89d651efa38544bfcf6849ab1b9505c3a552225575de5b63c52e134a1d487532', 8, 8)": [
+      "green",
+      [
+        "div",
+        "search-box",
+        null
+      ]
+    ],
+    "('input', 'search skin-minerva-search-trigger', 'searchInput', 'id855371f8c8eb76e5fb7f9543f45db5eea71898732527287f338e28b0ac6f1516', 8, 9)": [
+      "green",
+      [
+        "div",
+        "search-box",
+        null
+      ]
+    ],
+    "('span', 'search-box-icon-overlay', None, 'idd3f86c3f9e040d889b53d0c7633fa567836cef6f699be7f3b47469ddf5bedf74', 8, 10)": [
+      "green",
+      [
+        "div",
+        "search-box",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--search', None, 'idab7835c20165cce7944f17699f24d6b2a81a8a03f20aa48424ab9e0550194fd5', 8, 11)": [
+      "green",
+      [
+        "button",
+        "cdx-button cdx-button--size-large cdx-button--icon-only cdx-button--weight-quiet skin-minerva-search-trigger",
+        "searchIcon"
+      ]
+    ],
+    "('span', None, None, 'idb181b0604fcf188e9ea7d4e7c3455fa07b1df8009198fb72bf6ee0ad827e1bbf', 8, 12)": [
+      "green",
+      [
+        "button",
+        "cdx-button cdx-button--size-large cdx-button--icon-only cdx-button--weight-quiet skin-minerva-search-trigger",
+        "searchIcon"
+      ]
+    ],
+    "('span', 'mw-page-title-main', None, 'ide83f2f8d1b21a02cb02a9e8a833d621c2514c3216a822f1cf0f479d650e30218', 8, 13)": [
+      "red",
+      [
+        "h1",
+        "firstHeading mw-first-heading",
+        "firstHeading"
+      ]
+    ],
+    "('li', 'page-actions-menu__list-item', 'language-selector', 'id4b7e391eff8d9d6e38fd2edf79528bd3f7690c5b968900f73d59688cb81e2e6e', 8, 14)": [
+      "green",
+      [
+        "ul",
+        "page-actions-menu__list",
+        "p-views"
+      ]
+    ],
+    "('li', 'page-actions-menu__list-item', 'page-actions-watch', 'id003d4cbaeb5d3a78f75789f2374764e81e350e968dd179aa43d16e8b717e722a', 8, 15)": [
+      "green",
+      [
+        "ul",
+        "page-actions-menu__list",
+        "p-views"
+      ]
+    ],
+    "('li', 'page-actions-menu__list-item', 'page-actions-edit', 'id6f1cf0336f6b7f164c19908ec59c603185c97e66b9aba4673a90d175646a5ac5', 8, 16)": [
+      "green",
+      [
+        "ul",
+        "page-actions-menu__list",
+        "p-views"
+      ]
+    ],
+    "('section', 'mf-section-0', 'mf-section-0', 'idc6524f4e4255a25d8b0a15e3ec708b3f6e37b5a2c9ffafb62e08b24f99bf6a4b', 8, 17)": [
+      "green",
+      [
+        "div",
+        "mw-content-ltr mw-parser-output",
+        null
+      ]
+    ],
+    "('div', 'mw-heading mw-heading2 section-heading', None, 'id684d770782a5e5bd61583284cf145b2f8256974e5b2a89c5ca1a9452ff05b15d', 8, 18)": [
+      "red",
+      [
+        "div",
+        "mw-content-ltr mw-parser-output",
+        null
+      ]
+    ],
+    "('section', 'mf-section-1 collapsible-block', 'mf-section-1', 'idb06f4463395ee391c4c0e624d109abd76635357d2e4ffa6ec680d5fa1858434d', 8, 19)": [
+      "red",
+      [
+        "div",
+        "mw-content-ltr mw-parser-output",
+        null
+      ]
+    ],
+    "('img', None, None, 'idb9680b1e887863491060fe43bb16fd6756e2150d31ddd2504d8b6f18a6108b97', 8, 20)": [
+      "green",
+      [
+        "noscript",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'idab38c766c9f118e3232ce0635bdedca596d2b03ce51c4ccebe3e5c5dde57dced', 8, 21)": [
+      "green",
+      [
+        "div",
+        "printfooter",
+        null
+      ]
+    ],
+    "('span', None, None, 'id24a0f044a8b0463f569fd98f14866a979eb70d70196b7ba67c6f3f689a1dc5fd', 8, 22)": [
+      "green",
+      [
+        "span",
+        "last-modified-bar__text modified-enhancement",
+        null
+      ]
+    ],
+    "('ul', 'minerva-languages', 'p-variants', 'id3d24cefd487534fa543bbbcb49ca452f47ac20b88540d577e35e7a5ff4fb0798', 8, 23)": [
+      "green",
+      [
+        "section",
+        null,
+        null
+      ]
+    ],
+    "('ul', 'minerva-languages', None, 'id62c5d7937e576e77057017cec1c50682b0c4e9c259854456d3f21a47ce4e7741', 8, 24)": [
+      "green",
+      [
+        "section",
+        null,
+        null
+      ]
+    ],
+    "('p', None, None, 'id569b797075354a0d7f4e03f41b82982df7591a3cc078f883cca5438a74ac8512', 8, 25)": [
+      "green",
+      [
+        "section",
+        null,
+        null
+      ]
+    ],
+    "('a', 'external', None, 'id55d3bc418730c3999a9401a4f541ab19e2dd9a6b9e0bb6290ab84c5f43e8db89', 8, 26)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-info-copyright"
+      ]
+    ],
+    "('a', None, None, 'idbb82a04a2816a16e5f5f5972b8716667aaa01f5b9341fd5ee3e7468e5830bb8f', 8, 27)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-privacy"
+      ]
+    ],
+    "('a', None, None, 'idf62e68650d9011a77f7dedbd04eacdda7ea5d47f38ac639e9d4713275b0f3ece', 8, 28)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-about"
+      ]
+    ],
+    "('a', None, None, 'idd063ccba62fbc5f1fd4500b70c72aedea4478ff02b076d24222d8ee09bd5cd9e', 8, 29)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-disclaimers"
+      ]
+    ],
+    "('a', None, None, 'idfff9d90bb3190268026f3818ffa217d64a954758439a732bb2f8a7dac112a832', 8, 30)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-wm-codeofconduct"
+      ]
+    ],
+    "('a', None, None, 'idc216a8f40551727c35d3da89da845d3fdd64461260170ed691a6110c274f646d', 8, 31)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-developers"
+      ]
+    ],
+    "('a', None, None, 'id84af42161df1f708883b619505817865b8d72a5f944de98670b19d22a701a50e', 8, 32)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-statslink"
+      ]
+    ],
+    "('a', None, None, 'id135e1e1dcd1e021bfc757e00dcf258babcb826d82a1b9719603986b07dceefbd', 8, 33)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-cookiestatement"
+      ]
+    ],
+    "('a', None, None, 'id6a7ed869f64f7b491202cd3d63a71f685531b03b1dc08919bd694a30a2a87298', 8, 34)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-terms-use"
+      ]
+    ],
+    "('a', None, 'mw-mf-display-toggle', 'ida3e9c4279e0c28a5b564598f455d93324339e66d122e4c4bf6bc50ef522b3b49', 8, 35)": [
+      "green",
+      [
+        "li",
+        null,
+        "footer-places-desktop-toggle"
+      ]
+    ]
+  },
+  "9": {
+    "('li', 'toggle-list-item ', None, 'idf9cf814a5d936332897016278e22c4cb5fb0b0c353b6aa9e3a4d5ae137b97eff', 9, 0)": [
+      "green",
+      [
+        "ul",
+        "toggle-list__list",
+        "p-navigation"
+      ]
+    ],
+    "('li', 'toggle-list-item ', None, 'id1e239d8bc61b9e02f8cf78ccf84834a084da4d44fc1ce413ceda168226828f0e', 9, 1)": [
+      "green",
+      [
+        "ul",
+        "toggle-list__list",
+        "p-navigation"
+      ]
+    ],
+    "('li', 'toggle-list-item ', None, 'id66185a74b5752b4667a5e6cb9f653a18f505aaa7cd7835bb08b0528321a4d4f6', 9, 2)": [
+      "green",
+      [
+        "ul",
+        "toggle-list__list",
+        "p-personal"
+      ]
+    ],
+    "('li', 'toggle-list-item skin-minerva-list-item-jsonly', None, 'idd2063639e2ebabd39cba9c405de5432b4bb5cffc91298784ece793ab58cd052b', 9, 3)": [
+      "green",
+      [
+        "ul",
+        "toggle-list__list",
+        "pt-preferences"
+      ]
+    ],
+    "('li', 'toggle-list-item ', None, 'id478b06718206813b07ee4a4ec63a93ffbd81e8ceb8dddefae2a5ed93011e8086', 9, 4)": [
+      "green",
+      [
+        "ul",
+        "toggle-list__list",
+        "p-donation"
+      ]
+    ],
+    "('li', 'toggle-list-item ', None, 'ida4797cdd8e4f10d6a3191d3fd09e39992c80340e04ed0e05dbcdfaf6eafcdb54', 9, 5)": [
+      "green",
+      [
+        "ul",
+        "hlist",
+        null
+      ]
+    ],
+    "('li', 'toggle-list-item ', None, 'idc283317854e316aa13fd0f2a22a69b4e7e881c3f9155ae21aba780163bde7958', 9, 6)": [
+      "green",
+      [
+        "ul",
+        "hlist",
+        null
+      ]
+    ],
+    "('img', None, None, 'idd7a9d3839476b061ea2104b3dbdc955f198f5345cc3fa5410c6b87b86051653a', 9, 7)": [
+      "green",
+      [
+        "span",
+        null,
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--search', None, 'idab7835c20165cce7944f17699f24d6b2a81a8a03f20aa48424ab9e0550194fd5', 9, 8)": [
+      "green",
+      [
+        "span",
+        "search-box-icon-overlay",
+        null
+      ]
+    ],
+    "('a', 'cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet   language-selector disabled', None, 'idbc49ffda8be093d54f2af89ed76f3d939da6d25d8421b1c3c64f0ed5ac23cea2', 9, 9)": [
+      "green",
+      [
+        "li",
+        "page-actions-menu__list-item",
+        "language-selector"
+      ]
+    ],
+    "('a', 'cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet menu__item--page-actions-watch', 'ca-watch', 'id41624d74487075fa0ee7326518b81c5da58a5fe4b893bde2425c8fda7c71b8f6', 9, 10)": [
+      "green",
+      [
+        "li",
+        "page-actions-menu__list-item",
+        "page-actions-watch"
+      ]
+    ],
+    "('a', 'cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet edit-page menu__item--page-actions-edit', 'ca-edit', 'id545fd03824fa0333ebcb97354a5315ab8d8c118d14b21cc4c9ba123bfb943917', 9, 11)": [
+      "green",
+      [
+        "li",
+        "page-actions-menu__list-item",
+        "page-actions-edit"
+      ]
+    ],
+    "('span', 'indicator mf-icon mf-icon-expand mf-icon--small', None, 'id7679b016bf1281eb99e6ec7bab8c8aaf85cddb27e4fa7d281f0b6a5a88155524', 9, 12)": [
+      "green",
+      [
+        "div",
+        "mw-heading mw-heading2 section-heading",
+        null
+      ]
+    ],
+    "('h2', None, 'Engelska', 'idb2f0c2297392b95c7fc8234f8b4c243d41537d2c26b1f5247afeb102c4e3a455', 9, 13)": [
+      "red",
+      [
+        "div",
+        "mw-heading mw-heading2 section-heading",
+        null
+      ]
+    ],
+    "('span', 'mw-editsection', None, 'id1d5796261c22ffd59b1c116ef87c7af26a058b4fa7679fda154e347801a96bf6', 9, 14)": [
+      "green",
+      [
+        "div",
+        "mw-heading mw-heading2 section-heading",
+        null
+      ]
+    ],
+    "('div', 'mw-heading mw-heading3', None, 'id48641f8024dd8c8e69dfaada10f62e725e2f3ec2372d3750a8a6fb30d22d8038', 9, 15)": [
+      "red",
+      [
+        "section",
+        "mf-section-1 collapsible-block",
+        "mf-section-1"
+      ]
+    ],
+    "('p', None, None, 'idf4eb1e8227976e761404bfa498df93d0a9f612b1508b958964c1c95160480776', 9, 16)": [
+      "red",
+      [
+        "section",
+        "mf-section-1 collapsible-block",
+        "mf-section-1"
+      ]
+    ],
+    "('ol', None, None, 'ida7c048eb76ad1813112426af34f43ef1be487157be3a4239dc8d03d6dec410d9', 9, 17)": [
+      "red",
+      [
+        "section",
+        "mf-section-1 collapsible-block",
+        "mf-section-1"
+      ]
+    ]
+  },
+  "10": {
+    "('a', 'toggle-list-item__anchor menu__item--home', None, 'id0cb4328d7c660a40f5a97396a04c8e4a3a8e30a54adf77b84795bce389843966', 10, 0)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item ",
+        null
+      ]
+    ],
+    "('a', 'toggle-list-item__anchor menu__item--random', None, 'idf7afa116d15ccf07b1a779494aec37b5a71d7c4448c9ca2164332e398fe0251d', 10, 1)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item ",
+        null
+      ]
+    ],
+    "('a', 'toggle-list-item__anchor menu__item--login', None, 'id9f9847f37da119c599cfc0bb73aa23d95fdbda0c7070808a9cb000089f4600c7', 10, 2)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item ",
+        null
+      ]
+    ],
+    "('a', 'toggle-list-item__anchor menu__item--settings', None, 'id6d7a8648a960bd00147c4102c73227426a6dfd881840749c2716cd3f972d6a76', 10, 3)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item skin-minerva-list-item-jsonly",
+        null
+      ]
+    ],
+    "('a', 'toggle-list-item__anchor menu__item--donate', None, 'idde8a5f8092526cac9883bbc2a954651d0754178d834957a13138ae0a926c14d8', 10, 4)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item ",
+        null
+      ]
+    ],
+    "('a', 'toggle-list-item__anchor menu__item--about', None, 'id843b3efc8df7c8f5f446208b75b1c4a05f89193cafc60a13816696b896b3096e', 10, 5)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item ",
+        null
+      ]
+    ],
+    "('a', 'toggle-list-item__anchor menu__item--disclaimers', None, 'id5a1a6345c8ed88da4a67ca84758f698647b5b473c1bde6c1230695507e972576', 10, 6)": [
+      "green",
+      [
+        "li",
+        "toggle-list-item ",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--language', None, 'ida052fd81fd27e9d7881ca21a5dcbee23a42e56c122438fe554e9fe977077b717', 10, 7)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet   language-selector disabled",
+        null
+      ]
+    ],
+    "('span', None, None, 'id953a92fcc61cd1bd90878f4802641636d7cd45263310d42c833a2ffc427fe2c5', 10, 8)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet   language-selector disabled",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--star', None, 'id65ef0f24ea676938f81e0657789c08b8d88f0baa61cb4251c6ac242e5dfa4983', 10, 9)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet menu__item--page-actions-watch",
+        "ca-watch"
+      ]
+    ],
+    "('span', None, None, 'ida00a1455f26282348daaf57282a928fa5cc8521b6a82f39bc596c3dd71f82adc', 10, 10)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet menu__item--page-actions-watch",
+        "ca-watch"
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--edit', None, 'id8e6b92418150ec645d4e8e7bd2a3e6a2422482a283c3426a4cc4d9af1ab98ed9', 10, 11)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet edit-page menu__item--page-actions-edit",
+        "ca-edit"
+      ]
+    ],
+    "('span', None, None, 'ida78e46c331f29d9f37786d656be36264e1cf817a423f40bfd5cc715fc939f760', 10, 12)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet edit-page menu__item--page-actions-edit",
+        "ca-edit"
+      ]
+    ],
+    "('a', 'cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet ', None, 'ided734f49ccb11257e285660dbb14f21e862a290914b4d232007edb9cfe2fbdd4', 10, 13)": [
+      "green",
+      [
+        "span",
+        "mw-editsection",
+        null
+      ]
+    ],
+    "('h3', None, 'Substantiv', 'id3a3333c6776458ea24fced2d6e2855e841c320b1f3456745894804a43a88632f', 10, 14)": [
+      "red",
+      [
+        "div",
+        "mw-heading mw-heading3",
+        null
+      ]
+    ],
+    "('span', 'mw-editsection', None, 'idcc78da1b1301a4b4194483a91975207520d16fc65063c3c6a7099b1f1f189f37', 10, 15)": [
+      "green",
+      [
+        "div",
+        "mw-heading mw-heading3",
+        null
+      ]
+    ],
+    "('b', None, None, 'id5cf463bb9ac9ff4ac48740aeb0c00ac7e24cf76a9605df9ab3f0f7f75ede2a8b', 10, 16)": [
+      "red",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id3d8d5492c880f94b80ef0dd6298592f13406063dc454dfe70a9d38bc4bad4f39', 10, 17)": [
+      "red",
+      [
+        "ol",
+        null,
+        null
+      ]
+    ]
+  },
+  "11": {
+    "('span', 'minerva-icon minerva-icon--home', None, 'id29927ac3df5ac2e91ba82c137ec903e8776c6c26b5f013d1f860a7ea43ce16f1', 11, 0)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--home",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'ida1e042925680b59fc0e071f2a946afef5d4fcab4dd1aa893a128f956153bae55', 11, 1)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--home",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--die', None, 'idf6195d7c9fd63ddef371938da937f96e4aceb229cc6cb33aa5296cb341432781', 11, 2)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--random",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'id29ce9183d278b9be6d66ab3830c71c7103d82813b371bbaa87e66bc72ef45f85', 11, 3)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--random",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--logIn', None, 'idbd34e24f6d3befb08c1a88147e74f170403219c4f8f98bbd8fda49209e39b166', 11, 4)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--login",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'id8f53ad414113834cb592792fc24c43d61f41bdc9060f25f5df3960a48f59383d', 11, 5)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--login",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--settings', None, 'id15118a29a17056bf73e78e4037fba34f4c5f531d8fec4db2e21f14aa091edbc1', 11, 6)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--settings",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'id53a614e2a1686da681190e6763b6ef0921f02177c5c73b02731e43223a3d02e5', 11, 7)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--settings",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--heart', None, 'id9a1d747686a06a4f11e07a8b2cb561f2da99dfeacc12f6841c9d1ab714c1b583', 11, 8)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--donate",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'id17929510d22c5cef9bdf830bf2f655df290c537475ee2dcf346302844ec43c00', 11, 9)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--donate",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'ide3ef92488e5d422e5e19c528c69d324946327296540872aefe2ab378adc51cb1', 11, 10)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--about",
+        null
+      ]
+    ],
+    "('span', 'toggle-list-item__label', None, 'idac6e50401faca30703249803cc724952e9d46cd3379f2361047465d8f267d411', 11, 11)": [
+      "green",
+      [
+        "a",
+        "toggle-list-item__anchor menu__item--disclaimers",
+        null
+      ]
+    ],
+    "('span', 'minerva-icon minerva-icon--edit', None, 'id8e6b92418150ec645d4e8e7bd2a3e6a2422482a283c3426a4cc4d9af1ab98ed9', 11, 12)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet ",
+        null
+      ]
+    ],
+    "('span', None, None, 'id31522ffae93aace368e925cbfc384d53fac3dc037ebef3d82ee9f8451bb0810f', 11, 13)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet ",
+        null
+      ]
+    ],
+    "('a', 'cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet ', None, 'id2c26dff51788e7092a94d6a0c92c359137970fef0d0ff5dce1d19c33ac8299a2', 11, 14)": [
+      "green",
+      [
+        "span",
+        "mw-editsection",
+        null
+      ]
+    ],
+    "('i', None, None, 'idda4295bd316f163497cf5481abf0d99eb8b834b471b19432b875d0e56f326c6e', 11, 15)": [
+      "red",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id77cac37ce0531216f06cff865648b0529762fcaaa6092921f605a261af75a4ad', 11, 16)": [
+      "red",
+      [
+        "li",
+        null,
+        null
+      ]
+    ]
+  },
+  "12": {
+    "('span', 'minerva-icon minerva-icon--edit', None, 'id8e6b92418150ec645d4e8e7bd2a3e6a2422482a283c3426a4cc4d9af1ab98ed9', 12, 0)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet ",
+        null
+      ]
+    ],
+    "('span', None, None, 'id31522ffae93aace368e925cbfc384d53fac3dc037ebef3d82ee9f8451bb0810f', 12, 1)": [
+      "green",
+      [
+        "a",
+        "cdx-button cdx-button--size-large cdx-button--fake-button cdx-button--fake-button--enabled cdx-button--icon-only cdx-button--weight-quiet ",
+        null
+      ]
+    ]
+  }
+}

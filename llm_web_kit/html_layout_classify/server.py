@@ -149,7 +149,7 @@ def __init_queue(layout_sample_dir, reset):
 
     layout_dir = Path(layout_sample_dir)
     for file_path in layout_dir.rglob('*.jsonl'):
-        file_path_str = str(file_path)
+        file_path_str = str(file_path.resolve())  # 使用resolve()获取文件的绝对路径
         # Only add files that are not currently being processed
         if file_path_str not in processing_files:
             file_queue.put(file_path_str)

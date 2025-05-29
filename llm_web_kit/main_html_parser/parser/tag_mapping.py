@@ -1,15 +1,18 @@
-from hashlib import sha256
-
 from lxml import etree, html
 
 from llm_web_kit.exception.exception import TagMappingParserException
+from llm_web_kit.html_layout.html_layout_cosin import get_feature, similarity
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
+from llm_web_kit.main_html_parser.parser.layout_batch_parser import \
+    LayoutBatchParser
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
+
+SIMILAR_THRESHOLD = 0.9
 
 
 class MapItemToHtmlTagsParser(BaseMainHtmlParser):
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
-        """将正文的item_id与原html网页tag进行映射, 找出正文内容, 并构造出正文树结构的字典html_element_list
+        """将正文的item_id与原html网页tag进行映射, 找出正文内容, 并构造出正文树结构的字典html_element_list，使用相似度判断正文抽取效果
            字典结构
                     {
                      layer_no: {
@@ -28,21 +31,53 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         """
         # tag映射逻辑
         try:
-            template_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
+            template_raw_html = pre_data[PreDataJsonKey.TYPICAL_RAW_HTML]
+            template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
             response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
-            root = html.fromstring(template_html)
+            root = html.fromstring(template_tag_html)
+            tree = etree.ElementTree(root)
+            # 抽取正文树结构
             content_list = self.tag_main_html(response_json, root)
-            element_dict = self.construct_main_tree(root)
+            element_dict = self.construct_main_tree(root, tree)
+
+            # 模版抽取正文html
+            parser = LayoutBatchParser({})
+            extract_info = {PreDataJsonKey.HTML_SOURCE: template_raw_html,
+                            PreDataJsonKey.HTML_ELEMENT_DICT: element_dict}
+            extract_info_json = PreDataJson(extract_info)
+            parts = parser.parse(extract_info_json)
+            template_extract_html = parts[PreDataJsonKey.MAIN_HTML_BODY]
+
+            # 检验模版抽取效果
+            feature1 = get_feature(template_raw_html)
+            feature2 = get_feature(template_extract_html)
+            layer = self.__get_max_width_layer(element_dict)
+            template_sim = similarity(feature1, feature2, layer_n=layer)
+
+            # 比较模版正文html与原html相似度
+            if template_sim > SIMILAR_THRESHOLD:
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+            else:
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True
+
+            # 结果返回
+            pre_data[PreDataJsonKey.SIMILARITY_LAYER] = layer
+            pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = template_extract_html
             pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
-            pre_data[PreDataJsonKey.HTML_ELEMENT_LIST] = element_dict
+            pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict
         except Exception as e:
             raise TagMappingParserException(e)
         return pre_data
 
-    def get_element_id(self, element):
-        """生成稳定的短哈希ID."""
-        element_html = html.tostring(element, encoding='unicode', method='html')
-        return f'id{sha256(element_html.encode()).hexdigest()}'  # 10位哈希
+    def __get_max_width_layer(self, element_dict):
+        max_length = 0
+        max_width_layer = 0
+        for layer_n, layer in element_dict.items():
+            if len(layer) > max_length:
+                max_width_layer = layer_n
+                max_length = len(layer)
+
+        return max_width_layer - 2 if max_width_layer > 4 else 3
 
     def deal_element_direct(self, item_id, test_root):
         # 对正文内容赋予属性magic_main_html
@@ -119,7 +154,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         self.tag_parent(pre_root)
         return content_list
 
-    def process_main_tree(self, element, depth, layer_index_counter, all_dict, all_set):
+    def process_main_tree(self, element, depth, layer_index_counter, all_dict, all_set, tree):
         if element is None:
             return
         if isinstance(element, etree._Comment):
@@ -140,7 +175,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         keyy = (tag, class_id, idd, depth, layer_index_counter[depth])
 
         parent = element.getparent()
-        if parent:
+        if parent is not None:
             parent_tag = parent.tag
             parent_class_id = parent.get('class', None)
             parent_idd = parent.get('id', None)
@@ -154,23 +189,23 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             color = 'red'
         else:
             color = 'green'
-
+        xpath = tree.getpath(element)
         # 写入该层元素key，如果有重复的green节点，只保留一个
         if keyy_for_sim in current_set:
             if is_main_html and current_set[keyy_for_sim][0] == 'green':
-                current_dict[keyy] = ('red', parent_keyy)
+                current_dict[keyy] = ('red', parent_keyy, xpath)
                 current_set[keyy_for_sim] = ('red', parent_keyy)
         else:
-            current_dict[keyy] = (color, parent_keyy)
+            current_dict[keyy] = (color, parent_keyy, xpath)
             current_set[keyy_for_sim] = (color, parent_keyy)
 
         for ele in element:
-            self.process_main_tree(ele, depth + 1, layer_index_counter, all_dict, all_set)
+            self.process_main_tree(ele, depth + 1, layer_index_counter, all_dict, all_set, tree)
 
-    def construct_main_tree(self, pre_root):
+    def construct_main_tree(self, pre_root, tree):
         all_dict = {}
         all_set = {}
         layer_index_counter = {}
-        self.process_main_tree(pre_root, 0, layer_index_counter, all_dict, all_set)
+        self.process_main_tree(pre_root, 0, layer_index_counter, all_dict, all_set, tree)
 
         return all_dict

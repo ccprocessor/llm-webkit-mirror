@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>North Vancouver Web Design </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="North Vancouver web designer of mobile friendly websites, web development by Tyler Lange"/>
+
+    <meta name="keywords" content="North Vancouver Web Design"/>
+
+    <meta name="google-site-verification" content="cEL4kDdAQApBTqo8Lf9I4fc9WrWhV4zyW35ZBtqqKVk"/>
+
+    <link rel="shortcut icon" href="http://www.northvanweb.com/favicon.ico">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+    <!--[if lt IE 9]>
+
+    <script src="http://www.northvanweb.com/wp-content/themes/bootstrap3-child/bootstrap/js/html5shiv.js"></script>
+
+    <script src="http://www.northvanweb.com/wp-content/themes/bootstrap3-child/bootstrap/js/respond.min.js"></script>
+
+    <![endif]-->
+
+
+    <style>
+
+        #masthead {
+            background-color: rgba(0, 0, 0, .8);
+        }
+
+        .video-poster-image {
+            background: url('http://www.northvanweb.com/wp-content/uploads/home-bg1.jpg') no-repeat !important;
+        }
+
+
+        ::selection {
+            background: #FECD08; /* Safari */
+            color: #fff;
+        }
+
+        ::-moz-selection {
+            background: #FECD08; /* Firefox */
+            color: #fff;
+        }
+
+        .color-high {
+            color: #FECD08;
+        }
+
+        .footer-top a:hover {
+            color: #FECD08;
+        }
+
+        .project-info-tag > span {
+            background: #FECD08;
+        }
+
+        #control_buttons a:hover {
+            color: #FECD08;
+            border: solid 3px #FECD08;
+        }
+
+        #item_slider .flex-direction-nav li a:hover {
+            border: solid 2px #FECD08;
+            color: #FECD08;
+        }
+
+        div#portfolio_thumbs ul li div.item_info h3 {
+            background: #FECD08;
+        }
+
+        div#portfolio_thumbs ul li div.item_info {
+            background: #FECD08 url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/icons/open.png') center center no-repeat;
+        }
+
+        ul#portfolioFilter li.active-filter {
+            background: #FECD08;
+            border: solid 1px #FECD08;
+        }
+
+        ul#portfolioFilter li:hover {
+            background: #FECD08;
+            border: solid 1px #FECD08;
+        }
+
+        .team-info {
+            border-bottom: 8px solid #FECD08;
+        }
+
+        .item:hover > a > .thumb-title {
+            background: #FECD08;
+        }
+
+        .services-expansion {
+            background: #FECD08;
+        }
+
+        .liner-small > span {
+            background: #FECD08;
+        }
+
+        .liner > span {
+            background: #FECD08;
+        }
+
+        .promo-heading {
+            border-top: solid 1px #FECD08;
+            border-bottom: solid 1px #FECD08;
+        }
+
+        .contact-alert .alert {
+            background: #FECD08;
+            color: #FFF;
+            font-family: "OpenSansRegular";
+            font-size: 20px;
+            line-height: 31px;
+            text-transform: capitalize;
+        }
+
+        .cl-effect-10 a::before {
+            background: #FECD08;
+        }
+
+        .pace .pace-progress {
+            background: #FECD08;
+        }
+
+        .menu a:hover, .menu a.active {
+            background: #FECD08;
+            color: #FFF;
+        }
+
+        .top-banner-caption-v1 h3 > span {
+            border-bottom: solid 4px #FECD08;
+        }
+
+        .top-banner-caption-v2 h3 > span {
+            color: #fff;
+            background: #FECD08;
+        }
+
+        .top-banner-caption-v3 h3 > span {
+            color: #fff;
+            background: #FECD08;
+        }
+
+        .top-banner-caption-v4 h3 > span {
+            color: #fff;
+            background: #FECD08;
+        }
+
+        .top-banner-caption-v5 h3 > span {
+            color: #fff;
+            background: #FECD08;
+        }
+
+        .top-banner-caption-v9 {
+            background: #FECD08 !important;
+        }
+
+        .btn-rounded-color:hover {
+            color: #fff !important;
+            background: #FECD08 !important;
+            border: solid 2px #FECD08 !important;
+        }
+
+        .top-banner-caption-v6 h3 > span {
+            color: #fff;
+            background: #FECD08;
+        }
+
+        .btn-rounded-color2 {
+            color: #fff !important;
+            background: #FECD08 !important;
+            border: solid 2px #FECD08 !important;
+        }
+
+        .btn-rounded-color2:hover {
+            color: #fff !important;
+            background: #121212 !important;
+            border: solid 2px #121212 !important;
+        }
+
+        /*.services-icon-wrap-yellow > .service-icon.current{
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/triangle-yellow.png') center bottom no-repeat;
+        }*/
+        .services-icon-wrap-yellow > .service-icon.current {
+            position: relative;
+        }
+
+        .services-icon-wrap-yellow > .service-icon.current::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            left: 43%;
+            bottom: -15px;
+            background: #FECD08;
+            z-index: 1;
+            transform: rotate(45deg);
+            -ms-transform: rotate(45deg); /* IE 9 */
+            -webkit-transform: rotate(45deg); /* Safari and Chrome */
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+        }
+
+        .services-icon-wrap-red > .service-icon.current {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/triangle-red.png') center bottom no-repeat;
+        }
+
+        .services-icon-wrap-green > .service-icon.current {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/triangle-green.png') center bottom no-repeat;
+        }
+
+        .services-icon-wrap-blue > .service-icon.current {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/triangle-blue.png') center bottom no-repeat;
+        }
+
+        .testimonial-carousel-yellow {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/bg/testimonials-yellow.jpg') center center repeat;
+        }
+
+        .testimonial-carousel-red {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/bg/testimonials-red.jpg') center center repeat;
+        }
+
+        .testimonial-carousel-green {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/bg/testimonials-green.jpg') center center repeat;
+        }
+
+        .testimonial-carousel-blue {
+            background: url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/bg/testimonials-blue.jpg') center center repeat;
+        }
+
+        .standard-nav li > a.highlighted {
+            color: #FECD08 !important;
+        }
+
+        .standard-nav li > a:hover {
+            color: #FECD08 !important;
+        }
+
+        .det-overlay {
+            background: #FECD08 url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/zoom.png') center center no-repeat;
+        }
+
+        .highlight-bg {
+            background: #FECD08;
+        }
+
+        .highlight-txt, .highlight-txt * {
+            color: #FECD08 !important;
+        }
+
+        .btn-rounded:hover {
+            background: #FECD08 !important;
+            border-color: #FECD08 !important;
+            color: #FFF !important;
+            -webkit-transition: all .8s linear;
+            -moz-transition: all .8s linear;
+            -ms-transition: all .8s linear;
+            -o-transition: all .8s linear;
+            transition: all .8s linear;
+        }
+
+        .btn-rounded.highlight-btn {
+            background: #FECD08 !important;
+            color: #FFF !important;
+            border: none !important;
+        }
+
+        .btn-rounded.highlight-btn:hover {
+            background: #121212 !important;
+            border-color: #121212 !important;
+        }
+
+        .border-top-medium {
+            border-top: #FECD08 solid 4px;
+        }
+
+        .border-bottom-medium {
+            border-bottom: #FECD08 solid 4px;
+        }
+
+        .border-top-thin {
+            border-top: #FECD08 solid 2px;
+        }
+
+        .border-bottom-thin {
+            border-bottom: #FECD08 solid 2px;
+        }
+
+        .border-top-light {
+            border-top: #FECD08 solid 1px;
+        }
+
+        .border-bottom-light {
+            border-bottom: #FECD08 solid 1px;
+        }
+
+
+        .dignity-sandbox-controls a {
+            background: #FECD08;
+        }
+
+        .md-overlay {
+            background: rgba(254, 205, 8, 0.8) url('http://www.northvanweb.com/wp-content/themes/bootstrap3-child/images/modal-loader.gif') center center no-repeat;
+        }
+
+        .highlighted .price-plan-header {
+            background: #FECD08 !important;
+        }
+
+        .price-button:hover {
+            color: #FFF;
+            background: #FECD08;
+            border: #FECD08 solid 1px;
+        }
+
+        /*calendar*/
+
+        #wp-calendar {
+            width: 100%;
+            padding: 0px 0px;
+            margin: 0px 0px;
+            border: #FECD08 solid 3px !important;
+            color: #FFF !important;
+
+
+        }
+
+        #calendar_wrap {
+
+            margin: 0px auto;
+            margin-top: 40px;
+
+        }
+
+        #wp-calendar caption {
+            padding: 10px 5px 10px 5px;
+            font-size: 22px;
+            color: #FFF;
+            text-transform: uppercase;
+            border-bottom: rgba(0, 0, 0, .2) solid 3px;
+            background: #FECD08 !important;
+
+        }
+
+        #wp-calendar thead {
+            margin-bottom: 10px;
+            background: #FECD08 !important;
+        }
+
+        #wp-calendar th {
+            color: #FFF !important;
+
+        }
+
+        #wp-calendar th, #wp-calendar td {
+            padding: 5px;
+            text-align: center;
+
+            background: #fed32a;
+        }
+
+        #wp-calendar td {
+            color: #FECD08 !important;
+        }
+
+        #wp-calendar td a {
+
+            padding: 0px;
+            border: none;
+            color: #fed32a;
+
+        }
+
+        #wp-calendar td a:hover {
+            text-shadow: 0px 0px 6px #FFF;
+            text-decoration: none;
+        }
+
+        #wp-calendar td {
+            background: transparent;
+            border: none;
+            color: #CCC;
+        }
+
+        #wp-calendar td, table#wp-calendar th {
+            padding: 2px 0;
+        }
+
+        #searchform input[type="text"], #comments-form input[type="text"], #comments-form textarea {
+            border-radius: 0px;
+            border: 1px solid #FECD08 !important;
+            color: #FECD08 !important;
+            font-family: "OpenSansLight";
+            font-size: 16px;
+            font-weight: normal;
+            line-height: 27px;
+            padding: 11px 10px;
+            width: 60%;
+            box-shadow: none !important;
+            margin-top: 10px;
+        }
+
+        #comments-form textarea {
+            width: 100% !important;
+        }
+
+        @-moz-document url-prefix() {
+            #searchform input[type="text"] {
+                padding: 14px 10px !important;
+            }
+            .sidebar .dignity-button {
+                padding: 14px 14px !important;
+            }
+        }
+
+        #searchform .dignity-button {
+            border: 0px;
+            margin-top: 0px;
+            border: 4px solid #FECD08;
+            background: #FECD08;
+            color: #FFF !important;
+        }
+
+        .sidebar ul li a:hover {
+            color: #FECD08;
+        }
+
+        .featured_attr {
+            padding: 7px 10px;
+            background: #FECD08;
+            color: #FFF;
+        }
+
+        .featured_attr a {
+            color: #FFF !important;
+        }
+
+        .cmntbox a:hover, .post-tags a:hover {
+            color: #FECD08;
+        }
+
+        .logged-in-as a:hover {
+            color: #FECD08 !important;
+        }
+
+        #comments-form .form-submit #post-comment:hover {
+            background: #FECD08;
+        }
+
+        .post-tags {
+            border-top: #EEE solid 2px;
+            padding-top: 15px;
+        }
+
+        .dignity-button:hover {
+            border: 1px solid #FECD08;
+            background: #FECD08;
+            color: #FFF !important;
+        }
+
+        .post-type-quote {
+            border-left: 5px solid #FECD08 !important;
+        }
+
+        .post-type-link {
+            background: #FECD08 !important;
+        }
+    </style>
+    <!-- Performance optimized by W3 Total Cache. Learn more: http://www.w3-edge.com/wordpress-plugins/
+
+    Minified using disk
+    Page Caching using disk: enhanced
+    Database Caching using disk
+    Object Caching 363/369 objects using disk
+    Content Delivery Network via N/A
+
+     Served from: www.northvanweb.com @ 2014-03-25 16:56:51 by W3 Total Cache -->

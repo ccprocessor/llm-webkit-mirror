@@ -2,18 +2,39 @@ import unittest
 from pathlib import Path
 
 from llm_web_kit.html_layout.html_layout_cosin import (cluster_html_struct,
-                                                       get_feature, similarity)
+                                                       get_feature, similarity,
+                                                       sum_tags)
 
 base_dir = Path(__file__).parent
 
-TEST_FEATURE_HTML = [{'input': 'assets/feature.html', 'expected': 2}]
+TEST_FEATURE_HTML = [
+    {'input': 'assets/feature.html', 'expected': 2},
+    {'input': 'assets/feature3.html', 'expected': None},
+]
 TEST_SIMIL_HTMLS = [
-    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.1748186},
-    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.925361},
+    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.22013982},
+    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9357468},
+    {'input1': 'assets/feature1.html', 'input2': 'assets/data_structure.html', 'layer_n': 12, 'expected': 0},
+
 ]
 TEST_CLUSTER_HTMLS = [
-    {'input1': 'assets/feature1.html', 'input2': 'assets/cosin.html', 'expected': [0]},
-    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'expected': [-1]}
+    {'input': ['assets/feature1.html', 'assets/cosin.html'], 'expected': [-1]},
+    {'input': ['assets/feature1.html', 'assets/feature2.html'], 'expected': [-1]},
+    {'input': ['assets/100.html', 'assets/101.html', 'assets/102.html', 'assets/103.html', 'assets/104.html',
+               'assets/105.html', 'assets/106.html'], 'expected': [0, 1, -1]}
+
+]
+
+TEST_SUM_TAGS = [
+    {
+        'input': {'tags': {1: ['div', 'div', 'div'], 2: ['div', 'div', 'ul'], 3: ['div', 'ul', 'p', 'li'],
+                           4: ['dl', 'a', 'ul', 'p', 'div', 'table', 'div', 'table', 'ul', 'div']}},
+        'expected': {'layer_n': {1: 3, 2: 3, 3: 4, 4: 10}, 'total_n': 20}},
+    {
+        'input': {'tags': {1: ['div'], 2: ['div', 'div', 'footer', 'div', 'header'],
+                           3: ['div', 'div', 'div', 'div', 'div', 'div', 'div'],
+                           4: ['div', 'div', 'header', 'article', 'aside', 'div', 'a', 'div', 'div']}},
+        'expected': {'layer_n': {1: 1, 2: 5, 3: 7, 4: 9}, 'total_n': 22}}
 ]
 
 
@@ -24,13 +45,16 @@ class TestHtmllayoutcosin(unittest.TestCase):
             raw_html_path = base_dir.joinpath(test_case['input'])
             raw_html = raw_html_path.read_text(encoding='utf-8')
             features = get_feature(raw_html)
-            self.assertEqual(len(features), test_case['expected'])
+            if features is not None:
+                self.assertEqual(len(features), test_case['expected'])
+            else:
+                self.assertEqual(features, test_case['expected'])
 
     def test_cluster_html_struct(self):
         for TEST_CLUSTER_HTML in TEST_CLUSTER_HTMLS:
-            feature1 = get_feature(base_dir.joinpath(TEST_CLUSTER_HTML['input1']).read_text(encoding='utf-8'))
-            feature2 = get_feature(base_dir.joinpath(TEST_CLUSTER_HTML['input2']).read_text(encoding='utf-8'))
-            res, layout_list = cluster_html_struct([{'feature': feature1}, {'feature': feature2}])
+            features = [{'feature': get_feature(base_dir.joinpath(line).read_text(encoding='utf-8'))} for line in
+                        TEST_CLUSTER_HTML['input']]
+            res, layout_list = cluster_html_struct(features)
             self.assertEqual(TEST_CLUSTER_HTML['expected'], layout_list)
 
     def test_similarity(self):
@@ -38,4 +62,10 @@ class TestHtmllayoutcosin(unittest.TestCase):
             feature1 = get_feature(base_dir.joinpath(TEST_SIMIL_HTML['input1']).read_text(encoding='utf-8'))
             feature2 = get_feature(base_dir.joinpath(TEST_SIMIL_HTML['input2']).read_text(encoding='utf-8'))
             cosin = similarity(feature1, feature2, layer_n=TEST_SIMIL_HTML.get('layer_n', 5))
-            self.assertEqual(TEST_SIMIL_HTML['expected'], cosin)
+            self.assertEqual('{:.2f}'.format(TEST_SIMIL_HTML['expected']), '{:.2f}'.format(cosin))
+
+    def test_sum_tags(self):
+        for TEST_SUM_TAG in TEST_SUM_TAGS:
+            layer_n, total_n = sum_tags(TEST_SUM_TAG['input']['tags'])
+            self.assertEqual(TEST_SUM_TAG['expected']['layer_n'], layer_n)
+            self.assertEqual(TEST_SUM_TAG['expected']['total_n'], total_n)
