@@ -71,7 +71,6 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
                     take_code = True
 
                 # 只有 pre 没有 code
-                # 仅判断是否是pre标签则认为是code逻辑太薄弱，需要排除掉pre标签下全是p标签的情况
                 if tag_pre.detect(root):
                     tag_pre.modify_tree(root)
                     take_code = True
