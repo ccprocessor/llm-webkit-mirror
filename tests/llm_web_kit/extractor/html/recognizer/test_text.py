@@ -258,7 +258,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
             'dataset_name': 'text_md',
             'url': 'https://www.oltrelebarriere.net/5825/permessi-per-lassistenza-ai-familiari-disabili/',
             'data_source_category': 'HTML',
-            'path': 'text13.html',
+            'path': 'test_text_line_exception.html',
             'file_bytes': 1000,
             'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
         }
