@@ -161,22 +161,18 @@ def _detect_and_remove_subling_lineno(node: HtmlElement, depth: int = 4):
     if depth == 0 or node is None or node.getparent() is None:
         return
 
-    found = False
-    # 认为只有代码元素左侧的元素可能是行号，避免对无关的表格进行损坏
-    ele_before = None
-    for child in node.getparent():
-        if child == node:
-            if ele_before is None:
-                break
-            has_lineno, _ = _detect_lineno('\n'.join(ele_before.itertext()), False)
-            if has_lineno:
-                node.getparent().remove(ele_before)
-                found = True
-            break
-        ele_before = child
+    parent = node.getparent()
+    ele_before = node.getprevious()
 
-    if not found:
-        _detect_and_remove_subling_lineno(node.getparent(), depth - 1)
+    if ele_before is not None:
+        text = '\n'.join(ele_before.itertext())
+        has_lineno, _ = _detect_lineno(text, False)
+        if has_lineno:
+            parent.remove(ele_before)
+            return  # 删除后立即返回，不再递归
+
+    # 继续递归父节点
+    _detect_and_remove_subling_lineno(parent, depth - 1)
 
 
 def get_full_text(sub_tree: HtmlElement) -> tuple[bool, str, str]:
