@@ -10,6 +10,7 @@ from nltk.tokenize import word_tokenize
 from llm_web_kit.html_layout.html_layout_cosin import get_feature, similarity
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
+from llm_web_kit.libs.logger import mylogger as logger
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
 nltk.download('punkt', quiet=True)  # 静默模式避免日志干扰
@@ -179,7 +180,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
                     continue
                 # 采用element dict中的key来替换
                 if current_layer_key == keyy:
-                    print(keyy, ' changed to ', matched_ele_key)
+                    logger.info(keyy, ' changed to ', matched_ele_key)
                     keyy = matched_ele_key
                     element.set('id', matched_ele_key[2])
                 if current_layer_key in layer_nodes_dict:
@@ -294,12 +295,12 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 feature1 = get_feature(ele_html)
                 feature2 = get_feature(node_html)
                 if feature1 is None or feature2 is None:
-                    print(ele_keyy, ' not get feature')
+                    logger.info(ele_keyy, ' getting feature failed')
                     continue
                 template_sim = similarity(feature1, feature2, layer_n=3)
 
                 if template_sim > DYNAMIC_ID_SIM_THRESHOLD:
                     return ele_label, self.normalize_key(ele_keyy[0:3])
                 else:
-                    print(f'{current_layer_key} and {ele_keyy} similarity is {template_sim}')
+                    logger.info(f'{current_layer_key} and {ele_keyy} similarity is {template_sim}')
         return None, None
