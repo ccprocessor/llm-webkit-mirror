@@ -28,10 +28,10 @@ repos:
     rev: v4.3.0
     hooks:
       - id: trailing-whitespace
-        exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*'
+        exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*|\.ipynb$'
       - id: check-yaml
       - id: end-of-file-fixer
-        exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*'
+        exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*|\.ipynb$'
       - id: requirements-txt-fixer
       - id: double-quote-string-fixer
         exclude: '^tests/.*/assets/|llm_web_kit/model/assets/.*|jupyter/domain_clustering/.*'
@@ -40,7 +40,7 @@ repos:
         args: [ "--remove" ]
       - id: mixed-line-ending
         args: [ "--fix=lf" ]
-        exclude: '^tests/.*/assets/'
+        exclude: '^tests/.*/assets/|\.ipynb$'
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.9
     hooks:
