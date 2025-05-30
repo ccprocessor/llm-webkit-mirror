@@ -16,6 +16,7 @@ nltk.download('punkt', quiet=True)  # 静默模式避免日志干扰
 
 MAX_LENGTH = 10
 SIMILARITY_THRESHOLD = 0.75
+DYNAMIC_ID_SIM_THRESHOLD = 0.9
 
 
 class LayoutBatchParser(BaseMainHtmlParser):
@@ -24,6 +25,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
     def __init__(self, template_data: str | dict):
         # 确保模板数据的键是整数类型
         self.template_data = template_data
+        self.dynamic_id_enable = False
 
     def parse_tuple_key(self, key_str):
         if key_str.startswith('(') and key_str.endswith(')'):
@@ -36,6 +38,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
         # 支持输入字符串和tag mapping后的dict对象
         html_source = pre_data[PreDataJsonKey.HTML_SOURCE]
+        template_dict_html = pre_data.get(PreDataJsonKey.TYPICAL_DICT_HTML, '<html></html>')
+        self.dynamic_id_enable = pre_data.get(PreDataJsonKey.DYNAMIC_ID_ENABLE, False)
         template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
         template_data = dict()
         if isinstance(template_data_str, str):
@@ -47,8 +51,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
             template_data = template_data_str
         else:
             raise ValueError(f'template_data 类型错误: {type(template_data_str)}')
-        pipeline = LayoutBatchParser(template_data)
-        content, body = pipeline.process(html_source)
+        self.template_data = template_data
+        content, body = self.process(html_source, template_dict_html)
 
         # 相似度计算
         if pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, None):
@@ -75,9 +79,9 @@ class LayoutBatchParser(BaseMainHtmlParser):
         element_html = html.tostring(element, encoding='unicode', method='html')
         return f'id{sha256(element_html.encode()).hexdigest()}'  # 10位哈希
 
-    def process(self, html_source: str) -> str:
+    def process(self, html_source: str, template_dict_html: str) -> str:
         # 根据颜色删减html_source
-        processed_html = self.drop_node_element(html_source, self.template_data)
+        processed_html = self.drop_node_element(html_source, self.template_data, template_dict_html)
         content, body = self.htmll_to_content2(processed_html)
         return content, body
 
@@ -104,7 +108,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 使用 \1 保留前面的 "post" 或 "postid"，但替换数字部分
         return re.sub(pattern, lambda m: f'{m.group(1)}-', text, flags=re.IGNORECASE)
 
-    def find_blocks_drop(self, element, depth, element_dict, parent_keyy, parent_label):
+    def find_blocks_drop(self, element, depth, element_dict, parent_keyy, parent_label, template_doc):
         # 判断这个tag是否有id
         if isinstance(element, etree._Comment):
             return
@@ -116,39 +120,76 @@ class LayoutBatchParser(BaseMainHtmlParser):
         tag = element.tag
         layer_nodes = element_dict[depth]
         class_tag = element.get('class')
-        keyy = self.normalize_key((tag, class_tag, idd))
+        ori_keyy = (tag, class_tag, idd)
+        keyy = self.normalize_key(ori_keyy)
 
-        # 获取element的当前子层的所有节点
+        # 获取element的当前层的所有节点
         element_parent = element.getparent()
-        current_layer_keys = set()
+        current_layer_keys = {}
         if element_parent is None:
-            current_layer_keys.add(keyy)
+            child_str = html.tostring(element, encoding='utf-8').decode()
+            current_layer_keys[keyy] = (ori_keyy, child_str)
         else:
             for child in element_parent:
-                child_key = self.normalize_key((child.tag, child.get('class'), child.get('id')))
-                current_layer_keys.add(child_key)
+                if isinstance(child, etree._Comment):
+                    continue
+                child_ori_key = (child.tag, child.get('class'), child.get('id'))
+                child_key = self.normalize_key(child_ori_key)
+                child_str = html.tostring(child, encoding='utf-8').decode()
+                current_layer_keys[child_key] = (child_ori_key, child_str)
 
         # 匹配正文节点
         has_red = False
-        layer_nodes_list = []
         layer_nodes_dict = dict()
-        if class_tag == 'mw-editsection':
-            print('test')
-        for node_keyy, node_value in layer_nodes.items():
-            node_parent_keyy = self.normalize_key(node_value[1])
-            if node_parent_keyy is not None:
-                node_parent_keyy = tuple(node_parent_keyy)
-            node_label = node_value[0]
-            norm_node_keyy = self.normalize_key(node_keyy[:3])
-            if node_parent_keyy == parent_keyy and norm_node_keyy in current_layer_keys:
-                layer_nodes_list.append((node_keyy[:3], node_label))
-                if norm_node_keyy in layer_nodes_dict:
-                    layer_nodes_dict[norm_node_keyy].append(node_label)
+        layer_norm_eles = {}
+        # 构造当前层的候选映射字典
+        for ele_keyy, ele_value in layer_nodes.items():
+            ele_parent_keyy = self.normalize_key(ele_value[1])
+            if ele_parent_keyy is not None:
+                ele_parent_keyy = tuple(ele_parent_keyy)
+            ele_label = ele_value[0]
+            norm_ele_keyy = self.normalize_key(ele_keyy[:3])
+            if norm_ele_keyy in layer_norm_eles:
+                layer_norm_eles[norm_ele_keyy].append((ele_label, ele_keyy[:3], ele_parent_keyy))
+            else:
+                layer_norm_eles[norm_ele_keyy] = [(ele_label, ele_keyy[:3], ele_parent_keyy)]
+        # 尝试匹配当前层每个节点，判断是否存在至少一个红色节点
+        for current_layer_key, current_layer_value in current_layer_keys.items():
+            if current_layer_key in layer_norm_eles:
+                for layer_norm_ele_value in layer_norm_eles[current_layer_key]:
+                    if layer_norm_ele_value[2] != parent_keyy:
+                        continue
+                    node_label = layer_norm_ele_value[0]
+
+                    if current_layer_key in layer_nodes_dict:
+                        layer_nodes_dict[current_layer_key].append(node_label)
+                    else:
+                        layer_nodes_dict[current_layer_key] = [node_label]
+                    if node_label == 'red':
+                        has_red = True
+                        break
+            # 动态id匹配逻辑
+            elif self.dynamic_id_enable and current_layer_key[2]:
+                current_layer_ori_key = current_layer_value[0]
+                node_html = current_layer_value[1]
+                node_label, matched_ele_key = self.__match_tag_class(layer_nodes, current_layer_ori_key, parent_keyy,
+                                                                     node_html, template_doc)
+                if node_label is None:
+                    # TODO: match tag
+                    continue
+                # 采用element dict中的key来替换
+                if current_layer_key == keyy:
+                    # logger.info(keyy, ' changed to ', matched_ele_key)
+                    keyy = matched_ele_key
+                    element.set('id', matched_ele_key[2])
+                if current_layer_key in layer_nodes_dict:
+                    layer_nodes_dict[matched_ele_key].append(node_label)
                 else:
-                    layer_nodes_dict[norm_node_keyy] = [node_label]
+                    layer_nodes_dict[matched_ele_key] = [node_label]
 
                 if node_label == 'red':
                     has_red = True
+
         if not has_red and parent_label != 'red':
             parent = element.getparent()
             if parent is not None:
@@ -158,6 +199,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         elif not has_red and parent_label == 'red':
             return
         label = None
+        # 判断当前节点是否是红色节点
         if keyy in layer_nodes_dict:
             if 'red' not in layer_nodes_dict[keyy]:
                 parent = element.getparent()
@@ -170,12 +212,13 @@ class LayoutBatchParser(BaseMainHtmlParser):
             return
 
         for child in element:
-            self.find_blocks_drop(child, depth + 1, element_dict, keyy, label)
+            self.find_blocks_drop(child, depth + 1, element_dict, keyy, label, template_doc)
 
-    def drop_node_element(self, html_source, element_dict):
+    def drop_node_element(self, html_source, element_dict, template_dict_html):
         # 解析 HTML 内容
         tree = html_to_element(html_source)
-        self.find_blocks_drop(tree, 0, element_dict, None, '')
+        doc = html_to_element(template_dict_html)
+        self.find_blocks_drop(tree, 0, element_dict, None, '', doc)
         return element_to_html(tree)
 
     def htmll_to_content2(self, body_str):
@@ -228,3 +271,35 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 max_length = len(layer)
 
         return max_width_layer - 2 if max_width_layer > 4 else 3
+
+    def __match_tag_class(self, layer_nodes, current_layer_key, parent_key, node_html, template_doc):
+        # 构建主键和父键的key
+        current_norm_key = (self.normalize_key((current_layer_key[0], current_layer_key[1], None)), parent_key)
+        # 构建tag class字典
+        for ele_keyy, ele_value in layer_nodes.items():
+            # id要存在
+            if not ele_keyy[2]:
+                continue
+            xpath = ele_value[2]
+            ele_parent_keyy = self.normalize_key(ele_value[1])
+            if ele_parent_keyy is not None:
+                ele_parent_keyy = tuple(ele_parent_keyy)
+            ele_label = ele_value[0]
+            norm_ele_keyy = self.normalize_key((ele_keyy[0], ele_keyy[1], None))
+            norm_ele_keyy_parent = (norm_ele_keyy, ele_parent_keyy)
+            if current_norm_key == norm_ele_keyy_parent:
+                # 计算3层相似度
+                ele_root = template_doc.xpath(xpath)[0]
+                ele_html = html.tostring(ele_root, encoding='utf-8').decode()
+                feature1 = get_feature(ele_html)
+                feature2 = get_feature(node_html)
+                if feature1 is None or feature2 is None:
+                    # logger.info(ele_keyy, ' getting feature failed')
+                    continue
+                template_sim = similarity(feature1, feature2, layer_n=3)
+
+                if template_sim > DYNAMIC_ID_SIM_THRESHOLD:
+                    return ele_label, self.normalize_key(ele_keyy[0:3])
+                # else:
+                    # logger.info(f'{current_layer_key} and {ele_keyy} similarity is {template_sim}')
+        return None, None
