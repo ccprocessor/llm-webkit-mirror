@@ -1,5 +1,6 @@
 flask==3.0.2 # for html_layout_classify
 func_timeout==4.3.5
+nbstripout==0.8.1
 nltk==3.8.1
 openai==1.75.0
 pre-commit==3.8.0
