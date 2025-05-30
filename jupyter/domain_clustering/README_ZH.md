@@ -31,7 +31,7 @@ s3://cc-store-stage1/
 
 ```
 
-## stage2:  hash桶内聚合domain生成最终存储
+## stage2:  hash桶内聚合生成最终 domain 聚类数据和 domain 索引文件
 
 具体流程图如下：
 
@@ -42,13 +42,13 @@ s3://cc-store-stage1/
 - [cc_store_stage2.py](./pipeline/cc_store_stage2.py) - 实现了 Stage2 的数据处理流程，将分桶数据按域名聚合并生成最终存储格式
 - [cc_domain_index_gen.py](./pipeline/cc_domain_index_gen.py) - 实现了 Stage2 的最终数据domain维度的索引创建
 
-数据存储结构如下：
+domain聚类数据存储结构如下：
 
 ```yaml
 s3://cc-store-stage2/
   ├── data/                        # 主数据存储路径
   │   ├── 0000/                    # domain_hash_id, 按域名hash后分为1000个桶，xxhash.xxh64_intdigest(domain) % 1000
-  │   │   ├── 0/part-67fa76d24112-000001.jsonl.gz  # 包含多个域名的数据文件（约2GB）
+  │   │   ├── 0/part-67fa76d24112-000001.jsonl.gz  # 包含多个域名的数据文件，同一个 domain 数据聚类连续存储
   │   │   └── 1/part-67fa76d24112-000002.jsonl.gz
   │   └── ...
   │   ├── 0001/
@@ -60,7 +60,7 @@ s3://cc-store-stage2/
       │   └── ...
 ```
 
-文件索引格式如下：
+domain聚类文件索引格式如下：
 
 ```json
 # 元数据结构

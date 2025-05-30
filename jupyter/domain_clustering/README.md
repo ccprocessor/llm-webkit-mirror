@@ -31,7 +31,7 @@ s3://cc-store-stage1/
 
 ```
 
-## Stage 2: Aggregating Domains within Hash Buckets to Generate Final Storage
+## Stage 2: Aggregating Domains within Hash Buckets to Generate Final Domain Clustering Data and Domain Index Files
 
 The detailed workflow is as follows:
 
@@ -42,13 +42,13 @@ Data production code:
 - [cc_store_stage2.py](./pipeline/cc_store_stage2.py) - Implements the Stage 2 data processing pipeline, aggregating bucketed data by domain and generating the final storage format
 - [cc_domain_index_gen.py](./pipeline/cc_domain_index_gen.py) - Implements the creation of domain-level indexes for Stage 2 final data
 
-Data storage structure:
+Domain clustering data storage structure:
 
 ```yaml
 s3://cc-store-stage2/
   ├── data/                        # Main data storage path
   │   ├── 0000/                    # domain_hash_id, domains are hashed into 1000 buckets using xxhash.xxh64_intdigest(domain) % 1000
-  │   │   ├── 0/part-67fa76d24112-000001.jsonl.gz  # Data file containing multiple domains (~2GB)
+  │   │   ├── 0/part-67fa76d24112-000001.jsonl.gz  # Data file containing multiple domains, with same domain data clustered and stored consecutively
   │   │   └── 1/part-67fa76d24112-000002.jsonl.gz
   │   └── ...
   │   ├── 0001/
