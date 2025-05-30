@@ -16,6 +16,10 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import iter_node
+import json
+from datetime import datetime
+from lxml import etree
+import argparse
 
 
 class MathRecognizer(BaseHTMLElementRecognizer):
@@ -178,62 +182,70 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
         return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
 
+def read_test_html(html_file):
+    """从指定html文件读取内容."""
+    with open(html_file, 'r', encoding='utf-8') as f:
+        return f.read()
+
+def save_math_results(result, output_file):
+    """将数学公式转换结果保存到文件."""
+    math_formulas = []
+
+    for cc_html, raw_html in result:
+        # 查找所有的数学公式元素
+        math_elements = cc_html.xpath('//ccmath-interline | //ccmath-inline')
+        for math_elem in math_elements:
+            # 创建一个新的临时元素来包含单个数学公式
+            wrapper = etree.Element("html")
+            wrapper.append(math_elem)
+
+            try:
+                # 获取原始的HTML字符串
+                raw_html_str = etree.tostring(math_elem, encoding='unicode', pretty_print=True)
+
+                formula = {
+                    'type': 'equation-interline' if math_elem.tag == 'ccmath-interline' else 'equation-inline',
+                    'raw_content': raw_html_str,
+                    'content': {
+                        'math_content': math_elem.text or '',
+                        'math_type': math_elem.get('type', ''),
+                        'by': math_elem.get('by', '')
+                    }
+                }
+                math_formulas.append(formula)
+            except Exception as e:
+                print(f"处理数学公式失败: {e}")
+                continue
+
+    output_data = {
+        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'formulas': math_formulas
+    }
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(output_data, f, ensure_ascii=False, indent=2)
+
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='数学公式识别与导出')
+    parser.add_argument('--html', type=str,
+                        default='badcase3.html', help='输入HTML文件路径')
+    parser.add_argument('--output', type=str,
+                        default='math_results_badcase333.json', help='输出JSON文件路径')
+    parser.add_argument('--url', type=str,
+                        default='https://blog.csdn.net/MooM_X/article/details/105072849', help='基础URL')
+    args = parser.parse_args()
+
+    from llm_web_kit.libs.html_utils import html_to_element
+
+    test_raw_html = read_test_html(args.html)
+    html_element = html_to_element(test_raw_html)
+
     math_recognizer = MathRecognizer()
-    test_html = [
-        (
-            ("""
-        <div>
-            <script type="math/tex">x^2 + y^2 = z^2</script>
-            <script type="math/tex"></script>
-            <script type="math/tex; mode=display">E=mc^2</script>
-        </div>
-        """),
-            ("""
-        <div>
-            <script type="math/tex">x^2 + y^2 = z^2</script>
-            <script type="math/tex"></script>
-            <script type="math/tex; mode=display">E=mc^2</script>
-        </div>
-        """)
-        )
-    ]
-    raw_html = (
-        '<head> '
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
-        '?config=TeX-MML-AM_CHTML"> </script> '
-        '</head> '
-        '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
+    result = math_recognizer.recognize(
+        args.url,
+        [(html_element, html_element)],
+        test_raw_html
     )
-    # with open('aa.html', 'r') as f:
-    #     raw_html = f.read()
-    # from llm_web_kit.libs.html_utils import html_to_element
-    # root = html_to_element(raw_html)
-    # math_recognizer.recognize(
-    #         'https://www.baidu.com',
-    #         [(root, root)],
-    #         raw_html
-    #     )
-    # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
-    # print(math_recognizer.recognize(
-    #     'https://www.baidu.com',
-    #     [(raw_html, raw_html)],
-    #     raw_html
-    # ))
-    # print(math_recognizer.to_content_list_node(
-    #     'https://www.baidu.com',
-    #     '<ccmath-interline type="latex" by="mathjax">$u_{x_0}^{in}(x)$</ccmath-interline>',
-    #     # raw_html,
-    #     raw_html
-    # ))
-    # print(math_recognizer.html_split_by_tags(
-    #     raw_html,
-    #     ['ccmath']
-    # ))
-    # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
-    # print(math_recognizer.recognize(
-    #     'https://www.baidu.com',
-    #     [(raw_html, raw_html)],
-    #     raw_html
-    # ))
+
+    save_math_results(result, args.output)

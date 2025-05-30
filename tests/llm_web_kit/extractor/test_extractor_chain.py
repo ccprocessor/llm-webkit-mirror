@@ -12,6 +12,7 @@
 """
 import json
 import os
+import re
 import unittest
 
 from lxml import html
@@ -49,11 +50,11 @@ class TestExtractorChain(unittest.TestCase):
             self.base_path, 'assets/extractor_chain_input/good_data/output_expected/oracle_doc.main_html.html'
         )
 
-        self.md_expected_content = open(self.md_output_file_path, 'r').read()
-        self.txt_expected_content = open(self.txt_output_file_path, 'r').read()
-        self.main_html_expected_content = open(self.main_html_output_file_path, 'r').read()
-        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r').read()
-        self.oracle_doc_main_html_content = open(self.oracle_doc_main_html_path, 'r').read()
+        self.md_expected_content = open(self.md_output_file_path, 'r', encoding='utf-8').read()
+        self.txt_expected_content = open(self.txt_output_file_path, 'r', encoding='utf-8').read()
+        self.main_html_expected_content = open(self.main_html_output_file_path, 'r', encoding='utf-8').read()
+        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r', encoding='utf-8').read()
+        self.oracle_doc_main_html_content = open(self.oracle_doc_main_html_path, 'r', encoding='utf-8').read()
 
         self.data_json = []
         with open(self.html_data_path, 'r') as f:
@@ -63,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 87
+        assert len(self.data_json) == 89
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -716,3 +717,45 @@ A few explanations on why certain things in business are so.
                 f.write(content_md)
             assert elapsed_time < 30
             assert len(content_md) > 0
+
+    def test_math_namespace(self):
+        """badcase1，math标签缺少命名空间"""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[87]
+        # 创建 DataJson 并提取内容
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+
+        # 生成 markdown 格式内容
+        md_content = result.get_content_list().to_nlp_md()
+        with open('output_badcase1.md', 'w', encoding='utf-8') as f:
+            f.write(md_content)
+
+        formula_count = len(re.findall(r'\$\$[\s\S]*?\$\$', md_content)) + len(
+            re.findall(r'(?<!\$)\$([^\$]+?)\$(?!\$)', md_content))
+        self.assertEqual(formula_count, 7, "公式总数应为7个")
+        # 分别测试一个行内公式和一个行间公式
+        self.assertIn(
+            r'(1+{\text{DP}}_{0}/({\sum }_{\text{n}=0}^{\text{i}}({\text{DP}}_{\text{n}})\times \text{C}))',
+            md_content)
+        self.assertIn(r'\text{PF}=\frac{T-S}{P}\times 100', md_content)
+
+    def test_math_paragraph(self):
+        """badcase2，段落划分错误导致公式不在同意段落"""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[88]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+
+        # 打印content_list的内容
+        # content_list = result.get_content_list()._get_data()[0]
+        # print("\n============ content_list ============")
+        # print(json.dumps(content_list, indent=2, ensure_ascii=False))
+
+        md_content = result.get_content_list().to_nlp_md()
+        with open('output_badcase2.md', 'w', encoding='utf-8') as f:
+            f.write(md_content)
+        self.assertIn(r'1178.7 F g ${}^{-1}$', md_content)
