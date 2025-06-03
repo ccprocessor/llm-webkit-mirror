@@ -1,4 +1,8 @@
-README for the XSLT MathML Library
+mmltex.xsl, 2002/22/11(旧版本)
+->
+mmltex.xsl,v 1.7 2003/06/10 12:24:04（MegaMath官方2025年4月提交的新版本）
+
+README for the XSLT MathML Library 2.1.2
 
 XSLT MathML Library is a set of XSLT stylesheets to transform
 MathML 2.0 to LaTeX.
@@ -48,12 +52,12 @@ Obtaining The Library
 
 The XSLT MathML Library is available for download as:
 
-    * Zip file: http://www.raleigh.ru/MathML/mmltex/mmltex.zip
+    * Zip file: http://www.raleigh.ru/MathML/mmltex/xsltml_2.1.2.zip
 
 Copyright
 ---------
 
-Copyright (C) 2001, 2002 Vasil Yaroshevich
+Copyright (C) 2001-2003 Vasil Yaroshevich
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -95,28 +99,3 @@ Contacting the Author
 ---------------------
 
 These stylesheets are maintained by Vasil Yaroshevich, <yarosh@raleigh.ru>.
-
-
-
-`llm_web_kit/extractor/html/recognizer/cc_math/mmltex` 目录下的 `.xsl` 文件是 XSLT 样式表文件，用于将 MathML 2.0 数学公式转换为 LaTeX 格式。
-这些文件属于 XSLT MathML Library（由 Vasil Yaroshevich 开发），可以单独或组合使用，实现 MathML 到 LaTeX 的自动转换。
-常见文件说明如下：
-
-- `mmltex.xsl`：主样式表，通常作为入口导入其它模块。
-- `tokens.xsl`、`glayout.xsl`、`scripts.xsl`、`tables.xsl`、`entities.xsl`、`cmarkup.xsl`：分别处理 MathML 的不同部分（如符号、布局、上下标、表格、实体等）。
-
-这些文件可被 XSLT 处理器（如 `xsltproc`、Python 的 `lxml` 等）调用，实现批量或自动化的 MathML 转 LaTeX。
-
-——————————————————————————————————————————————————————————————————————————————
-mmltex.xsl 及其相关 XSLT 文件只接收 MathML 部分（即 <math> 标签及其内容），
-将其转换为 LaTeX 格式。它不会处理 HTML 的其他部分（如普通文本、段落、表格等），
-也不会自动从 HTML 中提取 MathML。需要先将 MathML 部分提取出来，再用这些 XSLT 文件进行转换。
-——————————————————————————————————————————————————————————————————————————————
-
-这些 .xsl 文件分别处理 MathML 的不同结构部分，具体如下：
-tokens.xsl：处理 MathML 中的基本符号和标记（如 <mi>、<mn>、<mo>，即变量、数字、运算符等）。
-glayout.xsl：处理数学公式的布局结构（如分数、根式、括号等复杂排版）。
-scripts.xsl：处理上下标、下上标等（如 <msub>、<msup>、<msubsup>）。
-tables.xsl：处理数学表格结构（如 <mtable>、<mtr>、<mtd>）。
-entities.xsl：处理 MathML 中的实体引用（如希腊字母、特殊符号等）。
-cmarkup.xsl：处理带有颜色、样式等自定义标记的 MathML 元素。

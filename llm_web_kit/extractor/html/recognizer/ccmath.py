@@ -20,7 +20,7 @@ import json
 from datetime import datetime
 from lxml import etree
 import argparse
-
+from llm_web_kit.libs.html_utils import html_to_element
 
 class MathRecognizer(BaseHTMLElementRecognizer):
     """解析数学公式元素."""
@@ -182,10 +182,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
         return self.html_split_by_tags(tree, [CCTag.CC_MATH_INTERLINE])
 
-def read_test_html(html_file):
-    """从指定html文件读取内容."""
-    with open(html_file, 'r', encoding='utf-8') as f:
-        return f.read()
+# def read_test_html(html_file):
+#     """从指定html文件读取内容."""
+#     with open(html_file, 'r', encoding='utf-8') as f:
+#         return f.read()
 
 def save_math_results(result, output_file):
     """将数学公式转换结果保存到文件."""
@@ -228,24 +228,22 @@ def save_math_results(result, output_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='数学公式识别与导出')
-    parser.add_argument('--html', type=str,
-                        default='badcase3.html', help='输入HTML文件路径')
-    parser.add_argument('--output', type=str,
-                        default='math_results_badcase333.json', help='输出JSON文件路径')
-    parser.add_argument('--url', type=str,
-                        default='https://blog.csdn.net/MooM_X/article/details/105072849', help='基础URL')
-    args = parser.parse_args()
-
-    from llm_web_kit.libs.html_utils import html_to_element
-
-    test_raw_html = read_test_html(args.html)
-    html_element = html_to_element(test_raw_html)
-
-    math_recognizer = MathRecognizer()
-    result = math_recognizer.recognize(
-        args.url,
-        [(html_element, html_element)],
-        test_raw_html
-    )
-
-    save_math_results(result, args.output)
+    # parser.add_argument('--html', type=str,
+    #                     default='tests/llm_web_kit/extractor/assets/extractor_chain_input/good_data/html/math_miss_namespace.html', help='输入HTML文件路径')
+    # parser.add_argument('--output', type=str,
+    #                     default='math_results_badcase333.json', help='输出JSON文件路径')
+    # parser.add_argument('--url', type=str,
+    #                     default='https://blog.csdn.net/MooM_X/article/details/105072849', help='基础URL')
+    # args = parser.parse_args()
+    # with open(args.html, 'r', encoding='utf-8') as f:
+    #     test_raw_html = f.read()
+    # html_element = html_to_element(test_raw_html)
+    #
+    # math_recognizer = MathRecognizer()
+    # result = math_recognizer.recognize(
+    #     args.url,
+    #     [(html_element, html_element)],
+    #     test_raw_html
+    # )
+    #
+    # save_math_results(result, args.output)
