@@ -10,8 +10,8 @@
             "cache_path": "~/.llm_web_kit_cache"
         },
         "unsafe_words":{
-            "download_path": "s3://web-parse-huawei/shared_resource/political/unsafe_words.jsonl",
-            "md5": "e81dd1050a79f68b9d9b3f66baadde66",
+            "download_path": "s3://web-parse-huawei/shared_resource/unsafe_words/unsafe_words_porn_politics.jsonl",
+            "md5": "ef51faf114353d987ec97b211a8d2b06",
         },
         "xyz_internal_unsafe_words":{
             "download_path": "s3://web-parse-huawei/shared_resource/political/xyz_internal_unsafe_words.jsonl",
@@ -49,6 +49,32 @@ m.process("your content",
 ```
 {'safety_remained': True,
  'safety_infos': {'domain_level': '', 'hit_unsafe_words': False}}
+```
+
+### 敏感词检测模块用法示例
+
+```python
+from llm_web_kit.model.unsafe_words_detector import *
+
+checker = UnsafeWordChecker(language="zh-en")
+
+content = "64式销售QQ"
+unsafe_words = checker.check_unsafe_words(
+    content_str=content,
+)
+print(unsafe_words)
+[{'word': '64式', 'type': '违禁品', 'level': 'L3', 'language': 'zh', 'count': 1.0}, {'word': '64式销售', 'type': '违禁品', 'level': 'L3', 'language': 'zh', 'count': 1.0}, {'word': '销售', 'type': '广告营销', 'level': 'L3', 'language': 'zh', 'count': 1.0}, {'word': '64式销售qq', 'type': '违禁品', 'level': 'L1', 'language': 'zh', 'count': 1.0}]
+
+checker = UnsafeWordsFilter()
+content = "64式销售QQ"
+#from_safe_source:是否来自安全来源。如果是，直接返回安全。
+#from_domestic_source: 是否来自国内来源。如果是，仅检查 L1 级别的不安全词；否则检查 L1 和 L2 级别。
+result = checker.filter(
+    content,
+    'zh',
+    from_safe_source = False,
+    from_domestic_source = True,
+)
 ```
 
 ## 速度
