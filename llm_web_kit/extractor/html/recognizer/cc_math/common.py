@@ -132,17 +132,6 @@ transform = etree.XSLT(xslt)
 
 
 class CCMATH():
-    """
-    CCMATH 类用于处理和识别 HTML 或文本中的数学公式，支持 LaTeX、MathML、AsciiMath 等多种数学标记语言。
-    其主要功能包括：
-        判断公式类型（行内/行间、LaTeX/MathML/AsciiMath 等）。
-        包装和去除公式的分隔符（如 $...$、$$...$$、\(...\) 等）。
-        处理特殊网站的公式分隔符。
-        将 MathML 转换为 LaTeX。
-        替换 HTML 节点中的数学公式为自定义 cc 标签（如 <ccmath-interline>）。
-        兼容多种数学公式的提取和格式转换。
-        该类在数学内容抽取、结构化和标准化过程中起到核心作用。
-    """
     def __init__(self):
         self.url = ''
 
@@ -204,11 +193,6 @@ class CCMATH():
 
     def get_equation_type(self, html: str) -> List[Tuple[str, str]]:
         """根据latex_config判断数学公式是行内还是行间公式.
-        1 先查找 MathML（<math> 标签），根据 display="block" 属性区分行间/行内。
-        2 检查文本内容是否有 LaTeX 公式分隔符（如 $$...$$、\[...\]、$...$、\(...\) 等），区分行间/行内。
-        3 检查 AsciiMath（通常用反引号包裹），也区分行间/行内。
-        4 查找 <script> 标签，判断其 type 属性是否包含 mode=display，来区分行间/行内。
-        5 检查 <sub> 和 <sup> 标签，认为是行内数学表达式。
 
         Args:
             html: 包含数学公式的HTML文本
@@ -217,11 +201,10 @@ class CCMATH():
             Tuple[str, str]: (EQUATION_INLINE 或 EQUATION_INTERLINE, 公式类型)
 
         Examples:
-            >>> cm = CCMATH()
-            >>> cm.get_equation_type("<span>这是行内公式 $x^2$ 测试</span>")
-            [('ccmath-inline', 'latex')]
-            >>> cm.get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
-            [('ccmath-interline', 'latex')]
+            >>> get_equation_type("<span>这是行内公式 $x^2$ 测试</span>")
+            ('equation-inline', 'latex')
+            >>> get_equation_type("<span>这是行间公式 $$y=mx+b$$ 测试</span>")
+            ('equation-interline', 'latex')
         """
 
         def check_delimiters(delims_list, s):
@@ -246,7 +229,7 @@ class CCMATH():
             raise ValueError(f'Failed to load html: {html}')
         result = []
         for node in tree.iter():
-            # 先检查mathml（判断其是行间公式还是行内公式）
+            # 先检查mathml
             math_elements = node.xpath('//math | //*[contains(local-name(), ":math")]')
             if len(math_elements) > 0:
                 # 检查math标签是否有display属性且值为block，https://developer.mozilla.org/en-US/docs/Web/MathML/Element/math
@@ -292,14 +275,6 @@ class CCMATH():
         return self.equation_type_to_tag(result)
 
     def equation_type_to_tag(self, type_math_type: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
-        """
-        处理过程会将 $...$、$$...$$ 等数学公式用自定义标签（如 <ccmath-inline>、<ccmath-interline>）包裹，便于后续结构化处理。
-        1 转换前：
-            <p>这是行内公式 $x^2$，这是行间公式：$$y=mx+b$$。</p>
-        2 转换后：
-            <p>这是行内公式 <ccmath-inline type="latex" by="" html="x^2">x^2</ccmath-inline>，
-            这是行间公式：<ccmath-interline type="latex" by="" html="y=mx+b">y=mx+b</ccmath-interline>。</p>
-        """
         return list({
             (eq_type, math_type): (
                 CCMATH_INLINE if eq_type == EQUATION_INLINE else CCMATH_INTERLINE,
@@ -310,28 +285,27 @@ class CCMATH():
         }.values())
 
     def mml_to_latex(self, mml_code):
-        # 1.预处理:清理空格和换行
-        mml_code = re.sub(r'\s+', ' ', mml_code).strip()
-
-        # 2.移除mspace标签
-        mml_code = re.sub(r'<mspace[^>]*>.*?</mspace>', '', mml_code, flags=re.DOTALL)
-
-        # 3.规范化math标签并添加命名空间
-        mml_ns = re.sub(r'<math\s+[^>]*?>', '<math xmlns="http://www.w3.org/1998/Math/MathML">', mml_code)
-
-        # 4.修复一些特殊字符和转义字符
+        # Remove any attributes from the math tag
+        mml_ns = re.sub(r'<math.*?>', '<math xmlns="http://www.w3.org/1998/Math/MathML">', mml_code)
+        # mml_ns = mml_code
         mml_ns = mml_ns.replace('&quot;', '"')
         mml_ns = mml_ns.replace("'\\\"", '"').replace("\\\"'", '"')
 
-        # 5.先将mml_ns转换为HtmlElement，兼容一些有错误的html解析
+        pattern = r'"([^"]+?)\''
+        mml_ns = re.sub(pattern, r'"\1"', mml_ns)
+        mml_ns = re.sub(r'<mspace[^>]*>.*?</mspace>', '', mml_ns, flags=re.DOTALL)
+        # 先将mml_ns转换为HtmlElement，兼容一些有错误的html解析
         mml_dom = html_to_element(mml_ns)
         # 再将 HtmlElement 转换为 etree._Element 以兼容 XSLT 转换
         mml_str = etree.tostring(mml_dom)
         # 提前修复已知的一些利用XSLT方法转换的错误
         mml_str = self.fix_mathml_superscript(mml_str)
         mml_element = etree.fromstring(mml_str)
+        print(f'Processing MathML: {etree.tostring(mml_element, encoding="unicode", pretty_print=True)}')
         mmldom = transform(mml_element)
+        print(f'After XSLT transformation: {str(mmldom)}')
         latex_code = str(mmldom)
+        print(f'latex_code: {latex_code}')
         return latex_code
 
     def fix_mathml_superscript(self, mathml_str):
