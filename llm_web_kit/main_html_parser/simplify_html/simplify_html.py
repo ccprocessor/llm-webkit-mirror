@@ -554,9 +554,9 @@ def should_remove_element(element) -> bool:
             if part in ATTR_PATTERNS_TO_REMOVE:
                 return True
             # 检查是否包含特定前缀/后缀
-            for pattern in ATTR_SUFFIX_TO_REMOVE:
-                if part.endswith(pattern):
-                    return True
+            # for pattern in ATTR_SUFFIX_TO_REMOVE:
+            #     if part.endswith(pattern):
+            #         return True
 
     # 检查id属性
     id_name = element.get('id', '')
@@ -567,9 +567,9 @@ def should_remove_element(element) -> bool:
             if part in ATTR_PATTERNS_TO_REMOVE:
                 return True
             # 检查是否包含特定前缀/后缀
-            for pattern in ATTR_SUFFIX_TO_REMOVE:
-                if part.endswith(pattern):
-                    return True
+            # for pattern in ATTR_SUFFIX_TO_REMOVE:
+            #     if part.endswith(pattern):
+            #         return True
 
     # 检查style属性
     style_attr = element.get('style', '')
