@@ -38,7 +38,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             tree = etree.ElementTree(root)
             # 抽取正文树结构
             content_list = self.tag_main_html(response_json, root)
-            element_dict = self.construct_main_tree(root, tree)
+            element_dict, template_dict_html = self.construct_main_tree(root, tree)
 
             # 模版抽取正文html
             parser = LayoutBatchParser({})
@@ -65,6 +65,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = template_extract_html
             pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
             pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict
+            pre_data[PreDataJsonKey.TYPICAL_DICT_HTML] = template_dict_html
         except Exception as e:
             raise TagMappingParserException(e)
         return pre_data
@@ -207,5 +208,5 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         all_set = {}
         layer_index_counter = {}
         self.process_main_tree(pre_root, 0, layer_index_counter, all_dict, all_set, tree)
-
-        return all_dict
+        template_dict_html = html.tostring(pre_root, encoding='utf-8').decode()
+        return all_dict, template_dict_html
