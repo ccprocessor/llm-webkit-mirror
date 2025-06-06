@@ -19,7 +19,7 @@ Data storage structure:
 ```yaml
 s3://cc-store-stage1/
   ├── CC-domain/                # Main data sorted by domain
-  │   ├── 0000/                      # domain_hash_id, domains are hashed into 1000 buckets using xxhash.xxh64_intdigest(domain) % 1000
+  │   ├── 0000/                      # domain_hash_id, domains are hashed into 10000 buckets using xxhash.xxh64_intdigest(domain) % 10000
   │   │   ├── CC-MAIN-2013-20/          # Specific domain directory (after domain normalization)
   │   │   │   ├── 0/part-67fa76d24112-003956.jsonl.gz  # Split into 100k records, file_idx=0
   │   │   │   └── 1/part-67fa76d24112-004656.jsonl.gz  # file_idx=1
@@ -47,7 +47,7 @@ Domain clustering data storage structure:
 ```yaml
 s3://cc-store-stage2/
   ├── data/                        # Main data storage path
-  │   ├── 0000/                    # domain_hash_id, domains are hashed into 1000 buckets using xxhash.xxh64_intdigest(domain) % 1000
+  │   ├── 0000/                    # domain_hash_id, domains are hashed into 10000 buckets using xxhash.xxh64_intdigest(domain) % 10000
   │   │   ├── 0/part-67fa76d24112-000001.jsonl.gz  # Data file containing multiple domains, with same domain data clustered and stored consecutively
   │   │   └── 1/part-67fa76d24112-000002.jsonl.gz
   │   └── ...

@@ -1,7 +1,6 @@
 import json
 import time
 import traceback
-from datetime import datetime
 
 import pyspark.sql.functions as F
 import xxhash
@@ -88,7 +87,9 @@ def generate_domain_indices_parallel_optimized(input_base_path, output_base_path
                 domain_records_df = file_rdd.mapPartitions(process_domain_records_file).toDF(schema)
 
                 # 5. 按域名聚合，合并来自不同文件的记录
-                grouped_df = domain_records_df.groupBy("domain", "domain_hash_id").agg(
+                # 注意：只按domain聚合，因为同一域名的domain_hash_id应该是一致的
+                grouped_df = domain_records_df.groupBy("domain").agg(
+                    F.first("domain_hash_id").alias("domain_hash_id"),  # 使用第一个domain_hash_id
                     F.sum("count").alias("count"),
                     F.flatten(F.collect_list("files")).alias("files")
                 )
@@ -154,66 +155,64 @@ def process_domain_records_file(_iter):
     Yields:
         域名记录信息
     """
-    # 错误日志存放地址
-    error_log_path = "s3://cc-store/error_logs/domain_index_errors.jsonl"
-    print(f"error_log_path: {error_log_path}")
-    s3_doc_writer = S3DocWriter(path=error_log_path)
-    error_info = None
-
     for fpath in _iter:
         print(f"处理文件: {fpath}")
-        current_domain = None
-        start_offset = None
-        domain_length = 0
-        idx = 0
-        last_detail_data = None
+        # 每个文件的状态变量初始化
+        current_domain = None      # 当前正在处理的域名
+        start_offset = None        # 当前域名在文件中的起始偏移量
+        domain_length = 0          # 当前域名数据的总长度
+        idx = 0                    # 当前域名的记录计数器
+        file_timestamp = int(time.time())  # 当前文件的统一时间戳
+        error_info = None          # 错误信息初始化
+
+        # 错误日志配置 - 为每个文件生成独立的错误日志
+        # 提取文件路径后缀，如：0/0/part-681a291b597f-001442.jsonl.gz
+        path_suffix = "/".join(fpath.split("/")[-3:]).replace(".jsonl.gz", "").replace("/", "_")
+        error_log_path = f"s3://cc-store/error_logs/domain_index_errors_{file_timestamp}_{path_suffix}.jsonl"
+        print(f"错误日志路径: {error_log_path}")
+        s3_doc_writer = S3DocWriter(path=error_log_path)
 
         try:
-            for row in read_s3_rows(fpath):
-                idx += 1
+            for row in read_s3_rows(path=fpath, use_stream=True):
                 try:
                     detail_data = json.loads(row.value)
                     domain = detail_data["domain"]
                     domain_hash_id = detail_data.get("domain_hash_id")
+                    # 如果domain_hash_id为空，则计算
+                    if domain_hash_id is None:
+                        domain_hash_id = xxhash.xxh64_intdigest(domain) % HASH_COUNT
                     offset, length = map(int, row.loc.split("bytes=")[-1].split(",")) if "bytes=" in row.loc else (0, len(row.value))
 
-                    # 如果是同一个域名的连续记录，累计长度
-                    if domain == current_domain:
-                        domain_length += length
-                        last_detail_data = detail_data
-                        continue
-                    else:
-                        # 如果已有域名记录，则生成一条记录
+                    # 如果是新域名，先输出前一个域名的记录
+                    if domain != current_domain:
+                        # 输出前一个域名的记录（如果存在）
                         if current_domain is not None:
-                            print(f"{current_domain} 该批数据批次结束, 总数据量为: {idx - 1}")
-                            # 如果domain_hash_id为空，使用计算值
-                            current_domain_hash_id = None
-                            if last_detail_data and "domain_hash_id" in last_detail_data:
-                                current_domain_hash_id = last_detail_data["domain_hash_id"]
-                            if current_domain_hash_id is None:
-                                current_domain_hash_id = xxhash.xxh64_intdigest(current_domain) % HASH_COUNT
-
+                            print(f"{current_domain} 该批数据批次结束, 总数据量为: {idx}")
                             line = {
                                 "domain": current_domain,
-                                "domain_hash_id": current_domain_hash_id,
-                                "count": idx - 1,
+                                "domain_hash_id": domain_hash_id,
+                                "count": idx,
                                 "files": [{
                                     "filepath": fpath,
                                     "offset": start_offset,
                                     "length": domain_length,
-                                    "record_count": idx - 1,
-                                    "timestamp": int(time.time())
+                                    "record_count": idx,
+                                    "timestamp": file_timestamp
                                 }]
                             }
                             yield line
-                            idx = 1
 
                         # 开始新的域名记录
                         current_domain = domain
                         start_offset = offset
                         domain_length = length
-                        last_detail_data = detail_data
-                        print(f"新批次数据: {current_domain}, start_offset: {start_offset}, domain_length: {domain_length}")
+                        idx = 1  # 当前记录是第1条
+                        print(f"新批次数据: {current_domain}, start_offset: {start_offset}")
+                    else:
+                        # 相同域名，累计数据
+                        domain_length += length
+                        idx += 1
+
                 except Exception as e:
                     error_info = {
                         "error_type": type(e).__name__,
@@ -221,19 +220,14 @@ def process_domain_records_file(_iter):
                         "traceback": traceback.format_exc(),
                         "input_data": row.value if hasattr(row, 'value') else str(row),
                         "file_path": fpath,
-                        "timestamp": datetime.now().isoformat()
+                        "timestamp": file_timestamp
                     }
                     s3_doc_writer.write(error_info)
                     continue
 
             # 处理文件末尾的最后一个域名
-            if current_domain is not None and last_detail_data is not None:
+            if current_domain is not None:
                 print(f"last: {current_domain} 该批数据批次结束, 总数据量为: {idx}")
-                # 如果domain_hash_id为空，使用计算值
-                domain_hash_id = last_detail_data.get("domain_hash_id")
-                if domain_hash_id is None:
-                    domain_hash_id = xxhash.xxh64_intdigest(current_domain) % HASH_COUNT
-
                 line = {
                     "domain": current_domain,
                     "domain_hash_id": domain_hash_id,
@@ -243,7 +237,7 @@ def process_domain_records_file(_iter):
                         "offset": start_offset,
                         "length": domain_length,
                         "record_count": idx,
-                        "timestamp": int(time.time())
+                        "timestamp": file_timestamp
                     }]
                 }
                 yield line
@@ -253,7 +247,7 @@ def process_domain_records_file(_iter):
                 "error_message": str(e),
                 "traceback": traceback.format_exc(),
                 "file_path": fpath,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": file_timestamp
             }
             s3_doc_writer.write(error_info)
 
@@ -264,22 +258,16 @@ def process_domain_records_file(_iter):
 # =====主函数=====
 # 配置
 config = {
-    'spark_conf_name': 'spark_4',
-    'skip_success_check': True,
-    # "spark.yarn.queue": "pipeline.clean",
-    # "spark.dynamicAllocation.maxExecutors":120,
-    'spark.executor.memory': '80g',
-    'spark.executor.memoryOverhead': '40g',  # 增加到40GB
-    # "spark.speculation": "true",     # 启用推测执行
-    # "maxRecordsPerFile": 200000,      # 增加每文件记录数以减少总文件数
-    'output_compression': 'gz',
-    'skip_output_check': True,
-    # "spark.sql.shuffle.partitions": "10000",
-    # "spark.default.parallelism": "10000",
-    'spark.network.timeout': '1200s',  # 网络超时
-    'spark.broadcast.timeout': '1800s',  # 增加广播超时
-    'spark.broadcast.compress': 'true',  # 确保广播压缩
-    'spark.task.maxFailures': 8,
+    "spark_conf_name": "spark_2",
+    "skip_success_check": True,
+    "spark.yarn.queue": "qa",
+    "spark.dynamicAllocation.maxExecutors": 1000,  # 控制1万并发
+    "skip_output_check": True,
+    "spark.sql.shuffle.partitions": "10000",
+    "spark.default.parallelism": "10000",
+    "spark.network.timeout": "1200s",  # 网络超时
+    "spark.broadcast.timeout": "1800s",  # 增加广播超时
+    "spark.broadcast.compress": "true",  # 确保广播压缩
 }
 
 # 配置参数
@@ -305,6 +293,6 @@ output_base_path = 's3://cc-store/cc-domain-index'  # 输出数据基础路径
 # 生成域名索引
 print('开始生成域名索引...')
 generate_domain_indices_parallel_optimized(input_base_path, output_base_path, START_HASH_ID,
-                        END_HASH_ID)
+                        END_HASH_ID, 1000)
 
 print('处理完成')

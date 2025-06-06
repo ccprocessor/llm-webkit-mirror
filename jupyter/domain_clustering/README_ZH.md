@@ -19,7 +19,7 @@
 ```yaml
 s3://cc-store-stage1/
   ├── CC-domain/                # 按域名排序的主数据
-  │   ├── 0000/                      # domain_hash_id, 按域名hash后分为1000个桶，xxhash.xxh64_intdigest(domain) % 1000
+  │   ├── 0000/                      # domain_hash_id, 按域名hash后分为10000个桶，xxhash.xxh64_intdigest(domain) % 10000
   │   │   ├── CC-MAIN-2013-20/          # 具体域名目录（domain normalize后）
   │   │   │   ├── 0/part-67fa76d24112-003956.jsonl.gz  # 10w条分割，file_idx=0
   │   │   │   └── 1/part-67fa76d24112-004656.jsonl.gz  # file_idx=1
@@ -47,7 +47,7 @@ domain聚类数据存储结构如下：
 ```yaml
 s3://cc-store-stage2/
   ├── data/                        # 主数据存储路径
-  │   ├── 0000/                    # domain_hash_id, 按域名hash后分为1000个桶，xxhash.xxh64_intdigest(domain) % 1000
+  │   ├── 0000/                    # domain_hash_id, 按域名hash后分为10000个桶，xxhash.xxh64_intdigest(domain) % 10000
   │   │   ├── 0/part-67fa76d24112-000001.jsonl.gz  # 包含多个域名的数据文件，同一个 domain 数据聚类连续存储
   │   │   └── 1/part-67fa76d24112-000002.jsonl.gz
   │   └── ...
