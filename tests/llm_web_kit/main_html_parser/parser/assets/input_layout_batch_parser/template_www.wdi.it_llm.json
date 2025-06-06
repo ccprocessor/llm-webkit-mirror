@@ -5,9 +5,9 @@
     "item_id 4": "No",
     "item_id 5": "No",
     "item_id 6": "No",
-    "item_id 7": "Yes",
+    "item_id 7": "No",
     "item_id 8": "No",
-    "item_id 9": "No",
+    "item_id 9": "Yes",
     "item_id 10": "No",
     "item_id 11": "No",
     "item_id 12": "No",
@@ -31,5 +31,9 @@
     "item_id 30": "No",
     "item_id 31": "No",
     "item_id 32": "No",
-    "item_id 33": "No"
-  }
+    "item_id 33": "No",
+    "item_id 34": "No",
+    "item_id 35": "No",
+    "item_id 36": "No",
+    "item_id 37": "No"
+}

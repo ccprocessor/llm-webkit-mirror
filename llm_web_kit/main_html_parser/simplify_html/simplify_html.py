@@ -18,7 +18,18 @@ inline_tags = {
 
 # 需要删除的标签
 tags_to_remove = {
-    'head', 'header', 'footer', 'nav', 'aside', 'style', 'script', 'select', 'noscript', 'link', 'meta', 'iframe', 'frame'
+    'head',
+    'header',
+    'footer',
+    'nav',
+    'aside',
+    'style',
+    'script',
+    'noscript',
+    'link',
+    'meta',
+    'iframe',
+    'frame'
 }
 
 # 需要保留的特殊标签（即使它们是行内标签）
@@ -31,7 +42,7 @@ ATTR_PATTERNS_TO_REMOVE = {
 
 # 需要删除的属性名模式（特定前缀/后缀）
 ATTR_SUFFIX_TO_REMOVE = {
-    '-nav', '_nav',
+    # '-nav', '_nav',
     # '-footer', '_footer',  # 有特例，可能dl列表一组最后一项添加了自定义footer属性，先注释
     # '-header', '_header',  # 有特例，可能自定义的header中有标题，先注释
 }
@@ -543,9 +554,9 @@ def should_remove_element(element) -> bool:
             if part in ATTR_PATTERNS_TO_REMOVE:
                 return True
             # 检查是否包含特定前缀/后缀
-            for pattern in ATTR_SUFFIX_TO_REMOVE:
-                if pattern in part:
-                    return True
+            # for pattern in ATTR_SUFFIX_TO_REMOVE:
+            #     if part.endswith(pattern):
+            #         return True
 
     # 检查id属性
     id_name = element.get('id', '')
@@ -556,9 +567,9 @@ def should_remove_element(element) -> bool:
             if part in ATTR_PATTERNS_TO_REMOVE:
                 return True
             # 检查是否包含特定前缀/后缀
-            for pattern in ATTR_SUFFIX_TO_REMOVE:
-                if pattern in part:
-                    return True
+            # for pattern in ATTR_SUFFIX_TO_REMOVE:
+            #     if part.endswith(pattern):
+            #         return True
 
     # 检查style属性
     style_attr = element.get('style', '')
@@ -647,9 +658,9 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
             content_type = para.get('content_type', 'block_element')
 
             # 公共处理步骤
-            clean_attributes(root)
+            # clean_attributes(root)
             simplify_list(root)
-            remove_inline_tags(root)
+            # remove_inline_tags(root)
 
             # 跳过无意义内容
             if not is_meaningful_content(root):
