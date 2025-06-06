@@ -284,7 +284,6 @@
 		<xsl:when test='starts-with($content,"{")'><xsl:value-of select='"\left\{"' /><xsl:call-template name="replaceEntities"><xsl:with-param name="content" select="substring-after($content, '{')"/></xsl:call-template></xsl:when>
 		<xsl:when test='starts-with($content,"}")'><xsl:value-of select='"\right\}"' /><xsl:call-template name="replaceEntities"><xsl:with-param name="content" select="substring-after($content, '}')"/></xsl:call-template></xsl:when>
 
-
 		<xsl:otherwise>
 			<xsl:value-of select="substring($content,1,1)"/>
 			<xsl:call-template name="replaceEntities">

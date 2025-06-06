@@ -62,8 +62,8 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         raise HtmlMathRecognizerException(f'Error processing math tag: {e}')
 
 
-if __name__ == '__main__':
-    html = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'
-    element = html_to_element(html)
-    cm = CCMATH()
-    modify_tree(cm, 'mathjax', html, element, element)
+# if __name__ == '__main__':
+    # html = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'
+    # element = html_to_element(html)
+    # cm = CCMATH()
+    # modify_tree(cm, 'mathjax', html, element, element)

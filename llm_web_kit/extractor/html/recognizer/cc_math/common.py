@@ -286,22 +286,10 @@ class CCMATH():
 
     def mml_to_latex(self, mml_code):
         # Remove any attributes from the math tag
-        mml_code = re.sub(r'(<math.*?>)', r'\1', mml_code)
-        mml_ns = mml_code.replace('<math>', '<math xmlns="http://www.w3.org/1998/Math/MathML">')  # Required.
-
+        mml_ns = re.sub(r'<math.*?>', '<math xmlns="http://www.w3.org/1998/Math/MathML">', mml_code)
+        # mml_ns = mml_code
         mml_ns = mml_ns.replace('&quot;', '"')
         mml_ns = mml_ns.replace("'\\\"", '"').replace("\\\"'", '"')
-
-        # 很多网页中标签内容就是错误
-        # pattern = r"(<[^<>]*?\s)(mathbackground|mathsize|mathvariant|mathfamily|class|separators|style|id|rowalign|columnspacing|rowlines|columnlines|frame|framespacing|equalrows|equalcolumns|align|linethickness|lspace|rspace|mathcolor|rowspacing|displaystyle|style|columnalign|open|close|right|left)(?=\s|>)(?![\"'][^<>]*?>)"
-        # def replace_attr(match):
-        #     tag_start = match.group(1)  # 标签开始部分和空格
-        #     attr_name = match.group(2)  # 属性名
-        #     return f'{tag_start}{attr_name}=\"\" '
-        # # 替换文本
-        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
-        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
-        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
 
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
@@ -313,9 +301,11 @@ class CCMATH():
         # 提前修复已知的一些利用XSLT方法转换的错误
         mml_str = self.fix_mathml_superscript(mml_str)
         mml_element = etree.fromstring(mml_str)
-        # 使用兼容的元素进行转换
         mmldom = transform(mml_element)
         latex_code = str(mmldom)
+        # print(f'Processing MathML: {etree.tostring(mml_element, encoding="unicode", pretty_print=True)}')
+        # print(f'After XSLT transformation: {str(mmldom)}')
+        # print(f'latex_code: {latex_code}')
         return latex_code
 
     def fix_mathml_superscript(self, mathml_str):
