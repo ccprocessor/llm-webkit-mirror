@@ -42,6 +42,7 @@ def html_to_element(html:str) -> HtmlElement:
         element: lxml.html.HtmlElement: element
     """
     parser = HTMLParser(collect_ids=False, encoding='utf-8', remove_comments=True, remove_pis=True)
+
     # 将 HTML 字符串编码为字节类型, 兼容html中有 XML 声明（如 <?xml version="1.0" encoding="utf-8"?>）
     html_bytes = html.encode('utf-8')
     root = fromstring(html_bytes, parser=parser)
@@ -337,6 +338,7 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
     # 直接处理当前元素是sub或sup的情况
     if element.tag == 'sub' or element.tag == 'sup':
         marker = element.tag
+
         content = element.text or ''
 
         # 处理所有子元素
