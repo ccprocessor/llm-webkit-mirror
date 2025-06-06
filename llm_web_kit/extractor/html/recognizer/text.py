@@ -40,9 +40,20 @@ special_symbols = [  # TODO 从文件读取
     '☁'    # 云符号
 ]
 
+# 其他标点符
+other_symbols = [
+    '“',
+    '‘',
+    '[',
+    '(',
+    '”',
+    '’'
+]
+
 PARAGRAPH_SEPARATOR = '\n\n'
 
 # 需要保留的html实体，例如：'>' 直接在markdown中无法渲染，需要替换为html实体
+# 这个entities map会导致一些<sup标签的'>'被转义成'&gt;'从而导致markdown上sup标签显现且上标功能失效
 entities_map = {'>': 'gt'}
 
 # 行内元素
@@ -51,7 +62,7 @@ inline_tags = {
     'dfn', 'em', 'i', 'img', 'input', 'kbd', 'label', 'map', 'object', 'q',
     'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
     'textarea', 'time', 'var', 'u', 's', 'code', 'cccode-inline', 'ccmath-inline',
-    'marked-tail', 'marked-text'
+    'marked-tail', 'marked-text', 'font', 'nobr', 'bdi', 'mjx-container', 'mjx-assistive-mml'
 }
 
 
@@ -108,7 +119,9 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             lst: List[Tuple[HtmlElement | str, HtmlElement | str]]: Element和raw_html组成的列表
         """
         new_lst = []
+
         for el, raw_html in lst:
+
             # 如果是字符串则转换为 HtmlElement
             el_element = html_to_element(el) if isinstance(el, str) else el
             raw_html_element = html_to_element(raw_html) if isinstance(raw_html, str) else raw_html
@@ -132,8 +145,10 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         def one_xlat(match):
             """回调函数，用于将匹配到的字符替换为对应的HTML实体。"""
             return f'&{entities_map[match.group(0)]};'
-
-        return rx.sub(one_xlat, text)
+        # 阻止<sup>标签被<sup&gt;
+        t = rx.sub(one_xlat, text)
+        t = t.replace('</sup&gt;', '</sup>').replace('<sup&gt;', '<sup>').replace('</sub&gt;', '</sub>').replace('<sub&gt;', '<sub>')
+        return t
 
     def __combine_text(self, text1:str, text2:str, lang='en') -> str:
         """将两段文本合并，中间加空格.
@@ -149,8 +164,12 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             txt = text1 + text2
             return self.replace_entities(txt.strip(), entities_map)
         else:
-            words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
+            # 根据text1的最后一个字符和text2的第一个字符判断两个text之间的连接
+            words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols or text2[0] in other_symbols or text1 and text1[-1] in other_symbols else ' '
             txt = text1 + words_sep + text2
+            # print('text1:',text1)
+            # print('text2:',text2)
+            # print('txt:',txt)
             return self.replace_entities(txt.strip(), entities_map)
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
@@ -187,6 +206,8 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 text += PARAGRAPH_SEPARATOR  # TODO 这个地方直接加换行是错误点做法，需要利用数据结构来保证段落。
             elif el.tag == 'sub' or el.tag == 'sup':
                 text = process_sub_sup_tags(el, text, recursive=False)
+            elif el.tag == 'audio':  # 避免audio被识别为paragraph
+                pass
             else:
                 if el.text and el.text.strip():
                     text = self.__combine_text(text, el.text.strip())
