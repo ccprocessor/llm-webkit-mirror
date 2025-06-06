@@ -301,11 +301,11 @@ class CCMATH():
         # 提前修复已知的一些利用XSLT方法转换的错误
         mml_str = self.fix_mathml_superscript(mml_str)
         mml_element = etree.fromstring(mml_str)
-        print(f'Processing MathML: {etree.tostring(mml_element, encoding="unicode", pretty_print=True)}')
         mmldom = transform(mml_element)
-        print(f'After XSLT transformation: {str(mmldom)}')
         latex_code = str(mmldom)
-        print(f'latex_code: {latex_code}')
+        # print(f'Processing MathML: {etree.tostring(mml_element, encoding="unicode", pretty_print=True)}')
+        # print(f'After XSLT transformation: {str(mmldom)}')
+        # print(f'latex_code: {latex_code}')
         return latex_code
 
     def fix_mathml_superscript(self, mathml_str):
