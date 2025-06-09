@@ -146,8 +146,11 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     'items': []
                 }
                 for child in el.getchildren():
-                    child_list['items'].append(__extract_list_item_text_recusive(child))
-                result['child_list'] = child_list
+                    child_item = __extract_list_item_text_recusive(child)
+                    if len(child_item) != 0:
+                        child_list['items'].append(child_item)
+                if child_list['items']:
+                    result['child_list'] = child_list
             else:
                 if el.text and el.text.strip():
                     if el.text != '-':
@@ -181,6 +184,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             paragraph = __extract_list_item_text_recusive(child)
             if len(paragraph) > 0:
                 text_paragraph.append(paragraph)
+
         return text_paragraph
 
     def __get_list_content_list(self, ele: HtmlElement, list_nest_level: int) -> list:

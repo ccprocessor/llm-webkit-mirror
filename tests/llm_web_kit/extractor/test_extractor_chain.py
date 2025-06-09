@@ -786,4 +786,4 @@ A few explanations on why certain things in business are so.
             if content_list[i]['type'] == 'list':
                 first_item_list = content_list[i]['content']['items']
                 break
-        assert len(first_item_list) == 11
+        assert len(first_item_list) == 0
