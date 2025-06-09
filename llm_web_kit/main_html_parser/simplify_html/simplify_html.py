@@ -417,14 +417,29 @@ def is_meaningful_content(element) -> bool:
 
 
 def clean_attributes(element):
-    """清理元素属性，只保留图片的有效src."""
+    """清理元素属性，只保留图片的有效src以及所有元素的class和id."""
     if element.tag == 'img':
         src = element.get('src', '').strip()
-        element.attrib.clear()
+        class_attr = element.get('class', '').strip()
+        id_attr = element.get('id', '').strip()
+        element.attrib.clear()  # 先清除所有属性
         if src:
             element.set('src', src)
+        if class_attr:
+            element.set('class', class_attr)
+        if id_attr:
+            element.set('id', id_attr)
     else:
-        element.attrib.clear()
+        # 对于其他元素，只保留class和id
+        class_attr = element.get('class', '').strip()
+        id_attr = element.get('id', '').strip()
+        element.attrib.clear()  # 先清除所有属性
+        if class_attr:
+            element.set('class', class_attr)
+        if id_attr:
+            element.set('id', id_attr)
+
+    # 递归处理子元素
     for child in element:
         clean_attributes(child)
 
@@ -658,7 +673,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
             content_type = para.get('content_type', 'block_element')
 
             # 公共处理步骤
-            # clean_attributes(root)
+            clean_attributes(root)
             simplify_list(root)
             # remove_inline_tags(root)
 
