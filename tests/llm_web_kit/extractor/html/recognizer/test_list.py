@@ -99,9 +99,9 @@ class TestSimpleListRecognize(unittest.TestCase):
         for element, _ in html_part:
             element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
             # 检查是否包含格式化的下标/上标和它后面的尾部文本
-            if ('~2~O' in element_text and '重要的物质' in element_text) or \
-               ('^2^' in element_text and '爱因斯坦的公式' in element_text) or \
-               ('~6~H~12~O~6~' in element_text and '一种糖' in element_text):
+            if ('<sub>2</sub>O' in element_text and '重要的物质' in element_text) or \
+               ('<sup>2</sup>' in element_text and '爱因斯坦的公式' in element_text) or \
+               ('<sub>6</sub>H<sub>12</sub>O<sub>6</sub>' in element_text and '一种糖' in element_text):
                 any_contains_text_after_marker = True
                 break
 
@@ -249,7 +249,7 @@ class TestSimpleListRecognize(unittest.TestCase):
         for element, _ in html_part:
             element_text = element.text_content() if hasattr(element, 'text_content') else (element.text or '')
             print('============= element_text', element_text)
-            if ('~下标~' in element_text) or ('^上标^' in element_text):
+            if ('<sub>下标</sub>' in element_text) or ('<sup>上标</sup>' in element_text):
                 marker_found = True
                 break
 
@@ -302,10 +302,10 @@ class TestSimpleListRecognize(unittest.TestCase):
 
         # 验证关键文本和标记
         assert 'E=mc' in combined_text, '未找到公式前缀 E=mc'
-        assert '^2^' in combined_text, '未找到上标 ^2^'
+        assert '<sup>2</sup>' in combined_text, '未找到上标 ^2^'
         assert 'Einstein' in combined_text, '未找到 Einstein'
         assert 'H' in combined_text, '未找到 H'
-        assert '~2~' in combined_text, '未找到下标 ~2~'
+        assert '<sub>2</sub>' in combined_text, '未找到下标 ~2~'
         assert 'O' in combined_text, '未找到 O'
 
     def test_non_li_tail_with_sub_sup(self):

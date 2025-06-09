@@ -244,3 +244,25 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert 'For maintaining mount' in content_md
+
+    def test_text_line_exception(self):
+        """
+        测试13  s3://xyz-llm-users/xyz-users/minrui/layout_benchmark/sample/v005/label/188b8435-3150-455c-8159-096c41ef3926.jsonl
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://www.oltrelebarriere.net/5825/permessi-per-lassistenza-ai-familiari-disabili/',
+            'data_source_category': 'HTML',
+            'path': 'test_text_line_exception.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'}
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'sensi dell’art.33' in content_md

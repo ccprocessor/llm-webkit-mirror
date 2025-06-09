@@ -57,7 +57,7 @@ class MyTestCase(unittest.TestCase):
         file_path = base_dir / 'assets/test_html_data/1.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
-        data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
+        data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html, PreDataJsonKey.IS_XPATH: False}
         pre_data = PreDataJson(data_dict)
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')

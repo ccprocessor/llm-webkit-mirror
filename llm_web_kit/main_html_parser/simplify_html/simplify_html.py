@@ -18,7 +18,18 @@ inline_tags = {
 
 # 需要删除的标签
 tags_to_remove = {
-    'head', 'header', 'footer', 'nav', 'aside', 'style', 'script', 'select', 'noscript', 'link', 'meta', 'iframe', 'frame'
+    'head',
+    'header',
+    'footer',
+    'nav',
+    'aside',
+    'style',
+    'script',
+    'noscript',
+    'link',
+    'meta',
+    'iframe',
+    'frame'
 }
 
 # 需要保留的特殊标签（即使它们是行内标签）
@@ -31,7 +42,7 @@ ATTR_PATTERNS_TO_REMOVE = {
 
 # 需要删除的属性名模式（特定前缀/后缀）
 ATTR_SUFFIX_TO_REMOVE = {
-    '-nav', '_nav',
+    # '-nav', '_nav',
     # '-footer', '_footer',  # 有特例，可能dl列表一组最后一项添加了自定义footer属性，先注释
     # '-header', '_header',  # 有特例，可能自定义的header中有标题，先注释
 }
@@ -406,14 +417,40 @@ def is_meaningful_content(element) -> bool:
 
 
 def clean_attributes(element):
-    """清理元素属性，只保留图片的有效src."""
+    """清理元素属性，保留图片的有效src（排除base64）、alt，以及所有元素的class和id."""
     if element.tag == 'img':
+        # 获取图片相关属性
         src = element.get('src', '').strip()
-        element.attrib.clear()
-        if src:
+        alt = element.get('alt', '').strip()
+        class_attr = element.get('class', '').strip()
+        id_attr = element.get('id', '').strip()
+
+        element.attrib.clear()  # 清除所有属性
+
+        # 保留非base64的src
+        if src and not src.startswith('data:image/'):
             element.set('src', src)
+        # 保留alt（如果非空）
+        if alt:
+            element.set('alt', alt)
+        # 保留class和id（如果非空）
+        if class_attr:
+            element.set('class', class_attr)
+        if id_attr:
+            element.set('id', id_attr)
     else:
-        element.attrib.clear()
+        # 非图片元素：只保留class和id
+        class_attr = element.get('class', '').strip()
+        id_attr = element.get('id', '').strip()
+
+        element.attrib.clear()  # 清除所有属性
+
+        if class_attr:
+            element.set('class', class_attr)
+        if id_attr:
+            element.set('id', id_attr)
+
+    # 递归处理子元素
     for child in element:
         clean_attributes(child)
 
@@ -543,9 +580,9 @@ def should_remove_element(element) -> bool:
             if part in ATTR_PATTERNS_TO_REMOVE:
                 return True
             # 检查是否包含特定前缀/后缀
-            for pattern in ATTR_SUFFIX_TO_REMOVE:
-                if pattern in part:
-                    return True
+            # for pattern in ATTR_SUFFIX_TO_REMOVE:
+            #     if part.endswith(pattern):
+            #         return True
 
     # 检查id属性
     id_name = element.get('id', '')
@@ -556,9 +593,9 @@ def should_remove_element(element) -> bool:
             if part in ATTR_PATTERNS_TO_REMOVE:
                 return True
             # 检查是否包含特定前缀/后缀
-            for pattern in ATTR_SUFFIX_TO_REMOVE:
-                if pattern in part:
-                    return True
+            # for pattern in ATTR_SUFFIX_TO_REMOVE:
+            #     if part.endswith(pattern):
+            #         return True
 
     # 检查style属性
     style_attr = element.get('style', '')
@@ -649,7 +686,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
             # 公共处理步骤
             clean_attributes(root)
             simplify_list(root)
-            remove_inline_tags(root)
+            # remove_inline_tags(root)
 
             # 跳过无意义内容
             if not is_meaningful_content(root):

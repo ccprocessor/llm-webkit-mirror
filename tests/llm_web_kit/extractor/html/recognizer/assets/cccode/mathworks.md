@@ -4,7 +4,7 @@
 
 ### Use Integers for Index Variables
 
-In MATLAB^®^ code that you want to convert to single precision,
+In MATLAB<sup>®</sup> code that you want to convert to single precision,
 it is a best practice to use integers for index variables. However,
 if the code does not use integers for index variables, when possible `convertToSingle` tries to detect
 the index variables and select `int32` types for

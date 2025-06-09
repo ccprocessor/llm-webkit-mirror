@@ -26,7 +26,6 @@ class TestMarkuplm(unittest.TestCase):
         self.assertEqual(markuplm.device, device)
         mock_model_from_pretrained.assert_called_once_with(markuplm.model_path, num_labels=markuplm.num_labels)
         mock_tokenizer_from_pretrained.assert_called_once_with(markuplm.model_path)
-        mock_load.assert_called_once_with(markuplm.checkpoint_path, map_location=device)
 
     @patch('transformers.MarkupLMProcessor.from_pretrained')
     @patch('transformers.MarkupLMForSequenceClassification.from_pretrained')

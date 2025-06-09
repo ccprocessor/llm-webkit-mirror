@@ -1,3 +1,5 @@
+import os
+
 import torch
 
 from llm_web_kit.model.resource_utils import import_transformer
@@ -6,13 +8,12 @@ from llm_web_kit.model.resource_utils import import_transformer
 class Markuplm():
     def __init__(self, path, device):
         self.path = path
-        self.model_path = self.path + '/markuplm-base'
-        self.checkpoint_path = self.path + '/markuplm_202501222031_epoch_2.pt'
+        self.model_path = os.path.join(self.path, 'markuplm-base')
 
         self.device = device
-        self.num_labels = 3
+        self.num_labels = 4
         self.max_tokens = 512
-        self.label2id = {0:'article', 1:'forum', 2:'other'}
+        self.label2id = {0: 'Article', 1: 'Forum_or_Article_with_commentsection', 2: 'Content Listing', 3: 'Other'}
 
         self.model = self.load_model()
         self.tokenizer = self.load_tokenizer()
@@ -25,8 +26,6 @@ class Markuplm():
     def load_model(self):
         transformers = import_transformer()
         model = transformers.MarkupLMForSequenceClassification.from_pretrained(self.model_path, num_labels=self.num_labels)
-        # load checkpoint
-        model.load_state_dict(torch.load(self.checkpoint_path, map_location=self.device))
         model.to(self.device)
         model.eval()
 
