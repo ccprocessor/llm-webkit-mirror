@@ -26,6 +26,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 确保模板数据的键是整数类型
         self.template_data = template_data
         self.dynamic_id_enable = False
+        self.dynamic_classid_enable = False
 
     def parse_tuple_key(self, key_str):
         if key_str.startswith('(') and key_str.endswith(')'):
@@ -40,6 +41,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         html_source = pre_data[PreDataJsonKey.HTML_SOURCE]
         template_dict_html = pre_data.get(PreDataJsonKey.TYPICAL_DICT_HTML, '<html></html>')
         self.dynamic_id_enable = pre_data.get(PreDataJsonKey.DYNAMIC_ID_ENABLE, False)
+        self.dynamic_classid_enable = pre_data.get('dynamic_classid_enable', False)
         template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
         template_data = dict()
         if isinstance(template_data_str, str):
@@ -174,12 +176,12 @@ class LayoutBatchParser(BaseMainHtmlParser):
             elif self.dynamic_id_enable and current_layer_key[2]:
                 node_label, matched_ele_key = self.__match_tag_class(layer_nodes, current_layer_ori_key, parent_keyy,
                                                                      node_html, template_doc)
-                if node_label is None:
+                if node_label is None and self.dynamic_classid_enable:
                     node_label, matched_ele_key = self.__match_tag(layer_nodes, current_layer_ori_key, parent_keyy,
                                                                    node_html,
                                                                    template_doc, False, True)
-                    if node_label is None:
-                        continue
+                if node_label is None:
+                    continue
                 # 采用element dict中的key来替换
                 if current_layer_key == keyy:
                     keyy = matched_ele_key
@@ -191,7 +193,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
 
                 if node_label == 'red':
                     has_red = True
-            elif self.dynamic_id_enable and current_layer_key[1]:
+            elif self.dynamic_id_enable and self.dynamic_classid_enable and current_layer_key[1]:
                 node_label, matched_ele_key = self.__match_tag(layer_nodes, current_layer_ori_key, parent_keyy,
                                                                node_html,
                                                                template_doc, True, False)
