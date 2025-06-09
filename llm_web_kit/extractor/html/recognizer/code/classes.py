@@ -14,13 +14,11 @@ def modify_tree(root: HtmlElement) -> None:
 
         if not any(['code' in class_name for class_name in maybe_code_root.classes]):
             continue
-
         # 应对list或者audio被识别为code的情况
         if maybe_code_root.tag in no_code_tags:
             continue
         if maybe_code_root.tag == 'div' and any([child.tag in no_code_tags for child in maybe_code_root.iterchildren()]):
             continue
-
         if len(maybe_code_root.xpath(f'.//{CCTag.CC_CODE}')) > 0:
             continue
 
@@ -33,15 +31,10 @@ def detect(root: HtmlElement) -> bool:
 
         if not any(['code' in class_name for class_name in maybe_code_root.classes]):
             continue
-
         if maybe_code_root.tag in no_code_tags:
             continue
         if maybe_code_root.tag == 'div' and any([child.tag in no_code_tags for child in maybe_code_root.iterchildren()]):
             continue
-
-        if len(maybe_code_root.xpath(f'.//{CCTag.CC_CODE}')) > 0:
-            continue
-
         if len(maybe_code_root.xpath(f'.//{CCTag.CC_CODE}')) > 0:
             continue
         return True

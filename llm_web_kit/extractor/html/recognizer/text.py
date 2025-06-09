@@ -53,7 +53,6 @@ other_symbols = [
 PARAGRAPH_SEPARATOR = '\n\n'
 
 # 需要保留的html实体，例如：'>' 直接在markdown中无法渲染，需要替换为html实体
-# 这个entities map会导致一些<sup标签的'>'被转义成'&gt;'从而导致markdown上sup标签显现且上标功能失效
 entities_map = {'>': 'gt'}
 
 # 行内元素
