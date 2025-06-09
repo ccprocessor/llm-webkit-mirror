@@ -417,23 +417,34 @@ def is_meaningful_content(element) -> bool:
 
 
 def clean_attributes(element):
-    """清理元素属性，只保留图片的有效src以及所有元素的class和id."""
+    """清理元素属性，保留图片的有效src（排除base64）、alt，以及所有元素的class和id."""
     if element.tag == 'img':
+        # 获取图片相关属性
         src = element.get('src', '').strip()
+        alt = element.get('alt', '').strip()
         class_attr = element.get('class', '').strip()
         id_attr = element.get('id', '').strip()
-        element.attrib.clear()  # 先清除所有属性
-        if src:
+
+        element.attrib.clear()  # 清除所有属性
+
+        # 保留非base64的src
+        if src and not src.startswith('data:image/'):
             element.set('src', src)
+        # 保留alt（如果非空）
+        if alt:
+            element.set('alt', alt)
+        # 保留class和id（如果非空）
         if class_attr:
             element.set('class', class_attr)
         if id_attr:
             element.set('id', id_attr)
     else:
-        # 对于其他元素，只保留class和id
+        # 非图片元素：只保留class和id
         class_attr = element.get('class', '').strip()
         id_attr = element.get('id', '').strip()
-        element.attrib.clear()  # 先清除所有属性
+
+        element.attrib.clear()  # 清除所有属性
+
         if class_attr:
             element.set('class', class_attr)
         if id_attr:
