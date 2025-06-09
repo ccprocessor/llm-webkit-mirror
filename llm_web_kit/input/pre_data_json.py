@@ -15,6 +15,7 @@ class PreDataJsonKey:
 
     TYPICAL_RAW_HTML = 'typical_raw_html'
     TYPICAL_RAW_TAG_HTML = 'typical_raw_tag_html'
+    IS_XPATH = True
     XPATH_MAPPING = 'xpath_mapping'
     TYPICAL_SIMPLIFIED_HTML = 'typical_simplified_html'
     # 模型打标字典
