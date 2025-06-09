@@ -93,17 +93,16 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         base_url:str = data_json['url']
         page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
 
-        #main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
-        #main_html_element = html_to_element(main_html)
-        raw_html_elemt = html_to_element(raw_html)
-        parsed_html = [(raw_html_elemt, raw_html)]
+        main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
+        main_html_element = html_to_element(main_html)
+        parsed_html = [(main_html_element, raw_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
         content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
         data_json['content_list'] = content_list
-        #data_json['title'] = title
+        data_json['title'] = title
         return data_json
 
     def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str, str]:
