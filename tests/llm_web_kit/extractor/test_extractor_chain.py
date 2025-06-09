@@ -751,6 +751,7 @@ A few explanations on why certain things in business are so.
         result = chain.extract(input_data)
         content_list = result.get_content_list().to_dict()[0]
         types = []
+
         for i in range(len(content_list)):
             types.append(content_list[i]['type'])
         assert 'code' not in types

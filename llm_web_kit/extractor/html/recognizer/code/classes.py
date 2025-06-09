@@ -4,7 +4,7 @@ from llm_web_kit.extractor.html.recognizer.code.common import \
     replace_node_by_cccode
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 
-no_code_tags = ['audio', 'td', 'span','ul', 'li']
+no_code_tags = ['audio', 'td', 'span','ul', 'li', 'body']
 
 
 def modify_tree(root: HtmlElement) -> None:

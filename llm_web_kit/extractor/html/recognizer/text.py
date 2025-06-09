@@ -166,9 +166,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             # 根据text1的最后一个字符和text2的第一个字符判断两个text之间的连接
             words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols or text2[0] in other_symbols or text1 and text1[-1] in other_symbols else ' '
             txt = text1 + words_sep + text2
-            # print('text1:',text1)
-            # print('text2:',text2)
-            # print('txt:',txt)
             return self.replace_entities(txt.strip(), entities_map)
 
     def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
