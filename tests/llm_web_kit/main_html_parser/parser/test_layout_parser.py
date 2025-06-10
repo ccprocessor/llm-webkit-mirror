@@ -167,6 +167,7 @@ class TestLayoutParser(unittest.TestCase):
         # 推广
         pre_data[PreDataJsonKey.HTML_SOURCE] = expand_source
         pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data['dynamic_classid_enable'] = True
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
@@ -206,6 +207,7 @@ class TestLayoutParser(unittest.TestCase):
         # 推广
         pre_data[PreDataJsonKey.HTML_SOURCE] = expand_source
         pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data['dynamic_classid_enable'] = True
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
@@ -228,6 +230,7 @@ class TestLayoutParser(unittest.TestCase):
         # 推广
         pre_data[PreDataJsonKey.HTML_SOURCE] = expand_source2
         pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data['dynamic_classid_enable'] = True
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
