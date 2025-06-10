@@ -435,3 +435,4 @@ if __name__ == '__main__':
     # cm.url = 'mathhelpforum.com'
     # print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))
     # print(cm.wrap_math_md_custom(r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />'))
+

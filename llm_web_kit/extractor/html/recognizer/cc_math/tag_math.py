@@ -7,8 +7,7 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   MathType,
                                                                   text_strip)
-from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         html_to_element, replace_element)
+from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html, replace_element)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
