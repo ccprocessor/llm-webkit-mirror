@@ -133,7 +133,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 parent = node.getparent()
 
                 # 针对csdn博客中的katex-mathml标签，提取latex公式
-                if node.tag == 'span' and node.get('class') == 'katex-mathml':
+                if node.tag == 'span' and node.get('class') == 'katex-mathml' and 'blog.csdn.net' in self.cm.url:
                     tag_script.process_katex_mathml(self.cm, math_render_type, node)
 
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq

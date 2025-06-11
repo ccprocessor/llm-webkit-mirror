@@ -744,10 +744,9 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        content_list = result.get_content_list()._get_data()
+        # 打印content_list内容
+        # content_list = result.get_content_list()._get_data()
         # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
-        # with open('output_badcase2.md', 'w', encoding='utf-8') as f:
-        #     f.write(md_content)
         self.assertIn(r'1178.7 F g ${}^{-1}$', md_content)
 
     def test_csnd_none_formula(self):
@@ -755,15 +754,12 @@ A few explanations on why certain things in business are so.
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[89]
+        # 验证URL中包含blog.csdn.net
+        self.assertIn('blog.csdn.net', test_data['url'])
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        # 打印content_list内容
-        content_list = result.get_content_list()._get_data()
-        # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
         md_content = result.get_content_list().to_nlp_md()
         # print('Markdown Content:', md_content)
-        with open('output_badcase3.md', 'w', encoding='utf-8') as f:
-            f.write(md_content)
         self.assertIn(r'$\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}$', md_content)
         self.assertIn(r'\begin{aligned} \frac{f(1.01)-f(1)}{1.01-1} &= \frac{1.01^2-1^2}{0.01} \\ &= \frac{0.0201}{0.01} \\ &= 2.01\end{aligned}', md_content)
