@@ -88,3 +88,35 @@ def process_katex_mathml(cm, math_render, node):
             html=None
         )
         replace_element(node, new_span)
+
+
+def process_zhihu_custom_tag(cm, math_render, node):
+    """知乎公式逻辑比较特殊：所有公式都是行内公式，通过双斜杠进行换行，md渲染时需要begin{aligned}和end{aligned}包裹."""
+    try:
+        # 从data-tex属性获取LaTeX公式
+        latex = node.get('data-tex')
+        if latex:
+            if r'\\' in latex:
+                # 检查是否已经被\begin{*}和\end{*}包裹
+                is_already_aligned = re.search(r'\\begin\{[^}]+\}.*\\end\{[^}]+\}', latex, re.DOTALL) is not None
+                if not is_already_aligned:
+                    lines = re.split(r'\\\\[\s]*', latex)
+                    # 为每一行添加 & 符号使其左对齐（匹配知乎逻辑）
+                    formatted_lines = []
+                    for line in lines:
+                        line = line.strip()
+                        if not line.startswith('&'):
+                            line = '&' + line
+                        formatted_lines.append(line)
+                    latex = r'\begin{aligned} ' + r' \\ '.join(formatted_lines) + r' \end{aligned}'
+            new_span = build_cc_element(
+                html_tag_name='ccmath-inline',
+                text=cm.wrap_math_md(latex),
+                tail=text_strip(node.tail),
+                type='latex',
+                by=math_render,
+                html=element_to_html(node)
+            )
+            replace_element(node, new_span)
+    except Exception as e:
+        raise HtmlMathRecognizerException(f'处理知乎数学公式失败: {e}')
