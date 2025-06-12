@@ -49,11 +49,11 @@ class TestExtractorChain(unittest.TestCase):
             self.base_path, 'assets/extractor_chain_input/good_data/output_expected/oracle_doc.main_html.html'
         )
 
-        self.md_expected_content = open(self.md_output_file_path, 'r').read()
-        self.txt_expected_content = open(self.txt_output_file_path, 'r').read()
-        self.main_html_expected_content = open(self.main_html_output_file_path, 'r').read()
-        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r').read()
-        self.oracle_doc_main_html_content = open(self.oracle_doc_main_html_path, 'r').read()
+        self.md_expected_content = open(self.md_output_file_path, 'r', encoding='utf-8').read()
+        self.txt_expected_content = open(self.txt_output_file_path, 'r', encoding='utf-8').read()
+        self.main_html_expected_content = open(self.main_html_output_file_path, 'r', encoding='utf-8').read()
+        self.csdn_lineno_expected_content = open(self.csdn_lineno_output_file_path, 'r', encoding='utf-8').read()
+        self.oracle_doc_main_html_content = open(self.oracle_doc_main_html_path, 'r', encoding='utf-8').read()
 
         self.data_json = []
         with open(self.html_data_path, 'r') as f:
@@ -63,7 +63,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 87
+        assert len(self.data_json) == 90
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -383,11 +383,12 @@ DEF
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[16]
-        # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        content_list = result.get_content_list()._get_data()
-        assert content_list[0][2]['content']['html'] == '<table><tr><td>单位换算：</td><td>数学公式区块： $1 \\text{km} = 10^3 \\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>数学公式 $1m=10^2cm$</td></tr>td><td>数学公式 $1kg=10^3g$</td><td>数学公式 $1h=3600s$</td></table></td></tr><tr><td>运动学：</td><td>数学公式 $v = \\frac{dx}{dt}$ 数学公式 $a = \\frac{dv}{dt}$</td></tr></table>'
+        md_content = result.get_content_list().to_nlp_md()
+        # with open('output_badcase_p2.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
+        self.assertIn(r'<table><tr><td>单位换算：</td><td>数学公式区块： $1\text{km}={10}^{3}\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>数学公式 $1m={10}^{2}\mathrm{cm}$</td><td>数学公式 $1\mathrm{kg}={10}^{3}g$</td><td>数学公式 $1h=3600s$</td></tr></table></td></tr><tr><td>运动学：</td><td>数学公式 $v=\frac{dx}{dt}$ 数学公式 $a=\frac{dv}{dt}$</td></tr></table>', md_content)
 
     def test_clean_tags(self):
         """测试clean_tag的preExtractor是否生效."""
@@ -716,3 +717,49 @@ A few explanations on why certain things in business are so.
                 f.write(content_md)
             assert elapsed_time < 30
             assert len(content_md) > 0
+
+    def test_math_namespace(self):
+        """badcase1，math标签缺少命名空间."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[87]
+        # 创建 DataJson 并提取内容
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        # with open('output_badcase1-1.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
+        # 分别测试一个行内公式和一个行间公式
+        self.assertIn(
+            r'$\left(1+{\text{DP}}_{0}/\left({\sum }_{\text{n}=0}^{\text{i}}\left({\text{DP}}_{\text{n}}\right)×\text{C}\right)\right)$',
+            md_content)
+        self.assertIn(r'\left(1+\frac{D{P}_{0}}{{\sum }_{n=0}^{i}\left(D{P}_{n}\right)×C}\right)×D{P}_{i+1}=\frac{\left\{{\sum }_{n=0}^{i}\left(D{O}_{n}\right)+P\right\}×D{P}_{0}}{\left\{{\sum }_{n=0}^{i}\left(D{P}_{n}\right)×C\right\}}\left(D{O}_{0}=0,i\ge 0\right)', md_content)
+
+    def test_math_paragraph(self):
+        """badcase2，段落划分错误导致公式不在同段落."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[88]
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        # 打印content_list内容
+        # content_list = result.get_content_list()._get_data()
+        # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
+        self.assertIn(r'1178.7 F g ${}^{-1}$', md_content)
+
+    def test_csnd_none_formula(self):
+        """badcase3，新增csdn公式提取逻辑."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[89]
+        # 验证URL中包含blog.csdn.net
+        self.assertIn('blog.csdn.net', test_data['url'])
+        # Create DataJson from test data
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        # print('Markdown Content:', md_content)
+        self.assertIn(r'$\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}$', md_content)
+        self.assertIn(r'\begin{aligned} \frac{f(1.01)-f(1)}{1.01-1} &= \frac{1.01^2-1^2}{0.01} \\ &= \frac{0.0201}{0.01} \\ &= 2.01\end{aligned}', md_content)

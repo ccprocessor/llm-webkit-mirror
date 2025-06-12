@@ -52,10 +52,12 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             feature1 = get_feature(template_raw_html)
             feature2 = get_feature(template_extract_html)
             layer = self.__get_max_width_layer(element_dict)
-            template_sim = similarity(feature1, feature2, layer_n=layer)
+            template_sim = None
+            if feature1 is not None and feature2 is not None:
+                template_sim = similarity(feature1, feature2, layer_n=layer)
 
             # 比较模版正文html与原html相似度
-            if template_sim > SIMILAR_THRESHOLD:
+            if template_sim is None or template_sim > SIMILAR_THRESHOLD:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
             else:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True

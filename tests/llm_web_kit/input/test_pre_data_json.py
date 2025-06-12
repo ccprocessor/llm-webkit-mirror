@@ -391,6 +391,7 @@ class TestPreDataJsonKey(unittest.TestCase):
         assert hasattr(PreDataJsonKey, 'MAIN_HTML_SUCCESS')
         assert hasattr(PreDataJsonKey, 'TYPICAL_DICT_HTML')
         assert hasattr(PreDataJsonKey, 'DYNAMIC_ID_ENABLE')
+        assert hasattr(PreDataJsonKey, 'DYNAMIC_CLASSID_ENABLE')
 
         # Check actual values
         assert PreDataJsonKey.DOMAIN_NAME == 'domain_name'
