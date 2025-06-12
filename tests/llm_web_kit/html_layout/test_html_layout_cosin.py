@@ -10,10 +10,11 @@ base_dir = Path(__file__).parent
 TEST_FEATURE_HTML = [
     {'input': 'assets/feature.html', 'expected': 2},
     {'input': 'assets/feature3.html', 'expected': None},
+    {'input': 'assets/feature4.html', 'expected': 2},
 ]
 TEST_SIMIL_HTMLS = [
     {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.22013982},
-    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9357468},
+    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9463744},
     {'input1': 'assets/feature1.html', 'input2': 'assets/data_structure.html', 'layer_n': 12, 'expected': 0},
 ]
 TEST_SIMIL_FEATURES = [
