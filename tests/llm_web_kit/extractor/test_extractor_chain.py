@@ -756,11 +756,9 @@ A few explanations on why certain things in business are so.
         test_data = self.data_json[89]
         # 验证URL中包含blog.csdn.net
         self.assertIn('blog.csdn.net', test_data['url'])
-        # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        # print('Markdown Content:', md_content)
         self.assertIn(r'$\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}$', md_content)
         self.assertIn(r'\begin{aligned} \frac{f(1.01)-f(1)}{1.01-1} &= \frac{1.01^2-1^2}{0.01} \\ &= \frac{0.0201}{0.01} \\ &= 2.01\end{aligned}', md_content)
 
@@ -769,15 +767,12 @@ A few explanations on why certain things in business are so.
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[90]
+        # 验证URL中包含zhuanlan.zhihu.com
         self.assertIn('zhuanlan.zhihu.com', test_data['url'])
-        # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        with open('output_zhihu_custom_tag_inline1.md', 'w', encoding='utf-8') as f:
-            f.write(md_content)
-
-        # print('Markdown Content:', md_content)
-        self.assertIn(r'$\begin{gathered} p(s_{1}|s_{1},a_{2})=0, \\ p(s_{2}|s_{1},a_{2})=1, \\ p(s_{3}|s_{1},a_{2})=0, \\ p(s_{4}|s_{1},a_{2})=0, \\ p(s_{5}|s_{1},a_{2})=0, \end{gathered}$', md_content)
+        self.assertIn(r'\begin{gathered} p(s_{1}|s_{1},a_{2})=0, \\ p(s_{2}|s_{1},a_{2})=1, \\ p(s_{3}|s_{1},a_{2})=0, \\ p(s_{4}|s_{1},a_{2})=0, \\ p(s_{5}|s_{1},a_{2})=0, \end{gathered}', md_content)
         self.assertIn(r'$s_1\xrightarrow{a_2}s_2\xrightarrow{a_3}s_5\xrightarrow{a_3}s_8\xrightarrow{a_2}s_9.$', md_content)
-        self.assertIn(r'$\begin{aligned} & p(s^{\prime}|s,a) \\ & \sum_{s^{\prime}\in\mathcal{S}}p(s^{\prime}|s,a)=1\text{ for any }(s,a). \end{aligned}$', md_content)
+        self.assertIn(r'$\mathrm{return}=0+0+0+1=1.$', md_content)
+        self.assertIn(r'\begin{aligned} V(s) & =\mathbb{E}[G_t|S_t=s] \\  & =\mathbb{E}[R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\ldots|S_t=s] \\  & =\mathbb{E}[R_t+\gamma(R_{t+1}+\gamma R_{t+2}+\ldots)|S_t=s] \\  & =\mathbb{E}[R_t+\gamma G_{t+1}|S_t=s] \\  & =\mathbb{E}[R_t+\gamma V(S_{t+1})|S_t=s] \end{aligned}', md_content)

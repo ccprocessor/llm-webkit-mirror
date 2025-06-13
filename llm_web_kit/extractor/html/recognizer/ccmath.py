@@ -139,6 +139,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 if 'zhuanlan.zhihu.com' in self.cm.url and node.tag == 'span' and node.get('class') == 'ztext-math':
                     tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
 
+                # if 'mathinsight.org' in self.cm.url and node.tag == 'span' and node.get('class') == '':
+
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
                 if node.tag == 'span' and node.get('class') and (
                         'math-container' in node.get('class') or
