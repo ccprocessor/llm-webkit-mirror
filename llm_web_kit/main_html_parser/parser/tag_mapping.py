@@ -72,6 +72,28 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             raise TagMappingParserException(e)
         return pre_data
 
+    def parse_single(self, pre_data: PreDataJson) -> PreDataJson:
+        """
+            skip element dict construct step, remove all non-main tags in template tagged html directly
+            for single-html extraction plan
+            Args:
+                pre_root:
+            Returns:
+                PreDataJson: 包含映射结果的PreDataJson对象
+        """
+        try:
+            template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
+            response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
+            root = html.fromstring(template_tag_html)
+            # 直接抽取正文
+            content_list = self.tag_main_html(response_json, root)
+            template_extract_html = self.__extract_main_directly(root)
+            pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = template_extract_html
+            pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
+        except Exception as e:
+            raise TagMappingParserException(e)
+        return pre_data
+
     def __get_max_width_layer(self, element_dict):
         max_length = 0
         max_width_layer = 0
@@ -138,6 +160,34 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                     break
                 parent.set('magic_main_html', 'True')
                 cur = parent
+
+    def __extract_main_directly(self, pre_root):
+        def iter_process(elem):
+            if isinstance(elem, etree._Comment):
+                return
+            magic_main_html = elem.get('magic_main_html', None)
+            if magic_main_html:
+                # 查找所有子孙节点中 magic_main_html='True' 的元素
+                matching_elements = elem.xpath(
+                    './/*[@magic_main_html="True"]'
+                )
+                # 给正文最小单元节点的子孙节点补上正文标识，避免被删除
+                if len(matching_elements) == 0:
+                    for child in elem.iterdescendants():  # 仅遍历子孙节点（不包括自身）
+                        child.set('magic_main_html', 'True')
+            else:
+                # 非正文节点直接删除
+                parent = elem.getparent()
+                if parent is None:
+                    return
+                parent.remove(elem)
+            for elem_child in elem:
+                iter_process(elem_child)
+
+        if pre_root is None:
+            return None
+        iter_process(pre_root)
+        return html.tostring(pre_root, encoding='utf-8').decode()
 
     def tag_main_html(self, response, pre_root):
         content_list = []
