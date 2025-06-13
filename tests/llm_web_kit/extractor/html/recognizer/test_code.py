@@ -284,7 +284,6 @@ class TestCodeRecognizer(unittest.TestCase):
                 cccodes = part_el.xpath(f'.//{CCTag.CC_CODE}') + part_el.xpath(
                     f'.//{CCTag.CC_CODE_INLINE}'
                 )
-
                 # self.assertEqual(len(cccodes), 1)
                 for part_el in cccodes:
                     inline = part_el.get('inline', 'false') == 'true'
