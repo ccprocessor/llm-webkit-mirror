@@ -34,6 +34,8 @@ class PreDataJsonKey:
     TYPICAL_DICT_HTML = 'typical_dict_html'
     # 动态id开关
     DYNAMIC_ID_ENABLE = 'dynamic_id_enable'
+    # 动态classid开关
+    DYNAMIC_CLASSID_ENABLE = 'dynamic_classid_enable'
     # 推广原网页
     HTML_SOURCE = 'html_source'
     # 推广网页提取正文成功标签, bool类型

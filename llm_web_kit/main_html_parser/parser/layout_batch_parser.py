@@ -65,8 +65,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 layer = self.__get_max_width_layer(template_data)
             feature1 = get_feature(template_main_html)
             feature2 = get_feature(body)
-            sim = similarity(feature1, feature2, layer_n=layer)
-            if sim < SIMILARITY_THRESHOLD:
+            sim = None
+            if feature1 is not None and feature2 is not None:
+                sim = similarity(feature1, feature2, layer_n=layer)
+            if sim is None or sim < SIMILARITY_THRESHOLD:
                 pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
             else:
                 pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = True
