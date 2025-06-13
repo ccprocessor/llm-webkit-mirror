@@ -751,15 +751,18 @@ A few explanations on why certain things in business are so.
         result = chain.extract(input_data)
         content_list = result.get_content_list().to_dict()[0]
         types = []
-
+        # 1
         for i in range(len(content_list)):
             types.append(content_list[i]['type'])
+        with open('output.jsonl', 'w') as f:
+            f.write(result.get_content_list().to_json())
         assert 'code' not in types
         test_data = self.data_json[91]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list().to_dict()[0]
         types = []
+
         for i in range(len(content_list)):
             types.append(content_list[i]['type'])
         assert 'code' not in types
@@ -772,6 +775,7 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_nlp_md()
+        # print(content_md)
         assert '<sup&gt;' not in content_md and '<sub&gt;' not in content_md
 
     def test_item_notext_error(self):

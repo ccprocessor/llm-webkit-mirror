@@ -124,6 +124,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
             paragraph = []
             result = {}
+
             if el.tag == CCTag.CC_MATH_INLINE and el.text and el.text.strip():
                 paragraph.append({'c': f'${el.text}$', 't': ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE and el.text and el.text.strip():
@@ -176,10 +177,11 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 else:
                     paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
             if paragraph:
+                # item['c'].strip(): 会导致前面处理br标签，添加的\n\n失效
                 result['c'] = ' '.join(normalize_text_segment(item['c'].strip()) for item in paragraph)
             return result
         # 这里也需要加上ul，不然会导致<ul><ul><ul/><ul/>的结构的list提取不到
-        list_item_tags = ('li', 'dd', 'dt', 'ul')
+        list_item_tags = ('li', 'dd', 'dt', 'ul', 'div')
         if child.tag in list_item_tags:
             paragraph = __extract_list_item_text_recusive(child)
             if len(paragraph) > 0:
@@ -197,6 +199,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         Returns:
             list: 包含列表项内容的列表，即items
         """
+
         content_list = []
         # 处理根元素文本
         if ele.text and ele.text.strip():

@@ -141,6 +141,7 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
+        print(content_md)
         assert '1813 года\n\n5864. Лабиринт волшебства, или удивительные приключения восточных принцев, сочинение В. Протопоповича; Москва, 1786 г. - в 8°.\n\n 5865. Лакировальщик' in content_md
 
     def test_text_7(self):

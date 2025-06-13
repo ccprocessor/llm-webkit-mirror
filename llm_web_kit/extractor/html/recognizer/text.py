@@ -47,7 +47,9 @@ other_symbols = [
     '[',
     '(',
     '”',
-    '’'
+    '’',
+    '。',
+    '，'
 ]
 
 PARAGRAPH_SEPARATOR = '\n\n'
@@ -60,8 +62,9 @@ inline_tags = {
     'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'br', 'button', 'cite', 'code',
     'dfn', 'em', 'i', 'img', 'input', 'kbd', 'label', 'map', 'object', 'q',
     'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
-    'textarea', 'time', 'var', 'u', 's', 'code', 'cccode-inline', 'ccmath-inline',
-    'marked-tail', 'marked-text', 'font', 'nobr', 'bdi', 'mjx-container', 'mjx-assistive-mml'
+    'textarea', 'time', 'var', 'u', 's', 'cccode-inline', 'ccmath-inline',
+    'marked-tail', 'marked-text', 'font', 'nobr', 'bdi', 'mjx-container',
+    'mjx-assistive-mml', 'strike', 'wbr'
 }
 
 
@@ -103,9 +106,16 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         new_html_lst = []
         for html_element, raw_html_element in main_html_lst:
             # 如果是字符串则转换为 HtmlElement
+
             if self.is_cc_html(html_element):
                 new_html_lst.append((html_element, raw_html_element))
+
             else:
+                # html_element = element_to_html_unescaped(html_element) # str
+                # if '<sup&gt;' in html_element:
+                #     print('-------------------------------------')
+                # html_element = html.fromstring(html_element) # html_to_element
+                # html_element = html_to_element(html_element)
                 lst = list(self.__extract_paragraphs(html_element))
                 new_lst = self.__to_cctext_lst(lst)
                 new_html_lst.extend(new_lst)
@@ -132,22 +142,45 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         return new_lst
 
     def replace_entities(self, text, entities_map):
-        """使用正则表达式同时替换文本中的多个特定字符为其对应的HTML实体。
+        """替换文本中指定字符为对应的HTML实体，但跳过HTML标签内的字符。
 
         :param text: 需要处理的文本。
-        :param entities_map: 一个字典，键是需要替换的字符，值是对应的HTML实体名
+        :param entities_map: 字典，键是要替换的字符，值是对应的HTML实体名。
         :return: 替换后的文本。
         """
-        # 创建正则表达式模式，匹配所有需要替换的字符
-        rx = re.compile('|'.join(re.escape(str(key)) for key in entities_map.keys()))
+        if not entities_map:
+            return text  # 如果字典为空，直接返回原文本
 
-        def one_xlat(match):
-            """回调函数，用于将匹配到的字符替换为对应的HTML实体。"""
-            return f'&{entities_map[match.group(0)]};'
-        # 阻止<sup>标签被<sup&gt;
-        t = rx.sub(one_xlat, text)
-        t = t.replace('</sup&gt;', '</sup>').replace('<sup&gt;', '<sup>').replace('</sub&gt;', '</sub>').replace('<sub&gt;', '<sub>')
-        return t
+        # 构建匹配需要替换字符的正则表达式
+        entities_pattern = '|'.join(re.escape(str(key)) for key in entities_map.keys())
+        rx_entity = re.compile(entities_pattern)
+
+        # 构建匹配HTML标签的正则表达式
+        rx_tag = re.compile(r'<[^>]*>')
+
+        result = []
+        last_pos = 0
+
+        # 遍历所有HTML标签
+        for tag_match in rx_tag.finditer(text):
+            start, end = tag_match.start(), tag_match.end()
+
+            # 提取非标签部分并进行替换
+            non_tag_part = text[last_pos:start]
+            replaced = rx_entity.sub(lambda m: f'&{entities_map[m.group(0)]};', non_tag_part)
+            result.append(replaced)
+
+            # 保留HTML标签不变
+            result.append(text[start:end])
+
+            last_pos = end
+
+        # 处理最后剩余的非标签部分
+        non_tag_part = text[last_pos:]
+        replaced = rx_entity.sub(lambda m: f'&{entities_map[m.group(0)]};', non_tag_part)
+        result.append(replaced)
+
+        return ''.join(result)
 
     def __combine_text(self, text1:str, text2:str, lang='en') -> str:
         """将两段文本合并，中间加空格.
@@ -184,7 +217,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         para_text = []
 
         def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
-
             # 标记当前元素是否是sub或sup类型
             is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
 
