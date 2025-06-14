@@ -159,12 +159,17 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
     with open(to_process_file_path, 'r', encoding='utf-8') as f:
         for line in f:
             if line and line.strip():
-                obj = json.loads(line.strip())
-                simplified_html = obj['simplified_html']
-                track_id = obj['track_id']
-                logger.warning(f'process {to_process_file_path}, track_id: {track_id}, simplified_html length: {len(simplified_html)}')
-                xpath_cnt = len(obj['xpath_mapping'])
                 try:
+                    obj = json.loads(line.strip())
+                except Exception as e:
+                    logger.error(f'load json fail: {line}, {str(e)}')
+                    continue
+
+                try:
+                    simplified_html = obj['simplified_html']
+                    track_id = obj['track_id']
+                    logger.warning(f'process {to_process_file_path}, track_id: {track_id}, simplified_html length: {len(simplified_html)}')
+                    xpath_cnt = len(obj['xpath_mapping'])
                     chat_with_model_timeout = 60 * 5
                     rtn, succ = func_timeout(chat_with_model_timeout, __call_model_server, args=(model_server_url, model_server_sk, model_name, simplified_html, xpath_cnt))
                 except FunctionTimedOut:
@@ -184,12 +189,14 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
                     obj['llm_node_select'] = rtn  # a dict
                     to_save_str = json.dumps(obj, ensure_ascii=False)
                     file_buffer.write(to_save_str.encode('utf-8') + b'\n')
+                    # logger.success(f'process {to_process_file_path} succ, model_name: {model_name}, llm_node_select: {rtn}')
                 else:
                     obj['model_name'] = model_name
                     obj['__error'] = rtn
                     to_save_str = json.dumps(obj, ensure_ascii=False)
                     file_buffer.write(to_save_str.encode('utf-8') + b'\n')
                     all_err_reason.append(rtn)
+                    logger.error(f'process {to_process_file_path} fail, err_reason: {rtn}')
 
     if not has_call_model_succ:
         logger.error(f'all model call fail, **NOT** save {to_process_file_path}, err_reason: {all_err_reason}')
@@ -198,6 +205,7 @@ def __process_one_input_file(result_save_dir, to_process_file_path, model_server
 
     file_buffer.seek(0)
     # 一次性写入到磁盘,降低磁盘IO
+    logger.success(f'write result to {result_file_path}')
     with open(result_file_path, 'wb') as f:
         f.write(file_buffer.getvalue())
     logger.info(f'finished process {to_process_file_path}, write result to {result_file_path}')
