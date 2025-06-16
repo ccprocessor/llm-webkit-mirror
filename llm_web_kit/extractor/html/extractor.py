@@ -33,7 +33,7 @@ class HTMLFileFormatExtractor(PureHTMLFileFormatExtractor):
 
     @override
     def _do_extract(self, data_json: DataJson) -> DataJson:
-        """实现真正的数据提取.
+        """实现真正的数据提取.基于magic-html提取主要内容，然后调用父类的提取方法。
 
         Args:
             data_json (DataJson): 需要处理的数据集
