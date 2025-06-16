@@ -178,9 +178,8 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             else:
                 # 非正文节点直接删除
                 parent = elem.getparent()
-                if parent is None:
-                    return
-                parent.remove(elem)
+                if parent is not None:
+                    parent.remove(elem)
             for elem_child in elem:
                 iter_process(elem_child)
 
