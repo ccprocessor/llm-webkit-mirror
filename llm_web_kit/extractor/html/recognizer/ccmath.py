@@ -138,7 +138,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         node.get('class') in ['katex--inline', 'katex--display']):
                     tag_script.process_katex_mathml(self.cm, math_render_type, node)
 
-                if 'zhuanlan.zhihu.com' in self.cm.url and node.tag == 'span' and node.get('class') == 'ztext-math':
+                if 'zhihu.com' in self.cm.url and node.tag == 'span' and node.get('class') == 'ztext-math':
                     tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
 
                 # if 'mathinsight.org' in self.cm.url and node.tag == 'span' and node.get('class') == '':

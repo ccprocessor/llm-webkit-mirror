@@ -768,7 +768,7 @@ A few explanations on why certain things in business are so.
         self.assertIsNotNone(chain)
         test_data = self.data_json[90]
         # 验证URL中包含zhuanlan.zhihu.com
-        self.assertIn('zhuanlan.zhihu.com', test_data['url'])
+        self.assertIn('zhihu.com', test_data['url'])
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
