@@ -42,7 +42,7 @@ class TestST(unittest.TestCase):
                 'extractor': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor',
                         'class_init_kwargs': {}
                     }
                 ],
