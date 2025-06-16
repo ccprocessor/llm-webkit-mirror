@@ -63,8 +63,8 @@ inline_tags = {
     'dfn', 'em', 'i', 'img', 'input', 'kbd', 'label', 'map', 'object', 'q',
     'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
     'textarea', 'time', 'var', 'u', 's', 'cccode-inline', 'ccmath-inline',
-    'marked-tail', 'marked-text', 'font', 'nobr', 'bdi', 'mjx-container',
-    'mjx-assistive-mml', 'strike', 'wbr'
+    'marked-tail', 'marked-text', 'math','mspace', 'font', 'nobr', 'bdi',
+    'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr'
 }
 
 
@@ -109,13 +109,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
 
             if self.is_cc_html(html_element):
                 new_html_lst.append((html_element, raw_html_element))
-
             else:
-                # html_element = element_to_html_unescaped(html_element) # str
-                # if '<sup&gt;' in html_element:
-                #     print('-------------------------------------')
-                # html_element = html.fromstring(html_element) # html_to_element
-                # html_element = html_to_element(html_element)
                 lst = list(self.__extract_paragraphs(html_element))
                 new_lst = self.__to_cctext_lst(lst)
                 new_html_lst.extend(new_lst)
