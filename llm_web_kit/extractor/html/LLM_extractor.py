@@ -1,14 +1,16 @@
 import os
-from typing import Tuple
-
-import commentjson as json
-from overrides import override
-
-from llm_web_kit.config.cfg_reader import load_config
+from typing import List, Tuple
 from llm_web_kit.extractor.html.magic_html import GeneralExtractor
-from llm_web_kit.extractor.html.pure_extractor import \
-    PureHTMLFileFormatExtractor
-from llm_web_kit.input.datajson import DataJson
+import commentjson as json
+from lxml.html import HtmlElement
+from overrides import override
+from llm_web_kit.config.cfg_reader import load_config
+from llm_web_kit.exception.exception import HtmlFileExtractorException
+from llm_web_kit.extractor.extractor import BaseFileFormatExtractor
+from llm_web_kit.extractor.html.pure_extractor import PureHTMLFileFormatExtractor
+from llm_web_kit.input.datajson import ContentList, DataJson
+from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.libs.path_lib import get_py_pkg_root_dir
 
 

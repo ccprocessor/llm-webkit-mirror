@@ -5,6 +5,8 @@ from datetime import datetime
 
 from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
+from llm_web_kit.extractor.html.pure_extractor import \
+    PureHTMLFileFormatExtractor
 from llm_web_kit.input.datajson import DataJson
 
 
@@ -32,6 +34,22 @@ class ExtractorFactory:
             raise ValueError(f'Invalid extractor type: {extractor_type}')
 
 
+def __extract_pure_html(url:str, html_content: str) -> DataJson:
+    extractor = PureHTMLFileFormatExtractor(load_pipe_tpl('html'))
+    input_data_dict = {
+        'track_id': str(uuid.uuid4()),
+        'url': url,
+        'html': html_content,
+        'dataset_name': 'llm-web-kit-pure-quickstart',
+        'data_source_category': 'HTML',
+        'file_bytes': len(html_content),
+        'meta_info': {'input_datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    }
+    d = DataJson(input_data_dict)
+    result = extractor.extract(d)
+    return result
+
+
 def __extract_html(url:str, html_content: str) -> DataJson:
     extractor = ExtractorFactory.get_extractor(ExtractorType.HTML)
     input_data_dict = {
@@ -48,6 +66,18 @@ def __extract_html(url:str, html_content: str) -> DataJson:
     return result
 
 
+def extract_pure_html_to_md(url:str, html_content: str) -> str:
+    """extract pure html to markdown without images."""
+    result = __extract_pure_html(url, html_content)
+    return result.get_content_list().to_nlp_md()
+
+
+def extract_pure_html_to_mm_md(url:str, html_content: str) -> str:
+    """extract pure html to markdown with images."""
+    result = __extract_pure_html(url, html_content)
+    return result.get_content_list().to_mm_md()
+
+
 def extract_html_to_md(url:str, html_content: str) -> str:
     """extract html to markdown without images."""
     result = __extract_html(url, html_content)
@@ -56,6 +86,5 @@ def extract_html_to_md(url:str, html_content: str) -> str:
 
 def extract_html_to_mm_md(url:str, html_content: str) -> str:
     """extract html to markdown with images."""
-
     result = __extract_html(url, html_content)
     return result.get_content_list().to_mm_md()

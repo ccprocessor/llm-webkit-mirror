@@ -1,6 +1,8 @@
 import unittest
 
-from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
+from llm_web_kit.simple import (extract_html_to_md, extract_html_to_mm_md,
+                                extract_pure_html_to_md,
+                                extract_pure_html_to_mm_md)
 
 
 class TestSimple(unittest.TestCase):
@@ -16,4 +18,12 @@ class TestSimple(unittest.TestCase):
     def test_extract_html_to_mm_md(self):
         # Setup mock
         mm_md = extract_html_to_mm_md(self.url, self.html_content)
+        self.assertEqual(mm_md, '# Test Content\n\nThis is a test paragraph.\n\n![Test Image](e5db82b5bf63d49d80c5533616892d3386f43955369520986d67653c700fc53c)\n')
+
+    def test_extract_pure_html_to_md(self):
+        md = extract_pure_html_to_md(self.url, self.html_content)
+        self.assertEqual(md, '# Test Content\n\nThis is a test paragraph.\n')
+
+    def test_extract_pure_html_to_mm_md(self):
+        mm_md = extract_pure_html_to_mm_md(self.url, self.html_content)
         self.assertEqual(mm_md, '# Test Content\n\nThis is a test paragraph.\n\n![Test Image](e5db82b5bf63d49d80c5533616892d3386f43955369520986d67653c700fc53c)\n')
