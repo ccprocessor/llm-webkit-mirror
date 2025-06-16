@@ -63,32 +63,27 @@ def process_katex_mathml(cm, math_render, node):
         # 处理katex节点（CSDN）
         if node.tag == 'span' and node.get('class') in ['katex--inline', 'katex--display']:
             # 根据节点class确定公式类型
-            equation_type = 'ccmath-inline'  # 默认行内公式
-            if 'katex--display' in node.get('class'):
-                equation_type = 'ccmath-interline'  # 行间公式
+            equation_type = 'ccmath-inline' if 'katex--inline' in node.get('class') else 'ccmath-interline'
             # 查找内部的katex-mathml节点提取公式
             mathml_nodes = node.xpath('.//span[@class="katex-mathml"]')
-            if not mathml_nodes:
-                return
-            mathml_node = mathml_nodes[0]
-            # 提取latex公式（取最后一行非空内容）
-            lines = [line.strip() for line in mathml_node.text_content().splitlines() if line.strip()]
-            if not lines:
-                return
-            latex = lines[-1]
-            if not latex:
-                return
-            html_with_formula = element_to_html(node)
-            # 创建新元素替换原节点
-            new_span = build_cc_element(
-                html_tag_name=equation_type,
-                text=cm.wrap_math_md(latex),
-                tail=text_strip(node.tail),
-                type='latex',
-                by=math_render,
-                html=html_with_formula
-            )
-            replace_element(node, new_span)
+            if mathml_nodes:
+                mathml_node = mathml_nodes[0]
+                # 提取latex公式（取最后一行非空内容）
+                lines = [line.strip() for line in mathml_node.text_content().splitlines() if line.strip()]
+                if lines:
+                    latex = lines[-1]
+                    if latex:
+                        html_with_formula = element_to_html(node)
+                        # 创建新元素替换原节点
+                        new_span = build_cc_element(
+                            html_tag_name=equation_type,
+                            text=cm.wrap_math_md(latex),
+                            tail=text_strip(node.tail),
+                            type='latex',
+                            by=math_render,
+                            html=html_with_formula
+                        )
+                        replace_element(node, new_span)
     except Exception as e:
         raise HtmlMathRecognizerException(f'处理CSDN博客数学公式失败: {e}')
 
