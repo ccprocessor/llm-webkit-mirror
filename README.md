@@ -106,8 +106,7 @@ from loguru import logger
 
 def extract(url:str, html:str) -> str:
     try:
-        nlp_md = extract_pure_html_to_md(url, html)
-        # or mm_nlp_md = extract_pure_html_to_mm_md(url, html)
+        nlp_md = extract_html_to_md(url, html, clip_html=False)
         return nlp_md
     except Exception as e:
         logger.exception(e)
@@ -128,7 +127,7 @@ from loguru import logger
 
 def extract(url:str, html:str) -> str:
     try:
-        nlp_md = extract_magic_html(url, html)
+        nlp_md = extract_main_html_by_maigic_html(url, html)
         # or mm_nlp_md = extract_pure_html_to_mm_md(url, html)
         return nlp_md
     except Exception as e:

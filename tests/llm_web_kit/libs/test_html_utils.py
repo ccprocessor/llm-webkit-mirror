@@ -504,7 +504,7 @@ class TestRemoveElement(unittest.TestCase):
 
 class TestExtractMagicHtml(unittest.TestCase):
 
-    @patch('llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor')
+    @patch('llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor')
     def test_extract_magic_html_success(self, mock_extractor_class):
         mock_extractor_instance = MagicMock()
         mock_extractor_class.return_value = mock_extractor_instance
@@ -522,7 +522,7 @@ class TestExtractMagicHtml(unittest.TestCase):
         mock_extractor_instance._extract_main_html.assert_called_once_with(html, base_url, page_layout_type)
         self.assertEqual(result, expected_html)
 
-    @patch('llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor')
+    @patch('llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor')
     def test_extract_magic_html_exception(self, mock_extractor_class):
         mock_extractor_instance = MagicMock()
         mock_extractor_class.return_value = mock_extractor_instance
