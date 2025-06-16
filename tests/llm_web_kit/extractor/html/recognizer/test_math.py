@@ -550,11 +550,13 @@ class TestCCMATH(unittest.TestCase):
             with self.subTest(input=test_case['input']):
                 # 解析HTML为元素树
                 element = html_to_element(test_case['input'])
-                katex_node = element.xpath('//span[@class="katex-mathml"]')[0]
+                parent_class = 'katex--inline' if test_case['expected_tag'] == 'ccmath-inline' else 'katex--display'
+                katex_parent = element.xpath(f'//span[@class="{parent_class}"]')[0]
                 # 处理前验证没有ccmath标签
                 expected_tag = test_case['expected_tag']
                 self.assertEqual(len(element.xpath(f'//{expected_tag}')), 0)
-                process_katex_mathml(cm, 'katex', katex_node)
+                # 传入父节点进行处理
+                process_katex_mathml(cm, 'katex', katex_parent)
                 # 验证处理后的标签类型是否正确
                 self.assertEqual(len(element.xpath(f'//{expected_tag}')), 1)
                 # 验证公式内容是否正确

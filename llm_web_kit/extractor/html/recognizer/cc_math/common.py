@@ -273,20 +273,13 @@ class CCMATH():
                 (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
                 result.append((EQUATION_INLINE, MathType.HTMLMATH))
 
-            # 检查当前节点是否是katex-mathml元素（CSDN）
-            if node.tag == 'span' and node.get('class') == 'katex-mathml':
-                parent = node.getparent()
-                while parent is not None:
-                    parent_class = parent.get('class') or ''
-                    if 'katex--inline' in parent_class:
-                        result.append((EQUATION_INLINE, MathType.LATEX))
-                        break
-                    if 'katex--display' in parent_class:
-                        result.append((EQUATION_INTERLINE, MathType.LATEX))
-                        break
-                    parent = parent.getparent()
-                else:
+            # 检查当前节点是否是katex元素（CSDN）
+            if node.tag == 'span' and node.get('class'):
+                node_class = node.get('class')
+                if 'katex--inline' in node_class:
                     result.append((EQUATION_INLINE, MathType.LATEX))
+                elif 'katex--display' in node_class:
+                    result.append((EQUATION_INTERLINE, MathType.LATEX))
         return self.equation_type_to_tag(result)
 
     def equation_type_to_tag(self, type_math_type: List[Tuple[str, str]]) -> List[Tuple[str, str]]:

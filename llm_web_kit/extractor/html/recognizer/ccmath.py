@@ -132,8 +132,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 original_html = self._element_to_html(node)
                 parent = node.getparent()
 
-                # 针对csdn博客中的katex-mathml标签，提取latex公式
-                if 'blog.csdn.net' in self.cm.url and node.tag == 'span' and node.get('class') == 'katex-mathml':
+                # 针对csdn博客中的katex标签，提取latex公式
+                if ('blog.csdn.net' in self.cm.url and
+                        node.tag == 'span' and
+                        node.get('class') in ['katex--inline', 'katex--display']):
                     tag_script.process_katex_mathml(self.cm, math_render_type, node)
 
                 if 'zhuanlan.zhihu.com' in self.cm.url and node.tag == 'span' and node.get('class') == 'ztext-math':
