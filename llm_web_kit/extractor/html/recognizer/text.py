@@ -64,7 +64,7 @@ inline_tags = {
     'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
     'textarea', 'time', 'var', 'u', 's', 'cccode-inline', 'ccmath-inline',
     'marked-tail', 'marked-text', 'math','mspace', 'font', 'nobr', 'bdi',
-    'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr'
+    'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr', 'ins'
 }
 
 
@@ -191,7 +191,11 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             return self.replace_entities(txt.strip(), entities_map)
         else:
             # 根据text1的最后一个字符和text2的第一个字符判断两个text之间的连接
-            words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols or text2[0] in other_symbols or text1 and text1[-1] in other_symbols else ' '
+            # if text2[0] in string.punctuation or text2[0] in special_symbols or text2[0] in other_symbols or text1 and text1[-1] in other_symbols else ' '
+            if (text2[0] in string.punctuation) or (text2[0] in special_symbols) or (text2[0] in other_symbols) or (text1 and text1[-1] in other_symbols):
+                words_sep = ''
+            else :
+                words_sep = ' '
             txt = text1 + words_sep + text2
             return self.replace_entities(txt.strip(), entities_map)
 
