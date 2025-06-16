@@ -83,7 +83,7 @@ class StructureMapper(ABC):
         txt = txt.strip() + self.__text_end  # 加上结尾换行符
         return txt
 
-    def __to_md(self, exclude_nodes=[], exclude_inline_types=[]):
+    def __to_md(self, exclude_nodes=[], exclude_inline_types=[], use_raw_image_url=False):
         """把content_list转化为md格式.
 
         Args:
@@ -96,7 +96,7 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 if content_lst_node['type'] not in exclude_nodes:
-                    txt_content = self.__content_lst_node_2_md(content_lst_node, exclude_inline_types)
+                    txt_content = self.__content_lst_node_2_md(content_lst_node, exclude_inline_types, use_raw_image_url)
                     if txt_content and len(txt_content) > 0:
                         md_blocks.append(txt_content)
 
@@ -127,9 +127,9 @@ class StructureMapper(ABC):
         md = self.__to_md(exclude_nodes + DocElementType.MM_NODE_LIST, exclude_inline_types)
         return md
 
-    def to_mm_md(self, exclude_nodes=[], exclude_inline_types=[]):
+    def to_mm_md(self, exclude_nodes=[], exclude_inline_types=[], use_raw_image_url=False):
         self.__validate_exclude_nodes(exclude_nodes, exclude_inline_types)
-        md = self.__to_md(exclude_nodes, exclude_inline_types)
+        md = self.__to_md(exclude_nodes, exclude_inline_types, use_raw_image_url)
         return md
 
     def to_main_html(self) -> str:
@@ -243,7 +243,7 @@ class StructureMapper(ABC):
 
         return result
 
-    def __content_lst_node_2_md(self, content_lst_node: dict, exclude_inline_types: list = []) -> str:
+    def __content_lst_node_2_md(self, content_lst_node: dict, exclude_inline_types: list = [], use_raw_image_url=False) -> str:
         """把content_list里定义的每种元素块转化为markdown格式.
 
         Args:
@@ -276,15 +276,28 @@ class StructureMapper(ABC):
             image_title = content_lst_node['content'].get('title', '')
             image_caption = content_lst_node['content'].get('caption', '')
             image_url = content_lst_node['content'].get('url', '')
+
             if not image_path and not image_data:
                 image_path = sha256_hash(image_url)
 
+            if use_raw_image_url:
+                image_path = image_url
+
             if image_alt:
                 image_alt = image_alt.strip()
+            else:
+                image_alt = ''
+
             if image_title:
                 image_title = image_title.strip()
+            else:
+                image_title = ''
+
             if image_caption:
                 image_caption = image_caption.strip()
+            else:
+                image_caption = ''
+
             image_des = image_title if image_title else image_caption if image_caption else ''
             # 优先使用data, 其次path.其中data是base64编码的图片，path是图片的url
             if image_data:
