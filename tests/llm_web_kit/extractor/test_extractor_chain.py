@@ -63,7 +63,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 94
+        assert len(self.data_json) == 97
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -768,7 +768,7 @@ A few explanations on why certain things in business are so.
         """测试双重ul标签."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[87]
+        test_data = self.data_json[90]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_nlp_md()
@@ -778,12 +778,12 @@ A few explanations on why certain things in business are so.
         """测试括号、双引单引号等中文符号导致的空格."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[88]
+        test_data = self.data_json[91]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_nlp_md()
         assert '(APC)' in content_md
-        test_data = self.data_json[89]
+        test_data = self.data_json[92]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_nlp_md()
@@ -793,7 +793,7 @@ A few explanations on why certain things in business are so.
         """测试由于classname导致的audio、list识别为code的情况."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[90]
+        test_data = self.data_json[93]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list().to_dict()[0]
@@ -804,7 +804,7 @@ A few explanations on why certain things in business are so.
         with open('output.jsonl', 'w') as f:
             f.write(result.get_content_list().to_json())
         assert 'code' not in types
-        test_data = self.data_json[91]
+        test_data = self.data_json[94]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list().to_dict()[0]
@@ -818,7 +818,7 @@ A few explanations on why certain things in business are so.
         """测试<sup>和<sub>被转义成<sup&gt;和<sub&gt;导致上下标失效的情况."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[92]
+        test_data = self.data_json[95]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_nlp_md()
@@ -829,7 +829,7 @@ A few explanations on why certain things in business are so.
         """测试跳过list item中无实际内容的情况."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[93]
+        test_data = self.data_json[96]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list().to_dict()[0]
