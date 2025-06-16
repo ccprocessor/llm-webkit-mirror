@@ -15,6 +15,7 @@ class PreDataJsonKey:
 
     TYPICAL_RAW_HTML = 'typical_raw_html'
     TYPICAL_RAW_TAG_HTML = 'typical_raw_tag_html'
+    IS_XPATH = 'is_xpath'
     XPATH_MAPPING = 'xpath_mapping'
     TYPICAL_SIMPLIFIED_HTML = 'typical_simplified_html'
     # 模型打标字典
@@ -33,6 +34,8 @@ class PreDataJsonKey:
     TYPICAL_DICT_HTML = 'typical_dict_html'
     # 动态id开关
     DYNAMIC_ID_ENABLE = 'dynamic_id_enable'
+    # 动态classid开关
+    DYNAMIC_CLASSID_ENABLE = 'dynamic_classid_enable'
     # 推广原网页
     HTML_SOURCE = 'html_source'
     # 推广网页提取正文成功标签, bool类型

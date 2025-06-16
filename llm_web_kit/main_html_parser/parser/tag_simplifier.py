@@ -19,11 +19,12 @@ class HtmlTagSimplifierParser(BaseMainHtmlParser):
         """
         # 获取输入数据
         typical_raw_html = pre_data.get(PreDataJsonKey.TYPICAL_RAW_HTML, '')
+        is_xpath = pre_data.get(PreDataJsonKey.IS_XPATH, True)
         # layout_file_list = pre_data.get(PreDataJsonKey.LAYOUT_FILE_LIST, [])
 
         # 执行HTML标签简化逻辑
         try:
-            simplified_html, original_html, _ = simplify_html(typical_raw_html)
+            simplified_html, original_html, _ = simplify_html(typical_raw_html, is_xpath=is_xpath)
         except TagSimplifiedParserException as e1:
             raise e1
         except Exception as e2:

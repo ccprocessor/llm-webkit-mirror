@@ -2,6 +2,8 @@ import unittest
 from pathlib import Path
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
+from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import \
+    process_katex_mathml
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
@@ -354,6 +356,59 @@ TEST_MML_TO_LATEX = [
         'expected': r'${\left(\sum _{k=1}^{n}{a}_{k}{b}_{k}\right)}^{2}$'
     }
 ]
+
+TEST_CSDN_KATEX_MATHML = [
+    {
+        'input': r'''
+        <span class="katex--inline"><span class="katex"><span class="katex-mathml">
+
+           lim⁡
+           x
+           →
+           1
+             x
+             2
+            −
+            1
+            x
+            −
+            1
+
+            \lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}
+
+        </span>
+        ''',
+        'expected_tag': 'ccmath-inline',
+        'expected_formula': r'\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}'
+    },
+    {
+        'input': r'''
+        <span class="katex--display"><span class="katex-display"><span class="katex"><span class="katex-mathml">
+
+            f
+            (
+            1
+            )
+            −
+            f
+            (
+            1
+            )
+            1
+            −
+            1
+          &#61;
+           0
+           0
+
+            \frac{f(1)-f(1)}{1-1} &#61; \frac{0}{0}
+
+         </span>
+        ''',
+        'expected_tag': 'ccmath-interline',
+        'expected_formula': r'\frac{f(1)-f(1)}{1-1} = \frac{0}{0}'
+    }
+]
 base_dir = Path(__file__).parent
 
 
@@ -488,6 +543,23 @@ class TestCCMATH(unittest.TestCase):
             with self.subTest(input=test_case['input']):
                 output_math = self.ccmath.mml_to_latex(test_case['input'])
                 self.assertEqual(output_math, test_case['expected'])
+
+    def test_csdn_katex_mathml(self):
+        cm = CCMATH()
+        for test_case in TEST_CSDN_KATEX_MATHML:
+            with self.subTest(input=test_case['input']):
+                # 解析HTML为元素树
+                element = html_to_element(test_case['input'])
+                katex_node = element.xpath('//span[@class="katex-mathml"]')[0]
+                # 处理前验证没有ccmath标签
+                expected_tag = test_case['expected_tag']
+                self.assertEqual(len(element.xpath(f'//{expected_tag}')), 0)
+                process_katex_mathml(cm, 'katex', katex_node)
+                # 验证处理后的标签类型是否正确
+                self.assertEqual(len(element.xpath(f'//{expected_tag}')), 1)
+                # 验证公式内容是否正确
+                formula = element.xpath(f'//{expected_tag}/text()')[0]
+                self.assertIn(test_case['expected_formula'], formula)
 
 
 if __name__ == '__main__':

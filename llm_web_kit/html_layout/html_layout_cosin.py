@@ -1,3 +1,4 @@
+import re
 from collections import Counter, defaultdict
 from typing import Dict, List
 
@@ -7,8 +8,15 @@ from sklearn.cluster import DBSCAN
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from llm_web_kit.exception.exception import LayoutClusteringParserException
+
 TAGS_TO_IGNORE = ['script', 'style', 'meta', 'link', 'br', 'noscript']  # , 'b', 'i', 'strong'
 TAGS_IGNORE_ATTR = ['a', 'i', 'b', 'li', 'tr', 'td', 'img', 'p', 'body']
+RE_MD5 = re.compile(r'^[0-9a-f]{32}$')
+RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
+RE_UUID = re.compile(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$')
+RE_TIMESTAMP = re.compile(r'^\d{10,13}$')  # 时间戳属性值
+RE_NUM = re.compile(r'\d+')  # 自定义动态属性值
 
 
 def html_to_element(html_data: str) -> HtmlElement:
@@ -38,10 +46,11 @@ def __html_to_valid_element(html_source: str) -> HtmlElement:
     return root
 
 
-def get_feature(html_source: str) -> Dict:
+def get_feature(html_source: str, is_ignore_tag: bool = True) -> Dict:
     """获取DOM有效tag和attr
     Args:
         html_source: html源码字符串
+        is_ignore_tag: bool 是否忽略TAGS_TO_IGNORE可忽略的标签
     Returns:
         dict:
         {
@@ -50,7 +59,7 @@ def get_feature(html_source: str) -> Dict:
         }
     """
     doc = __html_to_valid_element(html_source)
-    return __recursive_extract_tags(doc)
+    return __recursive_extract_tags(doc, is_ignore_tag)
 
 
 def __parse_tag_attr(tag_attrs_lst: List[set]) -> Dict:
@@ -66,7 +75,7 @@ def __parse_tag_attr(tag_attrs_lst: List[set]) -> Dict:
     return {'tags': tags, 'attrs': attrs}
 
 
-def __recursive_extract_tags(doc: HtmlElement) -> Dict:
+def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Dict:
     """递归获取标签及属性
         Args:
             doc: lxml.html.HtmlElement
@@ -76,7 +85,7 @@ def __recursive_extract_tags(doc: HtmlElement) -> Dict:
                 "tags": {1: ["<body>/div"], 2: [...]},
                 "attrs": {1: ["content", "footer"], 2: [...]}
             }
-        """
+    """
 
     def __get_children(el_lst: List[HtmlElement], layer_n: int, tag_attr: Dict):
         el_tag_attr = list()
@@ -84,30 +93,74 @@ def __recursive_extract_tags(doc: HtmlElement) -> Dict:
         for el in el_lst:
             parent_tag_attr = set()
             for child in el.getchildren():
-                if isinstance(child, HtmlComment) or child.tag is None or child.tag.lower() in TAGS_TO_IGNORE:
+                if isinstance(child, HtmlComment) or child.tag is None:
                     continue
+                tag = child.tag.lower()
+                if is_ignore_tag and tag in TAGS_TO_IGNORE:
+                    continue
+                next_el.append(child)
+                if tag in TAGS_IGNORE_ATTR:
+                    parent_tag_attr.add(f'<{tag}>')
                 else:
-                    next_el.append(child)
-                    tag = child.tag.lower()
-                    if tag in TAGS_IGNORE_ATTR:
-                        parent_tag_attr.add(f'<{tag}>')
-                    else:
-                        attrs_str = ' '.join([f'{k}="{v}"' for k, v in child.attrib.items() if k in ['class', 'id']])
+                    attrs_str = __parse_attributes(child)
+                    if attrs_str is not None:
                         parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
 
             el_tag_attr.append(parent_tag_attr)
+
         layer_tag_attr = __parse_tag_attr(el_tag_attr)
         if layer_tag_attr.get('tags'):
-            tag_attr['tags'].update({layer_n: layer_tag_attr['tags']})
+            tag_attr['tags'][layer_n] = layer_tag_attr['tags']
         if layer_tag_attr.get('attrs'):
-            tag_attr['attrs'].update({layer_n: layer_tag_attr['attrs']})
+            tag_attr['attrs'][layer_n] = layer_tag_attr['attrs']
         if next_el:
             return __get_children(next_el, layer_n + 1, tag_attr)
 
     tag_attr = defaultdict(dict)
-    layer_n = 1
-    __get_children([doc], layer_n, tag_attr)
+    __get_children([doc], 1, tag_attr)
     return dict(tag_attr) if tag_attr.get('tags') else None
+
+
+def __parse_attributes(element: HtmlElement):
+    """解析标签属性值."""
+    class_s = None
+    id_s = None
+    class_attr = element.get('class')
+    if class_attr:
+        class_d = class_attr.split()
+        if len(class_d) > 1:
+            class_s = ' '.join([i for i in class_d if not RE_NUM.search(i)])
+        else:
+            class_s = __standardizing_dynamic_attributes(class_d[0])
+
+    id_attr = element.get('id')
+    if id_attr:
+        id_d = id_attr.split()
+        if len(id_d) > 1:
+            id_s = ' '.join([i for i in id_d if not RE_NUM.search(i)])
+        else:
+            id_s = __standardizing_dynamic_attributes(id_d[0])
+
+    if not class_s and not id_s:
+        return None
+    else:
+        return ' '.join([f'{k}= "{v}"' for k, v in {'class': class_s, 'id': id_s}.items() if v])
+
+
+def __standardizing_dynamic_attributes(attr_value):
+    """将动态属性值标准化为统一表示."""
+    if RE_MD5.fullmatch(attr_value):
+        return '[MD5]'
+    if RE_SHA1.fullmatch(attr_value):
+        return '[SHA1]'
+    if RE_UUID.fullmatch(attr_value):
+        return '[UUID]'
+    if RE_TIMESTAMP.fullmatch(attr_value):
+        return '[TIMESTAMP]'
+    if RE_NUM.search(attr_value):
+        return re.sub(r'\d+', '', attr_value)
+
+    return attr_value  # 不是可识别的哈希则返回原值
 
 
 def __list_to_dict(lst: List[Dict]) -> dict:
@@ -283,16 +336,34 @@ def similarity(feature1: Dict, feature2: Dict, layer_n=5, k=0.7) -> float:
             "attrs": {1: ["nav", "content", "footer"], 2: [...]}
         }
         layer_n: 相似度计算DOM树层级深度，默认为5
-        k: tags 和 attrs 权重占比，默认1:1
+        k: tags 和 attrs 权重占比，k表示tags权重，(1-k)为attrs权重，默认0.7:0.3
     Return:
         np.float32: cosine similarity
     """
-    tag_sim = cosine_similarity(
-        __parse_vectors([__simp_tags(feature1['tags'], layer_n), __simp_tags(feature2['tags'], layer_n)]))[0][1]
-    if not feature1.get('attrs') or not feature2.get('attrs'):
-        k = 1
-        return round(tag_sim * k, 8)
-    else:
-        attr_sim = cosine_similarity(
-            __parse_vectors([__simp_tags(feature1['attrs'], layer_n), __simp_tags(feature2['attrs'], layer_n)]))[0][1]
-        return round(tag_sim * k + attr_sim * (1 - k), 8)
+    if not isinstance(feature1, dict) or not isinstance(feature2, dict):
+        raise LayoutClusteringParserException('feature1 and feature2 must be dictionaries')
+
+    def process_feature(feat):
+        return {
+            'tags': __simp_tags(feat.get('tags', {}), layer_n),
+            'attrs': __simp_tags(feat.get('attrs', {}), layer_n)
+        }
+
+    f1 = process_feature(feature1)
+    f2 = process_feature(feature2)
+
+    f1_tag = f1.get('tags', {})
+    f2_tag = f2.get('tags', {})
+    if not f1_tag or not f2_tag:
+        return 0.0
+    tag_vecs = __parse_vectors([f1_tag, f2_tag])
+    tag_sim = cosine_similarity(tag_vecs)[0][1]
+
+    f1_attr = f1.get('attrs', {})
+    f2_attr = f2.get('attrs', {})
+    if not f1_attr or not f2_attr:
+        return round(tag_sim, 8)
+
+    attr_vecs = __parse_vectors([f1_attr, f2_attr])
+    attr_sim = cosine_similarity(attr_vecs)[0][1]
+    return round(tag_sim * k + attr_sim * (1 - k), 8)
