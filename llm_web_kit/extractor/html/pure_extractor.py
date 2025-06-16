@@ -1,14 +1,10 @@
-import os
 from typing import List, Tuple
 
-import commentjson as json
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.exception.exception import HtmlFileExtractorException
 from llm_web_kit.extractor.extractor import BaseFileFormatExtractor
-from llm_web_kit.extractor.html.magic_html import GeneralExtractor
 from llm_web_kit.extractor.html.recognizer.audio import AudioRecognizer
 from llm_web_kit.extractor.html.recognizer.cccode import CodeRecognizer
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
@@ -23,7 +19,6 @@ from llm_web_kit.extractor.html.recognizer.video import VideoRecognizer
 from llm_web_kit.input.datajson import ContentList, DataJson
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
-from llm_web_kit.libs.path_lib import get_py_pkg_root_dir
 
 
 class HTMLPageLayoutType:
@@ -65,8 +60,6 @@ class PureHTMLFileFormatExtractor(BaseFileFormatExtractor):
             CCTag.CC_TEXT: self.__paragraph_recognizer
         }
 
-        self.__magic_html_extractor = self.__build_extractor()
-
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
         """根据规则过滤content_list.
@@ -105,21 +98,6 @@ class PureHTMLFileFormatExtractor(BaseFileFormatExtractor):
         data_json['content_list'] = content_list
         # data_json['title'] = title
         return data_json
-
-    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str, str]:
-        """从html文本中提取主要的内容.
-
-        Args:
-            raw_html (str): html文本
-            base_url (str): html文本的网页地址
-            page_layout_type (str): 网页的布局类型
-
-        Returns:
-            str1: 主要的内容
-            str2: 获得内容的方式，可对质量进行评估
-        """
-        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url, precision=False, html_type=page_layout_type)
-        return dict_result['html'], dict_result['xp_num'], dict_result.get('title', '')
 
     def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement,HtmlElement]]:
         """从html文本中提取代码.
@@ -374,37 +352,3 @@ class PureHTMLFileFormatExtractor(BaseFileFormatExtractor):
             #     raise HtmlFileExtractorException(f'html文本中包含多个cc标签: {html}')
             # return element_to_html(nodes[0]), nodes[0].tag
             return nodes[0], nodes[0].tag
-
-    def __build_extractor(self):
-        """
-        结合自定义域名规则，构建一个抽取器。
-        自定义的规则先从python包内自带的规则中获取，然后使用用户在.llm-web-kit.jsonc中定义的规则覆盖。
-        Returns:
-
-        """
-        build_in_rule = self.__get_build_in_rule()
-        custom_rule = self.__get_custom_rule()
-        if custom_rule:
-            build_in_rule.update(custom_rule)
-
-        return GeneralExtractor(custom_rule=build_in_rule)
-
-    def __get_build_in_rule(self) -> dict:
-        """
-        获取内置的规则，也就是python包内自带的规则，这些规则是通用的，适用于大多数网站。
-        Returns:
-
-        """
-        pypkg_dir = get_py_pkg_root_dir()
-        rule_file_path = os.path.join(pypkg_dir, 'extractor', 'html', 'magic_html', 'custome_rule.jsonc')
-        with open(rule_file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-
-    def __get_custom_rule(self) -> dict:
-        """
-        获取用户自定义的规则，这个规则位于.llm-web-kit.jsonc文件中，用户可以在这个文件中定义自己的规则，随时修改并覆盖内置规则。
-        Returns:
-
-        """
-        config = load_config(suppress_error=True)
-        return config.get('magic-html-custom-rule', {})
