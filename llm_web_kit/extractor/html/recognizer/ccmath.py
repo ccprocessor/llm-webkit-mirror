@@ -155,7 +155,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
                 # script[type="math/tex"]
                 # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                    # tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
+                #     print('匹配到script标签: ', node.get('type'))
+                #     tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
 
                 # math tags
                 if node.tag == 'math' or node.tag.endswith(':math'):

@@ -274,7 +274,7 @@ class CCMATH():
                 result.append((EQUATION_INLINE, MathType.HTMLMATH))
 
             # 检查当前节点是否是katex元素（CSDN）
-            if node.tag == 'span' and node.get('class'):
+            if 'blog.csdn.net' in self.url and node.tag == 'span' and node.get('class'):
                 node_class = node.get('class')
                 if 'katex--inline' in node_class:
                     result.append((EQUATION_INLINE, MathType.LATEX))
