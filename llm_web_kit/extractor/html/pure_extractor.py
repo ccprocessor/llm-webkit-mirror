@@ -91,10 +91,11 @@ class PureHTMLFileFormatExtractor(BaseFileFormatExtractor):
         # 第三步将解析结果存入content_list中
         raw_html:str = data_json['html']
         base_url:str = data_json['url']
+        main_html:str = data_json['main_html']
         # page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
 
         # main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
-        main_html_element = html_to_element(raw_html)
+        main_html_element = html_to_element(main_html)
         parsed_html = [(main_html_element, raw_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,

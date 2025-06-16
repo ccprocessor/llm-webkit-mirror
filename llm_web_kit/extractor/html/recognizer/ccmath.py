@@ -49,7 +49,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
-
         return result
 
     @override
@@ -85,7 +84,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 获取math_content
             math_content = inter_ele[0].text
             math_content = self.cm.wrap_math_md(math_content)
-
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
@@ -97,7 +95,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             }
         elif len(in_els) > 0:
             math_content = in_els[0].text
-
             return {
                 'type': DocElementType.EQUATION_INLINE,
                 'raw_content': raw_html_segment,

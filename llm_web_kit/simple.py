@@ -5,6 +5,7 @@ from datetime import datetime
 
 from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
+from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
 from llm_web_kit.extractor.html.pure_extractor import \
     PureHTMLFileFormatExtractor
 from llm_web_kit.input.datajson import DataJson
@@ -40,6 +41,7 @@ def __extract_pure_html(url:str, html_content: str) -> DataJson:
         'track_id': str(uuid.uuid4()),
         'url': url,
         'html': html_content,
+        'main_html': html_content,
         'dataset_name': 'llm-web-kit-pure-quickstart',
         'data_source_category': 'HTML',
         'file_bytes': len(html_content),
@@ -48,6 +50,12 @@ def __extract_pure_html(url:str, html_content: str) -> DataJson:
     d = DataJson(input_data_dict)
     result = extractor.extract(d)
     return result
+
+
+def __extract_magic_html(url:str, html_str: str, page_layout_type:str) -> DataJson:
+    magic_html_extractor = HTMLFileFormatExtractor(load_pipe_tpl('html'))
+    main_html, method, title = magic_html_extractor._extract_main_html(html_str, url, page_layout_type)
+    return main_html, title
 
 
 def __extract_html(url:str, html_content: str) -> DataJson:
@@ -88,3 +96,9 @@ def extract_html_to_mm_md(url:str, html_content: str) -> str:
     """extract html to markdown with images."""
     result = __extract_html(url, html_content)
     return result.get_content_list().to_mm_md()
+
+
+def extract_magic_html(url:str, html_str: str, page_layout_type:str = 'article') -> str:
+    """extract main html."""
+    result = __extract_magic_html(url, html_str, page_layout_type)
+    return result[0], result[1]
