@@ -62,3 +62,35 @@ class TestTagMapping(unittest.TestCase):
         pre_data = parser.parse(pre_data)
         construct_success = pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS)
         self.assertEqual(False, construct_success)
+
+    def test_parse_single(self):
+        data = []
+        raw_html_path = base_dir.joinpath('assets/test_tag_mapping_web.jsonl')
+        with open(raw_html_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                data.append(json.loads(line.strip()))  # 解析每行 JSON
+        mock_dict = data[0]
+        pre_data = PreDataJson(mock_dict['pre_data'])
+        pre_data[PreDataJsonKey.TYPICAL_RAW_HTML] = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse_single(pre_data)
+        content_list = pre_data[PreDataJsonKey.HTML_TARGET_LIST]
+        self.assertEqual(content_list, mock_dict['expected_content_list'])
+        self.assertEqual(len(pre_data['typical_main_html']), 2269)
+
+    def test_parse_single_empty(self):
+        data = []
+        raw_html_path = base_dir.joinpath('assets/test_tag_mapping_web.jsonl')
+        with open(raw_html_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                data.append(json.loads(line.strip()))  # 解析每行 JSON
+        mock_dict = data[0]
+        pre_data = PreDataJson(mock_dict['pre_data'])
+        llm_response = pre_data[PreDataJsonKey.LLM_RESPONSE]
+        llm_response['item_id 5'] = 0
+        llm_response['item_id 7'] = 0
+        pre_data[PreDataJsonKey.LLM_RESPONSE] = llm_response
+        pre_data[PreDataJsonKey.TYPICAL_RAW_HTML] = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse_single(pre_data)
+        self.assertEqual(pre_data['typical_main_html'], '<html lang="it-IT" prefix="og: http://ogp.me/ns#"></html>')

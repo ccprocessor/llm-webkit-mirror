@@ -56,3 +56,35 @@ def extract_katex_formula(text: str) -> Dict[str, str]:
     render_matches = render_pattern.findall(text)
     formulas_dict = {element_id: formula_content for formula_content, element_id in render_matches}
     return formulas_dict
+
+
+def process_katex_mathml(cm, math_render, node):
+    # 只处理katex-mathml节点
+    if node.tag == 'span' and node.get('class') == 'katex-mathml':
+        # 向上查找父节点，判断行内/行间
+        parent = node.getparent()
+        is_inline = False
+        while parent is not None:
+            parent_class = parent.get('class') or ''
+            if 'katex--inline' in parent_class:
+                is_inline = True
+                break
+            if 'katex--display' in parent_class:
+                is_inline = False
+                break
+            parent = parent.getparent()
+        # 提取latex公式（取最后一行非空内容）
+        lines = [line.strip() for line in node.text_content().splitlines() if line.strip()]
+        if not lines:
+            return
+        latex = lines[-1]
+        tag = 'ccmath-inline' if is_inline else 'ccmath-interline'
+        new_span = build_cc_element(
+            html_tag_name=tag,
+            text=cm.wrap_math_md(latex),
+            tail=None,
+            type='latex',
+            by=math_render,
+            html=None
+        )
+        replace_element(node, new_span)

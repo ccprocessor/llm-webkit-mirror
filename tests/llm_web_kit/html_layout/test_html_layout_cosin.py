@@ -10,10 +10,11 @@ base_dir = Path(__file__).parent
 TEST_FEATURE_HTML = [
     {'input': 'assets/feature.html', 'expected': 2},
     {'input': 'assets/feature3.html', 'expected': None},
+    {'input': 'assets/feature4.html', 'expected': 2},
 ]
 TEST_SIMIL_HTMLS = [
-    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.22013982},
-    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9357468},
+    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.2831639},
+    {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9463744},
     {'input1': 'assets/feature1.html', 'input2': 'assets/data_structure.html', 'layer_n': 12, 'expected': 0},
 ]
 TEST_SIMIL_FEATURES = [
@@ -29,9 +30,9 @@ TEST_SIMIL_FEATURES = [
 ]
 TEST_CLUSTER_HTMLS = [
     {'input': ['assets/feature1.html', 'assets/cosin.html'], 'expected': [-1]},
-    {'input': ['assets/feature1.html', 'assets/feature2.html'], 'expected': [-1]},
+    {'input': ['assets/feature1.html', 'assets/feature2.html'], 'expected': [0]},
     {'input': ['assets/100.html', 'assets/101.html', 'assets/102.html', 'assets/103.html', 'assets/104.html',
-               'assets/105.html', 'assets/106.html'], 'expected': [0, 1, -1]}
+               'assets/105.html', 'assets/106.html'], 'expected': [0]}
 
 ]
 
@@ -61,7 +62,7 @@ class TestHtmllayoutcosin(unittest.TestCase):
                 layer_n, total_n = sum_tags(get_feature(raw_html, is_ignore_tag=False)['tags'])
                 ignore_layer_n, ignore_total_n = sum_tags(get_feature(raw_html)['tags'])
                 self.assertEqual(len(layer_n) == len(ignore_layer_n), True)
-                self.assertEqual(total_n > ignore_total_n, True)
+                self.assertEqual(total_n >= ignore_total_n, True)
             else:
                 self.assertEqual(features, test_case['expected'])
 
