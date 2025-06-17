@@ -762,7 +762,7 @@ A few explanations on why certain things in business are so.
         md_content = result.get_content_list().to_nlp_md()
         self.assertIn(r'$\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}$', md_content)
         self.assertIn(r'\begin{aligned} \frac{f(1.01)-f(1)}{1.01-1} &= \frac{1.01^2-1^2}{0.01} \\ &= \frac{0.0201}{0.01} \\ &= 2.01\end{aligned}', md_content)
-        
+
     def test_zhihu_custom_tag(self):
         """测试知乎自定义标签."""
         chain = ExtractSimpleFactory.create(self.config)
