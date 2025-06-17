@@ -124,6 +124,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
             paragraph = []
             result = {}
+
             if el.tag == CCTag.CC_MATH_INLINE and el.text and el.text.strip():
                 paragraph.append({'c': f'${el.text}$', 't': ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE and el.text and el.text.strip():
@@ -146,8 +147,11 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     'items': []
                 }
                 for child in el.getchildren():
-                    child_list['items'].append(__extract_list_item_text_recusive(child))
-                result['child_list'] = child_list
+                    child_item = __extract_list_item_text_recusive(child)
+                    if len(child_item) != 0:
+                        child_list['items'].append(child_item)
+                if child_list['items']:
+                    result['child_list'] = child_list
             else:
                 if el.text and el.text.strip():
                     paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
@@ -160,7 +164,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                             result['child_list'] = p['child_list']
                         # 添加子元素的文本内容
                         if 'c' in p:
-                            paragraph.append({'c': p['c'], 't': p.get('t', ParagraphTextType.TEXT)})
+                            if p['c'] != '':
+                                paragraph.append({'c': p['c'], 't': p.get('t', ParagraphTextType.TEXT)})
             if el.tag != 'li' and el.tail and el.tail.strip():
                 if is_sub_sup:
                     # 如果尾部文本跟在sub/sup后面，直接附加到最后一个文本段落中
@@ -171,9 +176,10 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 else:
                     paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
             if paragraph:
+                # item['c'].strip(): 会导致前面处理br标签，添加的\n\n失效
                 result['c'] = ' '.join(normalize_text_segment(item['c'].strip()) for item in paragraph)
             return result
-        list_item_tags = ('li', 'dd', 'dt')
+        list_item_tags = ('li', 'dd', 'dt', 'ul', 'div', 'p')
         if child.tag in list_item_tags:
             paragraph = __extract_list_item_text_recusive(child)
             if len(paragraph) > 0:
@@ -190,6 +196,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         Returns:
             list: 包含列表项内容的列表，即items
         """
+
         content_list = []
         # 处理根元素文本
         if ele.text and ele.text.strip():

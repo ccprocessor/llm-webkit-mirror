@@ -284,9 +284,10 @@ def extract_magic_html(html, base_url, page_layout_type):
         base_url: str: 基础url
         page_layout_type: str: 页面布局类型
     """
-    from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
+    from llm_web_kit.extractor.html.extractor import \
+        MagicHTMLFIleFormatorExtractor
 
-    extractor = HTMLFileFormatExtractor({})
+    extractor = MagicHTMLFIleFormatorExtractor({})
     try:
         main_html, _, _ = extractor._extract_main_html(html, base_url, page_layout_type)
         return main_html

@@ -1,3 +1,4 @@
+import re
 from collections import Counter, defaultdict
 from typing import Dict, List
 
@@ -11,6 +12,11 @@ from llm_web_kit.exception.exception import LayoutClusteringParserException
 
 TAGS_TO_IGNORE = ['script', 'style', 'meta', 'link', 'br', 'noscript']  # , 'b', 'i', 'strong'
 TAGS_IGNORE_ATTR = ['a', 'i', 'b', 'li', 'tr', 'td', 'img', 'p', 'body']
+RE_MD5 = re.compile(r'^[0-9a-f]{32}$')
+RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
+RE_UUID = re.compile(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$')
+RE_TIMESTAMP = re.compile(r'^\d{10,13}$')  # 时间戳属性值
+RE_NUM = re.compile(r'\d+')  # 自定义动态属性值
 
 
 def html_to_element(html_data: str) -> HtmlElement:
@@ -79,7 +85,7 @@ def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Di
                 "tags": {1: ["<body>/div"], 2: [...]},
                 "attrs": {1: ["content", "footer"], 2: [...]}
             }
-        """
+    """
 
     def __get_children(el_lst: List[HtmlElement], layer_n: int, tag_attr: Dict):
         el_tag_attr = list()
@@ -96,8 +102,9 @@ def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Di
                 if tag in TAGS_IGNORE_ATTR:
                     parent_tag_attr.add(f'<{tag}>')
                 else:
-                    attrs_str = ' '.join([f'{k}="{v}"' for k, v in child.attrib.items() if k in ['class', 'id']])
-                    parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
+                    attrs_str = __parse_attributes(child)
+                    if attrs_str is not None:
+                        parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
 
             el_tag_attr.append(parent_tag_attr)
 
@@ -112,6 +119,48 @@ def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Di
     tag_attr = defaultdict(dict)
     __get_children([doc], 1, tag_attr)
     return dict(tag_attr) if tag_attr.get('tags') else None
+
+
+def __parse_attributes(element: HtmlElement):
+    """解析标签属性值."""
+    class_s = None
+    id_s = None
+    class_attr = element.get('class')
+    if class_attr:
+        class_d = class_attr.split()
+        if len(class_d) > 1:
+            class_s = ' '.join([i for i in class_d if not RE_NUM.search(i)])
+        else:
+            class_s = __standardizing_dynamic_attributes(class_d[0])
+
+    id_attr = element.get('id')
+    if id_attr:
+        id_d = id_attr.split()
+        if len(id_d) > 1:
+            id_s = ' '.join([i for i in id_d if not RE_NUM.search(i)])
+        else:
+            id_s = __standardizing_dynamic_attributes(id_d[0])
+
+    if not class_s and not id_s:
+        return None
+    else:
+        return ' '.join([f'{k}= "{v}"' for k, v in {'class': class_s, 'id': id_s}.items() if v])
+
+
+def __standardizing_dynamic_attributes(attr_value):
+    """将动态属性值标准化为统一表示."""
+    if RE_MD5.fullmatch(attr_value):
+        return '[MD5]'
+    if RE_SHA1.fullmatch(attr_value):
+        return '[SHA1]'
+    if RE_UUID.fullmatch(attr_value):
+        return '[UUID]'
+    if RE_TIMESTAMP.fullmatch(attr_value):
+        return '[TIMESTAMP]'
+    if RE_NUM.search(attr_value):
+        return re.sub(r'\d+', '', attr_value)
+
+    return attr_value  # 不是可识别的哈希则返回原值
 
 
 def __list_to_dict(lst: List[Dict]) -> dict:
