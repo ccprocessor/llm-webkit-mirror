@@ -140,27 +140,6 @@ if __name__=="__main__":
     main_html = extract(url, html)
 ```
 
-### only extract by recognize
-
-```python
-from llm_web_kit.simple import extract_pure_html_to_md
-import traceback
-from loguru import logger
-
-def extract(url:str, html:str) -> str:
-    try:
-        nlp_md = extract_html_to_md(url, html, clip_html=False)
-        return nlp_md
-    except Exception as e:
-        logger.exception(e)
-    return None
-
-if __name__=="__main__":
-    url = ""
-    html = ""
-    markdown = extract(url, html)
-```
-
 ## Pipeline
 
 1. [HTML pre-dedup](jupyter/html-pre-dedup/main.ipynb)
