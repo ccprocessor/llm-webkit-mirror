@@ -2,6 +2,8 @@ import unittest
 from pathlib import Path
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (
+    CCMATH_INLINE, CSDN, ZHIHU)
 from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import (
     process_katex_mathml, process_zhihu_custom_tag)
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
@@ -562,7 +564,7 @@ class TestCCMATH(unittest.TestCase):
         for test_case in TEST_CSDN_KATEX_MATHML:
             with self.subTest(input=test_case['input']):
                 element = html_to_element(test_case['input'])
-                parent_class = 'katex--inline' if test_case['expected_tag'] == 'ccmath-inline' else 'katex--display'
+                parent_class = CSDN.INLINE if test_case['expected_tag'] == CCMATH_INLINE else CSDN.DISPLAY
                 katex_parent = element.xpath(f'//span[@class="{parent_class}"]')[0]
                 expected_tag = test_case['expected_tag']
                 process_katex_mathml(cm, 'katex', katex_parent)
@@ -577,7 +579,7 @@ class TestCCMATH(unittest.TestCase):
         for test_case in TEST_ZHIHU_ZTEXT_HTML:
             with self.subTest(input=test_case['input']):
                 element = html_to_element(test_case['input'])
-                ztext_math = element.xpath('//span[@class="ztext-math"]')[0]
+                ztext_math = element.xpath(f'//span[@class="{ZHIHU.MATH}"]')[0]
                 expected_tag = test_case['expected_tag']
                 process_zhihu_custom_tag(cm, 'MathJax', ztext_math)
                 # 验证处理后的标签类型是否正确

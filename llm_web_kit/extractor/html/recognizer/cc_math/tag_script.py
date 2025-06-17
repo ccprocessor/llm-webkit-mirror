@@ -5,7 +5,7 @@ from lxml.html import HtmlElement
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (
-    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, MathType, text_strip)
+    CCMATH, CCMATH_INLINE, CCMATH_INTERLINE, CSDN, MathType, text_strip)
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
                                          replace_element)
 
@@ -61,9 +61,9 @@ def extract_katex_formula(text: str) -> Dict[str, str]:
 def process_katex_mathml(cm, math_render, node):
     try:
         # 根据节点class确定公式类型
-        equation_type = 'ccmath-inline' if 'katex--inline' in node.get('class') else 'ccmath-interline'
+        equation_type = CCMATH_INLINE if CSDN.INLINE in node.get('class') else CCMATH_INTERLINE
         # 查找内部的katex-mathml节点提取公式
-        mathml_nodes = node.xpath('.//span[@class="katex-mathml"]')
+        mathml_nodes = node.xpath(f'.//span[@class="{CSDN.MATH}"]')
         if mathml_nodes:
             mathml_node = mathml_nodes[0]
             # 提取latex公式（取最后一行非空内容）

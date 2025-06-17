@@ -9,7 +9,8 @@ from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
-from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH, CSDN,
+                                                                  ZHIHU)
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
@@ -133,12 +134,12 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 parent = node.getparent()
 
                 # 针对csdn博客中的katex标签，提取latex公式
-                if ('blog.csdn.net' in self.cm.url and
+                if (CSDN.DOMAIN in self.cm.url and
                         node.tag == 'span' and
-                        node.get('class') in ['katex--inline', 'katex--display']):
+                        node.get('class') in [CSDN.INLINE, CSDN.DISPLAY]):
                     tag_script.process_katex_mathml(self.cm, math_render_type, node)
 
-                if 'zhihu.com' in self.cm.url and node.tag == 'span' and node.get('class') == 'ztext-math':
+                if ZHIHU.DOMAIN in self.cm.url and node.tag == 'span' and node.get('class') == ZHIHU.MATH:
                     tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
 
                 # if 'mathinsight.org' in self.cm.url and node.tag == 'span' and node.get('class') == '':

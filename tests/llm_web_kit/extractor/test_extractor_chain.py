@@ -18,7 +18,8 @@ from lxml import html
 
 from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
-from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (CSDN, ZHIHU,
+                                                                  MathType)
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 
@@ -63,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 91
+        assert len(self.data_json) == 92
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -755,7 +756,7 @@ A few explanations on why certain things in business are so.
         self.assertIsNotNone(chain)
         test_data = self.data_json[89]
         # 验证URL中包含blog.csdn.net
-        self.assertIn('blog.csdn.net', test_data['url'])
+        self.assertIn(CSDN.DOMAIN, test_data['url'])
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
@@ -768,7 +769,7 @@ A few explanations on why certain things in business are so.
         self.assertIsNotNone(chain)
         test_data = self.data_json[90]
         # 验证URL中包含zhuanlan.zhihu.com
-        self.assertIn('zhihu.com', test_data['url'])
+        self.assertIn(ZHIHU.DOMAIN, test_data['url'])
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
@@ -776,3 +777,17 @@ A few explanations on why certain things in business are so.
         self.assertIn(r'$s_1\xrightarrow{a_2}s_2\xrightarrow{a_3}s_5\xrightarrow{a_3}s_8\xrightarrow{a_2}s_9.$', md_content)
         self.assertIn(r'$\mathrm{return}=0+0+0+1=1.$', md_content)
         self.assertIn(r'\begin{aligned} V(s) & =\mathbb{E}[G_t|S_t=s] \\  & =\mathbb{E}[R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\ldots|S_t=s] \\  & =\mathbb{E}[R_t+\gamma(R_{t+1}+\gamma R_{t+2}+\ldots)|S_t=s] \\  & =\mathbb{E}[R_t+\gamma G_{t+1}|S_t=s] \\  & =\mathbb{E}[R_t+\gamma V(S_{t+1})|S_t=s] \end{aligned}', md_content)
+
+    # def test_mathinsight_custom_latex(self):
+    #     """测试mathinsight自定义latex."""
+    #     chain = ExtractSimpleFactory.create(self.config)
+    #     self.assertIsNotNone(chain)
+    #     test_data = self.data_json[91]
+    #     # 验证URL中包含mathinsight.org
+    #     self.assertIn('mathinsight.org', test_data['url'])
+    #     input_data = DataJson(test_data)
+    #     result = chain.extract(input_data)
+    #     md_content = result.get_content_list().to_nlp_md()
+    #     with open('output_mathinsight.md', 'w', encoding='utf-8') as f:
+    #         f.write(md_content)
+    #     self.assertIn(r'', md_content)

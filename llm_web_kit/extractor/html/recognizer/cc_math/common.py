@@ -74,6 +74,20 @@ class MATH_TYPE_PATTERN:
     DISPLAYMATH = 'displayMath'
 
 
+# CSDN博客的KaTeX标签
+class CSDN:
+    INLINE = 'katex--inline'
+    DISPLAY = 'katex--display'
+    MATH = 'katex-mathml'
+    DOMAIN = 'blog.csdn.net'
+
+
+# 知乎的数学公式标签
+class ZHIHU:
+    MATH = 'ztext-math'
+    DOMAIN = 'zhihu.com'
+
+
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
