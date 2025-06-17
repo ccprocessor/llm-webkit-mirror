@@ -12,7 +12,7 @@ inline_tags = {
     'samp', 'blink', 'b', 'code', 'nobr', 'strike', 'bdo', 'basefont', 'abbr', 'var', 'i', 'cccode-inline',
     'select', 's', 'pic', 'label', 'mark', 'object', 'dd', 'dt', 'ccmath-inline', 'svg', 'li',
     'button', 'a', 'font', 'dfn', 'sup', 'kbd', 'q', 'script', 'acronym', 'option', 'img', 'big', 'cite',
-    'em',
+    'em', 'marked-tail', 'marked-text'
     # 'td', 'th'
 }
 
