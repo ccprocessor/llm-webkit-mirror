@@ -49,7 +49,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
-
         return result
 
     @override
@@ -85,7 +84,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 获取math_content
             math_content = inter_ele[0].text
             math_content = self.cm.wrap_math_md(math_content)
-
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
@@ -97,7 +95,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             }
         elif len(in_els) > 0:
             math_content = in_els[0].text
-
             return {
                 'type': DocElementType.EQUATION_INLINE,
                 'raw_content': raw_html_segment,
@@ -132,8 +129,18 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 original_html = self._element_to_html(node)
                 parent = node.getparent()
 
+                # 针对csdn博客中的katex-mathml标签，提取latex公式
+                if node.tag == 'span' and node.get('class') == 'katex-mathml' and 'blog.csdn.net' in self.cm.url:
+                    tag_script.process_katex_mathml(self.cm, math_render_type, node)
+
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
-                if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
+                if node.tag == 'span' and node.get('class') and (
+                        'math-container' in node.get('class') or
+                        'mathjax' in node.get('class') or
+                        'wp-katex-eq' in node.get('class') or
+                        'x-ck12-mathEditor' in node.get('class') or
+                        'tex' in node.get('class')
+                ):
                     tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                 # script[type="math/tex"]
@@ -142,6 +149,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
                 # math tags
                 if node.tag == 'math' or node.tag.endswith(':math'):
+                    # print(f"匹配到数学标签: {node.tag}")
+                    # print(f"标签内容: {original_html}")
                     tag_math.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                 if node.tag == 'mjx-container':

@@ -5,4 +5,5 @@ INVISIBLE_TAGS = [
     {'url': '*', 'tag': '//div[contains(@style, "display:none")]'},
     {'url': 'stackexchange.com', 'tag': '//*[contains(@class, "d-none")]'},  # 任意标签，class包含d-none，限制在stackexchange.com网站
     {'url': 'mathoverflow.net', 'tag': '//*[contains(@class, "d-none")]'},  # 任意标签，class包含d-none，限制在mathoverflow.net网站
+    {'url': 'blog.csdn.net', 'tag': '//span[contains(@class, "katex-html")]'},  # 仅针对 blog.csdn.net 域名，删除所有 class 包含 katex-html 的 <span> 标签及其内容（用于移除数学公式渲染的 HTML 部分）
 ]

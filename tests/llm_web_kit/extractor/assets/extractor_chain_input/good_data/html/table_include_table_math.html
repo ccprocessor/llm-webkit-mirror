@@ -3,29 +3,43 @@
 <body>
 <table border="1">
   <tr>
-    <!-- 第一层单元格：主内容区 -->
     <td style="vertical-align: top">
-      <!-- 第二层表格：公式与代码分区 -->
       <table>
         <tr>
           <td colspan="2">
             <h3>STEM 综合展示表</h3>
           </td>
         </tr>
-        
-        <!-- 数学公式区块 -->
+
         <tr>
           <td>
             <p>基础公式：</p>
-            <math display="block">E = mc^2</math>
-            
-            <!-- 第三层嵌套表格：公式分类 -->
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+              <mi>E</mi>
+              <mo>=</mo>
+              <mi>m</mi>
+              <msup>
+                <mi>c</mi>
+                <mn>2</mn>
+              </msup>
+            </math>
+
             <table style="background-color: #f0f0f0">
               <tr>
                 <td>单位换算：</td>
                 <td>
-                  <p>数学公式区块：<math display="inline">1 \text{km} = 10^3 \text{m}</math></p>
-                  <!-- 第三层子嵌套 -->
+                  <p>数学公式区块：
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+                      <mn>1</mn>
+                      <mtext>km</mtext>
+                      <mo>=</mo>
+                      <msup>
+                        <mn>10</mn>
+                        <mn>3</mn>
+                      </msup>
+                      <mtext>m</mtext>
+                    </math>
+                  </p>
                   <table>
                     <tr>
                       <td>长度</td>
@@ -33,9 +47,45 @@
                       <td>时间</td>
                     </tr>
                     <tr>
-                      <td><p>数学公式<math>1m=10^2cm</math></p></tr>td>
-                      <td><p>数学公式<math>1kg=10^3g</math></p></td>
-                      <td><p>数学公式<math>1h=3600s</math></p></td>
+                      <td>
+                        <p>数学公式
+                          <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <mn>1</mn>
+                            <mi>m</mi>
+                            <mo>=</mo>
+                            <msup>
+                              <mn>10</mn>
+                              <mn>2</mn>
+                            </msup>
+                            <mi>cm</mi>
+                          </math>
+                        </p>
+                      </td>
+                      <td>
+                        <p>数学公式
+                          <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <mn>1</mn>
+                            <mi>kg</mi>
+                            <mo>=</mo>
+                            <msup>
+                              <mn>10</mn>
+                              <mn>3</mn>
+                            </msup>
+                            <mi>g</mi>
+                          </math>
+                        </p>
+                      </td>
+                      <td>
+                        <p>数学公式
+                          <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <mn>1</mn>
+                            <mi>h</mi>
+                            <mo>=</mo>
+                            <mn>3600</mn>
+                            <mi>s</mi>
+                          </math>
+                        </p>
+                      </td>
                     </tr>
                   </table>
                 </td>
@@ -43,19 +93,35 @@
               <tr>
                 <td>运动学：</td>
                 <td>
-                  <p>数学公式<math display="inline">v = \frac{dx}{dt}</math></p>
-                  <p>数学公式<math display="inline">a = \frac{dv}{dt}</math></p>
+                  <p>数学公式
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+                      <mi>v</mi>
+                      <mo>=</mo>
+                      <mfrac>
+                        <mrow><mi>d</mi><mi>x</mi></mrow>
+                        <mrow><mi>d</mi><mi>t</mi></mrow>
+                      </mfrac>
+                    </math>
+                  </p>
+                  <p>数学公式
+                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+                      <mi>a</mi>
+                      <mo>=</mo>
+                      <mfrac>
+                        <mrow><mi>d</mi><mi>v</mi></mrow>
+                        <mrow><mi>d</mi><mi>t</mi></mrow>
+                      </mfrac>
+                    </math>
+                  </p>
                 </td>
               </tr>
             </table>
           </td>
 
-          <!-- 代码区块 -->
           <td>
             <p>编程示例：</p>
             <pre>console.log("Hello World")</pre>
-            
-            <!-- 第三层嵌套表格：多语言示例 -->
+
             <table style="border: 2px dashed blue">
               <tr>
                 <td>
@@ -64,17 +130,68 @@
                 </td>
                 <td>
                   <p>对应公式：</p>
-                  <math display="block">\sum_{i=1}^{n} i = \frac{n(n+1)}{2}</math>
-                  
-                  <!-- 第三层子嵌套 -->
+                  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                      <munderover>
+                        <mo>∑</mo>
+                        <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+                        <mi>n</mi>
+                      </munderover>
+                      <mi>i</mi>
+                      <mo>=</mo>
+                      <mfrac>
+                        <mrow><mi>n</mi><mo>(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow>
+                        <mn>2</mn>
+                      </mfrac>
+                    </mrow>
+                  </math>
+
                   <table>
                     <tr>
                       <td>等差数列</td>
                       <td>等比数列</td>
                     </tr>
                     <tr>
-                      <td><p>数学公式<math>S_n = \frac{n(a_1+a_n)}{2}</math></p></td>
-                      <td><p>数学公式<math>S_n = a_1\frac{1-r^n}{1-r}</math></p></td>
+                      <td>
+                        <p>数学公式
+                          <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <msub><mi>S</mi><mi>n</mi></msub>
+                            <mo>=</mo>
+                            <mfrac>
+                              <mrow>
+                                <mi>n</mi>
+                                <mo>(</mo>
+                                <msub><mi>a</mi><mn>1</mn></msub>
+                                <mo>+</mo>
+                                <msub><mi>a</mi><mi>n</mi></msub>
+                                <mo>)</mo>
+                              </mrow>
+                              <mn>2</mn>
+                            </mfrac>
+                          </math>
+                        </p>
+                      </td>
+                      <td>
+                        <p>数学公式
+                          <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <msub><mi>S</mi><mi>n</mi></msub>
+                            <mo>=</mo>
+                            <msub><mi>a</mi><mn>1</mn></msub>
+                            <mfrac>
+                              <mrow>
+                                <mn>1</mn>
+                                <mo>-</mo>
+                                <msup><mi>r</mi><mi>n</mi></msup>
+                              </mrow>
+                              <mrow>
+                                <mn>1</mn>
+                                <mo>-</mo>
+                                <mi>r</mi>
+                              </mrow>
+                            </mfrac>
+                          </math>
+                        </p>
+                      </td>
                     </tr>
                   </table>
                 </td>
