@@ -154,8 +154,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     result['child_list'] = child_list
             else:
                 if el.text and el.text.strip():
-                    if el.text != '-':
-                        paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
+                    paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
                     el.text = None
                 for child in el.getchildren():
                     p = __extract_list_item_text_recusive(child)
@@ -165,7 +164,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                             result['child_list'] = p['child_list']
                         # 添加子元素的文本内容
                         if 'c' in p:
-                            if p['c'] != '' and p['c'] != '-':
+                            if p['c'] != '':
                                 paragraph.append({'c': p['c'], 't': p.get('t', ParagraphTextType.TEXT)})
             if el.tag != 'li' and el.tail and el.tail.strip():
                 if is_sub_sup:
@@ -180,13 +179,11 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 # item['c'].strip(): 会导致前面处理br标签，添加的\n\n失效
                 result['c'] = ' '.join(normalize_text_segment(item['c'].strip()) for item in paragraph)
             return result
-        # 这里也需要加上ul，不然会导致<ul><ul><ul/><ul/>的结构的list提取不到
-        list_item_tags = ('li', 'dd', 'dt', 'ul', 'div')
+        list_item_tags = ('li', 'dd', 'dt', 'ul', 'div', 'p')
         if child.tag in list_item_tags:
             paragraph = __extract_list_item_text_recusive(child)
             if len(paragraph) > 0:
                 text_paragraph.append(paragraph)
-
         return text_paragraph
 
     def __get_list_content_list(self, ele: HtmlElement, list_nest_level: int) -> list:
