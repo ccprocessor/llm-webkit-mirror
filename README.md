@@ -118,7 +118,7 @@ if __name__=="__main__":
     markdown = extract(url, html)
 ```
 
-### only extract by magic-html
+### only extract main_html by magic-html
 
 ```python
 from llm_web_kit.simple import extract_magic_html
@@ -127,9 +127,9 @@ from loguru import logger
 
 def extract(url:str, html:str) -> str:
     try:
-        nlp_md = extract_main_html_by_maigic_html(url, html)
+        main_html = extract_main_html_by_maigic_html(url, html)
         # or mm_nlp_md = extract_pure_html_to_mm_md(url, html)
-        return nlp_md
+        return main_html
     except Exception as e:
         logger.exception(e)
     return None
@@ -137,7 +137,7 @@ def extract(url:str, html:str) -> str:
 if __name__=="__main__":
     url = ""
     html = ""
-    markdown = extract(url, html)
+    main_html = extract(url, html)
 ```
 
 ## Pipeline
