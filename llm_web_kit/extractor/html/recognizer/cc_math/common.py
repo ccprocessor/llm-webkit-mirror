@@ -288,11 +288,11 @@ class CCMATH():
                 result.append((EQUATION_INLINE, MathType.HTMLMATH))
 
             # 检查当前节点是否是katex元素（CSDN）
-            if 'blog.csdn.net' in self.url and node.tag == 'span' and node.get('class'):
+            if CSDN.DOMAIN in self.url and node.tag == 'span' and node.get('class'):
                 node_class = node.get('class')
-                if 'katex--inline' in node_class:
+                if CSDN.INLINE in node_class:
                     result.append((EQUATION_INLINE, MathType.LATEX))
-                elif 'katex--display' in node_class:
+                elif CSDN.DISPLAY in node_class:
                     result.append((EQUATION_INTERLINE, MathType.LATEX))
         return self.equation_type_to_tag(result)
 
