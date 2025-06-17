@@ -128,6 +128,49 @@ from loguru import logger
 def extract(url:str, html:str) -> str:
     try:
         main_html = extract_main_html_by_maigic_html(url, html)
+        # or mm_main_html = extract_pure_html_to_mm_md(url, html)
+        return main_html
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    main_html = extract(url, html)
+```
+
+### only extract by recognize
+
+```python
+from llm_web_kit.simple import extract_pure_html_to_md
+import traceback
+from loguru import logger
+
+def extract(url:str, html:str) -> str:
+    try:
+        nlp_md = extract_html_to_md(url, html, clip_html=False)
+        return nlp_md
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    markdown = extract(url, html)
+```
+
+### only extract main_html by magic-html
+
+```python
+from llm_web_kit.simple import extract_magic_html
+import traceback
+from loguru import logger
+
+def extract(url:str, html:str) -> str:
+    try:
+        main_html = extract_main_html_by_maigic_html(url, html)
         # or mm_nlp_md = extract_pure_html_to_mm_md(url, html)
         return main_html
     except Exception as e:
