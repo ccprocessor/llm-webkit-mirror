@@ -24,7 +24,7 @@ from llm_web_kit.input.datajson import ContentList, DataJson
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 from llm_web_kit.libs.path_lib import get_py_pkg_root_dir
-from llm_web_kit.libs.html_utils import remove_script_style_tags
+
 
 class HTMLPageLayoutType:
     """网页的布局类型."""
@@ -99,7 +99,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
-        
+
         # 过滤掉包含script和style标签的元素
         filtered_parsed_html = []
         for cc_html, o_html in parsed_html:
