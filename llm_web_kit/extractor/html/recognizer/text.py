@@ -106,7 +106,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         new_html_lst = []
         for html_element, raw_html_element in main_html_lst:
             # 如果是字符串则转换为 HtmlElement
-
             if self.is_cc_html(html_element):
                 new_html_lst.append((html_element, raw_html_element))
             else:
@@ -259,7 +258,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         :param root: 根元素
         :return: 段落元素列表
         """
-
         def is_block_element(node) -> bool:
             """如果标签不在内联元素集合中，默认为块级元素。 但是，如果一个内联元素包含块级元素，则该内联元素被视为块级元素。"""
             if node.tag in inline_tags:

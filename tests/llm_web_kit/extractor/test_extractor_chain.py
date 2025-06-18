@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 98
+        assert len(self.data_json) == 99
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -853,3 +853,13 @@ A few explanations on why certain things in business are so.
                 first_item_list = content_list[i]['content']['items']
                 break
         assert len(first_item_list) == 0
+
+    def test_miss_title(self):
+        """测试title缺失的情况."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[98]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content = result.get_content_list().to_nlp_md()
+        assert 'Push-up' in content

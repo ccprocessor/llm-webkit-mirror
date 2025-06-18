@@ -124,7 +124,6 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
             paragraph = []
             result = {}
-
             if el.tag == CCTag.CC_MATH_INLINE and el.text and el.text.strip():
                 paragraph.append({'c': f'${el.text}$', 't': ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE and el.text and el.text.strip():
@@ -208,7 +207,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 'child_list': {}
             }
             content_list.append(root_item)
-        for child in ele.iterchildren():
+        for child in ele.iter():
             text_paragraph = self.__extract_list_item_text(child)
             if len(text_paragraph) > 0:
                 content_list.extend(text_paragraph)
