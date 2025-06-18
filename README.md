@@ -104,9 +104,9 @@ from llm_web_kit.simple import extract_pure_html_to_md
 import traceback
 from loguru import logger
 
-def extract(url:str, main_html:str, raw_html) -> str:
+def extract(url:str, html:str) -> str:
     try:
-        nlp_md = extract_html_to_md(url, main_html, clip_html=False, raw_html)
+        nlp_md = extract_html_to_md(url, html, clip_html=False)
         return nlp_md
     except Exception as e:
         logger.exception(e)

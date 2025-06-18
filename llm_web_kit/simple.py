@@ -35,14 +35,12 @@ class ExtractorFactory:
             raise ValueError(f'Invalid extractor type: {extractor_type}')
 
 
-def __extract_main_html_by_no_clip_html(url:str, html_content: str, raw_html:str) -> DataJson:
+def __extract_main_html_by_no_clip_html(url:str, html_content: str) -> DataJson:
     extractor = NoClipHTMLFIleFormatorExtractor(load_pipe_tpl('noclip_html'))
-    if raw_html == '':
-        raw_html = html_content
     input_data_dict = {
         'track_id': str(uuid.uuid4()),
         'url': url,
-        'html': raw_html,
+        'html': html_content,
         'main_html': html_content,
         'dataset_name': 'llm-web-kit-pure-quickstart',
         'data_source_category': 'HTML',
@@ -76,21 +74,21 @@ def __extract_html(url:str, html_content: str) -> DataJson:
     return result
 
 
-def extract_html_to_md(url:str, html_content: str, clip_html=True, raw_html='') -> str:
+def extract_html_to_md(url:str, html_content: str, clip_html=True) -> str:
     """extract html to markdown without images."""
     if clip_html:
         result = __extract_html(url, html_content)
     else:
-        result = __extract_main_html_by_no_clip_html(url, html_content, raw_html)
+        result = __extract_main_html_by_no_clip_html(url, html_content)
     return result.get_content_list().to_nlp_md()
 
 
-def extract_html_to_mm_md(url:str, html_content: str, clip_html=True, raw_html='') -> str:
+def extract_html_to_mm_md(url:str, html_content: str, clip_html=True) -> str:
     """extract html to markdown with images."""
     if clip_html:
         result = __extract_html(url, html_content)
     else:
-        result = __extract_main_html_by_no_clip_html(url, html_content, raw_html)
+        result = __extract_main_html_by_no_clip_html(url, html_content)
     return result.get_content_list().to_mm_md()
 
 
