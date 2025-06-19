@@ -47,6 +47,9 @@ ATTR_SUFFIX_TO_REMOVE = {
     # '-header', '_header',  # 有特例，可能自定义的header中有标题，先注释
 }
 
+# 自定义标签
+tail_block_tag = 'cc-alg-uc-text'
+
 
 def add_data_uids(dom: html.HtmlElement) -> None:
     """为DOM所有节点添加data-uid属性（递归所有子节点）"""
@@ -762,7 +765,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                                 # trailing_text = last_child.tail
 
                                 # 创建wrapper元素
-                                wrapper = etree.Element('cc-alg-uc-tex')
+                                wrapper = etree.Element(tail_block_tag)
                                 wrapper.set('_item_id', current_id)
 
                                 # 设置前面的文本
@@ -798,7 +801,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                                 # 检查父节点的text
                                 if original_parent.text and original_parent.text.strip() == root_for_xpath.text.strip():
                                     # 创建wrapper
-                                    wrapper = etree.Element('cc-alg-uc-tex')
+                                    wrapper = etree.Element(tail_block_tag)
                                     wrapper.set('_item_id', current_id)
                                     wrapper.text = original_parent.text
 
@@ -818,7 +821,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                                     for child in original_parent.iterchildren():
                                         if child.tail and child.tail.strip() == root_for_xpath.text.strip():
                                             # 创建wrapper
-                                            wrapper = etree.Element('cc-alg-uc-tex')
+                                            wrapper = etree.Element(tail_block_tag)
                                             wrapper.set('_item_id', current_id)
                                             wrapper.text = child.tail
 
@@ -830,21 +833,8 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                                             index = parent.index(child)
                                             parent.insert(index + 1, wrapper)
 
-                                            found = True
                                             break
 
-                                # 如果没有找到匹配的文本节点，使用父节点作为包裹对象
-                                if not found:
-                                    wrapper = etree.Element('cc-alg-uc-tex')
-                                    wrapper.set('_item_id', current_id)
-                                    wrapper.text = root_for_xpath.text
-                                    # 将父节点的内容移动到wrapper中
-                                    for child in list(original_parent.iterchildren()):
-                                        wrapper.append(child)
-                                        original_parent.remove(child)
-
-                                    # 添加wrapper到父节点
-                                    original_parent.append(wrapper)
             else:
                 # 块级元素直接设置属性
                 original_parent.set('_item_id', current_id)
