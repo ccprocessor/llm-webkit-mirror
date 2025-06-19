@@ -833,21 +833,8 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                                             index = parent.index(child)
                                             parent.insert(index + 1, wrapper)
 
-                                            found = True
                                             break
 
-                                # 如果没有找到匹配的文本节点，使用父节点作为包裹对象
-                                if not found:
-                                    wrapper = etree.Element(tail_block_tag)
-                                    wrapper.set('_item_id', current_id)
-                                    wrapper.text = root_for_xpath.text
-                                    # 将父节点的内容移动到wrapper中
-                                    for child in list(original_parent.iterchildren()):
-                                        wrapper.append(child)
-                                        original_parent.remove(child)
-
-                                    # 添加wrapper到父节点
-                                    original_parent.append(wrapper)
             else:
                 # 块级元素直接设置属性
                 original_parent.set('_item_id', current_id)
