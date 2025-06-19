@@ -99,7 +99,14 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
-        content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
+
+        # 过滤掉包含script和style标签的元素
+        filtered_parsed_html = []
+        for cc_html, o_html in parsed_html:
+            # 检查o_html是否包含script或style标签
+            if not (o_html.xpath('//script') or o_html.xpath('//style')):
+                filtered_parsed_html.append((cc_html, o_html))
+        content_list:ContentList = self._export_to_content_list(base_url, filtered_parsed_html, raw_html)
         data_json['content_list'] = content_list
         # data_json['title'] = title
         return data_json
