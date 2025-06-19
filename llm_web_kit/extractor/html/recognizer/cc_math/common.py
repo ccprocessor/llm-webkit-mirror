@@ -74,6 +74,20 @@ class MATH_TYPE_PATTERN:
     DISPLAYMATH = 'displayMath'
 
 
+# CSDN博客的KaTeX标签
+class CSDN:
+    INLINE = 'katex--inline'
+    DISPLAY = 'katex--display'
+    MATH = 'katex-mathml'
+    DOMAIN = 'blog.csdn.net'
+
+
+# 知乎的数学公式标签
+class ZHIHU:
+    MATH = 'ztext-math'
+    DOMAIN = 'zhihu.com'
+
+
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
@@ -272,6 +286,14 @@ class CCMATH():
             if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
                 (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
                 result.append((EQUATION_INLINE, MathType.HTMLMATH))
+
+            # 检查当前节点是否是katex元素（CSDN）
+            if CSDN.DOMAIN in self.url and node.tag == 'span' and node.get('class'):
+                node_class = node.get('class')
+                if CSDN.INLINE in node_class:
+                    result.append((EQUATION_INLINE, MathType.LATEX))
+                elif CSDN.DISPLAY in node_class:
+                    result.append((EQUATION_INTERLINE, MathType.LATEX))
         return self.equation_type_to_tag(result)
 
     def equation_type_to_tag(self, type_math_type: List[Tuple[str, str]]) -> List[Tuple[str, str]]:

@@ -23,7 +23,7 @@ from llm_web_kit.model.politics_detector import (GTEModel, PoliticalDetector,
 from llm_web_kit.model.resource_utils import CACHE_DIR
 
 
-class TestPoliticalDetector:
+class TestPoliticalDetector(TestCase):
 
     @patch('transformers.AutoTokenizer.from_pretrained')
     @patch('llm_web_kit.model.politics_detector.fasttext.load_model')
@@ -34,7 +34,7 @@ class TestPoliticalDetector:
         _ = PoliticalDetector()
         mock_load_model.assert_called_once_with('/fake/model/path/model.bin')
         mock_auto_tokenizer.assert_called_once_with(
-            '/fake/model/path/internlm2-chat-20b',
+            '/fake/model/path/qwen2.5_7b_tokenizer',
             use_fast=False,
             trust_remote_code=True,
         )
@@ -45,7 +45,7 @@ class TestPoliticalDetector:
         _ = PoliticalDetector('custom_model_path')
         mock_load_model.assert_called_once_with(os.path.join('custom_model_path', 'model.bin'))
         mock_auto_tokenizer.assert_called_once_with(
-            os.path.join('custom_model_path', 'internlm2-chat-20b'),
+            os.path.join('custom_model_path', 'qwen2.5_7b_tokenizer'),
             use_fast=False,
             trust_remote_code=True,
         )
@@ -59,6 +59,62 @@ class TestPoliticalDetector:
         predictions, probabilities = political_detect.predict('test text')
         assert predictions == ['label1', 'label2']
         assert probabilities == [0.9, 0.1]
+
+import logging
+import os
+from unittest import TestCase
+from unittest.mock import MagicMock, patch
+
+from loguru import logger
+
+# 假设你的类和函数在 llm_web_kit.model.politics_detector 模块中
+from llm_web_kit.model.politics_detector import PoliticalDetector
+
+
+class TestPoliticalDetectorWithAutoDownload(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # 禁用所有日志输出，防止 loguru 报错
+        logger.disable('llm_web_kit')
+
+    @patch('llm_web_kit.model.politics_detector.load_config')
+    @patch('llm_web_kit.model.politics_detector.os.path.exists', return_value=False)
+    @patch('llm_web_kit.model.politics_detector.download_auto_file', return_value='/tmp/cache/political-25m3_cpu.zip')
+    @patch('llm_web_kit.model.politics_detector.unzip_local_file', return_value='/tmp/cache/political-25m3_cpu')
+    @patch('llm_web_kit.model.politics_detector.logger.info')
+    def test_auto_download_triggers_config_access_and_logging(
+        self,
+        mock_logger_info,
+        mock_unzip_local_file,
+        mock_download_auto_file,
+        mock_os_path_exists,
+        mock_load_config
+    ):
+        # 构造一个假的配置返回值
+        mock_load_config.return_value = {
+            'resources': {
+                'political-25m3_cpu': {
+                    'download_path': 's3://fake-bucket/political-25m3_cpu.zip',
+                    'md5': 'fake_md5_hash'
+                }
+            }
+        }
+
+        # 创建 detector 实例，这会触发 auto_download()
+        with patch('transformers.AutoTokenizer.from_pretrained'), \
+             patch('llm_web_kit.model.politics_detector.fasttext.load_model'):
+
+            detector = PoliticalDetector()
+
+        # 验证 auto_download 返回的路径是否正确
+        self.assertEqual(detector.auto_download(), '/tmp/cache/political-25m3_cpu')
+
+        # 验证 load_config 是否至少被调用了一次
+        self.assertGreaterEqual(mock_load_config.call_count, 1)
+
+        # 验证 logger.info 是否被调用，并包含 download_path
+        mock_logger_info.assert_any_call('downloading s3://fake-bucket/political-25m3_cpu.zip')
 
 class TestGTEModel(TestCase):
     @patch('llm_web_kit.model.politics_detector.GTEModel.auto_download')
@@ -228,11 +284,11 @@ class TestGTEModel(TestCase):
 
 
 def test_decide_political_by_prob():
-    predictions = ['__label__normal', '__label__political']
+    predictions = ['__label__positive', '__label__negative']
     probabilities = [0.6, 0.4]
     assert decide_political_by_prob(predictions, probabilities) == 0.6
 
-    predictions = ['__label__political', '__label__normal']
+    predictions = ['__label__negative', '__label__positive']
     probabilities = [0.7, 0.3]
     assert decide_political_by_prob(predictions, probabilities) == 0.3
 
@@ -240,7 +296,7 @@ def test_decide_political_by_prob():
 def test_decide_political_func():
     political_detect = MagicMock()
     political_detect.predict.return_value = (
-        ['__label__normal', '__label__political'],
+        ['__label__positive', '__label__negative'],
         [0.6, 0.4],
     )
     test_str = 'test text'

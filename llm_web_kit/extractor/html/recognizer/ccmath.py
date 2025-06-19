@@ -9,7 +9,8 @@ from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
-from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH, CSDN,
+                                                                  ZHIHU)
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
@@ -129,9 +130,16 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 original_html = self._element_to_html(node)
                 parent = node.getparent()
 
-                # 针对csdn博客中的katex-mathml标签，提取latex公式
-                if node.tag == 'span' and node.get('class') == 'katex-mathml' and 'blog.csdn.net' in self.cm.url:
+                # 针对csdn博客中的katex标签，提取latex公式
+                if (CSDN.DOMAIN in self.cm.url and
+                        node.tag == 'span' and
+                        node.get('class') in [CSDN.INLINE, CSDN.DISPLAY]):
                     tag_script.process_katex_mathml(self.cm, math_render_type, node)
+
+                if ZHIHU.DOMAIN in self.cm.url and node.tag == 'span' and node.get('class') == ZHIHU.MATH:
+                    tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
+
+                # if 'mathinsight.org' in self.cm.url and node.tag == 'span' and node.get('class') == '':
 
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
                 if node.tag == 'span' and node.get('class') and (
@@ -145,7 +153,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
                 # script[type="math/tex"]
                 # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                    # tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
+                #     print('匹配到script标签: ', node.get('type'))
+                #     tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
 
                 # math tags
                 if node.tag == 'math' or node.tag.endswith(':math'):
