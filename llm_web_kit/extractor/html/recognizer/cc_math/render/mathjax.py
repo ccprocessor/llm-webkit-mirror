@@ -1,6 +1,9 @@
 import re
 from typing import Any, Dict, List
 
+from llm_web_kit.extractor.html.recognizer.cc_math.common import MATHINSIGHT
+from llm_web_kit.extractor.html.recognizer.cc_math.config.mathsight.formula_conversion import \
+    convert_to_standard_latex
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
@@ -34,6 +37,7 @@ class MathJaxRender(BaseMathRender):
             'config': '',
             'version': ''
         }
+        self.url = ''  # 添加url属性
 
     def get_render_type(self) -> str:
         """获取渲染器类型."""
@@ -332,6 +336,12 @@ class MathJaxRender(BaseMathRender):
         if not text:
             return text
 
+        # 如果是行间公式且没有找到匹配，尝试查找 \begin{xxx}...\end{xxx} 格式
+        if is_display:
+            begin_matches = list(re.finditer(r'\\begin\{([^}]+)}(.*?)\\end\{\1}', text, re.DOTALL))
+            if begin_matches:
+                return self._process_begin_end_matches(element, text, begin_matches, is_tail)
+
         # 查找所有匹配
         matches = list(pattern.finditer(text))
         if not matches:
@@ -359,6 +369,9 @@ class MathJaxRender(BaseMathRender):
             if self._is_escaped_delimiter(text, match.start()):
                 continue
 
+            # 限定MATHINSIGHT域名
+            if MATHINSIGHT.DOMAIN in self.url:
+                formula = convert_to_standard_latex(formula)
             start_pos = match.start()
             end_pos = match.end()
 
@@ -405,6 +418,61 @@ class MathJaxRender(BaseMathRender):
             last_position = start_pos
 
         # 返回处理后的文本
+        return result
+
+    def _process_begin_end_matches(self, element, text, begin_matches, is_tail):
+        """处理begin{},end{}包裹的数学公式."""
+        from llm_web_kit.extractor.html.recognizer.cc_math.common import \
+            MathType
+        from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
+        from llm_web_kit.libs.html_utils import build_cc_element
+
+        result = text
+        last_position = len(result)
+        parent = element.getparent()
+
+        for match in reversed(begin_matches):
+            env_name = match.group(1)  # 环境名称 (如 align, equation 等)
+            formula = match.group(2)  # 公式内容
+            formula = normalize_ctl_text(formula)
+            if not formula.strip():
+                continue  # 跳过空公式
+
+            # 构建完整的公式文本
+            formula = f'\\begin{{{env_name}}}{formula}\\end{{{env_name}}}'
+            # 将自定义LaTeX转换为标准LaTeX格式
+            if MATHINSIGHT.DOMAIN in self.url:
+                formula = convert_to_standard_latex(formula)
+
+            start_pos = match.start()
+            end_pos = match.end()
+            suffix = result[end_pos:last_position]
+
+            math_node = build_cc_element(
+                html_tag_name=CCTag.CC_MATH_INTERLINE,  # 始终是行间公式
+                text=formula,  # 使用标准化后的公式
+                tail=suffix,
+                type=MathType.LATEX,
+                by=self.render_type,
+                html=match.group(0)
+            )
+
+            result = result[:start_pos]
+
+            if is_tail:
+                element.tail = result
+                if parent is not None:
+                    parent_index = list(parent).index(element)
+                    parent.insert(parent_index + 1, math_node)
+            else:
+                element.text = result
+                if len(element) > 0:
+                    element.insert(0, math_node)
+                else:
+                    element.append(math_node)
+
+            last_position = start_pos
+
         return result
 
     def _is_escaped_delimiter(self, text: str, pos: int) -> bool:
