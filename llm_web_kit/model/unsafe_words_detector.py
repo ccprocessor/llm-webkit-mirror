@@ -68,7 +68,7 @@ def get_ac(language='zh-en'):
     unsafe_words_file_path = auto_download(language)
     t2 = time.time()
     print(
-        f'-----------------auto_download cost time: {t2-t1} , language: {language}------------------'
+        f'-----------------auto_download cost time: {t2 - t1} , language: {language}------------------'
     )
     with open(unsafe_words_file_path, 'r') as f:
         lines = f.readlines()
@@ -85,6 +85,8 @@ def get_ac(language='zh-en'):
     words = {}
     for line in lines:
         w = json_loads(line)
+        if w.get('tag') == 'delete':
+            continue
         word = str(w.get('word') or '').lower()
         if not word:
             continue
@@ -163,7 +165,7 @@ class UnsafeWordChecker:
         self.ac = get_ac(language)
         t2 = time.time()
         print(
-            f'---------------UnsafeWordChecker init time: {t2-t1} , language: {language}-----------------'
+            f'---------------UnsafeWordChecker init time: {t2 - t1} , language: {language}-----------------'
         )
 
     def check_unsafe_words(self, content_str: str) -> list:
