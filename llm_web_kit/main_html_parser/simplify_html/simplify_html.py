@@ -48,7 +48,7 @@ ATTR_SUFFIX_TO_REMOVE = {
 }
 
 # 自定义标签
-tail_block_tag = "cc-alg-uc-text"
+tail_block_tag = 'cc-alg-uc-text'
 
 
 def add_data_uids(dom: html.HtmlElement) -> None:
