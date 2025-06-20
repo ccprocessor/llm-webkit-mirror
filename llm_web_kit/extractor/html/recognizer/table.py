@@ -228,7 +228,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     parse_res.append(elem.text.strip())
                     elem.text = None  # 防止后续重复处理
                 # 存在嵌套表格，递归处理子节点
-                for child in elem.iterchildren():
+                for child in elem.iter():
                     if child.tag == 'table':
                         # 对嵌套表格递归调用简化处理
                         self.__simplify_td_th_content(table_nest_level, child)
