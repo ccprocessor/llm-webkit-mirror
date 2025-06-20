@@ -9,6 +9,7 @@ from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import (
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
+from llm_web_kit.extractor.html.pre_extractor import HTMLFileFormatCleanTagsPreExtractor
 
 TEST_CASES = [
     # 基本公式测试用例
@@ -450,7 +451,7 @@ class TestMathRecognizer(unittest.TestCase):
             raw_html_path = base_dir.joinpath(test_case['input'][0])
             # print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
-            raw_html = raw_html_path.read_text()
+            raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.math_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
             # print(parts)
             # 将parts列表中第一个元素拼接保存到文件，带随机数
@@ -458,12 +459,24 @@ class TestMathRecognizer(unittest.TestCase):
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
+            # 创建预处理器并清理隐藏元素
+            pre_extractor = HTMLFileFormatCleanTagsPreExtractor({})
+            data_json = {'html': raw_html, 'url': base_url}
+            data_json = pre_extractor._do_pre_extract(data_json)
+            cleaned_html = data_json['html']
+
+            # 使用清理后的HTML进行公式识别
+            parts = self.math_recognizer.recognize(
+                base_url,
+                [(html_to_element(cleaned_html), html_to_element(cleaned_html))],
+                cleaned_html
+            )
             # 检查行间公式抽取正确性
             new_parts = []
             for part in parts:
                 new_parts.append((element_to_html(part[0]), element_to_html(part[1])))
             parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
-            expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
+            expect_text = base_dir.joinpath(test_case['expected']).read_text(encoding='utf-8').strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
             self.assertEqual(len(parts), len(expect_formulas))
             # answers = []

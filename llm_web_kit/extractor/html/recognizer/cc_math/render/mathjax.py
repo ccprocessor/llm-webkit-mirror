@@ -336,14 +336,22 @@ class MathJaxRender(BaseMathRender):
         if not text:
             return text
 
-        # 如果是行间公式且processEnvironments为True，尝试查找 \begin{xxx}...\end{xxx} 格式
-        if is_display and MATHJAX_OPTIONS.get('processEnvironments', True):
+        # 首先查找所有分隔符形式的匹配
+        matches = list(pattern.finditer(text))
+
+        # 如果是行间公式且没有分隔符匹配，并且processEnvironments为True，才尝试查找 \begin{xxx}...\end{xxx} 格式
+        if is_display and not matches and MATHJAX_OPTIONS.get('processEnvironments', True):
+            # 检查是否是mjx-container元素，如果是则跳过此特殊处理，TODO: 暂时添加，可能要修改逻辑
+            parent = element.getparent()
+            if parent is not None and parent.tag == 'mjx-container':
+                return text
+
+            # TODO: mjx-container标签中\begin{xxx}...\end{xxx}包裹的公式在如下逻辑中无法提取，排查原因中
             begin_matches = list(re.finditer(r'\\begin\{([^}]+)}(.*?)\\end\{\1}', text, re.DOTALL))
             if begin_matches:
                 return self._process_begin_end_matches(element, text, begin_matches, is_tail)
 
-        # 查找所有匹配
-        matches = list(pattern.finditer(text))
+        # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
             return text
 
