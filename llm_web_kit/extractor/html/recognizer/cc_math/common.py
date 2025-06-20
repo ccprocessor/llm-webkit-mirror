@@ -88,6 +88,10 @@ class ZHIHU:
     DOMAIN = 'zhihu.com'
 
 
+class MATHINSIGHT:
+    DOMAIN = 'mathinsight.org'
+
+
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE

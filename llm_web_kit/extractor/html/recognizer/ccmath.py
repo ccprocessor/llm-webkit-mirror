@@ -42,6 +42,9 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         # 获取数学公式渲染器
         base_render = BaseMathRender()
         math_render = base_render.get_math_render(raw_html)
+        # 设置URL
+        if math_render:
+            math_render.url = base_url
         # TODO: 自定义配置目前只支持mathjax
         if math_render and math_render.render_type == MathRenderType.MATHJAX:
             math_render.get_options(raw_html)
