@@ -336,8 +336,8 @@ class MathJaxRender(BaseMathRender):
         if not text:
             return text
 
-        # 如果是行间公式且没有找到匹配，尝试查找 \begin{xxx}...\end{xxx} 格式
-        if is_display:
+        # 如果是行间公式且processEnvironments为True，尝试查找 \begin{xxx}...\end{xxx} 格式
+        if is_display and MATHJAX_OPTIONS.get('processEnvironments', True):
             begin_matches = list(re.finditer(r'\\begin\{([^}]+)}(.*?)\\end\{\1}', text, re.DOTALL))
             if begin_matches:
                 return self._process_begin_end_matches(element, text, begin_matches, is_tail)
