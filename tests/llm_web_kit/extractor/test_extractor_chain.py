@@ -795,19 +795,6 @@ A few explanations on why certain things in business are so.
         self.assertIn(r'L(\mathbf{x}) = f(\mathbf{a}) + T(\mathbf{x}-\mathbf{a})', md_content)
         self.assertIn(r'\frac{x^2y}{x^2+y^2} & \text{if } (x,y) \ne (0,0)\\',md_content)
 
-    def test_mathinsight_custom_latex(self):
-        """测试mathinsight自定义latex."""
-        chain = ExtractSimpleFactory.create(self.config)
-        self.assertIsNotNone(chain)
-        test_data = self.data_json[98]
-        # 验证URL中包含mathinsight.org
-        # self.assertIn('mathinsight.org', test_data['url'])
-        input_data = DataJson(test_data)
-        result = chain.extract(input_data)
-        md_content = result.get_content_list().to_nlp_md()
-        with open('output_test0620.md', 'w', encoding='utf-8') as f:
-            f.write(md_content)
-
     def test_double_ul(self):
         """测试双重ul标签."""
         chain = ExtractSimpleFactory.create(self.config)
