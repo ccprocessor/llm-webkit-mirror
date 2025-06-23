@@ -2,6 +2,8 @@ import unittest
 from pathlib import Path
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
+from llm_web_kit.extractor.html.pre_extractor import \
+    HTMLFileFormatCleanTagsPreExtractor
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (
     CCMATH_INLINE, CSDN, ZHIHU)
 from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import (
@@ -9,7 +11,6 @@ from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import (
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
-from llm_web_kit.extractor.html.pre_extractor import HTMLFileFormatCleanTagsPreExtractor
 
 TEST_CASES = [
     # 基本公式测试用例
