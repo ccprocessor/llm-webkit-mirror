@@ -1,0 +1,1228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Subtleties of differentiability in higher dimensions - Math Insight</title>
+	<!-- JavaScript Detection -->
+	<script>document.documentElement.className += " js";</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/static/css/mistyle.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 7]>
+<link href="/static/css/iehacks.min.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<script src="/static/js/jquery-latest.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/geogebra/scripts/deployggb.js"></script>
+<script src="/static/js/round.js" type="text/javascript"></script>
+
+<meta name="description" content="A description of some of the tricky ways where a function of multiple variables can fail to be differentiable. Example two variable functions are illustrated with interactive graphics."/>
+<script src="/static/js/jquery.cookie.js"></script>
+<script src="/static/js/ajaxcsrf.js" type="text/javascript"></script>
+
+
+
+<script type="text/javascript" src="/static/MathJax/MathJax.js?config=TeX-AMS_HTML-full,/static/mathjaxconfig/midefault"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J4DSZYWSNL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J4DSZYWSNL');
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-28169224-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+<ul class="ym-skiplinks">
+        <li><a class="ym-skip" href="#pagenav">Skip to navigation (Press Enter)</a></li>
+        <li><a class="ym-skip" href="#main">Skip to main content (Press Enter)</a></li>
+</ul>
+
+<nav id="sitenav" role="navigation">
+  <div class="ym-wrapper">
+    <div class="ym-wbox">
+      <div class="mnav">
+        <ul class="ym-grid ym-equalize linearize-level-2">
+          <li class="ym-g10 ym-gl"><a href="/">Home</a></li>
+          <li class="ym-g10 ym-gl"><a href="/thread/list">Threads</a></li>
+          <li class="ym-g10 ym-gl"><a href="/index/general">Index</a></li>
+          <li class="ym-g10 ym-gl"><a href="/about/mathinsight">About</a></li>
+          <li class="ym-g50 ym-gl"><div id="search_box"><form class="ym-searchform" action="/search/#search" method="get">
+          <input id="id_q_a" type="search" name="q" size="18" class="ym-searchfield" placeholder="Search Math Insight..."  />
+          <input class="ym-searchbutton" type="submit" value="Search" />
+        </form>
+      </div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<header>
+  <div class="ym-wrapper">
+    <div class="ym-wbox">
+      <h1>Math Insight</h1>
+    </div>
+  </div>
+</header>
+
+
+<nav id="pagenav">
+<div id="menu-icon">Page Navigation</div>
+  <div class="ym-wrapper">
+    <ul id="unav">
+
+  <li><a href="#sitenav">Top</a></li>
+
+  <li><a href="#definition">Definition</a>
+
+  </li>
+  <li><a href="#limits">High-D limits</a>
+
+  </li>
+  <li><a href="#understanding">Understanding in 2D</a>
+
+  </li>
+
+  <li><a href="#threads">In threads</a><ul>
+
+  <li><a href="#thread_multivar">Multivariable calculus</a></li>
+
+  <li><a href="#thread_math2374">Math 2374</a></li>
+  </ul></li>
+
+
+  <li><a href="#linksection">Links</a>
+    <ul>
+      <li><a href="#similar_pages">Similar pages</a></li>
+<li><a href="#related_generic">See also</a></li>
+      <li><a href="#lighter">Lighten up</a></li>
+      <li><a href="#deeper">Go deeper</a></li></ul>
+  </li>
+  <li><a href="#sendmessage">Contact us</a></li>
+
+      </ul>
+  </div>
+      <input type="button" value="x" class="unstick" onclick="unstick(document.getElementById('pagenav'))"/>
+</nav>
+
+
+<div id="breadcrumbs_login" style="background-color: rgb(254,250,120); padding-top: 5px; padding-bottom: 5px">
+  <div class="ym-wrapper">
+    <div class="ym-wbox" style="padding-top:0; padding-bottom: 0;">
+      <div class="ym-grid linearize-level-1">
+        <div class="ym-g66 ym-gl">
+          <div class="ym-gbox-left">
+
+            <span style="font-size: 18px">To create your own interactive content like this, check out our new web site <a href="https://www.doenet.org" />doenet.org</a>!</span>
+
+          </div>
+        </div>
+<!--    <div class="ym-g33 ym-gr">
+          <div class="ym-gbox-left" style="text-align: right;">
+
+            <a href="/accounts/login?next=/differentiability_multivariable_subtleties">log in</a>
+
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div class="ym-wrapper">
+    <div class="ym-wbox">
+
+
+
+  <div class="ym-column linearize-level-1">
+    <div class="ym-col1">
+      <div class="ym-cbox">
+	<h3>Subtleties of differentiability in higher dimensions</h3>
+      </div>
+    </div>
+
+    <div class="ym-col3">
+      <div class="ym-cbox">
+
+	<aside class="box info suggestbackbox">
+	  <h4>Suggested background</h4>
+	  <ul class="linklist">
+
+	    <li><a href="/differentiability_multivariable_introduction" class="content" title="Introduction to differentiability in higher dimensions: An introduction to the basic concept of the differentiability of a function of multiple variables. Discussion centers around the existence of a tangent plane to a function of two variables.">Introduction to differentiability in higher dimensions</a></li>
+
+	    <li><a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">The definition of differentiability in higher dimensions</a></li>
+
+	  </ul>
+	</aside>
+
+
+      </div>
+    </div>
+  </div>
+
+      <div class="ym-column linearize-level-1">
+        <div id="main_content" class="ym-col1">
+          <div class="ym-cbox">
+
+<a id="definition" class="anchor"></a>
+<h4>The definition of differentiability</h4>
+
+<p>The definition of differentiability in higher dimensions looks
+fairly intimidating at first glance.
+For this reason, we suggest beginning by reading the page about
+<a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">the
+intuition behind this definition</a>.
+We repeat the definition from the end of that page.</p>
+
+
+<p><b>Definition</b>: The function $\vc{f}: \R^n \to \R^m$ is
+<i>differentiable</i>
+ at the point $\vc{a}$ if there exists a <a href="/linear_transformation_definition_euclidean" class="content" title="Linear transformations: Definition of a linear transformation of Euclidean spaces.">linear transformation</a> $\vc{T}: \R^n \to \R^m$ that satisfies the condition
+$$\lim_{\vc{x} \to \vc{a}}
+\frac{\| \vc{f}(\vc{x})-\vc{f}(\vc{a}) - \vc{T}(\vc{x}-\vc{a})\|}{\|\vc{x}-\vc{a}\|} = 0.$$
+</p>
+
+<p>The $m \times n$ <a href="/matrices_linear_transformations" class="content" title="Matrices and linear transformations: A description of how every matrix can be associated with a linear transformation.">
+matrix associated with the linear transformation</a>
+$\vc{T}$ is the <a href="/derivative_matrix" class="content" title="The derivative matrix: The derivative matrix is presented as a natural generalization of the single variable derivative to multivariable functions.">matrix of partial derivatives</a>, which we denote
+by $\jacm{f}(\vc{a})$.
+We can refer to $\jacm{f}(\vc{a})$ as the <i>total derivative</i>
+(or simply the <i>derivative</i>) of $\vc{f}$.
+</p>
+
+<a id="limits" class="anchor"></a>
+<h4>The trouble with limits in higher dimensions</h4>
+
+<p>The differentiabililty definition is based on the limit
+$\vc{x} \to \vc{a}$.
+In order for this limit to exist,
+we have to get the same result, no matter the route $\vc{x}$
+takes on its way to $\vc{a}$.
+If we find two routes that give different values for this limit,
+then we can conclude the limit does not exist.
+In many of the subtle cases where a function fails to be differentiable,
+one can find linear transformations $\vc{T}$ where
+$$\frac{\| \vc{f}(\vc{x})-\vc{f}(\vc{a}) - \vc{T}(\vc{x}-\vc{a})\|}{\|\vc{x}-\vc{a}\|}$$
+does go to zero when $\vc{x}$ approaches $\vc{a}$ along some routes,
+but it does not go to zero when $\vc{x}$ approaches $\vc{a}$ along other routes.
+Don't make the mistake concluding a function must be differentiable
+after checking that you get zero along just a few paths of $\vc{x} \to \vc{a}$.
+</p>
+
+<p>For a scalar-valued function of one variable, $f(x)$,
+checking that this limit is zero isn't too difficult.
+On the real line, there are only two routes for $x$ to get to $a$.
+It can approach $a$ from above or from below.
+If we find a candidate tangent line
+$$L(x)=f(a)+T(x-a)=f(a)+m(x-a)$$
+where the upper and lower limits
+are both zero, then we can conclude that we really found a tangent line and the function is differentiable.</p>
+
+<p>On the other hand, as pictured below, we may be able to find one
+candidate tangent line (in blue) where the limit is zero from the left
+but not the right.  And we may find a second candidate tangent line (in red)
+where the limit is zero from the right and not the left.
+But in this case, it easy to see what is happening and to identify
+the kink in $f(x)$ that makes it non-differentiable at $x=a$.
+</p>
+
+<p class="centeredImage"><a id="image:two_tangents_left_right" class="anchor"></a><a href="/image/two_tangents_left_right" title="The function is not differentiable at a point where it has two different tangents from the left and the right."><img class="displayed" src="/media/image/image/two_tangents_left_right.png" alt="Two different tangents from the left and the right" width ="375" height="186" /></a></p>
+
+<p>Increasing the number of dimensions to two or more makes a limit
+become much more complicated.
+Now, one has to consider all the possible paths $\vc{x}$ could take to the point $\vc{a}$, such as the ones illustrated below for the case of two dimensions.
+The challenge is the fact that there are an infinite number of such paths,
+and one needs to get the same limiting value on all these paths in order for the limit to exist.
+</p>
+
+<p class="centeredImage"><a id="image:limit_many_paths_two_dimensions" class="anchor"></a><a href="/image/limit_many_paths_two_dimensions" title="In two or more dimensions, one must get the same value along all paths to a point for the limit to exist."><img class="displayed" src="/media/image/image/limit_many_paths_two_dimensions.png" alt="A limit involves many paths in two or more dimensions" width ="162" height="104" /></a></p>
+
+<a id="understanding" class="anchor"></a>
+
+<h4>Understanding the differentiability condition in two dimensions</h4>
+
+<p>To develop an intuition of the subtle ways in which the differentiability
+condition could be violated, it's enough to stick with
+scalar-valued functions of two variables, $f: \R^2 \to \R$.
+In this case, we can plot the graph of $f$ as a surface,
+and we understand that the linear approximation
+$$L(\vc{x}) = f(\vc{a}) + T(\vc{x}-\vc{a})$$
+is a tangent plane.</p>
+
+<p>We will also leave our formal definition of differentiability aside,
+and just focus on the geometry of the tangent plane.
+You can gather intuition about the correspondence between this definition
+and tangent planes in <a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">the
+page on the definition of differentiability</a>.
+The differentiability definition requires the tangent plane to be tangent to the graph
+along any path of mathin that goes to the point $\vc{a}$.</p>
+
+
+<p>The important consequence of this fact is that the existence of a
+derivative is much stronger than the existence of partial derivatives.
+Partial derivatives involve the limit of $\vc{f}$ only along
+directions parallel to the coordinate axes (in the above picture, such
+limits would be arrows coming straight in from the left, right, top,
+and bottom). </p>
+
+<p>If a function varies smoothly along the paths coming into
+$\vc{a}$ from the positive and negative $x$ directions, the partial
+derivative with respect to $x$ at the point $\vc{a}$ will exist.  If a
+function varies smoothly along the paths coming in from the positive
+and negative $y$ directions, the partial derivative with respect to $y$
+at the point $\vc{a}$ will exist.</p>
+
+<p>But just because the function behaves &ldquo;nicely&rdquo; along those four
+directions, it doesn't mean it behaves nicely along every path coming
+into $\vc{a}$.  </p>
+
+<p>For example, look at the following surface.  At the origin (i.e.,
+$\vc{a}=(0,0)$), the partial derivatives exist and are zero. (If one
+moves in the positive or negative $x$ or $y$ direction, the function
+is constant.)</p>
+
+<a id="applet:nondifferentiable_function_partial_derivatives" class="anchor"></a><section class="appletbox" ><div class="javascriptapplet"><div class="threeapplet" id="container_three_applet_AppletNondifferentiableFunctionPartialDerivatives01" ><div class="appletimagecontainer" style="width:400px; max-width:100%" ><img src="/media/applet/image/large/nondifferentiable_function_partial_derivatives.png" alt="Applet: Non-differentiable function with partial derivatives" width ="400" height="400" style="display: block; width: 100%; height: auto;" /><h4 style="position: absolute; top: 200.0px; width: 100%;" class="three_applet_loading_message">Applet loading</h4></div></div><div class="appleterror three_load_error"></div></div><p><i>Non-differentiable function with partial derivatives.</i> The partial derivatives of this function $f(x,y)$ exist at the origin, $\pdiff{f}{x}(0,0)=0$ and $\pdiff{f}{y}(0,0)=0$, as the function is constant along the $x$ and $y$ axis, $f(x,0)=f(0,y)=0$.  However, the slopes coming into the origin from other directions are non-zero.  If there were a tangent plane at the origin, it would have to be the horizontal plane $z=0$, as that is the only plane that would be tangent along the $x$ and $y$ directions.  Clearly, the slopes would not match in other directions, so this plane is not tangent.   Therefore, there is no tangent plane at $\vc{a}=(0,0)$, and the function is not differentiable there.  You can drag the blue point on the slider to remove the folds in the surface, but that does not change the partial derivatives at the origin.  The wrinkle at the origin is enough to make the function non-differentiable.</p><p><a href="/applet/nondifferentiable_function_partial_derivatives" title="Illustration of a function whose partial derivatives at the origin exist and are zero, but who is not differentiable at the origin." class="applet">More information about applet.</a> </p></section>
+
+<p>However, if you approach the origin from a path coming from any other
+direction, the slope of the path will be nonzero.  You'll be climbing
+uphill as you reach the origin (or possibly going downhill if you changed the surface to remove the folds).</p>
+
+<p>If the function were differentiable at the origin, it would have a
+tangent plane at the origin.
+If a tangent plane existed, the slopes would have to match the partial
+derivatives.  In this case, since the
+partial derivatives are zero, the only option for the tangent plane is
+the horizontal plane, as shown below.  Clearly this plane is not a
+tangent plane, as it is not tangent to paths approaching the
+origin from all directions.  This surface is a graph of a function
+that has partial derivatives at the origin but is not differentiable
+at the origin.</p>
+
+<a id="applet:nondifferentiable_function_partial_derivatives_no_tangent_plane" class="anchor"></a><section class="appletbox" ><div class="javascriptapplet"><div class="threeapplet" id="container_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane02" ><div class="appletimagecontainer" style="width:400px; max-width:100%" ><img src="/media/applet/image/large/nondifferentiable_function_partial_derivatives_no_tangent_plane.png" alt="Applet: Non-differentiable function with partial derivatives and no tangent plane" width ="400" height="400" style="display: block; width: 100%; height: auto;" /><h4 style="position: absolute; top: 200.0px; width: 100%;" class="three_applet_loading_message">Applet loading</h4></div></div><div class="appleterror three_load_error"></div></div><p><i>Non-differentiable function with partial derivatives and no tangent plane.</i> Since the partial derivatives of this function $f(x,y)$ exist and are zero at the origin, the only possible candidate for a tangent plane is the horizontal plane $z=0$ shown here.  Although this plane is tangent along the $x$ and $y$ directions, the slopes of the function clearly do not match in other directions.  Therefore, there is no tangent plane at $\vc{a}=(0,0)$, and the function is not differentiable there.  You can drag the blue point on the slider to remove the folds in the surface, but that does not change the partial derivatives at the origin.  The wrinkle at the origin is enough to make the function non-differentiable.</p><p><a href="/applet/nondifferentiable_function_partial_derivatives_no_tangent_plane" title="Illustration of a function whose partial derivatives at the origin exist and are zero, but that has no tangent plane at the origin." class="applet">More information about applet.</a> </p></section>
+
+<p>For the above figures, if you drag the blue dot on the sliders, you can
+look at other surfaces that are not differentiable. The partial
+derivatives at the origin do not change, so the candidate for the
+tangent plane is still the horizontal.  However, you can see that the
+horizontal plane is not a tangent plane.</p>
+
+<p>Note that for these functions, you could write down the matrix of
+partial derivatives.  It would  simply  be $[0 \, 0]$.  But that
+matrix <b>would not</b> correspond to the derivative.</p>
+
+<a id="examplefunction"></a>
+<h4>Further example</h4>
+
+<p>The following is another example function that has partial derivatives at
+the origin but is not differentiable.  For this example, we have an
+equation for the function.
+\begin{align*}
+  f(x,y) =
+  \begin{cases}
+    \displaystyle
+    \frac{x^2y}{x^2+y^2} &amp; \text{if } (x,y) \ne (0,0)\\
+    0 &amp; \text{if } (x,y) = (0.0)
+  \end{cases}
+\end{align*}
+</p>
+
+<p>
+The graph of the function is shown below.</p>
+
+<a id="applet:nondifferentiable_function_partial_derivatives_2" class="anchor"></a><section class="appletbox" ><div class="javascriptapplet"><div class="threeapplet" id="container_three_applet_AppletNondifferentiableFunctionPartialDerivatives203" ><div class="appletimagecontainer" style="width:400px; max-width:100%" ><img src="/media/applet/image/large/nondifferentiable_function_partial_derivatives_2.png" alt="Applet: Non-differentiable function with partial derivatives" width ="400" height="400" style="display: block; width: 100%; height: auto;" /><h4 style="position: absolute; top: 200.0px; width: 100%;" class="three_applet_loading_message">Applet loading</h4></div></div><div class="appleterror three_load_error"></div></div><p><i>Non-differentiable function with partial derivatives.</i> The partial derivatives of this function $f(x,y)$ are zero at the origin, $\pdiff{f}{x}(0,0)=\pdiff{f}{y}(0,0)=0$.  Therefore, the only possibility for a tangent plane would be a horizontal plane.  However, since the slopes of this function coming to the origin along different directions are not zero, a horizontal plane cannot be tangent.  We conclude that no tangent plane exists at the origin and this function is not differentiable there.</p><p><a href="/applet/nondifferentiable_function_partial_derivatives_2" title="Illustration of a function whose partial derivatives at the origin exist and are zero, but who is not differentiable at the origin." class="applet">More information about applet.</a> </p></section>
+
+<p>We can show partial derivatives exist at (0,0) but that function is not
+differentiable at (0,0).  Since this function is defined in piecewise fashion
+around the origin, there are no simple formulas for the partial derivatives.
+We have to use the <a href="/partial_derivative_limit_definition" class="content" title="Partial derivative by limit definition: Description with example of how to calculate the partial derivative from its limit definition.">limit definition</a> of the partial derivatives.
+For the partial derivative with respect to $x$, this formula is
+\begin{align*}
+  \pdiff{f}{x}(0,0) &amp;=
+  \lim_{h \rightarrow 0} \frac{f(0+h,0)-f(0,0)}{h}.
+\end{align*}
+\begin{align*}
+\frac{\| \vc{f}(\vc{x})-\vc{f}(\vc{a}) - \vc{T}(\vc{x}-\vc{a})\|}{\|\vc{x}-\vc{a}\|}
+\end{align*}
+Since $f(0,0)=0$ and  $f(0+h,0)=f(h,0) = 0$, we calculate
+\begin{align*}
+  \pdiff{f}{x}(0,0) &amp;=
+  \lim_{h \rightarrow 0} \frac{f(0+h,0)-f(0,0)}{h}\\
+  &amp;= \lim_{h \rightarrow 0}
+  \frac{0- 0}{h}
+  = \lim_{h \rightarrow 0}
+  0 =0.
+\end{align*}
+Similarly, you can show that $\displaystyle \pdiff{f}{y}(0,0)=0$.
+</p>
+
+
+<p>If the function had a tangent plane at (0,0), then it would have to
+be the flat plane with equation $z=f(0,0)=0$.</p>
+
+<a id="applet:nondifferentiable_function_partial_derivatives_no_tangent_plane_2" class="anchor"></a><section class="appletbox" ><div class="javascriptapplet"><div class="threeapplet" id="container_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane204" ><div class="appletimagecontainer" style="width:400px; max-width:100%" ><img src="/media/applet/image/large/nondifferentiable_function_partial_derivatives_no_tangent_plane_2.png" alt="Applet: Non-differentiable function with partial derivatives and no tangent plane" width ="400" height="400" style="display: block; width: 100%; height: auto;" /><h4 style="position: absolute; top: 200.0px; width: 100%;" class="three_applet_loading_message">Applet loading</h4></div></div><div class="appleterror three_load_error"></div></div><p><i>Non-differentiable function with partial derivatives and no tangent plane.</i> A function that is not differentiable at the origin is shown with the only possibility for a tangent plane at the origin. As the partial derivatives are zero at the origin, this candidate plane is a horizontal plane.  However, this plane is not tangent since the slopes of this function coming to the origin along different directions are not zero.</p><p><a href="/applet/nondifferentiable_function_partial_derivatives_no_tangent_plane_2" title="Illustration of a function whose partial derivatives at the origin exist and are zero, but that has no tangent plane at the origin." class="applet">More information about applet.</a> </p></section>
+
+
+<p>As you may see from the graph, if one approaches the origin along a diagonal,
+the tangent to the path would not be in the plane $z=0$.</p>
+
+<h4>Overcoming subtleties</h4>
+
+<p>Thankfully, in many cases, there is a simple way to overcome these subtleties and know for sure that a function is differentiable.
+The <a href="/differentiability_multivariable_theorem" class="content" title="The multidimensional differentiability theorem: Discussion of theorem that gives conditions which guarantee that a multivariable function is differentiable.">differentiability theorem</a> tells us that a function with continuous partial derivatives must be differentiable and therefore cannot have any of the crazy behavior of the above examples.
+By the same token, since the above functions are not differentiable, they must have discontinuous partial derivatives.
+For the latter example, we can visualize how it indeed has <a href="/nondifferentiable_discontinuous_partial_derivatives" class="content" title="Non-differentiable functions must have discontinuous partial derivatives: A visual tour demonstrating discontinuous partial derivatives of a non-differentiable function, as required by the differentiability theorem.">discontinuous partial derivatives</a>.
+
+          </div>
+        </div>
+        <div class="ym-col3">
+          <div class="ym-cbox">
+
+
+<a id="threads" class="anchor"></a>
+<section class="box threadbox">
+<h4><a href="/thread/list" class="normaltext">Thread navigation</a></h4>
+
+<a id="thread_multivar" class="anchor"></a>
+<h5 class="pre_list"><a href="/thread/multivar#s3" class="normaltext">Multivariable calculus</a></h5>
+<ul class="linklist">
+
+
+  <li> Previous: <a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">The definition of differentiability in higher dimensions</a></li>
+
+
+
+
+  <li> Next: <a href="/linear_approximation_multivariable" class="content" title="The multivariable linear approximation: Introduction to the linear approximation in multivariable calculus and why it might be useful.">The multivariable linear approximation</a></li>
+
+
+</ul>
+
+<a id="thread_math2374" class="anchor"></a>
+<h5 class="pre_list"><a href="/thread/math2374#s40" class="normaltext">Math 2374</a></h5>
+<ul class="linklist">
+
+
+  <li> Previous: <a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">The definition of differentiabililty</a></li>
+
+
+
+
+  <li> Next: <a href="/differentiability_multivariable_theorem" class="content" title="The multidimensional differentiability theorem: Discussion of theorem that gives conditions which guarantee that a multivariable function is differentiable.">The multidimensional differentiability theorem</a></li>
+
+
+</ul>
+
+</section>
+
+
+
+<a id="similar_pages" class="anchor"></a>
+<section class="similar_pages">
+<h4 class="pre_list">Similar pages</h4>
+<ul class="linklist">
+
+<li><a href="/derivative_matrix" class="content" title="The derivative matrix: The derivative matrix is presented as a natural generalization of the single variable derivative to multivariable functions.">The derivative matrix</a></li>
+
+<li><a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">The definition of differentiability in higher dimensions</a></li>
+
+<li><a href="/directional_derivative_gradient_introduction" class="content" title="An introduction to the directional derivative and the gradient: Interactive graphics about a mountain range illustrate the concepts behind the directional derivative and the gradient of scalar-valued functions of two variables. ">An introduction to the directional derivative and the gradient</a></li>
+
+<li><a href="/differentiability_multivariable_theorem" class="content" title="The multidimensional differentiability theorem: Discussion of theorem that gives conditions which guarantee that a multivariable function is differentiable.">The multidimensional differentiability theorem</a></li>
+
+<li><a href="/nondifferentiable_discontinuous_partial_derivatives" class="content" title="Non-differentiable functions must have discontinuous partial derivatives: A visual tour demonstrating discontinuous partial derivatives of a non-differentiable function, as required by the differentiability theorem.">Non-differentiable functions must have discontinuous partial derivatives</a></li>
+
+<li><a href="/differentiable_function_discontinuous_partial_derivatives" class="content" title="A differentiable function with discontinuous partial derivatives: Illustration that discontinuous partial derivatives need not exclude a function from being differentiable.">A differentiable function with discontinuous partial derivatives</a></li>
+
+<li><a href="/partial_derivative_introduction" class="content" title="Introduction to partial derivatives: The concept of partial derivatives is introduced with an illustration of heating costs. Interactive graphics demonstrate the properties of partial derivatives.">Introduction to partial derivatives</a></li>
+
+<li><a href="/partial_derivative_examples" class="content" title="Partial derivative examples: Examples of how to calculate partial derivatives.">Partial derivative examples</a></li>
+
+<li><a href="/partial_derivative_limit_definition" class="content" title="Partial derivative by limit definition: Description with example of how to calculate the partial derivative from its limit definition.">Partial derivative by limit definition</a></li>
+
+<li><a href="/differentiability_multivariable_introduction" class="content" title="Introduction to differentiability in higher dimensions: An introduction to the basic concept of the differentiability of a function of multiple variables. Discussion centers around the existence of a tangent plane to a function of two variables.">Introduction to differentiability in higher dimensions</a></li>
+
+<li><a href="/similar/differentiability_multivariable_subtleties" class="normaltext">More similar pages</a></li>
+</ul>
+</section>
+
+
+          </div>
+        </div>
+      </div>
+
+
+      <a id="linksection" class="anchor"></a>
+      <div class="ym-grid linearize-level-1">
+        <div class="ym-g66 ym-gl">
+          <div class="ym-grid linearize-level-2">
+            <div class="ym-g50 ym-gl">
+              <div class="ym-gbox-left">
+
+
+<a id="related_generic" class="anchor"></a>
+<section class="related_generic">
+<h4 class="pre_list">See also</h4>
+<ul class="linklist">
+
+<li><a href="/differentiability_multivariable_definition" class="content" title="The definition of differentiability in higher dimensions: The definition of differentiability for multivariable functions. Informal derivation designed to give intuition behind the condition for a function to be differentiable.">The definition of differentiability in higher dimensions</a></li>
+
+<li><a href="/derivative_multivariable_examples" class="content" title="Examples of calculating the derivative: Examples showing how to calculate the derivative and linear approximation of multivariable functions.">Examples of calculating the derivative</a></li>
+
+<li><a href="/partial_derivative_limit_definition" class="content" title="Partial derivative by limit definition: Description with example of how to calculate the partial derivative from its limit definition.">Partial derivative by limit definition</a></li>
+
+<li><a href="/linear_approximation_multivariable" class="content" title="The multivariable linear approximation: Introduction to the linear approximation in multivariable calculus and why it might be useful.">The multivariable linear approximation</a></li>
+
+<li><a href="/differentiability_multivariable_theorem" class="content" title="The multidimensional differentiability theorem: Discussion of theorem that gives conditions which guarantee that a multivariable function is differentiable.">The multidimensional differentiability theorem</a></li>
+
+</ul>
+</section>
+
+
+              </div>
+            </div>
+            <div class="ym-g50 ym-gr">
+              <div class="ym-gbox">
+
+
+<a id="lighter" class="anchor"></a>
+<section class="lighter">
+<h4 class="pre_list">Lighten up</h4>
+<ul class="linklist">
+
+<li><a href="/differentiability_multivariable_introduction" class="content" title="Introduction to differentiability in higher dimensions: An introduction to the basic concept of the differentiability of a function of multiple variables. Discussion centers around the existence of a tangent plane to a function of two variables.">Introduction to differentiability in higher dimensions</a></li>
+
+<li><a href="/derivative_matrix" class="content" title="The derivative matrix: The derivative matrix is presented as a natural generalization of the single variable derivative to multivariable functions.">The derivative matrix</a></li>
+
+<li><a href="/partial_derivative_introduction" class="content" title="Introduction to partial derivatives: The concept of partial derivatives is introduced with an illustration of heating costs. Interactive graphics demonstrate the properties of partial derivatives.">Introduction to partial derivatives</a></li>
+
+</ul>
+</section>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ym-g33 ym-gr">
+          <div class="ym-gbox-right secondary">
+
+
+<a id="deeper" class="anchor"></a>
+<section class="deeper">
+<h4 class="pre_list">Go deeper</h4>
+<ul class="linklist">
+
+<li><a href="/nondifferentiable_discontinuous_partial_derivatives" class="content" title="Non-differentiable functions must have discontinuous partial derivatives: A visual tour demonstrating discontinuous partial derivatives of a non-differentiable function, as required by the differentiability theorem.">Non-differentiable functions must have discontinuous partial derivatives</a></li>
+
+<li><a href="/differentiable_function_discontinuous_partial_derivatives" class="content" title="A differentiable function with discontinuous partial derivatives: Illustration that discontinuous partial derivatives need not exclude a function from being differentiable.">A differentiable function with discontinuous partial derivatives</a></li>
+
+</ul>
+</section>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="ym-wrapper">
+    <div class="ym-wbox">
+
+
+
+<section class="citation"><h4>Cite this as</h4>
+
+<p><a href="/contributor/dqnykamp" class="normaltext">Nykamp DQ</a>, &ldquo;Subtleties of differentiability in higher dimensions.&rdquo; From <i>Math Insight</i>.
+  <a href="http://mathinsight.org/differentiability_multivariable_subtleties" class="normaltext">http://mathinsight.org<wbr>/differentiability_multivariable_subtleties</a></p>
+</section>
+
+<section class="keywords"><p>Keywords:
+derivative, differentiability, linear transformation, partial derivative
+</p></section>
+<a id="sendmessage" class="anchor"></a>
+<section id="messageform">
+<h4 class="commentheading">Send us a message about &ldquo;Subtleties of differentiability in higher dimensions&rdquo;</h4>
+
+
+
+
+<form class="ym-form linearize-form" action="/comments/post/" method="post"><input type='hidden' name='csrfmiddlewaretoken' value='6gpVsfOKn7OgcMcWrPLQFOk6IyAeeTcY' />
+
+  <div><input id="id_content_type" name="content_type" type="hidden" value="midocs.page" /></div><div><input id="id_object_pk" name="object_pk" type="hidden" value="47" /></div><div><input id="id_timestamp" name="timestamp" type="hidden" value="1750130591" /></div><div><input id="id_security_hash" maxlength="40" name="security_hash" type="hidden" value="e600b86f9639e53d2699d345f3fe810708938aa4" /></div>
+
+<div class="ym-fbox-text">
+<label for="id_name">Name:</label><input id="id_name" maxlength="50" name="name" type="text" /></div>
+<div class="ym-fbox-text">
+<label for="id_email">Email address:</label><input id="id_email" name="email" type="email" /></div>
+
+<div class="ym-fbox-text">
+<label for="id_comment">Comment:</label><textarea cols="40" id="id_comment" maxlength="3000" name="comment" rows="10">
+</textarea></div>
+<div class="ym-fbox-text" style="display:none;">
+<label for="id_honeypot">If you enter anything in this field your comment will be treated as spam:</label><input id="id_honeypot" name="honeypot" type="text" /></div>
+<div class="ym-fbox-button">
+ <input type="submit" name="post" class="ym-button" value="Send message" />
+</div>
+</form>
+
+</section>
+
+
+<section id="copyright">
+
+<div id="copyright_image"><h4><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/static/image/somerights20.png" /></a></h4></div>
+<p><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Subtleties of differentiability in higher dimensions</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://mathinsight.org/differentiability_multivariable_subtleties" property="cc:attributionName" rel="cc:attributionURL">Duane Q. Nykamp</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" class="external">Creative Commons Attribution-Noncommercial-ShareAlike 4.0 License</a>.  For permissions beyond the scope of this license, please <a xmlns:cc="http://creativecommons.org/ns#" href="http://mathinsight.org/about/contact" rel="cc:morePermissions">contact us</a>.</p>
+
+</section>
+
+
+
+<section id="credits">
+<h4>Credits</h4>
+Thanks to David Arnold for correcting errors.
+</section>
+
+
+
+
+    </div>
+  </div>
+</footer>
+
+<!-- full skip link functionality in webkit browsers -->
+<script src="/static/js/yaml-focusfix.js"></script>
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    /* toggle nav */
+    $("#menu-icon").click(function(){
+        $("#unav").slideToggle();
+    });
+    $("#unav").click(function(){
+        $("#unav").slideToggle();
+    });
+});
+</script>
+<script src="/static/js/jquery.sticky.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#pagenav").sticky({topSpacing:0});
+  });
+</script>
+<script type="text/javascript">
+  function unstick(obj)
+  {
+  obj.style.position="static";
+  }
+</script>
+<script type="text/javascript">
+ function showHide(shID) {
+        if (document.getElementById(shID)) {
+                if (document.getElementById(shID).style.display == 'none') {
+                        document.getElementById(shID+'_show').style.display = 'none';
+                        document.getElementById(shID+'_hide').style.display = 'inline';
+                        document.getElementById(shID).style.display = 'block';
+                }
+                else {
+                        document.getElementById(shID+'_show').style.display = 'inline';
+                        document.getElementById(shID+'_hide').style.display = 'none';
+                        document.getElementById(shID).style.display = 'none';
+                }
+        }
+  }
+  function inIframe () {
+    try {
+        return window.self !== window.parent;
+    }
+    catch (e) {
+        return true;
+    }
+  }
+
+function isElementInViewport (el) {
+    // From http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+    // Modified so true is partially visible
+
+    //special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.bottom >= 0 &&
+        rect.right >= 0 &&
+        rect.top <= jQuery(window).height() &&
+        rect.left <= jQuery(window).width()
+    );
+}
+
+
+</script>
+
+
+<div id="geogebra_onit"><script type="text/javascript">
+function ggbOnInit(arg) {
+console.log(arg);
+
+if(inIframe()) { parent.ggbOnInit(arg);}
+}
+</script></div><script src="/static/js/three/three.js"></script><script src="/static/js/three/controls/TrackballControls.js"></script><script src="/static/js/three/Detector.js"></script><script src="/static/js/three/MIAppletThree.js"></script><script src="/static/js/three/MIThreeObjects.js"></script><script src="/static/js/three/Axes.js"></script><script src="/static/js/three/Arrow.js"></script><script src="/static/js/three/VectorField.js"></script><script src="/static/js/three/Slider.js"></script><script src="/static/js/three/DragObjects.js"></script><script src="/static/js/three/TextLabel.js"></script><script src="/static/js/three/Geometries.js"></script>
+<script>
+if(Detector.webgl) {
+
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivatives01=new MIAppletThree('container_three_applet_AppletNondifferentiableFunctionPartialDerivatives01', 400, 400, { static_url: '/static/', media_url: '/media/' });
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivatives01.run = function() {
+var renderer=this.renderer, container=this.container, width=this.width, height=this.height, namedObjects=this.namedObjects, parameters=this.parameters;
+    var scene = new THREE.Scene();
+
+    var sceneOrtho = new THREE.Scene();
+
+    renderer.setSize(width, height);
+    renderer.autoClear = false; // To render sceneOrtho overlay on top of scene
+
+    container.append( renderer.domElement );
+
+    var VIEW_ANGLE = 7, ASPECT = width / height, NEAR = 1.0, FAR = 2000;
+    var camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+    scene.add(camera);
+
+    camera.position.set(10,-25,15);
+    camera.up = new THREE.Vector3(0,0,1);
+    camera.lookAt(scene.position);
+
+    var cameraOrtho = new THREE.OrthographicCamera( - width / 2, width / 2, height / 2, - height / 2, 0.1, 20 );
+    cameraOrtho.position.z = 10;
+    sceneOrtho.add(cameraOrtho);
+
+    var controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+    controls.rotateSpeed = 2.0;
+    controls.panSpeed = 0.01;
+    controls.staticMoving = true;
+
+    var drag = new DragObjects(renderer, camera, {controls: controls, camera2: cameraOrtho});
+    scene.add( drag );
+
+    var axes = new Axes({size: new THREE.Vector3(1,1,1), negSize: new THREE.Vector3(-1,-1,-1), showBoxAxes: true, showAxisTicks: true, showAxisTickLabels: true, showLabels: true, labelFontSize: 25, axisWidth: 2, axisTickIncrement: new THREE.Vector3(1,1,0.5), tickLabelSpace: 0.05, axisLabelSpace: 0.1});
+    scene.add( axes );
+
+
+    function g(r, theta, a) {
+	return -(1 - a)*r*Math.abs(Math.sin(2*theta)) + a*r*Math.sin(2*theta);
+    }
+
+
+
+    var a = 0;
+
+    function f_surface(u,v) {
+	var theta = v*2*Math.PI;
+	var r = u;
+
+	var x = r*Math.cos(theta);
+	var y = r*Math.sin(theta);
+	var z = g(r,theta,a);
+	return new THREE.Vector3(x, y, z);
+    }
+
+
+    var Nu=2, Nv=160*4;
+
+    var surfaceGeometry = new THREE.ParametricGeometry(f_surface, Nu, Nv);
+
+    var surfaceMaterial = new THREE.MeshLambertMaterial({color: 0x999999, ambient: 0xfffff, side: THREE.DoubleSide});
+
+    var thesurface = new THREE.Mesh( surfaceGeometry, surfaceMaterial )
+    thesurface.draggable = false;
+    axes.add(thesurface);
+    drag.objects.push(thesurface);
+
+    // slider
+    var slider = new Slider( {dragobjects: drag.objects2, color: 0x0000ff, length: 10, minval: 0, maxval: 1, pointSize: 0.7, pointLabeled: false});
+    sceneOrtho.add(slider);
+    slider.position.set(0,-height/2+8,1);
+    slider.scale.set(10,10,1);
+    slider.setValue(0);
+
+    slider.addDependent(thesurface);
+
+    thesurface.addEventListener('refresh', function(event) {
+	a = slider.getValue();
+
+	for (var i = 0; i <= Nv; i ++ ) {
+	    var v = i / Nv;
+
+	    for (var j = 0; j <= Nu; j ++ ) {
+
+		var u = j / Nu;
+
+		surfaceGeometry.vertices[i*(Nu+1)+j].copy(f_surface( u, v ));
+
+	    }
+	}
+	surfaceGeometry.dynamic=true;
+	surfaceGeometry.verticesNeedUpdate = true;
+	surfaceGeometry.elementsNeedUpdate = true;
+	surfaceGeometry.uvsNeedUpdate = true;
+	surfaceGeometry.normalsNeedUpdate = true;
+	surfaceGeometry.tangentsNeedUpdate = true;
+	surfaceGeometry.colorsNeedUpdate = true;
+
+	// these don't seem to be updated despite setting the flags
+	surfaceGeometry.computeBoundingSphere();
+	surfaceGeometry.computeFaceNormals();
+	surfaceGeometry.computeVertexNormals();
+	surfaceGeometry.computeMorphNormals();
+	surfaceGeometry.computeCentroids();
+
+    });
+
+
+    // Colored lights
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, 6 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x555555 );
+    light.position.set( 0, 0, -10 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, -6 );
+    scene.add( light );
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, -2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, -2 );
+    scene.add( light );
+
+    light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+
+    animate();
+
+    function animate() {
+	setTimeout( function() { requestAnimationFrame( animate );}, 40 );
+	render();
+	controls.update();
+    }
+
+    function render() {
+	renderer.clear();
+	renderer.render( scene, camera );
+	renderer.clearDepth();
+	renderer.render( sceneOrtho, cameraOrtho );
+    }
+
+}
+
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane02=new MIAppletThree('container_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane02', 400, 400, { static_url: '/static/', media_url: '/media/' });
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane02.run = function() {
+var renderer=this.renderer, container=this.container, width=this.width, height=this.height, namedObjects=this.namedObjects, parameters=this.parameters;
+    var scene = new THREE.Scene();
+
+    var sceneOrtho = new THREE.Scene();
+
+    renderer.setSize(width, height);
+    renderer.autoClear = false; // To render sceneOrtho overlay on top of scene
+
+    container.append( renderer.domElement );
+
+    var VIEW_ANGLE = 7, ASPECT = width / height, NEAR = 1.0, FAR = 2000;
+    var camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+    scene.add(camera);
+
+    camera.position.set(10,-25,15);
+    camera.up = new THREE.Vector3(0,0,1);
+    camera.lookAt(scene.position);
+
+    var cameraOrtho = new THREE.OrthographicCamera( - width / 2, width / 2, height / 2, - height / 2, 0.1, 20 );
+    cameraOrtho.position.z = 10;
+    sceneOrtho.add(cameraOrtho);
+
+    var controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+    controls.rotateSpeed = 2.0;
+    controls.panSpeed = 0.01;
+    controls.staticMoving = true;
+
+    var drag = new DragObjects(renderer, camera, {controls: controls, camera2: cameraOrtho});
+    scene.add( drag );
+
+    var axes = new Axes({size: new THREE.Vector3(1,1,1), negSize: new THREE.Vector3(-1,-1,-1), showBoxAxes: true, showAxisTicks: true, showAxisTickLabels: true, showLabels: true, labelFontSize: 25, axisWidth: 2, axisTickIncrement: new THREE.Vector3(1,1,0.5), tickLabelSpace: 0.05, axisLabelSpace: 0.1});
+    scene.add( axes );
+
+
+    function g(r, theta, a) {
+	return -(1 - a)*r*Math.abs(Math.sin(2*theta)) + a*r*Math.sin(2*theta);
+    }
+
+
+
+    var a = 0;
+
+    function f_surface(u,v) {
+	var theta = v*2*Math.PI;
+	var r = u;
+
+	var x = r*Math.cos(theta);
+	var y = r*Math.sin(theta);
+	var z = g(r,theta,a);
+	return new THREE.Vector3(x, y, z);
+    }
+
+
+    var Nu=2, Nv=160*4;
+
+    var surfaceGeometry = new THREE.ParametricGeometry(f_surface, Nu, Nv);
+
+    var surfaceMaterial = new THREE.MeshLambertMaterial({color: 0x999999, ambient: 0xfffff, side: THREE.DoubleSide});
+
+    var thesurface = new THREE.Mesh( surfaceGeometry, surfaceMaterial )
+    thesurface.draggable = false;
+    axes.add(thesurface);
+    drag.objects.push(thesurface);
+
+
+    var circleGeometry = new THREE.CircleGeometry(1, 30);
+    surfaceMaterial = new THREE.MeshLambertMaterial({color: 0x999999, ambient: 0xfffff, side: THREE.DoubleSide, opacity: 0.7, transparent: true});
+    var circle = new THREE.Mesh(circleGeometry, surfaceMaterial);
+    axes.add(circle);
+
+
+    // slider
+    var slider = new Slider( {dragobjects: drag.objects2, color: 0x0000ff, length: 10, minval: 0, maxval: 1, pointSize: 0.7, pointLabeled: false});
+    sceneOrtho.add(slider);
+    slider.position.set(0,-height/2+8,1);
+    slider.scale.set(10,10,1);
+    slider.setValue(0);
+
+    slider.addDependent(thesurface);
+
+    thesurface.addEventListener('refresh', function(event) {
+	a = slider.getValue();
+
+	for (var i = 0; i <= Nv; i ++ ) {
+	    var v = i / Nv;
+
+	    for (var j = 0; j <= Nu; j ++ ) {
+
+		var u = j / Nu;
+
+		surfaceGeometry.vertices[i*(Nu+1)+j].copy(f_surface( u, v ));
+
+	    }
+	}
+	surfaceGeometry.dynamic=true;
+	surfaceGeometry.verticesNeedUpdate = true;
+	surfaceGeometry.elementsNeedUpdate = true;
+	surfaceGeometry.uvsNeedUpdate = true;
+	surfaceGeometry.normalsNeedUpdate = true;
+	surfaceGeometry.tangentsNeedUpdate = true;
+	surfaceGeometry.colorsNeedUpdate = true;
+
+	// these don't seem to be updated despite setting the flags
+	surfaceGeometry.computeBoundingSphere();
+	surfaceGeometry.computeFaceNormals();
+	surfaceGeometry.computeVertexNormals();
+	surfaceGeometry.computeMorphNormals();
+	surfaceGeometry.computeCentroids();
+
+    });
+
+
+    // Colored lights
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, 6 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x555555 );
+    light.position.set( 0, 0, -10 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, -6 );
+    scene.add( light );
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, -2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, -2 );
+    scene.add( light );
+
+    light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+
+    animate();
+
+    function animate() {
+	setTimeout( function() { requestAnimationFrame( animate );}, 40 );
+	render();
+	controls.update();
+    }
+
+    function render() {
+	renderer.clear();
+	renderer.render( scene, camera );
+	renderer.clearDepth();
+	renderer.render( sceneOrtho, cameraOrtho );
+    }
+
+}
+
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivatives203=new MIAppletThree('container_three_applet_AppletNondifferentiableFunctionPartialDerivatives203', 400, 400, { static_url: '/static/', media_url: '/media/' });
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivatives203.run = function() {
+var renderer=this.renderer, container=this.container, width=this.width, height=this.height, namedObjects=this.namedObjects, parameters=this.parameters;
+    var scene = new THREE.Scene();
+
+    renderer.setSize(width, height);
+
+    container.append( renderer.domElement );
+
+    var VIEW_ANGLE = 7, ASPECT = width / height, NEAR = 1.0, FAR = 2000;
+    var camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+    scene.add(camera);
+
+    camera.position.set(15,-20,15);
+    camera.up = new THREE.Vector3(0,0,1);
+    camera.lookAt(scene.position);
+
+    var controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+    controls.rotateSpeed = 2.0;
+    controls.panSpeed = 0.01;
+    controls.staticMoving = true;
+
+
+    var drag = new DragObjects(renderer, camera, {controls: controls});
+    scene.add( drag );
+
+
+    var axes = new Axes({size: new THREE.Vector3(1,1,0.5), negSize: new THREE.Vector3(-1,-1,-0.5), showBoxAxes: true, showAxisTicks: true, showAxisTickLabels: true, showLabels: true, labelFontSize: 25, axisWidth: 2, axisTickIncrement: new THREE.Vector3(1,1,0.5), tickLabelSpace: 0.05, axisLabelSpace: 0.1});
+    scene.add( axes );
+
+    function f_surface(u,v) {
+
+	var x = 2*u-1;
+	var y = 2*v-1;
+	var z = x*x+y*y;
+	if(z!=0) {
+	    z = x*x*y/z;
+	}
+	return new THREE.Vector3(x, y, z);
+    }
+
+
+    var Nu=80, Nv=80;
+
+    var surfaceGeometry = new THREE.ParametricGeometry(f_surface, Nu, Nv);
+
+    var surfaceMaterial = new THREE.MeshLambertMaterial({color: 0x999999, ambient: 0xfffff, side: THREE.DoubleSide});
+
+    var thesurface = new THREE.Mesh( surfaceGeometry, surfaceMaterial )
+    thesurface.draggable = false;
+    axes.add(thesurface);
+    drag.objects.push(thesurface);
+
+
+    // Colored lights
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, 6 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x555555 );
+    light.position.set( 0, 0, -10 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, -6 );
+    scene.add( light );
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, -2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, -2 );
+    scene.add( light );
+
+    light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+
+    animate();
+
+    function animate() {
+	setTimeout( function() { requestAnimationFrame( animate );}, 40 );
+	render();
+	controls.update();
+    }
+
+    function render() {
+	renderer.render( scene, camera );
+    }
+
+}
+
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane204=new MIAppletThree('container_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane204', 400, 400, { static_url: '/static/', media_url: '/media/' });
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane204.run = function() {
+var renderer=this.renderer, container=this.container, width=this.width, height=this.height, namedObjects=this.namedObjects, parameters=this.parameters;
+    var scene = new THREE.Scene();
+
+    renderer.setSize(width, height);
+
+    container.append( renderer.domElement );
+
+    var VIEW_ANGLE = 7, ASPECT = width / height, NEAR = 1.0, FAR = 2000;
+    var camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+    scene.add(camera);
+
+    camera.position.set(15,-20,15);
+    camera.up = new THREE.Vector3(0,0,1);
+    camera.lookAt(scene.position);
+
+    var controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+    controls.rotateSpeed = 2.0;
+    controls.panSpeed = 0.01;
+    controls.staticMoving = true;
+
+
+    var drag = new DragObjects(renderer, camera, {controls: controls});
+    scene.add( drag );
+
+
+    var axes = new Axes({size: new THREE.Vector3(1,1,0.5), negSize: new THREE.Vector3(-1,-1,-0.5), showBoxAxes: true, showAxisTicks: true, showAxisTickLabels: true, showLabels: true, labelFontSize: 25, axisWidth: 2, axisTickIncrement: new THREE.Vector3(1,1,0.5), tickLabelSpace: 0.05, axisLabelSpace: 0.1});
+    scene.add( axes );
+
+    function f_surface(u,v) {
+
+	var x = 2*u-1;
+	var y = 2*v-1;
+	var z = x*x+y*y;
+	if(z!=0) {
+	    z = x*x*y/z;
+	}
+	return new THREE.Vector3(x, y, z);
+    }
+
+
+    var Nu=80, Nv=80;
+
+    var surfaceGeometry = new THREE.ParametricGeometry(f_surface, Nu, Nv);
+
+    var surfaceMaterial = new THREE.MeshLambertMaterial({color: 0x999999, ambient: 0xffffff, side: THREE.DoubleSide});
+
+    var thesurface = new THREE.Mesh( surfaceGeometry, surfaceMaterial )
+    thesurface.draggable = false;
+    axes.add(thesurface);
+    drag.objects.push(thesurface);
+
+    var planeGeometry = new THREE.PlaneGeometry(2,2);
+    surfaceMaterial = new THREE.MeshLambertMaterial({color: 0x999999, ambient: 0x999999, opacity: 0.5, transparent: true, side: THREE.DoubleSide});
+    var plane = new THREE.Mesh(planeGeometry, surfaceMaterial);
+    axes.add(plane);
+
+    // Colored lights
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, 2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, 6 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x555555 );
+    light.position.set( 0, 0, -10 );
+    scene.add( light );
+
+    light = new THREE.DirectionalLight( 0x0000ff );
+    light.position.set( -10, -10, -6 );
+    scene.add( light );
+    var light = new THREE.DirectionalLight( 0xff0000 );
+    light.position.set( 10, 10, -2 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0x00ff00 );
+    light.position.set( 10, -10, -2 );
+    scene.add( light );
+
+
+    light = new THREE.AmbientLight( 0x222222 );
+    scene.add( light );
+
+
+    animate();
+
+    function animate() {
+	setTimeout( function() { requestAnimationFrame( animate );}, 40 );
+	render();
+	controls.update();
+    }
+
+    function render() {
+	renderer.render( scene, camera );
+    }
+
+}
+
+MathJax.Hub.Register.StartupHook("End",function () {
+jQuery('#container_three_applet_AppletNondifferentiableFunctionPartialDerivatives01').empty();
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivatives01.run();
+
+jQuery('#container_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane02').empty();
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane02.run();
+
+jQuery('#container_three_applet_AppletNondifferentiableFunctionPartialDerivatives203').empty();
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivatives203.run();
+
+jQuery('#container_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane204').empty();
+applet_three_applet_AppletNondifferentiableFunctionPartialDerivativesNoTangentPlane204.run();
+});
+}
+else {
+ jQuery( ".three_applet_loading_message").remove(); jQuery( ".three_load_error" ).append('The applet did not load, and the above is only a static image representing one view of the applet. <br/> ').append(Detector.getWebGLErrorMessage())
+}
+</script>
+
+
+
+</body>
+</html>

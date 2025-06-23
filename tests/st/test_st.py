@@ -78,7 +78,7 @@ class TestST(unittest.TestCase):
             output_path=output_path,
         )
 
-        with open(self.pipeline_data_path, 'r') as f:
+        with open(self.pipeline_data_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data_json = json.loads(line.strip())
                 # files结构是{'filename': {'url': '', 'filepath': ''}}，获取filepath
@@ -89,7 +89,7 @@ class TestST(unittest.TestCase):
                 try:
                     output, content_list, statics = eval_ours_extract_html(self.chainConfig, data_json)
                     # 断言statics中的元素数量和groundtruth_filepath中的元素数量一致
-                    with open(groundtruth_filepath, 'r') as f:
+                    with open(groundtruth_filepath, 'r', encoding='utf-8') as f:
                         groundtruth = json.loads(f.readline().strip())
                     # 断言equation-interline, paragraph.equation-inline和list.equation-inline元素数一致
                     self.assertEqual(statics.get('equation-interline'), groundtruth.get('statics', {}).get('equation-interline'), msg=f'{fileName}抽取equation-interline数量和groundtruth:{groundtruth_filepath}不一致')
