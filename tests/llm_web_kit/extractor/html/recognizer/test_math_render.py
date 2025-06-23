@@ -1099,6 +1099,48 @@ class TestMathRender(unittest.TestCase):
         render = BaseMathRender.create_render(tree)
         self.assertIsInstance(render, MathJaxRender)
 
+    def test_begin_end_environments(self):
+        """测试begin{environment}...end{environment}格式的公式处理."""
+        # 创建测试HTML
+        html = """<div><div><hr></hr>
+单层环境:
+\\begin{equation}
+E = mc^2
+\\end{equation}
+
+嵌套环境:
+\\begin{equation}
+\\begin{split}
+E = mc^2
+\\end{split}
+\\end{equation}
+
+<hr></hr>
+Brackets:
+
+</div></div>"""
+        root = html_to_element(html)
+        self.mathjax_render.find_math(root)
+        ccmath_nodes = root.xpath('.//*[self::ccmath-interline]')
+        self.assertEqual(len(ccmath_nodes), 2, '应该找到两个行间公式')
+        # 验证第一个公式（equation环境）
+        first_formula = ccmath_nodes[0]
+        self.assertEqual(first_formula.tag, CCTag.CC_MATH_INTERLINE)
+        self.assertEqual(first_formula.text, '\\begin{equation}\nE = mc^2\n\\end{equation}')
+        self.assertEqual(first_formula.get('type'), MathType.LATEX)
+        self.assertEqual(first_formula.get('by'), MathRenderType.MATHJAX)
+        # 验证第二个公式（嵌套equation和split环境）
+        second_formula = ccmath_nodes[1]
+        self.assertEqual(second_formula.tag, CCTag.CC_MATH_INTERLINE)
+        expected_nested_formula = '''\\begin{equation}
+\\begin{split}
+E = mc^2
+\\end{split}
+\\end{equation}'''
+        self.assertEqual(second_formula.text, expected_nested_formula)
+        self.assertEqual(second_formula.get('type'), MathType.LATEX)
+        self.assertEqual(second_formula.get('by'), MathRenderType.MATHJAX)
+
 
 if __name__ == '__main__':
     unittest.main()
