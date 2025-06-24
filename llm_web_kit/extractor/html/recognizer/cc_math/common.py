@@ -325,7 +325,6 @@ class CCMATH():
     def __init__(self):
         self.url = ''
 
-
     def wrap_math_md(self, s):
         """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
         if not s:

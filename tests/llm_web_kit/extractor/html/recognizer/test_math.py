@@ -278,8 +278,6 @@ TEST_CONTENT_LIST_NODE = [
     }
 ]
 
-
-
 TEST_WRAP_MATH_MD = [
     {
         'input': r'$$a^2 + b^2 = c^2$$',
