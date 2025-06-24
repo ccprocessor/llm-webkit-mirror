@@ -27,14 +27,6 @@ class BaseMathRender():
         self.render_type = None
         self.url = ''  # 添加url属性的正确方式
 
-    def set_url(self, url: str) -> None:
-        """设置URL。
-
-        Args:
-            url: 当前页面的URL
-        """
-        self.url = url
-
     @abstractmethod
     def get_render_type(self) -> str:
         """获取渲染器类型."""
