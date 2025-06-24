@@ -50,13 +50,13 @@ if __name__ == '__main__':
 
             # 读取html
             html_content = reader.read(
-                f'{root}/bench/{test_data.get("path")}'
+                f'{root}/bench/{test_data.get('path')}'
             ).decode('utf-8')
 
             # 提取main_html
             from llm_web_kit.extractor.html.extractor import \
-                HTMLFileFormatExtractor
-            htmlExtractor = HTMLFileFormatExtractor(chain_config)
+                MagicHTMLFIleFormatorExtractor
+            htmlExtractor = MagicHTMLFIleFormatorExtractor(chain_config)
             main_html, method, title = htmlExtractor._extract_main_html(
                 html_content, test_data.get('url', ''), test_data.get('page_layout_type', 'article')
             )
