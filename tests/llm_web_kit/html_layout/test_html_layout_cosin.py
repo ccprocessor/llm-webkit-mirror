@@ -50,7 +50,7 @@ TEST_SUM_TAGS = [
 TEST_CLUSTER_TEST = [
     {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2},
     {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2},
-    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2}
+    {'feature': {'tags': {'1': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2}
 ]
 
 
