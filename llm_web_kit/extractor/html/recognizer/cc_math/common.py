@@ -325,22 +325,6 @@ class CCMATH():
     def __init__(self):
         self.url = ''
 
-    # end def
-    def wrap_math(self, s, display=False):
-        """根据行间行内公式加上$$或$"""
-        s = re.sub(r'\s+', ' ', s)
-        s = color_regex.sub('', s)
-        s = s.replace('$', '')
-        s = s.replace('\n', ' ').replace('\\n', '')
-        s = s.strip()
-        if len(s) == 0:
-            return s
-        # Don't wrap if it's already in \align
-        if '\\begin' in s:
-            return s
-        if display:
-            return '$$' + s + '$$'
-        return '$' + s + '$'
 
     def wrap_math_md(self, s):
         """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
@@ -359,6 +343,9 @@ class CCMATH():
         if s.startswith('`') and s.endswith('`'):
             return s.replace('`', '').strip()
         s = self.wrap_math_md_custom(s)
+        # 处理MathInsight网站的特殊宏
+        if MATHINSIGHT.DOMAIN in self.url:
+            s = MATHINSIGHT_convert_to_standard_latex(s)
         return s.strip()
 
     # 循环MATH_MD_CUSTOM_CONFIG，如果url匹配，则去掉特殊网站的公式奇怪的起始结尾
@@ -618,8 +605,6 @@ if __name__ == '__main__':
     # print(cm.get_equation_type(r'<p>abc [itex]x^2 abc</p>'))
     print(cm.get_equation_type(r'<p>\begin{align} a^2+b=c\end{align}</p>'))
     print(cm.get_equation_type(r'<p>\begin{abc} a^2+b=c\end{abc}</p>'))
-    print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
-    print(cm.wrap_math(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))

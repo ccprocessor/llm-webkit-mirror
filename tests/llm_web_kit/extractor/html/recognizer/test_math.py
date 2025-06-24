@@ -279,23 +279,6 @@ TEST_CONTENT_LIST_NODE = [
 ]
 
 
-TEST_WRAP_MATH = [
-    {
-        'input': '$$a^2 + b^2 = c^2$$',
-        'display': True,
-        'expected': '$$a^2 + b^2 = c^2$$'
-    },
-    {
-        'input': r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}',
-        'display': False,
-        'expected': r'${\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}$',
-    },
-    {
-        'input': r'\begin{align}a^2 + b^2 = c^2\end{align}',
-        'display': True,
-        'expected': r'\begin{align}a^2 + b^2 = c^2\end{align}',
-    }
-]
 
 TEST_WRAP_MATH_MD = [
     {
@@ -546,12 +529,6 @@ class TestCCMATH(unittest.TestCase):
                         self.assertEqual(tag_math_type_list[i][0], expect0, msg=f'result is: {tag_math_type_list[i][0]}, expected is: {expect0}')
                         self.assertEqual(tag_math_type_list[i][1], expect1, msg=f'result is: {tag_math_type_list[i][1]}, expected is: {expect1}')
 
-    def test_wrap_math(self):
-        for test_case in TEST_WRAP_MATH:
-            with self.subTest(input=test_case['input']):
-                output_math = self.ccmath.wrap_math(test_case['input'], test_case['display'])
-                self.assertEqual(output_math, test_case['expected'])
-
     def test_wrap_math_md(self):
         for test_case in TEST_WRAP_MATH_MD:
             with self.subTest(input=test_case['input']):
@@ -624,5 +601,3 @@ if __name__ == '__main__':
     # c = TestCCMATH()
     # c.setUp()
     # c.test_mml_to_latex()
-    # c.test_wrap_math()
-    # c.test_wrap_math_md()

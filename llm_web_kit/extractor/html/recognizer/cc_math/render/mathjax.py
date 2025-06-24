@@ -1,8 +1,7 @@
 import re
 from typing import Any, Dict, List
 
-from llm_web_kit.extractor.html.recognizer.cc_math.common import (
-    MATHINSIGHT, MATHINSIGHT_convert_to_standard_latex)
+from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
@@ -36,7 +35,7 @@ class MathJaxRender(BaseMathRender):
             'config': '',
             'version': ''
         }
-        self.url = ''  # 添加url属性
+        self.ccmath = CCMATH()  # 初始化CCMATH实例
 
     def get_render_type(self) -> str:
         """获取渲染器类型."""
@@ -376,9 +375,8 @@ class MathJaxRender(BaseMathRender):
             if self._is_escaped_delimiter(text, match.start()):
                 continue
 
-            # 限定MATHINSIGHT域名
-            if MATHINSIGHT.DOMAIN in self.url:
-                formula = MATHINSIGHT_convert_to_standard_latex(formula)
+            formula = self.ccmath.wrap_math_md(formula)
+
             start_pos = match.start()
             end_pos = match.end()
 
@@ -448,8 +446,7 @@ class MathJaxRender(BaseMathRender):
             # 构建完整的公式文本
             formula = f'\\begin{{{env_name}}}{formula}\\end{{{env_name}}}'
             # 将自定义LaTeX转换为标准LaTeX格式
-            if MATHINSIGHT.DOMAIN in self.url:
-                formula = MATHINSIGHT_convert_to_standard_latex(formula)
+            formula = self.ccmath.wrap_math_md(formula)
 
             start_pos = match.start()
             end_pos = match.end()
