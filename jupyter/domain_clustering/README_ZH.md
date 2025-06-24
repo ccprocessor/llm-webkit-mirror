@@ -93,5 +93,6 @@ offset = 257877031
 record_count = 10
 
 # 读取指定偏移量和数量的记录
-rows = list(read_s3_rows_from_offset(filepath, offset=offset, limit=record_count))
+for i, row in enumerate(read_s3_rows_from_offset(filepath, offset=offset, limit=record_count)):
+    data = json.loads(row.value)
 ```
