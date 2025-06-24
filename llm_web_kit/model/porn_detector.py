@@ -172,7 +172,7 @@ class XlmrModel(BertModel):
             model_config = json.load(reader)
         self.cls_index = int(model_config.get('cls_index', 1))
         self.use_sigmoid = bool(model_config.get('use_sigmoid', False))
-        self.max_tokens = int(model_config.get('max_tokens', 300))
+        self.max_tokens = int(model_config.get('max_tokens', 512))
         self.remain_tail = min(
             self.max_tokens - 1, int(model_config.get('remain_tail', -1))
         )
