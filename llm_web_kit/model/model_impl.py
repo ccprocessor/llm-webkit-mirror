@@ -112,7 +112,7 @@ class PoliticalCPUModel(BaseModelResource):
         # raise NotImplementedError
         # TODO convert result to response ensure the threshold
         return PoliticalResponse(
-            is_remained=result['political_prob'] > 0.99, details=result
+            is_remained=result['political_prob'] > 0.89, details=result
         )
 
 

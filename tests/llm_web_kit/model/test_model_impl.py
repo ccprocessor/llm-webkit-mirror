@@ -92,14 +92,14 @@ class TestPoliticalCPUModel(TestCase):
         mock_load_model.return_value = MagicMock()
         model = PoliticalCPUModel()
 
-        # Test case where political_prob > 0.99 (should be flagged)
-        result = {'political_prob': 0.995}
+        # Test case where political_prob > 0.89 (should be flagged)
+        result = {'political_prob': 0.9}
         response = model.convert_result_to_response(result)
         assert response.is_remained
         assert response.details == result
 
-        # Test case where political_prob <= 0.99 (should not be flagged)
-        result = {'political_prob': 0.985}
+        # Test case where political_prob <= 0.89 (should not be flagged)
+        result = {'political_prob': 0.88}
         response = model.convert_result_to_response(result)
         assert not response.is_remained
         assert response.details == result
