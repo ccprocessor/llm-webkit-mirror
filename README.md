@@ -75,8 +75,10 @@ llm-web-kit is a python library that ..
 
 ## Quick Start
 
+### extract by magic_html+recognize
+
 ```python
-from llm_web_kit.simple import extract_html_to_md
+from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
 import traceback
 from loguru import logger
 
@@ -93,6 +95,50 @@ if __name__=="__main__":
     url = ""
     html = ""
     markdown = extract(url, html)
+```
+
+### only extract by recognize
+
+```python
+from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
+import traceback
+from loguru import logger
+
+def extract(url:str, raw_html:str) -> str:
+    try:
+        nlp_md = extract_html_to_md(url, raw_html, clip_html=False)
+        # or mm_nlp_md = extract_html_to_mm_md(url, raw_html, clip_html=False)
+        return nlp_md
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    markdown = extract(url, html)
+```
+
+### only extract main_html by magic-html
+
+```python
+from llm_web_kit.simple import extract_main_html_by_maigic_html
+import traceback
+from loguru import logger
+
+def extract(url:str, html:str) -> str:
+    try:
+        main_html = extract_main_html_by_maigic_html(url, html)
+        # or mm_main_html = extract_pure_html_to_mm_md(url, html)
+        return main_html
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    main_html = extract(url, html)
 ```
 
 ## Pipeline

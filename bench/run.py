@@ -9,7 +9,7 @@ from bench.common.result import Result_Detail, Result_Summary
 from bench.eval.ours import eval_ours_extract_html
 from llm_web_kit.dataio.filebase import (FileBasedDataReader,
                                          FileBasedDataWriter)
-from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
+from llm_web_kit.extractor.html.extractor import MagicHTMLFIleFormatorExtractor
 from llm_web_kit.libs.statics import Statics
 
 
@@ -18,13 +18,11 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='HTML提取与评估工具')
     parser.add_argument('--input', type=str, help='HTML文件路径')
     parser.add_argument('--output', type=str, help='输出文件路径')
-    parser.add_argument(
-        '--tool',
-        type=str,
-        choices=['ours', 'magic_html', 'unstructured'],
-        help='抽取工具',
-        default='ours'
-    )
+    parser.add_argument('--tool',
+                        type=str,
+                        choices=['ours', 'magic_html', 'unstructured'],
+                        help='抽取工具',
+                        default='ours')
     return parser.parse_args()
 
 
@@ -41,7 +39,8 @@ def setup_paths():
     return paths
 
 
-def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, summary, detail):
+def run_ours(config_path, data_path, output_path, statics_pre, reader, writer,
+             summary, detail):
     """运行我们的提取模型.
 
     Args:
@@ -62,6 +61,11 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
         print(f'数据路径: {data_path_str}')
         print(f'输出路径: {output_path_str}')
 
+        # 加载配置文件
+        import commentjson
+        with open(config_path_str, 'r', encoding='utf-8') as f:
+            chain_config = commentjson.load(f)
+
         with open(data_path_str, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
                 try:
@@ -74,8 +78,7 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
 
                     # 执行评估
                     content, content_list, statics = eval_ours_extract_html(
-                        config_path_str, data_json
-                    )
+                        chain_config, data_json)
 
                     # 获取路径并进行安全处理
                     path = data_json.get('path', '')
@@ -88,7 +91,8 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
                     html_content = ''
                     if file_path and os.path.exists(file_path):
                         try:
-                            html_content = reader.read(file_path).decode('utf-8')
+                            html_content = reader.read(file_path).decode(
+                                'utf-8')
                             print(f'成功读取HTML，长度: {len(html_content)}')
                         except Exception as e:
                             print(f'读取HTML文件失败: {e}')
@@ -96,10 +100,11 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
                         print(f'文件不存在或路径为空: {file_path}')
 
                     # 提取main_html
-                    htmlExtractor = HTMLFileFormatExtractor(config_path_str)
+                    htmlExtractor = MagicHTMLFIleFormatorExtractor(
+                        chain_config)
                     main_html, method, title = htmlExtractor._extract_main_html(
-                        html_content, data_json.get('url', ''), data_json.get('page_layout_type', 'article')
-                    )
+                        html_content, data_json.get('url', ''),
+                        data_json.get('page_layout_type', 'article'))
 
                     # 准备输出内容
                     out = {
@@ -130,7 +135,7 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer, s
                     print(f'成功写入结果到: {output_file}')
                     summary.total += 1
                 except Exception as e:
-                    summary.error_count += 1
+                    summary.error_summary['count'] += 1
                     import traceback
                     print(f'处理单条数据时出错: {e}')
                     print(traceback.format_exc())
@@ -165,8 +170,7 @@ def run_magic_html(html, url, file_name, output_path, writer):
 
         writer.write(
             os.path.join(output_path, 'magic_html', f'{file_name}.jsonl'),
-            json.dumps(out, ensure_ascii=False).encode('utf-8') + b'\n'
-        )
+            json.dumps(out, ensure_ascii=False).encode('utf-8') + b'\n')
     except Exception as e:
         print(f'运行magic_html评估时出错: {e}')
 
@@ -195,8 +199,7 @@ def run_unstructured(html, url, file_name, output_path, writer):
 
         writer.write(
             os.path.join(output_path, 'unstructured', f'{file_name}.jsonl'),
-            json.dumps(out, ensure_ascii=False).encode('utf-8') + b'\n'
-        )
+            json.dumps(out, ensure_ascii=False).encode('utf-8') + b'\n')
     except Exception as e:
         print(f'运行unstructured评估时出错: {e}')
 
@@ -218,13 +221,11 @@ def main():
     output_path = os.path.join(paths['output'], task_id)
 
     # 创建评测结果概览
-    summary = Result_Summary.create(
-        task_id=task_id,
-        output_path=output_path,
-        total=0,
-        result_summary={},
-        error_count=0
-    )
+    summary = Result_Summary.create(task_id=task_id,
+                                    output_path=output_path,
+                                    total=0,
+                                    result_summary={},
+                                    error_count=0)
 
     # 创建评测结果详情
     detail = Result_Detail.create(
@@ -239,16 +240,11 @@ def main():
 
     # 如果是ours工具，直接运行ours评估
     if args.tool == 'ours':
-        summary, detail, statics_pre = run_ours(
-            paths['pipeline_config'],
-            paths['pipeline_data'],
-            paths['output'],
-            statics_pre,
-            reader,
-            writer,
-            summary,
-            detail
-        )
+        summary, detail, statics_pre = run_ours(paths['pipeline_config'],
+                                                paths['pipeline_data'],
+                                                paths['output'], statics_pre,
+                                                reader, writer, summary,
+                                                detail)
     else:
         # 读取HTML文件
         try:
@@ -261,8 +257,7 @@ def main():
                         url = file_data.get('url', '')
                         origin_filepath = file_data.get('origin_filepath', '')
                         groundtruth_filepath = file_data.get(
-                            'groundtruth_filepath', ''
-                        )
+                            'groundtruth_filepath', '')
                         layout_type = file_data.get('layout_type', '')
 
                         print(f'处理: {file_name}, 类型: {layout_type}')
@@ -275,27 +270,21 @@ def main():
                         try:
                             html = reader.read(str(html_path)).decode('utf-8')
                             groundtruth_data = reader.read(
-                                str(groundtruth_path)
-                            ).decode('utf-8')
+                                str(groundtruth_path)).decode('utf-8')
                             groundtruth = json.loads(groundtruth_data)
                             statics_gt.merge_statics(
-                                groundtruth.get('statics', {})
-                            )
+                                groundtruth.get('statics', {}))
                         except Exception as e:
                             print(f'读取文件失败: {e}')
                             continue
 
                         # 根据工具类型运行不同的评估
                         if args.tool == 'magic_html':
-                            run_magic_html(
-                                html, url, file_name,
-                                paths['output'], writer
-                            )
+                            run_magic_html(html, url, file_name,
+                                           paths['output'], writer)
                         elif args.tool == 'unstructured':
-                            run_unstructured(
-                                html, url, file_name,
-                                paths['output'], writer
-                            )
+                            run_unstructured(html, url, file_name,
+                                             paths['output'], writer)
                     except Exception as e:
                         print(f'处理文件 {file_name} 时出错: {e}')
         except Exception as e:
