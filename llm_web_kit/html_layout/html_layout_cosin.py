@@ -12,6 +12,11 @@ from llm_web_kit.exception.exception import LayoutClusteringParserException
 
 TAGS_TO_IGNORE = ['script', 'style', 'meta', 'link', 'br', 'noscript']  # , 'b', 'i', 'strong'
 TAGS_IGNORE_ATTR = ['a', 'i', 'b', 'li', 'tr', 'td', 'img', 'p', 'body']
+RE_MD5 = re.compile(r'^[0-9a-f]{32}$')
+RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
+RE_UUID = re.compile(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$')
+RE_TIMESTAMP = re.compile(r'^\d{10,13}$')  # 时间戳属性值
+RE_NUM = re.compile(r'\d+')  # 自定义动态属性值
 
 
 def html_to_element(html_data: str) -> HtmlElement:
@@ -97,9 +102,7 @@ def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Di
                 if tag in TAGS_IGNORE_ATTR:
                     parent_tag_attr.add(f'<{tag}>')
                 else:
-                    attrs_str = ' '.join(
-                        [f'{k}="{__standardizing_dynamic_attributes(v)}"' for k, v in child.attrib.items() if
-                         k in ['class', 'id']])
+                    attrs_str = __parse_attributes(child)
                     parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
 
             el_tag_attr.append(parent_tag_attr)
@@ -117,14 +120,34 @@ def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Di
     return dict(tag_attr) if tag_attr.get('tags') else None
 
 
+def __parse_attributes(element: HtmlElement):
+    """解析标签属性值."""
+    class_s = None
+    id_s = None
+    class_attr = element.get('class')
+    if class_attr:
+        class_d = class_attr.split()
+        if len(class_d) > 1:
+            class_s = ' '.join([i for i in class_d if not RE_NUM.search(i)])
+        elif len(class_d) == 1:
+            class_s = __standardizing_dynamic_attributes(class_d[0])
+
+    id_attr = element.get('id')
+    if id_attr:
+        id_d = id_attr.split()
+        if len(id_d) > 1:
+            id_s = ' '.join([i for i in id_d if not RE_NUM.search(i)])
+        elif len(id_d) == 1:
+            id_s = __standardizing_dynamic_attributes(id_d[0])
+
+    if not class_s and not id_s:
+        return None
+    else:
+        return ' '.join([f'{k}= "{v}"' for k, v in {'class': class_s, 'id': id_s}.items() if v])
+
+
 def __standardizing_dynamic_attributes(attr_value):
     """将动态属性值标准化为统一表示."""
-    # 预编译正则表达式
-    RE_MD5 = re.compile(r'^[0-9a-f]{32}$')
-    RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
-    RE_UUID = re.compile(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$')
-    RE_TIMESTAMP = re.compile(r'^\d{10,13}$')  # 时间戳属性值
-    RE_CUSTOM = re.compile(r'^([A-Za-z-_ ]{2,})\d+$')  # 自定义动态属性值
     if RE_MD5.fullmatch(attr_value):
         return '[MD5]'
     if RE_SHA1.fullmatch(attr_value):
@@ -133,9 +156,8 @@ def __standardizing_dynamic_attributes(attr_value):
         return '[UUID]'
     if RE_TIMESTAMP.fullmatch(attr_value):
         return '[TIMESTAMP]'
-    match = RE_CUSTOM.fullmatch(attr_value)
-    if match:
-        return match.group(1)
+    if RE_NUM.search(attr_value):
+        return re.sub(r'\d+', '', attr_value)
 
     return attr_value  # 不是可识别的哈希则返回原值
 
@@ -246,7 +268,7 @@ def __parse_valid_layer(features: List[Dict]) -> int:
         layer_max_l.append(max_key)
     counter = Counter(layer_max_l)
     layer_n = counter.most_common(1)[0][0]
-    return layer_n if layer_n > 5 else len(features[0]['tags'])
+    return layer_n if layer_n > 1 else len(features[0]['tags'])
 
 
 def cluster_html_struct(sampled_list: List[Dict], threshold=0.95) -> List[Dict]:

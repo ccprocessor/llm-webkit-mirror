@@ -32,7 +32,7 @@ TEST_CLUSTER_HTMLS = [
     {'input': ['assets/feature1.html', 'assets/cosin.html'], 'expected': [-1]},
     {'input': ['assets/feature1.html', 'assets/feature2.html'], 'expected': [-1]},
     {'input': ['assets/100.html', 'assets/101.html', 'assets/102.html', 'assets/103.html', 'assets/104.html',
-               'assets/105.html', 'assets/106.html'], 'expected': [0, 1, -1]}
+               'assets/105.html', 'assets/106.html'], 'expected': [0]}
 
 ]
 
@@ -46,6 +46,11 @@ TEST_SUM_TAGS = [
                            3: ['div', 'div', 'div', 'div', 'div', 'div', 'div'],
                            4: ['div', 'div', 'header', 'article', 'aside', 'div', 'a', 'div', 'div']}},
         'expected': {'layer_n': {1: 1, 2: 5, 3: 7, 4: 9}, 'total_n': 22}}
+]
+TEST_CLUSTER_TEST = [
+    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2},
+    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2},
+    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2}
 ]
 
 
@@ -62,7 +67,7 @@ class TestHtmllayoutcosin(unittest.TestCase):
                 layer_n, total_n = sum_tags(get_feature(raw_html, is_ignore_tag=False)['tags'])
                 ignore_layer_n, ignore_total_n = sum_tags(get_feature(raw_html)['tags'])
                 self.assertEqual(len(layer_n) == len(ignore_layer_n), True)
-                self.assertEqual(total_n > ignore_total_n, True)
+                self.assertEqual(total_n >= ignore_total_n, True)
             else:
                 self.assertEqual(features, test_case['expected'])
 
@@ -72,6 +77,8 @@ class TestHtmllayoutcosin(unittest.TestCase):
                         TEST_CLUSTER_HTML['input']]
             res, layout_list = cluster_html_struct(features)
             self.assertEqual(TEST_CLUSTER_HTML['expected'], layout_list)
+        res, layout_list = cluster_html_struct(TEST_CLUSTER_TEST)
+        self.assertEqual(layout_list, [0])
 
     def test_similarity(self):
         for TEST_SIMIL_HTML in TEST_SIMIL_HTMLS:
