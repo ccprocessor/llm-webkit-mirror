@@ -14,11 +14,10 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
-    'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code','mjx-container'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
     'elements': ['body'],
-    'environments': ['equation', 'align', 'align1', 'displaymath', 'eqnarray', 'gather', 'multline', 'flalign', 'alignat', 'CD']
 }
 
 
@@ -233,13 +232,9 @@ class MathJaxRender(BaseMathRender):
 
         # 添加对环境的支持
         if MATHJAX_OPTIONS.get('processEnvironments', True):
-            environments = MATHJAX_OPTIONS.get('environments', [])
-            for env in environments:
-                # 使用递归正则表达式模式匹配嵌套结构
-                # 注意：Python的re模块不支持递归模式，这里是概念性展示
-                # 实际实现需要用其他方法
-                env_pattern = f'\\\\begin{{{re.escape(env)}}}.*?\\\\end{{{re.escape(env)}}}'
-                display_patterns.append(env_pattern)
+            # 通用匹配任何 \begin{...}\end{...} 环境的模式，保证环境名称相同时才匹配
+            env_pattern = r'(\\begin\{(?P<env>[^}]+)\}.*?\\end\{(?P=env)\})'
+            display_patterns.append(env_pattern)
 
         # 编译正则表达式
         inline_pattern = re.compile('|'.join(inline_patterns), re.DOTALL)
@@ -268,7 +263,7 @@ class MathJaxRender(BaseMathRender):
                 element.tail = self._process_math_in_text(element, element.tail, inline_pattern, False, True)
 
         # 跳过特定标签
-        skip_tags = MATHJAX_OPTIONS.get('skipTags', ['script', 'noscript', 'style', 'textarea', 'pre', 'code'])
+        skip_tags = MATHJAX_OPTIONS['skipTags']
         if element.tag in skip_tags:
             return
         # 跳过ccmath标签
@@ -348,7 +343,6 @@ class MathJaxRender(BaseMathRender):
         # 首先查找所有分隔符形式的匹配
         matches = list(pattern.finditer(text))
 
-
         # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
             return text
@@ -424,8 +418,6 @@ class MathJaxRender(BaseMathRender):
 
         # 返回处理后的文本
         return result
-
-
 
     def _is_escaped_delimiter(self, text: str, pos: int) -> bool:
         """检查分隔符是否被转义.

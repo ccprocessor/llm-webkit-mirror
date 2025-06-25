@@ -188,9 +188,6 @@ class TestExtractorChain(unittest.TestCase):
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-        # 打印content_list内容
-        content_list = result.get_content_list()._get_data()
-        print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
         # Verify basic properties
         self.assertEqual(result.get_dataset_name(), 'test_pipeline_suit')
         self.assertEqual(result['track_id'], 'stackoverflow_math')
@@ -790,8 +787,6 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        with open('output_mathinsight.md', 'w', encoding='utf-8') as f:
-            f.write(md_content)
         self.assertIn(r'L(\mathbf{x}) = f(\mathbf{a}) + T(\mathbf{x}-\mathbf{a})', md_content)
         self.assertIn(r'\frac{x^2y}{x^2+y^2} & \text{if } (x,y) \ne (0,0)\\',md_content)
 
