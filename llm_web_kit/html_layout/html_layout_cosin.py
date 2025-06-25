@@ -103,8 +103,7 @@ def __recursive_extract_tags(doc: HtmlElement, is_ignore_tag: bool = True) -> Di
                     parent_tag_attr.add(f'<{tag}>')
                 else:
                     attrs_str = __parse_attributes(child)
-                    if attrs_str is not None:
-                        parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
+                    parent_tag_attr.add(f'<{tag} {attrs_str}>' if attrs_str else f'<{tag}>')
 
             el_tag_attr.append(parent_tag_attr)
 
@@ -130,7 +129,7 @@ def __parse_attributes(element: HtmlElement):
         class_d = class_attr.split()
         if len(class_d) > 1:
             class_s = ' '.join([i for i in class_d if not RE_NUM.search(i)])
-        else:
+        elif len(class_d) == 1:
             class_s = __standardizing_dynamic_attributes(class_d[0])
 
     id_attr = element.get('id')
@@ -138,7 +137,7 @@ def __parse_attributes(element: HtmlElement):
         id_d = id_attr.split()
         if len(id_d) > 1:
             id_s = ' '.join([i for i in id_d if not RE_NUM.search(i)])
-        else:
+        elif len(id_d) == 1:
             id_s = __standardizing_dynamic_attributes(id_d[0])
 
     if not class_s and not id_s:
@@ -269,7 +268,7 @@ def __parse_valid_layer(features: List[Dict]) -> int:
         layer_max_l.append(max_key)
     counter = Counter(layer_max_l)
     layer_n = counter.most_common(1)[0][0]
-    return layer_n if layer_n > 5 else len(features[0]['tags'])
+    return layer_n if layer_n > 1 else len(features[0]['tags'])
 
 
 def cluster_html_struct(sampled_list: List[Dict], threshold=0.95) -> List[Dict]:
