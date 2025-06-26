@@ -801,9 +801,9 @@ A few explanations on why certain things in business are so.
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
         content_list = result.get_content_list()._get_data()
-        print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
-        with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
-            f.write(md_content)
+        # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
+        # with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
 
     def test_double_ul(self):
         """测试双重ul标签."""
