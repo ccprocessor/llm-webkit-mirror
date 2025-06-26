@@ -14,7 +14,7 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
-    'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code','mjx-container'],
+    'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
     'elements': ['body'],

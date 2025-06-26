@@ -190,7 +190,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     except Exception as e:
                         raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
             # 保存处理后的html
-            # with open('math_courses_processed.html', 'w') as f:
+            # with open('math_courses_processed.html', 'w', encoding='utf-8') as f:
             #     f.write(self._element_to_html(tree))
         except Exception as e:
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
@@ -199,32 +199,32 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
-    test_html = [
-        (
-            ("""
-        <div>
-            <script type="math/tex">x^2 + y^2 = z^2</script>
-            <script type="math/tex"></script>
-            <script type="math/tex; mode=display">E=mc^2</script>
-        </div>
-        """),
-            ("""
-        <div>
-            <script type="math/tex">x^2 + y^2 = z^2</script>
-            <script type="math/tex"></script>
-            <script type="math/tex; mode=display">E=mc^2</script>
-        </div>
-        """)
-        )
-    ]
-    raw_html = (
-        '<head> '
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
-        '?config=TeX-MML-AM_CHTML"> </script> '
-        '</head> '
-        '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
-    )
-    # with open('aa.html', 'r') as f:
+    # test_html = [
+    #     (
+    #         ("""
+    #     <div>
+    #         <script type="math/tex">x^2 + y^2 = z^2</script>
+    #         <script type="math/tex"></script>
+    #         <script type="math/tex; mode=display">E=mc^2</script>
+    #     </div>
+    #     """),
+    #         ("""
+    #     <div>
+    #         <script type="math/tex">x^2 + y^2 = z^2</script>
+    #         <script type="math/tex"></script>
+    #         <script type="math/tex; mode=display">E=mc^2</script>
+    #     </div>
+    #     """)
+    #     )
+    # ]
+    # raw_html = (
+    #     '<head> '
+    #     '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
+    #     '?config=TeX-MML-AM_CHTML"> </script> '
+    #     '</head> '
+    #     '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
+    # )
+    # with open(r'C:\Users\10412\.ssh\llm-webkit-mirror\tests\llm_web_kit\extractor\assets\extractor_chain_input\good_data\html\testmathjax.html', 'r', encoding='utf-8') as f:
     #     raw_html = f.read()
     # from llm_web_kit.libs.html_utils import html_to_element
     # root = html_to_element(raw_html)

@@ -4,6 +4,8 @@ from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   CCTag,
                                                                   MathType,
                                                                   text_strip)
+from llm_web_kit.extractor.html.recognizer.recognizer import \
+    BaseHTMLElementRecognizer
 from llm_web_kit.libs.html_utils import build_cc_element, replace_element
 
 
@@ -21,6 +23,12 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement):
     """
     # 处理mjx-container标签
     if node.tag == 'mjx-container':
+        # 查找formula标签
+        formula = node.find('.//formula')
+        if formula is not None and formula.text:
+            # 如果已经包含指定的ccmath标签，不进行替换
+            if BaseHTMLElementRecognizer.is_cc_html(formula, [CCTag.CC_MATH_INTERLINE, CCTag.CC_MATH_INLINE]):
+                return
         display = node.get('display', 'false').lower() == 'true'
         if display:
             new_tag = CCTag.CC_MATH_INTERLINE

@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 99
+        assert len(self.data_json) == 100
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -789,6 +789,21 @@ A few explanations on why certain things in business are so.
         md_content = result.get_content_list().to_nlp_md()
         self.assertIn(r'L(\mathbf{x}) = f(\mathbf{a}) + T(\mathbf{x}-\mathbf{a})', md_content)
         self.assertIn(r'\frac{x^2y}{x^2+y^2} & \text{if } (x,y) \ne (0,0)\\',md_content)
+
+    def test_mjx_container(self):
+        """测试mathinsight自定义latex."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[99]
+        # 验证URL中包含mathinsight.org
+        # self.assertIn('mathinsight.org', test_data['url'])
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        content_list = result.get_content_list()._get_data()
+        print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
+        with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
+            f.write(md_content)
 
     def test_double_ul(self):
         """测试双重ul标签."""
