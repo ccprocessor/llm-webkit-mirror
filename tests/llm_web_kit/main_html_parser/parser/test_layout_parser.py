@@ -3,6 +3,8 @@ import re
 import unittest
 from pathlib import Path
 
+from lxml import etree, html
+
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
 from llm_web_kit.main_html_parser.parser.layout_batch_parser import \
     LayoutBatchParser
@@ -235,3 +237,46 @@ class TestLayoutParser(unittest.TestCase):
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
         assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body
+
+    def test_more_noise_enable(self):
+        """测试推广方法的动态id识别功能."""
+        # 构造测试html
+        html_source = base_dir.joinpath('assets/input_layout_batch_parser/www.wdi.it.html').read_text(
+            encoding='utf-8')
+        template_source = re.sub(
+            'clearfix post post-37041 type-post status-publish format-standard hentry category-economia ' +
+            'category-societa tag-camera tag-commercio tag-cosenza tag-diritto tag-economia-2 tag-imprese tag-libro ' +
+            'tag-usi item-wrap',
+            'post-id', html_source)
+        template_source = re.sub('post-37041', 'test-37041', template_source)
+        expand_source = re.sub('test-37041', 'test-25031', template_source)
+        tree = etree.HTML(expand_source)
+        content_main = tree.xpath('//*[@id="content-main"]')[0]  # 定位 id="content-main" 的元素
+
+        # 创建新元素 <p>test</p> 并添加到 content-main 下
+        new_p = etree.SubElement(content_main, 'p')
+        new_p.text = 'test more noise'
+        expand_source = html.tostring(tree, encoding='utf-8').decode()
+        # 简化网页
+        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        # 模型结果格式改写
+        llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
+        llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
+        for key in llm_response.keys():
+            llm_response[key] = 1 if llm_response[key] == 'Yes' else 0
+        pre_data = {'typical_raw_tag_html': typical_raw_tag_html, 'typical_raw_html': template_source,
+                    'llm_response': llm_response}
+        pre_data = PreDataJson(pre_data)
+        # 映射
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse(pre_data)
+        element_dict = pre_data.get(PreDataJsonKey.HTML_ELEMENT_DICT, {})
+        # 推广
+        pre_data[PreDataJsonKey.HTML_SOURCE] = expand_source
+        pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_ENABLE] = True
+        pre_data[PreDataJsonKey.MORE_NOISE_ENABLE] = True
+        parser = LayoutBatchParser(element_dict)
+        parts = parser.parse(pre_data)
+        main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
+        assert 'test more noise' in main_html_body
