@@ -25,6 +25,7 @@ class BaseMathRender():
         """初始化渲染器基类."""
         self.options = {}
         self.render_type = None
+        self.url = ''  # 添加url属性的正确方式
 
     @abstractmethod
     def get_render_type(self) -> str:

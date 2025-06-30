@@ -93,5 +93,6 @@ offset = 257877031
 record_count = 10
 
 # Read records from specified offset and count
-rows = list(read_s3_rows_from_offset(filepath, offset=offset, limit=record_count))
+for i, row in enumerate(read_s3_rows_from_offset(filepath, offset=offset, limit=record_count)):
+    data = json.loads(row.value)
 ```

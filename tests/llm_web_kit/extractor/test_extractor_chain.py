@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 98
+        assert len(self.data_json) == 100
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -188,13 +188,12 @@ class TestExtractorChain(unittest.TestCase):
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-
         # Verify basic properties
         self.assertEqual(result.get_dataset_name(), 'test_pipeline_suit')
         self.assertEqual(result['track_id'], 'stackoverflow_math')
 
         html_content_list = result.get_content_list()[0]
-        assert len(html_content_list) == 22
+        assert len(html_content_list) == 24
 
     def test_mathlab_html_to_md(self):
         """测试第二个数据：这个数据会丢失一些文本信息."""
@@ -777,6 +776,33 @@ A few explanations on why certain things in business are so.
         self.assertIn(r'$s_1\xrightarrow{a_2}s_2\xrightarrow{a_3}s_5\xrightarrow{a_3}s_8\xrightarrow{a_2}s_9.$', md_content)
         self.assertIn(r'$\mathrm{return}=0+0+0+1=1.$', md_content)
         self.assertIn(r'\begin{aligned} V(s) & =\mathbb{E}[G_t|S_t=s] \\  & =\mathbb{E}[R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\ldots|S_t=s] \\  & =\mathbb{E}[R_t+\gamma(R_{t+1}+\gamma R_{t+2}+\ldots)|S_t=s] \\  & =\mathbb{E}[R_t+\gamma G_{t+1}|S_t=s] \\  & =\mathbb{E}[R_t+\gamma V(S_{t+1})|S_t=s] \end{aligned}', md_content)
+
+    def test_mathinsight_custom_latex(self):
+        """测试mathinsight自定义latex."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[98]
+        # 验证URL中包含mathinsight.org
+        # self.assertIn('mathinsight.org', test_data['url'])
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'L(\mathbf{x}) = f(\mathbf{a}) + T(\mathbf{x}-\mathbf{a})', md_content)
+        self.assertIn(r'\frac{x^2y}{x^2+y^2} & \text{if } (x,y) \ne (0,0)\\',md_content)
+
+    def test_mjx_container(self):
+        """测试mathinsight自定义latex."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[99]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'1111', md_content)
+        # content_list = result.get_content_list()._get_data()
+        # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
+        # with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
 
     def test_double_ul(self):
         """测试双重ul标签."""

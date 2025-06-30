@@ -27,6 +27,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         self.template_data = template_data
         self.dynamic_id_enable = False
         self.dynamic_classid_enable = False
+        self.more_noise_enable = False
 
     def parse_tuple_key(self, key_str):
         if key_str.startswith('(') and key_str.endswith(')'):
@@ -41,7 +42,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
         html_source = pre_data[PreDataJsonKey.HTML_SOURCE]
         template_dict_html = pre_data.get(PreDataJsonKey.TYPICAL_DICT_HTML, '<html></html>')
         self.dynamic_id_enable = pre_data.get(PreDataJsonKey.DYNAMIC_ID_ENABLE, False)
-        self.dynamic_classid_enable = pre_data.get('dynamic_classid_enable', False)
+        self.dynamic_classid_enable = pre_data.get(PreDataJsonKey.DYNAMIC_CLASSID_ENABLE, False)
+        self.more_noise_enable = pre_data.get(PreDataJsonKey.MORE_NOISE_ENABLE, False)
         template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
         template_data = dict()
         if isinstance(template_data_str, str):
@@ -97,6 +99,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
         if not tup:
             return None
         tag, class_id, idd = tup
+        if class_id:
+            class_id = re.sub(r' +', ' ', class_id)
+        if idd:
+            idd = re.sub(r' +', ' ', idd)
         # 如果有id，则无需判断class，因为有的网页和模版id相同，但是class不同
         if tag in ['body', 'html']:
             return (tag, None, None)
@@ -110,7 +116,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 匹配 "post-数字" 或 "postid-数字"（不区分大小写），并替换数字部分为空
         pattern = r'(post|postid)-(\d+)'
         # 使用 \1 保留前面的 "post" 或 "postid"，但替换数字部分
-        return re.sub(pattern, lambda m: f'{m.group(1)}-', text, flags=re.IGNORECASE)
+        return re.sub(pattern, lambda m: f'{m.group(1)}-', text, flags=re.IGNORECASE).strip()
 
     def find_blocks_drop(self, element, depth, element_dict, parent_keyy, parent_label, template_doc):
         # 判断这个tag是否有id
@@ -118,6 +124,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
             return
         length = len(self.get_tokens(element.text_content().strip()))
         length_tail = 0
+        text = element.xpath('string()').strip()
+        is_natural_language = self.__is_natural_language(text)
         if element.tail:
             length_tail = len(element.tail.strip())
         idd = element.get('id')
@@ -224,10 +232,13 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 判断当前节点是否是红色节点
         if keyy in layer_nodes_dict:
             if 'red' not in layer_nodes_dict[keyy]:
-                parent = element.getparent()
-                if parent is not None:
-                    parent.remove(element)
-                return
+                if self.more_noise_enable and tag in ['p', 'ul'] and not idd and not class_tag and is_natural_language:
+                    label = 'red'
+                else:
+                    parent = element.getparent()
+                    if parent is not None:
+                        parent.remove(element)
+                    return
             else:
                 label = 'red'
         elif length > 0 or length_tail > 0:
@@ -352,6 +363,20 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 if feature1 is None or feature2 is None:
                     continue
                 template_sim = similarity(feature1, feature2, layer_n=3)
-                if template_sim > 0.9:
+                if template_sim > 0.85:
                     return ele_label, self.normalize_key(ele_keyy[0:3])
         return None, None
+
+    def __is_natural_language(self, text, min_words=3):
+        """判断文本是否像自然语言.
+
+        :param text: 输入文本
+        :param min_words: 至少需要几个有效词才认为是自然语言
+        :return: bool
+        """
+        # 移除标点符号和多余空格
+        cleaned_text = re.sub(r'[^\w\s]', '', text.strip())
+        words = cleaned_text.split()
+        if len(words) <= min_words:
+            return False
+        return True

@@ -1,6 +1,7 @@
 import re
 from typing import Any, Dict, List
 
+from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
@@ -16,7 +17,7 @@ MATHJAX_OPTIONS = {
     'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
-    'elements': ['body']
+    'elements': ['body'],
 }
 
 
@@ -34,6 +35,7 @@ class MathJaxRender(BaseMathRender):
             'config': '',
             'version': ''
         }
+        self.ccmath = CCMATH()  # 初始化CCMATH实例
 
     def get_render_type(self) -> str:
         """获取渲染器类型."""
@@ -228,6 +230,12 @@ class MathJaxRender(BaseMathRender):
             pattern = f'{start_escaped}(.*?){end_escaped}'
             display_patterns.append(pattern)
 
+        # 添加对环境的支持
+        if MATHJAX_OPTIONS.get('processEnvironments', True):
+            # 通用匹配任何 \begin{...}\end{...} 环境的模式，保证环境名称相同时才匹配
+            env_pattern = r'(\\begin\{(?P<env>[^}]+)\}.*?\\end\{(?P=env)\})'
+            display_patterns.append(env_pattern)
+
         # 编译正则表达式
         inline_pattern = re.compile('|'.join(inline_patterns), re.DOTALL)
         display_pattern = re.compile('|'.join(display_patterns), re.DOTALL)
@@ -255,7 +263,7 @@ class MathJaxRender(BaseMathRender):
                 element.tail = self._process_math_in_text(element, element.tail, inline_pattern, False, True)
 
         # 跳过特定标签
-        skip_tags = MATHJAX_OPTIONS.get('skipTags', ['script', 'noscript', 'style', 'textarea', 'pre', 'code'])
+        skip_tags = MATHJAX_OPTIONS['skipTags']
         if element.tag in skip_tags:
             return
         # 跳过ccmath标签
@@ -332,8 +340,10 @@ class MathJaxRender(BaseMathRender):
         if not text:
             return text
 
-        # 查找所有匹配
+        # 首先查找所有分隔符形式的匹配
         matches = list(pattern.finditer(text))
+
+        # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
             return text
 
@@ -358,6 +368,8 @@ class MathJaxRender(BaseMathRender):
             # 检查是否是转义的分隔符
             if self._is_escaped_delimiter(text, match.start()):
                 continue
+
+            formula = self.ccmath.wrap_math_md(formula)
 
             start_pos = match.start()
             end_pos = match.end()
