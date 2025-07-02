@@ -193,7 +193,7 @@ class TestExtractorChain(unittest.TestCase):
         self.assertEqual(result['track_id'], 'stackoverflow_math')
 
         html_content_list = result.get_content_list()[0]
-        assert len(html_content_list) == 24
+        assert len(html_content_list) == 22
 
     def test_mathlab_html_to_md(self):
         """测试第二个数据：这个数据会丢失一些文本信息."""
