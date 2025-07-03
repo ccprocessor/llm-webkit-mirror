@@ -603,7 +603,7 @@ class TestCCMATH(unittest.TestCase):
                     nonlocal cc_tag_count, not_cc_tag_count
                     if element is None:
                         return
-                    if BaseHTMLElementRecognizer.is_cc_html(element):
+                    if BaseHTMLElementRecognizer.is_cc_tag_node(element):
                         cc_tag_count += 1
                         return
                     else:
