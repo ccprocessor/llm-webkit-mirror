@@ -269,7 +269,9 @@ class MathJaxRender(BaseMathRender):
         # 跳过ccmath标签
         from llm_web_kit.extractor.html.recognizer.recognizer import \
             BaseHTMLElementRecognizer
-        if BaseHTMLElementRecognizer.is_cc_html(element):
+
+        # 新增方法is_cc_tag_node，该方法值判断当前节点是否是cc标签，而不判断子节点
+        if BaseHTMLElementRecognizer.is_cc_tag_node(element):
             return
 
         # 检查是否应该忽略该元素
