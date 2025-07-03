@@ -78,6 +78,8 @@ class TestST(unittest.TestCase):
             output_path=output_path,
         )
 
+        failed_cases = []
+
         with open(self.pipeline_data_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data_json = json.loads(line.strip())
@@ -105,7 +107,14 @@ class TestST(unittest.TestCase):
         detail.finish()
         self.assertIsNotNone(summary)
         self.assertIsNotNone(detail)
-        self.assertEqual(summary.error_summary['count'], 0, msg=f'测试数据抽取有失败, 抽取失败的数据详情: {detail.to_dict()}')
+        # 修改，显示所有断言失败的数据，不仅是显示一条
+        if failed_cases or summary.error_summary['count'] != 0:
+            msg = ''
+            if failed_cases:
+                msg += '有断言失败:\n' + '\n'.join(failed_cases) + '\n'
+            if summary.error_summary['count'] != 0:
+                msg += f'测试数据抽取有失败, 抽取失败的数据详情: {detail.to_dict()}'
+            self.fail(msg)
 
 
 if __name__ == '__main__':

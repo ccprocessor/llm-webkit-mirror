@@ -54,10 +54,10 @@ TEST_CASES = [
         ],
         'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script><p>$x = 5$,$$x=6$$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>',
-             '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
-             ('<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>',
-              '<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>')
+            ('<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>')
         ]
     },
     {
@@ -67,9 +67,9 @@ TEST_CASES = [
         ],
         'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script> <p>$x = 5$,$$x=6$$,$x=4$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>', '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
+            ('<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>', '<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>'),
             ('<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>', '<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>'),
-            ('<p>,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>', '<p>,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>')
+            ('<p>,<ccmath-inline type="latex" by="mathjax" html="$x=4$">x=4</ccmath-inline></p>', '<p>,<ccmath-inline type="latex" by="mathjax" html="$x=4$">x=4</ccmath-inline></p>')
         ]
     },
     {
@@ -81,12 +81,12 @@ TEST_CASES = [
         'expected': [
             ('<p>By substituting </p>',
              '<p>By substituting </p>'),
-            ('<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="$$x$$">x</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="$$x$$">x</ccmath-interline></p>'),
             ('<p> with </p>',
              '<p> with </p>'),
-            ('<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="$$t - \\dfrac{b}{3a}$$">t - \\dfrac{b}{3a}</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="$$t - \\dfrac{b}{3a}$$">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
             ('<p>, the general</p>',
              '<p>, the general</p>')
         ]

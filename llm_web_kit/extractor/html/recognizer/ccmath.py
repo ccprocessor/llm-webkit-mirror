@@ -182,15 +182,24 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     # 14. 只处理只有一层的p标签
                     if node.tag == 'p' and len(node.getchildren()) == 0:
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
-
                     # TODO: 待优化，渲染器通用方案兜底
-                    try:
-                        if math_render_type == MathRenderType.MATHJAX:
-                            math_render.find_math(node)
-                    except Exception as e:
-                        raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+                    # try:
+                    #     if math_render_type == MathRenderType.MATHJAX:
+                    #         math_render.find_math(node)
+                    # except Exception as e:
+                    #     raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+
+            # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
+            if math_render_type:
+                try:
+                    if math_render_type == MathRenderType.MATHJAX:
+                        # 对 tree 节点应用 find_math
+                        math_render.find_math(tree)
+                except Exception as e:
+                    raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+
             # 保存处理后的html
-            # with open('math_courses_processed.html', 'w', encoding='utf-8') as f:
+            # with open('test20250702_result.html', 'w', encoding='utf-8') as f:
             #     f.write(self._element_to_html(tree))
         except Exception as e:
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
@@ -224,7 +233,10 @@ if __name__ == '__main__':
     #     '</head> '
     #     '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     # )
-    # with open(r'C:\Users\10412\.ssh\llm-webkit-mirror\tests\llm_web_kit\extractor\assets\extractor_chain_input\good_data\html\testmathjax.html', 'r', encoding='utf-8') as f:
+    # with open(r'C:\Users\10412\.ssh\llm-webkit-mirror\tests\st\test20250702.html', 'r', encoding='utf-8') as f:
+    # # with open(
+    # #         r'C:\Users\10412\.ssh\llm-webkit-mirror\bench\data\origin\math_mathjax_asciimath_1.html',
+    # #         'r', encoding='utf-8') as f:
     #     raw_html = f.read()
     # from llm_web_kit.libs.html_utils import html_to_element
     # root = html_to_element(raw_html)
