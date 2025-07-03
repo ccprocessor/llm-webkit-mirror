@@ -3,7 +3,8 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.exception.exception import HtmlMathRecognizerException
+from llm_web_kit.exception.exception import (
+    HtmlMathMathjaxRenderRecognizerException, HtmlMathRecognizerException)
 from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
@@ -138,8 +139,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 if ZHIHU.DOMAIN in self.cm.url and node.tag == 'span' and node.get('class') == ZHIHU.MATH:
                     tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
 
-                # if 'mathinsight.org' in self.cm.url and node.tag == 'span' and node.get('class') == '':
-
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
                 if node.tag == 'span' and node.get('class') and (
                         'math-container' in node.get('class') or
@@ -183,9 +182,13 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
             # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
-            if math_render_type and math_render_type == MathRenderType.MATHJAX:
-                # 对 tree 节点应用 find_math
-                math_render.find_math(tree)
+            if math_render_type:
+                try:
+                    if math_render_type == MathRenderType.MATHJAX:
+                        # 对 tree 节点应用 find_math
+                        math_render.find_math(tree)
+                except Exception as e:
+                    raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
 
             # 保存处理后的html
             # with open('test20250702_result.html', 'w', encoding='utf-8') as f:
