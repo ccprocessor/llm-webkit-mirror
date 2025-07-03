@@ -407,6 +407,19 @@ TEST_ZHIHU_ZTEXT_HTML = [
         'expected_formula': r'\begin{aligned}  & p(r|s,a) \\  & \sum_{r\in\mathcal{R}(s,a)}p(r|s,a)=1\text{ for any }(s,a). \end{aligned}'
     }
 ]
+
+TEST_IS_CC_TAG_NODE = [
+    {
+        'input': r'<div><p>行内公式1：$A+B=C$</p><p>行内公式2：$a+b=c$。</p><p>行间公式1：$$E+F=G$$。<\p><ccmath-interline type="latex" by="mathjax" html="$$t - \\dfrac{b}{3a}$$">t - \\dfrac{b}{3a}</ccmath-interline><p>行内公式3：$2A+2B=2C$。</p><p>行间公式2：$$2E+2F=2G$$。</p></div>',
+        'cc_tag': '1',
+        'not_cc_tag': '6',
+    },
+    {
+        'input': r'<body><p><ccmath-interline type="latex" by="mathjax" html="$$x$$">x</ccmath-interline><p><ccmath-inline type="latex" by="mathjax" html="$x$">x</ccmath-inline></p><p>行内公式1：$A+B=C$</p><span class="math-container"><p>行间公式2$$D+E=F$$</p></span></body>',
+        'cc_tag': '2',
+        'not_cc_tag': '6',
+    }
+]
 base_dir = Path(__file__).parent
 
 
@@ -576,6 +589,35 @@ class TestCCMATH(unittest.TestCase):
                 # 验证公式内容是否正确
                 formula = element.xpath(f'//{expected_tag}/text()')[0]
                 self.assertIn(test_case['expected_formula'], formula)
+
+    def test_is_cc_tag_node(self):
+        from llm_web_kit.extractor.html.recognizer.recognizer import \
+            BaseHTMLElementRecognizer
+        for test_case in TEST_IS_CC_TAG_NODE:
+            with self.subTest(input=test_case['input']):
+                root = html_to_element(test_case['input'])
+                cc_tag_count = 0
+                not_cc_tag_count = 0
+
+                def check_nodes(element):
+                    nonlocal cc_tag_count, not_cc_tag_count
+                    if element is None:
+                        return
+                    if BaseHTMLElementRecognizer.is_cc_html(element):
+                        cc_tag_count += 1
+                        return
+                    else:
+                        not_cc_tag_count += 1
+                    for child in element:
+                        check_nodes(child)
+                # mathjax方案是传入根节点递归调用，与其保持一致
+                check_nodes(root)
+                expected_cc_tag = int(test_case['cc_tag'])
+                expected_not_cc_tag = int(test_case['not_cc_tag'])
+                self.assertEqual(cc_tag_count, expected_cc_tag,
+                                 f'Expected {expected_cc_tag} cc tags, but found {cc_tag_count}')
+                self.assertEqual(not_cc_tag_count, expected_not_cc_tag,
+                                 f'Expected {expected_not_cc_tag} non-cc tags, but found {not_cc_tag_count}')
 
 
 if __name__ == '__main__':
