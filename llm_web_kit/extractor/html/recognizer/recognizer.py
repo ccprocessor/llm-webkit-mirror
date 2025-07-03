@@ -277,8 +277,4 @@ class BaseHTMLElementRecognizer(ABC):
             CCTag.CC_CODE, CCTag.CC_MATH_INLINE, CCTag.CC_MATH_INTERLINE, CCTag.CC_IMAGE, CCTag.CC_VIDEO,
             CCTag.CC_AUDIO, CCTag.CC_TABLE, CCTag.CC_LIST, CCTag.CC_TEXT, CCTag.CC_TITLE
         ]
-        if hasattr(el, 'tag'):
-            tag_name = el.tag
-            if isinstance(tag_name, str):
-                return tag_name in default_tag_names
-        return False
+        return hasattr(el, 'tag') and isinstance(el.tag, str) and el.tag in default_tag_names

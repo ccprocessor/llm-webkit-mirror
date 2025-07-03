@@ -182,21 +182,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     # 14. 只处理只有一层的p标签
                     if node.tag == 'p' and len(node.getchildren()) == 0:
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
-                    # TODO: 待优化，渲染器通用方案兜底
-                    # try:
-                    #     if math_render_type == MathRenderType.MATHJAX:
-                    #         math_render.find_math(node)
-                    # except Exception as e:
-                    #     raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
 
             # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
-            if math_render_type:
-                try:
-                    if math_render_type == MathRenderType.MATHJAX:
-                        # 对 tree 节点应用 find_math
-                        math_render.find_math(tree)
-                except Exception as e:
-                    raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+            if math_render_type and math_render_type == MathRenderType.MATHJAX:
+                # 对 tree 节点应用 find_math
+                math_render.find_math(tree)
 
             # 保存处理后的html
             # with open('test20250702_result.html', 'w', encoding='utf-8') as f:
