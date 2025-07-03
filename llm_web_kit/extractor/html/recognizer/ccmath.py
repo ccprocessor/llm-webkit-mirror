@@ -3,8 +3,7 @@ from typing import List, Tuple
 from lxml.html import HtmlElement
 from overrides import override
 
-from llm_web_kit.exception.exception import (
-    HtmlMathMathjaxRenderRecognizerException, HtmlMathRecognizerException)
+from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
                                                            tag_common_modify,
                                                            tag_img, tag_math,
