@@ -371,7 +371,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 template_sim = similarity(feature1, feature2, layer_n=3)
                 if template_sim >= self.dynamic_classid_similarity_threshold:
                     return ele_label, self.normalize_key(ele_keyy[0:3])
-            # 第一个class方案
+            # first class方案
             norm_ele_keyy_with_first_class = self.normalize_key((ele_keyy[0], ele_keyy[1].strip().split(' ')[0], None))
             norm_ele_keyy_parent_with_first_class = (norm_ele_keyy_with_first_class, ele_parent_keyy)
             if current_norm_key_with_first_class == norm_ele_keyy_parent_with_first_class:
