@@ -236,7 +236,6 @@ class TestLayoutParser(unittest.TestCase):
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
-        print(main_html_body)
         assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body
 
     def test_more_noise_enable(self):
