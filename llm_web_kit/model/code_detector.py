@@ -3,7 +3,7 @@ import re
 from typing import Dict
 
 import fasttext
-import jieba
+import jieba_fast as jieba
 
 from llm_web_kit.config.cfg_reader import load_config
 from llm_web_kit.libs.logger import mylogger as logger
@@ -36,7 +36,7 @@ class CodeClassification:
         model_download_path = code_cl_v4_config['download_path']
         model_md5 = code_cl_v4_config.get('md5', '')
 
-        target_dir = os.path.join(CACHE_DIR, 'resource_name')
+        target_dir = os.path.join(CACHE_DIR, resource_name)
         os.makedirs(target_dir, exist_ok=True)
         target_path = os.path.join(target_dir, f'{resource_name}.bin')
 
