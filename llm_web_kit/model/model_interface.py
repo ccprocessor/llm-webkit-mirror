@@ -50,6 +50,20 @@ class PornResponse(ModelResponse):
 
 
 @dataclass
+class MathRequest(ModelRequest):
+    """数学内容检测请求."""
+
+    pass
+
+
+@dataclass
+class MathResponse(ModelResponse):
+    """数学内容检测响应."""
+
+    pass
+
+
+@dataclass
 class BatchProcessConfig:
     """批处理配置."""
 
@@ -148,4 +162,11 @@ class PornPredictor(ModelPredictor):
     """色情预测器接口."""
 
     def predict_batch(self, requests: List[PornRequest]) -> List[PornResponse]:
+        pass
+
+
+class MathPredictor(ModelPredictor):
+    """数学内容预测器接口."""
+
+    def predict_batch(self, requests: List[MathRequest]) -> List[MathResponse]:
         pass
