@@ -280,3 +280,41 @@ class TestLayoutParser(unittest.TestCase):
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
         assert 'test more noise' in main_html_body
+
+    def test_classid_with_first_class(self):
+        """测试动态classid失败的情况下，采取first classid方案判断 e.g. "class-main" vs "class-
+        main middle-content"只取第一个classid来判断."""
+        # 构造测试html
+        html_source = base_dir.joinpath('assets/input_layout_batch_parser/www.wdi.it.html').read_text(
+            encoding='utf-8')
+        template_source = re.sub(
+            'clearfix post post-37041 type-post status-publish format-standard hentry category-economia ' +
+            'category-societa tag-camera tag-commercio tag-cosenza tag-diritto tag-economia-2 tag-imprese tag-libro ' +
+            'tag-usi item-wrap',
+            'post-classid', html_source)
+        template_source = re.sub('post-37041', '', template_source)
+        expand_source = re.sub('post-classid', 'post-classid template-classid', template_source)
+        # 简化网页
+        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        # 模型结果格式改写
+        llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
+        llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
+        for key in llm_response.keys():
+            llm_response[key] = 1 if llm_response[key] == 'Yes' else 0
+        pre_data = {'typical_raw_tag_html': typical_raw_tag_html, 'typical_raw_html': template_source,
+                    'llm_response': llm_response}
+        pre_data = PreDataJson(pre_data)
+        # 映射
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse(pre_data)
+        element_dict = pre_data.get(PreDataJsonKey.HTML_ELEMENT_DICT, {})
+        # 推广
+        pre_data[PreDataJsonKey.HTML_SOURCE] = expand_source
+        pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_ENABLE] = True
+        pre_data[PreDataJsonKey.MORE_NOISE_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_SIM_THRESH] = 1
+        parser = LayoutBatchParser(element_dict)
+        parts = parser.parse(pre_data)
+        main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
+        assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body

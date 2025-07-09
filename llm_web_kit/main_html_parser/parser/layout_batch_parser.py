@@ -28,6 +28,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         self.dynamic_id_enable = False
         self.dynamic_classid_enable = False
         self.more_noise_enable = False
+        self.dynamic_classid_similarity_threshold = 0.85
 
     def parse_tuple_key(self, key_str):
         if key_str.startswith('(') and key_str.endswith(')'):
@@ -44,6 +45,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         self.dynamic_id_enable = pre_data.get(PreDataJsonKey.DYNAMIC_ID_ENABLE, False)
         self.dynamic_classid_enable = pre_data.get(PreDataJsonKey.DYNAMIC_CLASSID_ENABLE, False)
         self.more_noise_enable = pre_data.get(PreDataJsonKey.MORE_NOISE_ENABLE, False)
+        self.dynamic_classid_similarity_threshold = pre_data.get(PreDataJsonKey.DYNAMIC_CLASSID_SIM_THRESH, 0.85)
         template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
         template_data = dict()
         if isinstance(template_data_str, str):
@@ -149,7 +151,6 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 child_key = self.normalize_key(child_ori_key)
                 child_str = html.tostring(child, encoding='utf-8').decode()
                 current_layer_keys[child_key] = (child_ori_key, child_str)
-
         # 匹配正文节点
         has_red = False
         layer_nodes_dict = dict()
@@ -237,11 +238,13 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 else:
                     parent = element.getparent()
                     if parent is not None:
+                        if element.tail:
+                            element.tail = None
                         parent.remove(element)
                     return
             else:
                 label = 'red'
-        elif length > 0 or length_tail > 0:
+        elif length > 0 or length_tail > 0 or tag in ['figure', 'img']:
             return
 
         for child in element:
@@ -340,6 +343,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
     def __match_tag(self, layer_nodes, current_layer_key, parent_key, node_html, template_doc, class_must=False,
                     id_exist=False):
         current_norm_key = (self.normalize_key((current_layer_key[0], None, None)), parent_key)
+        current_norm_key_with_first_class = (
+            self.normalize_key((current_layer_key[0], current_layer_key[1].strip().split(' ')[0], None)), parent_key)
         for ele_keyy, ele_value in layer_nodes.items():
             # class id要存在
             if class_must and not ele_keyy[1]:
@@ -354,6 +359,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             ele_label = ele_value[0]
             norm_ele_keyy = self.normalize_key((ele_keyy[0], None, None))
             norm_ele_keyy_parent = (norm_ele_keyy, ele_parent_keyy)
+            # 相似度方案
             if current_norm_key == norm_ele_keyy_parent:
                 # 计算3层相似度
                 ele_root = template_doc.xpath(xpath)[0]
@@ -363,8 +369,14 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 if feature1 is None or feature2 is None:
                     continue
                 template_sim = similarity(feature1, feature2, layer_n=3)
-                if template_sim > 0.85:
+                if template_sim >= self.dynamic_classid_similarity_threshold:
                     return ele_label, self.normalize_key(ele_keyy[0:3])
+            # first class方案
+            norm_ele_keyy_with_first_class = self.normalize_key((ele_keyy[0], ele_keyy[1].strip().split(' ')[0], None))
+            norm_ele_keyy_parent_with_first_class = (norm_ele_keyy_with_first_class, ele_parent_keyy)
+            if current_norm_key_with_first_class == norm_ele_keyy_parent_with_first_class:
+                return ele_label, self.normalize_key(ele_keyy[0:3])
+
         return None, None
 
     def __is_natural_language(self, text, min_words=3):

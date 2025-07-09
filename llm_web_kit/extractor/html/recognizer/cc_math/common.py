@@ -557,6 +557,8 @@ class CCMATH():
                     return match
                 math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
                 wrapped_text = func(math_text) if func else math_text
+                # html保留原始的，而不是传入修改过的wrapped_text
+                original_wrapped = wrapped_text
                 wrapped_text = self.wrap_math_md(wrapped_text)
                 if not wrapped_text:
                     return match
@@ -566,7 +568,7 @@ class CCMATH():
                     tail='',
                     type=math_type,
                     by=math_render,
-                    html=wrapped_text
+                    html=original_wrapped
                 )
             except Exception:
                 return match
