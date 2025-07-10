@@ -451,7 +451,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
-        assert len(content_txt) == 1982
+        assert len(content_txt) == 1983
 
     def test_xml_tag(self):
         """测试xml标签."""

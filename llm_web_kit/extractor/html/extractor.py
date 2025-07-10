@@ -90,6 +90,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         raw_html:str = data_json['html']
         base_url:str = data_json['url']
         main_html:str = data_json['main_html']
+        language:str = data_json.get('language', 'en')
         # page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
 
         # main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
@@ -97,8 +98,9 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         parsed_html = [(main_html_element, raw_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
-                             self._extract_title, self._extract_paragraph]:
+                             self._extract_title]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
+        parsed_html = self._extract_paragraph(base_url, parsed_html, raw_html, language)
 
         # 过滤掉包含script和style标签的元素
         filtered_parsed_html = []
@@ -222,7 +224,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html)
         return lst
 
-    def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取段落.
 
         Args:
@@ -233,7 +235,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
     def __is_valid_node(self, node: dict) -> bool:
