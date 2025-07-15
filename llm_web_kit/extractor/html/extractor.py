@@ -100,7 +100,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
 
-        # 过滤掉包含script和style标签的元素
+        # 过滤掉包含script和style标签的元素,在这里改，是因为math提取需要保留script标签
         filtered_parsed_html = []
         for cc_html, o_html in parsed_html:
             # 检查o_html是否包含script或style标签
