@@ -72,6 +72,7 @@ class TestTagMapping(unittest.TestCase):
         mock_dict = data[0]
         pre_data = PreDataJson(mock_dict['pre_data'])
         pre_data[PreDataJsonKey.TYPICAL_RAW_HTML] = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
+        pre_data['success_label_enable'] = True
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse_single(pre_data)
         content_list = pre_data[PreDataJsonKey.HTML_TARGET_LIST]
