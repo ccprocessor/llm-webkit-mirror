@@ -156,11 +156,13 @@ def extract(response_json: dict, html:str) -> str:
         pre_data = PreDataJson({})
         pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML] = typical_raw_tag_html
         pre_data[PreDataJsonKey.TYPICAL_RAW_HTML] = html
+        pre_data['success_label_enable'] = True
         pre_data[PreDataJsonKey.LLM_RESPONSE] = response_json
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse_single(pre_data)
         main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
-        return main_html
+        is_success = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS]
+        return main_html, is_success
     except Exception as e:
         logger.exception(e)
     return None
@@ -168,7 +170,7 @@ def extract(response_json: dict, html:str) -> str:
 if __name__=="__main__":
     response_json =  {'item_id 1': 0, 'item_id 2': 1, 'item_id 3': 1}
     html = ""
-    main_html = extract(response_json, html)
+    main_html, is_success = extract(response_json, html)
 ```
 
 ## Pipeline
