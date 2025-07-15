@@ -1,5 +1,6 @@
 flask==3.0.2 # for html_layout_classify
 func_timeout==4.3.5
+lxml[html_clean]==0.4.2
 nbstripout==0.8.1
 nltk==3.8.1
 openai==1.75.0
@@ -11,4 +12,3 @@ pytest-cov==6.0.0
 pytest-xdist==3.6.1
 requests==2.31.0 # for html_layout_classify
 retry==0.9.2 # for html_layout_classify
-lxml[html_clean]==0.4.2
