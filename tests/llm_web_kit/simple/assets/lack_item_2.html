@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html id="XenForo" lang="en-US" dir="LTR" class="Public NoJs LoggedOut NoSidebar RightSidebar  Responsive"
+    xmlns:fb="http://www.facebook.com/2008/fbml">
+
+<head>
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href="https://plus.google.com/+physicsforum" rel="publisher" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="misc/apple-touch-icon-180x180.png">
+
+    <meta name="theme-color" content="#0275b4">
+
+    <meta name="robots" content="NOODP">
+
+    <link href='//fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+    <base href="https://www.physicsforums.com/" />
+    <script>
+        var _b = document.getElementsByTagName('base')[0], _bH = "https://www.physicsforums.com/";
+        if (_b && _b.href != _bH) _b.href = _bH;
+    </script>
+
+
+
+    <title>Thermodynamics - evaporator condenser</title>
+
+
+    <noscript>
+        <style>
+            .JsOnly,
+            .jsOnly {
+                display: none !important;
+            }
+        </style>
+    </noscript>
+    <link rel="stylesheet" href="css.php?css=xenforo,form,public&amp;style=7&amp;dir=LTR&amp;d=1432926007" />
+    <link rel="stylesheet"
+        href="css.php?css=Gritter,GritterEXTRA,bb_code,cta_featuredthreads,discussion_list,editor_ui,facebook,guest_editor,login_bar,message,message_user_info,pf_first_post_rss,pf_latex_preview,pf_welcome,quick_reply,similar_threads,thread_view,twitter,xb,xb_message,xb_quicksearch_nav&amp;style=7&amp;dir=LTR&amp;d=1432926007" />
+
+
+
+
+    <script>
+
+        var _gaq = [['_setAccount', 'UA-2209856-4'], ['_trackPageview']];
+        !function (d, t) {
+            var g = d.createElement(t),
+                s = d.getElementsByTagName(t)[0];
+            g.async = true;
+            g.src = ('https:' == d.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g, s);
+        }
+            (document, 'script');
+
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <script>if (!window.jQuery) { document.write('<scr' + 'ipt type="text/javascript" src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/jquery/jquery-1.11.0.min.js"><\/scr' + 'ipt>'); }</script>
+
+    <script src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/xenforo/xenforo.js?_v=91c7bb50"></script>
+
+    <script
+        src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/Nobita/QuickReplyGuest/quick_reply.js?_v=91c7bb50"></script>
+    <script src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/xenforo/discussion.js?_v=91c7bb50"></script>
+    <script src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/redactor/redactor.js?_v=91c7bb50"></script>
+    <script src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/xenforo/bb_code_edit.js?_v=91c7bb50"></script>
+    <script
+        src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/pf/editorsymbols/editorsymbols.js?_v=91c7bb50"></script>
+    <script
+        src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/pf/mathjaxpreview/pf_mathjaxpreview.js?_v=91c7bb50"></script>
+    <script
+        src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/gritter/jquery.gritter.js?_v=91c7bb50"></script>
+    <script
+        src="https://physicsforums-bernhardtmediall.netdna-ssl.com/js/gritter/notifications.js?_v=91c7bb50"></script>
+
+
+    <script type="text/javascript">
+        $(document).ajaxComplete(function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "messageList"]);
+        });
+    </script>
+
+
+    <script type='text/javascript'>
+        //<![CDATA[
+        jQuery(document).ready(function ($) {
+
+            var aboveHeight = $('#logoBlock').outerHeight() + 0;
+
+
+
+            var navwrapper = $('.navFloatwrapper').outerHeight();
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > aboveHeight) {
+                    $('.navFloatwrapper').addClass('fixed');
+
+
+                    $('.tabLinks').addClass('displaynone');
+
+                } else {
+                    $('.navFloatwrapper').removeClass('fixed');
+
+
+                    $('.tabLinks').removeClass('displaynone');
+
+                }
+            });
+
+
+
+
+
+        });
+
+        //]]>
+
+        $(function () {
+            $('a[href*=#]:not([href=#])').click(function () {
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                    if (target.length) {
+                        $('html,body').animate({
+                            scrollTop: target.offset().top - 50 //offsets for fixed header
+                        }, 1000);
+                        return false;
+                    }
+                }
+            });
+            //Executed on page load with URL containing an anchor tag.
+            if ($(location.href.split("#")[1])) {
+                var target = $('#' + location.href.split("#")[1]);
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top - 50 //offset height of header here too.
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <link rel="apple-touch-icon"
+        href="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/physicsforums/xenforo/logo.og.png" />
+    <link rel="alternate" type="application/rss+xml"
+        title="RSS feed for Physics Forums - The Fusion of Science and Community" href="forums/-/index.rss" />
+
+    <script type="text/javascript">
+        window.Tinhte_XenTag_maximumHashtags = parseInt('0');
+    </script>
+    <link rel="canonical" href="https://www.physicsforums.com/threads/thermodynamics-evaporator-condenser.720060/" />
+    <!-- <meta name="description" content="Hello - fundamental thermo question which is puzzling me...
+
+It concerns a multiple effect evaporator with condenser. Hot vapour is water, cooling..." /> -->
+    <meta property="og:site_name" content="Physics Forums - The Fusion of Science and Community" />
+    <meta property="og:image"
+        content="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/physicsforums/xenforo/avatars/avatar_m.png" />
+    <meta property="og:image" content="https://www.physicsforums.com/styles/physicsforums/xenforo/logo.og1.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url"
+        content="https://www.physicsforums.com/threads/thermodynamics-evaporator-condenser.720060/" />
+    <meta property="og:title" content="Thermodynamics - evaporator condenser" />
+    <meta property="og:description" content="Hello - fundamental thermo question which is puzzling me...
+
+It concerns a multiple effect evaporator with condenser. Hot vapour is water, cooling..." />
+
+    <meta property="fb:app_id" content="775925142469315" />
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+                    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+                                        tex2jax:{element:null,inlineMath:[['[itex]','[/itex]'],['##','##']],displayMath:[['[tex]','[/tex]'],['$$','$$']],skipTags:["script","noscript","style","textarea","pre","code"], processEscapes: true, ignoreClass: "tex2jax_ignore|dno" },
+                                        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" },equationNumbers: { autoNumber: "AMS" } },
+                                        messageStyle: "none"
+                });
+                </script>
+    <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+
+
+
+</head>
+
+<body class="node105 node98 SelectQuotable">
+
+    <!-- Tapatalk Detect body start -->
+    <style type="text/css">
+        .ui-mobile [data-role="page"],
+        .ui-mobile [data-role="dialog"],
+        .ui-page {
+            top: auto;
+        }
+    </style>
+    <script type="text/javascript">if (typeof (tapatalkDetect) == "function") { tapatalkDetect() }</script>
+    <!-- Tapatalk Detect banner body end -->
+
+
+
+
+
+
+
+    <script>
+        XenForo.LoginBar = function (a) { };
+    </script>
+
+
+    <div id="loginBar">
+        <div class="pageWidth">
+            <div class="pageContent">
+                <h3 id="loginBarHandle">
+                    <label for="LoginControl"><a href="login" class="OverlayTrigger concealed noOutline">Log in or Sign
+                            up</a></label>
+                </h3>
+                <span class="helper"></span>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="headerMover">
+
+        <div id="headerProxy"></div>
+
+
+
+        <div id="welcome" class="pageWidth">
+            <div class="pfWelcome">
+
+                <span class="rightSide"><a href="login" class="OverlayTrigger inner">Login</a> or <a
+                        href="register">Sign up!</a></span>
+            </div>
+        </div>
+
+
+
+        <div id="content" class="thread_view">
+            <div class="pageWidth">
+                <div class="pageContent">
+
+                    <!-- main content area -->
+
+
+
+
+
+
+
+
+
+
+
+                    <div class="breadBoxTop ">
+
+
+
+                        <nav>
+
+
+
+
+
+
+
+
+
+
+
+
+                            <fieldset class="breadcrumb">
+                                <a href="misc/quick-navigation-menu?selected=node-105"
+                                    class="OverlayTrigger jumpMenuTrigger" data-cacheOverlay="true"
+                                    title="Open quick navigation"><i class="fa fa-sitemap"></i><!--Jump to...--></a>
+
+                                <div class="boardTitle"><strong>Physics Forums - The Fusion of Science and
+                                        Community</strong></div>
+
+                                <span class="crumbs">
+
+
+
+                                    <span class="crust selectedTabCrumb" itemscope="itemscope"
+                                        itemtype="http://data-vocabulary.org/Breadcrumb">
+                                        <a href="https://www.physicsforums.com/" class="crumb" rel="up"
+                                            itemprop="url"><span itemprop="title">Forums</span></a>
+                                        <span class="arrow"><span>&gt;</span></span>
+                                    </span>
+
+
+
+
+                                    <span class="crust" itemscope="itemscope"
+                                        itemtype="http://data-vocabulary.org/Breadcrumb">
+                                        <a href="https://www.physicsforums.com/.#engineering.98" class="crumb" rel="up"
+                                            itemprop="url"><span itemprop="title">Engineering</span></a>
+                                        <span class="arrow"><span>&gt;</span></span>
+                                    </span>
+
+                                    <span class="crust" itemscope="itemscope"
+                                        itemtype="http://data-vocabulary.org/Breadcrumb">
+                                        <a href="https://www.physicsforums.com/forums/materials-and-chemical-engineering.105/"
+                                            class="crumb" rel="up" itemprop="url"><span itemprop="title">Materials and
+                                                Chemical Engineering</span></a>
+                                        <span class="arrow"><span>&gt;</span></span>
+                                    </span>
+
+
+                                </span>
+                            </fieldset>
+                        </nav>
+                    </div>
+
+
+
+
+
+
+                    <!--[if lt IE 8]>
+							<p class="importantMessage">You are using an out of date browser. It  may not display this or other websites correctly.<br />You should upgrade or use an <a href="https://www.google.com/chrome/browser/" target="_blank">alternative browser</a>.</p>
+						<![endif]-->
+
+
+
+
+
+
+
+
+                    <!-- h1 title, description -->
+                    <div class="titleBar">
+
+                        <h1>
+
+
+
+
+
+
+                            Thermodynamics - evaporator condenser
+
+                        </h1>
+
+                        <!-- <p id="pageDescription" class="muted ">
+	Discussion in '<a href="forums/materials-and-chemical-engineering.105/">Materials and Chemical Engineering</a>' started by <a href="members/james-meng.491487/" class="username" dir="auto">James MEng</a>, <a href="threads/thermodynamics-evaporator-condenser.720060/"><span class="DateTime" title="Oct 31, 2013 at 4:05 PM">Oct 31, 2013</span></a>.
+</p> -->
+                    </div>
+
+
+
+
+
+                    <div class="adHeader">
+                        <!-- <img src="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/physicsforums/xenforo/sources/ad728.png" /> -->
+                    </div>
+
+                    <!-- main template -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div class="pageNavLinkGroup">
+                        <div class="linkGroup SelectionCountContainer">
+
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+                    <form action="inline-mod/post/switch" method="post" class="InlineModForm section"
+                        data-cookieName="posts" data-controls="#InlineModControls"
+                        data-imodOptions="#ModerationSelect option">
+
+                        <ol class="messageList" id="messageList">
+
+
+
+
+
+
+                            <li id="post-4557295" class="message   " data-author="James MEng">
+
+                                <div class="messageHeading">
+                                    <span class="leftSide">
+
+                                        <a href="threads/thermodynamics-evaporator-condenser.720060/" title="Permalink"
+                                            class="datePermalink"><span class="DateTime"
+                                                title="Oct 31, 2013 at 4:05 PM">Oct 31, 2013</span></a>
+
+                                    </span>
+
+                                    <span class="rightSide">
+                                        <a href="threads/thermodynamics-evaporator-condenser.720060/" title="Permalink"
+                                            class="item muted postNumber hashPermalink OverlayTrigger"
+                                            data-href="posts/4557295/permalink">#1</a>
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <div class="messageUserInfo" itemscope="itemscope"
+                                    itemtype="http://data-vocabulary.org/Person">
+                                    <div class="messageUserBlock ">
+                                        <h3 class="xbUserName">
+                                            <a href="members/james-meng.491487/" class="username" dir="auto"
+                                                itemprop="name">James MEng</a>
+                                        </h3>
+
+
+
+                                        <div class="avatarHolder">
+
+
+                                            <a href="members/james-meng.491487/" class="avatar Av491487m"
+                                                data-avatarhtml="true"><img
+                                                    src="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/physicsforums/xenforo/avatars/avatar_m.png"
+                                                    width="96" height="96" alt="James MEng" /></a>
+
+
+                                            <span id="avpc" title="Post Count"><a href="search/member?user_id=491487"
+                                                    class="concealed" rel="nofollow">6</a></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            <!-- slot: message_user_info_avatar -->
+                                        </div>
+
+
+
+
+                                        <h3 class="userText">
+
+                                            <!--  -->
+
+                                            <!-- slot: message_user_info_text -->
+                                        </h3>
+
+
+                                        <!-- old user content area -->
+
+
+
+                                        <span class="arrow"><span></span></span>
+                                    </div>
+                                </div>
+
+                                <div class="messageInfo primaryContent">
+
+
+
+
+
+
+
+                                    <div class="messageContent">
+                                        <article>
+                                            <blockquote class="messageText SelectQuoteContainer ugc baseHtml">
+
+
+
+                                                <div style="margin: 2px; float: left;">
+                                                    <script async
+                                                        src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                                    <!-- PF InsidePost 300x250 -->
+                                                    <ins class="adsbygoogle"
+                                                        style="display:inline-block;width:300px;height:250px"
+                                                        data-ad-client="ca-pub-6580726045122001"
+                                                        data-ad-slot="3049969336"></ins>
+                                                    <script>
+                                                        (adsbygoogle = window.adsbygoogle || []).push({});
+                                                    </script>
+                                                </div>
+
+
+
+
+
+
+
+                                                Hello - fundamental thermo question which is puzzling me...<br />
+                                                <br />
+                                                It concerns a multiple effect evaporator with condenser. Hot vapour is
+                                                water, cooling medium is water.<br />
+                                                <br />
+                                                My question stems from the following:<br />
+                                                When the flow of cooling water to the condenser is increased, the
+                                                pressure in the condenser (and thus the pressure profile of the entire
+                                                evaporator) is reduced.<br />
+                                                <br />
+                                                Here&#039;s how I understand it...<br />
+                                                <br />
+                                                <ul>
+                                                    <li>Heat transfer area of condenser remains constant</li>
+                                                    <li>Overall heat transfer coefficient is increased slightly; given
+                                                        that the Reynolds number on cold side is increased</li>
+                                                    <li>Cooling water temperature out is <b>reduced</b> (assuming heat
+                                                        load is constant and inlet temperature is the same)</li>
+                                                </ul><br />
+                                                How does this in turn lead to a reduction in evaporator pressure, please
+                                                explain in basic terms (what&#039;s actually physically happening rather
+                                                than just formulae! :thumbs:).<br />
+                                                <br />
+                                                Thanks in advance for any replies<br />
+                                                <br />
+                                                Edit: Also the mass flow rate of condensate will be the same for a given
+                                                flow &quot;in&quot; of water and steam. Some thermodynamic activity is
+                                                occuring here I just cannot work out what!
+                                                <div class="messageTextEndMarker">&nbsp;</div>
+                                            </blockquote>
+                                        </article>
+
+
+                                    </div>
+
+
+
+                                    <div class="editDate">
+
+                                        Last edited: <span class="DateTime" title="Oct 31, 2013 at 4:16 PM">Oct 31,
+                                            2013</span>
+
+                                    </div>
+
+
+
+
+
+
+
+                                    <div id="likes-post-4557295"></div>
+                                </div>
+
+
+
+
+
+
+
+
+
+                                <div class="messageMeta ToggleTriggerAnchor">
+                                    <div class="privateControls hiddenResponsiveMedium hiddenResponsiveNarrow">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </div>
+
+                                    <div class="privateControls visibleResponsiveMedium visibleResponsiveNarrow">
+
+
+
+                                    </div>
+
+
+                                    <div class="publicControls">
+
+
+
+
+
+                                    </div>
+                                </div>
+
+
+
+                            </li>
+
+
+
+
+                            <li id="post-physorg" class="message">
+                                <div class="messageUserInfo">
+                                    <div class="physOrgHolder">
+                                        <img alt="jcsd"
+                                            src="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/default/xenforo/physorg.png"
+                                            width="120" height="35">
+                                    </div>
+                                </div>
+
+                                <div class="messageInfo primaryContent">
+                                    <div class="messageContent">
+                                        <a href="http://phys.org/technology-news/engineering/"
+                                            target="_blank">Engineering news</a> on Phys.org
+                                        <ul class="phys_items">
+
+                                            <li>&bull;&nbsp;<a href="http://phys.org/news352043372.html" rel="nofollow"
+                                                    target="_blank">Collision course: ONR testing high-speed planing
+                                                    hulls to better understand wave slam</a></li>
+
+                                            <li>&bull;&nbsp;<a href="http://phys.org/news352025479.html" rel="nofollow"
+                                                    target="_blank">Air traffic control failure shows we need a better
+                                                    approach to programming</a></li>
+
+                                            <li>&bull;&nbsp;<a href="http://phys.org/news352022945.html" rel="nofollow"
+                                                    target="_blank">Off-road run-ins for driverless fleets</a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
+
+
+                        </ol>
+
+
+
+                        <input type="hidden" name="_xfToken" value="" />
+
+                    </form>
+
+
+                    <div class="pageNavLinkGroup">
+
+
+                        <div class="linkGroup signup">
+
+                            <label for="LoginControl"><a href="login/" class="OverlayTrigger concealed element"><i
+                                        class="fa fa-comments"></i> Want to reply to this thread? Log in or Sign up
+                                    here!</a></label>
+
+                        </div>
+
+                        <div class="linkGroup" style="display: none"><a href="javascript:"
+                                class="muted JsOnly DisplayIgnoredContent Tooltip" title="Show hidden content by ">Show
+                                Ignored Content</a></div>
+
+
+
+                    </div>
+
+
+
+
+                    <div style="font-size:15px;">Know someone interested in this topic? Share a link to this question
+                        via <a
+                            href="mailto:?subject=Physics%20Forums%20Discussion&amp;body=Thermodynamics - evaporator condenser"
+                            target="_blank" rel="nofollow">email</a>,
+                        <a href="https://plus.google.com/share?url=https://www.physicsforums.com/threads/thermodynamics-evaporator-condenser.720060/"
+                            target="_blank" rel="nofollow">Google+</a>,
+                        <a href="http://twitter.com/share?url=https://www.physicsforums.com/threads/thermodynamics-evaporator-condenser.720060/"
+                            target="_blank" rel="nofollow">Twitter</a>, or
+                        <a href="http://www.facebook.com/sharer.php?u=https://www.physicsforums.com/threads/thermodynamics-evaporator-condenser.720060/"
+                            target="_blank" rel="nofollow">Facebook</a>
+                    </div>
+
+                    <br />
+
+                    <div style="width:95%;margin-left:auto;margin-right:auto;font-size:15pt;">
+                        Have something to add? <i class="fa fa-arrow-down"></i>
+                        <br />
+                    </div>
+
+
+                    <script>XenForo.phrases['error_captcha'] = "You did not complete the CAPTCHA verification properly. Please try again.";</script>
+
+
+
+
+
+                    <div class="quickReply message">
+
+
+
+                        <div class="messageUserInfo" itemscope="itemscope" itemtype="http://data-vocabulary.org/Person">
+                            <div class="messageUserBlock ">
+                                <h3 class="xbUserName">
+                                    <a class="username" dir="auto" itemprop="name"></a>
+                                </h3>
+
+
+
+                                <div class="avatarHolder">
+
+
+                                    <a class="avatar Av0m" data-avatarhtml="true"><img
+                                            src="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/physicsforums/xenforo/avatars/avatar_m.png"
+                                            width="96" height="96" alt="" /></a>
+
+
+                                    <span id="avpc" title="Post Count"><a href="search/member?user_id=0"
+                                            class="concealed" rel="nofollow">0</a></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    <!-- slot: message_user_info_avatar -->
+                                </div>
+
+
+
+
+                                <span class="arrow"><span></span></span>
+                            </div>
+                        </div>
+
+                        <form action="threads/thermodynamics-evaporator-condenser.720060/guest/add-reply" method="post"
+                            class="AutoValidator blendedEditor" data-optInOut="OptIn" id="QuickReply">
+
+
+
+                            <div>
+
+                                <textarea name="message_html" id="ctrl_message_html"
+                                    class="textCtrl MessageEditor BbCodeWysiwygEditor " style="display:none; "
+                                    data-css-url="css.php?style=7&amp;css=editor_contents&amp;d=1432926007"
+                                    data-dialog-url="index.php?editor/dialog&amp;style=7"
+                                    data-options="{&quot;placeholder&quot;:&quot;reply_placeholder&quot;,&quot;bbCodes&quot;:{&quot;sub&quot;:{&quot;title&quot;:&quot;Sub Script&quot;,&quot;hasOption&quot;:&quot;no&quot;},&quot;sup&quot;:{&quot;title&quot;:&quot;Super Script&quot;,&quot;hasOption&quot;:&quot;no&quot;}},&quot;buttons&quot;:{&quot;pf_symbol&quot;:{&quot;title&quot;:&quot;Insert Symbol&quot;,&quot;callback&quot;:&quot;toggleSymbols&quot;}}}"></textarea>
+                                <noscript><textarea name="message" id="ctrl_message" class="textCtrl MessageEditor "
+                                        style=""></textarea></noscript>
+
+                                <input type="hidden" name="_xfRelativeResolver"
+                                    value="https://www.physicsforums.com/threads/thermodynamics-evaporator-condenser.720060/" />
+
+
+
+
+
+
+
+
+
+                                <script>
+                                    if (typeof RELANG === 'undefined') {
+                                        var RELANG = {};
+                                    }
+
+                                    RELANG.xf = {
+                                        image: "Image",
+                                        link: "Link",
+                                        link_insert: "Link",
+                                        unlink: "Unlink",
+                                        quote: "Quote",
+                                        code: "Code",
+                                        bold: "Bold (Ctrl+B)",
+                                        italic: "Italic (Ctrl+I)",
+                                        fontcolor: "Text Color",
+                                        unorderedlist: "Unordered List",
+                                        orderedlist: "Ordered List",
+                                        outdent: "Outdent",
+                                        indent: "Indent",
+                                        none: "None",
+                                        align_left: "Align Left",
+                                        align_center: "Align Center",
+                                        align_right: "Align Right",
+                                        deleted: "Strike-through",
+                                        underline: "Underline (Ctrl+U)",
+                                        alignment: "Alignment",
+                                        undo: "Undo (Ctrl+Z)",
+                                        redo: "Redo (Ctrl+Y)",
+                                        spoiler: "Spoiler",
+                                        insert: "Insert...",
+
+                                        remove_formatting: "Remove Formatting",
+                                        font_size: "Font Size",
+                                        font_family: "Font Family",
+                                        smilies: "Smilies",
+                                        media: "Media",
+
+                                        drafts: "Drafts",
+                                        save_draft: "Save Draft",
+                                        delete_draft: "Delete Draft",
+                                        draft_saved: "Draft saved",
+                                        draft_deleted: "Draft deleted",
+
+                                        switch_mode_bb: "Use BB Code Editor",
+                                        switch_mode_rich: "Use Rich Text Editor",
+
+                                        reply_placeholder: "Write your reply...",
+
+                                        drop_files_here_to_upload: "Drop files here to upload",
+                                        uploads_are_not_available: "Uploads are not available."
+                                    };
+                                </script>
+
+
+                                <div class="guestCaptchaPlace">
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+                            <div class="submitUnit">
+                                <div class="draftUpdate">
+                                    <span class="draftSaved">Draft saved</span>
+                                    <span class="draftDeleted">Draft deleted</span>
+                                </div>
+                                <input type="button" class="button JsOnly MultiQuoteWatcher insertQuotes"
+                                    id="MultiQuote" value="Insert Quotes..." tabindex="1"
+                                    data-href="threads/thermodynamics-evaporator-condenser.720060/multi-quote?formId=%23QuickReply"
+                                    data-add="+ Quote" data-add-message="Message added to multi-quote."
+                                    data-remove="− Quote" data-remove-message="Message removed from multi-quote."
+                                    data-cacheOverlay="false" />
+
+                                <input type="submit" class="button primary OverlayTrigger" data-href="login/"
+                                    value="Post Reply" accesskey="s" />
+
+
+
+
+
+
+
+                                <input type="button" id="pf_show" class="PFLatex_Preview button primary hideme"
+                                    value="LaTeX" />
+
+                                <input type="button" id="whiteboard" class="Preview button primary hideme"
+                                    value="Whiteboard"
+                                    onclick="window.open('https://www.physicsforums.com/whiteboard.html', '_blank', 'height=810,width=930,toolbar=0,location=0,menubar=0,resizable=1,scrollbars=1'); return false" />
+
+                                <div class="latex_preview">
+                                    <input type="text" placeholder="Write LaTeX Code..." id="pf_latex_input"
+                                        class="textCtrl titleCtrl" name="pf_latex_code" />
+                                    <input type="button" class="PFLatex_Show button primary" value="Show Preview" />
+                                    <input type="button" class="PFLatex_Clear button primary" value="Clear Preview" />
+                                    <span class="guide_link">
+                                        <a href="https://www.physicsforums.com/threads/physics-forums-faq-and-howto.617567/#post-3977517"
+                                            target="_blank">LaTeX Guide</a>
+                                    </span>
+                                    <div class="preview_area" id="MathPreview">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <input type="hidden" name="last_date" value="1383253515" data-load-value="1383253515" />
+                            <input type="hidden" name="last_known_date" value="1383253515" />
+                            <input type="hidden" name="_xfToken" value="" />
+
+                        </form>
+
+                    </div>
+
+
+
+
+                    <div style="clear:both;"></div>
+
+
+
+                    <div class="discussionList section sectionMain similarThreads">
+
+
+                        <dl class="sectionHeaders">
+                            <dd class="main">
+                                <span>Similar discussions for: Thermodynamics - evaporator condenser</span>
+                            </dd>
+
+                        </dl>
+
+                        <ol class="discussionListItems">
+
+
+
+
+                            <li id="thread-65580" class="discussionListItem visible locked  " data-author="eureeca">
+
+
+                                <div class="listBlock main">
+                                    <div class="titleText">
+                                        <h3 class="title">
+
+                                            <a href="threads/selecting-t-for-condensing-fluid.65580/"
+                                                class="PreviewTooltip"
+                                                data-previewUrl="threads/selecting-t-for-condensing-fluid.65580/preview">Selecting
+                                                T for condensing fluid</a>
+                                        </h3>
+
+
+                                    </div>
+                                </div>
+
+
+                            </li>
+
+
+
+                            <li id="thread-274503" class="discussionListItem visible locked  " data-author="Elbobo">
+
+
+                                <div class="listBlock main">
+                                    <div class="titleText">
+                                        <h3 class="title">
+
+                                            <a href="threads/is-condensed-physics-the-same-as-materials-engineering.274503/"
+                                                class="PreviewTooltip"
+                                                data-previewUrl="threads/is-condensed-physics-the-same-as-materials-engineering.274503/preview">Is
+                                                condensed physics the same as materials engineering?</a>
+                                        </h3>
+
+
+                                    </div>
+                                </div>
+
+
+                            </li>
+
+
+
+                            <li id="thread-617061" class="discussionListItem visible  " data-author="ank59">
+
+
+                                <div class="listBlock main">
+                                    <div class="titleText">
+                                        <h3 class="title">
+
+                                            <a href="threads/air-cooled-steam-condenser.617061/" class="PreviewTooltip"
+                                                data-previewUrl="threads/air-cooled-steam-condenser.617061/preview">Air
+                                                cooled steam condenser</a>
+                                        </h3>
+
+
+                                    </div>
+                                </div>
+
+
+                            </li>
+
+
+
+                            <li id="thread-644408" class="discussionListItem visible locked  " data-author="Meteorrain">
+
+
+                                <div class="listBlock main">
+                                    <div class="titleText">
+                                        <h3 class="title">
+
+                                            <a href="threads/pressure-drop-due-to-friction-and-condensation.644408/"
+                                                class="PreviewTooltip"
+                                                data-previewUrl="threads/pressure-drop-due-to-friction-and-condensation.644408/preview">Pressure
+                                                drop due to friction and condensation</a>
+                                        </h3>
+
+
+                                    </div>
+                                </div>
+
+
+                            </li>
+
+
+
+                            <li id="thread-715551" class="discussionListItem visible  " data-author="Woopydalan">
+
+
+                                <div class="listBlock main">
+                                    <div class="titleText">
+                                        <h3 class="title">
+
+                                            <a href="threads/purpose-of-the-dimples-in-a-condenser-is-for.715551/"
+                                                class="PreviewTooltip"
+                                                data-previewUrl="threads/purpose-of-the-dimples-in-a-condenser-is-for.715551/preview">Purpose
+                                                of the dimples in a condenser is for?</a>
+                                        </h3>
+
+
+                                    </div>
+                                </div>
+
+
+                            </li>
+
+
+                        </ol>
+
+                        <div id="PreviewTooltip">
+                            <span class="arrow"><span></span></span>
+
+                            <div class="section">
+                                <div class="primaryContent previewContent">
+                                    <span class="PreviewContents">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!-- login form, to be moved to the upper drop-down -->
+
+
+
+
+
+
+
+
+                    <form action="login/login" method="post" class="xenForm eAuth" id="login" style="display:none">
+
+
+                        <ul id="eAuthUnit">
+
+
+
+
+                            <li><a href="register/facebook?reg=1" class="fbLogin" tabindex="110"><span>Log in with
+                                        Facebook</span></a></li>
+
+
+
+
+                            <li><a href="register/twitter?reg=1" class="twitterLogin" tabindex="110"><span>Log in with
+                                        Twitter</span></a></li>
+
+
+
+
+
+                        </ul>
+
+
+                        <div class="ctrlWrapper">
+                            <dl class="ctrlUnit">
+                                <dt><label for="LoginControl">Your name or email address:</label></dt>
+                                <dd><input type="text" name="login" id="LoginControl" class="textCtrl" tabindex="101" />
+                                </dd>
+                            </dl>
+
+
+                            <dl class="ctrlUnit">
+                                <dt>
+                                    <label for="ctrl_password">Do you already have an account?</label>
+                                </dt>
+                                <dd>
+                                    <ul>
+                                        <li><label for="ctrl_not_registered"><input type="radio" name="register"
+                                                    value="1" id="ctrl_not_registered" tabindex="105" />
+                                                No, create an account now.</label></li>
+                                        <li><label for="ctrl_registered"><input type="radio" name="register" value="0"
+                                                    id="ctrl_registered" tabindex="105" checked="checked"
+                                                    class="Disabler" />
+                                                Yes, my password is:</label></li>
+                                        <li id="ctrl_registered_Disabler">
+                                            <input type="password" name="password" class="textCtrl" id="ctrl_password"
+                                                tabindex="102" />
+                                            <div class="lostPassword"><a href="lost-password/"
+                                                    class="OverlayTrigger OverlayCloser" tabindex="106">Forgot your
+                                                    password?</a></div>
+                                        </li>
+                                    </ul>
+                                </dd>
+                            </dl>
+
+
+                            <dl class="ctrlUnit submitUnit">
+                                <dt></dt>
+                                <dd>
+                                    <input type="submit" class="button primary" value="Log in" tabindex="104"
+                                        data-loginPhrase="Log in" data-signupPhrase="Sign up" />
+                                    <label for="ctrl_remember" class="rememberPassword"><input type="checkbox"
+                                            name="remember" value="1" id="ctrl_remember" tabindex="103" /> Stay logged
+                                        in</label>
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <input type="hidden" name="cookie_check" value="1" />
+                        <input type="hidden" name="redirect"
+                            value="/threads/thermodynamics-evaporator-condenser.720060/" />
+                        <input type="hidden" name="_xfToken" value="" />
+
+                    </form>
+
+
+
+
+
+
+                    <div class="breadBoxBottom">
+
+                        <nav>
+
+
+                            <fieldset class="breadcrumb">
+                                <a href="misc/quick-navigation-menu?selected=node-105"
+                                    class="OverlayTrigger jumpMenuTrigger" data-cacheOverlay="true"
+                                    title="Open quick navigation"><i class="fa fa-sitemap"></i><!--Jump to...--></a>
+
+                                <div class="boardTitle"><strong>Physics Forums - The Fusion of Science and
+                                        Community</strong></div>
+
+                                <span class="crumbs">
+
+
+
+                                    <span class="crust selectedTabCrumb">
+                                        <a href="https://www.physicsforums.com/" class="crumb"><span>Forums</span></a>
+                                        <span class="arrow"><span>&gt;</span></span>
+                                    </span>
+
+
+
+
+                                    <span class="crust">
+                                        <a href="https://www.physicsforums.com/.#engineering.98"
+                                            class="crumb"><span>Engineering</span></a>
+                                        <span class="arrow"><span>&gt;</span></span>
+                                    </span>
+
+                                    <span class="crust">
+                                        <a href="https://www.physicsforums.com/forums/materials-and-chemical-engineering.105/"
+                                            class="crumb"><span>Materials and Chemical Engineering</span></a>
+                                        <span class="arrow"><span>&gt;</span></span>
+                                    </span>
+
+
+                                </span>
+                            </fieldset>
+                        </nav>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <header>
+
+
+
+            <div id="header">
+
+
+
+
+
+                <div class="navFloatwrapper">
+
+
+                    <div id="navigation" class="withSearch">
+                        <div class="pageContent">
+                            <nav>
+
+                                <div class="navTabs">
+                                    <div class="xbMaxwidth">
+
+                                        <ul class="xbnavLogo">
+                                            <li><a href="https://www.physicsforums.com/">
+                                                    <span></span>
+
+                                                    <img src="https://physicsforums-bernhardtmediall.netdna-ssl.com/styles/physicsforums/xenforo/logo.png"
+                                                        alt="Physics Forums - The Fusion of Science and Community" />
+
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="floatRight">
+                                            <ul class="publicTabs">
+
+                                                <!-- home -->
+
+
+
+                                                <!-- extra tabs: home -->
+
+
+
+                                                <!-- forums -->
+
+
+
+                                                <li class="navTab forums selected Popup PopupControl PopupClosed">
+
+
+                                                    <a href="https://www.physicsforums.com/"
+                                                        class="navLink NoPopupGadget" rel="Menu">Forums</a>
+
+                                                    <div class="xbTabPopupArrow">
+                                                        <span class="arrow"><span></span></span>
+                                                    </div>
+
+
+                                                    <div class="selectedMenu Menu JsOnly tabMenu forumsTabLinks">
+
+
+                                                        <div class="xbMaxwidth">
+                                                            <div class="primaryContent menuHeader">
+                                                                <h3>Forums</h3>
+                                                                <div class="muted">Quick Links</div>
+                                                            </div>
+                                                            <ul class="secondaryContent blockLinksList">
+
+
+
+
+
+
+                                                                <li><a href="threads/featured">Featured Threads</a></li>
+
+
+                                                                <li><a href="find-new/posts" rel="nofollow">Recent
+                                                                        Posts</a></li>
+                                                                <li style="background-color:#ffffc8;"><a
+                                                                        href="unanswered/threads">Unanswered Threads</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+
+
+                                                <!-- extra tabs: middle -->
+
+
+
+                                                <!-- insights -->
+
+
+                                                <li class="navTab members  Popup PopupControl PopupClosed">
+
+
+                                                    <a href="https://www.physicsforums.com/insights/"
+                                                        class="navLink NoPopupGadget" rel="Menu"><span
+                                                            class="insights">Insights</span></a>
+
+
+                                                </li>
+
+
+
+                                                <!-- info / taken from members above -->
+
+
+
+                                                <!-- extra tabs: end -->
+
+
+
+
+
+
+                                                <li class="navTab searchMini Popup PopupControl PopupClosed">
+                                                    <a href="search/" rel="Menu" class="navLink NoPopupGadget"><i
+                                                            class="fa fa-search"></i> Search</a>
+                                                    <div class="Popup" id="commonSearches">
+                                                        <div class="Menu">
+
+                                                            <div id="searchBar" class="pageWidth">
+
+                                                                <fieldset id="QuickSearchNav">
+                                                                    <form action="search/search" method="post"
+                                                                        class="formPopup">
+
+                                                                        <div class="primaryControls">
+                                                                            <!-- block: primaryControls -->
+                                                                            <input type="search" name="keywords"
+                                                                                value="" class="textCtrl"
+                                                                                placeholder="Search..." results="0"
+                                                                                title="Enter your search and hit enter"
+                                                                                id="QuickSearchQuery" />
+                                                                            <!-- end block: primaryControls -->
+                                                                        </div>
+
+                                                                        <div class="secondaryControls">
+                                                                            <div class="controlsWrapper">
+
+                                                                                <!-- block: secondaryControls -->
+                                                                                <dl class="ctrlUnit">
+                                                                                    <dt></dt>
+                                                                                    <dd>
+                                                                                        <ul>
+                                                                                            <li><label><input
+                                                                                                        type="checkbox"
+                                                                                                        name="title_only"
+                                                                                                        value="1"
+                                                                                                        id="search_bar_title_only"
+                                                                                                        class="AutoChecker"
+                                                                                                        data-uncheck="#search_bar_thread" />
+                                                                                                    Search titles
+                                                                                                    only</label></li>
+                                                                                        </ul>
+                                                                                    </dd>
+                                                                                </dl>
+
+                                                                                <dl class="ctrlUnit">
+                                                                                    <dt><label
+                                                                                            for="searchBar_users">Posted
+                                                                                            by Member:</label></dt>
+                                                                                    <dd>
+                                                                                        <input type="text" name="users"
+                                                                                            value=""
+                                                                                            class="textCtrl AutoComplete"
+                                                                                            id="searchBar_users" />
+                                                                                        <p class="explain">Separate
+                                                                                            names with a comma.</p>
+                                                                                    </dd>
+                                                                                </dl>
+
+                                                                                <dl class="ctrlUnit">
+                                                                                    <dt><label
+                                                                                            for="searchBar_date">Newer
+                                                                                            Than:</label></dt>
+                                                                                    <dd><input type="date" name="date"
+                                                                                            value="" class="textCtrl"
+                                                                                            id="searchBar_date" /></dd>
+                                                                                </dl>
+
+
+                                                                                <dl class="ctrlUnit">
+                                                                                    <dt></dt>
+                                                                                    <dd>
+                                                                                        <ul>
+
+                                                                                            <li><label
+                                                                                                    title="Search only Thermodynamics - evaporator condenser"><input
+                                                                                                        type="checkbox"
+                                                                                                        name="type[post][thread_id]"
+                                                                                                        value="720060"
+                                                                                                        id="search_bar_thread"
+                                                                                                        class="AutoChecker"
+                                                                                                        data-uncheck="#search_bar_title_only, #search_bar_nodes" />
+                                                                                                    Search this thread
+                                                                                                    only</label></li>
+
+                                                                                            <li><label
+                                                                                                    title="Search only Materials and Chemical Engineering"><input
+                                                                                                        type="checkbox"
+                                                                                                        name="nodes[]"
+                                                                                                        value="105"
+                                                                                                        id="search_bar_nodes"
+                                                                                                        class="Disabler AutoChecker"
+                                                                                                        checked="checked"
+                                                                                                        data-uncheck="#search_bar_thread" />
+                                                                                                    Search this forum
+                                                                                                    only</label>
+                                                                                                <ul
+                                                                                                    id="search_bar_nodes_Disabler">
+                                                                                                    <li><label><input
+                                                                                                                type="checkbox"
+                                                                                                                name="type[post][group_discussion]"
+                                                                                                                value="1"
+                                                                                                                id="search_bar_group_discussion"
+                                                                                                                class="AutoChecker"
+                                                                                                                data-uncheck="#search_bar_thread" />
+                                                                                                            Display
+                                                                                                            results as
+                                                                                                            threads</label>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </li>
+
+                                                                                        </ul>
+                                                                                    </dd>
+                                                                                </dl>
+
+                                                                            </div>
+                                                                            <!-- end block: secondaryControls -->
+                                                                            <div class="ctrlUnit submitUnit">
+
+                                                                                <input type="submit" value="Search"
+                                                                                    class="button primary Tooltip"
+                                                                                    title="Find Now" />
+                                                                                <a href="search/"
+                                                                                    class="button moreOptions Tooltip"
+                                                                                    title="Advanced Search">More...</a>
+                                                                            </div>
+
+
+                                                                        </div>
+
+                                                                        <input type="hidden" name="_xfToken" value="" />
+                                                                    </form>
+                                                                </fieldset>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+
+
+                                                <!-- responsive popup -->
+                                                <li class="navTab navigationHiddenTabs Popup PopupControl PopupClosed"
+                                                    style="display:none">
+
+                                                    <a rel="Menu" class="navLink NoPopupGadget"><span
+                                                            class="menuIcon">Menu</span></a>
+
+                                                    <div class="Menu JsOnly blockLinksList primaryContent"
+                                                        id="NavigationHiddenMenu"></div>
+                                                </li>
+
+                                                <!-- no selection -->
+
+
+                                            </ul>
+
+
+
+
+
+
+
+
+                                            <ul class="visitorTabs" style="background-color:#daff88;">
+                                                <li class="navTab PopupClosed">
+                                                    <h3 id="loginBarHandle">
+                                                        <label for="LoginControl"><a href="login"
+                                                                class="OverlayTrigger navLink">Log in or Sign
+                                                                up</a></label>
+                                                    </h3>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="helper"></span>
+
+                            </nav>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+        </header>
+
+    </div>
+
+    <footer>
+
+
+
+        <div class="footer">
+            <div class="pageWidth">
+                <div class="pageContent">
+
+                    <dl class="choosers">
+
+
+                    </dl>
+
+
+                    <ul class="footerLinks">
+
+
+
+
+
+                        <li><a href="misc/contact" class="OverlayTrigger"
+                                data-overlayOptions="{&quot;fixed&quot;:false}">Contact Us</a></li>
+
+                        <li><a href="help/">Help</a></li>
+                        <li><a href="https://www.physicsforums.com/help/aboutus/" class="homeLink">About</a></li>
+                        <li><a href="/threads/thermodynamics-evaporator-condenser.720060/#headerMover"
+                                class="topLink">Top</a></li>
+
+
+                        <li><a href="forums/-/index.rss" rel="alternate" class="globalFeed" target="_blank"
+                                title="RSS feed for Physics Forums - The Fusion of Science and Community"><i
+                                    class="fa fa-rss"></i></a></li>
+                        <li title="Download Android PF App"><a
+                                href="https://itunes.apple.com/us/app/physics-forums/id594086680" target="_blank"
+                                rel="nofollow"><i class="fa fa-apple fa-lg"></i></a> </li>
+                        <li title="Download iOS PF App"><a
+                                href="https://play.google.com/store/apps/details?id=com.tapatalk.physicsforumscom&hl=en"
+                                target="_blank" rel="nofollow"><i class="fa fa-android fa-lg"></i></a> </li>
+                        <li title="Follow PF on Google+"><a href="https://plus.google.com/+physicsforum" target="_blank"
+                                rel="nofollow"><i class="fa fa-google-plus fa-lg"></i></a> </li>
+                        <li title="Follow PF on Twitter"><a href="https://twitter.com/physicsforums" target="_blank"
+                                rel="nofollow"><i class="fa fa-twitter fa-lg"></i></a> </li>
+                        <li title="Follow PF on Facebook"><a href="https://www.facebook.com/physicsforums"
+                                target="_blank" rel="nofollow"><i class="fa fa-facebook-square fa-lg"></i></a> </li>
+                        <li title="Follow PF On Pinterest"><a href="https://www.pinterest.com/physicsforums"
+                                target="_blank" rel="nofollow"><i class="fa fa-pinterest fa-lg"></i></a></li>
+
+
+
+
+                    </ul>
+
+
+                    <span class="helper"></span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="footerLegal">
+            <div class="pageWidth">
+                <div class="pageContent">
+                    <ul id="legal">
+
+
+                        <li><a href="https://www.physicsforums.com/threads/physics-forums-global-guidelines.414380/">Terms
+                                and Rules</a></li>
+                        <li><a href="https://www.physicsforums.com/threads/physics-forums-privacy-policy.797829/">Privacy
+                                Policy</a></li>
+
+                    </ul>
+
+                    <!-- <div id="copyright">  </div> -->
+                    <div id="copyright">&copy 2001-2015 Physics Forums</div>
+
+
+
+
+
+
+                    <span class="helper"></span>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <script>
+
+
+        jQuery.extend(true, XenForo,
+            {
+                visitor: { user_id: 0 },
+                serverTimeInfo:
+                {
+                    now: 1432932035,
+                    today: 1432875600,
+                    todayDow: 5
+                },
+                _lightBoxUniversal: "0",
+                _enableOverlays: "1",
+                _animationSpeedMultiplier: "1",
+                _overlayConfig:
+                {
+                    top: "10%",
+                    speed: 200,
+                    closeSpeed: 100,
+                    mask:
+                    {
+                        color: "rgb(42, 42, 42)",
+                        opacity: "0.6",
+                        loadSpeed: 200,
+                        closeSpeed: 100
+                    }
+                },
+                _ignoredUsers: [],
+                _loadedScripts: { "cta_featuredthreads": true, "thread_view": true, "message": true, "bb_code": true, "xb_message": true, "message_user_info": true, "pf_first_post_rss": true, "quick_reply": true, "editor_ui": true, "guest_editor": true, "pf_latex_preview": true, "similar_threads": true, "discussion_list": true, "xb": true, "login_bar": true, "pf_welcome": true, "facebook": true, "twitter": true, "xb_quicksearch_nav": true, "Gritter": true, "GritterEXTRA": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/Nobita\/QuickReplyGuest\/quick_reply.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/xenforo\/discussion.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/redactor\/redactor.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/xenforo\/bb_code_edit.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/pf\/editorsymbols\/editorsymbols.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/pf\/mathjaxpreview\/pf_mathjaxpreview.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/gritter\/jquery.gritter.js?_v=91c7bb50": true, "https:\/\/physicsforums-bernhardtmediall.netdna-ssl.com\/js\/gritter\/notifications.js?_v=91c7bb50": true },
+                _cookieConfig: { path: "/", domain: "", prefix: "xf_" },
+                _csrfToken: "",
+                _csrfRefreshUrl: "login/csrf-token-refresh",
+                _jsVersion: "91c7bb50"
+            });
+        jQuery.extend(XenForo.phrases,
+            {
+                dismiss_notification: "Dismiss Notification",
+                cancel: "Cancel",
+
+                a_moment_ago: "A moment ago",
+                one_minute_ago: "1 minute ago",
+                x_minutes_ago: "%minutes% minutes ago",
+                today_at_x: "Today at %time%",
+                yesterday_at_x: "Yesterday at %time%",
+                day_x_at_time_y: "%day% at %time%",
+
+                day0: "Sunday",
+                day1: "Monday",
+                day2: "Tuesday",
+                day3: "Wednesday",
+                day4: "Thursday",
+                day5: "Friday",
+                day6: "Saturday",
+
+                _months: "January,February,March,April,May,June,July,August,September,October,November,December",
+                _daysShort: "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
+
+                following_error_occurred: "The following error occurred",
+                server_did_not_respond_in_time_try_again: "The server did not respond in time. Please try again.",
+                logging_in: "Logging in",
+                click_image_show_full_size_version: "Click this image to show the full-size version.",
+                show_hidden_content_by_x: "Show hidden content by {names}"
+            });
+
+        // Facebook Javascript SDK
+        XenForo.Facebook.appId = "775925142469315";
+        XenForo.Facebook.forceInit = false;
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="GritterContainer" class="baseHtml">
+
+
+
+
+
+
+
+        <script type="text/javascript">
+            $("#dismiss-link-1").hide();
+            window.setTimeout(showNotifications, 5000);
+
+            function showNotifications() {
+                if (!$.getCookie('notification_1')) {
+                    $(function () {
+                        $.extend($.gritter.options, {
+                            position: 'bottom-right',
+                        });
+
+                        $.gritter.add({
+                            id: 1,
+
+                            sticky: 1,
+                            class_name: 'easy',
+                            time: '15000',
+                            fade_in_speed: '1500',
+                            fade_out_speed: '500',
+                            title: 'Join Physics Forums',
+                            text: '<p><a href="https://www.physicsforums.com/register" style="line-height: 1.45em; background-color: initial;">Register a free account<\/a><span style="line-height: 1.45em; background-color: initial;"> if you have something to add to this discussion or have a new question. &nbsp;In 2 minutes you\'ll be part of the friendliest and highest quality science community!<\/span><br><\/p>',
+                            dismiss: '0',
+                            image: 'https://physicsforums-bernhardtmediall.netdna-ssl.com/noti_logo.png',
+                        });
+
+
+                        $('#close-1').click(function () {
+                            var expires = 0;
+                            expires = new Date(new Date().getTime() + expires * 86400000);
+                            $.setCookie('notification_1', 'xf_notification_1_closed')
+                        });
+
+
+
+                        $("#dismiss-link-1")
+                            .appendTo("#dismiss-container-1");
+
+                        $("#dismiss-link-1").show();
+
+                    });
+
+                }
+            }
+        </script>
+
+        <style type="text/css">
+            #gritter-item-1 .gritter-item {
+                color: rgb(248, 248, 248);
+                background: url(rgba.php?r=82&g=132&b=193&a=255);
+            }
+
+            #gritter-item-1 .gritter-item a {
+                color: rgb(248, 248, 248);
+            }
+
+
+            @media (max-width:800px) {
+                .Responsive #gritter-item-1 {
+                    display: none !important;
+                }
+            }
+        </style>
+
+
+
+
+
+
+    </div>
+
+    <!--XenBase Current Version : 1.4.4 -->
+    <!--Style Version :  -->
+
+
+    <script type="application/ld+json">
+{ "@context" : "http://schema.org",
+  "@type" : "Organization",
+  "name" : "Physics Forums",
+  "url" : "https://www.physicsforums.com",
+  "logo" : "https://physicsforums-bernhardtmediall.netdna-ssl.com/misc/apple-touch-icon.png",
+  "sameAs" : [ "https://www.facebook.com/physicsforums",
+    "https://twitter.com/physicsforums",
+    "https://www.linkedin.com/company/physics-forums",
+    "https://plus.google.com/+physicsforum"]
+}
+</script>
+
+
+
+
+    <!-- <script async type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full,https://www.physicsforums.com/mathjax/mjsettings.js"></script> -->
+
+
+
+    <script type="text/javascript" src="https://physicsforums-bernhardtmediall.netdna-ssl.com/copyright.js"></script>
+
+
+    <script type="text/javascript">
+        var vglnk = { key: '6afc78eea2339e9c047ab6748b0d37e7' };
+
+        (function (d, t) {
+            var s = d.createElement(t); s.type = 'text/javascript'; s.async = true;
+            s.src = '//cdn.viglink.com/api/vglnk.js';
+            var r = d.getElementsByTagName(t)[0]; r.parentNode.insertBefore(s, r);
+        }(document, 'script'));
+    </script>
+
+</body>
+
+</html>

@@ -12,6 +12,7 @@ langdetect_zh==1.0.4
 lightgbm==4.5.0
 loguru==0.7.2
 lxml==5.3.0
+lxml_html_clean==0.4.2
 nbconvert==7.16.6
 nltk==3.8.1
 notebook==7.4.2
