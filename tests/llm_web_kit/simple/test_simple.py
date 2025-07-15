@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from llm_web_kit.simple import (extract_html_to_md, extract_html_to_mm_md,
@@ -115,6 +116,7 @@ class TestSimple(unittest.TestCase):
 </body>
 </html>
         """
+        self.base_path = os.path.dirname(os.path.abspath(__file__))
 
     def test_extractor_factory(self):
         # Setup mocks
@@ -141,3 +143,13 @@ class TestSimple(unittest.TestCase):
     def test_extract_real_html_to_md(self):
         md = extract_html_to_md(self.url, self.real_html_content, clip_html=False)
         assert 'DOMContentLoaded' not in md
+
+    def test_extract_lack_item(self):
+        html_content = open(os.path.join(self.base_path, 'assets', 'lack_item.html'), 'r').read()
+        md = extract_html_to_md(self.url, html_content, clip_html=False)
+        assert len(md) > 0
+
+    def test_extract_lack_item_2(self):
+        html_content = open(os.path.join(self.base_path, 'assets', 'lack_item_2.html'), 'r').read()
+        md = extract_html_to_md(self.url, html_content, clip_html=False)
+        assert '2001-2015 Physics Forums' in md

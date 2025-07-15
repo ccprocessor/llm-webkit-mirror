@@ -3,6 +3,7 @@ from typing import List, Tuple
 
 import commentjson as json
 from lxml.html import HtmlElement
+from lxml.html.clean import Cleaner
 from overrides import override
 
 from llm_web_kit.config.cfg_reader import load_config
@@ -94,19 +95,26 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
 
         # main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
         main_html_element = html_to_element(main_html)
-        parsed_html = [(main_html_element, raw_html)]
+        cleaner = Cleaner(
+            scripts=True,           # 删除script标签及其内容
+            style=True,             # 删除style标签及其内容
+            comments=True,          # 删除HTML注释
+            embedded=True,          # 删除嵌入式内容
+            frames=True,            # 删除frame标签
+            forms=True,             # 删除form标签
+            links=True,             # 删除link标签
+            meta=True,              # 删除meta标签
+            page_structure=True,    # 删除页面结构标签
+            processing_instructions=True,  # 删除处理指令
+            remove_tags=['script', 'style', 'noscript', 'iframe', 'embed', 'object', 'applet']
+        )
+        filtered_main_html = cleaner.clean_html(main_html_element)
+        parsed_html = [(filtered_main_html, raw_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
-                             self._extract_image,
-                             self._extract_title, self._extract_paragraph]:
+                           self._extract_image,
+                           self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html)
-
-        # 过滤掉包含script和style标签的元素
-        filtered_parsed_html = []
-        for cc_html, o_html in parsed_html:
-            # 检查o_html是否包含script或style标签
-            if not (o_html.xpath('//script') or o_html.xpath('//style')):
-                filtered_parsed_html.append((cc_html, o_html))
-        content_list:ContentList = self._export_to_content_list(base_url, filtered_parsed_html, raw_html)
+        content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
         data_json['content_list'] = content_list
         # data_json['title'] = title
         return data_json
