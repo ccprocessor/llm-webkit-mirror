@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 100
+        assert len(self.data_json) == 101
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -503,6 +503,9 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
+        # 打印content_list内容
+        content_list = result.get_content_list()._get_data()
+        print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
         self.assertIn('$\\Delta K = (dd^{\\dagger} + d^{\\dagger}d)K$', result_md)
         self.assertIn('$$\\Delta K = \\Bigl( \\frac{1}{3!}\\epsilon^{klm}\\epsilon^n_{\\ ij}\\partial_k \\partial_n K_{lm} - \\frac{1}{4}\\partial_{i}\\partial^k K_{jk} \\Bigr) dx^i \\wedge dx^j$$', result_md)
 
@@ -803,6 +806,23 @@ A few explanations on why certain things in business are so.
         # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
         # with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
         #     f.write(md_content)
+
+    def test_ascii_delimiter(self):
+        """测试ascii分隔符."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[100]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'$L = {T}^{2} / \left(2 W\right)$', md_content)
+        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
+        self.assertIn(r'$(kg)/m^3$', md_content)
+        self.assertIn(r'$rho$', md_content)
+        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
+        self.assertIn(r"""$$
+f = \frac{v}{2 L}
+$$""", md_content)
 
     def test_double_ul(self):
         """测试双重ul标签."""

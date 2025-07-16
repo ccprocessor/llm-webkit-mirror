@@ -14,6 +14,7 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
+    'processascii': False,
     'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
@@ -54,12 +55,15 @@ class MathJaxRender(BaseMathRender):
         if tree is None:
             return self.options
 
+        # 重置processascii为默认值
+        processascii = MATHJAX_OPTIONS.get('processascii', False)
+
         # 查找MathJax配置脚本
         for script in tree.iter('script'):
             if script.get('type') == 'text/x-mathjax-config':
                 self._parse_mathjax_config(script.text)
 
-            # 检查MathJax版本
+            # 检查MathJax版本和配置
             src = script.get('src', '')
             if 'mathjax' in src.lower():
                 self._parse_mathjax_version(src)
@@ -71,6 +75,16 @@ class MathJaxRender(BaseMathRender):
                         config = re.search(r'config=([^&]+)', config_part)
                         if config:
                             self.options['config'] = config.group(1)
+                            # 检查是否包含AM_CHTML配置
+                            if 'AM_CHTML' in config.group(1):
+                                processascii = True
+
+                # 检查html是否包含ASCIIMathML.js等相关脚本
+                if 'ASCIIMathML' in src:
+                    processascii = True
+
+        # 更新processascii选项
+        self.options['processascii'] = processascii
         return self.options
 
     def _parse_mathjax_config(self, config_text: str) -> None:
@@ -207,6 +221,13 @@ class MathJaxRender(BaseMathRender):
             inline_delimiters = MATHJAX_OPTIONS.get(
                 'inlineMath', [['$', '$'], ['\\(', '\\)']]
             )
+
+        # 如果processascii为True，添加反引号分隔符
+        if self.options.get('processascii', False):
+            # 检查是否已经包含反引号分隔符，避免重复添加
+            backtick_delimiter = ['`', '`']
+            if backtick_delimiter not in inline_delimiters:
+                inline_delimiters = inline_delimiters + [backtick_delimiter]
 
         display_delimiters = self.options.get('displayMath', [])
         if not display_delimiters:
