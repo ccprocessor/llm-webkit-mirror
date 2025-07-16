@@ -98,9 +98,8 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         parsed_html = [(main_html_element, raw_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
-                             self._extract_title]:
-            parsed_html = extract_func(base_url, parsed_html, raw_html)
-        parsed_html = self._extract_paragraph(base_url, parsed_html, raw_html, language)
+                             self._extract_title, self._extract_paragraph]:
+            parsed_html = extract_func(base_url, parsed_html, raw_html, language)
 
         # 过滤掉包含script和style标签的元素,在这里改，是因为math提取需要保留script标签
         filtered_parsed_html = []
@@ -113,7 +112,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         # data_json['title'] = title
         return data_json
 
-    def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement,HtmlElement]]:
+    def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str, language:str) -> List[Tuple[HtmlElement,HtmlElement]]:
         """从html文本中提取代码.
 
         Args:
@@ -123,10 +122,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__code_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__code_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_math(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_math(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取数学公式.
 
         Args:
@@ -137,10 +136,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__math_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__math_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_image(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_image(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取图片.
 
         Args:
@@ -151,10 +150,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__image_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__image_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_audio(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_audio(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取音频.
 
         Args:
@@ -165,10 +164,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__audio_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__audio_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_video(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_video(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取视频.
 
         Args:
@@ -179,10 +178,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__video_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__video_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_table(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_table(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取表格.
 
         Args:
@@ -193,10 +192,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__table_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__table_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取列表.
 
         Args:
@@ -207,10 +206,10 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__list_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__list_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_title(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_title(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取标题.
 
         Args:
@@ -221,7 +220,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
     def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:

@@ -29,7 +29,7 @@ class BaseHTMLElementRecognizer(ABC):
 
     """基本的元素解析类."""
     @abstractmethod
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html:str, language:str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析html中的元素.
 
         Args:
