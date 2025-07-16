@@ -48,7 +48,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         return ele_node
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str, language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析列表元素.
 
         Args:
