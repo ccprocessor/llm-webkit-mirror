@@ -14,6 +14,7 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
+    'processascii': False,
     'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
@@ -54,12 +55,16 @@ class MathJaxRender(BaseMathRender):
         if tree is None:
             return self.options
 
+        # 检测ASCII配置
+        processascii = self._detect_ascii_config(tree)
+        self.options['processascii'] = processascii
+
         # 查找MathJax配置脚本
         for script in tree.iter('script'):
             if script.get('type') == 'text/x-mathjax-config':
                 self._parse_mathjax_config(script.text)
 
-            # 检查MathJax版本
+            # 检查MathJax版本和配置
             src = script.get('src', '')
             if 'mathjax' in src.lower():
                 self._parse_mathjax_version(src)
@@ -208,6 +213,10 @@ class MathJaxRender(BaseMathRender):
                 'inlineMath', [['$', '$'], ['\\(', '\\)']]
             )
 
+        # 如果检测到ASCII配置，添加反引号分隔符
+        inline_delimiters = self._add_backtick_delimiter(inline_delimiters)
+
+        # 其余代码保持不变...
         display_delimiters = self.options.get('displayMath', [])
         if not display_delimiters:
             # 使用默认分隔符
@@ -444,6 +453,46 @@ class MathJaxRender(BaseMathRender):
 
         # 奇数个反斜杠表示转义
         return count % 2 == 1
+
+    def _detect_ascii_config(self, tree: HtmlElement) -> bool:
+        """检测是否启用ASCII数学公式处理.
+
+        Args:
+            tree: HTML元素树
+
+        Returns:
+            bool: 如果检测到ASCII配置则返回True，否则返回False
+        """
+        # 查找所有script标签
+        for script in tree.iter('script'):
+            src = script.get('src', '')
+            if src:
+                # 检查是否包含config=AM_CHTML配置
+                if 'config=' in src and 'AM_CHTML' in src:
+                    return True
+
+                # 检查是否包含ASCIIMathML.js
+                if 'ASCIIMathML' in src:
+                    return True
+
+        return False
+
+    def _add_backtick_delimiter(self, inline_delimiters: List[List[str]]) -> List[List[str]]:
+        """如果processascii为True，添加反引号分隔符到行内公式分隔符中.
+
+        Args:
+            inline_delimiters: 现有的行内公式分隔符列表
+
+        Returns:
+            List[List[str]]: 更新后的行内公式分隔符列表
+        """
+        if self.options.get('processascii', False):
+            backtick_delimiter = ['`', '`']
+            # 检查是否已经包含反引号分隔符，避免重复添加
+            if backtick_delimiter not in inline_delimiters:
+                inline_delimiters = inline_delimiters + [backtick_delimiter]
+
+        return inline_delimiters
 
 
 # 使用示例
