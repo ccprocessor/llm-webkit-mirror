@@ -84,10 +84,25 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         try:
             template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
             response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
+            source_html = pre_data[PreDataJsonKey.TYPICAL_RAW_HTML]
             root = html.fromstring(template_tag_html)
             # 直接抽取正文
             content_list = self.tag_main_html(response_json, root)
             template_extract_html = self.__extract_main_directly(root)
+            if pre_data.get('success_label_enable', False):
+                feature1 = get_feature(source_html)
+                feature2 = get_feature(template_extract_html)
+                layer = 6
+                template_sim = None
+                if feature1 is not None and feature2 is not None:
+                    template_sim = similarity(feature1, feature2, layer_n=layer)
+
+                # 比较模版正文html与原html相似度
+                if template_sim is None or template_sim > SIMILAR_THRESHOLD:
+                    pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+                else:
+                    pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True
+
             pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = template_extract_html
             pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
         except Exception as e:
