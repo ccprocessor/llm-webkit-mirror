@@ -256,7 +256,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __get_table_body(self, table_type, table_nest_level, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
         if table_type == 'empty':
-            return None
+            content = table_root.text_content()
+            return content
         allowed_attributes = ['colspan', 'rowspan']
         # 清理除了colspan和rowspan之外的属性
         if len(table_root.attrib) > 0:
