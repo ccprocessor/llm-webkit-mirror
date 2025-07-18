@@ -3,7 +3,7 @@ import unittest
 
 from llm_web_kit.simple import (extract_html_to_md, extract_html_to_mm_md,
                                 extract_main_html_by_maigic_html)
-import json
+
 
 class TestSimple(unittest.TestCase):
     def setUp(self):
@@ -157,4 +157,4 @@ class TestSimple(unittest.TestCase):
     def test_extract_word_press(self):
         html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
         md = extract_html_to_md(self.url, html_content, clip_html=False)
-        assert "For descriptions of the methods (AM1, HF, MP2, ...) a" in md
+        assert 'For descriptions of the methods (AM1, HF, MP2, ...) a' in md

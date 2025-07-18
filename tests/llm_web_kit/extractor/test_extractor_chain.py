@@ -602,7 +602,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_mm_md()
-        print("=============result_md=============", result_md)
+        print('=============result_md=============', result_md)
         text = """
 A few explanations on why certain things in business are so.
         """
