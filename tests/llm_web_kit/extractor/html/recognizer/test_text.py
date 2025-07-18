@@ -266,3 +266,47 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert 'sensi dell’art.33' in content_md
+
+    def test_no_separation_language(self):
+        """
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://www.zjfish.org/Talent/Detail/876289162604750/2174994673059649',
+            'data_source_category': 'HTML',
+            'path': 'zh.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'zh'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert '成果； 三' not in content_md
+
+    def test_tail_space(self):
+        """
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'br.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'br'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'Henañ (c' in content_md

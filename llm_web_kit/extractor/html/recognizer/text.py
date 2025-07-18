@@ -67,6 +67,9 @@ inline_tags = {
     'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr', 'ins'
 }
 
+# 词间无分隔符的语言
+no_separation_language = ['zh', 'ja', 'ko', 'wuu', 'th', 'km', 'lo', 'bo', 'ii', 'jv']
+
 
 class TextParagraphRecognizer(BaseHTMLElementRecognizer):
     """解析文本段落元素."""
@@ -93,7 +96,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         return node
 
     @override
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement | str, HtmlElement | str]], raw_html:str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement | str, HtmlElement | str]], raw_html:str, language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析文本段落元素.
 
         Args:
@@ -111,11 +114,11 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 new_html_lst.append((html_element, raw_html_element))
             else:
                 lst = list(self.__extract_paragraphs(html_element))
-                new_lst = self.__to_cctext_lst(lst)
+                new_lst = self.__to_cctext_lst(lst, language)
                 new_html_lst.extend(new_lst)
         return new_html_lst
 
-    def __to_cctext_lst(self, lst: List[Tuple[HtmlElement | str, HtmlElement | str]]) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def __to_cctext_lst(self, lst: List[Tuple[HtmlElement | str, HtmlElement | str]], language:str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """将lst[Element, raw_html] 进行处理. 提出Element里的文字，做成<<cctext>>标签.
 
         Args:
@@ -129,7 +132,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             el_element = html_to_element(el) if isinstance(el, str) else el
             raw_html_element = html_to_element(raw_html) if isinstance(raw_html, str) else raw_html
 
-            para_text = self.__get_paragraph_text(el_element)
+            para_text = self.__get_paragraph_text(el_element, language)
             if para_text:
                 cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html_unescaped(raw_html_element))
                 new_lst.append((cctext_el, raw_html_element))
@@ -185,20 +188,20 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊符号开头的连接不加空格。
         """
         text1 = text1.strip(' ') if text1 else ''
-        text2 = text2.strip(' ') if text2 else ''
-        if lang == 'zh':
+        text2 = text2.rstrip(' ') if text2 else ''
+        if lang in no_separation_language:
             txt = text1 + text2
             return self.replace_entities(txt.strip(), entities_map)
         else:
             # 根据text1的最后一个字符和text2的第一个字符判断两个text之间的连接
             if (text2[0] in string.punctuation) or (text2[0] in special_symbols) or (text2[0] in other_symbols) or (text1 and text1[-1] in other_symbols):
                 words_sep = ''
-            else :
+            else:
                 words_sep = ' '
             txt = text1 + words_sep + text2
             return self.replace_entities(txt.strip(), entities_map)
 
-    def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
+    def __get_paragraph_text(self, root: HtmlElement, language:str = 'en') -> List[dict]:
         """
         获取段落全部的文本.
         对于段落里的行内公式<equation-inline>需要特定处理，转换为段落格式：
@@ -235,7 +238,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 pass
             else:
                 if el.text and el.text.strip():
-                    text = self.__combine_text(text, el.text.strip())
+                    text = self.__combine_text(text, el.text.strip(), language)
                 for child in el:
                     text = __get_paragraph_text_recusive(child, text)
 
@@ -244,7 +247,8 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 if is_sub_sup:
                     text += el.tail
                 else:
-                    text = self.__combine_text(text, el.tail.strip())
+                    new_tail = f' {el.tail.strip()}' if el.tail.startswith(' ') and el.tail.strip()[0] in string.punctuation else el.tail.strip()
+                    text = self.__combine_text(text, new_tail, language)
 
             return text
 

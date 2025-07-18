@@ -39,7 +39,7 @@ def select_representative_html(html_strings):
                 continue
 
             # 将字符串转换为文件对象
-            file_obj = StringIO(html_dict['html'])
+            file_obj = StringIO(html_str)
             tree = html.parse(file_obj)
 
             # 找到body元素
