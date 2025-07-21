@@ -153,3 +153,8 @@ class TestSimple(unittest.TestCase):
         html_content = open(os.path.join(self.base_path, 'assets', 'lack_item_2.html'), 'r').read()
         md = extract_html_to_md(self.url, html_content, clip_html=False)
         assert '2001-2015 Physics Forums' in md
+
+    def test_extract_word_press(self):
+        html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
+        md = extract_html_to_md(self.url, html_content, clip_html=False)
+        assert 'For descriptions of the methods (AM1, HF, MP2, ...) a' in md
