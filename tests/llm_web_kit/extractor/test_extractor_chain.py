@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 100
+        assert len(self.data_json) == 101
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -362,8 +362,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         list_type = result.get_content_list()._get_data()[0][0]['type']
-        print('=============', json.dumps(result.get_content_list()._get_data(), ensure_ascii=False))
-        print('=============', list_type)
         assert list_type != 'list'
 
     def test_table_include_math_p(self):
@@ -604,6 +602,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_mm_md()
+        print('=============result_md=============', result_md)
         text = """
 A few explanations on why certain things in business are so.
         """

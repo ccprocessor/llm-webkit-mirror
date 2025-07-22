@@ -169,7 +169,7 @@ class TestTableRecognizer(unittest.TestCase):
             base_url = 'https://en.m.wikipedia.org/wiki/Variance'
             raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.rec.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
-            assert parts[0][0].xpath(f'.//{CCTag.CC_TABLE}')[0].text is None
+            assert len(parts[0][0].xpath(f'.//{CCTag.CC_TABLE}')[0]) == 0
 
     @unittest.skip(reason='在code模块解决了table嵌套多行代码问题')
     def test_table_involve_code(self):
