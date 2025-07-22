@@ -400,3 +400,33 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
                 result = combine_text(result, child.tail, lang)
 
     return result
+
+
+def get_cc_select_html(element: HtmlElement) -> HtmlElement:
+    """获取带有cc-select="true"属性的所有HTML内容.
+
+    Args:
+        element: HtmlElement: 要处理的HTML元素
+
+    Returns:
+        HtmlElement: 包含所有cc-select="true"元素的容器元素
+    """
+    # 查找所有带有 cc-select="true" 属性的元素，包括当前元素本身
+    # 使用 self::*[@cc-select="true"] | .//*[@cc-select="true"] 来包含自己和子节点
+    selected_elements = element.xpath('self::*[@cc-select="true"] | .//*[@cc-select="true"]')
+
+    if not selected_elements:
+        # 如果没有找到任何元素，返回一个空的div容器
+        container = fromstring('<div></div>')
+        return container
+
+    # 创建一个容器元素来包含所有匹配的元素
+    container = fromstring('<div></div>')
+
+    # 将所有匹配的元素添加到容器中
+    for elem in selected_elements:
+        # 创建元素的深拷贝以避免修改原始DOM
+        elem_copy = deepcopy(elem)
+        container.append(elem_copy)
+
+    return container
