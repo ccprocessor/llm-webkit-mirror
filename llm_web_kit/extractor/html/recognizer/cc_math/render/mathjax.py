@@ -14,6 +14,7 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
+    'processascii': False,
     'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
@@ -71,6 +72,12 @@ class MathJaxRender(BaseMathRender):
                         config = re.search(r'config=([^&]+)', config_part)
                         if config:
                             self.options['config'] = config.group(1)
+
+        # 配置ASCII处理选项
+        processascii = self._configure_ascii_processing(html)
+        # 更新processascii选项
+        self.options['processascii'] = processascii
+
         return self.options
 
     def _parse_mathjax_config(self, config_text: str) -> None:
@@ -207,6 +214,9 @@ class MathJaxRender(BaseMathRender):
             inline_delimiters = MATHJAX_OPTIONS.get(
                 'inlineMath', [['$', '$'], ['\\(', '\\)']]
             )
+
+        # 如果processascii为True，添加反引号分隔符
+        inline_delimiters = self._add_backtick_delimiter(inline_delimiters)
 
         display_delimiters = self.options.get('displayMath', [])
         if not display_delimiters:
@@ -444,6 +454,57 @@ class MathJaxRender(BaseMathRender):
 
         # 奇数个反斜杠表示转义
         return count % 2 == 1
+
+    def _add_backtick_delimiter(self, inline_delimiters: List[List[str]]) -> List[List[str]]:
+        """如果启用了processascii，添加反引号分隔符.
+
+        Args:
+            inline_delimiters: 现有的行内分隔符列表
+
+        Returns:
+            List[List[str]]: 可能包含反引号分隔符的分隔符列表
+        """
+        if self.options.get('processascii', False):
+            backtick_delimiter = ['`', '`']
+            if backtick_delimiter not in inline_delimiters:
+                return inline_delimiters + [backtick_delimiter]
+        return inline_delimiters
+
+    def _configure_ascii_processing(self, html: str) -> bool:
+        """配置ASCII数学表达式处理选项.
+
+        Args:
+            html: 包含MathJax配置的HTML字符串
+
+        Returns:
+            bool: 是否启用ASCII处理
+        """
+        # 重置processascii为默认值
+        processascii = MATHJAX_OPTIONS.get('processascii', False)
+
+        tree = html_to_element(html)
+        if tree is None:
+            return processascii
+
+        # 查找MathJax配置脚本
+        for script in tree.iter('script'):
+            src = script.get('src', '')
+            if 'mathjax' in src.lower():
+                # 检查配置参数
+                if '?' in src:
+                    config_part = src.split('?', 1)[1]
+                    if 'config=' in config_part:
+                        config = re.search(r'config=([^&]+)', config_part)
+                        if config:
+                            # 检查是否包含AM_CHTML配置
+                            if 'AM_CHTML' in config.group(1):
+                                processascii = True
+
+                # 检查html是否包含ASCIIMathML.js等相关脚本
+                if 'ASCIIMathML' in src:
+                    processascii = True
+
+        return processascii
 
 
 # 使用示例
