@@ -41,6 +41,8 @@ def test_json_loads(input: Union[str, bytes], target_dict) -> None:
 
     """
     assert target_dict == json_loads(input)
+    data = '{"word": "all girls allowed", "level": "L3", "language": "en", "comment": NaN}'
+    assert str(json_loads(data)) == "{'word': 'all girls allowed', 'level': 'L3', 'language': 'en', 'comment': nan}"
 
 
 @pytest.mark.parametrize('input_dict, target_str', [
@@ -77,7 +79,9 @@ TEST_COMPRESS_CASES = [
     {'input': 'Оренбург, штакетник П-образный узкий, цена',
      'com_expected': b'x\x9c\x1d\x8c\xdb\t\x800\x10\x04[\xb9\x02\xb4\xc7`@\x04{\xd0\x16"\x12b\x02g\rs\x1d\xb9\xf8\xb5\xc3\xbe8"Qq\xae\xc8\xa2{\xb2\xd8b\xa10\xa8R\xe7a\x18\xe7\xcc\xabF\x92\xdf\xf0\xd8\xe9\x16Y8\x14wM\xd6\xff\xa2|\xfer4T',
      'base_expected': 'eJwdjNsJgDAQBFu5ArTHYEAEe9AWIhJiAmcNcx25+LXDvjgiUXGuyKJ7sthioTCoUudhGOfMq0aS3/DY6RZZOBR3Tdb/onz+cjRU'},
-    {'input': b'x\x9c{\xb6\xb5\xfb\xc5\xfa\xa9\xcf\xa6nx\xd6\xbb\x0e\x009C\x08\x9f', 'com_expected': b'x\x9c\xab\x98S\xbdm\xeb\xef\xa3\xbfV\x9e_\x96Wqm7\x1f\x83\xa53\xc7|\x00\x91b\x0b{', 'base_expected': 'eJyrmFO9bevvo79Wnl+WV3FtNx+DpTPHfACRYgt7'},
+    {'input': b'x\x9c{\xb6\xb5\xfb\xc5\xfa\xa9\xcf\xa6nx\xd6\xbb\x0e\x009C\x08\x9f',
+     'com_expected': b'x\x9c\xab\x98S\xbdm\xeb\xef\xa3\xbfV\x9e_\x96Wqm7\x1f\x83\xa53\xc7|\x00\x91b\x0b{',
+     'base_expected': 'eJyrmFO9bevvo79Wnl+WV3FtNx+DpTPHfACRYgt7'},
     {'input': 12345, 'expected': 10000000},
 ]
 TEST_DISCOMPRESS_CASES = [
