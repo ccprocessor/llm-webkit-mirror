@@ -29,6 +29,7 @@ ASCIIMATH_KEYWORDS = [
     'AM_CHTML'
 ]
 
+
 class MathJaxRender(BaseMathRender):
     """MathJax渲染器实现."""
 
