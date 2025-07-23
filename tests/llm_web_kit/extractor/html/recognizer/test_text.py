@@ -310,3 +310,26 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert 'Henañ (c' in content_md
+
+    def test_interactive_element(self):
+        """
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'delete_interactive_element1.html',
+            'main_path': 'delete_interactive_element1_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        main_html = result.get_content_list().to_main_html()
+        assert '<input' not in main_html
