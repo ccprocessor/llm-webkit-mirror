@@ -5,8 +5,7 @@ from overrides import override
 
 from llm_web_kit.exception.exception import (
     HtmlMathMathjaxRenderRecognizerException, HtmlMathRecognizerException)
-from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
-                                                           tag_common_modify,
+from llm_web_kit.extractor.html.recognizer.cc_math import (tag_common_modify,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH, CSDN,
@@ -172,11 +171,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
                 # 只有有渲染器的网站才会走下面文本匹配逻辑
                 if math_render_type:
-                    # script[type="math/asciimath"]
-                    # if node.tag == 'script' and node.get('type') == 'math/asciimath':
-                    if node.tag in ('p','div') and node.text and '`' in node.text:
-                        tag_asciimath.modify_tree(self.cm, math_render_type, original_html, node, parent)
-
                     # 14. 只处理只有一层的p标签
                     if node.tag == 'p' and len(node.getchildren()) == 0:
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
@@ -185,7 +179,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             if math_render_type:
                 try:
                     if math_render_type == MathRenderType.MATHJAX:
-                        # 对 tree 节点应用 find_math
                         math_render.find_math(tree)
                 except Exception as e:
                     raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
@@ -225,10 +218,9 @@ if __name__ == '__main__':
     #     '</head> '
     #     '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
     # )
-    # with open(r'C:\Users\10412\.ssh\llm-webkit-mirror\tests\st\test20250702.html', 'r', encoding='utf-8') as f:
-    # # with open(
-    # #         r'C:\Users\10412\.ssh\llm-webkit-mirror\bench\data\origin\math_mathjax_asciimath_1.html',
-    # #         'r', encoding='utf-8') as f:
+    # ——————————————测试代码——————————————————
+    # ↓ 要测试的html文件 ↓
+    # with open(r'C:\Users\10412\.ssh\llm-webkit-mirror\tests\llm_web_kit\extractor\html\recognizer\assets\ccmath\asciimath.html', 'r', encoding='utf-8') as f:
     #     raw_html = f.read()
     # from llm_web_kit.libs.html_utils import html_to_element
     # root = html_to_element(raw_html)
@@ -237,6 +229,7 @@ if __name__ == '__main__':
     #         [(root, root)],
     #         raw_html
     #     )
+    # ———————————————————————————————————————
     # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
     # print(math_recognizer.recognize(
     #     'https://www.baidu.com',

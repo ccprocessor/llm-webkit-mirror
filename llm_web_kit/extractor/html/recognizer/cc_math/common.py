@@ -532,6 +532,10 @@ class CCMATH():
 
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:
         # pattern re数学公式匹配 func 公式预处理 默认不处理
+        # ascii公式处理逻辑转移到mathjax渲染器方案中
+        if asciimath_wrap:
+            return node
+
         pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
         original_text = node.text or ''
 
@@ -555,8 +559,7 @@ class CCMATH():
                 match = match_text.group(0)
                 if is_ccmath_wrapped(match_text, original_text):
                     return match
-                math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
-                wrapped_text = func(math_text) if func else math_text
+                wrapped_text = func(match) if func else match
                 # html保留原始的，而不是传入修改过的wrapped_text
                 original_wrapped = wrapped_text
                 wrapped_text = self.wrap_math_md(wrapped_text)

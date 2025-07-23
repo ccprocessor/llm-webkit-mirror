@@ -55,12 +55,15 @@ class MathJaxRender(BaseMathRender):
         if tree is None:
             return self.options
 
+        # 重置processascii为默认值
+        processascii = MATHJAX_OPTIONS.get('processascii', False)
+
         # 查找MathJax配置脚本
         for script in tree.iter('script'):
             if script.get('type') == 'text/x-mathjax-config':
                 self._parse_mathjax_config(script.text)
 
-            # 检查MathJax版本
+            # 检查MathJax版本和配置
             src = script.get('src', '')
             if 'mathjax' in src.lower():
                 self._parse_mathjax_version(src)
@@ -72,12 +75,16 @@ class MathJaxRender(BaseMathRender):
                         config = re.search(r'config=([^&]+)', config_part)
                         if config:
                             self.options['config'] = config.group(1)
+                            # 检查是否包含AM_CHTML配置
+                            if 'AM_CHTML' in config.group(1):
+                                processascii = True
 
-        # 配置ASCII处理选项
-        processascii = self._configure_ascii_processing(html)
+            # 检查html是否包含ASCIIMathML.js等相关脚本
+            if 'ASCIIMathML' in src:
+                processascii = True
+
         # 更新processascii选项
         self.options['processascii'] = processascii
-
         return self.options
 
     def _parse_mathjax_config(self, config_text: str) -> None:
@@ -381,7 +388,11 @@ class MathJaxRender(BaseMathRender):
             if self._is_escaped_delimiter(text, match.start()):
                 continue
 
-            formula = self.ccmath.wrap_math_md(formula)
+            original_match = match.group(0)
+            if self._is_ascii_math_formula(original_match):
+                formula = self._extract_ascii_math_content(original_match)
+            else:
+                formula = self.ccmath.wrap_math_md(formula)
 
             start_pos = match.start()
             end_pos = match.end()
@@ -470,41 +481,37 @@ class MathJaxRender(BaseMathRender):
                 return inline_delimiters + [backtick_delimiter]
         return inline_delimiters
 
-    def _configure_ascii_processing(self, html: str) -> bool:
-        """配置ASCII数学表达式处理选项.
+    def _is_ascii_math_formula(self, match_text: str) -> bool:
+        """检查是否是ASCII数学公式（反引号包围）.
 
         Args:
-            html: 包含MathJax配置的HTML字符串
+            match_text: 匹配到的文本
 
         Returns:
-            bool: 是否启用ASCII处理
+            bool: 如果是ASCII公式则返回True
         """
-        # 重置processascii为默认值
-        processascii = MATHJAX_OPTIONS.get('processascii', False)
+        return (self.options.get('processascii', False) and
+                match_text.startswith('`') and match_text.endswith('`'))
 
-        tree = html_to_element(html)
-        if tree is None:
-            return processascii
+    def _extract_ascii_math_content(self, match_text: str) -> str:
+        """提取ASCII数学公式内容并转换.
 
-        # 查找MathJax配置脚本
-        for script in tree.iter('script'):
-            src = script.get('src', '')
-            if 'mathjax' in src.lower():
-                # 检查配置参数
-                if '?' in src:
-                    config_part = src.split('?', 1)[1]
-                    if 'config=' in config_part:
-                        config = re.search(r'config=([^&]+)', config_part)
-                        if config:
-                            # 检查是否包含AM_CHTML配置
-                            if 'AM_CHTML' in config.group(1):
-                                processascii = True
+        Args:
+            match_text: 完整的匹配文本（包含反引号）
 
-                # 检查html是否包含ASCIIMathML.js等相关脚本
-                if 'ASCIIMathML' in src:
-                    processascii = True
+        Returns:
+            str: 处理后的数学公式文本
+        """
+        # 去除反引号
+        ascii_content = match_text.strip('`')
 
-        return processascii
+        # 调用CCMATH的extract_asciimath方法
+        try:
+            ascii_latex = self.ccmath.extract_asciimath(ascii_content)
+            return self.ccmath.wrap_math_md(ascii_latex)
+        except Exception:
+            # 如果解析失败，直接返回原内容作为LaTeX
+            return self.ccmath.wrap_math_md(ascii_content)
 
 
 # 使用示例

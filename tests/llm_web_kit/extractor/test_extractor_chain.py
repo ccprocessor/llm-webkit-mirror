@@ -812,16 +812,13 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        # with open('test_ascii_0716.md.md', 'w', encoding='utf-8') as f:
+        # with open('mathjax抽取case111.md', 'w', encoding='utf-8') as f:
         #     f.write(md_content)
+        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
+        self.assertIn(r'${m}^{2}$', md_content)
+        self.assertIn(r'\rho$', md_content)
+        self.assertIn(r'$f = \frac{1}{2 L} \sqrt{\frac{E}{\rho}}$', md_content)
         self.assertIn(r'$L = {T}^{2} / \left(2 W\right)$', md_content)
-        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
-        self.assertIn(r'$(kg)/m^3$', md_content)
-        self.assertIn(r'$rho$', md_content)
-        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
-        self.assertIn(r"""$$
-f = \frac{v}{2 L}
-$$""", md_content)
 
     def test_double_ul(self):
         """测试双重ul标签."""
