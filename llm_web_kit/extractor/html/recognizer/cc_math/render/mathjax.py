@@ -21,6 +21,13 @@ MATHJAX_OPTIONS = {
     'elements': ['body'],
 }
 
+# ASCIIMath相关脚本关键词，作为开启ASCII反引号分隔符的依据，可继续补充
+ASCIIMATH_KEYWORDS = [
+    # case1: <script type="text/javascript" src="javascript/ASCIIMathMLeditor.js"></script>
+    'ASCIIMath',
+    # case2: <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/latest.js?config=AM_CHTML"></script>
+    'AM_CHTML'
+]
 
 class MathJaxRender(BaseMathRender):
     """MathJax渲染器实现."""
@@ -55,9 +62,6 @@ class MathJaxRender(BaseMathRender):
         if tree is None:
             return self.options
 
-        # 重置processascii为默认值
-        processascii = MATHJAX_OPTIONS.get('processascii', False)
-
         # 查找MathJax配置脚本
         for script in tree.iter('script'):
             if script.get('type') == 'text/x-mathjax-config':
@@ -75,16 +79,9 @@ class MathJaxRender(BaseMathRender):
                         config = re.search(r'config=([^&]+)', config_part)
                         if config:
                             self.options['config'] = config.group(1)
-                            # 检查是否包含AM_CHTML配置
-                            if 'AM_CHTML' in config.group(1):
-                                processascii = True
 
-            # 检查html是否包含ASCIIMathML.js等相关脚本
-            if 'ASCIIMathML' in src:
-                processascii = True
-
-        # 更新processascii选项
-        self.options['processascii'] = processascii
+        # 检测ASCIIMath脚本并更新选项
+        self.options['processascii'] = self._detect_ascii_math(tree)
         return self.options
 
     def _parse_mathjax_config(self, config_text: str) -> None:
@@ -512,6 +509,27 @@ class MathJaxRender(BaseMathRender):
         except Exception:
             # 如果解析失败，直接返回原内容作为LaTeX
             return self.ccmath.wrap_math_md(ascii_content)
+
+    def _detect_ascii_math(self, tree: HtmlElement) -> bool:
+        """检测HTML中是否包含ASCIIMath相关脚本，如果有，则开启processascii.
+
+        Args:
+            tree: HTML元素树
+
+        Returns:
+            bool: 如果检测到ASCIIMath脚本则返回True，否则返回False
+        """
+        # 重置processascii为默认值
+        processascii = MATHJAX_OPTIONS.get('processascii', False)
+
+        for script in tree.iter('script'):
+            src = script.get('src', '')
+            # 检查html是否包含ASCIIMathML.js等相关脚本
+            if any(keyword in src for keyword in ASCIIMATH_KEYWORDS):
+                processascii = True
+                break
+
+        return processascii
 
 
 # 使用示例

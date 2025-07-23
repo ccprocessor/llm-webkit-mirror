@@ -810,8 +810,8 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        # with open('mathjax抽取case111.md', 'w', encoding='utf-8') as f:
-        #     f.write(md_content)
+        with open('mathjax抽取case222.md', 'w', encoding='utf-8') as f:
+            f.write(md_content)
         self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
         self.assertIn(r'${m}^{2}$', md_content)
         self.assertIn(r'\rho$', md_content)
