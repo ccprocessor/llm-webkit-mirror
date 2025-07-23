@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 101
+        assert len(self.data_json) == 102
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -808,7 +808,7 @@ A few explanations on why certain things in business are so.
         """测试ascii分隔符."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
-        test_data = self.data_json[100]
+        test_data = self.data_json[101]
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
