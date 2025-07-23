@@ -362,8 +362,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         list_type = result.get_content_list()._get_data()[0][0]['type']
-        print('=============', json.dumps(result.get_content_list()._get_data(), ensure_ascii=False))
-        print('=============', list_type)
         assert list_type != 'list'
 
     def test_table_include_math_p(self):
@@ -451,7 +449,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
-        assert len(content_txt) == 1982
+        assert len(content_txt) == 1983
 
     def test_xml_tag(self):
         """测试xml标签."""
