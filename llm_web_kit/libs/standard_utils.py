@@ -29,6 +29,8 @@ def json_loads(s: Union[str, bytes], **kwargs) -> dict:
             return orjson.loads(s)
         except AttributeError:
             pass
+        except orjson.JSONDecodeError:
+            pass
     try:
         return json.loads(s, **kwargs)
     except Exception as e:
