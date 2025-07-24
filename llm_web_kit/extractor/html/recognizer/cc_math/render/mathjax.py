@@ -14,11 +14,20 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
+    'processascii': False,
     'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
     'elements': ['body'],
 }
+
+# ASCIIMath相关脚本关键词，作为开启ASCII反引号分隔符的依据，可继续补充
+ASCIIMATH_KEYWORDS = [
+    # case1: <script type="text/javascript" src="javascript/ASCIIMathMLeditor.js"></script>
+    'ASCIIMath',
+    # case2: <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/latest.js?config=AM_CHTML"></script>
+    'AM_CHTML'
+]
 
 
 class MathJaxRender(BaseMathRender):
@@ -59,7 +68,7 @@ class MathJaxRender(BaseMathRender):
             if script.get('type') == 'text/x-mathjax-config':
                 self._parse_mathjax_config(script.text)
 
-            # 检查MathJax版本
+            # 检查MathJax版本和配置
             src = script.get('src', '')
             if 'mathjax' in src.lower():
                 self._parse_mathjax_version(src)
@@ -71,6 +80,9 @@ class MathJaxRender(BaseMathRender):
                         config = re.search(r'config=([^&]+)', config_part)
                         if config:
                             self.options['config'] = config.group(1)
+
+        # 检测ASCIIMath脚本并更新选项
+        self.options['processascii'] = self._detect_ascii_math(tree)
         return self.options
 
     def _parse_mathjax_config(self, config_text: str) -> None:
@@ -207,6 +219,9 @@ class MathJaxRender(BaseMathRender):
             inline_delimiters = MATHJAX_OPTIONS.get(
                 'inlineMath', [['$', '$'], ['\\(', '\\)']]
             )
+
+        # 如果processascii为True，添加反引号分隔符
+        inline_delimiters = self._add_backtick_delimiter(inline_delimiters)
 
         display_delimiters = self.options.get('displayMath', [])
         if not display_delimiters:
@@ -371,7 +386,11 @@ class MathJaxRender(BaseMathRender):
             if self._is_escaped_delimiter(text, match.start()):
                 continue
 
-            formula = self.ccmath.wrap_math_md(formula)
+            original_match = match.group(0)
+            if self._is_ascii_math_formula(original_match):
+                formula = self._extract_ascii_math_content(original_match)
+            else:
+                formula = self.ccmath.wrap_math_md(formula)
 
             start_pos = match.start()
             end_pos = match.end()
@@ -444,6 +463,74 @@ class MathJaxRender(BaseMathRender):
 
         # 奇数个反斜杠表示转义
         return count % 2 == 1
+
+    def _add_backtick_delimiter(self, inline_delimiters: List[List[str]]) -> List[List[str]]:
+        """如果启用了processascii，添加反引号分隔符.
+
+        Args:
+            inline_delimiters: 现有的行内分隔符列表
+
+        Returns:
+            List[List[str]]: 可能包含反引号分隔符的分隔符列表
+        """
+        if self.options.get('processascii', False):
+            backtick_delimiter = ['`', '`']
+            if backtick_delimiter not in inline_delimiters:
+                return inline_delimiters + [backtick_delimiter]
+        return inline_delimiters
+
+    def _is_ascii_math_formula(self, match_text: str) -> bool:
+        """检查是否是ASCII数学公式（反引号包围）.
+
+        Args:
+            match_text: 匹配到的文本
+
+        Returns:
+            bool: 如果是ASCII公式则返回True
+        """
+        return (self.options.get('processascii', False) and
+                match_text.startswith('`') and match_text.endswith('`'))
+
+    def _extract_ascii_math_content(self, match_text: str) -> str:
+        """提取ASCII数学公式内容并转换.
+
+        Args:
+            match_text: 完整的匹配文本（包含反引号）
+
+        Returns:
+            str: 处理后的数学公式文本
+        """
+        # 去除反引号
+        ascii_content = match_text.strip('`')
+
+        # 调用CCMATH的extract_asciimath方法
+        try:
+            ascii_latex = self.ccmath.extract_asciimath(ascii_content)
+            return self.ccmath.wrap_math_md(ascii_latex)
+        except Exception:
+            # 如果解析失败，直接返回原内容作为LaTeX
+            return self.ccmath.wrap_math_md(ascii_content)
+
+    def _detect_ascii_math(self, tree: HtmlElement) -> bool:
+        """检测HTML中是否包含ASCIIMath相关脚本，如果有，则开启processascii.
+
+        Args:
+            tree: HTML元素树
+
+        Returns:
+            bool: 如果检测到ASCIIMath脚本则返回True，否则返回False
+        """
+        # 重置processascii为默认值
+        processascii = MATHJAX_OPTIONS.get('processascii', False)
+
+        for script in tree.iter('script'):
+            src = script.get('src', '')
+            # 检查html是否包含ASCIIMathML.js等相关脚本
+            if any(keyword in src for keyword in ASCIIMATH_KEYWORDS):
+                processascii = True
+                break
+
+        return processascii
 
 
 # 使用示例

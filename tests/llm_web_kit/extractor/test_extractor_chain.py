@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 101
+        assert len(self.data_json) == 102
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -602,7 +602,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_mm_md()
-        print('=============result_md=============', result_md)
         text = """
 A few explanations on why certain things in business are so.
         """
@@ -802,6 +801,22 @@ A few explanations on why certain things in business are so.
         # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
         # with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
         #     f.write(md_content)
+
+    def test_ascii_delimiter(self):
+        """测试ascii分隔符."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[101]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        with open('mathjax抽取case222.md', 'w', encoding='utf-8') as f:
+            f.write(md_content)
+        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
+        self.assertIn(r'${m}^{2}$', md_content)
+        self.assertIn(r'\rho$', md_content)
+        self.assertIn(r'$f = \frac{1}{2 L} \sqrt{\frac{E}{\rho}}$', md_content)
+        self.assertIn(r'$L = {T}^{2} / \left(2 W\right)$', md_content)
 
     def test_double_ul(self):
         """测试双重ul标签."""

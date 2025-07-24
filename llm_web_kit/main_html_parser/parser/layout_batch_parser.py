@@ -154,6 +154,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 匹配正文节点
         has_red = False
         layer_nodes_dict = dict()
+        layer_nodes_dict_drop_tail = dict()
         layer_norm_eles = {}
         # 构造当前层的候选映射字典
         for ele_keyy, ele_value in layer_nodes.items():
@@ -161,11 +162,12 @@ class LayoutBatchParser(BaseMainHtmlParser):
             if ele_parent_keyy is not None:
                 ele_parent_keyy = tuple(ele_parent_keyy)
             ele_label = ele_value[0]
+            is_drop_tail = ele_value[3]
             norm_ele_keyy = self.normalize_key(ele_keyy[:3])
             if norm_ele_keyy in layer_norm_eles:
-                layer_norm_eles[norm_ele_keyy].append((ele_label, ele_keyy[:3], ele_parent_keyy))
+                layer_norm_eles[norm_ele_keyy].append((ele_label, ele_keyy[:3], ele_parent_keyy, is_drop_tail))
             else:
-                layer_norm_eles[norm_ele_keyy] = [(ele_label, ele_keyy[:3], ele_parent_keyy)]
+                layer_norm_eles[norm_ele_keyy] = [(ele_label, ele_keyy[:3], ele_parent_keyy, is_drop_tail)]
         # 尝试匹配当前层每个节点，判断是否存在至少一个红色节点
         for current_layer_key, current_layer_value in current_layer_keys.items():
             current_layer_ori_key = current_layer_value[0]
@@ -175,20 +177,22 @@ class LayoutBatchParser(BaseMainHtmlParser):
                     if layer_norm_ele_value[2] != parent_keyy:
                         continue
                     node_label = layer_norm_ele_value[0]
-
+                    is_drop_tail = layer_norm_ele_value[3]
                     if current_layer_key in layer_nodes_dict:
                         layer_nodes_dict[current_layer_key].append(node_label)
+                        layer_nodes_dict_drop_tail[current_layer_key].append(is_drop_tail)
                     else:
                         layer_nodes_dict[current_layer_key] = [node_label]
+                        layer_nodes_dict_drop_tail[current_layer_key] = [is_drop_tail]
                     if node_label == 'red':
                         has_red = True
                         break
             # 动态id匹配逻辑
             elif self.dynamic_id_enable and current_layer_key[2]:
-                node_label, matched_ele_key = self.__match_tag_class(layer_nodes, current_layer_ori_key, parent_keyy,
+                node_label, matched_ele_key, is_drop_tail = self.__match_tag_class(layer_nodes, current_layer_ori_key, parent_keyy,
                                                                      node_html, template_doc)
                 if node_label is None and self.dynamic_classid_enable:
-                    node_label, matched_ele_key = self.__match_tag(layer_nodes, current_layer_ori_key, parent_keyy,
+                    node_label, matched_ele_key, is_drop_tail = self.__match_tag(layer_nodes, current_layer_ori_key, parent_keyy,
                                                                    node_html,
                                                                    template_doc, False, True)
                 if node_label is None:
@@ -199,13 +203,14 @@ class LayoutBatchParser(BaseMainHtmlParser):
                     element.set('id', matched_ele_key[2])
                 if current_layer_key in layer_nodes_dict:
                     layer_nodes_dict[matched_ele_key].append(node_label)
+                    layer_nodes_dict_drop_tail[matched_ele_key].append(is_drop_tail)
                 else:
                     layer_nodes_dict[matched_ele_key] = [node_label]
-
+                    layer_nodes_dict_drop_tail[matched_ele_key] = [is_drop_tail]
                 if node_label == 'red':
                     has_red = True
             elif self.dynamic_id_enable and self.dynamic_classid_enable and current_layer_key[1]:
-                node_label, matched_ele_key = self.__match_tag(layer_nodes, current_layer_ori_key, parent_keyy,
+                node_label, matched_ele_key, is_drop_tail = self.__match_tag(layer_nodes, current_layer_ori_key, parent_keyy,
                                                                node_html,
                                                                template_doc, True, False)
                 if node_label is None:
@@ -216,11 +221,12 @@ class LayoutBatchParser(BaseMainHtmlParser):
                     element.set('class', matched_ele_key[1])
                 if current_layer_key in layer_nodes_dict:
                     layer_nodes_dict[matched_ele_key].append(node_label)
+                    layer_nodes_dict_drop_tail[matched_ele_key].append(is_drop_tail)
                 else:
                     layer_nodes_dict[matched_ele_key] = [node_label]
+                    layer_nodes_dict_drop_tail[matched_ele_key] = [is_drop_tail]
                 if node_label == 'red':
                     has_red = True
-
         if not has_red and parent_label != 'red':
             parent = element.getparent()
             if parent is not None:
@@ -244,6 +250,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
                     return
             else:
                 label = 'red'
+                # 正文节点情况下还需要判断tail是否是正文
+                if False not in layer_nodes_dict_drop_tail[keyy]:
+                    if element.tail:
+                        element.tail = None
         elif length > 0 or length_tail > 0 or tag in ['figure', 'img']:
             return
 
@@ -321,6 +331,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             if ele_parent_keyy is not None:
                 ele_parent_keyy = tuple(ele_parent_keyy)
             ele_label = ele_value[0]
+            is_drop_tail = ele_value[3]
             norm_ele_keyy = self.normalize_key((ele_keyy[0], ele_keyy[1], None))
             norm_ele_keyy_parent = (norm_ele_keyy, ele_parent_keyy)
             if current_norm_key == norm_ele_keyy_parent:
@@ -335,10 +346,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 template_sim = similarity(feature1, feature2, layer_n=3)
 
                 if template_sim > DYNAMIC_ID_SIM_THRESHOLD:
-                    return ele_label, self.normalize_key(ele_keyy[0:3])
+                    return ele_label, self.normalize_key(ele_keyy[0:3]), is_drop_tail
                 # else:
                 # logger.info(f'{current_layer_key} and {ele_keyy} similarity is {template_sim}')
-        return None, None
+        return None, None, None
 
     def __match_tag(self, layer_nodes, current_layer_key, parent_key, node_html, template_doc, class_must=False,
                     id_exist=False):
@@ -357,6 +368,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             if ele_parent_keyy is not None:
                 ele_parent_keyy = tuple(ele_parent_keyy)
             ele_label = ele_value[0]
+            is_drop_tail = ele_value[3]
             norm_ele_keyy = self.normalize_key((ele_keyy[0], None, None))
             norm_ele_keyy_parent = (norm_ele_keyy, ele_parent_keyy)
             # 相似度方案
@@ -370,14 +382,14 @@ class LayoutBatchParser(BaseMainHtmlParser):
                     continue
                 template_sim = similarity(feature1, feature2, layer_n=3)
                 if template_sim >= self.dynamic_classid_similarity_threshold:
-                    return ele_label, self.normalize_key(ele_keyy[0:3])
+                    return ele_label, self.normalize_key(ele_keyy[0:3]), is_drop_tail
             # first class方案
             norm_ele_keyy_with_first_class = self.normalize_key((ele_keyy[0], ele_keyy[1].strip().split(' ')[0], None))
             norm_ele_keyy_parent_with_first_class = (norm_ele_keyy_with_first_class, ele_parent_keyy)
             if current_norm_key_with_first_class == norm_ele_keyy_parent_with_first_class:
-                return ele_label, self.normalize_key(ele_keyy[0:3])
+                return ele_label, self.normalize_key(ele_keyy[0:3]), is_drop_tail
 
-        return None, None
+        return None, None, None
 
     def __is_natural_language(self, text, min_words=3):
         """判断文本是否像自然语言.

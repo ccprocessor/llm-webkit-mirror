@@ -124,27 +124,36 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         elements = test_root.xpath(f'//*[@_item_id="{item_id}"]')
         deal_element = elements[0]
         deal_element.set('magic_main_html', 'True')
+        for ele in deal_element:
+            ele.set('magic_main_html', 'True')
 
     def find_affected_element_after_drop(self, element):
         prev_sibling = element.getprevious()
         parent = element.getparent()
-
+        is_main = bool(element.get('magic_main_html', None))
         # 包裹子节点的情况返回element父节点
         if len(element) > 0:
-            if element.get('magic_main_html', None):
+            if is_main:
                 for ele in element:
                     ele.set('magic_main_html', 'True')
 
             element.drop_tag()
-            return parent
+            # 如果包含子tag并且还有text，text有可能是兄弟节点的tail
+            if element.text and element.text.strip():
+                if prev_sibling is not None:
+                    # 兄弟节点是否drop text， 是否drop tail
+                    return prev_sibling, False, not is_main
+                else:
+                    return parent, not is_main, False
+            return parent, False, False
 
         # 只有文本的情况，返回element前面的兄弟节点或者父节点
         element.drop_tag()
 
         if prev_sibling is not None:
-            return prev_sibling
+            return prev_sibling, False, not is_main
         else:
-            return parent
+            return parent, not is_main, False
 
     def process_element(self, element):
         # 前序遍历元素树（先处理子元素）
@@ -154,9 +163,13 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # 如果是cc-alg-uc-text标签，用drop_tag()删除标签但保留子元素
         if element.tag == 'cc-alg-uc-text':
             is_main = element.get('magic_main_html', None)
-            affected = self.find_affected_element_after_drop(element)
+            affected, drop_text, drop_tail = self.find_affected_element_after_drop(element)
             if is_main:
                 affected.set('magic_main_html', 'True')
+            if drop_text:
+                affected.set('drop_text', 'True')
+            if drop_tail:
+                affected.set('drop_tail', 'True')
 
         return
 
@@ -234,6 +247,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             all_dict[depth] = {}
             all_set[depth] = {}
         is_main_html = element.get('magic_main_html', None)
+        is_drop_tail = element.get('drop_tail', None)
         current_dict = all_dict[depth]
         current_set = all_set[depth]
         tag = element.tag
@@ -260,10 +274,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # 写入该层元素key，如果有重复的green节点，只保留一个
         if keyy_for_sim in current_set:
             if is_main_html and current_set[keyy_for_sim][0] == 'green':
-                current_dict[keyy] = ('red', parent_keyy, xpath)
+                current_dict[keyy] = ('red', parent_keyy, xpath, bool(is_drop_tail))
                 current_set[keyy_for_sim] = ('red', parent_keyy)
         else:
-            current_dict[keyy] = (color, parent_keyy, xpath)
+            current_dict[keyy] = (color, parent_keyy, xpath, bool(is_drop_tail))
             current_set[keyy_for_sim] = (color, parent_keyy)
 
         for ele in element:
