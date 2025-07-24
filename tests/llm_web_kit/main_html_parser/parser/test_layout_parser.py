@@ -349,6 +349,3 @@ class TestLayoutParser(unittest.TestCase):
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
         assert main_html == "<html></html>" and main_html_body == "<html></html>"
 
-
-if __name__ == "__main__":
-    unittest.main()
