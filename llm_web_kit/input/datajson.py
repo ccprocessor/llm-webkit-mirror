@@ -499,7 +499,7 @@ class StructureMapper(ABC):
             elif el['t'] == ParagraphTextType.CODE_INLINE:
                 one_para.append(f"`{el['c'].strip()}`")
             else:
-                raise ValueError(f'paragraph_el_lst contains invalid element type: {el["t"]}')
+                raise ValueError(f'paragraph_el_lst contains invalid element type: {el['t']}')
 
         return ' '.join(one_para)
 
