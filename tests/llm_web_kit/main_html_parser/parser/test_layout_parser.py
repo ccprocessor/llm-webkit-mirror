@@ -21,7 +21,8 @@ TEST_CASES = [
             ['assets/input_layout_batch_parser/answers.acrobatusers.html',
              'assets/input_layout_batch_parser/template_answers.acrobatusers.json',
              'https://answers.acrobatusers.com/change-default-open-size-Acrobat-Pro-XI-q302177.aspx'],
-            ['assets/input_layout_batch_parser/template_www.wdi.it_llm.json']
+            ['assets/input_layout_batch_parser/template_www.wdi.it_llm.json'],
+            ['assets/input_layout_batch_parser/test_llm_response_all_zero.json']
         ),
         'expected': [
             'assets/output_layout_batch_parser/wdi_main_html.html',
@@ -53,7 +54,7 @@ class TestLayoutParser(unittest.TestCase):
             element_dict_str = json.loads(element_path.read_text(encoding='utf-8'))
             element_dict = {}
             for layer, layer_dict in element_dict_str.items():
-                layer_dict_json = {parse_tuple_key(k): [v[0], v[1], None, False] for k, v in layer_dict.items()}
+                layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
                 element_dict[int(layer)] = layer_dict_json
             data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html,
                          'typical_main_html': raw_html, 'similarity_layer': 5, 'typical_dict_html': raw_html}
@@ -72,7 +73,7 @@ class TestLayoutParser(unittest.TestCase):
             element_dict_str = json.loads(element_path.read_text(encoding='utf-8'))
             element_dict = {}
             for layer, layer_dict in element_dict_str.items():
-                layer_dict_json = {parse_tuple_key(k): [v[0], v[1], None, False] for k, v in layer_dict.items()}
+                layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
                 element_dict[int(layer)] = layer_dict_json
             data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html,
                          'typical_main_html': raw_html, 'similarity_layer': 5, 'typical_dict_html': raw_html}
@@ -93,7 +94,7 @@ class TestLayoutParser(unittest.TestCase):
         element_dict_str = json.loads(element_path.read_text(encoding='utf-8'))
         element_dict = {}
         for layer, layer_dict in element_dict_str.items():
-            layer_dict_json = {parse_tuple_key(k): [v[0], v[1], None, False] for k, v in layer_dict.items()}
+            layer_dict_json = {parse_tuple_key(k): v for k, v in layer_dict.items()}
             element_dict[int(layer)] = layer_dict_json
         data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html,
                      'typical_main_html': raw_html, 'similarity_layer': 5, 'typical_dict_html': raw_html}
@@ -108,11 +109,7 @@ class TestLayoutParser(unittest.TestCase):
         expected_html = base_dir.joinpath(
             'assets/output_layout_batch_parser/parser_sv_m_wiktionary_org.html').read_text(encoding='utf-8')
         raw_html = raw_html_path.read_text(encoding='utf-8')
-        element_dict_old = json.loads(element_path.read_text(encoding='utf-8'))
-        element_dict = {}
-        for layer, layer_dict in element_dict_old.items():
-            layer_dict_json = {parse_tuple_key(k): [v[0], v[1], None, False] for k, v in layer_dict.items()}
-            element_dict[int(layer)] = layer_dict_json
+        element_dict = element_path.read_text(encoding='utf-8')
         data_dict = {'html_source': raw_html, 'html_element_dict': element_dict, 'ori_html': raw_html,
                      'typical_main_html': raw_html, 'similarity_layer': 5, 'typical_dict_html': raw_html}
         pre_data = PreDataJson(data_dict)
@@ -128,12 +125,9 @@ class TestLayoutParser(unittest.TestCase):
             encoding='utf-8')
         template_html = base_dir.joinpath('assets/input_layout_batch_parser/test_similarity_template.html').read_text(
             encoding='utf-8')
-        element_dict_old = json.loads(base_dir.joinpath(
-            'assets/input_layout_batch_parser/test_similarity_element_dict.json').read_text(encoding='utf-8'))
-        element_dict = {}
-        for layer, layer_dict in element_dict_old.items():
-            layer_dict_json = {parse_tuple_key(k): [v[0], v[1], None, False] for k, v in layer_dict.items()}
-            element_dict[int(layer)] = layer_dict_json
+        element_dict = base_dir.joinpath(
+            'assets/input_layout_batch_parser/test_similarity_element_dict.json').read_text(encoding='utf-8')
+
         data_dict = {'html_source': success_html, 'html_element_dict': element_dict,
                      'typical_main_html': template_html, 'typical_dict_html': template_html}
         pre_data = PreDataJson(data_dict)
@@ -326,19 +320,35 @@ class TestLayoutParser(unittest.TestCase):
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
         assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body
 
-    def test_table_integrity(self):
+    def test_llm_response_all_zero(self):
+        """测试llm_response全为0时，为什么还能抽取出内容"""
         # 构造测试html
-        html_source_tag = base_dir.joinpath('assets/input_layout_batch_parser/table_integrity.html').read_text(
+        template_source = base_dir.joinpath('assets/input_layout_batch_parser/test_llm_response_all_zero.html').read_text(
             encoding='utf-8')
         # 简化网页
-        # 模型结果格式改写
-        llm_path = 'assets/input_layout_batch_parser/table_integrity.json'
-        llm_response = json.loads(base_dir.joinpath(llm_path).read_text(encoding='utf-8'))
-        pre_data = {'typical_raw_tag_html': html_source_tag, 'typical_raw_html': html_source_tag,
+        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        llm_path = base_dir.joinpath(TEST_CASES[0]['input'][3][0])
+        llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
+        pre_data = {'typical_raw_tag_html': typical_raw_tag_html, 'typical_raw_html': template_source,
                     'llm_response': llm_response}
         pre_data = PreDataJson(pre_data)
         # 映射
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse(pre_data)
-        typical_main_html = pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, {})
-        assert '1144' in typical_main_html and '3004' in typical_main_html
+        assert pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] == "<html></html>"
+        element_dict = pre_data.get(PreDataJsonKey.HTML_ELEMENT_DICT, {})
+        # 推广
+        pre_data[PreDataJsonKey.HTML_SOURCE] = template_source
+        pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_ENABLE] = True
+        pre_data[PreDataJsonKey.MORE_NOISE_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_SIM_THRESH] = 1
+        parser = LayoutBatchParser(element_dict)
+        parts = parser.parse(pre_data)
+        main_html = parts[PreDataJsonKey.MAIN_HTML]
+        main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
+        assert main_html == "<html></html>" and main_html_body == "<html></html>"
+
+
+if __name__ == "__main__":
+    unittest.main()
