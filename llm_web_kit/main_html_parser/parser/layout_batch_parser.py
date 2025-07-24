@@ -57,7 +57,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             template_data = template_data_str
         else:
             raise ValueError(f'template_data 类型错误: {type(template_data_str)}')
-        
+
          # 检查第0层第一个元素是否为green，如果是则返回空的HTML
         if 0 in template_data:
             layer_0_elements = template_data[0]
@@ -67,11 +67,11 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 if isinstance(first_element_info, tuple) and len(first_element_info) > 0:
                     label = first_element_info[0]  # 获取标签（red/green）
                     if label == 'green':
-                        pre_data[PreDataJsonKey.MAIN_HTML] = "<html></html>"
-                        pre_data[PreDataJsonKey.MAIN_HTML_BODY] = "<html></html>"
+                        pre_data[PreDataJsonKey.MAIN_HTML] = '<html></html>'
+                        pre_data[PreDataJsonKey.MAIN_HTML_BODY] = '<html></html>'
                         pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
                         return pre_data
-        
+
         self.template_data = template_data
         content, body = self.process(html_source, template_dict_html)
 

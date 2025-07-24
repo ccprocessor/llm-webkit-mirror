@@ -321,7 +321,7 @@ class TestLayoutParser(unittest.TestCase):
         assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body
 
     def test_llm_response_all_zero(self):
-        """测试llm_response全为0时，为什么还能抽取出内容"""
+        """测试llm_response全为0时，为什么还能抽取出内容."""
         # 构造测试html
         template_source = base_dir.joinpath('assets/input_layout_batch_parser/test_llm_response_all_zero.html').read_text(
             encoding='utf-8')
@@ -335,7 +335,7 @@ class TestLayoutParser(unittest.TestCase):
         # 映射
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse(pre_data)
-        assert pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] == "<html></html>"
+        assert pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] == '<html></html>'
         element_dict = pre_data.get(PreDataJsonKey.HTML_ELEMENT_DICT, {})
         # 推广
         pre_data[PreDataJsonKey.HTML_SOURCE] = template_source
@@ -347,5 +347,4 @@ class TestLayoutParser(unittest.TestCase):
         parts = parser.parse(pre_data)
         main_html = parts[PreDataJsonKey.MAIN_HTML]
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
-        assert main_html == "<html></html>" and main_html_body == "<html></html>"
-
+        assert main_html == '<html></html>' and main_html_body == '<html></html>'

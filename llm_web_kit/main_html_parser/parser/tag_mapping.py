@@ -49,10 +49,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                         break
             else:
                 all_values_zero = False
-            
+
             # 如果所有值都为0，直接返回空的HTML
             if all_values_zero:
-                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = "<html></html>"
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = '<html></html>'
                 pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
                 pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict
                 pre_data[PreDataJsonKey.TYPICAL_DICT_HTML] = template_dict_html

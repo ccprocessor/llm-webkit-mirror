@@ -119,10 +119,10 @@ def get_relative_xpath(element):
 
     # 构建最终的XPath
     if found_unique_ancestor:
-        return f'//{"/".join(path_from_element)}'
+        return f'//{'/'.join(path_from_element)}'
     else:
         # 如果没有找到唯一属性祖先，返回完整路径
-        return f'//{"/".join(path_from_element)}'
+        return f'//{'/'.join(path_from_element)}'
 
 
 def is_data_table(table_element: html.HtmlElement) -> bool:
