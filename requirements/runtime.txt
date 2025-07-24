@@ -18,6 +18,7 @@ nltk==3.8.1
 notebook==7.4.2
 numpy==1.26.4
 optimum==1.21.3
+orjson==3.11.0
 overrides==7.7.0
 py-asciimath==0.3.0
 pyahocorasick==2.0.0
