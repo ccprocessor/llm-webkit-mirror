@@ -39,7 +39,25 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             # 抽取正文树结构
             content_list = self.tag_main_html(response_json, root)
             element_dict, template_dict_html = self.construct_main_tree(root, tree)
+            # 检查response_json中的所有值是否都为0
+            all_values_zero = True
+            if isinstance(response_json, dict):
+                for value in response_json.values():
+                    if value != 0:
+                        all_values_zero = False
+                        break
+            else:
+                all_values_zero = False
 
+            # 如果所有值都为0，直接返回空的HTML
+            if all_values_zero:
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = '<html></html>'
+                pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
+                pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict
+                pre_data[PreDataJsonKey.TYPICAL_DICT_HTML] = template_dict_html
+                pre_data[PreDataJsonKey.SIMILARITY_LAYER] = 0
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+                return pre_data
             # 模版抽取正文html
             parser = LayoutBatchParser({})
             extract_info = {PreDataJsonKey.HTML_SOURCE: template_raw_html,
