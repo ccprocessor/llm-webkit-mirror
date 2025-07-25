@@ -361,3 +361,14 @@ class TestLayoutParser(unittest.TestCase):
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse(pre_data)
         assert pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] == ''
+        # 推广
+        pre_data[PreDataJsonKey.HTML_SOURCE] = html_source_tag
+        pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_ENABLE] = True
+        pre_data[PreDataJsonKey.MORE_NOISE_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_SIM_THRESH] = 1
+        parser = LayoutBatchParser({})
+        parts = parser.parse(pre_data)
+        main_html = parts[PreDataJsonKey.MAIN_HTML]
+        main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
+        assert main_html == '' and main_html_body == ''
