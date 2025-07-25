@@ -203,6 +203,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                         result.append(f'`{node.text.strip()}`')
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
+                elif node.tag in ['sub', 'sup']:
+                    # 保留原始的sub/sup标签
+                    inner_text = (node.text or '').strip()
+                    if inner_text:
+                        result.append(f'<{node.tag}>{inner_text}</{node.tag}>')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
                 else:
                     # 提取当前节点的文本
                     if node.text and node.text.strip():
