@@ -342,3 +342,33 @@ class TestLayoutParser(unittest.TestCase):
         pre_data = parser.parse(pre_data)
         typical_main_html = pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, {})
         assert '1144' in typical_main_html and '3004' in typical_main_html
+
+    def test_llm_response_all_zero(self):
+        """测试llm_response全为0时，为什么还能抽取出内容."""
+        # 构造测试html
+        html_source_tag = base_dir.joinpath('assets/input_layout_batch_parser/table_integrity.html').read_text(
+            encoding='utf-8')
+        # 简化网页
+        # 模型结果格式改写
+        llm_path = 'assets/input_layout_batch_parser/table_integrity.json'
+        llm_response = json.loads(base_dir.joinpath(llm_path).read_text(encoding='utf-8'))
+        for key, value in llm_response.items():
+            llm_response[key] = 0
+        pre_data = {'typical_raw_tag_html': html_source_tag, 'typical_raw_html': html_source_tag,
+                    'llm_response': llm_response}
+        pre_data = PreDataJson(pre_data)
+        # 映射
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse(pre_data)
+        assert pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] == ''
+        # 推广
+        pre_data[PreDataJsonKey.HTML_SOURCE] = html_source_tag
+        pre_data[PreDataJsonKey.DYNAMIC_ID_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_ENABLE] = True
+        pre_data[PreDataJsonKey.MORE_NOISE_ENABLE] = True
+        pre_data[PreDataJsonKey.DYNAMIC_CLASSID_SIM_THRESH] = 1
+        parser = LayoutBatchParser({})
+        parts = parser.parse(pre_data)
+        main_html = parts[PreDataJsonKey.MAIN_HTML]
+        main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
+        assert main_html == '' and main_html_body == ''

@@ -22,7 +22,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                                 }
                     }
            e.g. {1: {('head', None, None, 'ida37c725374fc21e', 1, 0): ('green', ('html', None, None)), ('body', 'post-template-default', None, 'idb421920acb189b3d, 1, 1): ('red', ('html', None, None))}}
-
         Args:
             pre_data (PreDataJson): 包含LLM抽取结果的PreDataJson对象
 
@@ -39,6 +38,26 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             # 抽取正文树结构
             content_list = self.tag_main_html(response_json, root)
             element_dict, template_dict_html = self.construct_main_tree(root, tree)
+
+            # 检查response_json中的所有值是否都为0
+            all_values_zero = True
+            if isinstance(response_json, dict):
+                for value in response_json.values():
+                    if value != 0:
+                        all_values_zero = False
+                        break
+            else:
+                all_values_zero = False
+
+            # 如果所有值都为0，直接返回空的HTML
+            if all_values_zero:
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = ''
+                pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
+                pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict
+                pre_data[PreDataJsonKey.TYPICAL_DICT_HTML] = template_dict_html
+                pre_data[PreDataJsonKey.SIMILARITY_LAYER] = 0
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+                return pre_data
 
             # 模版抽取正文html
             parser = LayoutBatchParser({})
