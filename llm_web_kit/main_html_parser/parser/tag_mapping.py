@@ -22,7 +22,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                                 }
                     }
            e.g. {1: {('head', None, None, 'ida37c725374fc21e', 1, 0): ('green', ('html', None, None)), ('body', 'post-template-default', None, 'idb421920acb189b3d, 1, 1): ('red', ('html', None, None))}}
-
         Args:
             pre_data (PreDataJson): 包含LLM抽取结果的PreDataJson对象
 
