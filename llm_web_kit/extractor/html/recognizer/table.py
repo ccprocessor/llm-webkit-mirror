@@ -5,6 +5,8 @@ from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlTableRecognizerException
+from llm_web_kit.extractor.html.recognizer.cc_math.common import \
+    extract_html_math_tags
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
@@ -180,6 +182,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
             def process_node(node):
                 """处理行内公式、行间公式、行间代码、行内代码."""
+                math_tag_result = extract_html_math_tags(node, preserve_tags=True)
+                if math_tag_result is not None:
+                    result.append(math_tag_result)
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                    return
+
                 if node.tag == CCTag.CC_MATH_INLINE:
                     if node.text and node.text.strip():
                         result.append(f'${node.text.strip()}$')
