@@ -9,7 +9,7 @@ from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import remove_element
+from llm_web_kit.libs.html_utils import process_sub_sup_tags, remove_element
 from llm_web_kit.libs.text_utils import normalize_text_segment
 
 
@@ -201,6 +201,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 elif node.tag == CCTag.CC_CODE_INLINE:
                     if node.text and node.text.strip():
                         result.append(f'`{node.text.strip()}`')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                elif node.tag in ['sub', 'sup']:
+                    # 使用process_sub_sup_tags保留原始的sub/sup标签
+                    processed_text = process_sub_sup_tags(node, '', lang='en', recursive=True)
+                    if processed_text:
+                        result.append(processed_text)
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
                 else:
