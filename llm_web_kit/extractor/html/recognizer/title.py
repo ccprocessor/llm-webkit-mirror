@@ -5,11 +5,10 @@ from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlTitleRecognizerException
-from llm_web_kit.extractor.html.recognizer.cc_math.common import \
-    extract_html_math_tags
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import process_sub_sup_tags
 
 
 class TitleRecognizer(BaseHTMLElementRecognizer):
@@ -125,13 +124,13 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
 
             if el.tag == CCTag.CC_CODE_INLINE:
                 blks.append(f'`{el.text}`')
+            elif el.tag in ['sub', 'sup']:
+                # 使用process_sub_sup_tags保留原始的sub/sup标签
+                processed_text = process_sub_sup_tags(el, '', 'en', True)
+                if processed_text:
+                    blks.append(processed_text)
             else:
-                # 使用extract_html_math_tags处理数学标记
-                math_content = extract_html_math_tags(el, preserve_tags=True)
-                if math_content:
-                    blks.append(math_content)
-                else:
-                    blks.append((el.text or '').strip())
+                blks.append((el.text or '').strip())
 
             for child in el.getchildren():
                 blks.extend(__extract_title_text_recusive(child))

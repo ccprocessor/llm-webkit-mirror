@@ -321,25 +321,6 @@ def MATHINSIGHT_convert_to_standard_latex(text):
     return text
 
 
-def extract_html_math_tags(node: HtmlElement, preserve_tags: bool = True) -> str:
-    """提取并处理HTML数学标记（sub、sup标签）
-
-    Args:
-        node: HTML元素节点
-        preserve_tags: 是否保留原始标签格式，True保留<sub>/<sup>标签，False提取纯文本
-
-    Returns:
-        处理后的文本内容
-    """
-    if node.tag in ['sub', 'sup']:
-        inner_text = (node.text or '').strip()
-        if preserve_tags and inner_text:
-            return f'<{node.tag}>{inner_text}</{node.tag}>'
-        else:
-            return inner_text
-    return None
-
-
 class CCMATH():
     def __init__(self):
         self.url = ''
@@ -461,8 +442,11 @@ class CCMATH():
                     else:
                         result.append((EQUATION_INLINE, MathType.LATEX))
 
-            # 检查 HTML 数学标记（sub 和 sup）- 使用extract_html_math_tags方法
-            if extract_html_math_tags(node, preserve_tags=False):
+            # 检查 HTML 数学标记（sub 和 sup）
+            sub_elements = tree.xpath('//sub')
+            sup_elements = tree.xpath('//sup')
+            if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
+                (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
                 result.append((EQUATION_INLINE, MathType.HTMLMATH))
 
             # 检查当前节点是否是katex元素（CSDN）

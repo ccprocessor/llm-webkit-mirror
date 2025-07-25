@@ -5,13 +5,11 @@ from lxml.html import HtmlElement
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlTableRecognizerException
-from llm_web_kit.extractor.html.recognizer.cc_math.common import \
-    extract_html_math_tags
 from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import remove_element
+from llm_web_kit.libs.html_utils import process_sub_sup_tags, remove_element
 from llm_web_kit.libs.text_utils import normalize_text_segment
 
 
@@ -182,13 +180,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
             def process_node(node):
                 """处理行内公式、行间公式、行间代码、行内代码."""
-                math_tag_result = extract_html_math_tags(node, preserve_tags=True)
-                if math_tag_result is not None:
-                    result.append(math_tag_result)
-                    if node.tail and node.tail.strip():
-                        result.append(node.tail.strip())
-                    return
-
                 if node.tag == CCTag.CC_MATH_INLINE:
                     if node.text and node.text.strip():
                         result.append(f'${node.text.strip()}$')
@@ -217,6 +208,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     inner_text = (node.text or '').strip()
                     if inner_text:
                         result.append(f'<{node.tag}>{inner_text}</{node.tag}>')
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
+                elif node.tag in ['sub', 'sup']:
+                    # 使用process_sub_sup_tags保留原始的sub/sup标签
+                    processed_text = process_sub_sup_tags(node, '', lang='en', recursive=True)
+                    if processed_text:
+                        result.append(processed_text)
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
                 else:
