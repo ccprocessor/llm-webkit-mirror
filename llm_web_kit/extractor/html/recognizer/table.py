@@ -204,13 +204,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
                 elif node.tag in ['sub', 'sup']:
-                    # 保留原始的sub/sup标签
-                    inner_text = (node.text or '').strip()
-                    if inner_text:
-                        result.append(f'<{node.tag}>{inner_text}</{node.tag}>')
-                    if node.tail and node.tail.strip():
-                        result.append(node.tail.strip())
-                elif node.tag in ['sub', 'sup']:
                     # 使用process_sub_sup_tags保留原始的sub/sup标签
                     processed_text = process_sub_sup_tags(node, '', lang='en', recursive=True)
                     if processed_text:
