@@ -123,6 +123,10 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
 
             if el.tag == CCTag.CC_CODE_INLINE:
                 blks.append(f'`{el.text}`')
+            elif el.tag in ['sub', 'sup']:
+                # 保留原始的sub/sup标签
+                inner_text = (el.text or '').strip()
+                blks.append(f'<{el.tag}>{inner_text}</{el.tag}>')
             else:
                 blks.append((el.text or '').strip())
 
