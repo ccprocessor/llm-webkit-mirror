@@ -30,6 +30,8 @@ class PreDataJsonKey:
     TYPICAL_MAIN_HTML = 'typical_main_html'
     # 模版网页提取正文成功标签, bool类型
     TYPICAL_MAIN_HTML_SUCCESS = 'typical_main_html_success'
+    # similarity between typical main html and html
+    TYPICAL_MAIN_HTML_SIM = 'typical_main_html_sim'
     # 用于生成element dict的html
     TYPICAL_DICT_HTML = 'typical_dict_html'
     # 动态id开关
@@ -44,6 +46,8 @@ class PreDataJsonKey:
     HTML_SOURCE = 'html_source'
     # 推广网页提取正文成功标签, bool类型
     MAIN_HTML_SUCCESS = 'main_html_success'
+    # similarity between main html and typical main html
+    MAIN_HTML_SIM = 'main_html_sim'
     # 推广网页提取正文文本
     MAIN_HTML = 'main_html'
     # 推广网页提取正文树

@@ -86,6 +86,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             sim = None
             if feature1 is not None and feature2 is not None:
                 sim = similarity(feature1, feature2, layer_n=layer)
+                pre_data[PreDataJsonKey.MAIN_HTML_SIM] = sim
             if sim is None or sim < SIMILARITY_THRESHOLD:
                 pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
             else:
