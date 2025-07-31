@@ -192,8 +192,6 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     # 如果尾部文本跟在sub/sup后面，直接附加到最后一个文本段落中
                     if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
                         paragraph[-1]['c'] += _new_tail
-                    else:
-                        paragraph.append({'c': _new_tail, 't': ParagraphTextType.TEXT})
                 else:
                     paragraph.append({'c': _new_tail, 't': ParagraphTextType.TEXT})
 

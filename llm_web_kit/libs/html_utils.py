@@ -4,7 +4,6 @@ import string
 from copy import deepcopy
 
 from lxml import html as lxmlhtml
-from lxml.etree import ParseError
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
 
 special_symbols = [  # TODO 从文件读取
@@ -449,7 +448,5 @@ def html_normalize_space(text: str) -> str:
         tem_text_el = lxmlhtml.fromstring(text.strip())
         _text = tem_text_el.xpath('normalize-space()')
         return _text
-    except ParseError:
-        return ''
     except Exception:
         return text

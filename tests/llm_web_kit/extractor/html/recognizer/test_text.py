@@ -406,6 +406,30 @@ class TestTextParagraphRecognize(unittest.TestCase):
         content_md = result.get_content_list().to_mm_md()
         assert '### Volume 6, Issue 3, 01 February 1965\n\n- INFRARED LASER ACTION AND LIFETIMES IN ARGON II\n\n F. A. Horrigan , S. H. Koozekanani and R. A. Paananen\n\n Scitation Author Page\n\n PubMed\n\n Google Scholar\n\n Source' in content_md
 
+    def test_normalize_space4(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space4.html',
+            'main_path': 'text_normalize_space4_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'Show Ignored Content\n  1. DrDu\n\n Lieber Hendrik, \n\n kannst Du hierzu was beitragen? \n\n Ich finde keinen rechten Grund' in content_md
+
     def test_Lack_content1(self):
         """
         测试换缺少内容
