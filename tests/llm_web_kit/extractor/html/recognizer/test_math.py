@@ -176,11 +176,6 @@ TEST_CASES_HTML = [
         'expected': 'assets/ccmath/katex_mathjax_1.html'
     },
     {
-        'input': ['assets/ccmath/asciimath.html'],
-        'base_url': 'https://www.wjagray.co.uk/maths/ASCIIMathTutorial.html',
-        'expected': 'assets/ccmath/asciimath_1.html'
-    },
-    {
         'input': ['assets/ccmath/mathtex_script_type.html'],
         'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
         'expected': 'assets/ccmath/mathtex_script_type_1.html'

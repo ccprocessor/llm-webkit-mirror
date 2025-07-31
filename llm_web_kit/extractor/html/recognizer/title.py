@@ -8,6 +8,7 @@ from llm_web_kit.exception.exception import HtmlTitleRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
+from llm_web_kit.libs.html_utils import process_sub_sup_tags
 
 
 class TitleRecognizer(BaseHTMLElementRecognizer):
@@ -123,6 +124,11 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
 
             if el.tag == CCTag.CC_CODE_INLINE:
                 blks.append(f'`{el.text}`')
+            elif el.tag in ['sub', 'sup']:
+                # 使用process_sub_sup_tags保留原始的sub/sup标签
+                processed_text = process_sub_sup_tags(el, '', 'en', True)
+                if processed_text:
+                    blks.append(processed_text)
             else:
                 blks.append((el.text or '').strip())
 
