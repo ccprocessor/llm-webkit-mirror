@@ -286,8 +286,14 @@ class LayoutBatchParser(BaseMainHtmlParser):
         body = html.fromstring(body_str)
         tags_to_remove = ['header', 'footer', 'nav', 'aside', 'script', 'style']
         for tag in tags_to_remove:
-            for element in body.xpath(f'//{tag}'):
-                element.getparent().remove(element)
+            for element in list(body.xpath(f'//{tag}')):
+                prev = element.getprevious()
+                parent = element.getparent()
+                if prev is not None:
+                    prev.tail = (prev.tail or '') + (element.tail or '')
+                else:
+                    parent.text = (parent.text or '') + (element.tail or '')
+                parent.remove(element)
         self.add_newline_after_tags(body, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'span', 'div', 'p', 'li'])
         output = []
         main_content = re.split(r'\n{1,}', self.get_text_with_newlines(body))
