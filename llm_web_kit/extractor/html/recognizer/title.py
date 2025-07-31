@@ -11,7 +11,7 @@ from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (html_normalize_space,
                                          process_sub_sup_tags)
 
-from .text import PARAGRAPH_SEPARATOR, inline_tags
+from .text import PARAGRAPH_SEPARATOR
 
 
 class TitleRecognizer(BaseHTMLElementRecognizer):
@@ -132,8 +132,6 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
             else:
                 if el.text and el.text.strip():
                     _new_text = html_normalize_space(el.text.strip())
-                    if blks and el.tag not in inline_tags:
-                        blks.extend(['$br$'])
                     blks.append(_new_text)
 
             for child in el.getchildren():
