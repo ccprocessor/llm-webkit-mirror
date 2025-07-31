@@ -333,3 +333,99 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         main_html = result.get_content_list().to_main_html()
         assert '<input' not in main_html
+
+    def test_normalize_space1(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space1.html',
+            'main_path': 'text_normalize_space1_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'Please note! These' in content_md
+
+    def test_normalize_space2(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space2.html',
+            'main_path': 'text_normalize_space2_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'December 10th 2009, 06:42 PM\n\n fearless901\n\n Can someone please tell me my code wont work, error after error\n\n\n\n im need to write code to get height and time of the fluid in a reservoir, help guys. is my functions wrong? \n\n \n\n \n\n\n\n Code' in content_md
+
+    def test_normalize_space3(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space3.html',
+            'main_path': 'text_normalize_space3_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert '### Volume 6, Issue 3, 01 February 1965\n\n- INFRARED LASER ACTION AND LIFETIMES IN ARGON II\n\n F. A. Horrigan , S. H. Koozekanani and R. A. Paananen\n\n Scitation Author Page\n\n PubMed\n\n Google Scholar\n\n Source' in content_md
+
+    def test_Lack_content1(self):
+        """
+        测试换缺少内容
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'Lack_content1.html',
+            'main_path': 'Lack_content1_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'a) Electronic mail: airegg.py90g@nctu.edu.tw .' in content_md

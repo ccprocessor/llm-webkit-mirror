@@ -95,7 +95,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
 
         # main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
         main_html_element = html_to_element(main_html)
-        parsed_html = [(main_html_element, raw_html)]
+        parsed_html = [(main_html_element, main_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
