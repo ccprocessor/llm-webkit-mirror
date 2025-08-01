@@ -1,6 +1,7 @@
 import re
 from typing import Any, Dict, List
 
+from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
@@ -13,11 +14,20 @@ MATHJAX_OPTIONS = {
     'processEscapes': True,
     'processEnvironments': True,
     'processRefs': True,
+    'processascii': False,
     'skipTags': ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
     'ignoreClass': 'tex2jax_ignore',
     'processClass': 'tex2jax_process',
-    'elements': ['body']
+    'elements': ['body'],
 }
+
+# ASCIIMath相关脚本关键词，作为开启ASCII反引号分隔符的依据，可继续补充
+ASCIIMATH_KEYWORDS = [
+    # case1: <script type="text/javascript" src="javascript/ASCIIMathMLeditor.js"></script>
+    'ASCIIMath',
+    # case2: <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/latest.js?config=AM_CHTML"></script>
+    'AM_CHTML'
+]
 
 
 class MathJaxRender(BaseMathRender):
@@ -34,6 +44,7 @@ class MathJaxRender(BaseMathRender):
             'config': '',
             'version': ''
         }
+        self.ccmath = CCMATH()  # 初始化CCMATH实例
 
     def get_render_type(self) -> str:
         """获取渲染器类型."""
@@ -57,7 +68,7 @@ class MathJaxRender(BaseMathRender):
             if script.get('type') == 'text/x-mathjax-config':
                 self._parse_mathjax_config(script.text)
 
-            # 检查MathJax版本
+            # 检查MathJax版本和配置
             src = script.get('src', '')
             if 'mathjax' in src.lower():
                 self._parse_mathjax_version(src)
@@ -69,6 +80,9 @@ class MathJaxRender(BaseMathRender):
                         config = re.search(r'config=([^&]+)', config_part)
                         if config:
                             self.options['config'] = config.group(1)
+
+        # 检测ASCIIMath脚本并更新选项
+        self.options['processascii'] = self._detect_ascii_math(tree)
         return self.options
 
     def _parse_mathjax_config(self, config_text: str) -> None:
@@ -206,6 +220,9 @@ class MathJaxRender(BaseMathRender):
                 'inlineMath', [['$', '$'], ['\\(', '\\)']]
             )
 
+        # 如果processascii为True，添加反引号分隔符
+        inline_delimiters = self._add_backtick_delimiter(inline_delimiters)
+
         display_delimiters = self.options.get('displayMath', [])
         if not display_delimiters:
             # 使用默认分隔符
@@ -227,6 +244,12 @@ class MathJaxRender(BaseMathRender):
             end_escaped = re.escape(end)
             pattern = f'{start_escaped}(.*?){end_escaped}'
             display_patterns.append(pattern)
+
+        # 添加对环境的支持
+        if MATHJAX_OPTIONS.get('processEnvironments', True):
+            # 通用匹配任何 \begin{...}\end{...} 环境的模式，保证环境名称相同时才匹配
+            env_pattern = r'(\\begin\{(?P<env>[^}]+)\}.*?\\end\{(?P=env)\})'
+            display_patterns.append(env_pattern)
 
         # 编译正则表达式
         inline_pattern = re.compile('|'.join(inline_patterns), re.DOTALL)
@@ -255,13 +278,15 @@ class MathJaxRender(BaseMathRender):
                 element.tail = self._process_math_in_text(element, element.tail, inline_pattern, False, True)
 
         # 跳过特定标签
-        skip_tags = MATHJAX_OPTIONS.get('skipTags', ['script', 'noscript', 'style', 'textarea', 'pre', 'code'])
+        skip_tags = MATHJAX_OPTIONS['skipTags']
         if element.tag in skip_tags:
             return
         # 跳过ccmath标签
         from llm_web_kit.extractor.html.recognizer.recognizer import \
             BaseHTMLElementRecognizer
-        if BaseHTMLElementRecognizer.is_cc_html(element):
+
+        # 新增方法is_cc_tag_node，该方法值判断当前节点是否是cc标签，而不判断子节点
+        if BaseHTMLElementRecognizer.is_cc_tag_node(element):
             return
 
         # 检查是否应该忽略该元素
@@ -332,8 +357,10 @@ class MathJaxRender(BaseMathRender):
         if not text:
             return text
 
-        # 查找所有匹配
+        # 首先查找所有分隔符形式的匹配
         matches = list(pattern.finditer(text))
+
+        # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
             return text
 
@@ -358,6 +385,12 @@ class MathJaxRender(BaseMathRender):
             # 检查是否是转义的分隔符
             if self._is_escaped_delimiter(text, match.start()):
                 continue
+
+            original_match = match.group(0)
+            if self._is_ascii_math_formula(original_match):
+                formula = self._extract_ascii_math_content(original_match)
+            else:
+                formula = self.ccmath.wrap_math_md(formula)
 
             start_pos = match.start()
             end_pos = match.end()
@@ -430,6 +463,74 @@ class MathJaxRender(BaseMathRender):
 
         # 奇数个反斜杠表示转义
         return count % 2 == 1
+
+    def _add_backtick_delimiter(self, inline_delimiters: List[List[str]]) -> List[List[str]]:
+        """如果启用了processascii，添加反引号分隔符.
+
+        Args:
+            inline_delimiters: 现有的行内分隔符列表
+
+        Returns:
+            List[List[str]]: 可能包含反引号分隔符的分隔符列表
+        """
+        if self.options.get('processascii', False):
+            backtick_delimiter = ['`', '`']
+            if backtick_delimiter not in inline_delimiters:
+                return inline_delimiters + [backtick_delimiter]
+        return inline_delimiters
+
+    def _is_ascii_math_formula(self, match_text: str) -> bool:
+        """检查是否是ASCII数学公式（反引号包围）.
+
+        Args:
+            match_text: 匹配到的文本
+
+        Returns:
+            bool: 如果是ASCII公式则返回True
+        """
+        return (self.options.get('processascii', False) and
+                match_text.startswith('`') and match_text.endswith('`'))
+
+    def _extract_ascii_math_content(self, match_text: str) -> str:
+        """提取ASCII数学公式内容并转换.
+
+        Args:
+            match_text: 完整的匹配文本（包含反引号）
+
+        Returns:
+            str: 处理后的数学公式文本
+        """
+        # 去除反引号
+        ascii_content = match_text.strip('`')
+
+        # 调用CCMATH的extract_asciimath方法
+        try:
+            ascii_latex = self.ccmath.extract_asciimath(ascii_content)
+            return self.ccmath.wrap_math_md(ascii_latex)
+        except Exception:
+            # 如果解析失败，直接返回原内容作为LaTeX
+            return self.ccmath.wrap_math_md(ascii_content)
+
+    def _detect_ascii_math(self, tree: HtmlElement) -> bool:
+        """检测HTML中是否包含ASCIIMath相关脚本，如果有，则开启processascii.
+
+        Args:
+            tree: HTML元素树
+
+        Returns:
+            bool: 如果检测到ASCIIMath脚本则返回True，否则返回False
+        """
+        # 重置processascii为默认值
+        processascii = MATHJAX_OPTIONS.get('processascii', False)
+
+        for script in tree.iter('script'):
+            src = script.get('src', '')
+            # 检查html是否包含ASCIIMathML.js等相关脚本
+            if any(keyword in src for keyword in ASCIIMATH_KEYWORDS):
+                processascii = True
+                break
+
+        return processascii
 
 
 # 使用示例

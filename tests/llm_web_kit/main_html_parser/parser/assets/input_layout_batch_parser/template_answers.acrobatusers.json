@@ -1,0 +1,3893 @@
+{
+  "0": {
+    "('html', None, None, 'id23905f4f858849a668ced548898055dff71d4df871b0a7b694ae665fc8f6a59b', 0, 0)": [
+      "red",
+      null
+    ]
+  },
+  "1": {
+    "('body', None, None, 'idd013847afcad3e7c7edb5d5c2106183a32d8868bde488643a63c8c34f4814c11', 1, 0)": [
+      "red",
+      [
+        "html",
+        null,
+        null
+      ]
+    ]
+  },
+  "2": {
+    "('p', None, None, 'idde75efa60f74e128f195ebfcc40d0faa93a1b4a114238dd0e14bca2269708951', 2, 0)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, None, 'idaaef425db14f619ebba77e7c2c120ebf399f2da6bf08ce8564dcd818c2f6c683', 2, 1)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, 'ctl01_metaLanguage', 'idaeee54d8632b53a234451c68760ef232130f839a79fcf443a3bf7f1890883805', 2, 2)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'ctl01_rssFeedLink', 'id956859ffeb985cc00ccc62f7545e96451d3561f23d7f8bc5d565f2831eada40a', 2, 3)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('title', None, 'ctl01_HeaderTags_pageTitle', 'id282f8ba32fd35bc406cba334e305be6ad58410bea0b75937cf64e82c1a88b436', 2, 4)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, 'ctl01_HeaderTags_metaDescription', 'id17ef493620f94e4bb9e90a1c93be573f812f4a29452976e3e30503b2811504f2', 2, 5)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, 'ctl01_HeaderTags_metaKeywords', 'id8a230127a9c2ec431df58a891b13d20745cc063f6f50ac856197a25efd425df3', 2, 6)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('meta', None, 'ctl01_HeaderTags_robotsMeta', 'id6830482e53dd45f38c25e2c303fd506591b31af0adbeb5c02809f076bc4e0121', 2, 7)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, 'ctl01_cssLink', 'id120f6327f06586fb08399f907a51e9f3450776d3f2b516140e6def78727c819a', 2, 9)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'idba6dbf59f5bf780ecdebb831dc905f69af3f40d1db6e8cb2bba783c0ee98d0a0', 2, 11)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id3c0d1afa18d8cb0efde84487405fa786522e56b709f8940f988bb200d4610613', 2, 12)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id6b7185c695ad96a422581e4fa59af1f710260cc431d1e6a91d764fcad1ef0b6b', 2, 14)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id8a898c574352566e6c8e8a12c3d8d5d3570bd5ad9e20bb63afd9e00edb7e0e15', 2, 15)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'idfd3b66e3917d99fbc441648abcff7672a5b7d838ba5a22137b134fa727a4a2ad', 2, 16)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id5a196719de5cac32710835cdb416dd9e7a5c8ef914605636870904cf9a23765b', 2, 17)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'ida282791b98950817fdccee602c31f8273d34e7ffe26472882a832346e2afcc13', 2, 18)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'idc6b42f3f217ec847a2bb4b76816acb5f4d313575ff3d1035418513344a706f32', 2, 22)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id803788e7fc461ab54838794a44db343893ab8d8633b94ca90f9605ea251464bf', 2, 23)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id08d706d94fcf9a7ac58132cf0f515b642afd465e4161a96c3159bb6e758c370c', 2, 24)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id7f96f6a5ddcd00a587b08952500ffc63d7e974e6871da323255639a208b6fabf', 2, 25)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('link', None, None, 'id03e5a0748f2d22c40ff71f2b8bd965ce3131adb11c9ab69dfbf1afc50c7c65ff', 2, 26)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'idf13b2051f9e0aec4b9e21d2862f95fe36a2e916f2850c0056785abb6603aa791', 2, 27)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('center', None, None, 'idbd29e759a3d8c9c656fc0cf9e7a9fed0008f8a81faab9f21cb965a6dfa0feece', 2, 28)": [
+      "red",
+      [
+        "body",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id12be4780c45a82b0923bc62de9c7ded417b5b84df9ea7afc4a480f2439dac1c9', 2, 29)": [
+      "green",
+      [
+        "body",
+        null,
+        null
+      ]
+    ]
+  },
+  "3": {
+    "('form', None, 'aspnetForm', 'id0235cae69a7238b48761a73a668ff21d43150b70739067ea7ccb3beacca4f05b', 3, 0)": [
+      "red",
+      [
+        "center",
+        null,
+        null
+      ]
+    ],
+    "('span', None, 'Anthem_ctl01_necessary__', 'id4a873af19225d7c00634d98ed2e4d2b44eab5cf7f2a930aa289c25ab17ad25ce', 3, 1)": [
+      "green",
+      [
+        "center",
+        null,
+        null
+      ]
+    ],
+    "('script', None, None, 'id0c31fc6517e93f6701e87a9bacbbb106c29f2c800dd4ca0f080cada111577e56', 3, 2)": [
+      "green",
+      [
+        "center",
+        null,
+        null
+      ]
+    ],
+    "('div', None, 'ctl01_analyticsCode', 'id84803b1949d3ec29d2f3baa43328ba7aedaf919a5c206fe69cb4cefa569f4598', 3, 3)": [
+      "green",
+      [
+        "center",
+        null,
+        null
+      ]
+    ]
+  },
+  "4": {
+    "('input', None, '__VIEWSTATE', 'ide36fbcc1a7cfe8783affdce010b42431f38176983e69e3d67dc025f5177fd007', 4, 0)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('script', None, None, 'id53f432a151082f01f9b6eb2cf2b43dcc782f81fe6755f378b24e12abc8f54a94', 4, 1)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('script', None, None, 'idf551cfd03dde73397370ffd79776203c62390556740f62adf0f8775193501a76', 4, 2)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('input', None, '__VIEWSTATEGENERATOR', 'idd1160a18bd33903db96aaf4a4e8178353d2870136f071a3eecf59025d195f22c', 4, 3)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('input', None, '__EVENTVALIDATION', 'idb5e676d9599f4feaf67eba66917f7b044449b53f5411df23947c8e8d88fcadd0', 4, 4)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('div', 'auc-page', None, 'id08661d7feef289d875f9463d6283805af90c8651fe2a974b4615c6948a234429', 4, 5)": [
+      "red",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('script', None, None, 'idb4caaaabdd30c81a2cbb53c1d86b26a3ed56c6a1a05c1c37111d3fc4e99547c9', 4, 6)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('script', None, None, 'ida13421c71f359571af40f5b7dddb9873db2ab51f61a61dec60f2bcbfbec4cf74', 4, 7)": [
+      "green",
+      [
+        "form",
+        null,
+        "aspnetForm"
+      ]
+    ],
+    "('span', None, 'ctl01_necessary', 'idb8e8e3155136c0c68879c7dbb2f7376f40cf87a9cc968b4f516c45a03d72534c', 4, 8)": [
+      "green",
+      [
+        "span",
+        null,
+        "Anthem_ctl01_necessary__"
+      ]
+    ],
+    "('script', None, None, 'id647ca7f5595cc2659a0df8fbf0c3431616de2bf19e312f8073b501abae11c570', 4, 9)": [
+      "green",
+      [
+        "div",
+        null,
+        "ctl01_analyticsCode"
+      ]
+    ],
+    "('script', None, None, 'idd44c84d6d65b2432dfbeeef0151f1f2e24c4045d3132968fa90eeb7e8b9ee93f', 4, 11)": [
+      "green",
+      [
+        "div",
+        null,
+        "ctl01_analyticsCode"
+      ]
+    ],
+    "('script', None, None, 'id80282bd97f648fd8ad8da7c33e588bd808c1d7dfeb2bbd3041d8ae990a1e6a72', 4, 12)": [
+      "green",
+      [
+        "div",
+        null,
+        "ctl01_analyticsCode"
+      ]
+    ],
+    "('script', None, None, 'id4106a9ff1d71cfd128bd973459fb05aac9a3e002d7579b4cd1df1864a9c155df', 4, 13)": [
+      "green",
+      [
+        "div",
+        null,
+        "ctl01_analyticsCode"
+      ]
+    ],
+    "('noscript', None, None, 'id97c2ff713e04c7c3a188ba6a9a30856e78371fc0ae9684bb6f69c55e6961848f', 4, 14)": [
+      "green",
+      [
+        "div",
+        null,
+        "ctl01_analyticsCode"
+      ]
+    ],
+    "('script', None, None, 'id48b0f22f3bb76acfa7cde5ccb813d21695382b578ea5c3f6c76fca426f3266cf', 4, 17)": [
+      "green",
+      [
+        "div",
+        null,
+        "ctl01_analyticsCode"
+      ]
+    ]
+  },
+  "5": {
+    "('div', 'auc-page-top', None, 'ida05f59af942b892ba3ec94df1220e2c29440de0e73bbff5fd3f32b6036a0e878', 5, 0)": [
+      "red",
+      [
+        "div",
+        "auc-page",
+        null
+      ]
+    ],
+    "('div', 'auc-page-bottom', None, 'idaf2a5b969a69b23fc1fd1dd02bcd0513dfd7057b965d9f80e549db38a159590d', 5, 1)": [
+      "green",
+      [
+        "div",
+        "auc-page",
+        null
+      ]
+    ],
+    "('a', None, None, 'idb2f8f238462a6b42a413aac974b2b43f7ecef858b6cc0f16f86c53d5e591f2f5', 5, 2)": [
+      "green",
+      [
+        "noscript",
+        null,
+        null
+      ]
+    ]
+  },
+  "6": {
+    "('div', 'auc-banner-container', None, 'id36fa01986936582c7f4d55e0506b130fb8e16b9194d4bc4c4a14b6d8af66b1ed', 6, 0)": [
+      "green",
+      [
+        "div",
+        "auc-page-top",
+        null
+      ]
+    ],
+    "('div', 'auc-content-container', None, 'idb03740994e50e6e35689b1ee63611e8cb925a11753912a2a0037029487f31975', 6, 1)": [
+      "red",
+      [
+        "div",
+        "auc-page-top",
+        null
+      ]
+    ],
+    "('div', None, 'auc-page-tooltip', 'idaac79869bc9db40d03a89fd7241615bc4d960671902da62b19569467ee835b61', 6, 2)": [
+      "green",
+      [
+        "div",
+        "auc-page-top",
+        null
+      ]
+    ],
+    "('div', None, 'auc-footer-container', 'id261299cebdc1dfe78537a67aa2a9051fabb01d838a918fa919791108febb6cc2', 6, 3)": [
+      "green",
+      [
+        "div",
+        "auc-page-bottom",
+        null
+      ]
+    ],
+    "('img', None, None, 'id6e3ef1736b61f5e1c49b88bb13076c7fa08dcfcd3694afa5c94031e616e909db', 6, 4)": [
+      "green",
+      [
+        "a",
+        null,
+        null
+      ]
+    ]
+  },
+  "7": {
+    "('a', 'auc-logo', None, 'idad77aa13203f3b6b907232c2d027d56e107bda810e22ed476bbbd7cebb23fdf9', 7, 0)": [
+      "green",
+      [
+        "div",
+        "auc-banner-container",
+        null
+      ]
+    ],
+    "('a', 'adobe-logo', None, 'id880e7d1ae0f7e5ab5872a9fbae0c5c744c7dad21e19c075d32cd03e24aca90ce', 7, 1)": [
+      "green",
+      [
+        "div",
+        "auc-banner-container",
+        null
+      ]
+    ],
+    "('div', 'auc-banner-nav', None, 'idccee373e25ff07a041d5fa2a8b97cb5ec5d737b5e6deaa48f8654d22d68301be', 7, 2)": [
+      "green",
+      [
+        "div",
+        "auc-banner-container",
+        null
+      ]
+    ],
+    "('a', 'forum_message', None, 'id41c312ac7e10993d3bf47f4038a0d0b53e6982d725369342bb3c56dd5d053c9c', 7, 3)": [
+      "green",
+      [
+        "div",
+        "auc-banner-container",
+        null
+      ]
+    ],
+    "('div', None, 'answerbaseContent', 'idcd2498b5e15b6020a85a59671ab20a1632b378a31dcd46d38994b242b439840c', 7, 4)": [
+      "red",
+      [
+        "div",
+        "auc-content-container",
+        null
+      ]
+    ],
+    "('div', 'auc_footer_index', None, 'idd05c00516d413aa6eb5331e82623be88b2913d2cc00d15753f2361303338399c', 7, 5)": [
+      "green",
+      [
+        "div",
+        null,
+        "auc-footer-container"
+      ]
+    ],
+    "('div', 'auc-footer-copyright', None, 'ide55c365c08d02c367bfd76d946f0e2a72eba35606f14021c6a206bdea4f8be60', 7, 6)": [
+      "green",
+      [
+        "div",
+        null,
+        "auc-footer-container"
+      ]
+    ]
+  },
+  "8": {
+    "('a', 'btn_trial', None, 'id8925d09df70290295865f5579b3f82d9fb1c437cb03af1f5a7f5c41d2d0ed805', 8, 0)": [
+      "green",
+      [
+        "div",
+        "auc-banner-nav",
+        null
+      ]
+    ],
+    "('div', 'nav', None, 'id4efde29b4828e9ca4e99e04d11e9e85d66f2445c6223aaff434f515a2eb7144c', 8, 1)": [
+      "green",
+      [
+        "div",
+        "auc-banner-nav",
+        null
+      ]
+    ],
+    "('span', None, None, 'id5a2cb57a38df3aeaa930acebbc87be5c64670b155959f03b91164ef49e331980', 8, 2)": [
+      "green",
+      [
+        "a",
+        "forum_message",
+        null
+      ]
+    ],
+    "('br', None, None, 'iddcfe7c4113c082329e2d11a6ceca58dae0c2b7af9f193dadbbed074629cb9884', 8, 3)": [
+      "green",
+      [
+        "div",
+        null,
+        "answerbaseContent"
+      ]
+    ],
+    "('div', None, 'loginPlaceHolder', 'id1c051e791f08e0869ca3eec63c8b755e6c40cb7d90a6e3306e14c90dc450da0c', 8, 4)": [
+      "green",
+      [
+        "div",
+        null,
+        "answerbaseContent"
+      ]
+    ],
+    "('div', None, 'leftCenterColumn', 'id2b4b2cb9a21426aeac988d062cb61a262dc39d0f28bf88ddbc19e73a57f2018a', 8, 5)": [
+      "red",
+      [
+        "div",
+        null,
+        "answerbaseContent"
+      ]
+    ],
+    "('div', None, 'rightColumn', 'idd6f87812c0c62c9c335acba94b4faf42a6500964d47b162faf8cfa3da276a39d', 8, 6)": [
+      "green",
+      [
+        "div",
+        null,
+        "answerbaseContent"
+      ]
+    ],
+    "('br', None, None, 'idb972c06e8193c8e72e91e64c8f497be23ea2c92c7ebe371b18beddb86fd52035', 8, 7)": [
+      "green",
+      [
+        "div",
+        null,
+        "answerbaseContent"
+      ]
+    ],
+    "('div', 'auc_footer_index_column', None, 'idde4f226cfded2ede577ec768c96849c28cbf2a52c3780396edf83999af61abe4', 8, 8)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index",
+        null
+      ]
+    ],
+    "('div', 'auc_footer_index_column', None, 'id38325353d831d04ed2a5e28637e6194f5562ad8161014cb300570c134f854e0e', 8, 9)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index",
+        null
+      ]
+    ],
+    "('div', 'auc_footer_index_column', None, 'id20defe29b8a6be86cc8d2f4696d93017a015a84c99b545a0786917fd4f176ae7', 8, 10)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index",
+        null
+      ]
+    ],
+    "('div', 'clear_both', None, 'id25442a1cb2c30a60cca4adbdee2fa4f2de0d5ff495cf61e01c0a1248e2332567', 8, 11)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index",
+        null
+      ]
+    ],
+    "('div', 'auc-adobe-copyright', None, 'id62e606c1a13fda769a3682e0a9736f8dc1b7b61bc37b62c43824bd660550c970', 8, 12)": [
+      "green",
+      [
+        "div",
+        "auc-footer-copyright",
+        null
+      ]
+    ],
+    "('div', 'clear_both', None, 'id25442a1cb2c30a60cca4adbdee2fa4f2de0d5ff495cf61e01c0a1248e2332567', 8, 13)": [
+      "green",
+      [
+        "div",
+        "auc-footer-copyright",
+        null
+      ]
+    ]
+  },
+  "9": {
+    "('ul', None, None, 'idec1994722c38682146de1178fd7d4d18674ecebf8f104e73c922e6b5c13a747f', 9, 0)": [
+      "green",
+      [
+        "div",
+        "nav",
+        null
+      ]
+    ],
+    "('div', None, 'leftColumnfull', 'id69bb81fe15e289da3c3abc2f8a88596f38884c70a0e7ef5df366dee3ba46454f', 9, 1)": [
+      "red",
+      [
+        "div",
+        null,
+        "leftCenterColumn"
+      ]
+    ],
+    "('script', None, None, 'id59cdc67a238d41ec53cedadea0bb37fe67eee9599f048df99b6563edde224a80', 9, 2)": [
+      "green",
+      [
+        "div",
+        null,
+        "rightColumn"
+      ]
+    ],
+    "('script', None, None, 'idfce7cf6b6e73e0d7e87ff2be734523ebca0334fad05cc33362395f8e35242ff9', 9, 3)": [
+      "green",
+      [
+        "div",
+        null,
+        "rightColumn"
+      ]
+    ],
+    "('div', None, 'search', 'idce30a88d9b4ef6fc6724dbaf7c8cf8776d66af450f4eee42518494adb9d6e53e', 9, 4)": [
+      "green",
+      [
+        "div",
+        null,
+        "rightColumn"
+      ]
+    ],
+    "('div', 'userContent', None, 'idb0533501cc87eff2f1b5277eb4b8b97c2125ee8a3539856e218390ea135f54ba', 9, 6)": [
+      "green",
+      [
+        "div",
+        null,
+        "rightColumn"
+      ]
+    ],
+    "('div', 'userContent', None, 'id7cb2ba1df426d4b46ef3bc00c01ec687bca334107ae337c89823dd0ae194569d', 9, 7)": [
+      "green",
+      [
+        "div",
+        null,
+        "rightColumn"
+      ]
+    ],
+    "('h4', None, None, 'id9e9b47200e132ed6c0104548c95163a5e44059c2983cdbda4b0fdaf64f1b91f2', 9, 8)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', None, None, 'id29c1b4cac6c41476459aa60be2b569bc9f827f36a509e4c9961d99bcd8445a1f', 9, 9)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', None, None, 'id39f3e45f8aede9b4601f6eebdc911ce37e06f8ba5084dfa81af3fcf5f7e72edd', 9, 10)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('h4', None, None, 'ida5bf8e09ff838a4b83dbe239cb81a806944bae6155b2461f3b92951119e5fb8c', 9, 11)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', None, None, 'id286a145d4f057666c989def1ff5024f28a0dcc2610edc760f09ad16cc78d2e28', 9, 12)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('h4', None, None, 'id670cabb02bb3f5a48b9134a646eff292c34f8f380855cf02cfa63f9721be02d7', 9, 13)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', 'social-icon fb', None, 'id6057260adb2c997025e6d1e6dfe9c72beeeead07981883fc7686801ff41b893d', 9, 14)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', 'social-icon tw', None, 'id775b58e2e4ff957323a1481110e915c0e2c07a3c6459a75c39a19e76bf452ae9', 9, 15)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', 'social-icon yt', None, 'id270f7eaa16c1e7ace232a866d497cf46c5423044555f806fe32d9f1710900827', 9, 16)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', 'social-icon li', None, 'id8d7ae4a6e2741043710017c4dd03974bea3de9b0e7fd2710a1cf2fd1cc49409e', 9, 17)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('a', 'social-icon gp', None, 'id273e5da7b70f6f4f1842053ac5ac6ec8cbfa0283382d72582f434ceb8bf7aeec', 9, 18)": [
+      "green",
+      [
+        "div",
+        "auc_footer_index_column",
+        null
+      ]
+    ],
+    "('p', None, None, 'id5c6bbec6b8f0425b44522a731b3d5df82e01fc3dd5cecc761c880a76effb2422', 9, 19)": [
+      "green",
+      [
+        "div",
+        "auc-adobe-copyright",
+        null
+      ]
+    ]
+  },
+  "10": {
+    "('li', None, None, 'id8e0354a4eea0033ff013a7510b9c885398413393b03eee85869e18f77472c0cd', 10, 0)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'idbaf2b7936b8b93c08e6fe8d633be3179617866283de7eeaf10af3b9ca8cac7a5', 10, 1)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id328f353a5d6c4db5f8e7bfa2293d7ff8a3d1b14acb5b68d67a32dc7ddce4ea50', 10, 2)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('div', None, 'questionDetailsPage', 'id88ef168c47f83c941b18dd6d70a7f9ad238119052081df87e839328fc0fbf731', 10, 3)": [
+      "red",
+      [
+        "div",
+        null,
+        "leftColumnfull"
+      ]
+    ],
+    "('div', None, 'textBoxArea', 'id527e2ed0483a7fffa626aea3366af8333e74a0a665a75d71cc97a436264fac4c', 10, 4)": [
+      "green",
+      [
+        "div",
+        null,
+        "search"
+      ]
+    ],
+    "('div', 'box', 'categoryNavigation', 'id842c2ff15a7104197212c44ffa97009ab24b7d126953028f64c2f43cf0eeaf23', 10, 5)": [
+      "green",
+      [
+        "div",
+        "userContent", null
+      ]
+    ],
+    "('span', None, None, 'id6af03420aa2a7c7763481fd315803c6048ab0a310d40ff7cf68effd07949bc32', 10, 6)": [
+      "green",
+      [
+        "a",
+        "social-icon fb",
+        null
+      ]
+    ],
+    "('span', None, None, 'id9e51a3da29de6aeae3445c4596062a50e83eaa5ee986f194fc6676347a3083f2', 10, 7)": [
+      "green",
+      [
+        "a",
+        "social-icon tw",
+        null
+      ]
+    ],
+    "('span', None, None, 'id4a498ead4d68b22be2b600d224f28b7173575acc5e50e2876d7fb74b6b8e8659', 10, 8)": [
+      "green",
+      [
+        "a",
+        "social-icon yt",
+        null
+      ]
+    ],
+    "('span', None, None, 'ide279d6f560bf7d123b3e11cfb6d523eb459750ac3941b4fb5f4728174b0cbb0a', 10, 9)": [
+      "green",
+      [
+        "a",
+        "social-icon li", 
+        null
+      ]
+    ],
+    "('span', None, None, 'id88a37930c0f2a173972484594b53c046d6c04e460321c095c145b4423badc867', 10, 10)": [
+      "green",
+      [
+        "a",
+        "social-icon gp",
+        null
+      ]
+    ],
+    "('a', None, None, 'id6e696ef57aca7fb48e2ae305f1f17cae30614229d7a6b92a8882639e18b720e2', 10, 11)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id0d686255b7e1840cb5d37b9a918451eb2b131a86b5f60b2a50610014dcfb4338', 10, 12)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id9dabf3ef4f43d5b96633e5f793d2c261dde3249d45595be5efc2d78a27082055', 10, 13)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ]
+  },
+  "11": {
+    "('a', None, None, 'id74cf8bc5f734651e1b4e3771439b80937d1b39f07782413018c31a917169cb87', 11, 0)": [
+      "green",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('ul', None, None, 'idb17d9ac760cccb8e076ccaf168c116dca9b835ee1a64381711fddcb22703bd12', 11, 1)": [
+      "green",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'idb6d7141187449f3ca572ba21131e959836959d8a9e92c49070c1972988b30d00', 11, 2)": [
+      "green",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('ul', None, None, 'idc9e6380c8fdc45a80cfedf9b2f539c2bb2a10ef2b0f1acbf2c9f107f02cba348', 11, 3)": [
+      "green",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('a', None, None, 'id3161f8749c2f20454d10a36dfc2accc1d1cf05f45c1b98c576ae83fa82890309', 11, 4)": [
+      "green",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('ul', None, None, 'id8f099edbb2a924103e4ff213a09579088434c47809c8dd5076f2bb082c105144', 11, 5)": [
+      "green",
+      [
+        "li",
+        null,
+        null
+      ]
+    ],
+    "('div', 'box', None, 'idb7aa9843bff6ac6cc79859028c278fd31e1ef1d29d1afa608a38246dd180e69e', 11, 6)": [
+      "red",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('br', None, None, 'idf6a75ddac5445516b183031d9b29f102014a4decc9511f9b04c07804135f0b3c', 11, 7)": [
+      "green",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('h2', None, 'ctl01_CenterColumnContentPlaceHolder_ctl00_allAnswersTitle', 'id56efaf89d50e0dfa04d3fa0c6d5a2896d827b3d20dfc579e64051349ce694824', 11, 8)": [
+      "green",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('div', 'box', 'answers', 'id047ad8c4973d58bc9ae47473dc7989db3b388a71a90444f2b677974ba91a7c2c', 11, 9)": [
+      "red",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('br', None, None, 'idd2e01628713f20ac4e3e87bc71951b1021bc5db852542849ba42731aa9abddd6', 11, 10)": [
+      "green",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('div', None, None, 'ide4d9a6cac6c623a1242befeb3f1e883e774bbaa72ac14d8c0ed0ad792e4923a4', 11, 11)": [
+      "green",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('script', None, None, 'id05893a6b98304324c677bdd318a173d92f79f59f7335b79a066fbb69f351c2cf', 11, 12)": [
+      "green",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('script', None, None, 'idd3d44250860c59e9a31defbfeb9f30a6cc4a0af5bcdd7cd969b9489db11a1815', 11, 13)": [
+      "green",
+      [
+        "div",
+        null,
+        "questionDetailsPage"
+      ]
+    ],
+    "('div', 'searchBox', None, 'ida8df511e08070fbf47bd2e5513ca803537d92683c3b5decdafddee52a7050307', 11, 14)": [
+      "green",
+      [
+        "div",
+        null,
+        "textBoxArea"
+      ]
+    ],
+    "('input', 'button', 'ctl01_ucSearch_btnSearch', 'idf8bf9c27201b4b2c920866d6611b80ffc90c741cca9bbfc45dc0c8b7ff864d63', 11, 15)": [
+      "green",
+      [
+        "div",
+        null,
+        "textBoxArea"
+      ]
+    ],
+    "('script', None, None, 'id00f37216e5d34417dfd74e1bcf681150df0a200b087cebc87851006ac5f8dccd', 11, 16)": [
+      "green",
+      [
+        "div",
+        null,
+        "textBoxArea"
+      ]
+    ],
+    "('span', 'searchTypeArea small', 'ctl01_ucSearch_searchTypeArea', 'id1b8a14707a3ca376c96cdd4f6b3c25047287ff3c99a0179c00206e8a6848926b', 11, 17)": [
+      "green",
+      [
+        "div",
+        null,
+        "textBoxArea"
+      ]
+    ],
+    "('h2', None, 'ctl01_RightColumnContentPlaceHolder__2a6ec53_ucCategoryNavigation_categoriesTitle', 'id124e13877cecbcf79e1686c103ebf643705a47ecfc7aba7d7a89443c347cf80e', 11, 18)": [
+      "green",
+      [
+        "div",
+        "box",
+        "categoryNavigation"
+      ]
+    ],
+    "('div', 'content', None, 'id6022af45dc52865d531a62b54d9e702a70e531e23deefca6d824f331077b8832', 11, 19)": [
+      "green",
+      [
+        "div",
+        "box",
+        "categoryNavigation"
+      ]
+    ]
+  },
+  "12": {
+    "('li', None, None, 'idf6e40d8cac9ddb78df86778dbf7c5d0ae9f062442c5196d3363c4b837757518c', 12, 0)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id8f97b142447b6cef7bdb01551102f0f55c21b28920ae462770163e3e643e33a9', 12, 1)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'ide37e20cfe3350b49621997730e4c437472bcc7b96f843f7bafb60b935d7a4d18', 12, 2)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'ide112eedef0e16623bb1ad1c2f1e596af0faa7f996c106d048f0e4ae102c76ce8', 12, 3)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'idcd1b5e7fd0ced8d54c7d47b4339079d5f04dae8b9f5909daba2959b27b76ff52', 12, 4)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id43bd1f30322c369d764416124a3bb1aa534f1e4d6dfabe2a84735eb63e640828', 12, 5)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'ida159c785ad58a6812180c291651d57048446aa6fca957b63566df9915003bd0c', 12, 6)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id292e135707fc2f5aea94c2ec9b784550eca430a1614dae56b86813522e5b4477', 12, 7)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'idad20ff81437d5a1babf034a28cf92dccfd95e24feeb70ea893c929031d5395b5', 12, 8)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id8cc7a4c2bc0979a43014ab18f964f228fb71423193db08201f2379f78c7166e4', 12, 9)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id096c0a98e206878c06351df3e86a617166386de212e9ff6e2e22efdf343503a4', 12, 10)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id04ecf6bbcba6e6a519ddd3f33d6da2a4ffa57db8277311775464866a10d89041', 12, 11)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id401f3b9910e0b2e5d865dbcdcfd079c39be6768464697c1588412c63f0b99b06', 12, 12)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id8959b9ab5cefa5dfd28e8ba6558b62e4f0b70c1da384eb6ccf6406032a8ac6bc', 12, 13)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'iddac77c520920af8f30454e534f885a4be9b2602efb9b91a6ba672149a4f3d6bc', 12, 14)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('li', None, None, 'id2b980f778b6156bc9185cbd7dbb1bafcd780c4293e02b9865ace5360447cb3dd', 12, 15)": [
+      "green",
+      [
+        "ul",
+        null,
+        null
+      ]
+    ],
+    "('div', 'question', None, 'id4d67901f4202474f0b532e2eb72c7b64a4ab38c84345a5cd32bab15e18cccb3d', 12, 16)": [
+      "red",
+      [
+        "div",
+        "box",
+        null
+      ]
+    ],
+    "('div', 'padding', None, 'ide4d5ae2b5478dd93ce44f133c276ecf570c2a647e35f238cf931e8efcc01bcb6', 12, 17)": [
+      "green",
+      [
+        "div",
+        "box",
+        null
+      ]
+    ],
+    "('div', None, 'ctl01_CenterColumnContentPlaceHolder_ctl00_topAnswerTableRow', 'id56baeeb44156a460af3ecd43cbe4c2bf06c9a32462606fbd21b5071246c9db95', 12, 18)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer9978', 'id73b554753e12a266c5996a2225dde9acbc5792051a25e79616f0e1f08625075e', 12, 19)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 20)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer15491', 'id7c9e0725aae2f36f8bc2f6ff044eea5d39374d409828bc3e1a2350b7dd63f076', 12, 21)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 22)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer17075', 'idff68ca5856fe381a3935af5a957a5aca8811ceb6d1519bae131d6bc773145cf2', 12, 23)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 24)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer34252', 'iddd50643a0ecdef65efa3c5df477f7f3fe2a8996bdbf08d39a231a1c94379d99f', 12, 25)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 26)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer34297', 'id236e25054c2d472388af5d90a0185a6ef86429efed1f71578468b87400d77faf', 12, 27)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 28)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer40845', 'idd240be9c2c5309e908e76041bf235395a3f0fd53a755fbe21822435525d204bd', 12, 29)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 30)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer73984', 'ide308750c83626ca928ff177bd10923b27d97410becf7ff2bbe43f4064d9ffd83', 12, 31)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 32)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer93069', 'iddf581e68aa0c2656ba52c2f5f61cd2436298cae6ed20fa6cae1f13412ba4974a', 12, 33)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 34)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer112900', 'id408c360f880dc214ef6ec1b358f75aea0cd5b21be330f519b454cc989c1d175b', 12, 35)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 36)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer127879', 'id5f22345386fe6b05545cc5ae30c002f45af7788255219b77fbb96189967ef81c', 12, 37)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 38)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer207599', 'id43648e9c43702cf08b72dc791e43bbe0279279a07a09536524914bdee532e7d8', 12, 39)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 40)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer210411', 'id677b61db40f762d8ec41902397bfafead7140a7402c2ae986494d7aa2b86ff34', 12, 41)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 42)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer210693', 'idc39e2d46d8d3d8b5d18e793f15bb551a3f15ae89991b8543b42c8e3903ca2455', 12, 43)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 44)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer283814', 'id7a7ba9a7616c8ee74d7251ff35da0e59ae503d032e4ca9c79ec221c3ea0d5bb0', 12, 45)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 46)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer293001', 'id688b889d782f6a06155f1b59bc5c9ac0c367de9b8e63f415f20e1308bf52f1e0', 12, 47)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 48)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer295881', 'idac8ffb07368e0d07761de4c5e451cc75522e17cd3012d1c5c2585faa52ec90e0', 12, 49)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'id54d01a76064357bf141b1839bab35521cb8cba6a1ed442b1f47e4b49a57589ff', 12, 50)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', 'answer', 'answer302803', 'id6e57f93da27eeaab14377d676a710e3b18b6383db8aeaede5b8da45c71f0b96f', 12, 51)": [
+      "red",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('hr', None, None, 'idd442da91bdbefbc8c492cda39d18512fd1d0ca6564590b8c00a2c5387a1e6595', 12, 52)": [
+      "green",
+      [
+        "div",
+        "box",
+        "answers"
+      ]
+    ],
+    "('div', None, 'report-options', 'idb4ec9bd13866f7085910cb2dba2d75d38587e1cec0a137f1a25cd77846dd0b1d', 12, 53)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'selectArea', None, 'id90f8aa7a3a2da71ac683c927ccb3fb10b8cdbc6ffde6f647cf6af5aa4912ca28', 12, 54)": [
+      "green",
+      [
+        "div",
+        "searchBox",
+        null
+      ]
+    ],
+    "('input', 'textbox', 'ctl01_ucSearch_searchTextBox', 'idee2f86101bead93b5e9503473d9c78d7ec0978f32b82aa6bca6ba32585228894', 12, 55)": [
+      "green",
+      [
+        "div",
+        "searchBox", null
+      ]
+    ],
+    "('span', None, 'ctl01_ucSearch_searchTypeRadioButton', 'id8ed2cec72ef0b456b4f87dc0541090629e593dec6b13ab1f59237de97b056286', 12, 56)": [
+      "green",
+      [
+        "span",
+        "searchTypeArea small",
+        "ctl01_ucSearch_searchTypeArea"
+      ]
+    ],
+    "('ul', 'category-list', None, 'id8ff0ed5ccb9c9149acc22389fcc2b32a3a4f15d6df3138b933926f597f6d54a6', 12, 57)": [
+      "green",
+      [
+        "div",
+        "content", null
+      ]
+    ]
+  },
+  "13": {
+    "('a', None, None, 'idbdcc309a52e5e6758b126f6f770cc9d5c218062f7e6403fc268c6e225f7d31b1', 13, 0)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idc8187c3fca9b17412029ed2e8ec3e20b500546b184cc974781b6a3e35ac0a32a', 13, 1)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id14f5588de5d52d736b01ea20e0f0fcadcbf94124aa5476737450cedeb88afcc9', 13, 2)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id2c53e679c5c2c358db6017105888d1f3526d79995d103c70e49993429e519dde', 13, 3)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id2cfcc4a38d64d2e036d0c70aa1be4414ff3a0e75280b61a75a64f79a5982d3fc', 13, 4)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idfdfcf50a9de8f1c84f5b9cba1dfc82cc024b825e02c8981c0b02759566875802', 13, 5)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idff81acae2ebe27ca2ebd99bf19033f81b2c17733df255630ca38633fd6d7c818', 13, 6)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id6aae2e3a39821588cfdb6d6042a3c5c93f3dcf712860a50022cdea62868c240e', 13, 7)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idb4a8393378e94526f40e0e46b4dc26c0e1d49527fafa4d7d74550bc3b6319dbc', 13, 8)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id90f417af0644f0e00d2099d65a57d6cdecb1b2e3c3e4ab0fec793d59e0475be6', 13, 9)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'ida80949718de0b7df2926a3d15545ecea4f8947d03adaf10b00ec72299c096e25', 13, 10)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id93893aa6bd886e88abf22372d9804fd102cb87c11152219c21fdc5a7d2c23584', 13, 11)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'ida10fd0ad24ad72ef071af440fb0d4078e7bba5184c58e19abdc6de160d88a829', 13, 12)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id3e60197829169c18782ed126ac07c71812855ee87058c8d4058347526b05dfb6', 13, 13)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id65789c1d458b577ba8b75b07a9bfea8ad576c746b5c7671b25826da8ca44f39e', 13, 14)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id235fa5b6bc0dabb6ef4697d7a5e407392da656dd5467f6c6ac83978f7c54bfca', 13, 15)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id83bf58c20ae36c6e7f9f5cd865746a12871d4d7c41856513d3feb65dd4aec762', 13, 16)": [
+      "red",
+      [
+        "div",
+        "question", null
+      ]
+    ],
+    "('div', 'shareOptions', None, 'id5803a63199e5b830e0bed741e1bebe7a135ecb12779a986104c1c3694bb69af0', 13, 17)": [
+      "green",
+      [
+        "div",
+        "padding", null
+      ]
+    ],
+    "('p', 'answerQuestion', None, 'ide064979902fd011f1886c32ccbe79bbf1026d31ca77a5e92052492248e4ff567', 13, 18)": [
+      "green",
+      [
+        "div",
+        "padding", null
+      ]
+    ],
+    "('div', None, 'best-answer', 'id16ea7385250efc15875caf823cbabfe40ae6e1d1e5e3100bff6f866e9916cfe7', 13, 19)": [
+      "red",
+      [
+        "div", null,
+        "ctl01_CenterColumnContentPlaceHolder_ctl00_topAnswerTableRow"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'idd958b91cd8f38af9214d8ec0d9cfdfb0b88d07d465afada2a55836f904712d25', 13, 20)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer9978"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'ide48ab7b7a3cceda020332690d4216a8f2395102aa086f4824fb2632d28587425', 13, 21)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer15491"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id15e229ad339b4dd91f98cdecb4c3c48a754425cabbb4bfb8dece27564191838a', 13, 22)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer17075"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id14ae5addd0042387283bc5f81aee9d60e8c29a18675c67a1019237e463c870b8', 13, 23)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer34252"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id093342b8669d1ea965665e55c839ca55e4c76e351500c9aaa5eb8227c90212db', 13, 24)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer34297"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id8e0161fce4ff3e388589ccc403590f34b5022210e33a825d7594b0d4296ed58b', 13, 25)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer40845"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'idcd45f317823319dbc38a3e6c0dfda3de50a8e0c81153cec8fcbdd5844b6f34d1', 13, 26)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer73984"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'idbd7cf3185f2dc561133ca8aabbccc1542f488dcec391892b12acf931c555973c', 13, 27)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer93069"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id0e4f9a308171cc024dc444d4a127075d8ab01a63e2414703b678525afe76164a', 13, 28)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer112900"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'idaca72f698de6ebfd04e490d58411e8fdc422207d7510cdb33abb129f15caa04d', 13, 29)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer127879"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id7e743a94858d029a7fa8bc7cd54140cbd71e1aa476f671598bb2a7bba012a32b', 13, 30)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer207599"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id9eb5ac07ae7fd475ae8cd88c8a4ff420745555df7671caac06e101c7f2666cd6', 13, 31)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer210411"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id961b35600cffd14a900eed5b81f9153a36537cb4af0f47d113bb526f43ca8112', 13, 32)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer210693"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id412c9d68bd8f4ec781d918d0a9fa7cad2c1bdc688910130d685adcc72cad9807', 13, 33)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer283814"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id687f40f304d21d417d5d863d845d2232a9a3627d07f3abe590df89be348b8f67', 13, 34)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer293001"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id329ee5c6ff42a15170a97971db3b62d4e9a5df73e81c65b10250b05997937f48', 13, 35)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer295881"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id325c8b3abbf3fd0257bd9454a178ad0a95b4fd0da266ba318d7fa78b76d67488', 13, 36)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer302803"
+      ]
+    ],
+    "('div', 'title', None, 'id8615b6e491603cb3389bb9326cc076d9a07322aa9f777df0e17ea052c0f454d6', 13, 37)": [
+      "green",
+      [
+        "div", null,
+        "report-options"
+      ]
+    ],
+    "('div', 'body', None, 'id3e470fe64bc2c8c6f2e39416a8cd5c426644b5004d0bc3343ece3514e1b77bdd', 13, 38)": [
+      "green",
+      [
+        "div", null,
+        "report-options"
+      ]
+    ],
+    "('div', 'buttons', None, 'id9ac4f6d888b82953429d9cc8ef3c0770f1ddd981f569b126e1c1766dca55a305', 13, 39)": [
+      "green",
+      [
+        "div", null,
+        "report-options"
+      ]
+    ],
+    "('select', None, 'searchTypeDropDown', 'id1781ea9800f750593fa15645f49a0f4daba0697e93e9a4eae42a19df400f6b22', 13, 40)": [
+      "green",
+      [
+        "div",
+        "selectArea", null
+      ]
+    ],
+    "('input', None, 'ctl01_ucSearch_searchTypeRadioButton_0', 'id95dee076c7134d89da15bec0951132a27173b442f22900c2f5002e4e1b5264ef', 13, 41)": [
+      "green",
+      [
+        "span", null,
+        "ctl01_ucSearch_searchTypeRadioButton"
+      ]
+    ],
+    "('label', None, None, 'id6ad06b262d12c01ecbfffe46f798a1df7b48286dbf65070c0130d26a86a40a9a', 13, 42)": [
+      "green",
+      [
+        "span", null,
+        "ctl01_ucSearch_searchTypeRadioButton"
+      ]
+    ],
+    "('li', None, None, 'idb716c95520a52307431c07b8be6d5218becf6e298e795f233c87a43b1b5fa996', 13, 43)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'ide323cf955b7fa3a7b6b4234ce076b6634431df429ebfeb29d7e40a6af2db3dfc', 13, 44)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id0dbf7fecd0ecf4d8a931f6d34ea5ae76a3879587d3e818f5a1aca0638eae2402', 13, 45)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', 'selectedCategory', None, 'idb46e25004db25f3e161473ccc7f112934ecb3abd169298fe58d07eedb587b2e8', 13, 46)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id5b078562d11f24f411337332c5f0e8f8ac8f1231d0310a28fc249a1f28d25297', 13, 47)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'idd3551588bc82a07e3eeffa3c714aaafc7e5cda39415597cb3628f2a21a8a9ad1', 13, 48)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id8531c2e47b7442d45be1a74615eccf41736d15be5cd04841cdad75c32ea2dbed', 13, 49)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id002756e5f3712306abbcdeaf982b42b30732e323c60758efb3e6473ab48c5b0a', 13, 50)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'idbd0202d68668cb3e8b1f51e7c817d48e1b01fd513811e42aefff377e54a78d81', 13, 51)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id81e72605c337c354b68a76e14a7753cbff6916701d7ab87ab0b1b8d9145be4b1', 13, 52)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id48cf68d0599043025181e1ef64ddee3972a054c940135432dff29d5f7fef7d02', 13, 53)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id6f9592b38bbdce071e8ad3b62f9900f2d1c33228ae8205e8424f377aebf4784f', 13, 54)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id88fe479358d7c826ffe85d2de77dfe065d23f8983ce4e5e1f0c79dccdb8a6eb1', 13, 55)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'ide78393bdb586977941f0157a0bacb7894f70e4ddb4ec1297fef3f1290755f47e', 13, 56)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id63a79e42523cf589f264378bd51803b4fef7a94900e1c8a6a85a22e1b28eab42', 13, 57)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ],
+    "('li', None, None, 'id326ac51a98a2133e31fa005c8dffaabc3aa2745876dc00ca60421ca74eb114bc', 13, 58)": [
+      "green",
+      [
+        "ul",
+        "category-list", null
+      ]
+    ]
+  },
+  "14": {
+    "('div', None, None, 'id3ef3966037268866645c12adaca8819f258626417d50200c2cdc1f43d1040f8c', 14, 0)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, 'facebooklike', 'ided33a8d09dbee9226edaae84231ff891f04449a062e19035db233cfab0d4f86a', 14, 1)": [
+      "green",
+      [
+        "div",
+        "shareOptions", null
+      ]
+    ],
+    "('div', None, 'tweet', 'id0cf88b5f951d89cc74426a1a1c9d516203bd93e9b24e88e5ead7843da46bc506', 14, 2)": [
+      "green",
+      [
+        "div",
+        "shareOptions", null
+      ]
+    ],
+    "('g:plusone', None, None, 'idb4cb05face04ecd169a0ee404cc4dba2e25658448b25577d072737a4d4fe1f8c', 14, 3)": [
+      "green",
+      [
+        "div",
+        "shareOptions", null
+      ]
+    ],
+    "('h3', None, None, 'id1209abd16a9930cd6f6cc47fc2d1088cb5cd29ddcbb7025c7c8d3c89107ff4e7', 14, 4)": [
+      "green",
+      [
+        "div", null,
+        "best-answer"
+      ]
+    ],
+    "('div', 'answer', 'answer113856', 'idf9c9299f9855e1a590729ed415ca5bb274aedd46e5350eee98cdb791e8cb5886', 14, 5)": [
+      "red",
+      [
+        "div", null,
+        "best-answer"
+      ]
+    ],
+    "('hr', None, None, 'idc3a5f8564418a03954fef831bad708341b7276770e14237f2cc189cb7e515db5', 14, 6)": [
+      "green",
+      [
+        "div", null,
+        "best-answer"
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'ide2c7963db56ca63e30ef0a4c6a60813296282287989d93111bb5d3c88f4efba9', 14, 7)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'ida1ac70047b0c9d3697c7b075dae561dd6a03dec2cce73307658dcc9246ef63aa', 14, 8)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 9)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id84f13b962e14441598ac5c23f416560232a112ed1b8561a64c734fed3fb595e5', 14, 10)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id6f9cd3da7cbd19fe61ec309ca5bf56e6c3fa98bfcbc6a2047bcb998cee7c452b', 14, 11)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id05fb2af2cc78be39392ea1f916a9baf678d2e61f583ef2cd19ef5338ab0da121', 14, 12)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 13)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'idbee1eae4c76fa197dc8345aa3ecd90323847f111319c64f8be42fbf42797d007', 14, 14)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id4792da4805d8ff095973cc63627a22f7922b684b44d1a4556acefe483d4f6340', 14, 15)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id825f836c3e2214cefec2f9ca6f6d77e580f7784995aa2d78b84d3eb7dd79af92', 14, 16)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 17)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id1e08977f5e1532aca1ba84a6d688af89f88fd16347caaf87d6896fcee77874a4', 14, 18)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'ida787bd04004127d5e4a9cc214891bdfc6741fd036a3f328b6f3ec74b6c2e5df1', 14, 19)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id5c6307a30b95953cdfbf2cf7e5d97d44d50c2db7f7c4cf924421c8198df489d7', 14, 20)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 21)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id2e695476d323d75022a91aa131c38b0d91b4714211b81e20b49886dfb3fa58dc', 14, 22)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'idfa2b7d3dffae2f1c49e9f5e20cf9b7f60e59f9ff2acf8c902ea66d78463eb4fe', 14, 23)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id769a0f8fae68c98d6af7fd8ebb85f9da24948665cf3fdb0587d5f9281fb8a918', 14, 24)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 25)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'ide682147a8016a0a5fa2658700d32829a9f6af01780cd7cc734f307a873ad89ba', 14, 26)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id01b3fa857ae9ae8a7a00a73c741f5ad792cd3074564ec8d84d87df3f404bf365', 14, 27)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id0917df5f322922323c98d8e1035de43d58a68227f3efa22cc93a316b82746014', 14, 28)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 29)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id951b240610eec16fbf8daa1df634dfe67ea1647638b62bd43497e6ac44f679a7', 14, 30)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'ida8a686773f7f5f388bc6563597b53c672caa6ea3417ba731529717c5e697c332', 14, 31)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id68f1361b799a2946526ced449314ea6b5922abbaad41c6de87fa30689619db87', 14, 32)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 33)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id3d06e88a36d4e183c45c34279690fa72e11ae37d43c9022b5131a9cc99734d30', 14, 34)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id85cdd599489ff93f6dc6a9990740b1b0df974876727584beb097cc821b5a3ec0', 14, 35)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'idc33ad6e542f156e5c6927ced981e640331b0c8f4b29ea2949563e07f09b50222', 14, 36)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 37)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'ida7083036e959b0c68735e58a155b4b8b5a051144b03c63a8ce9835d2f129cb7b', 14, 38)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id020065453a7f6ffe949a5827d9eb7e9d6bceb8a94c0f6b2870d737b7b64f49cd', 14, 39)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id1feee642c574b8b747df2878f8e498f1d9468e1856579dd15c52eb84924c8594', 14, 40)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 41)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id000fe8fd95ed9198276568f850a652c30d242d848202278dbb3e963905be56cd', 14, 42)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id7f2cc614ee675d3e4a1adff3c93bfb0a274ec1928428acc1c3522832abca42ed', 14, 43)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id8c19c7fc7fbffd39c67a600b9770bd417c9a3cf94002a58be35651115d33f473', 14, 44)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 45)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'idcd8e5cb6d3bbae909eb8f075e189aaa12aa19398a9c28f769dd5b9986ba0e319', 14, 46)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id255cbbf187989432272f130fa9650e6a1d35bff227a625c4572f47072a0c9576', 14, 47)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'idf8e8df62f5e176e174025bf35a98baa2116b650fa33ba2050f2e20845aed6998', 14, 48)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 49)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id66eb21b15720793315f6fa8722064364e7001b7696668054a65344b2e7f583aa', 14, 50)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id633ef9b363334c15de48fc1b6c3dc86c75f64c59b0cab12716cc097b0713c97f', 14, 51)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id3587e46d8c50ffe741bcd6489c36295e2338f74f8e524493f26353cf1f8986f6', 14, 52)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 53)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id36524da581d7538e54e9d82c6c2fb99b4184d6036189ac381498d916c8ee670e', 14, 54)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id8d60196087ee1c1afd95e43c8ae1cc8b73003cc30254a90bf96518d37d5bb4b6', 14, 55)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id52900f68d7f8b73f315e1c23b4d7b78f70fa64ef08470dae1f2a08aa00fc2e4e', 14, 56)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 57)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id36806220347027bce254b44baf6ce7b226ad1d8162d21d04b9b49f66efccd110', 14, 58)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id13e10822bdc3f5cf5fad27be6d9b8494794c6c3cf838eb7e8169c560eb1869f2', 14, 59)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id9d5e5fcd4330c9d99729f9b6b790d4da925b665501841dd9245e770387c0063f', 14, 60)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 61)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'ide7aa3fff8ee407393e7dbfd6a65f5a4ef6365ca40a3f1ef92f97dd2c858880eb', 14, 62)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id3050102d407611b7268095fed3cbab5988f37a3b7ace72c781d91b786c062f0d', 14, 63)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'idd2403986856b11f62db1da6248b61095754413f29a6ba8d2adccca664383783a', 14, 64)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 65)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id523b5a0afaa8a50020bf03511538b5763c83803e3943a3d0052231e2024bf842', 14, 66)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id7cf39d80175edb58e84d1d8359a3f4f0e61217b82fd9b70f4b9b9770a3d08839', 14, 67)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id3f0372aecc6403d3b89446f48f03d88d37f163023cb3599e95db7ff198154adb', 14, 68)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 69)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id0167e3564f38dc706a7eb734875e30f7ab0aecde3eba0fa5ad0c69916d100837', 14, 70)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id856b9dd9b32e2ddefd3de00f1cf008c6010f1337e6a447250fad01ddbfd04239', 14, 71)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id67b0dd7c05c1e43942ceab26d88a0179b2bafffea4bd1338f2bfa27a8d1f2273', 14, 72)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 14, 73)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'idb8d71979cfa8a6058f5eb0afc36f8d1bc4ca04ca5d6113cf0bc7a521d8d97706', 14, 74)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id94417c0a5ea31d4ec8909a6cea7b032226e834833a136b35beb9a5e96fe21852', 14, 75)": [
+      "green",
+      [
+        "div",
+        "body", null
+      ]
+    ],
+    "('div', None, None, 'id45027c12b9607266fc4d388faf4df8585397ca8c3797244fa3faa79040b8afd7', 14, 76)": [
+      "green",
+      [
+        "div",
+        "body", null
+      ]
+    ],
+    "('div', None, None, 'id557d1e71e56f1e8cfb20b7db47b11b8eac859ab6cbef2a75051d8e4c752cef95', 14, 77)": [
+      "green",
+      [
+        "div",
+        "body", null
+      ]
+    ],
+    "('div', None, None, 'id7385e0d4e15f7c1feb241e963cc5508edd047aa9215c8c9190fa9d59f5c45d6a', 14, 78)": [
+      "green",
+      [
+        "div",
+        "body", null
+      ]
+    ],
+    "('input', 'report button', None, 'id8fd253ea8b037d405a629a62d9ec373f9a341e74bbfe824ed99019618e93132d', 14, 79)": [
+      "green",
+      [
+        "div",
+        "buttons", null
+      ]
+    ],
+    "('input', 'cancel button', None, 'idf525c8b788d5dd227b9d38695c1e54d8fbd384bde09e46c8100d25f5bb69ef51', 14, 80)": [
+      "green",
+      [
+        "div",
+        "buttons", null
+      ]
+    ],
+    "('option', None, None, 'id550af5bc06339d559aa99387f9cd662a485974ec69eb77af77ac16b12a731cc3', 14, 81)": [
+      "green",
+      [
+        "select", null,
+        "searchTypeDropDown"
+      ]
+    ],
+    "('option', None, None, 'ide5ae303955be3243861fc3d242fdbecfc4bd09fecad3b96d7a3246af62e3cd5b', 14, 82)": [
+      "green",
+      [
+        "select", null,
+        "searchTypeDropDown"
+      ]
+    ],
+    "('a', None, None, 'id59273f4ab4aa53673f4930aea71eb508e4c2f66ed43714a01667e992ba71a67e', 14, 83)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id83057e2e511df3b9897d6dfbce7829b9fc7c4088f4690408537139c7551f8086', 14, 84)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idfccea99856d26e16e3998838a895808f25afcfa2d38d16761121bf8b8086aa6e', 14, 85)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id4fcd8ae70c42e658a153a025d35b8d55771fac1c3abce6b435343861b03a28d2', 14, 86)": [
+      "green",
+      [
+        "li",
+        "selectedCategory", null
+      ]
+    ],
+    "('a', None, None, 'id34728aa0677faf4c4ff7b2a88c0c2b3e5c0c18b0cae1efc8f8391c8521676746', 14, 87)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id4a12c782118cff61a8b7b89526fb8a0286ff0a6aeef3fb24a51b8697f12c4f1b', 14, 88)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'iddfd81f4c41f404954efaa7f7b0bafa42892b0843cf62a499593e209b278db3cd', 14, 89)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id87b3818a82b02c011e86003ad1ad12bff9db0a3afed3c7eb383349cb5f3fe754', 14, 90)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id5fdf50f55a205a89dd89d62ca7a51f6a827bd8175445081d2509789678121f8f', 14, 91)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idc4b753047b86770313cf65a9c595804231c5d1cc4089b6adaf8208911b7fa2ab', 14, 92)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id9c9c127aa76cf9c8d1227818873c29f374e286f0501eea6f652b8b2f772111bf', 14, 93)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id448ca8508465697cc4efe83482bf97b4fe5df74637ff76844081637c1ab144b6', 14, 94)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idb43e7283ab15f8a49b41d46ad6a7350e0b480e70af5fa331c0d5fdfc06d0e14e', 14, 95)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'id24fdf83efe806e0cd19cb2d4056234e67d9393cefdf7ec432dbe8eeb5018ab13', 14, 96)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idfc497f2d4958343e19ba45e4da89017a5f7c52149dcee0ec55acf57d5bb0f25d', 14, 97)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ],
+    "('a', None, None, 'idab254df231324cd9f7548dd33d535c72ce9c6f5d58c0cf84136942e0350fded2', 14, 98)": [
+      "green",
+      [
+        "li", null, null
+      ]
+    ]
+  },
+  "15": {
+    "('div', 'right', None, 'idc74f93dd4fd2a06454a3105fe43518eee576b2f23e04a8cd743e4424cc797f1b', 15, 0)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('h1', None, None, 'idfc72b69a1ff42d4dd3a474bd6a4d804733585377b9429d531385020a531627a0', 15, 1)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id6fb5a61e7142ed09d437346fdf2df5e395aa62b837f45f0e8ca46c35b2497120', 15, 2)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', 'small', None, 'id0cc4350b142be94b0df90ecd6a9360fa96524fda925646563f58f341005a51bf', 15, 3)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('iframe', None, None, 'id590643c8ece3ce2e3426df6d49124b77533fb94ad807dea79d6db874af200151', 15, 4)": [
+      "green",
+      [
+        "div", null,
+        "tweet"
+      ]
+    ],
+    "('div', 'questionDetailsInfo', None, 'id6449748a780dd4329448bb02ea18f63d6b6c2172d850a1c022a481c2dafd68f5', 15, 5)": [
+      "red",
+      [
+        "div",
+        "answer",
+        "answer113856"
+      ]
+    ],
+    "('a', None, None, 'idee456a90fccf5143d0ae78fb18507dfd131145ac07661bc576fb81106ebb5718', 15, 6)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'idebb1ca416854e05ff29d02e08a12cfcbc9f8debdc105980f06a2b9872e2191c1', 15, 7)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'idbe5f7cee446002d89ad5328e2c15070e72448d739a4073c2d7cc9dae16bc4dbb', 15, 9)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments9978', 'id1ab4c2424561f371ce9b73f92ce60c3723654e837e54ccd593e063946800d34d', 15, 10)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id23222652e587ca13d7a7df0a68cc432b781f0d46b38c4b4ae8f1664d6e0df6a6', 15, 11)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 15, 12)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id4822e2ed92485d8d490c0a37b58851ee8ec799d58a8c68b5a11dbd38990f2114', 15, 13)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'ida81ced9f4a932e0d99413b8e5649a45181c30152e4a73a2023c226a6b26fe160', 15, 14)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id6c9e2c68ab254d18d25cefb00c66ea506440bb0696a1a936939fb4afd6b67078', 15, 15)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'ida81ced9f4a932e0d99413b8e5649a45181c30152e4a73a2023c226a6b26fe160', 15, 16)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id04e37ee1dd77fd84ddff09dbda0b02b7e2fdde3dd45edbbd679e5653b1a767e2', 15, 17)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'ida81ced9f4a932e0d99413b8e5649a45181c30152e4a73a2023c226a6b26fe160', 15, 18)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id6c506599c809f2c1994692d894c3ca4d6e958c7a6810c5bbf7244761f7233a0a', 15, 19)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'ida81ced9f4a932e0d99413b8e5649a45181c30152e4a73a2023c226a6b26fe160', 15, 20)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id3e5f74d9854f485fe8c7918674da5f5ef77209a2ecdf4f2ff711374bc300057f', 15, 21)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'idbec33f3e00c59ed61316e1f67c92341bf29bc7475820c5b9e8aba0a0afef63c3', 15, 23)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments15491', 'id808d003c4aea3f7054f701b11404b357d6d9cca808e70bad340a7e9abcc70fa9', 15, 24)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'idafc26e80ca57a377a773708c754c41511cf23a81017c1f1d22e40417a3e6cf14', 15, 25)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id35e2a4b4657b83077be156faa21c091745ce2838ca95b8b1a0d35d4aeeb2e344', 15, 26)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id644bf0209eb1ba3ccccbac1a81cf6d8748a7e2fbcf2da50002dc837f6cbe9f1b', 15, 28)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments17075', 'idc40750f9822c054c508600260780e6b4c012823fb18165219dbae2ebbc0b8aed', 15, 29)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'idff8bd9b73a5435858ea066e9631b46151fb2a76ca116c020b332e5caff1cbbe0', 15, 30)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id771667968fd3179bfe6cbb9718cb33230c82a8e0a7428501b800264e6edaa9a2', 15, 31)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'iddfc58e109df509d28cca9dc493dbc584d0c91939075f63d07aee65356d656d1d', 15, 33)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments34252', 'iddae46190d3281499d5f815e4e7f678a4128fb1b82534cfa80a3cc55d1ce4cdb7', 15, 34)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'idca7b1baeea1aee85e1d5d4c1dfb18841932610ee55b93f5334c8780ef401d0bf', 15, 35)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id5dca1cb1d25e64458239c52d91dc60ce57b6fbde03c28dd3253f0b24158bf2a3', 15, 36)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id3ff0906f3c7156ceb99dd94e628b66d36781dae5df42ef86155647ad7dbf6ede', 15, 38)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments34297', 'id67259d120d3e3e3e8dc78f7cba42ac97fda79d3bcdaf179d996d552ca56378c0', 15, 39)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id397be10c4f2627be1074803b86e899a481671cbef1339fe238d12f7377bdd3c8', 15, 40)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id1a979f0ff6caf9d42774fcfc75ee22574dca9938a9b45e2e78f33aed0d62750a', 15, 41)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id9620f02333524f630c89e06fd8d08db3b7398bb00d9234dd000d261f48013753', 15, 43)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments40845', 'id3cf39d80f562da524006a0032f90de3e8365ff50da2d98abb648bc42a50f53ef', 15, 44)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'ida9079deb6ce87721e1e30e8c88c7d34e6c0c7c7595a3042e04828e7107d71fca', 15, 45)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 15, 46)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'idbd5e50ae5ee6747519b312f63fdaf068192801b58bb153782412ccd5b834e813', 15, 47)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'ida81ced9f4a932e0d99413b8e5649a45181c30152e4a73a2023c226a6b26fe160', 15, 48)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'idafbc6f7f4565a2c73ddba35a4685507e7647a81c680c2c9ed5b6d5731a419154', 15, 49)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id0a4dcffbb9fab42fd911086afcbecad29e14461005a844045e9b57dce3224cc5', 15, 51)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments73984', 'id85204c4ad3ca57a0d7b43674f50c0c0c99fc8e2b200abd10020a926e4009b9b2', 15, 52)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id0fb772522d6a2bb76aad620a3b0df0a436f7b4e6a1170bbfd480a92e258cc55e', 15, 53)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id90e5a99305cf4c0ea2e31fc1a5b8b576a3108277ce9cc6b00658f91dd0ee71f5', 15, 54)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'iddc775668b3fcf5cac10c29cc8e6caf4a5cce4c96b21d5c13b0c4560265a431c4', 15, 56)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments93069', 'id06b1128b9f4d26b2b43826dd289f14fecf95c7990a2d33c56836a63c209b65bf', 15, 57)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'idef6e777024cb11afe909ad3790351e0e8c964f4cf1f0f2762b00907e6323cd86', 15, 58)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id5828d1de52b989d96ddfa55beb071020248379bce5803fe77fa52998b42d48d2', 15, 59)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id5c8b143f200ac0a57c5fdc6ab7880dc870197775d983912559c15fc44505b35e', 15, 61)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments112900', 'idf0b282931a81c273abfd0c884767dcd74d599b32c1dfa82a5dd098f3849702b3', 15, 62)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'idef63839e2fda22f67f18e5fa16dc80b2df33987ba8d180734bd32a33ec6c9f48', 15, 63)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id59fb3fcf36b490b3064e0c96be3620034da0c47848244e0baee8110a22735f30', 15, 64)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id0e635b1d90a4c4621c2399bca0a6328395d6c885d5b8225b610c0eb112b2dcbf', 15, 66)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments127879', 'id7eaae5e22a4e42c57b171e45267e217431ad132f0c3cf1458c9d97a612b3c931', 15, 67)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'ideea4ad500e53597fa2bf54e29bc3f4035220b00ac115a7ab8cd6cdbf2a3d4be3', 15, 68)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 15, 69)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'idaaa7332b2ab1e5f8e5a5b396b90cb387cee00b31de3ac1779d23b67ffa44cd49', 15, 70)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id89a9c3cd76deeb7795f9be2233a81c15606d6c73bf4587abe79887cfaad87c00', 15, 71)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'idfce11b229d538ef9d75f69ca7265425bdcb6b3ed0acc2727d77fc7378fbae410', 15, 72)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id89a9c3cd76deeb7795f9be2233a81c15606d6c73bf4587abe79887cfaad87c00', 15, 73)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'idfd3df034bd7786b378c114acd308a0666316e6f0fc6fc7e8bde42aae95e63d61', 15, 74)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id89a9c3cd76deeb7795f9be2233a81c15606d6c73bf4587abe79887cfaad87c00', 15, 75)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, None, 'id483aa47407b04b055a59f47d40d8630d5a9da1c33d39edf806cd835bc38115f5', 15, 76)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'idc2eec9b8378caebda5fd24ed5937429a6887f1020e1733ad5d5d5dad0f800e6f', 15, 78)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments207599', 'id40e70ecab9c100651bfef07f8cdba727038c1dba5298f8130b004f22fdc840fd', 15, 79)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'idfccdb195218b73dc6bb21efd4770f22bb55e6446591bbe05cf945238c53d3933', 15, 80)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id50fbfffb075b17a1640373e8c7ef5f36e464c10254528ef6f8e678c8cd15fd12', 15, 81)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id68140fe11a6e380046daf6a5e070c77d04fdbe344a5ddaffe9bd71e4dd59e5f8', 15, 83)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments210411', 'idf1094dae426bfe48d23e0b691dc34c156f0a02367bcff9b27bec818b003f51f5', 15, 84)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id21e1a89b19d760581a41ac0e863412cfb6a873e41070c6ce9549a075f7258ca1', 15, 85)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 15, 86)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'markdown', None, 'ide967e7e44a9220652cde5516ea41b97a874fc89ef05c27fc078b8e6c3135f439', 15, 87)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'idcb31faf87bb7a262d39d03dc5496aa6c3578b72c33b7090adb4a1b134032522e', 15, 89)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments210693', 'id027f8e6cf856f660ddc6ffa9e5bfde7286eacc1dd8ad1e13d05ec888f7d3b272', 15, 90)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id2c9912a1b47f5e78442b0e371661160248e3d551e03adf106d369ca07833de42', 15, 91)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 15, 92)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('p', None, '', 'id6e440c478e14e50dafae4765a3918a95ffb6cbd8fb0645571819c35a27aabdda', 15, 93)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'ide98b5c11d9145cd50499bd18546113843eccfef358b78fab1f2db6b9f34bed47', 15, 95)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments283814', 'id0a582b1559743de8e3c410577bf616daa7c34245935340ce71b8913748fdf0a2', 15, 96)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id7eab0c38cfca8c4100a109ee4c502a34f6bde6db23300cc5c65830d6a826d263', 15, 97)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id31e1e276656a6a88b03a6c7948a1d8c52524744675d29917ac672428873c8e68', 15, 98)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'idbe7b6af6149bb05c7d80b62f07893c13dcd51f792b0d5ef0f8b17ae05471135e', 15, 100)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments293001', 'idd79af2e078924c6532b17484de8260b13b1bf8d303254c90c8577f5618d9939a', 15, 101)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id2a06e1339257b5ecd162c8654d271f86ba4da89d827d7639cd74effa452d0fb0', 15, 102)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id535989ac96d9d1ae060daeedc88a87a309585827bac4d0355bf90abab2827e6d', 15, 103)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id3138f32ea7bf82d8a7b75393b6cc4522824528a3932af83fd17a6711e76ad432', 15, 105)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments295881', 'id16d8192c688e3b4e10b1a85eb18bb40a60cc604cd5e5b86a5151ed95fca3959a', 15, 106)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('a', None, None, 'id6dd2e3e96aef2ad6f1274a144c02cb3c300d6f05a68f13a90f67645dfb09bbbe', 15, 107)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt", null
+      ]
+    ],
+    "('p', None, None, 'id1e40533aefeb3e65440493cb9db8481c355cd486e18bd4a6362e80dabe100e7b', 15, 108)": [
+      "red",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', 'small weak', None, 'id627f283f6f885a2dbeca67f92b32c78fdae48423d3b0afd4c56719f0d449e00a', 15, 110)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('div', None, 'postComments302803', 'id2bad7bac4b499181b3daf1bd52e4a7c87163a2ad2440e02d7e62aa40829835a7', 15, 111)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('label', None, None, 'id68c7e4ad77f2880ac98116942ac7433752197bdcb183e63ba029370194315ab5', 15, 112)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('label', None, None, 'id3321158995907b14a973c0c284809d04283c2b42479bd64c41e64a06d463a86e', 15, 113)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('label', None, None, 'id9e41a52780f565861896dec263f541639639debf4b3ca59f53f783673a1c55c2', 15, 114)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ],
+    "('label', None, None, 'idad70cbc7989e275016114d65c241372ca47acdcc486b334faa92788bfa6b8bbe', 15, 115)": [
+      "green",
+      [
+        "div", null, null
+      ]
+    ]
+  },
+  "16": {
+    "('img', 'answeredCheckLargeIcon', 'ctl01_CenterColumnContentPlaceHolder_ctl00_questionStatus', 'ided2aa6eaab61ee7cea8550c7ad58cf6c64b6f52d0fe2002128a4dd30c47ddbb6', 16, 0)": [
+      "green",
+      [
+        "div",
+        "right",
+        null
+      ]
+    ],
+    "('br', None, None, 'id5b32015d92c13b4c9354a41ba9572d23b7612cdbebed4d26de57dd91908365de', 16, 1)": [
+      "green",
+      [
+        "div",
+        "right",
+        null
+      ]
+    ],
+    "('span', None, 'ctl01_CenterColumnContentPlaceHolder_ctl00_questionTitleLabel', 'id93eb542cf664a5d057bcd27bfb0e0dabd0218d7313ab04529567fe34b42d661e', 16, 2)": [
+      "green",
+      [
+        "h1",
+        null,
+        null
+      ]
+    ],
+    "('span', None, 'ctl01_CenterColumnContentPlaceHolder_ctl00_questionTextLabel', 'idb16527acba98be35b15c559534a0457802257cb7e6dfba3e721a1e61131b3f05', 16, 3)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 4)": [
+      "green",
+      [
+        "p",
+        "small", null
+      ]
+    ],
+    "('span', None, 'ctl01_CenterColumnContentPlaceHolder_ctl00_questionUsernameLabel', 'iddbf757078517fe999d64c29ec124611aaefce026ed86fa2f5cbe42004250ce70', 16, 5)": [
+      "green",
+      [
+        "p",
+        "small", null
+      ]
+    ],
+    "('span', None, 'ctl01_CenterColumnContentPlaceHolder_ctl00_createTimeLabel', 'id48e29826ec32cfc034d0f9526dcda3fe798d57b66fc6c8f6551ea20f406fe4be', 16, 6)": [
+      "green",
+      [
+        "p",
+        "small", null
+      ]
+    ],
+    "('div', 'editAnswer alt', None, 'id2416401c782130ec3498d48db893e8c4778c1349637c425ad5928c92861ba6c9', 16, 7)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo",
+        null
+      ]
+    ],
+    "('div', None, None, 'idfc9a77762fa75d86de28fd9e6e9bdfd9de80406c6c2e4f269e58156cc1b6cd63', 16, 8)": [
+      "red",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id47013a8a30d6c893698271f3bff0c3b0dd670992f09ceb8ec4f62b804f23df55', 16, 9)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('div', None, None, 'id534a5eaa50b65cd8d482a8dce25c68df7180382a04d4646c4b694fa0bdcff488', 16, 10)": [
+      "green",
+      [
+        "div",
+        "questionDetailsInfo", null
+      ]
+    ],
+    "('br', None, None, 'id60c92919c1c9dbc06fbd46af7b820ce1d904144013e86a5c9b66383b01396b3d', 16, 11)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 12)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idc27b9216c5fc846f082e480c439d76147e31366e9b160f8d21eaaa16dfa4ed48', 16, 13)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('a', None, '', 'idb143673e2e7a6671b7a07b623bd5337761be89863940eaeeda05483e5742e8e2', 16, 14)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 15)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idbe0822465bbe99000c73e8c4e09019795840233d226f64a945c8ecc2ba9eaf23', 16, 16)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idb61520e9ac52c0b6dfdf99825be148d008ce66712e6cfe3419ffae1e07100978', 16, 17)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idfdd67a8a5c28b0ac3170a87eb48d1f753ba2934f3c1ac03c793898b073111cd5', 16, 18)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id60c92919c1c9dbc06fbd46af7b820ce1d904144013e86a5c9b66383b01396b3d', 16, 19)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 20)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idd13e57aa6dd43dcb4fc21673999c4be919a1cc966b5420d5b5f980a2ff97ae44', 16, 21)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 22)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id25e535fb5db7c00cf81fbcaee8ef73064dd78677d0c2db752ba663076b35da0f', 16, 23)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id60c92919c1c9dbc06fbd46af7b820ce1d904144013e86a5c9b66383b01396b3d', 16, 24)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 25)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id7a752806642b90856582184d0e8b393f3f0356125f8f6fd64f484694c991d255', 16, 26)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 27)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id90a64ceefa79d0237b4e73062677e19bd491610658bbd831c9abac06b94b32af', 16, 28)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 29)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id199b6546e64c8f86530ac44ac36a7f66cb36d10ff07cc05f79f6acea50bc4272', 16, 30)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 31)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idd1916a6a73b628b4ed7206e5941289a0796707fea870bcc90bcd94c51b7e8cb7', 16, 32)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 33)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id7dabd15feca434e61232e94baafe967941e6af6aa2662afeac69d63f04aaf6e4', 16, 34)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 35)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id7df1313367419a29f046effb4856a8e6d7d301e76583cac7068652b3fc482577', 16, 36)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 37)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id6b7dc6020163f78c1b40df1fbe34c6a32ae334a91d197109352f886459d65d0e', 16, 38)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 39)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id02325dd12b6f78bd9d38e96869437751e3c3907b6db342895663db85ed045acf', 16, 40)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 41)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 42)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 43)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 44)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 45)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id60c92919c1c9dbc06fbd46af7b820ce1d904144013e86a5c9b66383b01396b3d', 16, 46)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 47)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 48)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 49)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id60c92919c1c9dbc06fbd46af7b820ce1d904144013e86a5c9b66383b01396b3d', 16, 50)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id317861f027edc684c3c5b87deae59722df66ba6536bad7f0f93029ce6af33549', 16, 51)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 52)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id5cb8292bcabd0dc08819619114232603c72139a8c1dc7cbf5df1fcde485d8b19', 16, 53)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 54)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id02936af0018ced135e738c7cb5509b373533b065b4742362c062a124d032c19c', 16, 55)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 56)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id52197a7f022b9c18a14d49fad72ec84be9bc2db630996638f50c1d873f5515c0', 16, 57)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 58)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'idb95b15e41bba54807622f7bd587f6b9f03f488116bec992198f5d2933cac36ae', 16, 59)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('p', None, None, 'id9fe277b52791eca2c2bddf0e0710dc03b92222280493273842a88ff09daaade7', 16, 60)": [
+      "red",
+      [
+        "div",
+        "markdown",
+        null
+      ]
+    ],
+    "('p', None, None, 'id1e64276f1b13701ac68edb04613090057705f00d5adbae69982dc690c9f12329', 16, 61)": [
+      "red",
+      [
+        "div",
+        "markdown",
+        null
+      ]
+    ],
+    "('span', None, None, 'id40f55f417851177554e896dc69753326fa28e861978150d2ff2080543799caa6', 16, 62)": [
+      "green",
+      [
+        "p",
+        null,
+        ""
+      ]
+    ],
+    "('span', None, '', 'id58b08612da7f7e90187644ff650dd749da4f562128b6f7b3bcd8378354f32820', 16, 63)": [
+      "green",
+      [
+        "p",
+        null,
+        ""
+      ]
+    ],
+    "('span', None, '', 'id4a979e6121049f9360ddb73e292aabf79ccc2fdceecec1cb5a50926013fdd68d', 16, 64)": [
+      "green",
+      [
+        "p",
+        null,
+        ""
+      ]
+    ],
+    "('span', None, '', 'id341a096ce3fbe84163c3cfc750a0d4f284958460323397a66aa9130bf1c4b0d3', 16, 65)": [
+      "green",
+      [
+        "p",
+        null,
+        ""
+      ]
+    ],
+    "('o:p', None, None, 'idd8ff525e5685bf301b784bd4639dfdd9fe51081fa6de40c16d36235b5e59e882', 16, 66)": [
+      "green",
+      [
+        "p",
+        null,
+        ""
+      ]
+    ],
+    "('br', None, None, 'id65aef1adba8672a5fe7932d9f9f0dc35c2435893f65112acac628d2dc17a0bcf', 16, 67)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('br', None, None, 'ida38920f5d4168d1753e3145ebeab01202ac1c7789f8692005fcab0a035b38c98', 16, 68)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('img', None, None, 'idf6146237fda1c9266a08f5fa45250660bbf912598e4f0d329b5be58047c380a8', 16, 69)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('input', None, None, 'idaabf6f7026c47077ffd6353fcd4392897191bb4f96a99f852a665a55300e4b90', 16, 70)": [
+      "green",
+      [
+        "label",
+        null,
+        null
+      ]
+    ],
+    "('input', None, None, 'id64d80fb62e84943f4b42cc1983b3558cbcc7d60e0b189f0e88014bc21cae0ab7', 16, 71)": [
+      "green",
+      [
+        "label",
+        null,
+        null
+      ]
+    ],
+    "('input', None, None, 'id945a54d41aba97ffcd831af41e314150ff35b5f388a81b22b8dd6cfe12a3fbe6', 16, 72)": [
+      "green",
+      [
+        "label",
+        null,
+        null
+      ]
+    ],
+    "('input', None, None, 'id9e1e67fe8748e9775b5a8d14689ff1f3fe69a7250dc14a8fa475cc56c4ff19db', 16, 73)": [
+      "green",
+      [
+        "label",
+        null,
+        null
+      ]
+    ]
+  },
+  "17": {
+    "('a', None, None, 'ida519a2c906629f26a927ae7eacfaa5c149a1fa371cc069bda8ab69a2d1e4b3a4', 17, 0)": [
+      "green",
+      [
+        "div",
+        "editAnswer alt",
+        null
+      ]
+    ],
+    "('p', None, None, 'idfe04a9dc88d3f3be8d4f6bc63a9a80f45a4c6d8460e7551dab849457c091920a', 17, 1)": [
+      "green",
+      [
+        "div",
+        null,
+        null
+      ]
+    ],
+    "('div', 'markdown', None, 'id147ed19a4dca837b86aa70766f020ca6c780089006d105dd17940a83823d7495', 17, 2)": [
+      "red",
+      [
+        "div",
+        null,
+        null
+      ]
+    ],
+    "('div', 'small weak', None, 'id8d114863ff4eec07b484da8fd69a74cb46b05c6a89fd54420987489e5548a897', 17, 4)": [
+      "green",
+      [
+        "div",
+        null,
+        null
+      ]
+    ],
+    "('div', None, 'postComments113856', 'id7e62f4d234cd7a60c1032c76ca9d8bcf8d1d255b01293d01ca003998a0a5fdf5', 17, 5)": [
+      "green",
+      [
+        "div",
+        null,
+        null
+      ]
+    ],
+    "('em', None, None, 'iddb516233f49d2f380c32cf5593144d0d3e4064e49bb1b58baf9ce68921f7c030', 17, 6)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('img', None, None, 'id8de9b31855ade8ea1700a3b3a58f65d3ed8abd4c11f5388ca2ed59f000ec3c92', 17, 7)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ],
+    "('span', None, '', 'id20dfaaa4e4ce3b05278fe2ca91922a21ea68983195e4d49ca6bfc91665014ecb', 17, 8)": [
+      "green",
+      [
+        "span",
+        null,
+        ""
+      ]
+    ]
+  },
+  "18": {
+    "('p', None, None, 'id051c00412d5c05c09b457acd8888d15addc18d7ead07f5baf5fa368f425a7547', 18, 0)": [
+      "red",
+      [
+        "div",
+        "markdown",
+        null
+      ]
+    ],
+    "('p', None, None, 'id56d9a79feaea37b553b1c57564fe1270cbae645b58c25c5d324e6c05376b475c', 18, 1)": [
+      "red",
+      [
+        "div",
+        "markdown",
+        null
+      ]
+    ]
+  },
+  "19": {
+    "('img', None, None, 'id51d6ab90e17bed0817a1f1dead74e475c6adf744cd8e32971fba3fcd0c63a687', 19, 0)": [
+      "green",
+      [
+        "p",
+        null,
+        null
+      ]
+    ]
+  }
+}

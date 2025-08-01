@@ -10,7 +10,7 @@ from llm_web_kit.extractor.html.recognizer.recognizer import \
 class AudioRecognizer(BaseHTMLElementRecognizer):
     """解析音频元素."""
     @override
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement,HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement,HtmlElement]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement,HtmlElement]], raw_html:str, language:str = 'en') -> List[Tuple[HtmlElement,HtmlElement]]:
         """父类，解析音频元素.
 
         Args:

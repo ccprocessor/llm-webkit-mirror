@@ -15,8 +15,8 @@ class HTMLLayoutClassifier:
         self.model = Markuplm(model_path, device)
 
     def auto_download(self) -> str:
-        """Default download the html_cls_25m2.zip model."""
-        resource_name = 'html_cls-25m2'
+        """Default download the html_cls_25m4.zip model."""
+        resource_name = 'html_cls-25m4'
         resource_config = load_config()['resources']
         print(resource_config)
         model_config: dict = resource_config[resource_name]

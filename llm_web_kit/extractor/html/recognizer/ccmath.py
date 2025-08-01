@@ -5,11 +5,11 @@ from overrides import override
 
 from llm_web_kit.exception.exception import (
     HtmlMathMathjaxRenderRecognizerException, HtmlMathRecognizerException)
-from llm_web_kit.extractor.html.recognizer.cc_math import (tag_asciimath,
-                                                           tag_common_modify,
+from llm_web_kit.extractor.html.recognizer.cc_math import (tag_common_modify,
                                                            tag_img, tag_math,
                                                            tag_mjx, tag_script)
-from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH, CSDN,
+                                                                  ZHIHU)
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.extractor.html.recognizer.recognizer import (
@@ -26,7 +26,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
         self.cm = CCMATH()
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str, language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析数学公式元素.
 
         Args:
@@ -49,7 +49,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 result.extend(self.process_ccmath_html(cc_html, o_html, math_render, base_url))
             else:
                 result.append((cc_html, o_html))
-
         return result
 
     @override
@@ -85,7 +84,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             # 获取math_content
             math_content = inter_ele[0].text
             math_content = self.cm.wrap_math_md(math_content)
-
             return {
                 'type': DocElementType.EQUATION_INTERLINE,
                 'raw_content': raw_html_segment,
@@ -97,7 +95,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             }
         elif len(in_els) > 0:
             math_content = in_els[0].text
-
             return {
                 'type': DocElementType.EQUATION_INLINE,
                 'raw_content': raw_html_segment,
@@ -132,16 +129,34 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 original_html = self._element_to_html(node)
                 parent = node.getparent()
 
+                # 针对csdn博客中的katex标签，提取latex公式
+                if (CSDN.DOMAIN in self.cm.url and
+                        node.tag == 'span' and
+                        node.get('class') in [CSDN.INLINE, CSDN.DISPLAY]):
+                    tag_script.process_katex_mathml(self.cm, math_render_type, node)
+
+                if ZHIHU.DOMAIN in self.cm.url and node.tag == 'span' and node.get('class') == ZHIHU.MATH:
+                    tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
+
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
-                if node.tag == 'span' and node.get('class') and ('math-container' in node.get('class') or 'mathjax' in node.get('class') or 'wp-katex-eq' in node.get('class') or 'x-ck12-mathEditor' in node.get('class') or 'tex' in node.get('class')):
+                if node.tag == 'span' and node.get('class') and (
+                        'math-container' in node.get('class') or
+                        'mathjax' in node.get('class') or
+                        'wp-katex-eq' in node.get('class') or
+                        'x-ck12-mathEditor' in node.get('class') or
+                        'tex' in node.get('class')
+                ):
                     tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                 # script[type="math/tex"]
                 # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                    # tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
+                #     print('匹配到script标签: ', node.get('type'))
+                #     tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
 
                 # math tags
                 if node.tag == 'math' or node.tag.endswith(':math'):
+                    # print(f"匹配到数学标签: {node.tag}")
+                    # print(f"标签内容: {original_html}")
                     tag_math.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
                 if node.tag == 'mjx-container':
@@ -156,23 +171,20 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
                 # 只有有渲染器的网站才会走下面文本匹配逻辑
                 if math_render_type:
-                    # script[type="math/asciimath"]
-                    # if node.tag == 'script' and node.get('type') == 'math/asciimath':
-                    if node.tag in ('p','div') and node.text and '`' in node.text:
-                        tag_asciimath.modify_tree(self.cm, math_render_type, original_html, node, parent)
-
                     # 14. 只处理只有一层的p标签
                     if node.tag == 'p' and len(node.getchildren()) == 0:
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
-                    # TODO: 待优化，渲染器通用方案兜底
-                    try:
-                        if math_render_type == MathRenderType.MATHJAX:
-                            math_render.find_math(node)
-                    except Exception as e:
-                        raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+            # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
+            if math_render_type:
+                try:
+                    if math_render_type == MathRenderType.MATHJAX:
+                        math_render.find_math(tree)
+                except Exception as e:
+                    raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+
             # 保存处理后的html
-            # with open('math_courses_processed.html', 'w') as f:
+            # with open('test20250702_result.html', 'w', encoding='utf-8') as f:
             #     f.write(self._element_to_html(tree))
         except Exception as e:
             raise HtmlMathRecognizerException(f'处理数学公式失败: {e}')
@@ -181,32 +193,34 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
 if __name__ == '__main__':
     math_recognizer = MathRecognizer()
-    test_html = [
-        (
-            ("""
-        <div>
-            <script type="math/tex">x^2 + y^2 = z^2</script>
-            <script type="math/tex"></script>
-            <script type="math/tex; mode=display">E=mc^2</script>
-        </div>
-        """),
-            ("""
-        <div>
-            <script type="math/tex">x^2 + y^2 = z^2</script>
-            <script type="math/tex"></script>
-            <script type="math/tex; mode=display">E=mc^2</script>
-        </div>
-        """)
-        )
-    ]
-    raw_html = (
-        '<head> '
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
-        '?config=TeX-MML-AM_CHTML"> </script> '
-        '</head> '
-        '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
-    )
-    # with open('aa.html', 'r') as f:
+    # test_html = [
+    #     (
+    #         ("""
+    #     <div>
+    #         <script type="math/tex">x^2 + y^2 = z^2</script>
+    #         <script type="math/tex"></script>
+    #         <script type="math/tex; mode=display">E=mc^2</script>
+    #     </div>
+    #     """),
+    #         ("""
+    #     <div>
+    #         <script type="math/tex">x^2 + y^2 = z^2</script>
+    #         <script type="math/tex"></script>
+    #         <script type="math/tex; mode=display">E=mc^2</script>
+    #     </div>
+    #     """)
+    #     )
+    # ]
+    # raw_html = (
+    #     '<head> '
+    #     '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js'
+    #     '?config=TeX-MML-AM_CHTML"> </script> '
+    #     '</head> '
+    #     '<p>这是p的text<span class="mathjax_display">$$a^2 + b^2 = c^2$$</span>这是span的tail<b>这是b的text</b>这是b的tail</p>'
+    # )
+    # ——————————————测试代码——————————————————
+    # ↓ 要测试的html文件 ↓
+    # with open(r'C:\Users\10412\.ssh\llm-webkit-mirror\tests\llm_web_kit\extractor\html\recognizer\assets\ccmath\asciimath.html', 'r', encoding='utf-8') as f:
     #     raw_html = f.read()
     # from llm_web_kit.libs.html_utils import html_to_element
     # root = html_to_element(raw_html)
@@ -215,6 +229,7 @@ if __name__ == '__main__':
     #         [(root, root)],
     #         raw_html
     #     )
+    # ———————————————————————————————————————
     # raw_html = open('bench/data/origin/math_physicsforums_1.html', 'r').read()
     # print(math_recognizer.recognize(
     #     'https://www.baidu.com',

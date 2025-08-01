@@ -2,6 +2,12 @@ import unittest
 from pathlib import Path
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
+from llm_web_kit.extractor.html.pre_extractor import \
+    HTMLFileFormatCleanTagsPreExtractor
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (
+    CCMATH_INLINE, CSDN, ZHIHU)
+from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import (
+    process_katex_mathml, process_zhihu_custom_tag)
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
@@ -48,10 +54,10 @@ TEST_CASES = [
         ],
         'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script><p>$x = 5$,$$x=6$$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>',
-             '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
-             ('<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>',
-              '<p><ccmath-interline type="latex" by="mathjax" html="x=6">x=6</ccmath-interline></p>')
+            ('<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>',
+             '<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>'),
+             ('<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>',
+              '<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>')
         ]
     },
     {
@@ -61,9 +67,9 @@ TEST_CASES = [
         ],
         'raw_html': '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"> </script> <p>$x = 5$,$$x=6$$,$x=4$</p>',
         'expected': [
-            ('<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>', '<p><ccmath-inline type="latex" by="mathjax" html="x = 5">x = 5</ccmath-inline>,</p>'),
+            ('<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>', '<p><ccmath-inline type="latex" by="mathjax" html="$x = 5$">x = 5</ccmath-inline>,</p>'),
             ('<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>', '<p><ccmath-interline type="latex" by="mathjax" html="$$x=6$$">x=6</ccmath-interline></p>'),
-            ('<p>,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>', '<p>,<ccmath-inline type="latex" by="mathjax" html="x=4">x=4</ccmath-inline></p>')
+            ('<p>,<ccmath-inline type="latex" by="mathjax" html="$x=4$">x=4</ccmath-inline></p>', '<p>,<ccmath-inline type="latex" by="mathjax" html="$x=4$">x=4</ccmath-inline></p>')
         ]
     },
     {
@@ -75,12 +81,12 @@ TEST_CASES = [
         'expected': [
             ('<p>By substituting </p>',
              '<p>By substituting </p>'),
-            ('<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="mathjax" html="x">x</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="$$x$$">x</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="$$x$$">x</ccmath-interline></p>'),
             ('<p> with </p>',
              '<p> with </p>'),
-            ('<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>',
-             '<p><ccmath-interline type="latex" by="mathjax" html="t - \\dfrac{b}{3a}">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
+            ('<p><ccmath-interline type="latex" by="mathjax" html="$$t - \\dfrac{b}{3a}$$">t - \\dfrac{b}{3a}</ccmath-interline></p>',
+             '<p><ccmath-interline type="latex" by="mathjax" html="$$t - \\dfrac{b}{3a}$$">t - \\dfrac{b}{3a}</ccmath-interline></p>'),
             ('<p>, the general</p>',
              '<p>, the general</p>')
         ]
@@ -168,11 +174,6 @@ TEST_CASES_HTML = [
         'input': ['assets/ccmath/katex_mathjax.html'],
         'base_url': 'https://www.intmath.com/cg5/katex-mathjax-comparison.php',
         'expected': 'assets/ccmath/katex_mathjax_1.html'
-    },
-    {
-        'input': ['assets/ccmath/asciimath.html'],
-        'base_url': 'https://www.wjagray.co.uk/maths/ASCIIMathTutorial.html',
-        'expected': 'assets/ccmath/asciimath_1.html'
     },
     {
         'input': ['assets/ccmath/mathtex_script_type.html'],
@@ -272,25 +273,6 @@ TEST_CONTENT_LIST_NODE = [
     }
 ]
 
-
-TEST_WRAP_MATH = [
-    {
-        'input': '$$a^2 + b^2 = c^2$$',
-        'display': True,
-        'expected': '$$a^2 + b^2 = c^2$$'
-    },
-    {
-        'input': r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}',
-        'display': False,
-        'expected': r'${\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}$',
-    },
-    {
-        'input': r'\begin{align}a^2 + b^2 = c^2\end{align}',
-        'display': True,
-        'expected': r'\begin{align}a^2 + b^2 = c^2\end{align}',
-    }
-]
-
 TEST_WRAP_MATH_MD = [
     {
         'input': r'$$a^2 + b^2 = c^2$$',
@@ -354,6 +336,85 @@ TEST_MML_TO_LATEX = [
         'expected': r'${\left(\sum _{k=1}^{n}{a}_{k}{b}_{k}\right)}^{2}$'
     }
 ]
+
+TEST_CSDN_KATEX_MATHML = [
+    {
+        'input': r'''
+        <span class="katex--inline"><span class="katex"><span class="katex-mathml">
+
+           lim⁡
+           x
+           →
+           1
+             x
+             2
+            −
+            1
+            x
+            −
+            1
+
+            \lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}
+
+        </span>
+        ''',
+        'expected_tag': 'ccmath-inline',
+        'expected_formula': r'\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}'
+    },
+    {
+        'input': r'''
+        <span class="katex--display"><span class="katex-display"><span class="katex"><span class="katex-mathml">
+
+            f
+            (
+            1
+            )
+            −
+            f
+            (
+            1
+            )
+            1
+            −
+            1
+          &#61;
+           0
+           0
+
+            \frac{f(1)-f(1)}{1-1} &#61; \frac{0}{0}
+
+         </span>
+        ''',
+        'expected_tag': 'ccmath-interline',
+        'expected_formula': r'\frac{f(1)-f(1)}{1-1} = \frac{0}{0}'
+    }
+]
+
+TEST_ZHIHU_ZTEXT_HTML = [
+    {
+        'input': r'<span class="ztext-math" data-eeimg="1" data-tex="s_1\overset{a_2}{\operatorname*{\longrightarrow}}s_2\overset{a_3}{\operatorname*{\longrightarrow}}s_5\overset{a_3}{\operatorname*{\longrightarrow}}s_8\overset{a_2}{\operatorname*{\longrightarrow}}s_9\overset{a_5}{\operatorname*{\longrightarrow}}s_9\overset{a_5}{\operatorname*{\longrightarrow}}s_9\ldots"><span>',
+        'expected_tag': 'ccmath-inline',
+        'expected_formula': r's_1\overset{a_2}{\operatorname*{\longrightarrow}}s_2\overset{a_3}{\operatorname*{\longrightarrow}}s_5\overset{a_3}{\operatorname*{\longrightarrow}}s_8\overset{a_2}{\operatorname*{\longrightarrow}}s_9\overset{a_5}{\operatorname*{\longrightarrow}}s_9\overset{a_5}{\operatorname*{\longrightarrow}}s_9\ldots'
+    },
+    {
+        'input': r'<span class="ztext-math" data-eeimg="1" data-tex="\begin{aligned}  &amp; p(r|s,a) \\  &amp; \sum_{r\in\mathcal{R}(s,a)}p(r|s,a)=1\text{ for any }(s,a). \end{aligned}"><span>',
+        'expected_tag': 'ccmath-interline',
+        'expected_formula': r'\begin{aligned}  & p(r|s,a) \\  & \sum_{r\in\mathcal{R}(s,a)}p(r|s,a)=1\text{ for any }(s,a). \end{aligned}'
+    }
+]
+
+TEST_IS_CC_TAG_NODE = [
+    {
+        'input': r'<div><p>行内公式1：$A+B=C$</p><p>行内公式2：$a+b=c$。</p><p>行间公式1：$$E+F=G$$。<\p><ccmath-interline type="latex" by="mathjax" html="$$t - \\dfrac{b}{3a}$$">t - \\dfrac{b}{3a}</ccmath-interline><p>行内公式3：$2A+2B=2C$。</p><p>行间公式2：$$2E+2F=2G$$。</p></div>',
+        'cc_tag': '1',
+        'not_cc_tag': '6',
+    },
+    {
+        'input': r'<body><p><ccmath-interline type="latex" by="mathjax" html="$$x$$">x</ccmath-interline><p><ccmath-inline type="latex" by="mathjax" html="$x$">x</ccmath-inline></p><p>行内公式1：$A+B=C$</p><span class="math-container"><p>行间公式2$$D+E=F$$</p></span></body>',
+        'cc_tag': '2',
+        'not_cc_tag': '6',
+    }
+]
 base_dir = Path(__file__).parent
 
 
@@ -380,7 +441,7 @@ class TestMathRecognizer(unittest.TestCase):
             raw_html_path = base_dir.joinpath(test_case['input'][0])
             # print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
-            raw_html = raw_html_path.read_text()
+            raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.math_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
             # print(parts)
             # 将parts列表中第一个元素拼接保存到文件，带随机数
@@ -388,12 +449,24 @@ class TestMathRecognizer(unittest.TestCase):
             # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
             #     for part in parts:
             #         f.write(str(part[0]))
+            # 创建预处理器并清理隐藏元素
+            pre_extractor = HTMLFileFormatCleanTagsPreExtractor({})
+            data_json = {'html': raw_html, 'url': base_url}
+            data_json = pre_extractor._do_pre_extract(data_json)
+            cleaned_html = data_json['html']
+
+            # 使用清理后的HTML进行公式识别
+            parts = self.math_recognizer.recognize(
+                base_url,
+                [(html_to_element(cleaned_html), html_to_element(cleaned_html))],
+                cleaned_html
+            )
             # 检查行间公式抽取正确性
             new_parts = []
             for part in parts:
                 new_parts.append((element_to_html(part[0]), element_to_html(part[1])))
             parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
-            expect_text = base_dir.joinpath(test_case['expected']).read_text().strip()
+            expect_text = base_dir.joinpath(test_case['expected']).read_text(encoding='utf-8').strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
             self.assertEqual(len(parts), len(expect_formulas))
             # answers = []
@@ -462,12 +535,6 @@ class TestCCMATH(unittest.TestCase):
                         self.assertEqual(tag_math_type_list[i][0], expect0, msg=f'result is: {tag_math_type_list[i][0]}, expected is: {expect0}')
                         self.assertEqual(tag_math_type_list[i][1], expect1, msg=f'result is: {tag_math_type_list[i][1]}, expected is: {expect1}')
 
-    def test_wrap_math(self):
-        for test_case in TEST_WRAP_MATH:
-            with self.subTest(input=test_case['input']):
-                output_math = self.ccmath.wrap_math(test_case['input'], test_case['display'])
-                self.assertEqual(output_math, test_case['expected'])
-
     def test_wrap_math_md(self):
         for test_case in TEST_WRAP_MATH_MD:
             with self.subTest(input=test_case['input']):
@@ -488,6 +555,64 @@ class TestCCMATH(unittest.TestCase):
             with self.subTest(input=test_case['input']):
                 output_math = self.ccmath.mml_to_latex(test_case['input'])
                 self.assertEqual(output_math, test_case['expected'])
+
+    def test_csdn_katex_mathml(self):
+        cm = CCMATH()
+        for test_case in TEST_CSDN_KATEX_MATHML:
+            with self.subTest(input=test_case['input']):
+                element = html_to_element(test_case['input'])
+                parent_class = CSDN.INLINE if test_case['expected_tag'] == CCMATH_INLINE else CSDN.DISPLAY
+                katex_parent = element.xpath(f'//span[@class="{parent_class}"]')[0]
+                expected_tag = test_case['expected_tag']
+                process_katex_mathml(cm, 'katex', katex_parent)
+                # 验证处理后的标签类型是否正确
+                self.assertEqual(len(element.xpath(f'//{expected_tag}')), 1)
+                # 验证公式内容是否正确
+                formula = element.xpath(f'//{expected_tag}/text()')[0]
+                self.assertIn(test_case['expected_formula'], formula)
+
+    def test_zhihu_ztext_math(self):
+        cm = CCMATH()
+        for test_case in TEST_ZHIHU_ZTEXT_HTML:
+            with self.subTest(input=test_case['input']):
+                element = html_to_element(test_case['input'])
+                ztext_math = element.xpath(f'//span[@class="{ZHIHU.MATH}"]')[0]
+                expected_tag = test_case['expected_tag']
+                process_zhihu_custom_tag(cm, 'MathJax', ztext_math)
+                # 验证处理后的标签类型是否正确
+                self.assertEqual(len(element.xpath(f'//{expected_tag}')), 1)
+                # 验证公式内容是否正确
+                formula = element.xpath(f'//{expected_tag}/text()')[0]
+                self.assertIn(test_case['expected_formula'], formula)
+
+    def test_is_cc_tag_node(self):
+        from llm_web_kit.extractor.html.recognizer.recognizer import \
+            BaseHTMLElementRecognizer
+        for test_case in TEST_IS_CC_TAG_NODE:
+            with self.subTest(input=test_case['input']):
+                root = html_to_element(test_case['input'])
+                cc_tag_count = 0
+                not_cc_tag_count = 0
+
+                def check_nodes(element):
+                    nonlocal cc_tag_count, not_cc_tag_count
+                    if element is None:
+                        return
+                    if BaseHTMLElementRecognizer.is_cc_tag_node(element):
+                        cc_tag_count += 1
+                        return
+                    else:
+                        not_cc_tag_count += 1
+                    for child in element:
+                        check_nodes(child)
+                # mathjax方案是传入根节点递归调用，与其保持一致
+                check_nodes(root)
+                expected_cc_tag = int(test_case['cc_tag'])
+                expected_not_cc_tag = int(test_case['not_cc_tag'])
+                self.assertEqual(cc_tag_count, expected_cc_tag,
+                                 f'Expected {expected_cc_tag} cc tags, but found {cc_tag_count}')
+                self.assertEqual(not_cc_tag_count, expected_not_cc_tag,
+                                 f'Expected {expected_not_cc_tag} non-cc tags, but found {not_cc_tag_count}')
 
 
 if __name__ == '__main__':
@@ -511,5 +636,3 @@ if __name__ == '__main__':
     # c = TestCCMATH()
     # c.setUp()
     # c.test_mml_to_latex()
-    # c.test_wrap_math()
-    # c.test_wrap_math_md()

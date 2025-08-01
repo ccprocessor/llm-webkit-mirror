@@ -29,7 +29,7 @@ class BaseHTMLElementRecognizer(ABC):
 
     """基本的元素解析类."""
     @abstractmethod
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html:str, language:str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析html中的元素.
 
         Args:
@@ -263,3 +263,18 @@ class BaseHTMLElementRecognizer(ABC):
         # 构建XPath表达式，检查子元素是否包含目标标签
         xpath_expr = ' or '.join([f'self::{tag}' for tag in tags])
         return bool(el.xpath(f'.//*[{xpath_expr}]'))
+
+    @staticmethod
+    def is_cc_tag_node(el: HtmlElement) -> bool:
+        """判断html片段是否是cc标签.
+
+        在is_cc_html上做修改，只判断该节点是否为cc标签，而不检查其子节点是否包含cc标签，用在mathjax渲染器方法中.
+
+        Args:
+            el: str|HtmlElement: html片段或HtmlElement对象
+        """
+        default_tag_names = [
+            CCTag.CC_CODE, CCTag.CC_MATH_INLINE, CCTag.CC_MATH_INTERLINE, CCTag.CC_IMAGE, CCTag.CC_VIDEO,
+            CCTag.CC_AUDIO, CCTag.CC_TABLE, CCTag.CC_LIST, CCTag.CC_TEXT, CCTag.CC_TITLE
+        ]
+        return hasattr(el, 'tag') and isinstance(el.tag, str) and el.tag in default_tag_names

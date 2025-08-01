@@ -12,7 +12,8 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
-                                         html_to_element, process_sub_sup_tags)
+                                         html_normalize_space, html_to_element,
+                                         process_sub_sup_tags)
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -40,6 +41,18 @@ special_symbols = [  # TODO 从文件读取
     '☁'    # 云符号
 ]
 
+# 其他标点符
+other_symbols = [
+    '“',
+    '‘',
+    '[',
+    '(',
+    '”',
+    '’',
+    '。',
+    '，'
+]
+
 PARAGRAPH_SEPARATOR = '\n\n'
 
 # 需要保留的html实体，例如：'>' 直接在markdown中无法渲染，需要替换为html实体
@@ -50,8 +63,13 @@ inline_tags = {
     'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'br', 'button', 'cite', 'code',
     'dfn', 'em', 'i', 'img', 'input', 'kbd', 'label', 'map', 'object', 'q',
     'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
-    'textarea', 'time', 'var', 'u', 's', 'code', 'cccode-inline', 'ccmath-inline'
+    'textarea', 'time', 'var', 'u', 's', 'cccode-inline', 'ccmath-inline',
+    'marked-tail', 'marked-text', 'math','mspace', 'font', 'nobr', 'bdi',
+    'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr', 'ins'
 }
+
+# 词间无分隔符的语言
+no_separation_language = ['zh', 'ja', 'ko', 'wuu', 'th', 'km', 'lo', 'bo', 'ii', 'jv']
 
 
 class TextParagraphRecognizer(BaseHTMLElementRecognizer):
@@ -79,7 +97,7 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         return node
 
     @override
-    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement | str, HtmlElement | str]], raw_html:str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url:str, main_html_lst: List[Tuple[HtmlElement | str, HtmlElement | str]], raw_html:str, language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析文本段落元素.
 
         Args:
@@ -92,47 +110,75 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         new_html_lst = []
         for html_element, raw_html_element in main_html_lst:
             # 如果是字符串则转换为 HtmlElement
+
             if self.is_cc_html(html_element):
                 new_html_lst.append((html_element, raw_html_element))
             else:
                 lst = list(self.__extract_paragraphs(html_element))
-                new_lst = self.__to_cctext_lst(lst)
+                new_lst = self.__to_cctext_lst(lst, language)
                 new_html_lst.extend(new_lst)
         return new_html_lst
 
-    def __to_cctext_lst(self, lst: List[Tuple[HtmlElement | str, HtmlElement | str]]) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def __to_cctext_lst(self, lst: List[Tuple[HtmlElement | str, HtmlElement | str]], language:str) -> List[Tuple[HtmlElement, HtmlElement]]:
         """将lst[Element, raw_html] 进行处理. 提出Element里的文字，做成<<cctext>>标签.
 
         Args:
             lst: List[Tuple[HtmlElement | str, HtmlElement | str]]: Element和raw_html组成的列表
         """
         new_lst = []
+
         for el, raw_html in lst:
+
             # 如果是字符串则转换为 HtmlElement
             el_element = html_to_element(el) if isinstance(el, str) else el
             raw_html_element = html_to_element(raw_html) if isinstance(raw_html, str) else raw_html
 
-            para_text = self.__get_paragraph_text(el_element)
+            para_text = self.__get_paragraph_text(el_element, language)
             if para_text:
                 cctext_el = self._build_cc_element(CCTag.CC_TEXT, json.dumps(para_text, ensure_ascii=False, indent=4), '', html=element_to_html_unescaped(raw_html_element))
                 new_lst.append((cctext_el, raw_html_element))
         return new_lst
 
     def replace_entities(self, text, entities_map):
-        """使用正则表达式同时替换文本中的多个特定字符为其对应的HTML实体。
+        """替换文本中指定字符为对应的HTML实体，但跳过HTML标签内的字符。
 
         :param text: 需要处理的文本。
-        :param entities_map: 一个字典，键是需要替换的字符，值是对应的HTML实体名
+        :param entities_map: 字典，键是要替换的字符，值是对应的HTML实体名。
         :return: 替换后的文本。
         """
-        # 创建正则表达式模式，匹配所有需要替换的字符
-        rx = re.compile('|'.join(re.escape(str(key)) for key in entities_map.keys()))
+        if not entities_map:
+            return text  # 如果字典为空，直接返回原文本
 
-        def one_xlat(match):
-            """回调函数，用于将匹配到的字符替换为对应的HTML实体。"""
-            return f'&{entities_map[match.group(0)]};'
+        # 构建匹配需要替换字符的正则表达式
+        entities_pattern = '|'.join(re.escape(str(key)) for key in entities_map.keys())
+        rx_entity = re.compile(entities_pattern)
 
-        return rx.sub(one_xlat, text)
+        # 构建匹配HTML标签的正则表达式
+        rx_tag = re.compile(r'<[^>]*>')
+
+        result = []
+        last_pos = 0
+
+        # 遍历所有HTML标签
+        for tag_match in rx_tag.finditer(text):
+            start, end = tag_match.start(), tag_match.end()
+
+            # 提取非标签部分并进行替换
+            non_tag_part = text[last_pos:start]
+            replaced = rx_entity.sub(lambda m: f'&{entities_map[m.group(0)]};', non_tag_part)
+            result.append(replaced)
+
+            # 保留HTML标签不变
+            result.append(text[start:end])
+
+            last_pos = end
+
+        # 处理最后剩余的非标签部分
+        non_tag_part = text[last_pos:]
+        replaced = rx_entity.sub(lambda m: f'&{entities_map[m.group(0)]};', non_tag_part)
+        result.append(replaced)
+
+        return ''.join(result)
 
     def __combine_text(self, text1:str, text2:str, lang='en') -> str:
         """将两段文本合并，中间加空格.
@@ -143,16 +189,20 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             lang: str: 语言  TODO 实现根据语言连接文本的不同方式, 还有就是一些特殊符号开头的连接不加空格。
         """
         text1 = text1.strip(' ') if text1 else ''
-        text2 = text2.strip(' ') if text2 else ''
-        if lang == 'zh':
+        text2 = text2.rstrip(' ') if text2 else ''
+        if lang in no_separation_language:
             txt = text1 + text2
             return self.replace_entities(txt.strip(), entities_map)
         else:
-            words_sep = '' if text2[0] in string.punctuation or text2[0] in special_symbols else ' '
+            # 根据text1的最后一个字符和text2的第一个字符判断两个text之间的连接
+            if (text2[0] in string.punctuation) or (text2[0] in special_symbols) or (text2[0] in other_symbols) or (text1 and text1[-1] in other_symbols):
+                words_sep = ''
+            else:
+                words_sep = ' '
             txt = text1 + words_sep + text2
             return self.replace_entities(txt.strip(), entities_map)
 
-    def __get_paragraph_text(self, root: HtmlElement) -> List[dict]:
+    def __get_paragraph_text(self, root: HtmlElement, language:str = 'en') -> List[dict]:
         """
         获取段落全部的文本.
         对于段落里的行内公式<equation-inline>需要特定处理，转换为段落格式：
@@ -168,7 +218,6 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         para_text = []
 
         def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
-
             # 标记当前元素是否是sub或sup类型
             is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
 
@@ -183,26 +232,33 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     text = ''
                 para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag in ['br']:
-                text += PARAGRAPH_SEPARATOR  # TODO 这个地方直接加换行是错误点做法，需要利用数据结构来保证段落。
+                text += '$br$'
             elif el.tag == 'sub' or el.tag == 'sup':
                 text = process_sub_sup_tags(el, text, recursive=False)
+            elif el.tag == 'audio':  # 避免audio被识别为paragraph
+                pass
             else:
                 if el.text and el.text.strip():
-                    text = self.__combine_text(text, el.text.strip())
+                    tem_text = html_normalize_space(text)
+                    _text = html_normalize_space(el.text.strip())
+                    text = self.__combine_text(tem_text, _text, language)
                 for child in el:
                     text = __get_paragraph_text_recusive(child, text)
 
             # 处理尾部文本
             if el.tail and el.tail.strip():
                 if is_sub_sup:
-                    text += el.tail
+                    _new_tail = html_normalize_space(el.tail.strip())
+                    text += _new_tail
                 else:
-                    text = self.__combine_text(text, el.tail.strip())
+                    _new_tail = html_normalize_space(el.tail.strip())
+                    new_tail = f' {_new_tail}' if el.tail.startswith(' ') and el.tail.strip()[0] in string.punctuation else _new_tail
+                    text = self.__combine_text(text, new_tail, language)
 
             return text
 
         if final := __get_paragraph_text_recusive(root, ''):
-            para_text.append({'c': final, 't': ParagraphTextType.TEXT})
+            para_text.append({'c': final.replace('$br$', PARAGRAPH_SEPARATOR), 't': ParagraphTextType.TEXT})
 
         return para_text
 

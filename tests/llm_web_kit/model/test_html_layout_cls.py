@@ -40,14 +40,14 @@ class TestHTMLLayoutClassifier(TestCase):
         # Mock config data
         mock_load_config.return_value = {
             'resources': {
-                'html_cls-25m2': {'download_path': 's3://fake/path', 'md5': 'fake_md5'}
+                'html_cls-25m4': {'download_path': 's3://fake/path', 'md5': 'fake_md5'}
             }
         }
 
         # Mock file system state
-        mock_exists.side_effect = lambda x: False if 'html_cls-25m2' in x else True
+        mock_exists.side_effect = lambda x: False if 'html_cls-25m4' in x else True
         mock_unzip.return_value = '/fake/unzip/path'
-        mock_download.return_value = '/fake/cache/html_cls-25m2.zip'
+        mock_download.return_value = '/fake/cache/html_cls-25m4.zip'
 
         _ = HTMLLayoutClassifier()
         # result = classifier.auto_download()
@@ -55,7 +55,7 @@ class TestHTMLLayoutClassifier(TestCase):
         # self.assertEqual(result, "/fake/unzip/path")
         mock_download.assert_called_once_with(
             's3://fake/path',
-            os.path.join(mock_CACHE_DIR, 'html_cls-25m2.zip'),
+            os.path.join(mock_CACHE_DIR, 'html_cls-25m4.zip'),
             'fake_md5',
         )
         mock_unzip.assert_called_once()

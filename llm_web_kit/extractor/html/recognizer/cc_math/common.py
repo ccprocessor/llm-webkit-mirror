@@ -74,6 +74,24 @@ class MATH_TYPE_PATTERN:
     DISPLAYMATH = 'displayMath'
 
 
+# CSDN博客的KaTeX标签
+class CSDN:
+    INLINE = 'katex--inline'
+    DISPLAY = 'katex--display'
+    MATH = 'katex-mathml'
+    DOMAIN = 'blog.csdn.net'
+
+
+# 知乎的数学公式标签
+class ZHIHU:
+    MATH = 'ztext-math'
+    DOMAIN = 'zhihu.com'
+
+
+class MATHINSIGHT:
+    DOMAIN = 'mathinsight.org'
+
+
 # 行内行间公式，MathJax中一般也可以通过配置来区分行内行间公式
 EQUATION_INLINE = DocElementType.EQUATION_INLINE
 EQUATION_INTERLINE = DocElementType.EQUATION_INTERLINE
@@ -131,26 +149,181 @@ xslt = etree.parse(xsl_path)
 transform = etree.XSLT(xslt)
 
 
+def MATHINSIGHT_convert_to_standard_latex(text):
+    """将MathInsight网站使用的自定义LaTeX宏转换为标准LaTeX格式。
+
+    基于 https://mathinsight.org/static/mathjaxconfig/midefault.js?rev=2.6.1 配置文件中定义的宏。
+
+    当前支持的转换：
+    - 向量表示、雅可比矩阵
+    - 微分和多阶微分、偏微分和多阶偏微分、范数
+    - 各种积分形式（线积分、面积分、闭合积分等）
+    - 参数化积分（线积分、面积分等）
+    - 特殊函数符号（div、curl、tr）、默认字母和符号、集合符号
+    - 换行和格式控制、颜色标记
+
+    Args:
+        text: 包含MathInsight宏的LaTeX文本
+
+    Returns:
+        转换后的标准LaTeX文本
+    """
+    replacements = {
+        # 向量表示
+        r'\\vc{([^}]*)}': r'\\mathbf{\1}',
+
+        # 微分和偏微分
+        r'\\diff{([^}]*)}{([^}]*)}': r'\\frac{\\mathrm{d} \1}{\\mathrm{d} \2}',
+        r'\\diffn{([^}]*)}{([^}]*)}{([^}]*)}': r'\\frac{\\mathrm{d}^{\3} \1}{\\mathrm{d} \2^{\3}}',
+        r'\\pdiff{([^}]*)}{([^}]*)}': r'\\frac{\\partial \1}{\\partial \2}',
+        r'\\pdiffn{([^}]*)}{([^}]*)}{([^}]*)}': r'\\frac{\\partial^{\3} \1}{\\partial \2^{\3}}',
+
+        # 矩阵和行列式
+        r'\\jacm{([^}]*)}': r'D\1',
+        r'\\JacobianMatrix{([^}]*)}': r'D\1',
+
+        # 范数
+        r'\\norm{([^}]*)}': r'\\|\1\\|',
+
+        # 线积分
+        r'\\lint{([^}]*)}{([^}]*)}': r'\\int_{\1} \2 \\cdot d\\mathbf{s}',
+        r'\\clint{([^}]*)}{([^}]*)}': r'\\oint_{\1} \2 \\cdot d\\mathbf{s}',
+        r'\\slint{([^}]*)}{([^}]*)}': r'\\int_{\1} \2 \\,ds',
+        r'\\cslint{([^}]*)}{([^}]*)}': r'\\oint_{\1} \2 \\,ds',
+
+        # 面积分
+        r'\\sint{([^}]*)}{([^}]*)}': r'\\iint_{\1} \2 \\cdot d\\mathbf{S}',
+        r'\\ssint{([^}]*)}{([^}]*)}': r'\\iint_{\1} \2 \\,dS',
+
+        # 参数化积分（线积分）
+        r'\\plint{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}': r'\\int_{\1}^{\2} \3(\4(t)) \\cdot \4\'(t) dt',
+        r'\\pslint{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}': r'\\int_{\1}^{\2} \3(\4(t)) \\|\\4\'(t)\\| dt',
+
+        # 参数化积分（面积分）
+        r'\\psint{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\int_{\1}^{\2}\\int_{\3}^{\4} \5(\6(\7,\8)) \\cdot \\left( \\frac{\\partial \6}{\\partial \7}(\7,\8) \\times \\frac{\\partial \6}{\\partial \8}(\7,\8) \\right) d\7\\,d\8',
+
+        r'\\psintrn{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\int_{\1}^{\2}\\int_{\3}^{\4} \5(\6(\7,\8)) \\cdot \\left( \\frac{\\partial \6}{\\partial \8}(\7,\8) \\times \\frac{\\partial \6}{\\partial \7}(\7,\8) \\right) d\7\\,d\8',
+
+        r'\\psintrnro{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\int_{\1}^{\2}\\int_{\3}^{\4} \5(\6(\7,\8)) \\cdot \\left( \\frac{\\partial \6}{\\partial \8}(\7,\8) \\times \\frac{\\partial \6}{\\partial \7}(\7,\8) \\right) d\8\\,d\7',
+
+        r'\\psintro{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\int_{\1}^{\2}\\int_{\3}^{\4} \5(\6(\7,\8)) \\cdot \\left( \\frac{\\partial \6}{\\partial \7}(\7,\8) \\times \\frac{\\partial \6}{\\partial \8}(\7,\8) \\right) d\8\\,d\7',
+
+        r'\\psintor{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\iint_{\1} \2(\3(\4,\5)) \\cdot \\left( \\frac{\\partial \3}{\\partial \4}(\4,\5) \\times \\frac{\\partial \3}{\\partial \5}(\4,\5) \\right) d\4\\,d\5',
+
+        # 参数化标量面积分
+        r'\\pssint{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\int_{\1}^{\2}\\int_{\3}^{\4} \5(\6(\7,\8)) \\left\\| \\frac{\\partial \6}{\\partial \7}(\7,\8) \\times \\frac{\\partial \6}{\\partial \8}(\7,\8) \\right\\| d\7\\,d\8',
+
+        r'\\pssintro{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\int_{\1}^{\2}\\int_{\3}^{\4} \5(\6(\7,\8)) \\left\\| \\frac{\\partial \6}{\\partial \7}(\7,\8) \\times \\frac{\\partial \6}{\\partial \8}(\7,\8) \\right\\| d\8\\,d\7',
+
+        r'\\pssintor{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}{([^}]*)}':
+            r'\\iint_{\1} \2(\3(\4,\5)) \\left\\| \\frac{\\partial \3}{\\partial \4}(\4,\5) \\times \\frac{\\partial \3}{\\partial \5}(\4,\5) \\right\\| d\4\\,d\5',
+
+        # 特殊函数
+        r'\\div': r'\\mathop{\\text{div}}',
+        r'\\curl': r'\\mathop{\\text{curl}}',
+        r'\\tr': r'\\mathop{\\rm tr}',
+
+        # 默认字母替换
+        r'\\dlvf': r'\\mathbf{F}',
+        r'\\dlvfc': r'F',
+        r'\\adlvf': r'\\mathbf{G}',
+        r'\\adlvfc': r'G',
+        r'\\dlc': r'C',
+        r'\\adlc': r'B',
+        r'\\sadlc': r'E',
+        r'\\dlsi': r'f',
+        r'\\dlr': r'D',
+        r'\\dlv': r'W',
+        r'\\dls': r'S',
+        r'\\dlpf': r'f',  # 势函数
+
+        # 参数化
+        r'\\dllp': r'\\mathbf{c}',
+        r'\\dllpc': r'c',
+        r'\\adllp': r'\\mathbf{p}',
+        r'\\adllpc': r'p',
+        r'\\sadllp': r'\\mathbf{q}',
+        r'\\sadllpc': r'q',
+        r'\\tadllp': r'\\mathbf{d}',
+        r'\\tadllpc': r'd',
+        r'\\dlsp': r'\\mathbf{\\Phi}',
+        r'\\dlspc': r'\\Phi',
+
+        # 参数变量
+        r'\\spfv': r'u',
+        r'\\spsv': r'v',
+        r'\\cvarf': r'\\mathbf{T}',
+        r'\\cvarfc': r'T',
+        r'\\cvarfv': r'u',
+        r'\\cvarsv': r'v',
+        r'\\cvartv': r'w',
+
+        # 集合符号
+        r'\\R': r'\\mathbb{R}',
+
+        # 弧长和曲面符号
+        r'\\als': r's',
+        r'\\lis': r'\\mathbf{s}',
+        r'\\sas': r'S',
+        r'\\sid': r'\\mathbf{S}',
+
+        # 不可见运算符
+        r'\\invisibletimes': r'\\unicode{x2062}',
+        r'\\cdotbadbreak': r'\\mmlToken{mo}[linebreak="badbreak"]{\\u22C5}',
+        r'\\timesbadbreak': r'\\mmlToken{mo}[linebreak="badbreak"]{\\u00D7}',
+
+        # 颜色标记
+        r'\\blue': r'\\color{blue}{\\textbf{blue}}',
+        r'\\red': r'\\color{red}{\\textbf{red}}',
+        r'\\green': r'\\color{green}{\\textbf{green}}',
+        r'\\cyan': r'\\color{cyan}{\\textbf{cyan}}',
+        r'\\magenta': r'\\color{magenta}{\\textbf{magenta}}',
+
+        # 换行控制
+        r'\\goodbreak': r'\\mmlToken{mo}[linebreak="goodbreak"]{}',
+        r'\\badbreak{([^}]*)}': r'\\mmlToken{mo}[linebreak="badbreak"]{\1}',
+        r'\\nobreak{([^}]*)}': r'\\mmlToken{mo}[linebreak="nobreak"]{\1}',
+    }
+
+    # 应用所有替换规则
+    for pattern, replacement in replacements.items():
+        text = re.sub(pattern, replacement, text)
+
+    # 处理默认组合的积分形式
+    default_combos = {
+        # 默认线积分组合
+        r'\\dlint': r'\\int_{C} \\mathbf{F} \\cdot d\\mathbf{s}',
+        r'\\dclint': r'\\oint_{C} \\mathbf{F} \\cdot d\\mathbf{s}',
+        r'\\dslint': r'\\int_{C} f \\,ds',
+        r'\\dcslint': r'\\oint_{C} f \\,ds',
+
+        # 默认面积分组合
+        r'\\dsint': r'\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}',
+        r'\\dssint': r'\\iint_{S} f \\,dS',
+
+        # 默认参数化积分组合
+        r'\\dplint': r'\\int_{a}^{b} \\mathbf{F}(\\mathbf{c}(t)) \\cdot \\mathbf{c}\'(t) dt',
+        r'\\dpslint': r'\\int_{a}^{b} f(\\mathbf{c}(t)) \\|\\mathbf{c}\'(t)\\| dt',
+        r'\\dpsint': r'\\iint_{D} \\mathbf{F}(\\mathbf{\\Phi}(u,v)) \\cdot \\left( \\frac{\\partial \\mathbf{\\Phi}}{\\partial u}(u,v) \\times \\frac{\\partial \\mathbf{\\Phi}}{\\partial v}(u,v) \\right) du\\,dv',
+        r'\\dpssint': r'\\iint_{D} f(\\mathbf{\\Phi}(u,v)) \\left\\| \\frac{\\partial \\mathbf{\\Phi}}{\\partial u}(u,v) \\times \\frac{\\partial \\mathbf{\\Phi}}{\\partial v}(u,v) \\right\\| du\\,dv',
+    }
+
+    for pattern, replacement in default_combos.items():
+        text = re.sub(pattern, replacement, text)
+
+    return text
+
+
 class CCMATH():
     def __init__(self):
         self.url = ''
-
-    # end def
-    def wrap_math(self, s, display=False):
-        """根据行间行内公式加上$$或$"""
-        s = re.sub(r'\s+', ' ', s)
-        s = color_regex.sub('', s)
-        s = s.replace('$', '')
-        s = s.replace('\n', ' ').replace('\\n', '')
-        s = s.strip()
-        if len(s) == 0:
-            return s
-        # Don't wrap if it's already in \align
-        if '\\begin' in s:
-            return s
-        if display:
-            return '$$' + s + '$$'
-        return '$' + s + '$'
 
     def wrap_math_md(self, s):
         """去掉latex公式头尾的$$或$或\\(\\)或\\[\\]"""
@@ -169,6 +342,9 @@ class CCMATH():
         if s.startswith('`') and s.endswith('`'):
             return s.replace('`', '').strip()
         s = self.wrap_math_md_custom(s)
+        # 处理MathInsight网站的特殊宏
+        if MATHINSIGHT.DOMAIN in self.url:
+            s = MATHINSIGHT_convert_to_standard_latex(s)
         return s.strip()
 
     # 循环MATH_MD_CUSTOM_CONFIG，如果url匹配，则去掉特殊网站的公式奇怪的起始结尾
@@ -272,6 +448,14 @@ class CCMATH():
             if (sub_elements and any(text_strip(elem.text) for elem in sub_elements)) or \
                 (sup_elements and any(text_strip(elem.text) for elem in sup_elements)):
                 result.append((EQUATION_INLINE, MathType.HTMLMATH))
+
+            # 检查当前节点是否是katex元素（CSDN）
+            if CSDN.DOMAIN in self.url and node.tag == 'span' and node.get('class'):
+                node_class = node.get('class')
+                if CSDN.INLINE in node_class:
+                    result.append((EQUATION_INLINE, MathType.LATEX))
+                elif CSDN.DISPLAY in node_class:
+                    result.append((EQUATION_INTERLINE, MathType.LATEX))
         return self.equation_type_to_tag(result)
 
     def equation_type_to_tag(self, type_math_type: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
@@ -286,22 +470,10 @@ class CCMATH():
 
     def mml_to_latex(self, mml_code):
         # Remove any attributes from the math tag
-        mml_code = re.sub(r'(<math.*?>)', r'\1', mml_code)
-        mml_ns = mml_code.replace('<math>', '<math xmlns="http://www.w3.org/1998/Math/MathML">')  # Required.
-
+        mml_ns = re.sub(r'<math.*?>', '<math xmlns="http://www.w3.org/1998/Math/MathML">', mml_code)
+        # mml_ns = mml_code
         mml_ns = mml_ns.replace('&quot;', '"')
         mml_ns = mml_ns.replace("'\\\"", '"').replace("\\\"'", '"')
-
-        # 很多网页中标签内容就是错误
-        # pattern = r"(<[^<>]*?\s)(mathbackground|mathsize|mathvariant|mathfamily|class|separators|style|id|rowalign|columnspacing|rowlines|columnlines|frame|framespacing|equalrows|equalcolumns|align|linethickness|lspace|rspace|mathcolor|rowspacing|displaystyle|style|columnalign|open|close|right|left)(?=\s|>)(?![\"'][^<>]*?>)"
-        # def replace_attr(match):
-        #     tag_start = match.group(1)  # 标签开始部分和空格
-        #     attr_name = match.group(2)  # 属性名
-        #     return f'{tag_start}{attr_name}=\"\" '
-        # # 替换文本
-        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
-        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
-        # mml_ns = re.sub(pattern, replace_attr, mml_ns, re.S)
 
         pattern = r'"([^"]+?)\''
         mml_ns = re.sub(pattern, r'"\1"', mml_ns)
@@ -313,9 +485,11 @@ class CCMATH():
         # 提前修复已知的一些利用XSLT方法转换的错误
         mml_str = self.fix_mathml_superscript(mml_str)
         mml_element = etree.fromstring(mml_str)
-        # 使用兼容的元素进行转换
         mmldom = transform(mml_element)
         latex_code = str(mmldom)
+        # print(f'Processing MathML: {etree.tostring(mml_element, encoding="unicode", pretty_print=True)}')
+        # print(f'After XSLT transformation: {str(mmldom)}')
+        # print(f'latex_code: {latex_code}')
         return latex_code
 
     def fix_mathml_superscript(self, mathml_str):
@@ -358,6 +532,10 @@ class CCMATH():
 
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:
         # pattern re数学公式匹配 func 公式预处理 默认不处理
+        # ascii公式处理逻辑转移到mathjax渲染器方案中
+        if asciimath_wrap:
+            return node
+
         pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
         original_text = node.text or ''
 
@@ -381,8 +559,9 @@ class CCMATH():
                 match = match_text.group(0)
                 if is_ccmath_wrapped(match_text, original_text):
                     return match
-                math_text = self.extract_asciimath(match.strip('`').replace('\\','')) if asciimath_wrap else match
-                wrapped_text = func(math_text) if func else math_text
+                wrapped_text = func(match) if func else match
+                # html保留原始的，而不是传入修改过的wrapped_text
+                original_wrapped = wrapped_text
                 wrapped_text = self.wrap_math_md(wrapped_text)
                 if not wrapped_text:
                     return match
@@ -392,7 +571,7 @@ class CCMATH():
                     tail='',
                     type=math_type,
                     by=math_render,
-                    html=wrapped_text
+                    html=original_wrapped
                 )
             except Exception:
                 return match
@@ -430,8 +609,6 @@ if __name__ == '__main__':
     # print(cm.get_equation_type(r'<p>abc [itex]x^2 abc</p>'))
     print(cm.get_equation_type(r'<p>\begin{align} a^2+b=c\end{align}</p>'))
     print(cm.get_equation_type(r'<p>\begin{abc} a^2+b=c\end{abc}</p>'))
-    print(cm.wrap_math(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
-    print(cm.wrap_math(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu)^{2}\right].}'))
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))

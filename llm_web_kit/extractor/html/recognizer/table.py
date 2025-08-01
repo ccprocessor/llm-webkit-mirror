@@ -9,7 +9,7 @@ from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import remove_element
+from llm_web_kit.libs.html_utils import process_sub_sup_tags, remove_element
 from llm_web_kit.libs.text_utils import normalize_text_segment
 
 
@@ -24,7 +24,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def recognize(self,
                   base_url: str,
                   main_html_lst: List[Tuple[HtmlElement, HtmlElement]],
-                  raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
+                  raw_html: str,
+                  language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析表格元素.
 
         Args:
@@ -202,6 +203,13 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                         result.append(f'`{node.text.strip()}`')
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
+                elif node.tag in ['sub', 'sup']:
+                    # 使用process_sub_sup_tags保留原始的sub/sup标签
+                    processed_text = process_sub_sup_tags(node, '', lang='en', recursive=True)
+                    if processed_text:
+                        result.append(processed_text)
+                    if node.tail and node.tail.strip():
+                        result.append(node.tail.strip())
                 else:
                     # 提取当前节点的文本
                     if node.text and node.text.strip():
@@ -256,7 +264,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __get_table_body(self, table_type, table_nest_level, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
         if table_type == 'empty':
-            return None
+            content = table_root.text_content()
+            return content
         allowed_attributes = ['colspan', 'rowspan']
         # 清理除了colspan和rowspan之外的属性
         if len(table_root.attrib) > 0:
@@ -280,6 +289,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __do_extract_tables(self, root: HtmlElement) -> None:
         """递归处理所有子标签."""
         if root.tag in ['table']:
+            temp_tail = root.tail
+            root.tail = None
             table_raw_html = self._element_to_html(root)
             table_type = self.__get_table_type(root)
             table_nest_level = self.__is_table_nested(root)
@@ -288,6 +299,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             cc_element = self._build_cc_element(
                 CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, table_nest_level=table_nest_level,
                 html=table_raw_html)
+            cc_element.tail = temp_tail
             self._replace_element(root, cc_element)
             return
         for child in root.iterchildren():

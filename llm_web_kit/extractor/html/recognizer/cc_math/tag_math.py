@@ -8,7 +8,7 @@ from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   MathType,
                                                                   text_strip)
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         html_to_element, replace_element)
+                                         replace_element)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
@@ -23,7 +23,6 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         if len(annotation_tags) > 0:
             annotation_tag = annotation_tags[0]
             text = annotation_tag.text
-            # wrapped_text = cm.wrap_math(r'{}'.format(text), display=display)
             style_value = parent.get('style')
             if style_value:
                 normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
@@ -62,8 +61,8 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         raise HtmlMathRecognizerException(f'Error processing math tag: {e}')
 
 
-if __name__ == '__main__':
-    html = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'
-    element = html_to_element(html)
-    cm = CCMATH()
-    modify_tree(cm, 'mathjax', html, element, element)
+# if __name__ == '__main__':
+    # html = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x2260;</mo><mn>0</mn></math>'
+    # element = html_to_element(html)
+    # cm = CCMATH()
+    # modify_tree(cm, 'mathjax', html, element, element)

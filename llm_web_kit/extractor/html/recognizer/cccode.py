@@ -27,7 +27,8 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         self,
         base_url: str,
         main_html_lst: List[Tuple[HtmlElement, HtmlElement]],
-        raw_html: str
+        raw_html: str,
+        language:str = 'en'
     ) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析代码元素.
 
@@ -48,7 +49,7 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
 
             while True:
                 # 命中规则，直接处理并跳出
-                if domain in rules.RULES_MAP:
+                if rules.detect(domain):
                     rules.modify_tree(domain, root)
                     break
 

@@ -111,3 +111,76 @@ class HTMLFileFormatCleanTagsPreExtractor(HTMLFileFormatFilterPreExtractor):
                 for element in elements:
                     remove_element(element)
         return element_to_html(tree)
+
+
+class TestHTMLFileToDataJsonPreExtractor(HTMLFileFormatFilterPreExtractor):
+    """为了方便noclip管线对测试数据进行测试，根据路径读取html文件和main_html文件，然后转换为DataJson格式。"""
+
+    def __init__(self, config: dict, html_parent_dir: str):
+        """
+        初始化函数
+        Args:
+            config:
+            html_parent_dir:
+        """
+        super().__init__(config)
+        self.__html_parent_path = html_parent_dir
+
+    @override
+    def _do_pre_extract(self, data_json: DataJson) -> DataJson:
+        """对输入的html和main_html拼装到DataJson中，形成标准输入格式."""
+        proj_root_dir = get_proj_root_dir()
+        html_file_path = os.path.join(proj_root_dir, self.__html_parent_path, data_json.get('path'))
+        main_html_file_path = os.path.join(proj_root_dir, self.__html_parent_path, data_json.get('main_path'))
+
+        with open(html_file_path, 'r', encoding='utf-8') as f:
+            html = f.read()
+            data_json['html'] = html
+            del data_json['path']
+
+        with open(main_html_file_path, 'r', encoding='utf-8') as f:
+            main_html = f.read()
+            data_json['main_html'] = main_html
+            del data_json['main_path']
+        return data_json
+
+
+class HTMLFileFormatNoClipPreExtractor(HTMLFileFormatFilterPreExtractor):
+    """noclip管线对main_html预处理."""
+    def __init__(self, config: dict):
+        super().__init__(config)
+
+    @override
+    def _do_pre_extract(self, data_json: DataJson) -> DataJson:
+        data_json['main_html'] = self.__clean_interactive_elements(data_json)
+        return data_json
+
+    def __clean_interactive_elements(self, data_json: DataJson) -> str:
+        """清除main_html中交互式元素."""
+        html_content = data_json['main_html']
+        tree = html_to_element(html_content)
+        interactive_tags = ['input', 'select', 'textarea', 'button']
+        # 删除<body>内的交互标签及关联label
+        for tag in interactive_tags:
+            for element in tree.xpath(f'//body//{tag}'):
+                # 删除标签本身
+                parent = element.getparent()
+                if parent is not None:
+                    parent.remove(element)
+
+                # 删除关联的label（通过for属性匹配）
+                if 'id' in element.attrib:
+                    for label in tree.xpath(f'//body//label[@for="{element.attrib["id"]}"]'):
+                        label.getparent().remove(label)
+
+        # 处理<form>内的交互标签及关联label
+        for form in tree.xpath('//form'):
+            # 删除表单内所有交互标签
+            form_elements = form.xpath('.//input | .//select | .//textarea | .//button | .//label | .//img')
+            for element in form_elements:
+                element.getparent().remove(element)
+
+            # 检查表单是否为空（无子元素或仅剩空白文本）
+            if len(form.getchildren()) == 0 or not form.text_content().strip():
+                form.getparent().remove(form)
+        return element_to_html(tree)

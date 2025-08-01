@@ -5,9 +5,10 @@ from typing import Dict, List, Type, Union
 from llm_web_kit.exception.exception import (ModelInitException,
                                              ModelInputException,
                                              ModelRuntimeException)
-from llm_web_kit.model.model_interface import (BatchProcessConfig,
-                                               ModelPredictor, ModelResource,
-                                               ModelResponse, PoliticalRequest,
+from llm_web_kit.model.model_interface import (BatchProcessConfig, MathRequest,
+                                               MathResponse, ModelPredictor,
+                                               ModelResource, ModelResponse,
+                                               PoliticalRequest,
                                                PoliticalResponse, PornRequest,
                                                PornResponse,
                                                ResourceRequirement)
@@ -20,6 +21,7 @@ class ModelType(Enum):
 
     POLITICAL = 'political'  # 涉政模型
     PORN = 'porn'  # 色情模型
+    MATH = 'math'  # 数学内容模型
 
 
 class DeviceType(Enum):
@@ -112,7 +114,7 @@ class PoliticalCPUModel(BaseModelResource):
         # raise NotImplementedError
         # TODO convert result to response ensure the threshold
         return PoliticalResponse(
-            is_remained=result['political_prob'] > 0.99, details=result
+            is_remained=result['political_prob'] > 0.89, details=result
         )
 
 
@@ -285,6 +287,82 @@ class PornZhGPUModel(BaseModelResource):
         return PornResponse(is_remained=result['porn_prob'] > 0.95, details=result)
 
 
+# 数学内容模型实现
+class MathGPUModel(BaseModelResource):
+    """数学内容检测GPU模型."""
+
+    def _load_model(self):
+        try:
+            from llm_web_kit.model.math_detector import \
+                E5ScoreModel as MathModel
+
+            return MathModel()
+        except Exception as e:
+            raise ModelInitException(f'Failed to init the math model: {e}')
+
+    def get_resource_requirement(self):
+        # Math model requires similar resources to other GPU models
+        return ResourceRequirement(num_cpus=12, memory_GB=64, num_gpus=1)
+
+    def get_batch_config(self) -> BatchProcessConfig:
+        return BatchProcessConfig(
+            max_batch_size=512, optimal_batch_size=256, min_batch_size=8
+        )
+
+    def predict_batch(self, contents: List[str]) -> List[dict]:
+        if not self.model:
+            raise RuntimeError('Model not initialized')
+        try:
+            # Math model supports batch processing
+            results = self.model.predict(contents)
+            return [
+                {
+                    'math_score': result[self.model.get_output_key('score')],
+                    'math_int_score': result[self.model.get_output_key('int_score')]
+                }
+                for result in results
+            ]
+        except Exception as e:
+            raise RuntimeError(f'Prediction failed: {e}')
+
+    def convert_result_to_response(self, result: dict) -> ModelResponse:
+        # Math content is considered "remained" if score is above threshold (e.g., 3.0)
+        # This means mathematical content should be kept/processed
+        return MathResponse(
+            is_remained=result['math_score'] >= 3.0,
+            details=result
+        )
+
+
+class MathPredictorImpl(BasePredictor):
+    """数学内容检测预测器实现."""
+
+    def _create_model(self, language: Union[str, List[str]], device_type: DeviceType) -> ModelResource:
+        if device_type == DeviceType.CPU:
+            raise ModelInitException(f'Math model does not support device type: {device_type}')
+        # Math model supports multiple languages without restrictions
+        return MathGPUModel()
+
+    def predict_batch(self, requests: List[MathRequest]) -> List[MathResponse]:
+        """批量预测接口."""
+        try:
+            # 收集所有请求内容
+            batch_contents = []
+
+            for req in requests:
+                batch_contents.append(req.content)
+
+            if batch_contents:
+                # 批量处理
+                results = self.model.predict_batch(batch_contents)
+                responses = [self.model.convert_result_to_response(result) for result in results]
+            else:
+                responses = []
+        except Exception as e:
+            raise ModelRuntimeException(f'Math prediction failed: {e}')
+        return responses
+
+
 class PornPredictorImpl(BasePredictor):
     """色情检测预测器实现."""
 
@@ -327,6 +405,7 @@ class ModelFactory:
     _predictor_registry: Dict[ModelType, Type[BasePredictor]] = {
         ModelType.POLITICAL: PoliticalPredictorImpl,
         ModelType.PORN: PornPredictorImpl,
+        ModelType.MATH: MathPredictorImpl,
     }
 
     @classmethod

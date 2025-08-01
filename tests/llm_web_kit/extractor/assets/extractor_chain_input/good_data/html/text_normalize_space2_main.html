@@ -1,0 +1,303 @@
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" id="vbulletin_html"><head></head><body> <div class="body_wrapper"> <ul id="postlist"> <li class="postbit blockbody" id="post_1"> <div class="header"> <div class="datetime">December 10th 2009, 06:42 PM</div>
+ <span class="username">fearless901</span>
+ </div>
+ <div class="title">Can someone please tell me my code wont work, error after error</div>
+ <div class="content"> <blockquote class="restore">im need to write code to get height and time of the fluid in a reservoir, help guys. is my functions wrong?<br>
+ <br>
+ <br>
+ <div class="bbcode_container"> <div class="bbcode_description">Code:</div>
+ <hr><code class="bbcode_code">%&nbsp; VALUES GIVEN AND ASSUMED<br>
+
+%DIMENSIONS AND OTHER CONSTANS <br>
+
+L=5;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Length of Tube<br>
+
+x=0:.1:5;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Length vector<br>
+
+dx=0.1;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %&nbsp; FOR THE DISTANCE<br>
+
+Ao=1;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Cross-Sectional Area of undeformed Tube<br>
+
+n=(L./dx)+1;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %number of nodes<br>
+
+Ro=10^3;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Density of Fluid(Kg/m^3)<br>
+
+Co=10^3;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %propagation speed in an initially undeformed <br>
+
+kp=2/3*10^9;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Tube law proportionality constant<br>
+ <br>
+
+% BOUNDARY CONDITIONS<br>
+
+u=zeros(1,n);&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Initializes velocity vector to zero<br>
+
+uo=-10;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Velocity of withdrawn fluid(SET BY US)<br>
+
+u(1,1)=uo;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Set the initial velocity to the velocity of withdrawn fluid<br>
+
+un=u;<br>
+
+t=0;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Initializing t to zero<br>
+
+dt=0.00005;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %STEP SIZE FOR THE TIME<br>
+
+tmax=0.05;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Total duration of simulation<br>
+
+A=ones(1,n);&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Initial Tube Area vector<br>
+
+An=A;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %INITIAL AREA<br>
+
+&nbsp;<br>
+
+eval('A,kp,Ro,Ao,n');&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %calling evalc function<br>
+
+i_end=input('Enter 0 for open end&nbsp; or 1 for closed end TUBE: ');<br>
+
+ip=input('Enter 0 for A vs x or 1 for u vs x: ');&nbsp; &nbsp;  %&nbsp; Graphic preference<br>
+
+&nbsp;<br>
+
+GRAPHICS(x,A,u,ip,t)&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %calling graphics function<br>
+
+&nbsp;<br>
+
+while t&lt;tmax&nbsp; &nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; %clearing variables <br>
+
+&nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; Co=Cn;&nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; uo=un;<br>
+
+&nbsp; &nbsp; Ao=An;<br>
+
+&nbsp; &nbsp; DUA=0;<br>
+
+&nbsp; &nbsp; Cn=c;<br>
+
+&nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; while 1<br>
+
+&nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; B=zeros((2.*n),1);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; M=zeros((2.*n),4);<br>
+
+&nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; sol=zeros(1,(2.*n));<br>
+
+&nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; [M,B]=setUA(dx,dt,n,i_end,Co,Ao,Cn,un,An)<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; dUA=solveUA(M,B)<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; for i=1:n<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dU=dUA(i,2*i+1);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dA=dUA(i,2*i);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; un=uo+dU;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; An=Ao+dA;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; end<br>
+
+&nbsp; &nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; c=evalc(An,kp,Ro,Ao);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; if max(abs(dUA-DUA))&lt;5*10^-6,break,end&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; DUA=dUA;<br>
+
+&nbsp; &nbsp; end<br>
+
+&nbsp; &nbsp; t=t+dt;<br>
+
+&nbsp; &nbsp; i_end=input('Enter 0 for open end scenario or 1 for closed end scenario: ');<br>
+
+&nbsp; &nbsp; ip=input('Enter 0 for A vs x or 1 for U vs x: ');<br>
+
+&nbsp; &nbsp; GRPHCS(x,A,U,ip,t)&nbsp; &nbsp; <br>
+
+end</code><hr> </div>
+(Headbang) (Headbang) (Headbang)</blockquote> </div>
+ </li>
+<li class="postbit blockbody" id="post_2"> <div class="header"> <div class="datetime">December 10th 2009, 10:48 PM</div>
+ <span class="username">CaptainBlack</span>
+ </div>
+ <div class="content"> <blockquote class="restore"><div class="bbcode_container"> <div class="bbcode_description">Quote:</div>
+ <div class="bbcode_quote printable"> <hr> <div>
+				Originally Posted by <strong>fearless901</strong> <a href="http://mathhelpforum.com/math-software/119813-can-someone-please-tell-me-my-code-wont-work-error-after-error.html#post422750" rel="nofollow"><img class="inlineimg" src="http://cdn.mathhelpforum.com/images/buttons/viewpost.gif" alt="View Post"></a> </div>
+ <div class="message">im need to write code to get height and time of the fluid in a reservoir, help guys. is my functions wrong?<br>
+ <br>
+ <br>
+ <div class="bbcode_container"> <div class="bbcode_description">Code:</div>
+ <hr><code class="bbcode_code">%&nbsp; VALUES GIVEN AND ASSUMED<br>
+
+%DIMENSIONS AND OTHER CONSTANS <br>
+
+L=5;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Length of Tube<br>
+
+x=0:.1:5;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Length vector<br>
+
+dx=0.1;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %&nbsp; FOR THE DISTANCE<br>
+
+Ao=1;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Cross-Sectional Area of undeformed Tube<br>
+
+n=(L./dx)+1;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %number of nodes<br>
+
+Ro=10^3;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Density of Fluid(Kg/m^3)<br>
+
+Co=10^3;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %propagation speed in an initially undeformed <br>
+
+kp=2/3*10^9;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Tube law proportionality constant<br>
+
+&nbsp;<br>
+
+% BOUNDARY CONDITIONS<br>
+
+u=zeros(1,n);&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Initializes velocity vector to zero<br>
+
+uo=-10;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Velocity of withdrawn fluid(SET BY US)<br>
+
+u(1,1)=uo;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Set the initial velocity to the velocity of withdrawn fluid<br>
+
+un=u;<br>
+
+t=0;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %Initializing t to zero<br>
+
+dt=0.00005;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %STEP SIZE FOR THE TIME<br>
+
+tmax=0.05;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Total duration of simulation<br>
+
+A=ones(1,n);&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %Initial Tube Area vector<br>
+
+An=A;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %INITIAL AREA<br>
+
+&nbsp;<br>
+
+eval('A,kp,Ro,Ao,n');&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; %calling evalc function<br>
+
+i_end=input('Enter 0 for open end&nbsp; or 1 for closed end TUBE: ');<br>
+
+ip=input('Enter 0 for A vs x or 1 for u vs x: ');&nbsp; &nbsp;  %&nbsp; Graphic preference<br>
+
+&nbsp;<br>
+
+GRAPHICS(x,A,u,ip,t)&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  %calling graphics function<br>
+
+&nbsp;<br>
+
+while t&lt;tmax&nbsp; &nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; %clearing variables <br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; Co=Cn;&nbsp; &nbsp; <br>
+
+&nbsp; &nbsp; uo=un;<br>
+
+&nbsp; &nbsp; Ao=An;<br>
+
+&nbsp; &nbsp; DUA=0;<br>
+
+&nbsp; &nbsp; Cn=c;<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; while 1<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; B=zeros((2.*n),1);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; M=zeros((2.*n),4);<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; sol=zeros(1,(2.*n));<br>
+
+&nbsp;<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; [M,B]=setUA(dx,dt,n,i_end,Co,Ao,Cn,un,An)<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; dUA=solveUA(M,B)<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; for i=1:n<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dU=dUA(i,2*i+1);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dA=dUA(i,2*i);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; un=uo+dU;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; An=Ao+dA;<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; end<br>
+
+&nbsp;<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; c=evalc(An,kp,Ro,Ao);<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; if max(abs(dUA-DUA))&lt;5*10^-6,break,end&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; DUA=dUA;<br>
+
+&nbsp; &nbsp; end<br>
+
+&nbsp; &nbsp; t=t+dt;<br>
+
+&nbsp; &nbsp; i_end=input('Enter 0 for open end scenario or 1 for closed end scenario: ');<br>
+
+&nbsp; &nbsp; ip=input('Enter 0 for A vs x or 1 for U vs x: ');<br>
+
+&nbsp; &nbsp; GRPHCS(x,A,U,ip,t)&nbsp; &nbsp; <br>
+
+end</code><hr> </div>
+(Headbang) (Headbang) (Headbang)</div>
+ <hr> </div>
+ </div>
+Tell us what the first error message is, or better yet just tell us all of them.<br>
+ <br>
+
+Also, what do you think this line does:<br>
+ <br>
+
+eval('A,kp,Ro,Ao,n');       %calling evalc function<br>
+ <br>
+
+And:<br>
+ <br>
+
+Consider single stepping through the code in the debugger.<br>
+ <br>
+
+CB</blockquote> </div>
+ </li>
+ </ul> </div>
+  </body></html>

@@ -1,0 +1,12 @@
+{
+    "result_save_dir": "/share/xuchao/layout_node_select/result_v005",
+    "task_server_addr": "http://10.140.0.105:5000",
+    "qwen2.5-72b-tokenizer-path": "/share/xuchao/qwen2.5-72b/Qwen2.5-72b/",
+    "model_servers":[
+        {
+            "base_url": "http://10.140.37.104:11434/v1",
+            "model_name": "Qwen2.5-72b",
+            "sk": "EMPTY"
+        }
+    ]
+}

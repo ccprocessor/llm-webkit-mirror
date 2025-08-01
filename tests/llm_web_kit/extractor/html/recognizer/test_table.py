@@ -115,11 +115,11 @@ class TestTableRecognizer(unittest.TestCase):
             simple_table_tag = parts[1][0].xpath(f'.//{CCTag.CC_TABLE}')[0]
             simple_table_type = simple_table_tag.attrib
             assert simple_table_type['table_type'] == 'simple'
-            assert simple_table_type == {'table_type': 'simple', 'table_nest_level': '1', 'html': '<table>\n    <tr>\n        <td>1</td>\n        <td>2</td>\n    </tr>\n    <tr>\n        <td>3</td>\n        <td>4</td>\n    </tr>\n</table>\n\n'}
+            assert simple_table_type == {'table_type': 'simple', 'table_nest_level': '1', 'html': '<table>\n    <tr>\n        <td>1</td>\n        <td>2</td>\n    </tr>\n    <tr>\n        <td>3</td>\n        <td>4</td>\n    </tr>\n</table>'}
             complex_table_tag = parts[2][0].xpath(f'.//{CCTag.CC_TABLE}')[0]
             complex_table_type = complex_table_tag.attrib
             assert complex_table_type['table_type'] == 'complex'
-            assert complex_table_type == {'table_type': 'complex', 'table_nest_level': '1', 'html': '<table>\n        <tr>\n            <td rowspan="2">1</td>\n            <td>2</td>\n            <td>3</td>\n        </tr>\n        <tr>\n            <td colspan="2">4</td>\n        </tr>\n        <tr>\n            <td>5</td>\n            <td>6</td>\n            <td>7</td>\n        </tr>\n    </table>\n    '}
+            assert complex_table_type == {'table_type': 'complex', 'table_nest_level': '1', 'html': '<table>\n        <tr>\n            <td rowspan="2">1</td>\n            <td>2</td>\n            <td>3</td>\n        </tr>\n        <tr>\n            <td colspan="2">4</td>\n        </tr>\n        <tr>\n            <td>5</td>\n            <td>6</td>\n            <td>7</td>\n        </tr>\n    </table>'}
 
     def test_table_to_content_list_node_simple(self):
         """测试table的 to content list node方法."""
@@ -169,7 +169,7 @@ class TestTableRecognizer(unittest.TestCase):
             base_url = 'https://en.m.wikipedia.org/wiki/Variance'
             raw_html = raw_html_path.read_text(encoding='utf-8')
             parts = self.rec.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
-            assert parts[0][0].xpath(f'.//{CCTag.CC_TABLE}')[0].text is None
+            assert len(parts[0][0].xpath(f'.//{CCTag.CC_TABLE}')[0]) == 0
 
     @unittest.skip(reason='在code模块解决了table嵌套多行代码问题')
     def test_table_involve_code(self):

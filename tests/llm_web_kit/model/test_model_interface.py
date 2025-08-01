@@ -3,8 +3,10 @@
 import pytest
 
 from llm_web_kit.model.model_interface import (BatchProcessConfig,
-                                               ModelPredictor, ModelRequest,
-                                               ModelResource, ModelResponse,
+                                               MathPredictor, MathRequest,
+                                               MathResponse, ModelPredictor,
+                                               ModelRequest, ModelResource,
+                                               ModelResponse,
                                                PoliticalPredictor,
                                                PoliticalRequest,
                                                PoliticalResponse,
@@ -119,4 +121,45 @@ def test_porn_predictor() -> None:
     """Test PornPredictor implementation."""
     with pytest.raises(TypeError):
         predictor = PornPredictor()
+        assert isinstance(predictor, ModelPredictor)
+
+
+def test_math_request() -> None:
+    """Test MathRequest initialization and attributes."""
+    request = MathRequest(content='Calculate x^2 + 2x + 1', language='en')
+    assert request.content == 'Calculate x^2 + 2x + 1'
+    assert request.language == 'en'
+    assert request.extra_params is None
+
+    # Test with extra params
+    request_with_params = MathRequest(
+        content='Solve for x: 2x + 3 = 7',
+        language='en',
+        extra_params={'threshold': 3.0}
+    )
+    assert request_with_params.extra_params['threshold'] == 3.0
+
+
+def test_math_response() -> None:
+    """Test MathResponse initialization and attributes."""
+    response = MathResponse(
+        is_remained=True,
+        details={'math_score': 4.2, 'math_int_score': 4}
+    )
+    assert response.is_remained
+    assert response.details['math_score'] == 4.2
+    assert response.details['math_int_score'] == 4
+
+    # Test with low score (not remained)
+    low_score_response = MathResponse(
+        is_remained=False,
+        details={'math_score': 1.5, 'math_int_score': 2}
+    )
+    assert not low_score_response.is_remained
+
+
+def test_math_predictor() -> None:
+    """Test MathPredictor implementation."""
+    with pytest.raises(TypeError):
+        predictor = MathPredictor()
         assert isinstance(predictor, ModelPredictor)

@@ -3,6 +3,7 @@ import re
 import string
 from copy import deepcopy
 
+from lxml import html as lxmlhtml
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
 
 special_symbols = [  # TODO 从文件读取
@@ -284,9 +285,10 @@ def extract_magic_html(html, base_url, page_layout_type):
         base_url: str: 基础url
         page_layout_type: str: 页面布局类型
     """
-    from llm_web_kit.extractor.html.extractor import HTMLFileFormatExtractor
+    from llm_web_kit.extractor.html.extractor import \
+        MagicHTMLFIleFormatorExtractor
 
-    extractor = HTMLFileFormatExtractor({})
+    extractor = MagicHTMLFIleFormatorExtractor({})
     try:
         main_html, _, _ = extractor._extract_main_html(html, base_url, page_layout_type)
         return main_html
@@ -335,17 +337,33 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
     is_sub_sup_context = element.tag in ('sub', 'sup') or bool(element.xpath('.//sub | .//sup'))
 
     # 直接处理当前元素是sub或sup的情况
-    if element.tag == 'sub':
-        # 获取内容并规范化空白 - 去除所有换行符，将多个连续空格替换为单个空格
-        content = element.text_content()
-        content = re.sub(r'\s+', ' ', content).strip()
-        result = f'{current_text.rstrip()}~{content}~'
-        return result
-    elif element.tag == 'sup':
-        content = element.text_content()
-        # 使用正则表达式规范化空白
-        content = re.sub(r'\s+', ' ', content).strip()
-        result = f'{current_text.rstrip()}^{content}^'
+    if element.tag == 'sub' or element.tag == 'sup':
+        marker = element.tag
+        content = element.text or ''
+
+        # 处理所有子元素
+        for child in element:
+            if child.tag in ('sub', 'sup'):
+                # 对于嵌套的sub/sup标签，保留它们的标签结构
+                child_result = process_sub_sup_tags(child, '', lang, True)
+                content += child_result
+            else:
+                # 处理常规子元素，如span等
+                if child.text:
+                    content += child.text
+
+                # 递归处理子元素的子元素
+                for grandchild in child:
+                    if grandchild.tag in ('sub', 'sup'):
+                        content += process_sub_sup_tags(grandchild, '', lang, True)
+
+                # 处理子元素的尾部文本
+                if child.tail:
+                    content += child.tail
+
+        # 规范化空白并构建最终结果
+        # content = re.sub(r'\s+', ' ', content).strip()
+        result = f'{current_text.rstrip()}<{marker}>{content}</{marker}>'
         return result
 
     # 检查是否包含sub或sup子元素，如果不包含且不是sub/sup上下文，则按照普通文本处理
@@ -368,18 +386,12 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
 
     # 处理所有子元素及其尾部文本
     for child in element:
-        if child.tag == 'sub' or child.tag == 'sup':
-            content = child.text_content()
-            content = re.sub(r'\s+', ' ', content).strip()
-            marker = '~' if child.tag == 'sub' else '^'
-            result += f'{marker}{content}{marker}'
-        else:
-            child_result = process_sub_sup_tags(child, '', lang, recursive)
-            if child_result:
-                if is_sub_sup_context:
-                    result += child_result
-                else:
-                    result = combine_text(result, child_result, lang)
+        child_result = process_sub_sup_tags(child, '', lang, recursive)
+        if child_result:
+            if is_sub_sup_context:
+                result += child_result
+            else:
+                result = combine_text(result, child_result, lang)
 
         # 添加尾部文本
         if child.tail:
@@ -389,3 +401,52 @@ def process_sub_sup_tags(element: HtmlElement, current_text: str = '', lang='en'
                 result = combine_text(result, child.tail, lang)
 
     return result
+
+
+def get_cc_select_html(element: HtmlElement) -> HtmlElement:
+    """获取带有cc-select="true"属性的所有HTML内容.
+
+    Args:
+        element: HtmlElement: 要处理的HTML元素
+
+    Returns:
+        HtmlElement: 包含所有cc-select="true"元素的容器元素
+    """
+    # 查找所有带有 cc-select="true" 属性的元素，包括当前元素本身
+    # 使用 self::*[@cc-select="true"] | .//*[@cc-select="true"] 来包含自己和子节点
+    selected_elements = element.xpath('self::*[@cc-select="true"] | .//*[@cc-select="true"]')
+
+    if not selected_elements:
+        # 如果没有找到任何元素，返回一个空的div容器
+        container = fromstring('<div></div>')
+        return container
+
+    # 创建一个容器元素来包含所有匹配的元素
+    container = fromstring('<div></div>')
+
+    # 将所有匹配的元素添加到容器中
+    for elem in selected_elements:
+        # 创建元素的深拷贝以避免修改原始DOM
+        elem_copy = deepcopy(elem)
+        container.append(elem_copy)
+
+    return container
+
+
+def html_normalize_space(text: str) -> str:
+    """
+    标准化html中字符串中的空白字符
+    Args:
+        text:
+
+    Returns:
+
+    """
+    if not text.strip():
+        return ''
+    try:
+        tem_text_el = lxmlhtml.fromstring(text.strip())
+        _text = tem_text_el.xpath('normalize-space()')
+        return _text
+    except Exception:
+        return text
