@@ -12,7 +12,8 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
-                                         html_to_element, process_sub_sup_tags)
+                                         html_normalize_space, html_to_element,
+                                         process_sub_sup_tags)
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -231,29 +232,33 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                     text = ''
                 para_text.append({'c': el.text, 't': ParagraphTextType.CODE_INLINE})
             elif el.tag in ['br']:
-                text += PARAGRAPH_SEPARATOR  # TODO 这个地方直接加换行是错误点做法，需要利用数据结构来保证段落。
+                text += '$br$'
             elif el.tag == 'sub' or el.tag == 'sup':
                 text = process_sub_sup_tags(el, text, recursive=False)
             elif el.tag == 'audio':  # 避免audio被识别为paragraph
                 pass
             else:
                 if el.text and el.text.strip():
-                    text = self.__combine_text(text, el.text.strip(), language)
+                    tem_text = html_normalize_space(text)
+                    _text = html_normalize_space(el.text.strip())
+                    text = self.__combine_text(tem_text, _text, language)
                 for child in el:
                     text = __get_paragraph_text_recusive(child, text)
 
             # 处理尾部文本
             if el.tail and el.tail.strip():
                 if is_sub_sup:
-                    text += el.tail
+                    _new_tail = html_normalize_space(el.tail.strip())
+                    text += _new_tail
                 else:
-                    new_tail = f' {el.tail.strip()}' if el.tail.startswith(' ') and el.tail.strip()[0] in string.punctuation else el.tail.strip()
+                    _new_tail = html_normalize_space(el.tail.strip())
+                    new_tail = f' {_new_tail}' if el.tail.startswith(' ') and el.tail.strip()[0] in string.punctuation else _new_tail
                     text = self.__combine_text(text, new_tail, language)
 
             return text
 
         if final := __get_paragraph_text_recusive(root, ''):
-            para_text.append({'c': final, 't': ParagraphTextType.TEXT})
+            para_text.append({'c': final.replace('$br$', PARAGRAPH_SEPARATOR), 't': ParagraphTextType.TEXT})
 
         return para_text
 

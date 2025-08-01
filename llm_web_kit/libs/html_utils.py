@@ -3,6 +3,7 @@ import re
 import string
 from copy import deepcopy
 
+from lxml import html as lxmlhtml
 from lxml.html import HtmlElement, HTMLParser, fromstring, tostring
 
 special_symbols = [  # TODO 从文件读取
@@ -430,3 +431,22 @@ def get_cc_select_html(element: HtmlElement) -> HtmlElement:
         container.append(elem_copy)
 
     return container
+
+
+def html_normalize_space(text: str) -> str:
+    """
+    标准化html中字符串中的空白字符
+    Args:
+        text:
+
+    Returns:
+
+    """
+    if not text.strip():
+        return ''
+    try:
+        tem_text_el = lxmlhtml.fromstring(text.strip())
+        _text = tem_text_el.xpath('normalize-space()')
+        return _text
+    except Exception:
+        return text

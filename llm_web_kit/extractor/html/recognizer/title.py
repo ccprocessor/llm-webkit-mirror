@@ -8,7 +8,10 @@ from llm_web_kit.exception.exception import HtmlTitleRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import process_sub_sup_tags
+from llm_web_kit.libs.html_utils import (html_normalize_space,
+                                         process_sub_sup_tags)
+
+from .text import PARAGRAPH_SEPARATOR
 
 
 class TitleRecognizer(BaseHTMLElementRecognizer):
@@ -124,16 +127,18 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
 
             if el.tag == CCTag.CC_CODE_INLINE:
                 blks.append(f'`{el.text}`')
-            elif el.tag in ['sub', 'sup']:
-                # 使用process_sub_sup_tags保留原始的sub/sup标签
-                processed_text = process_sub_sup_tags(el, '', 'en', True)
-                if processed_text:
-                    blks.append(processed_text)
+            elif el.tag in ['br']:
+                blks.extend(['$br$'])
             else:
-                blks.append((el.text or '').strip())
+                if el.text and el.text.strip():
+                    _new_text = html_normalize_space(el.text.strip())
+                    blks.append(_new_text)
 
             for child in el.getchildren():
-                blks.extend(__extract_title_text_recusive(child))
+                if child.tag == 'sub' or child.tag == 'sup':
+                    blks.extend([process_sub_sup_tags(child, '', recursive=False), child.tail])
+                else:
+                    blks.extend(__extract_title_text_recusive(child))
 
             if with_tail:
                 blks.append((el.tail or '').strip())
@@ -143,7 +148,7 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         # 根元素不保留结尾
         blks = __extract_title_text_recusive(header_el, False)
 
-        return ' '.join(blk for blk in blks if blk)
+        return ' '.join(blk for blk in blks if blk).replace('$br$', PARAGRAPH_SEPARATOR)
 
     def __get_attribute(self, html:HtmlElement) -> Tuple[int, str]:
         """获取element的属性."""

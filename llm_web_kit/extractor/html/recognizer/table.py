@@ -289,6 +289,8 @@ class TableRecognizer(BaseHTMLElementRecognizer):
     def __do_extract_tables(self, root: HtmlElement) -> None:
         """递归处理所有子标签."""
         if root.tag in ['table']:
+            temp_tail = root.tail
+            root.tail = None
             table_raw_html = self._element_to_html(root)
             table_type = self.__get_table_type(root)
             table_nest_level = self.__is_table_nested(root)
@@ -297,6 +299,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             cc_element = self._build_cc_element(
                 CCTag.CC_TABLE, table_body, tail_text, table_type=table_type, table_nest_level=table_nest_level,
                 html=table_raw_html)
+            cc_element.tail = temp_tail
             self._replace_element(root, cc_element)
             return
         for child in root.iterchildren():

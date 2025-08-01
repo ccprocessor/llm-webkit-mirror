@@ -30,3 +30,21 @@ def test_title_tails_and_levels(title_recognizer):
     assert len(result) == 2
     assert element_to_html(result[0][0]) == '<div><cctitle level="4" html="&lt;h4&gt;TEST:&lt;cccode-inline&gt;import *&lt;/cccode-inline&gt;TEST&lt;/h4&gt;Tail">TEST: `import *` TEST</cctitle></div>'
     pass
+
+
+def test_title1(title_recognizer):
+    """
+    测试修复标题被隔断
+    Args:
+        title_recognizer:
+
+    Returns:
+
+    """
+    with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/title1_main.html', 'r') as file:
+        main_html_content = file.read()
+
+    with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/title1.html', 'r') as file:
+        html_content = file.read()
+    result = title_recognizer.recognize('http://www.baidu.com', [(main_html_content, main_html_content)], html_content)
+    assert 'Compare vibrational frequencies for two calculations for C &lt;sub&gt;3&lt;/sub&gt;  (carbon trimer)' in element_to_html(result[1][0])
