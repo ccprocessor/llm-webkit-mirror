@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from pathlib import Path
@@ -5,6 +6,7 @@ from typing import List, Tuple
 
 from lxml import etree
 from lxml.html import HtmlElement
+# 设置asciimath2tex的日志级别
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
@@ -14,7 +16,9 @@ from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
                                          html_to_element)
 from llm_web_kit.libs.text_utils import normalize_ctl_text
 
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.ERROR)
 asciimath2tex = ASCIIMath2Tex(log=False)
+
 color_regex = re.compile(r'\\textcolor\[.*?\]\{.*?\}')
 
 
