@@ -6,17 +6,19 @@ from typing import List, Tuple
 
 from lxml import etree
 from lxml.html import HtmlElement
-# 设置asciimath2tex的日志级别
+
+# 设置py_asciimath的日志级别
+logging.getLogger('py_asciimath').setLevel(logging.ERROR)
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
-from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
+from llm_web_kit.extractor.html.recognizer.recognizer import \
+    CCTag  # noqa: E402
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
                                          element_to_html_unescaped,
                                          html_to_element)
 from llm_web_kit.libs.text_utils import normalize_ctl_text
 
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.ERROR)
 asciimath2tex = ASCIIMath2Tex(log=False)
 
 color_regex = re.compile(r'\\textcolor\[.*?\]\{.*?\}')
@@ -139,9 +141,6 @@ MATH_TYPE_TO_DISPLAY = {
     MathType.LATEX: latex_config,
     MathType.ASCIIMATH: asciiMath_config
 }
-
-
-asciimath2tex = ASCIIMath2Tex(log=False)
 
 
 def text_strip(text):
