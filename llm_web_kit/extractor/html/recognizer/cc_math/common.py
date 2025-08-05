@@ -7,8 +7,14 @@ from typing import List, Tuple
 from lxml import etree
 from lxml.html import HtmlElement
 
-# 设置py_asciimath的日志级别
-logging.getLogger('py_asciimath').setLevel(logging.ERROR)
+# 在导入前就设置严格的日志控制
+logging.basicConfig(level=logging.WARNING, force=True)
+
+# 设置py_asciimath的日志级别，完全禁用其日志输出
+py_asciimath_logger = logging.getLogger('py_asciimath')
+py_asciimath_logger.setLevel(logging.ERROR)
+py_asciimath_logger.disabled = True
+
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
