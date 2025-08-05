@@ -12,12 +12,12 @@ repos:
     hooks:
       - id: isort
         exclude: '^tests/.*/assets/'
-  - repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.32.0
-    hooks:
-      - id: yapf
-        args: ["--style={based_on_style: google, column_limit: 200, indent_width: 4}"]
-        exclude: '^tests/.*/assets/'
+  # - repo: https://github.com/pre-commit/mirrors-yapf
+  #   rev: v0.32.0
+  #   hooks:
+  #     - id: yapf
+  #       args: ["--style={based_on_style: google, column_limit: 200, indent_width: 4}"]
+  #       exclude: '^tests/.*/assets/'
   # - repo: https://github.com/codespell-project/codespell
   #   rev: v2.2.1
   #   hooks:

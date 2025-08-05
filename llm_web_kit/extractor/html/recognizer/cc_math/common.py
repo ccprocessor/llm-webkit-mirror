@@ -11,8 +11,7 @@ from lxml.html import HtmlElement
 logging.getLogger('py_asciimath').setLevel(logging.ERROR)
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
-from llm_web_kit.extractor.html.recognizer.recognizer import \
-    CCTag  # noqa: E402
+from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
 from llm_web_kit.libs.doc_element_type import DocElementType
 from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
                                          element_to_html_unescaped,
