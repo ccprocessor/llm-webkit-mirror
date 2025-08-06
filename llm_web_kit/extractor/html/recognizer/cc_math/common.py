@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from pathlib import Path
@@ -5,6 +6,15 @@ from typing import List, Tuple
 
 from lxml import etree
 from lxml.html import HtmlElement
+
+# 在导入前就设置严格的日志控制
+logging.basicConfig(level=logging.WARNING, force=True)
+
+# 设置py_asciimath的日志级别，完全禁用其日志输出
+py_asciimath_logger = logging.getLogger('py_asciimath')
+py_asciimath_logger.setLevel(logging.ERROR)
+py_asciimath_logger.disabled = True
+
 from py_asciimath.translator.translator import ASCIIMath2Tex
 
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
@@ -15,6 +25,7 @@ from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
 from llm_web_kit.libs.text_utils import normalize_ctl_text
 
 asciimath2tex = ASCIIMath2Tex(log=False)
+
 color_regex = re.compile(r'\\textcolor\[.*?\]\{.*?\}')
 
 
@@ -135,9 +146,6 @@ MATH_TYPE_TO_DISPLAY = {
     MathType.LATEX: latex_config,
     MathType.ASCIIMATH: asciiMath_config
 }
-
-
-asciimath2tex = ASCIIMath2Tex(log=False)
 
 
 def text_strip(text):
