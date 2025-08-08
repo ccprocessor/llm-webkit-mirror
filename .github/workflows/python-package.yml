@@ -124,4 +124,4 @@ jobs:
       - name: Publish distribution to PyPI
         run: |
           pip install twine
-          twine upload --verbose --repository-url https://test.pypi.org/legacy/ dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          twine upload --verbose dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
