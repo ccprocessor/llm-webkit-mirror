@@ -380,6 +380,7 @@ class TestPreDataJsonKey(unittest.TestCase):
         assert hasattr(PreDataJsonKey, 'TYPICAL_RAW_TAG_HTML')
         assert hasattr(PreDataJsonKey, 'TYPICAL_SIMPLIFIED_HTML')
         assert hasattr(PreDataJsonKey, 'LLM_RESPONSE')
+        assert hasattr(PreDataJsonKey, 'LLM_RESPONSE_EMPTY')
         assert hasattr(PreDataJsonKey, 'HTML_ELEMENT_DICT')
         assert hasattr(PreDataJsonKey, 'HTML_TARGET_LIST')
         assert hasattr(PreDataJsonKey, 'MAIN_HTML')
