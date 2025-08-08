@@ -46,8 +46,15 @@ class LayoutBatchParser(BaseMainHtmlParser):
         self.dynamic_classid_enable = pre_data.get(PreDataJsonKey.DYNAMIC_CLASSID_ENABLE, False)
         self.more_noise_enable = pre_data.get(PreDataJsonKey.MORE_NOISE_ENABLE, False)
         self.dynamic_classid_similarity_threshold = pre_data.get(PreDataJsonKey.DYNAMIC_CLASSID_SIM_THRESH, 0.85)
+        response_empty = pre_data.get(PreDataJsonKey.LLM_RESPONSE_EMPTY, False)
         template_data_str = pre_data[PreDataJsonKey.HTML_ELEMENT_DICT]
         template_data = dict()
+        # 检查第0层第一个元素是否为green，如果是则返回空的HTML
+        if response_empty:
+            pre_data[PreDataJsonKey.MAIN_HTML] = ''
+            pre_data[PreDataJsonKey.MAIN_HTML_BODY] = ''
+            pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
+            return pre_data
         if isinstance(template_data_str, str):
             template_data_str = json.loads(template_data_str)
             for layer, layer_dict in template_data_str.items():
@@ -57,19 +64,6 @@ class LayoutBatchParser(BaseMainHtmlParser):
             template_data = template_data_str
         else:
             raise ValueError(f'template_data 类型错误: {type(template_data_str)}')
-        # 检查第0层第一个元素是否为green，如果是则返回空的HTML
-        if 0 in template_data:
-            layer_0_elements = template_data[0]
-            if layer_0_elements:
-                # 获取第一个元素
-                first_element_info = next(iter(layer_0_elements.values()))
-                if isinstance(first_element_info, tuple) and len(first_element_info) > 0:
-                    label = first_element_info[0]  # 获取标签（red/green）
-                    if label == 'green':
-                        pre_data[PreDataJsonKey.MAIN_HTML] = ''
-                        pre_data[PreDataJsonKey.MAIN_HTML_BODY] = ''
-                        pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
-                        return pre_data
 
         self.template_data = template_data
         content, body = self.process(html_source, template_dict_html)

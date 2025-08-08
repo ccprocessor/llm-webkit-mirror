@@ -20,6 +20,8 @@ class PreDataJsonKey:
     TYPICAL_SIMPLIFIED_HTML = 'typical_simplified_html'
     # 模型打标字典
     LLM_RESPONSE = 'llm_response'
+    # 模型结果都为0
+    LLM_RESPONSE_EMPTY = 'llm_response_empty'
     # 映射模版正文树结构的元素字典
     HTML_ELEMENT_DICT = 'html_element_dict'
     # 映射模版正文时的文本列表

@@ -57,6 +57,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                 pre_data[PreDataJsonKey.TYPICAL_DICT_HTML] = template_dict_html
                 pre_data[PreDataJsonKey.SIMILARITY_LAYER] = 0
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+                pre_data[PreDataJsonKey.LLM_RESPONSE_EMPTY] = True
                 return pre_data
 
             # 模版抽取正文html
