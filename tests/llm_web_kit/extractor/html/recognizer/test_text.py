@@ -428,7 +428,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert 'Show Ignored Content\n  1. DrDu\n\n Lieber Hendrik, \n\n kannst Du hierzu was beitragen? \n\n Ich finde keinen rechten Grund' in content_md
+        assert '1. DrDu\n\n Lieber Hendrik, \n\n kannst Du hierzu was beitragen? \n\n Ich finde keinen rechten Grund' in content_md
+        assert 'Show Ignored Content' not in content_md  # 这个是隐藏标签，不应该被识别出来
 
     def test_Lack_content1(self):
         """

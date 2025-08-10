@@ -17,11 +17,11 @@
                 },
                 {
                     "enable": true,
-                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor"
+                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipFilterTablePreExtractor"
                 },
                 {
                     "enable": true,
-                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor",
+                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipCleanTagsPreExtractor",
                     "class_init_kwargs": {}
                 }
             ],
