@@ -103,10 +103,10 @@ class HTMLFileFormatCleanTagsPreExtractor(HTMLFileFormatFilterPreExtractor):
     @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
         html_content = data_json['html']
-        data_json['html'] = self.__clean_invisible_elements(html_content, data_json)
+        data_json['html'] = self._clean_invisible_elements(html_content, data_json)
         return data_json
 
-    def __clean_invisible_elements(self, html_content: str, data_json: DataJson) -> str:
+    def _clean_invisible_elements(self, html_content: str, data_json: DataJson) -> str:
         """清理隐藏标签."""
         tree = html_to_element(html_content)
         # 遍历所有配置的隐藏标签规则
@@ -215,5 +215,5 @@ class HTMLFileFormatNoClipCleanTagsPreExtractor(HTMLFileFormatCleanTagsPreExtrac
     @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
         html_content = data_json['main_html']
-        data_json['main_html'] = self.__clean_invisible_elements(html_content, data_json)
+        data_json['main_html'] = self._clean_invisible_elements(html_content, data_json)
         return data_json
