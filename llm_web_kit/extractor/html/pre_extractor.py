@@ -49,7 +49,14 @@ class HTMLFileFormatFilterTablePreExtractor(HTMLFileFormatFilterPreExtractor):
 
     def __remove_format_table(self, data_json: DataJson):
         """remove 排版table."""
-        html_content = data_json['html']
+        html_content = self._get_html_content(data_json)
+        return self.__do_remove_layout_table(html_content)
+
+    def _get_html_content(self, data_json: DataJson):
+        return data_json['html']
+
+    def __do_remove_layout_table(self, html_content: str):
+        """remove 排版table."""
         html_str = html_to_element(html_content)
         first_structure = html_str.xpath('/html/body/table') != []
         second_structure = html_str.xpath('/html/body/center/table') != []
@@ -95,12 +102,12 @@ class HTMLFileFormatCleanTagsPreExtractor(HTMLFileFormatFilterPreExtractor):
 
     @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
-        data_json['html'] = self.__clean_invisible_elements(data_json)
+        html_content = data_json['html']
+        data_json['html'] = self.__clean_invisible_elements(html_content, data_json)
         return data_json
 
-    def __clean_invisible_elements(self, data_json: DataJson) -> str:
+    def __clean_invisible_elements(self, html_content: str, data_json: DataJson) -> str:
         """清理隐藏标签."""
-        html_content = data_json['html']
         tree = html_to_element(html_content)
         # 遍历所有配置的隐藏标签规则
         for tag in INVISIBLE_TAGS:
@@ -184,3 +191,29 @@ class HTMLFileFormatNoClipPreExtractor(HTMLFileFormatFilterPreExtractor):
             if len(form.getchildren()) == 0 or not form.text_content().strip():
                 form.getparent().remove(form)
         return element_to_html(tree)
+
+# ##############################################################################
+# 解决 main_html和html处理混乱的问题
+# ##############################################################################
+
+
+class HTMLFileFormatNoClipFilterTablePreExtractor(HTMLFileFormatFilterTablePreExtractor):
+    """noclip管线对main_html预处理."""
+    def __init__(self, config: dict):
+        super().__init__(config)
+
+    @override
+    def _get_html_content(self, data_json: DataJson):
+        return data_json['main_html']
+
+
+class HTMLFileFormatNoClipCleanTagsPreExtractor(HTMLFileFormatCleanTagsPreExtractor):
+    """noclip管线对main_html预处理."""
+    def __init__(self, config: dict):
+        super().__init__(config)
+
+    @override
+    def _do_pre_extract(self, data_json: DataJson) -> DataJson:
+        html_content = data_json['main_html']
+        data_json['main_html'] = self.__clean_invisible_elements(html_content, data_json)
+        return data_json
