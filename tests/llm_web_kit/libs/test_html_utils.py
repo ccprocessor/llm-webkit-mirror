@@ -6,7 +6,7 @@ from lxml.html import HtmlElement, fromstring
 
 from llm_web_kit.exception.exception import MagicHtmlExtractorException
 from llm_web_kit.libs.html_utils import (element_to_html, extract_magic_html,
-                                         html_to_element,
+                                         get_cc_select_html, html_to_element,
                                          html_to_markdown_table,
                                          process_sub_sup_tags, remove_element,
                                          replace_element, table_cells_count)
@@ -404,6 +404,76 @@ class TestHtmlUtils(unittest.TestCase):
         result = process_sub_sup_tags(html_el)
         self.assertEqual(result, 'prefix!<sub>test</sub>')
 
+    def test_get_cc_select_html(self):
+        """测试get_cc_select_html函数."""
+        # 测试用例1: 包含多个cc-select="true"元素
+        html_content = '''
+        <div>
+            <p cc-select="true">这是第一个选中的段落</p>
+            <div>
+                <span cc-select="true">这是选中的span</span>
+                <span cc-select="false">这不应该被选中</span>
+            </div>
+            <h1 cc-select="true">这是选中的标题</h1>
+            <p>这个段落没有cc-select属性</p>
+        </div>
+        '''
+        element = fromstring(html_content)
+        result = get_cc_select_html(element)
+
+        # 验证返回的是一个容器元素
+        self.assertEqual(result.tag, 'div')
+
+        # 验证容器中包含正确数量的子元素
+        self.assertEqual(len(result), 3)
+
+        # 验证第一个子元素是p标签，内容正确
+        first_child = result[0]
+        self.assertEqual(first_child.tag, 'p')
+        self.assertEqual(first_child.text, '这是第一个选中的段落')
+        self.assertEqual(first_child.get('cc-select'), 'true')
+
+        # 验证第二个子元素是span标签
+        second_child = result[1]
+        self.assertEqual(second_child.tag, 'span')
+        self.assertEqual(second_child.text, '这是选中的span')
+        self.assertEqual(second_child.get('cc-select'), 'true')
+
+        # 验证第三个子元素是h1标签
+        third_child = result[2]
+        self.assertEqual(third_child.tag, 'h1')
+        self.assertEqual(third_child.text, '这是选中的标题')
+        self.assertEqual(third_child.get('cc-select'), 'true')
+
+        # 测试用例2: 没有cc-select="true"元素
+        html_without_select = '''
+        <div>
+            <p>普通段落</p>
+            <span cc-select="false">不选中的span</span>
+        </div>
+        '''
+        element_no_select = fromstring(html_without_select)
+        result_no_select = get_cc_select_html(element_no_select)
+
+        # 验证返回空容器
+        self.assertEqual(result_no_select.tag, 'div')
+        self.assertEqual(len(result_no_select), 0)
+
+        # 测试用例3: 嵌套的cc-select元素
+        html_nested = '''
+        <div cc-select="true">
+            <p cc-select="true">嵌套的段落</p>
+            <span>普通span</span>
+        </div>
+        '''
+        element_nested = fromstring(html_nested)
+        result_nested = get_cc_select_html(element_nested)
+
+        # 验证包含了嵌套的所有cc-select="true"元素
+        self.assertEqual(len(result_nested), 2)
+        self.assertEqual(result_nested[0].tag, 'div')
+        self.assertEqual(result_nested[1].tag, 'p')
+
 
 # 测试用例数据
 TEST_REMOVE_ELEMENT_CASES = [
@@ -504,7 +574,7 @@ class TestRemoveElement(unittest.TestCase):
 
 class TestExtractMagicHtml(unittest.TestCase):
 
-    @patch('llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor')
+    @patch('llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor')
     def test_extract_magic_html_success(self, mock_extractor_class):
         mock_extractor_instance = MagicMock()
         mock_extractor_class.return_value = mock_extractor_instance
@@ -522,7 +592,7 @@ class TestExtractMagicHtml(unittest.TestCase):
         mock_extractor_instance._extract_main_html.assert_called_once_with(html, base_url, page_layout_type)
         self.assertEqual(result, expected_html)
 
-    @patch('llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor')
+    @patch('llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor')
     def test_extract_magic_html_exception(self, mock_extractor_class):
         mock_extractor_instance = MagicMock()
         mock_extractor_class.return_value = mock_extractor_instance

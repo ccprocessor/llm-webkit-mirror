@@ -75,8 +75,10 @@ llm-web-kit is a python library that ..
 
 ## Quick Start
 
+### extract by magic_html+recognize
+
 ```python
-from llm_web_kit.simple import extract_html_to_md
+from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
 import traceback
 from loguru import logger
 
@@ -93,6 +95,82 @@ if __name__=="__main__":
     url = ""
     html = ""
     markdown = extract(url, html)
+```
+
+### only extract by recognize
+
+```python
+from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
+import traceback
+from loguru import logger
+
+def extract(url:str, raw_html:str) -> str:
+    try:
+        nlp_md = extract_html_to_md(url, raw_html, clip_html=False)
+        # or mm_nlp_md = extract_html_to_mm_md(url, raw_html, clip_html=False)
+        return nlp_md
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    markdown = extract(url, html)
+```
+
+### only extract main_html by magic-html
+
+```python
+from llm_web_kit.simple import extract_main_html_by_maigic_html
+import traceback
+from loguru import logger
+
+def extract(url:str, html:str) -> str:
+    try:
+        main_html = extract_main_html_by_maigic_html(url, html)
+        # or mm_main_html = extract_pure_html_to_mm_md(url, html)
+        return main_html
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    url = ""
+    html = ""
+    main_html = extract(url, html)
+```
+
+### extract main_html by model response
+
+```python
+import traceback
+from loguru import logger
+from llm_web_kit.main_html_parser.simplify_html.simplify_html import simplify_html
+from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
+from llm_web_kit.main_html_parser.parser.tag_mapping import MapItemToHtmlTagsParser
+
+def extract(response_json: dict, html:str) -> str:
+    try:
+        _, typical_raw_tag_html, _ = simplify_html(html)
+        pre_data = PreDataJson({})
+        pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML] = typical_raw_tag_html
+        pre_data[PreDataJsonKey.TYPICAL_RAW_HTML] = html
+        pre_data['success_label_enable'] = True
+        pre_data[PreDataJsonKey.LLM_RESPONSE] = response_json
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse_single(pre_data)
+        main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
+        is_success = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS]
+        return main_html, is_success
+    except Exception as e:
+        logger.exception(e)
+    return None
+
+if __name__=="__main__":
+    response_json =  {'item_id 1': 0, 'item_id 2': 1, 'item_id 3': 1}
+    html = ""
+    main_html, is_success = extract(response_json, html)
 ```
 
 ## Pipeline

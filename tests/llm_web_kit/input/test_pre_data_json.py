@@ -380,6 +380,7 @@ class TestPreDataJsonKey(unittest.TestCase):
         assert hasattr(PreDataJsonKey, 'TYPICAL_RAW_TAG_HTML')
         assert hasattr(PreDataJsonKey, 'TYPICAL_SIMPLIFIED_HTML')
         assert hasattr(PreDataJsonKey, 'LLM_RESPONSE')
+        assert hasattr(PreDataJsonKey, 'LLM_RESPONSE_EMPTY')
         assert hasattr(PreDataJsonKey, 'HTML_ELEMENT_DICT')
         assert hasattr(PreDataJsonKey, 'HTML_TARGET_LIST')
         assert hasattr(PreDataJsonKey, 'MAIN_HTML')
@@ -392,6 +393,10 @@ class TestPreDataJsonKey(unittest.TestCase):
         assert hasattr(PreDataJsonKey, 'TYPICAL_DICT_HTML')
         assert hasattr(PreDataJsonKey, 'DYNAMIC_ID_ENABLE')
         assert hasattr(PreDataJsonKey, 'DYNAMIC_CLASSID_ENABLE')
+        assert hasattr(PreDataJsonKey, 'DYNAMIC_CLASSID_SIM_THRESH')
+        assert hasattr(PreDataJsonKey, 'MORE_NOISE_ENABLE')
+        assert hasattr(PreDataJsonKey, 'TYPICAL_MAIN_HTML_SIM')
+        assert hasattr(PreDataJsonKey, 'MAIN_HTML_SIM')
 
         # Check actual values
         assert PreDataJsonKey.DOMAIN_NAME == 'domain_name'

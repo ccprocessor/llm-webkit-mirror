@@ -18,7 +18,8 @@ from lxml import html
 
 from llm_web_kit.config.cfg_reader import load_pipe_tpl
 from llm_web_kit.extractor.extractor_chain import ExtractSimpleFactory
-from llm_web_kit.extractor.html.recognizer.cc_math.common import MathType
+from llm_web_kit.extractor.html.recognizer.cc_math.common import (CSDN, ZHIHU,
+                                                                  MathType)
 from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 
@@ -63,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 90
+        assert len(self.data_json) == 103
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -187,7 +188,6 @@ class TestExtractorChain(unittest.TestCase):
         # Create DataJson from test data
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
-
         # Verify basic properties
         self.assertEqual(result.get_dataset_name(), 'test_pipeline_suit')
         self.assertEqual(result['track_id'], 'stackoverflow_math')
@@ -362,8 +362,6 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         list_type = result.get_content_list()._get_data()[0][0]['type']
-        print('=============', json.dumps(result.get_content_list()._get_data(), ensure_ascii=False))
-        print('=============', list_type)
         assert list_type != 'list'
 
     def test_table_include_math_p(self):
@@ -451,7 +449,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_txt = result.get_content_list().to_nlp_md()
-        assert len(content_txt) == 1982
+        assert len(content_txt) == 1983
 
     def test_xml_tag(self):
         """测试xml标签."""
@@ -755,11 +753,159 @@ A few explanations on why certain things in business are so.
         self.assertIsNotNone(chain)
         test_data = self.data_json[89]
         # 验证URL中包含blog.csdn.net
-        self.assertIn('blog.csdn.net', test_data['url'])
-        # Create DataJson from test data
+        self.assertIn(CSDN.DOMAIN, test_data['url'])
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        # print('Markdown Content:', md_content)
         self.assertIn(r'$\lim\limits_{x \to 1}\dfrac{x^2-1}{x-1}$', md_content)
         self.assertIn(r'\begin{aligned} \frac{f(1.01)-f(1)}{1.01-1} &= \frac{1.01^2-1^2}{0.01} \\ &= \frac{0.0201}{0.01} \\ &= 2.01\end{aligned}', md_content)
+
+    def test_zhihu_custom_tag(self):
+        """测试知乎自定义标签."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[97]
+        # 验证URL中包含zhuanlan.zhihu.com
+        self.assertIn(ZHIHU.DOMAIN, test_data['url'])
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'\begin{gathered} p(s_{1}|s_{1},a_{2})=0, \\ p(s_{2}|s_{1},a_{2})=1, \\ p(s_{3}|s_{1},a_{2})=0, \\ p(s_{4}|s_{1},a_{2})=0, \\ p(s_{5}|s_{1},a_{2})=0, \end{gathered}', md_content)
+        self.assertIn(r'$s_1\xrightarrow{a_2}s_2\xrightarrow{a_3}s_5\xrightarrow{a_3}s_8\xrightarrow{a_2}s_9.$', md_content)
+        self.assertIn(r'$\mathrm{return}=0+0+0+1=1.$', md_content)
+        self.assertIn(r'\begin{aligned} V(s) & =\mathbb{E}[G_t|S_t=s] \\  & =\mathbb{E}[R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\ldots|S_t=s] \\  & =\mathbb{E}[R_t+\gamma(R_{t+1}+\gamma R_{t+2}+\ldots)|S_t=s] \\  & =\mathbb{E}[R_t+\gamma G_{t+1}|S_t=s] \\  & =\mathbb{E}[R_t+\gamma V(S_{t+1})|S_t=s] \end{aligned}', md_content)
+
+    def test_mathinsight_custom_latex(self):
+        """测试mathinsight自定义latex."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[98]
+        # 验证URL中包含mathinsight.org
+        # self.assertIn('mathinsight.org', test_data['url'])
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'L(\mathbf{x}) = f(\mathbf{a}) + T(\mathbf{x}-\mathbf{a})', md_content)
+        self.assertIn(r'\frac{x^2y}{x^2+y^2} & \text{if } (x,y) \ne (0,0)\\',md_content)
+
+    def test_mjx_container(self):
+        """测试mathinsight自定义latex."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[99]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'1111', md_content)
+        # content_list = result.get_content_list()._get_data()
+        # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
+        # with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
+
+    def test_ascii_delimiter(self):
+        """测试ascii分隔符."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[101]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        # with open('mathjax抽取case222.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
+        self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
+        self.assertIn(r'${m}^{2}$', md_content)
+        self.assertIn(r'\rho$', md_content)
+        self.assertIn(r'$f = \frac{1}{2 L} \sqrt{\frac{E}{\rho}}$', md_content)
+        self.assertIn(r'$L = {T}^{2} / \left(2 W\right)$', md_content)
+
+    def test_htmlmath_sub_sup(self):
+        """测试ascii分隔符."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[102]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        # with open('test0725_sub.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
+        self.assertIn(r'<sub>4</sub>', md_content)
+        self.assertIn(r'<sub>8</sub>', md_content)
+        self.assertIn(r'<sub>2</sub>', md_content)
+        self.assertIn(r'<sub>g</sub>', md_content)
+        self.assertIn(r'<sub>u</sub>', md_content)
+
+    def test_double_ul(self):
+        """测试双重ul标签."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[90]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_nlp_md()
+        assert 'Wheels and Tyres' in content_md
+
+    def test_other_space(self):
+        """测试括号、双引单引号等中文符号导致的空格."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[91]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_nlp_md()
+        assert '(APC)' in content_md
+        test_data = self.data_json[92]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_nlp_md()
+        assert '“I do swear by the Day of Resurrection.' in content_md
+
+    def test_classname_to_code(self):
+        """测试由于classname导致的audio、list识别为code的情况."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[93]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list().to_dict()[0]
+        types = []
+        # 1
+        for i in range(len(content_list)):
+            types.append(content_list[i]['type'])
+        with open('output.jsonl', 'w') as f:
+            f.write(result.get_content_list().to_json())
+        assert 'code' not in types
+        test_data = self.data_json[94]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list().to_dict()[0]
+        types = []
+
+        for i in range(len(content_list)):
+            types.append(content_list[i]['type'])
+        assert 'code' not in types
+
+    def test_sup_escape_error(self):
+        """测试<sup>和<sub>被转义成<sup&gt;和<sub&gt;导致上下标失效的情况."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[95]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_nlp_md()
+        # print(content_md)
+        assert '<sup&gt;' not in content_md and '<sub&gt;' not in content_md
+
+    def test_item_notext_error(self):
+        """测试跳过list item中无实际内容的情况."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[96]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_list = result.get_content_list().to_dict()[0]
+        first_item_list = {}
+        for i in range(len(content_list)):
+            if content_list[i]['type'] == 'list':
+                first_item_list = content_list[i]['content']['items']
+                break
+        assert len(first_item_list) == 0

@@ -27,7 +27,8 @@ class CodeRecognizer(BaseHTMLElementRecognizer):
         self,
         base_url: str,
         main_html_lst: List[Tuple[HtmlElement, HtmlElement]],
-        raw_html: str
+        raw_html: str,
+        language:str = 'en'
     ) -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析代码元素.
 

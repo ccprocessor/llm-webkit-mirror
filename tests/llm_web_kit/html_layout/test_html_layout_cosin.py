@@ -13,7 +13,7 @@ TEST_FEATURE_HTML = [
     {'input': 'assets/feature4.html', 'expected': 2},
 ]
 TEST_SIMIL_HTMLS = [
-    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.2831639},
+    {'input1': 'assets/feature.html', 'input2': 'assets/cosin.html', 'expected': 0.2231639},
     {'input1': 'assets/feature1.html', 'input2': 'assets/feature2.html', 'layer_n': 12, 'expected': 0.9463744},
     {'input1': 'assets/feature1.html', 'input2': 'assets/data_structure.html', 'layer_n': 12, 'expected': 0},
 ]
@@ -30,7 +30,7 @@ TEST_SIMIL_FEATURES = [
 ]
 TEST_CLUSTER_HTMLS = [
     {'input': ['assets/feature1.html', 'assets/cosin.html'], 'expected': [-1]},
-    {'input': ['assets/feature1.html', 'assets/feature2.html'], 'expected': [0]},
+    {'input': ['assets/feature1.html', 'assets/feature2.html', 'assets/data_structure.html'], 'expected': [-1]},
     {'input': ['assets/100.html', 'assets/101.html', 'assets/102.html', 'assets/103.html', 'assets/104.html',
                'assets/105.html', 'assets/106.html'], 'expected': [0]}
 
@@ -46,6 +46,11 @@ TEST_SUM_TAGS = [
                            3: ['div', 'div', 'div', 'div', 'div', 'div', 'div'],
                            4: ['div', 'div', 'header', 'article', 'aside', 'div', 'a', 'div', 'div']}},
         'expected': {'layer_n': {1: 1, 2: 5, 3: 7, 4: 9}, 'total_n': 22}}
+]
+TEST_CLUSTER_TEST = [
+    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2},
+    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2},
+    {'feature': {'tags': {'2': ['img', 'a']}}, 'layer_n': {'2': 2}, 'total_n': 2}
 ]
 
 
@@ -72,6 +77,8 @@ class TestHtmllayoutcosin(unittest.TestCase):
                         TEST_CLUSTER_HTML['input']]
             res, layout_list = cluster_html_struct(features)
             self.assertEqual(TEST_CLUSTER_HTML['expected'], layout_list)
+        res, layout_list = cluster_html_struct(TEST_CLUSTER_TEST)
+        self.assertEqual(layout_list, [0])
 
     def test_similarity(self):
         for TEST_SIMIL_HTML in TEST_SIMIL_HTMLS:

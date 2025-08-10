@@ -33,7 +33,7 @@ class HTMLPageLayoutType:
     LAYOUT_LIST = 'list'
 
 
-class HTMLFileFormatExtractor(BaseFileFormatExtractor):
+class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
     """一个从html文件中提取数据的提取器."""
 
     def __init__(self, config: dict):
@@ -65,8 +65,6 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             CCTag.CC_TEXT: self.__paragraph_recognizer
         }
 
-        self.__magic_html_extractor = self.__build_extractor()
-
     @override
     def _filter_by_rule(self, data_json: DataJson) -> bool:
         """根据规则过滤content_list.
@@ -91,36 +89,30 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         # 第三步将解析结果存入content_list中
         raw_html:str = data_json['html']
         base_url:str = data_json['url']
-        page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
+        main_html:str = data_json['main_html']
+        language:str = data_json.get('language', 'en')
+        # page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
 
-        main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
+        # main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
         main_html_element = html_to_element(main_html)
-        parsed_html = [(main_html_element, raw_html)]
+        parsed_html = [(main_html_element, main_html)]
         for extract_func in [self._extract_code, self._extract_table, self._extract_math, self._extract_list,
                              self._extract_image,
                              self._extract_title, self._extract_paragraph]:
-            parsed_html = extract_func(base_url, parsed_html, raw_html)
-        content_list:ContentList = self._export_to_content_list(base_url, parsed_html, raw_html)
+            parsed_html = extract_func(base_url, parsed_html, raw_html, language)
+
+        # 过滤掉包含script和style标签的元素,在这里改，是因为math提取需要保留script标签
+        filtered_parsed_html = []
+        for cc_html, o_html in parsed_html:
+            # 检查o_html是否包含script或style标签
+            if not (o_html.xpath('//script') or o_html.xpath('//style')):
+                filtered_parsed_html.append((cc_html, o_html))
+        content_list:ContentList = self._export_to_content_list(base_url, filtered_parsed_html, raw_html)
         data_json['content_list'] = content_list
-        data_json['title'] = title
+        # data_json['title'] = title
         return data_json
 
-    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str, str]:
-        """从html文本中提取主要的内容.
-
-        Args:
-            raw_html (str): html文本
-            base_url (str): html文本的网页地址
-            page_layout_type (str): 网页的布局类型
-
-        Returns:
-            str1: 主要的内容
-            str2: 获得内容的方式，可对质量进行评估
-        """
-        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url, precision=False, html_type=page_layout_type)
-        return dict_result['html'], dict_result['xp_num'], dict_result.get('title', '')
-
-    def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str) -> List[Tuple[HtmlElement,HtmlElement]]:
+    def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str, language:str) -> List[Tuple[HtmlElement,HtmlElement]]:
         """从html文本中提取代码.
 
         Args:
@@ -130,10 +122,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__code_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__code_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_math(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_math(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取数学公式.
 
         Args:
@@ -144,10 +136,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__math_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__math_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_image(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_image(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取图片.
 
         Args:
@@ -158,10 +150,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__image_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__image_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_audio(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_audio(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取音频.
 
         Args:
@@ -172,10 +164,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__audio_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__audio_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_video(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_video(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取视频.
 
         Args:
@@ -186,10 +178,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__video_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__video_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_table(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_table(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取表格.
 
         Args:
@@ -200,10 +192,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__table_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__table_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_list(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取列表.
 
         Args:
@@ -214,10 +206,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__list_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__list_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_title(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_title(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取标题.
 
         Args:
@@ -228,10 +220,10 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__title_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
-    def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str) -> List[Tuple[str,str]]:
+    def _extract_paragraph(self, base_url:str, html_lst:List[Tuple[str,str]], raw_html:str, language:str) -> List[Tuple[str,str]]:
         """从html文本中提取段落.
 
         Args:
@@ -242,7 +234,7 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
         Returns:
         """
 
-        lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html)
+        lst = self.__paragraph_recognizer.recognize(base_url, html_lst, raw_html, language)
         return lst
 
     def __is_valid_node(self, node: dict) -> bool:
@@ -373,6 +365,54 @@ class HTMLFileFormatExtractor(BaseFileFormatExtractor):
             #     raise HtmlFileExtractorException(f'html文本中包含多个cc标签: {html}')
             # return element_to_html(nodes[0]), nodes[0].tag
             return nodes[0], nodes[0].tag
+
+
+class MagicHTMLFIleFormatorExtractor(NoClipHTMLFIleFormatorExtractor):
+    """一个从html文件中提取数据的提取器."""
+
+    def __init__(self, config: dict):
+        """从参数指定的配置中初始化这个流水线链.
+
+        Args:
+            config (dict): 配置字典
+        """
+        super().__init__(config)
+        self.__magic_html_extractor = self.__build_extractor()
+
+    @override
+    def _do_extract(self, data_json: DataJson) -> DataJson:
+        """实现真正的数据提取.
+
+        Args:
+            data_json (DataJson): 需要处理的数据集
+        """
+        raw_html:str = data_json['html']
+        base_url:str = data_json['url']
+        page_layout_type:str = data_json.get('page_layout_type', HTMLPageLayoutType.LAYOUT_ARTICLE)  # 默认是文章类型
+
+        # 使用magic-html提取主要内容
+        main_html, method, title = self._extract_main_html(raw_html, base_url, page_layout_type)
+        data_json['main_html'] = main_html
+        # 调用父类的提取方法
+        data_json = super()._do_extract(data_json)
+        # 添加标题
+        data_json['title'] = title
+        return data_json
+
+    def _extract_main_html(self, raw_html:str, base_url:str, page_layout_type:str) -> Tuple[str, str, str]:
+        """从html文本中提取主要的内容.
+
+        Args:
+            raw_html (str): html文本
+            base_url (str): html文本的网页地址
+            page_layout_type (str): 网页的布局类型
+
+        Returns:
+            str1: 主要的内容
+            str2: 获得内容的方式，可对质量进行评估
+        """
+        dict_result = self.__magic_html_extractor.extract(raw_html, base_url=base_url, precision=False, html_type=page_layout_type)
+        return dict_result['html'], dict_result['xp_num'], dict_result.get('title', '')
 
     def __build_extractor(self):
         """

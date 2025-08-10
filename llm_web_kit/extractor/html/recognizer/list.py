@@ -8,8 +8,11 @@ from llm_web_kit.exception.exception import HtmlListRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import process_sub_sup_tags
+from llm_web_kit.libs.html_utils import (html_normalize_space,
+                                         process_sub_sup_tags)
 from llm_web_kit.libs.text_utils import normalize_text_segment
+
+from .text import inline_tags
 
 
 class ListAttribute():
@@ -48,7 +51,7 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         return ele_node
 
     @override
-    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str) -> List[Tuple[HtmlElement, HtmlElement]]:
+    def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str, language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
         """父类，解析列表元素.
 
         Args:
@@ -124,12 +127,13 @@ class ListRecognizer(BaseHTMLElementRecognizer):
             is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
             paragraph = []
             result = {}
+
             if el.tag == CCTag.CC_MATH_INLINE and el.text and el.text.strip():
                 paragraph.append({'c': f'${el.text}$', 't': ParagraphTextType.EQUATION_INLINE})
             elif el.tag == CCTag.CC_CODE_INLINE and el.text and el.text.strip():
                 paragraph.append({'c': f'`{el.text}`', 't': ParagraphTextType.CODE_INLINE})
             elif el.tag == 'br':
-                paragraph.append({'c': '\n\n', 't': ParagraphTextType.TEXT})
+                paragraph.append({'c': '$br$', 't': ParagraphTextType.TEXT})
             elif el.tag == 'sub' or el.tag == 'sup':
                 # 处理sub和sup标签，转换为GitHub Flavored Markdown格式
                 current_text = ''
@@ -146,13 +150,24 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                     'items': []
                 }
                 for child in el.getchildren():
-                    child_list['items'].append(__extract_list_item_text_recusive(child))
-                result['child_list'] = child_list
+                    child_item = __extract_list_item_text_recusive(child)
+                    if len(child_item) != 0:
+                        child_list['items'].append(child_item)
+                if child_list['items']:
+                    result['child_list'] = child_list
             else:
                 if el.text and el.text.strip():
-                    paragraph.append({'c': el.text, 't': ParagraphTextType.TEXT})
+                    _new_text = html_normalize_space(el.text.strip())
+                    if len(el) == 0 and el.tag not in inline_tags:
+                        _new_text += '$br$'
+                    paragraph.append({'c': _new_text, 't': ParagraphTextType.TEXT})
                     el.text = None
-                for child in el.getchildren():
+
+                for child in el:
+                    if child.tag not in inline_tags:
+                        if paragraph:
+                            paragraph[-1]['c'] += '$br$'
+
                     p = __extract_list_item_text_recusive(child)
                     if len(p) > 0:
                         # 如果子元素有child_list，需要保存
@@ -160,24 +175,42 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                             result['child_list'] = p['child_list']
                         # 添加子元素的文本内容
                         if 'c' in p:
-                            paragraph.append({'c': p['c'], 't': p.get('t', ParagraphTextType.TEXT)})
+                            if p['c'] != '':
+                                paragraph.append({'c': p['c'], 't': p.get('t', ParagraphTextType.TEXT)})
+                    else:
+                        if paragraph:
+                            last_paragraph = paragraph[-1]['c']
+                            if last_paragraph == '$br$':
+                                del paragraph[-1]
+                            else:
+                                if last_paragraph.endswith('$br$'):
+                                    paragraph[-1]['c'] = last_paragraph[:-4]
+
             if el.tag != 'li' and el.tail and el.tail.strip():
+                _new_tail = html_normalize_space(el.tail.strip())
                 if is_sub_sup:
                     # 如果尾部文本跟在sub/sup后面，直接附加到最后一个文本段落中
                     if len(paragraph) > 0 and paragraph[-1]['t'] == ParagraphTextType.TEXT:
-                        paragraph[-1]['c'] += el.tail
-                    else:
-                        paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+                        paragraph[-1]['c'] += _new_tail
                 else:
-                    paragraph.append({'c': el.tail, 't': ParagraphTextType.TEXT})
+                    paragraph.append({'c': _new_tail, 't': ParagraphTextType.TEXT})
+
             if paragraph:
+                # item['c'].strip(): 会导致前面处理br标签，添加的\n\n失效
                 result['c'] = ' '.join(normalize_text_segment(item['c'].strip()) for item in paragraph)
             return result
-        list_item_tags = ('li', 'dd', 'dt')
+        list_item_tags = ('li', 'dd', 'dt', 'ul', 'div', 'p', 'span')
         if child.tag in list_item_tags:
             paragraph = __extract_list_item_text_recusive(child)
             if len(paragraph) > 0:
-                text_paragraph.append(paragraph)
+                tem_json = json.dumps(paragraph).replace('$br$\"}', '\"}')
+                new_paragraph = json.loads(tem_json)
+                text_paragraph.append(new_paragraph)
+
+        for n, item in enumerate(text_paragraph):
+            tem_json = json.dumps(item).replace('$br$', '\\n\\n')
+            text_paragraph[n] = json.loads(tem_json)
+
         return text_paragraph
 
     def __get_list_content_list(self, ele: HtmlElement, list_nest_level: int) -> list:
@@ -190,11 +223,12 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         Returns:
             list: 包含列表项内容的列表，即items
         """
+
         content_list = []
         # 处理根元素文本
         if ele.text and ele.text.strip():
             # 检查元素是否包含数学或代码相关属性
-            text_content = ele.text.strip()
+            text_content = html_normalize_space(ele.text.strip())
             root_item = {
                 'c': text_content,
                 't': ParagraphTextType.TEXT,

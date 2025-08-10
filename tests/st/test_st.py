@@ -42,7 +42,7 @@ class TestST(unittest.TestCase):
                 'extractor': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.HTMLFileFormatExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor',
                         'class_init_kwargs': {}
                     }
                 ],
@@ -78,7 +78,9 @@ class TestST(unittest.TestCase):
             output_path=output_path,
         )
 
-        with open(self.pipeline_data_path, 'r') as f:
+        failed_cases = []
+
+        with open(self.pipeline_data_path, 'r', encoding='utf-8') as f:
             for line in f:
                 data_json = json.loads(line.strip())
                 # files结构是{'filename': {'url': '', 'filepath': ''}}，获取filepath
@@ -89,7 +91,7 @@ class TestST(unittest.TestCase):
                 try:
                     output, content_list, statics = eval_ours_extract_html(self.chainConfig, data_json)
                     # 断言statics中的元素数量和groundtruth_filepath中的元素数量一致
-                    with open(groundtruth_filepath, 'r') as f:
+                    with open(groundtruth_filepath, 'r', encoding='utf-8') as f:
                         groundtruth = json.loads(f.readline().strip())
                     # 断言equation-interline, paragraph.equation-inline和list.equation-inline元素数一致
                     self.assertEqual(statics.get('equation-interline'), groundtruth.get('statics', {}).get('equation-interline'), msg=f'{fileName}抽取equation-interline数量和groundtruth:{groundtruth_filepath}不一致')
@@ -105,7 +107,14 @@ class TestST(unittest.TestCase):
         detail.finish()
         self.assertIsNotNone(summary)
         self.assertIsNotNone(detail)
-        self.assertEqual(summary.error_summary['count'], 0, msg=f'测试数据抽取有失败, 抽取失败的数据详情: {detail.to_dict()}')
+        # 修改，显示所有断言失败的数据，不仅是显示一条
+        if failed_cases or summary.error_summary['count'] != 0:
+            msg = ''
+            if failed_cases:
+                msg += '有断言失败:\n' + '\n'.join(failed_cases) + '\n'
+            if summary.error_summary['count'] != 0:
+                msg += f'测试数据抽取有失败, 抽取失败的数据详情: {detail.to_dict()}'
+            self.fail(msg)
 
 
 if __name__ == '__main__':

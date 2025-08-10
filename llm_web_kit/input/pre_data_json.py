@@ -20,6 +20,8 @@ class PreDataJsonKey:
     TYPICAL_SIMPLIFIED_HTML = 'typical_simplified_html'
     # 模型打标字典
     LLM_RESPONSE = 'llm_response'
+    # 模型结果都为0
+    LLM_RESPONSE_EMPTY = 'llm_response_empty'
     # 映射模版正文树结构的元素字典
     HTML_ELEMENT_DICT = 'html_element_dict'
     # 映射模版正文时的文本列表
@@ -30,16 +32,24 @@ class PreDataJsonKey:
     TYPICAL_MAIN_HTML = 'typical_main_html'
     # 模版网页提取正文成功标签, bool类型
     TYPICAL_MAIN_HTML_SUCCESS = 'typical_main_html_success'
+    # similarity between typical main html and html
+    TYPICAL_MAIN_HTML_SIM = 'typical_main_html_sim'
     # 用于生成element dict的html
     TYPICAL_DICT_HTML = 'typical_dict_html'
     # 动态id开关
     DYNAMIC_ID_ENABLE = 'dynamic_id_enable'
     # 动态classid开关
     DYNAMIC_CLASSID_ENABLE = 'dynamic_classid_enable'
+    # 动态classid相似度阈值
+    DYNAMIC_CLASSID_SIM_THRESH = 'dynamic_classid_similarity_threshold'
+    # 正文噪音开关
+    MORE_NOISE_ENABLE = 'more_noise_enable'
     # 推广原网页
     HTML_SOURCE = 'html_source'
     # 推广网页提取正文成功标签, bool类型
     MAIN_HTML_SUCCESS = 'main_html_success'
+    # similarity between main html and typical main html
+    MAIN_HTML_SIM = 'main_html_sim'
     # 推广网页提取正文文本
     MAIN_HTML = 'main_html'
     # 推广网页提取正文树

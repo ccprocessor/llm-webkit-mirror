@@ -266,3 +266,223 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert 'sensi dell’art.33' in content_md
+
+    def test_no_separation_language(self):
+        """
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://www.zjfish.org/Talent/Detail/876289162604750/2174994673059649',
+            'data_source_category': 'HTML',
+            'path': 'zh.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'zh'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert '成果； 三' not in content_md
+
+    def test_tail_space(self):
+        """
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'br.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'br'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'Henañ (c' in content_md
+
+    def test_interactive_element(self):
+        """
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'delete_interactive_element1.html',
+            'main_path': 'delete_interactive_element1_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        main_html = result.get_content_list().to_main_html()
+        assert '<input' not in main_html
+
+    def test_normalize_space1(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space1.html',
+            'main_path': 'text_normalize_space1_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'Please note! These' in content_md
+
+    def test_normalize_space2(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space2.html',
+            'main_path': 'text_normalize_space2_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'December 10th 2009, 06:42 PM\n\n fearless901\n\n Can someone please tell me my code wont work, error after error\n\n\n\n im need to write code to get height and time of the fluid in a reservoir, help guys. is my functions wrong? \n\n \n\n \n\n\n\n Code' in content_md
+
+    def test_normalize_space3(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space3.html',
+            'main_path': 'text_normalize_space3_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert '### Volume 6, Issue 3, 01 February 1965\n\n- INFRARED LASER ACTION AND LIFETIMES IN ARGON II\n\n F. A. Horrigan , S. H. Koozekanani and R. A. Paananen\n\n Scitation Author Page\n\n PubMed\n\n Google Scholar\n\n Source' in content_md
+
+    def test_normalize_space4(self):
+        """
+        测试换行不正确
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'text_normalize_space4.html',
+            'main_path': 'text_normalize_space4_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'Show Ignored Content\n  1. DrDu\n\n Lieber Hendrik, \n\n kannst Du hierzu was beitragen? \n\n Ich finde keinen rechten Grund' in content_md
+
+    def test_Lack_content1(self):
+        """
+        测试换缺少内容
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'Lack_content1.html',
+            'main_path': 'Lack_content1_main.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert 'a) Electronic mail: airegg.py90g@nctu.edu.tw .' in content_md
+
+    def test_empty_string_fix(self):
+        """
+        测试修复字符串索引越界问题 - 当文本处理中出现空字符串时不应抛出IndexError
+        这个测试验证了__combine_text方法能够正确处理空字符串的情况
+        """
+        # 直接测试__combine_text方法处理空字符串的能力
+        text_recognizer = TextParagraphRecognizer()
+
+        # 测试各种空字符串组合
+        result1 = text_recognizer._TextParagraphRecognizer__combine_text('hello', '', 'en')
+        self.assertEqual(result1, 'hello')
+
+        result2 = text_recognizer._TextParagraphRecognizer__combine_text('', 'world', 'en')
+        self.assertEqual(result2, 'world')
+
+        result3 = text_recognizer._TextParagraphRecognizer__combine_text('', '', 'en')
+        self.assertEqual(result3, '')
+
+        # 测试包含空格但trim后变空的情况
+        result4 = text_recognizer._TextParagraphRecognizer__combine_text('hello', '   ', 'en')
+        self.assertEqual(result4, 'hello')
+
+        result5 = text_recognizer._TextParagraphRecognizer__combine_text('   ', 'world', 'en')
+        self.assertEqual(result5, 'world')
+
+        # 测试正常情况仍然工作
+        result6 = text_recognizer._TextParagraphRecognizer__combine_text('hello', 'world', 'en')
+        self.assertEqual(result6, 'hello world')
+
+        # 测试标点符号情况
+        result7 = text_recognizer._TextParagraphRecognizer__combine_text('hello', ',world', 'en')
+        self.assertEqual(result7, 'hello,world')

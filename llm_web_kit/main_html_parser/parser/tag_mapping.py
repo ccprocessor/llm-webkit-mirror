@@ -7,7 +7,7 @@ from llm_web_kit.main_html_parser.parser.layout_batch_parser import \
     LayoutBatchParser
 from llm_web_kit.main_html_parser.parser.parser import BaseMainHtmlParser
 
-SIMILAR_THRESHOLD = 0.9
+SIMILAR_THRESHOLD = 0.92
 
 
 class MapItemToHtmlTagsParser(BaseMainHtmlParser):
@@ -22,7 +22,6 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
                                 }
                     }
            e.g. {1: {('head', None, None, 'ida37c725374fc21e', 1, 0): ('green', ('html', None, None)), ('body', 'post-template-default', None, 'idb421920acb189b3d, 1, 1): ('red', ('html', None, None))}}
-
         Args:
             pre_data (PreDataJson): 包含LLM抽取结果的PreDataJson对象
 
@@ -40,6 +39,27 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             content_list = self.tag_main_html(response_json, root)
             element_dict, template_dict_html = self.construct_main_tree(root, tree)
 
+            # 检查response_json中的所有值是否都为0
+            all_values_zero = True
+            if isinstance(response_json, dict):
+                for value in response_json.values():
+                    if value != 0:
+                        all_values_zero = False
+                        break
+            else:
+                all_values_zero = False
+
+            # 如果所有值都为0，直接返回空的HTML
+            if all_values_zero:
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = ''
+                pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
+                pre_data[PreDataJsonKey.HTML_ELEMENT_DICT] = element_dict
+                pre_data[PreDataJsonKey.TYPICAL_DICT_HTML] = template_dict_html
+                pre_data[PreDataJsonKey.SIMILARITY_LAYER] = 0
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+                pre_data[PreDataJsonKey.LLM_RESPONSE_EMPTY] = True
+                return pre_data
+
             # 模版抽取正文html
             parser = LayoutBatchParser({})
             extract_info = {PreDataJsonKey.HTML_SOURCE: template_raw_html,
@@ -55,8 +75,9 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             template_sim = None
             if feature1 is not None and feature2 is not None:
                 template_sim = similarity(feature1, feature2, layer_n=layer)
+                pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SIM] = template_sim
 
-            # 比较模版正文html与原html相似度
+                # 比较模版正文html与原html相似度
             if template_sim is None or template_sim > SIMILAR_THRESHOLD:
                 pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
             else:
@@ -84,10 +105,25 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         try:
             template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
             response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
+            source_html = pre_data[PreDataJsonKey.TYPICAL_RAW_HTML]
             root = html.fromstring(template_tag_html)
             # 直接抽取正文
             content_list = self.tag_main_html(response_json, root)
             template_extract_html = self.__extract_main_directly(root)
+            if pre_data.get('success_label_enable', False):
+                feature1 = get_feature(source_html)
+                feature2 = get_feature(template_extract_html)
+                layer = 6
+                template_sim = None
+                if feature1 is not None and feature2 is not None:
+                    template_sim = similarity(feature1, feature2, layer_n=layer)
+
+                # 比较模版正文html与原html相似度
+                if template_sim is None or template_sim > SIMILAR_THRESHOLD:
+                    pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = False
+                else:
+                    pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML_SUCCESS] = True
+
             pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML] = template_extract_html
             pre_data[PreDataJsonKey.HTML_TARGET_LIST] = content_list
         except Exception as e:
@@ -109,27 +145,36 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         elements = test_root.xpath(f'//*[@_item_id="{item_id}"]')
         deal_element = elements[0]
         deal_element.set('magic_main_html', 'True')
+        for ele in deal_element:
+            ele.set('magic_main_html', 'True')
 
     def find_affected_element_after_drop(self, element):
         prev_sibling = element.getprevious()
         parent = element.getparent()
-
+        is_main = bool(element.get('magic_main_html', None))
         # 包裹子节点的情况返回element父节点
         if len(element) > 0:
-            if element.get('magic_main_html', None):
+            if is_main:
                 for ele in element:
                     ele.set('magic_main_html', 'True')
 
             element.drop_tag()
-            return parent
+            # 如果包含子tag并且还有text，text有可能是兄弟节点的tail
+            if element.text and element.text.strip():
+                if prev_sibling is not None:
+                    # 兄弟节点是否drop text， 是否drop tail
+                    return prev_sibling, False, not is_main
+                else:
+                    return parent, not is_main, False
+            return parent, False, False
 
         # 只有文本的情况，返回element前面的兄弟节点或者父节点
         element.drop_tag()
 
         if prev_sibling is not None:
-            return prev_sibling
+            return prev_sibling, False, not is_main
         else:
-            return parent
+            return parent, not is_main, False
 
     def process_element(self, element):
         # 前序遍历元素树（先处理子元素）
@@ -139,9 +184,13 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # 如果是cc-alg-uc-text标签，用drop_tag()删除标签但保留子元素
         if element.tag == 'cc-alg-uc-text':
             is_main = element.get('magic_main_html', None)
-            affected = self.find_affected_element_after_drop(element)
+            affected, drop_text, drop_tail = self.find_affected_element_after_drop(element)
             if is_main:
                 affected.set('magic_main_html', 'True')
+            if drop_text:
+                affected.set('drop_text', 'True')
+            if drop_tail:
+                affected.set('drop_tail', 'True')
 
         return
 
@@ -178,9 +227,8 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             else:
                 # 非正文节点直接删除
                 parent = elem.getparent()
-                if parent is None:
-                    return
-                parent.remove(elem)
+                if parent is not None:
+                    parent.remove(elem)
             for elem_child in elem:
                 iter_process(elem_child)
 
@@ -220,6 +268,7 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
             all_dict[depth] = {}
             all_set[depth] = {}
         is_main_html = element.get('magic_main_html', None)
+        is_drop_tail = element.get('drop_tail', None)
         current_dict = all_dict[depth]
         current_set = all_set[depth]
         tag = element.tag
@@ -246,10 +295,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # 写入该层元素key，如果有重复的green节点，只保留一个
         if keyy_for_sim in current_set:
             if is_main_html and current_set[keyy_for_sim][0] == 'green':
-                current_dict[keyy] = ('red', parent_keyy, xpath)
+                current_dict[keyy] = ('red', parent_keyy, xpath, bool(is_drop_tail))
                 current_set[keyy_for_sim] = ('red', parent_keyy)
         else:
-            current_dict[keyy] = (color, parent_keyy, xpath)
+            current_dict[keyy] = (color, parent_keyy, xpath, bool(is_drop_tail))
             current_set[keyy_for_sim] = (color, parent_keyy)
 
         for ele in element:
