@@ -35,7 +35,7 @@
             "post_extractor": [
             {
                 "enable": true,
-                "python_class": "llm_web_kit.extractor.html.post_extractor.HTMLStripSpacePostExtractor"
+                "python_class": "llm_web_kit.extractor.html.post_extractor.ContentListPostExtractor"
             }
         ]
     }
