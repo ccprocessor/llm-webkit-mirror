@@ -37,7 +37,7 @@ class HTMLFileFormatPostExtractor(BaseFileFormatPostExtractor):
         raise NotImplementedError('Subclass must implement abstract method')
 
 
-class HTMLStripSpacePostExtractor(BaseFileFormatPostExtractor):
+class ContentListStripSpacePostExtractor(BaseFileFormatPostExtractor):
     """对段落文本进行处理：
     1. 连续的多个空格转换成1个
     2. 连续的\t转换成1个
