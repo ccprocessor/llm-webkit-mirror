@@ -168,11 +168,13 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
                 # span.katex
                 if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
+                    # print('匹配到script/math/katex标签: ', original_html)
                     tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
                 # 只有有渲染器的网站才会走下面文本匹配逻辑
                 if math_render_type:
                     # 14. 只处理只有一层的p标签
                     if node.tag == 'p' and len(node.getchildren()) == 0:
+                        # print('匹配到p标签: ', original_html)
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
 
             # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
