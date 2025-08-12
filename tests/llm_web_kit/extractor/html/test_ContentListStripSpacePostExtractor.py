@@ -2,13 +2,13 @@ import json
 import unittest
 
 from llm_web_kit.extractor.html.post_extractor import \
-    HTMLStripSpacePostExtractor
+    ContentListStripSpacePostExtractor
 from llm_web_kit.input.datajson import DataJson
 
 
-class TestHTMLStripSpacePostExtractor(unittest.TestCase):
+class TestContentListStripSpacePostExtractor(unittest.TestCase):
     def setUp(self):
-        self.extractor = HTMLStripSpacePostExtractor({})
+        self.extractor = ContentListStripSpacePostExtractor({})
         self.data_json = {  # 构造一个测试数据，检测是否把文本中的连续空格字符转换为1个空格字符
             'content_list': [
                 [
@@ -27,7 +27,7 @@ class TestHTMLStripSpacePostExtractor(unittest.TestCase):
             ]
         }
 
-    def test_space_post_extractor(self):
+    def test_content_list_strip_space(self):
         # Test basic text normalization
         data_json = DataJson(self.data_json)
         processed = self.extractor.post_extract(data_json).get_content_list()._get_data()

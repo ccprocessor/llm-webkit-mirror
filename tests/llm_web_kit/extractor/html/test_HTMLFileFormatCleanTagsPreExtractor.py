@@ -104,6 +104,17 @@ TEST_CASES = [
         'expected_html': '''<html><body><p>正常内容1</p><p>正常内容2</p><p>正常内容3</p></body></html>'''
     },
 
+    # 测试display: none样式过滤 (带空格版本)
+    {
+        'input': {
+            'content_list': [],
+            'data_source_category': 'html',
+            'url': 'https://example.com/page',
+            'html': '''<html><body><div class="options-div-0-0 option-box__items" style="display: none;"><span class="bedroom-rate__title">Room Only Rate</span><span class="bedroom-rate__price">£1,230.00</span></div><p>正常内容</p></body></html>''',
+        },
+        'expected_html': '<html><body><p>正常内容</p></body></html>'
+    },
+
     # 测试保留tail文本
     {
         'input': {

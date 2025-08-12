@@ -194,8 +194,15 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             txt = text1 + text2
             return self.replace_entities(txt.strip(), entities_map)
         else:
+            # 如果text2为空，直接返回text1
+            if not text2:
+                return self.replace_entities(text1.strip(), entities_map)
+            # 如果text1为空，直接返回text2
+            if not text1:
+                return self.replace_entities(text2.strip(), entities_map)
+
             # 根据text1的最后一个字符和text2的第一个字符判断两个text之间的连接
-            if (text2[0] in string.punctuation) or (text2[0] in special_symbols) or (text2[0] in other_symbols) or (text1 and text1[-1] in other_symbols):
+            if (text2 and text2[0] in string.punctuation) or (text2 and text2[0] in special_symbols) or (text2 and text2[0] in other_symbols) or (text1 and text1[-1] in other_symbols):
                 words_sep = ''
             else:
                 words_sep = ' '
