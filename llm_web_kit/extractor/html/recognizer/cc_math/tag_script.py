@@ -15,7 +15,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         text = node.text
         if text and text_strip(text):
             if node.tag not in ['script', 'style']:
-                new_span = create_new_span([(CCMATH_INTERLINE,MathType.LATEX)], cm.wrap_math_md(text), node, math_render, o_html)
+                new_span = create_new_span([(CCMATH_INLINE,MathType.LATEX)], cm.wrap_math_md(text), node, math_render, o_html)
                 node.addnext(new_span)
             else:
                 katex_pattern = re.compile(r'katex.render')
@@ -28,7 +28,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                             target_element = target_elements[0]
                             o_html = element_to_html(target_element)
                             target_element.text = None
-                            new_span = create_new_span([(CCMATH_INTERLINE,MathType.LATEX)], cm.wrap_math_md(formula_content), target_element, math_render, o_html)
+                            new_span = create_new_span([(CCMATH_INLINE,MathType.LATEX)], cm.wrap_math_md(formula_content), target_element, math_render, o_html)
                             target_element.insert(0, new_span)
                 elif node.get('type') and 'math/tex' in node.get('type'):
                     tag_math_type_list = cm.get_equation_type(o_html)
