@@ -124,8 +124,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             tree = cc_html
             math_render_type = math_render.get_render_type()
             self.mathjax_detected = False  # 重置标记
-            # 打印遍历node次数
-            # count = 0
+
+            # process1: node循环逻辑
             for node in iter_node(tree):
                 assert isinstance(node, HtmlElement)
                 original_html = self._element_to_html(node)
@@ -187,15 +187,19 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
                         self.mathjax_detected = True
 
-            # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
-            if math_render_type:
-                # print(f'处理数学公式，渲染器类型: {math_render_type}')
-                try:
-                    if math_render_type == MathRenderType.MATHJAX:
-                        # print('使用MathJax渲染器处理数学公式')
-                        math_render.find_math(tree)
-                except Exception as e:
-                    raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+            # procsee2: mathjax渲染器逻辑
+            try:
+                # case1：有mathjax配置
+                if math_render_type == MathRenderType.MATHJAX:
+                    math_render.find_math(tree)
+                # case2：无Mathjax配置但是开启Mathjax逻辑开关（node循环抽到公式的情况）
+                elif math_render_type is None and self.mathjax_detected:
+                    from llm_web_kit.extractor.html.recognizer.cc_math.render.mathjax import MathJaxRender
+                    math_render = MathJaxRender()
+                    math_render.find_math(tree)
+            except Exception as e:
+                raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
+
 
             # 保存处理后的html
             # with open('test20250702_result.html', 'w', encoding='utf-8') as f:
