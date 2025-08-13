@@ -189,10 +189,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
             # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
             if math_render_type:
-                print(f'处理数学公式，渲染器类型: {math_render_type}')
+                # print(f'处理数学公式，渲染器类型: {math_render_type}')
                 try:
                     if math_render_type == MathRenderType.MATHJAX:
-                        print('使用MathJax渲染器处理数学公式')
+                        # print('使用MathJax渲染器处理数学公式')
                         math_render.find_math(tree)
                 except Exception as e:
                     raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')

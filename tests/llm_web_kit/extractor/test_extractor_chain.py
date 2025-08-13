@@ -796,11 +796,11 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        # self.assertIn(r'1111', md_content)
-        content_list = result.get_content_list()._get_data()
-        print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
-        with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
-            f.write(md_content)
+        self.assertIn(r'1111', md_content)
+        # content_list = result.get_content_list()._get_data()
+        # print('Content List:', json.dumps(content_list, ensure_ascii=False, indent=2))
+        # with open('test_mjx_container.md', 'w', encoding='utf-8') as f:
+        #     f.write(md_content)
 
     def test_ascii_delimiter(self):
         """测试ascii分隔符."""
