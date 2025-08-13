@@ -64,7 +64,7 @@ class TestExtractorChain(unittest.TestCase):
                     continue
                 self.data_json.append(json.loads(line))
 
-        assert len(self.data_json) == 103
+        assert len(self.data_json) == 104
 
         # Config for HTML extraction
         self.config = load_pipe_tpl('html-test')
@@ -810,16 +810,27 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        # with open('mathjax抽取case222.md', 'w', encoding='utf-8') as f:
-        #     f.write(md_content)
         self.assertIn(r'$f = \frac{1}{T} ^ 2 \sqrt{\frac{A E}{\rho}}$', md_content)
         self.assertIn(r'${m}^{2}$', md_content)
         self.assertIn(r'\rho$', md_content)
         self.assertIn(r'$f = \frac{1}{2 L} \sqrt{\frac{E}{\rho}}$', md_content)
         self.assertIn(r'$L = {T}^{2} / \left(2 W\right)$', md_content)
 
+    def test_mathjax_mock(self):
+        """测试虚拟mathjax渲染器."""
+        chain = ExtractSimpleFactory.create(self.config)
+        self.assertIsNotNone(chain)
+        test_data = self.data_json[103]
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        md_content = result.get_content_list().to_nlp_md()
+        self.assertIn(r'$(a_n)$', md_content)
+        self.assertIn(r'$a_n ≤ a_{n+1}$', md_content)
+        self.assertIn(r'$n \in \mathbb{N}$', md_content)
+        self.assertIn(r'$\left ( \frac{1}{n} \right ) = (1, \frac{1}{2}, \frac{1}{3}, ..., \frac{1}{n}, \frac{1}{n+1}, ... )$', md_content)
+
     def test_htmlmath_sub_sup(self):
-        """测试ascii分隔符."""
+        """测试htmlmath中的上下标标签."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[102]
