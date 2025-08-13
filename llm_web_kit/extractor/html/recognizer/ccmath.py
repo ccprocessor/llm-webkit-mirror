@@ -153,11 +153,6 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
                     self.mathjax_detected = True
 
-                # script[type="math/tex"]
-                # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
-                #     print('匹配到script标签: ', node.get('type'))
-                #     tag_common_modify.modify_tree(cm, math_render_type, original_html, node, parent)
-
                 # math tags
                 if node.tag == 'math' or node.tag.endswith(':math'):
                     # print(f"匹配到数学标签: {node.tag}")
@@ -192,11 +187,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 # case1：有mathjax配置
                 if math_render_type == MathRenderType.MATHJAX:
                     math_render.find_math(tree)
-                # case2：无Mathjax配置但是开启Mathjax逻辑开关（node循环抽到公式的情况.）
+                # case2：无Mathjax配置但是开启Mathjax逻辑开关（node循环抽到公式的情况）
                 elif math_render_type is None and self.mathjax_detected:
                     from llm_web_kit.extractor.html.recognizer.cc_math.render.mathjax import \
-                        MathJaxRender
-                    math_render = MathJaxRender()
+                        MathJaxRenderMock
+                    math_render = MathJaxRenderMock()
                     math_render.find_math(tree)
             except Exception as e:
                 raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')

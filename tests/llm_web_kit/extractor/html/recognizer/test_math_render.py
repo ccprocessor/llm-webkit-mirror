@@ -874,7 +874,7 @@ class TestMathRender(unittest.TestCase):
         """
         no_render = base_render.get_math_render(no_render_html)
         self.assertIsInstance(no_render, BaseMathRender)
-        # self.assertIsNone(no_render.get_render_type())
+        self.assertIsNone(no_render.get_render_type())
 
         # 测试不同版本的 MathJax
         mathjax3_html = """
@@ -962,7 +962,7 @@ class TestMathRender(unittest.TestCase):
             # 验证结果
             if expected_type is None:
                 self.assertIsInstance(render, BaseMathRender)
-                # self.assertIsNone(render.get_render_type())
+                self.assertIsNone(render.get_render_type())
             else:
                 self.assertIsNotNone(render)
                 self.assertEqual(render.get_render_type(), expected_type)
