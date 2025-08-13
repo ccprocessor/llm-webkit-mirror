@@ -195,8 +195,8 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 # case2：无Mathjax配置但是开启Mathjax逻辑开关（node循环抽到公式的情况.）
                 elif math_render_type is None and self.mathjax_detected:
                     from llm_web_kit.extractor.html.recognizer.cc_math.render.mathjax import \
-                        MathJaxRender
-                    math_render = MathJaxRender()
+                        MathJaxRenderMock
+                    math_render = MathJaxRenderMock()
                     math_render.find_math(tree)
             except Exception as e:
                 raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')

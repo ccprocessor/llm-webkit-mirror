@@ -533,6 +533,32 @@ class MathJaxRender(BaseMathRender):
         return processascii
 
 
+class MathJaxRenderMock(MathJaxRender):
+    """虚拟的MathJax渲染器，用于没有MathJax配置但需要使用MathJax解析逻辑的情况."""
+
+    def __init__(self):
+        """初始化虚拟MathJax渲染器."""
+        super().__init__()
+        self.render_type = MathRenderType.MATHJAX_MOCK
+        # 使用默认的MathJax选项
+        self.options = MATHJAX_OPTIONS.copy()
+
+    def get_options(self, html: str) -> Dict[str, Any]:
+        """虚拟渲染器直接返回默认选项，不解析HTML配置.
+
+        Args:
+            html: HTML字符串（忽略）
+
+        Returns:
+            Dict[str, Any]: 默认MathJax选项字典
+        """
+        return self.options
+
+    def is_customized_options(self) -> bool:
+        """虚拟渲染器始终返回False，表示使用默认配置."""
+        return False
+
+
 # 使用示例
 if __name__ == '__main__':
     # MathJax示例
