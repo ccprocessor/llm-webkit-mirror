@@ -192,15 +192,14 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 # case1：有mathjax配置
                 if math_render_type == MathRenderType.MATHJAX:
                     math_render.find_math(tree)
-                # case2：无Mathjax配置但是开启Mathjax逻辑开关（node循环抽到公式的情况）
+                # case2：无Mathjax配置但是开启Mathjax逻辑开关（node循环抽到公式的情况.）
                 elif math_render_type is None and self.mathjax_detected:
-                    from llm_web_kit.extractor.html.recognizer.cc_math.render.mathjax import MathJaxRender
+                    from llm_web_kit.extractor.html.recognizer.cc_math.render.mathjax import \
+                        MathJaxRender
                     math_render = MathJaxRender()
                     math_render.find_math(tree)
             except Exception as e:
                 raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
-
-
             # 保存处理后的html
             # with open('test20250702_result.html', 'w', encoding='utf-8') as f:
             #     f.write(self._element_to_html(tree))
