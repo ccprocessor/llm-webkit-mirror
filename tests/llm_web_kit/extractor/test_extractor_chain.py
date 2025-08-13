@@ -817,7 +817,7 @@ A few explanations on why certain things in business are so.
         self.assertIn(r'$L = {T}^{2} / \left(2 W\right)$', md_content)
 
     def test_mathjax_mock(self):
-        """测试ascii分隔符."""
+        """测试虚拟mathjax渲染器."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[103]
@@ -830,7 +830,7 @@ A few explanations on why certain things in business are so.
         self.assertIn(r'$\left ( \frac{1}{n} \right ) = (1, \frac{1}{2}, \frac{1}{3}, ..., \frac{1}{n}, \frac{1}{n+1}, ... )$', md_content)
 
     def test_htmlmath_sub_sup(self):
-        """测试ascii分隔符."""
+        """测试htmlmath中的上下标标签."""
         chain = ExtractSimpleFactory.create(self.config)
         self.assertIsNotNone(chain)
         test_data = self.data_json[102]
