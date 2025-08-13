@@ -24,6 +24,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
     def __init__(self):
         super().__init__()
         self.cm = CCMATH()
+        self.mathjax_detected = False  # 添加检测标记
 
     @override
     def recognize(self, base_url: str, main_html_lst: List[Tuple[HtmlElement, HtmlElement]], raw_html: str, language:str = 'en') -> List[Tuple[HtmlElement, HtmlElement]]:
@@ -122,6 +123,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
             self.cm.url = base_url
             tree = cc_html
             math_render_type = math_render.get_render_type()
+            self.mathjax_detected = False  # 重置标记
             # 打印遍历node次数
             # count = 0
             for node in iter_node(tree):
@@ -134,9 +136,11 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         node.tag == 'span' and
                         node.get('class') in [CSDN.INLINE, CSDN.DISPLAY]):
                     tag_script.process_katex_mathml(self.cm, math_render_type, node)
+                    self.mathjax_detected = True
 
                 if ZHIHU.DOMAIN in self.cm.url and node.tag == 'span' and node.get('class') == ZHIHU.MATH:
                     tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
+                    self.mathjax_detected = True
 
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
                 if node.tag == 'span' and node.get('class') and (
@@ -147,6 +151,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         'tex' in node.get('class')
                 ):
                     tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
+                    self.mathjax_detected = True
 
                 # script[type="math/tex"]
                 # if node.tag == 'script' and node.get('type') and 'math/tex' in node.get('type'):
@@ -158,29 +163,36 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                     # print(f"匹配到数学标签: {node.tag}")
                     # print(f"标签内容: {original_html}")
                     tag_math.modify_tree(self.cm, math_render_type, original_html, node, parent)
+                    self.mathjax_detected = True
 
                 if node.tag == 'mjx-container':
                     tag_mjx.modify_tree(self.cm, math_render, original_html, node)
+                    self.mathjax_detected = True
 
                 # img中的latex
                 if node.tag == 'img':
                     tag_img.modify_tree(self.cm, math_render_type, original_html, node, parent)
+                    self.mathjax_detected = True
 
                 # span.katex
                 if node.tag == 'script' or 'math' == node.get('class') or 'katex' == node.get('class'):
                     # print('匹配到script/math/katex标签: ', original_html)
                     tag_script.modify_tree(self.cm, math_render_type, original_html, node, parent)
+                    self.mathjax_detected = True
                 # 只有有渲染器的网站才会走下面文本匹配逻辑
                 if math_render_type:
                     # 14. 只处理只有一层的p标签
                     if node.tag == 'p' and len(node.getchildren()) == 0:
                         # print('匹配到p标签: ', original_html)
                         tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
+                        self.mathjax_detected = True
 
             # 修改：传入tree节点，mathjax方案作为process2，不参与上面process1节点的遍历
             if math_render_type:
+                print(f'处理数学公式，渲染器类型: {math_render_type}')
                 try:
                     if math_render_type == MathRenderType.MATHJAX:
+                        print('使用MathJax渲染器处理数学公式')
                         math_render.find_math(tree)
                 except Exception as e:
                     raise HtmlMathMathjaxRenderRecognizerException(f'处理MathjaxRender数学公式失败: {e}')
