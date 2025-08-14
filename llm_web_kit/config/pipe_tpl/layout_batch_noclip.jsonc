@@ -3,11 +3,13 @@
             "enable": true,
             "validate_input_format": false,
             // 第一阶段：使用layout_batch选择main_html
-            "main_html_parser": {
-                "enable": true,
-                "python_class": "llm_web_kit.extractor.html.main_html_parser.LayoutBatchMainHtmlParser",
-                "class_init_kwargs": {}
-            },
+            "main_html_parser": [
+                {
+                    "enable": true,
+                    "python_class": "llm_web_kit.extractor.html.main_html_parser.LayoutBatchMainHtmlParser",
+                    "class_init_kwargs": {}
+                }
+            ],
             // 第二阶段：html抽取为md
             "pre_extractor": [
                 {

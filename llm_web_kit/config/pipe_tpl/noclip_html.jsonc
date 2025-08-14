@@ -2,6 +2,7 @@
     "extractor_pipe": {
             "enable": true,
             "validate_input_format": false,
+            // 只执行第二阶段
             "pre_extractor": [
                 {
                     "enable": true,

@@ -7,11 +7,10 @@ from typing import Tuple
 import commentjson as json
 
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import MainHtmlParserBaseException
 from llm_web_kit.extractor.html.magic_html import GeneralExtractor
 from llm_web_kit.input.datajson import DataJson
 # from llm_web_kit.libs.class_loader import ClassLoader
-from llm_web_kit.libs.path_lib import get_py_pkg_root_dir
+from llm_web_kit.libs.path_lib import get_proj_root_dir, get_py_pkg_root_dir
 
 
 class HTMLPageLayoutType:
@@ -45,10 +44,7 @@ class AbstractMainHtmlParser(ABC):
         Raises:
             MainHtmlParserBaseException: 当解析失败时抛出
         """
-        try:
-            return self._do_parse(data_json)
-        except Exception as e:
-            raise MainHtmlParserBaseException(f'Main HTML parse failed: {str(e)}') from e
+        return self._do_parse(data_json)
 
     @abstractmethod
     def _do_parse(self, data_json: DataJson) -> DataJson:
@@ -173,3 +169,31 @@ class MagicHTMLMainHtmlParser(AbstractMainHtmlParser):
         """
         config = load_config(suppress_error=True)
         return config.get('magic-html-custom-rule', {})
+
+
+class TestHTMLFileFormatFilterMainHtmlParser(AbstractMainHtmlParser):
+    """为了方便对测试数据进行测试，需要吧测试数据的格式转换为处理HTML数据的标准的DataJson格式
+    也就是测试数据的html以文件放在磁盘路径下，但是标准的DataJson格式是html以字符串的形式存在于jsonl中的html字段里。
+    这个类就是根据路径读取html文件，然后转换为DataJson格式。"""
+
+    def __init__(self, config: dict, html_parent_dir: str):
+        """
+        初始化函数
+        Args:
+            config:
+            html_parent_dir:
+        """
+        super().__init__(config)
+        self.__html_parent_path = html_parent_dir
+
+    def _do_parse(self, data_json: DataJson) -> DataJson:
+        """对输入的单个html拼装到DataJson中，形成标准输入格式."""
+        proj_root_dir = get_proj_root_dir()
+        html_file_path = os.path.join(proj_root_dir, self.__html_parent_path, data_json.get('path'))
+
+        with open(html_file_path, 'r', encoding='utf-8') as f:
+            html = f.read()
+            data_json['html'] = html
+            data_json['main_html'] = html
+            del data_json['path']
+        return data_json

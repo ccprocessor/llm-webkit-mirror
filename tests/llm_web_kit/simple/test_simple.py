@@ -157,8 +157,8 @@ class TestSimple(unittest.TestCase):
 
     def test_extract_noclip_equivalent(self):
         """对应原有的noclip测试 - 测试从原始HTML直接提取内容"""
-        # 使用MAGIC_HTML_NOCLIP模拟原来的clip_html=False
-        md = extract_content_from_html_with_magic_html(self.url, self.html_content)
+        # 对应原来的clip_html=False
+        md = extract_content_from_main_html(self.url, self.html_content)
         self.assertEqual(md, self.expected_md)
 
     # ========================================

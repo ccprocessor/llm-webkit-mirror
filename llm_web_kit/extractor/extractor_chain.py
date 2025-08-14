@@ -30,7 +30,7 @@ class ExtractorChain:
         Args:
             config (dict): Config dict containing extractor_pipe configuration
         """
-        self.__main_html_parser: Optional[AbstractMainHtmlParser] = None
+        self.__main_html_parser: Optional[List[AbstractMainHtmlParser]] = []
         self.__pre_extractors: List[AbstractPreExtractor] = []
         self.__extractors: List[AbstractExtractor] = []
         self.__post_extractors: List[AbstractPostExtractor] = []
@@ -49,8 +49,8 @@ class ExtractorChain:
 
         try:
             # Stage 1: Main HTML parser
-            if self.__main_html_parser:
-                data = self.__main_html_parser.parse(data)
+            for main_html_parser in self.__main_html_parser:
+                data = main_html_parser.parse(data)
 
             # Stage 2: Pre extractors, main extractors, post extractors
             # Pre extractors
@@ -87,9 +87,10 @@ class ExtractorChain:
 
     def __init_main_html_parser(self, config: dict):
         """Initialize main HTML parser from config."""
-        parser_config = config.get('main_html_parser')
-        if parser_config and parser_config.get('enable'):
-            self.__main_html_parser = self.__create_extractor(parser_config)
+        for parser_config in config.get('main_html_parser', []):
+            if parser_config and parser_config.get('enable'):
+                main_html_parser = self.__create_extractor(parser_config)
+                self.__main_html_parser.append(main_html_parser)
 
     def __load_extractors(self, config: dict):
         """Load extractors from extractor_pipe config."""

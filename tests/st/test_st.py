@@ -25,19 +25,21 @@ class TestST(unittest.TestCase):
             'extractor_pipe': {
                 'enable': True,
                 'validate_input_format': False,
-                'main_html_parser': {
-                    'enable': True,
-                    'python_class': 'llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser',
-                    'class_init_kwargs': {}
-                },
-                'pre_extractor': [
+                'main_html_parser': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.main_html_parser.TestHTMLFileFormatFilterMainHtmlParser',
                         'class_init_kwargs': {
                             'html_parent_dir': 'bench/'
                         }
                     },
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser',
+                        'class_init_kwargs': {}
+                    }
+                ],
+                'pre_extractor': [
                     {
                         'enable': True,
                         'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',

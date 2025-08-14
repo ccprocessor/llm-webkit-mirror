@@ -20,15 +20,23 @@
     "extractor_pipe": {
         "enable": true,
         "validate_input_format": false,
-        "main_html_parser": {
+        "main_html_parser": [
+            {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.main_html_parser.TestHTMLFileFormatFilterMainHtmlParser",
+                "class_init_kwargs": {
+                    "html_parent_dir": "bench/"
+                }
+            },
+            {
             "enable": true,
             "python_class": "llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser",
             "class_init_kwargs": {}
-        },
+        }],
         "pre_extractor": [
             {
                 "enable": true,
-                "python_class": "llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor",
+                "python_class": "llm_web_kit.extractor.html.main_html_parser.TestHTMLFileFormatFilterMainHtmlParser",
                 "class_init_kwargs": {
                     "html_parent_dir": "bench/"
                 }
