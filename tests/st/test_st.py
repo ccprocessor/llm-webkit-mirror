@@ -25,6 +25,11 @@ class TestST(unittest.TestCase):
             'extractor_pipe': {
                 'enable': True,
                 'validate_input_format': False,
+                'main_html_parser': {
+                    'enable': True,
+                    'python_class': 'llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser',
+                    'class_init_kwargs': {}
+                },
                 'pre_extractor': [
                     {
                         'enable': True,
@@ -42,7 +47,7 @@ class TestST(unittest.TestCase):
                 'extractor': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.extractor.NoClipHTMLFIleFormatorExtractor',
                         'class_init_kwargs': {}
                     }
                 ],

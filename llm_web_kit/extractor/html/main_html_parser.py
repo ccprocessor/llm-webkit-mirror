@@ -7,7 +7,7 @@ from typing import Tuple
 import commentjson as json
 
 from llm_web_kit.config.cfg_reader import load_config
-from llm_web_kit.exception.exception import ExtractException
+from llm_web_kit.exception.exception import MainHtmlParserBaseException
 from llm_web_kit.extractor.html.magic_html import GeneralExtractor
 from llm_web_kit.input.datajson import DataJson
 # from llm_web_kit.libs.class_loader import ClassLoader
@@ -19,6 +19,13 @@ class HTMLPageLayoutType:
     LAYOUT_ARTICLE = 'article'
     LAYOUT_FORUM = 'forum'
     LAYOUT_LIST = 'list'
+
+
+class MainHtmlParserType:
+    """主要内容解析器类型常量."""
+    LLM = 'llm'
+    LAYOUT_BATCH = 'layout_batch'
+    MAGIC_HTML = 'magic_html'
 
 
 class AbstractMainHtmlParser(ABC):
@@ -36,12 +43,12 @@ class AbstractMainHtmlParser(ABC):
             DataJson: 处理后的数据，包含main_html字段
 
         Raises:
-            ExtractException: 当解析失败时抛出
+            MainHtmlParserBaseException: 当解析失败时抛出
         """
         try:
             return self._do_parse(data_json)
         except Exception as e:
-            raise ExtractException(f"Main HTML parse failed: {str(e)}") from e
+            raise MainHtmlParserBaseException(f"Main HTML parse failed: {str(e)}") from e
 
     @abstractmethod
     def _do_parse(self, data_json: DataJson) -> DataJson:
@@ -56,6 +63,8 @@ class LLMMainHtmlParser(AbstractMainHtmlParser):
         # 1. 调用LLM服务
         # 2. 解析结果
         # 3. 设置main_html字段
+        data_json['main_html'] = data_json['html']
+        data_json['main_html_parser_method'] = MainHtmlParserType.LLM
         return data_json
 
 
@@ -66,6 +75,8 @@ class LayoutBatchMainHtmlParser(AbstractMainHtmlParser):
         # 1. 调用布局批量解析主要内容
         # 2. 解析结果
         # 3. 设置main_html字段
+        data_json['main_html'] = data_json['html']
+        data_json['main_html_parser_method'] = MainHtmlParserType.LAYOUT_BATCH
         return data_json
 
 
@@ -101,7 +112,7 @@ class MagicHTMLMainHtmlParser(AbstractMainHtmlParser):
         data_json['main_html'] = main_html
         data_json['title'] = title
         # 可选：保存提取方法信息用于质量评估（xp_num表示xpath匹配数量）
-        data_json['extraction_xp_num'] = xp_num
+        data_json['main_html_parser_method'] = MainHtmlParserType.MAGIC_HTML
 
         return data_json
 
