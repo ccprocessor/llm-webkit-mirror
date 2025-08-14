@@ -149,7 +149,7 @@ class HTMLFileFormatNoClipPreExtractor(HTMLFileFormatFilterPreExtractor):
 
                 # 删除关联的label（通过for属性匹配）
                 if 'id' in element.attrib:
-                    for label in tree.xpath(f'//body//label[@for="{element.attrib['id']}"]'):
+                    for label in tree.xpath(f'//body//label[@for="{element.attrib["id"]}"]'):
                         label.getparent().remove(label)
 
         # 处理<form>内的交互标签及关联label
