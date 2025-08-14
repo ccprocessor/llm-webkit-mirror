@@ -21,9 +21,9 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
                 # node.addnext(new_span)
                 replace_element(node, new_span)  # 替换节点，而不是添加
 
-            # 然后处理script标签，如果text匹配到katex.render，则认为是katex公式，进行处理
-            # 例子：<script type = "e44e-text/javascript">katex.render("f(a,b,c) = (a^2+b^2+c^2)^3", mykatex);</script>
+            # 下面是katex逻辑
             else:
+                # 例子：<script type = "e44e-text/javascript">katex.render("f(a,b,c) = (a^2+b^2+c^2)^3", mykatex);</script>
                 katex_pattern = re.compile(r'katex.render')
                 node_text = text_strip(text)
                 if katex_pattern.findall(node_text):
