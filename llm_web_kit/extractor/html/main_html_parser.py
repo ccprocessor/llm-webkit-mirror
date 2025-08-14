@@ -48,7 +48,7 @@ class AbstractMainHtmlParser(ABC):
         try:
             return self._do_parse(data_json)
         except Exception as e:
-            raise MainHtmlParserBaseException(f"Main HTML parse failed: {str(e)}") from e
+            raise MainHtmlParserBaseException(f'Main HTML parse failed: {str(e)}') from e
 
     @abstractmethod
     def _do_parse(self, data_json: DataJson) -> DataJson:

@@ -46,9 +46,8 @@ class ExtractorFactory:
             raise InvalidExtractorTypeException(f'Invalid extractor type: {extractor_type}')
 
         # 统一缓存机制
-        cache_key = f"{extractor_type}_{pipe_tpl_name}"
+        cache_key = f'{extractor_type}_{pipe_tpl_name}'
         if cache_key not in ExtractorFactory._extractors:
-            print(f"load_pipe_tpl: {pipe_tpl_name}")
             extractor_cfg = load_pipe_tpl(pipe_tpl_name)
             chain = ExtractSimpleFactory.create(extractor_cfg)
             ExtractorFactory._extractors[cache_key] = chain
