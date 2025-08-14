@@ -199,13 +199,14 @@ class ListRecognizer(BaseHTMLElementRecognizer):
                 # item['c'].strip(): 会导致前面处理br标签，添加的\n\n失效
                 result['c'] = ' '.join(normalize_text_segment(item['c'].strip()) for item in paragraph)
             return result
-        list_item_tags = ('li', 'dd', 'dt', 'ul', 'div', 'p', 'span')
-        if child.tag in list_item_tags:
-            paragraph = __extract_list_item_text_recusive(child)
-            if len(paragraph) > 0:
-                tem_json = json.dumps(paragraph).replace('$br$\"}', '\"}')
-                new_paragraph = json.loads(tem_json)
-                text_paragraph.append(new_paragraph)
+        # list_item_tags = ('li', 'dd', 'dt', 'ul', 'div', 'p', 'span')
+        # if child.tag in list_item_tags:
+        # 去掉if限制条件，允许非标准结构的列表通过
+        paragraph = __extract_list_item_text_recusive(child)
+        if len(paragraph) > 0:
+            tem_json = json.dumps(paragraph).replace('$br$\"}', '\"}')
+            new_paragraph = json.loads(tem_json)
+            text_paragraph.append(new_paragraph)
 
         for n, item in enumerate(text_paragraph):
             tem_json = json.dumps(item).replace('$br$', '\\n\\n')
