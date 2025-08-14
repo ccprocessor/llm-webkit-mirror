@@ -1,0 +1,211 @@
+{\displaystyle \sigma ^{2}}
+{\displaystyle s^{2}}
+{\displaystyle \operatorname {Var} (X)}
+{\displaystyle V(X)}
+{\displaystyle \mathbb {V} (X)}
+{\displaystyle X}
+{\displaystyle X}
+{\displaystyle \mu =\operatorname {E} [X]}
+{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu )^{2}\right].}
+{\displaystyle \operatorname {Var} (X)=\operatorname {Cov} (X,X).}
+{\displaystyle X}
+{\displaystyle \operatorname {Var} (X)}
+{\displaystyle V(X)}
+{\displaystyle \mathbb {V} (X)}
+{\displaystyle \sigma _{X}^{2}}
+{\displaystyle \sigma ^{2}}
+{\displaystyle {\begin{aligned}\operatorname {Var} (X)&=\operatorname {E} \left[(X-\operatorname {E} [X])^{2}\right]\\[4pt]&=\operatorname {E} \left[X^{2}-2X\operatorname {E} [X]+\operatorname {E} [X]^{2}\right]\\[4pt]&=\operatorname {E} \left[X^{2}\right]-2\operatorname {E} [X]\operatorname {E} [X]+\operatorname {E} [X]^{2}\\[4pt]&=\operatorname {E} \left[X^{2}\right]-2\operatorname {E} [X]^{2}+\operatorname {E} [X]^{2}\\[4pt]&=\operatorname {E} \left[X^{2}\right]-\operatorname {E} [X]^{2}\end{aligned}}}
+{\displaystyle X}
+{\displaystyle x_{1}\mapsto p_{1},x_{2}\mapsto p_{2},\ldots ,x_{n}\mapsto p_{n}}
+{\displaystyle \operatorname {Var} (X)=\sum _{i=1}^{n}p_{i}\cdot (x_{i}-\mu )^{2},}
+{\displaystyle \mu }
+{\displaystyle \mu =\sum _{i=1}^{n}p_{i}x_{i}.}
+{\displaystyle n}
+{\displaystyle \operatorname {Var} (X)={\frac {1}{n}}\sum _{i=1}^{n}(x_{i}-\mu )^{2}}
+{\displaystyle \mu }
+{\displaystyle \mu ={\frac {1}{n}}\sum _{i=1}^{n}x_{i}.}
+{\displaystyle n}
+{\displaystyle \operatorname {Var} (X)={\frac {1}{n^{2}}}\sum _{i=1}^{n}\sum _{j=1}^{n}{\frac {1}{2}}(x_{i}-x_{j})^{2}={\frac {1}{n^{2}}}\sum _{i}\sum _{j>i}(x_{i}-x_{j})^{2}.}
+{\displaystyle X}
+{\displaystyle f(x)}
+{\displaystyle F(x)}
+{\displaystyle {\begin{aligned}\operatorname {Var} (X)=\sigma ^{2}&=\int _{\mathbb {R} }(x-\mu )^{2}f(x)\,dx\\[4pt]&=\int _{\mathbb {R} }x^{2}f(x)\,dx-2\mu \int _{\mathbb {R} }xf(x)\,dx+\mu ^{2}\int _{\mathbb {R} }f(x)\,dx\\[4pt]&=\int _{\mathbb {R} }x^{2}\,dF(x)-2\mu \int _{\mathbb {R} }x\,dF(x)+\mu ^{2}\int _{\mathbb {R} }\,dF(x)\\[4pt]&=\int _{\mathbb {R} }x^{2}\,dF(x)-2\mu \cdot \mu +\mu ^{2}\cdot 1\\[4pt]&=\int _{\mathbb {R} }x^{2}\,dF(x)-\mu ^{2},\end{aligned}}}
+{\displaystyle \operatorname {Var} (X)=\int _{\mathbb {R} }x^{2}f(x)\,dx-\mu ^{2},}
+{\displaystyle \mu }
+{\displaystyle X}
+{\displaystyle \mu =\int _{\mathbb {R} }xf(x)\,dx=\int _{\mathbb {R} }x\,dF(x).}
+{\displaystyle dx}
+{\displaystyle dF(x)}
+{\displaystyle x^{2}f(x)}
+{\displaystyle [a,b]\subset \mathbb {R} ,}
+{\displaystyle \operatorname {Var} (X)=\int _{-\infty }^{+\infty }x^{2}f(x)\,dx-\mu ^{2},}
+{\displaystyle f(x)=\lambda e^{-\lambda x}}
+{\displaystyle \operatorname {E} [X]=\int _{0}^{\infty }x\lambda e^{-\lambda x}\,dx={\frac {1}{\lambda }}.}
+{\displaystyle {\begin{aligned}\operatorname {E} \left[X^{2}\right]&=\int _{0}^{\infty }x^{2}\lambda e^{-\lambda x}\,dx\\&=\left[-x^{2}e^{-\lambda x}\right]_{0}^{\infty }+\int _{0}^{\infty }2xe^{-\lambda x}\,dx\\&=0+{\frac {2}{\lambda }}\operatorname {E} [X]\\&={\frac {2}{\lambda ^{2}}}.\end{aligned}}}
+{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[X^{2}\right]-\operatorname {E} [X]^{2}={\frac {2}{\lambda ^{2}}}-\left({\frac {1}{\lambda }}\right)^{2}={\frac {1}{\lambda ^{2}}}.}
+{\displaystyle (1+2+3+4+5+6)/6=7/2.}
+{\displaystyle {\begin{aligned}\operatorname {Var} (X)&=\sum _{i=1}^{6}{\frac {1}{6}}\left(i-{\frac {7}{2}}\right)^{2}\\[5pt]&={\frac {1}{6}}\left((-5/2)^{2}+(-3/2)^{2}+(-1/2)^{2}+(1/2)^{2}+(3/2)^{2}+(5/2)^{2}\right)\\[5pt]&={\frac {35}{12}}\approx 2.92.\end{aligned}}}
+{\displaystyle {\begin{aligned}\operatorname {Var} (X)&=\operatorname {E} \left(X^{2}\right)-(\operatorname {E} (X))^{2}\\[5pt]&={\frac {1}{n}}\sum _{i=1}^{n}i^{2}-\left({\frac {1}{n}}\sum _{i=1}^{n}i\right)^{2}\\[5pt]&={\frac {(n+1)(2n+1)}{6}}-\left({\frac {n+1}{2}}\right)^{2}\\[4pt]&={\frac {n^{2}-1}{12}}.\end{aligned}}}
+{\displaystyle \Pr \,(X=k)={\binom {n}{k}}p^{k}(1-p)^{n-k}}
+{\displaystyle np}
+{\displaystyle np(1-p)}
+{\displaystyle \Pr \,(X=k)=(1-p)^{k-1}p}
+{\displaystyle {\frac {1}{p}}}
+{\displaystyle {\frac {(1-p)}{p^{2}}}}
+{\displaystyle f\left(x\mid \mu ,\sigma ^{2}\right)={\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}}
+{\displaystyle \mu }
+{\displaystyle \sigma ^{2}}
+{\displaystyle f(x\mid a,b)={\begin{cases}{\frac {1}{b-a}}&{\text{for }}a\leq x\leq b,\\[3pt]0&{\text{for }}x<a{\text{ or }}x>b\end{cases}}}
+{\displaystyle {\frac {a+b}{2}}}
+{\displaystyle {\frac {(b-a)^{2}}{12}}}
+{\displaystyle f(x\mid \lambda )=\lambda e^{-\lambda x}}
+{\displaystyle {\frac {1}{\lambda }}}
+{\displaystyle {\frac {1}{\lambda ^{2}}}}
+{\displaystyle f(k\mid \lambda )={\frac {e^{-\lambda }\lambda ^{k}}{k!}}}
+{\displaystyle \lambda }
+{\displaystyle \lambda }
+{\displaystyle \operatorname {Var} (X)\geq 0.}
+{\displaystyle \operatorname {Var} (a)=0.}
+{\displaystyle \operatorname {Var} (X)=0\iff \exists a:P(X=a)=1.}
+{\displaystyle k}
+{\displaystyle 1<k\leq 2.}
+{\displaystyle X}
+{\displaystyle Y}
+{\displaystyle X}
+{\displaystyle \operatorname {Var} [X]=\operatorname {E} (\operatorname {Var} [X\mid Y])+\operatorname {Var} (\operatorname {E} [X\mid Y]).}
+{\displaystyle \operatorname {E} (X\mid Y)}
+{\displaystyle X}
+{\displaystyle Y}
+{\displaystyle \operatorname {Var} (X\mid Y)}
+{\displaystyle \operatorname {E} (X\mid Y=y)}
+{\displaystyle g(y)=\operatorname {E} (X\mid Y=y)}
+{\displaystyle \operatorname {E} (X\mid Y)=g(Y).}
+{\displaystyle Y}
+{\displaystyle y_{1},y_{2},y_{3}\ldots }
+{\displaystyle p_{1},p_{2},p_{3}\ldots ,}
+{\displaystyle \operatorname {E} (\operatorname {Var} [X\mid Y])=\sum _{i}p_{i}\sigma _{i}^{2},}
+{\displaystyle \sigma _{i}^{2}=\operatorname {Var} [X\mid Y=y_{i}]}
+{\displaystyle \operatorname {Var} (\operatorname {E} [X\mid Y])=\sum _{i}p_{i}\mu _{i}^{2}-\left(\sum _{i}p_{i}\mu _{i}\right)^{2}=\sum _{i}p_{i}\mu _{i}^{2}-\mu ^{2},}
+{\displaystyle \mu _{i}=\operatorname {E} [X\mid Y=y_{i}]}
+{\displaystyle \mu =\sum _{i}p_{i}\mu _{i}}
+{\displaystyle \operatorname {Var} [X]=\sum _{i}p_{i}\sigma _{i}^{2}+\left(\sum _{i}p_{i}\mu _{i}^{2}-\mu ^{2}\right).}
+{\displaystyle {\mathit {MS}}_{\text{total}}={\mathit {MS}}_{\text{between}}+{\mathit {MS}}_{\text{within}};}
+{\displaystyle {\mathit {MS}}}
+{\displaystyle {\mathit {MS}}_{\text{total}}={\mathit {MS}}_{\text{regression}}+{\mathit {MS}}_{\text{residual}}.}
+{\displaystyle {\mathit {SS}}}
+{\displaystyle {\mathit {SS}}_{\text{total}}={\mathit {SS}}_{\text{between}}+{\mathit {SS}}_{\text{within}},}
+{\displaystyle {\mathit {SS}}_{\text{total}}={\mathit {SS}}_{\text{regression}}+{\mathit {SS}}_{\text{residual}}.}
+{\displaystyle 2\int _{0}^{\infty }u(1-F(u))\,du-\left(\int _{0}^{\infty }(1-F(u))\,du\right)^{2}.}
+{\displaystyle \mathrm {argmin} _{m}\,\mathrm {E} \left(\left(X-m\right)^{2}\right)=\mathrm {E} (X)}
+{\displaystyle \varphi }
+{\displaystyle \mathrm {argmin} _{m}\,\mathrm {E} (\varphi (X-m))=\mathrm {E} (X)}
+{\displaystyle \varphi (x)=ax^{2}+b}
+{\displaystyle \operatorname {Var} (X+a)=\operatorname {Var} (X).}
+{\displaystyle \operatorname {Var} (aX)=a^{2}\operatorname {Var} (X).}
+{\displaystyle \operatorname {Var} (aX+bY)=a^{2}\operatorname {Var} (X)+b^{2}\operatorname {Var} (Y)+2ab\,\operatorname {Cov} (X,Y)}
+{\displaystyle \operatorname {Var} (aX-bY)=a^{2}\operatorname {Var} (X)+b^{2}\operatorname {Var} (Y)-2ab\,\operatorname {Cov} (X,Y)}
+{\displaystyle \operatorname {Cov} (X,Y)}
+{\displaystyle N}
+{\displaystyle \{X_{1},\dots ,X_{N}\}}
+{\displaystyle \operatorname {Var} \left(\sum _{i=1}^{N}X_{i}\right)=\sum _{i,j=1}^{N}\operatorname {Cov} (X_{i},X_{j})=\sum _{i=1}^{N}\operatorname {Var} (X_{i})+\sum _{i\neq j}\operatorname {Cov} (X_{i},X_{j}),}
+{\displaystyle {\begin{aligned}\operatorname {Var} \left(\sum _{i=1}^{N}a_{i}X_{i}\right)&=\sum _{i,j=1}^{N}a_{i}a_{j}\operatorname {Cov} (X_{i},X_{j})\\&=\sum _{i=1}^{N}a_{i}^{2}\operatorname {Var} (X_{i})+\sum _{i\not =j}a_{i}a_{j}\operatorname {Cov} (X_{i},X_{j})\\&=\sum _{i=1}^{N}a_{i}^{2}\operatorname {Var} (X_{i})+2\sum _{1\leq i<j\leq N}a_{i}a_{j}\operatorname {Cov} (X_{i},X_{j}).\end{aligned}}}
+{\displaystyle X_{1},\dots ,X_{N}}
+{\displaystyle \operatorname {Cov} (X_{i},X_{j})=0\ ,\ \forall \ (i\neq j),}
+{\displaystyle X_{1},\dots ,X_{N}}
+{\displaystyle \operatorname {Var} \left(\sum _{i=1}^{N}X_{i}\right)=\sum _{i=1}^{N}\operatorname {Var} (X_{i}).}
+{\displaystyle X_{1},\dots ,X_{n}}
+{\displaystyle X}
+{\displaystyle n}
+{\displaystyle X_{1},\ldots ,X_{n}}
+{\displaystyle c}
+{\displaystyle n}
+{\displaystyle c_{1},\ldots ,c_{n}}
+{\displaystyle c^{\mathsf {T}}X}
+{\displaystyle c^{\mathsf {T}}}
+{\displaystyle c}
+{\displaystyle \Sigma }
+{\displaystyle X}
+{\displaystyle c^{\mathsf {T}}X}
+{\displaystyle \operatorname {Var} \left(c^{\mathsf {T}}X\right)=c^{\mathsf {T}}\Sigma c.}
+{\displaystyle \operatorname {Var} \left({\bar {x}}\right)=\operatorname {Var} \left({\frac {1}{n}}1'X\right)={\frac {1}{n^{2}}}1'\Sigma 1.}
+{\displaystyle \operatorname {Var} \left(\sum _{i=1}^{n}X_{i}\right)=\sum _{i=1}^{n}\operatorname {Var} (X_{i}).}
+{\displaystyle \operatorname {Var} \left({\overline {X}}\right)=\operatorname {Var} \left({\frac {1}{n}}\sum _{i=1}^{n}X_{i}\right)={\frac {1}{n^{2}}}\sum _{i=1}^{n}\operatorname {Var} \left(X_{i}\right)={\frac {1}{n^{2}}}n\sigma ^{2}={\frac {\sigma ^{2}}{n}}.}
+{\displaystyle \operatorname {Var} (X+Y)=\operatorname {Var} (X)+\operatorname {Var} (Y).}
+{\displaystyle {\begin{aligned}\operatorname {Var} (X+Y)&=\operatorname {E} \left[(X+Y)^{2}\right]-(\operatorname {E} [X+Y])^{2}\\[5pt]&=\operatorname {E} \left[X^{2}+2XY+Y^{2}\right]-(\operatorname {E} [X]+\operatorname {E} [Y])^{2}.\end{aligned}}}
+{\displaystyle {\begin{aligned}\operatorname {Var} (X+Y)&=\operatorname {E} \left[X^{2}\right]+2\operatorname {E} [XY]+\operatorname {E} \left[Y^{2}\right]-\left(\operatorname {E} [X]^{2}+2\operatorname {E} [X]\operatorname {E} [Y]+\operatorname {E} [Y]^{2}\right)\\[5pt]&=\operatorname {E} \left[X^{2}\right]+\operatorname {E} \left[Y^{2}\right]-\operatorname {E} [X]^{2}-\operatorname {E} [Y]^{2}\\[5pt]&=\operatorname {Var} (X)+\operatorname {Var} (Y).\end{aligned}}}
+{\displaystyle \operatorname {Var} \left(\sum _{i=1}^{n}X_{i}\right)=\sum _{i=1}^{n}\sum _{j=1}^{n}\operatorname {Cov} \left(X_{i},X_{j}\right)=\sum _{i=1}^{n}\operatorname {Var} \left(X_{i}\right)+2\sum _{1\leq i<j\leq n}\operatorname {Cov} \left(X_{i},X_{j}\right).}
+{\displaystyle \operatorname {Cov} (\cdot ,\cdot )}
+{\displaystyle \operatorname {Var} \left({\overline {X}}\right)={\frac {\sigma ^{2}}{n}}+{\frac {n-1}{n}}\rho \sigma ^{2}.}
+{\displaystyle \operatorname {Var} \left({\overline {X}}\right)={\frac {1}{n}}+{\frac {n-1}{n}}\rho .}
+{\displaystyle \lim _{n\to \infty }\operatorname {Var} \left({\overline {X}}\right)=\rho .}
+{\displaystyle \operatorname {Var} \left(\sum _{i=1}^{N}X_{i}\right)=\operatorname {E} \left[N\right]\operatorname {Var} (X)+\operatorname {Var} (N)(\operatorname {E} \left[X\right])^{2}}
+{\displaystyle \operatorname {E} [N]=\operatorname {Var} (N)}
+{\displaystyle \operatorname {Var} \left(\sum _{i=1}^{n}X_{i}\right)}
+{\displaystyle n{S_{x}}^{2}+n{\bar {X}}^{2}}
+{\displaystyle \operatorname {SE} ({\bar {X}})={\sqrt {\frac {{S_{x}}^{2}+{\bar {X}}^{2}}{n}}}}
+{\displaystyle \operatorname {Var} (aX\pm bY)=a^{2}\operatorname {Var} (X)+b^{2}\operatorname {Var} (Y)\pm 2ab\,\operatorname {Cov} (X,Y).}
+{\displaystyle \operatorname {Var} \left(\sum _{i}^{n}a_{i}X_{i}\right)=\sum _{i=1}^{n}a_{i}^{2}\operatorname {Var} (X_{i})+2\sum _{1\leq i}\sum _{<j\leq n}a_{i}a_{j}\operatorname {Cov} (X_{i},X_{j})}
+{\displaystyle \operatorname {Var} (XY)=[\operatorname {E} (X)]^{2}\operatorname {Var} (Y)+[\operatorname {E} (Y)]^{2}\operatorname {Var} (X)+\operatorname {Var} (X)\operatorname {Var} (Y).}
+{\displaystyle \operatorname {Var} (XY)=\operatorname {E} \left(X^{2}\right)\operatorname {E} \left(Y^{2}\right)-[\operatorname {E} (X)]^{2}[\operatorname {E} (Y)]^{2}.}
+{\displaystyle {\begin{aligned}\operatorname {Var} (XY)={}&\operatorname {E} \left[X^{2}Y^{2}\right]-[\operatorname {E} (XY)]^{2}\\[5pt]={}&\operatorname {Cov} \left(X^{2},Y^{2}\right)+\operatorname {E} (X^{2})\operatorname {E} \left(Y^{2}\right)-[\operatorname {E} (XY)]^{2}\\[5pt]={}&\operatorname {Cov} \left(X^{2},Y^{2}\right)+\left(\operatorname {Var} (X)+[\operatorname {E} (X)]^{2}\right)\left(\operatorname {Var} (Y)+[\operatorname {E} (Y)]^{2}\right)\\[5pt]&-[\operatorname {Cov} (X,Y)+\operatorname {E} (X)\operatorname {E} (Y)]^{2}\end{aligned}}}
+{\displaystyle \operatorname {Var} \left[f(X)\right]\approx \left(f'(\operatorname {E} \left[X\right])\right)^{2}\operatorname {Var} \left[X\right]}
+{\textstyle \mu =\operatorname {E} [x_{i}]={\frac {1}{N}}\sum _{i=1}^{N}x_{i}}
+{\textstyle \operatorname {E} [x_{i}^{2}]=\left({\frac {1}{N}}\sum _{i=1}^{N}x_{i}^{2}\right)}
+{\textstyle \operatorname {E} }
+{\displaystyle \sigma ^{2}={\frac {1}{N^{2}}}\sum _{i<j}\left(x_{i}-x_{j}\right)^{2}={\frac {1}{2N^{2}}}\sum _{i,j=1}^{N}\left(x_{i}-x_{j}\right)^{2}.}
+{\textstyle N}
+{\displaystyle {\tilde {S}}_{Y}^{2}={\frac {1}{n}}\sum _{i=1}^{n}\left(Y_{i}-{\overline {Y}}\right)^{2}=\left({\frac {1}{n}}\sum _{i=1}^{n}Y_{i}^{2}\right)-{\overline {Y}}^{2}={\frac {1}{n^{2}}}\sum _{i,j\,:\,i<j}\left(Y_{i}-Y_{j}\right)^{2}.}
+{\displaystyle {\overline {Y}}}
+{\displaystyle {\overline {Y}}={\frac {1}{n}}\sum _{i=1}^{n}Y_{i}.}
+{\displaystyle {\overline {Y}}}
+{\displaystyle {\tilde {S}}_{Y}^{2}}
+{\displaystyle {\tilde {S}}_{Y}^{2}}
+{\displaystyle {\begin{aligned}\operatorname {E} [{\tilde {S}}_{Y}^{2}]&=\operatorname {E} \left[{\frac {1}{n}}\sum _{i=1}^{n}\left(Y_{i}-{\frac {1}{n}}\sum _{j=1}^{n}Y_{j}\right)^{2}\right]\\[5pt]&={\frac {1}{n}}\sum _{i=1}^{n}\operatorname {E} \left[Y_{i}^{2}-{\frac {2}{n}}Y_{i}\sum _{j=1}^{n}Y_{j}+{\frac {1}{n^{2}}}\sum _{j=1}^{n}Y_{j}\sum _{k=1}^{n}Y_{k}\right]\\[5pt]&={\frac {1}{n}}\sum _{i=1}^{n}\left(\operatorname {E} \left[Y_{i}^{2}\right]-{\frac {2}{n}}\left(\sum _{j\neq i}\operatorname {E} \left[Y_{i}Y_{j}\right]+\operatorname {E} \left[Y_{i}^{2}\right]\right)+{\frac {1}{n^{2}}}\sum _{j=1}^{n}\sum _{k\neq j}^{n}\operatorname {E} \left[Y_{j}Y_{k}\right]+{\frac {1}{n^{2}}}\sum _{j=1}^{n}\operatorname {E} \left[Y_{j}^{2}\right]\right)\\[5pt]&={\frac {1}{n}}\sum _{i=1}^{n}\left({\frac {n-2}{n}}\operatorname {E} \left[Y_{i}^{2}\right]-{\frac {2}{n}}\sum _{j\neq i}\operatorname {E} \left[Y_{i}Y_{j}\right]+{\frac {1}{n^{2}}}\sum _{j=1}^{n}\sum _{k\neq j}^{n}\operatorname {E} \left[Y_{j}Y_{k}\right]+{\frac {1}{n^{2}}}\sum _{j=1}^{n}\operatorname {E} \left[Y_{j}^{2}\right]\right)\\[5pt]&={\frac {1}{n}}\sum _{i=1}^{n}\left[{\frac {n-2}{n}}\left(\sigma ^{2}+\mu ^{2}\right)-{\frac {2}{n}}(n-1)\mu ^{2}+{\frac {1}{n^{2}}}n(n-1)\mu ^{2}+{\frac {1}{n}}\left(\sigma ^{2}+\mu ^{2}\right)\right]\\[5pt]&={\frac {n-1}{n}}\sigma ^{2}.\end{aligned}}}
+{\textstyle \sigma ^{2}=\operatorname {E} [Y_{i}^{2}]-\mu ^{2}}
+{\textstyle \operatorname {E} [Y_{i}Y_{j}]=\operatorname {E} [Y_{i}]\operatorname {E} [Y_{j}]=\mu ^{2}}
+{\textstyle Y_{i}}
+{\textstyle Y_{j}}
+{\textstyle {\tilde {S}}_{Y}^{2}}
+{\textstyle {\frac {n-1}{n}}}
+{\textstyle {\tilde {S}}_{Y}^{2}}
+{\textstyle {\tilde {S}}_{Y}^{2}}
+{\displaystyle S^{2}}
+{\displaystyle S^{2}={\frac {n}{n-1}}{\tilde {S}}_{Y}^{2}={\frac {n}{n-1}}\left[{\frac {1}{n}}\sum _{i=1}^{n}\left(Y_{i}-{\overline {Y}}\right)^{2}\right]={\frac {1}{n-1}}\sum _{i=1}^{n}\left(Y_{i}-{\overline {Y}}\right)^{2}}
+{\displaystyle (n-1){\frac {S^{2}}{\sigma ^{2}}}\sim \chi _{n-1}^{2}}
+{\displaystyle \operatorname {E} \left(S^{2}\right)=\operatorname {E} \left({\frac {\sigma ^{2}}{n-1}}\chi _{n-1}^{2}\right)=\sigma ^{2},}
+{\displaystyle \operatorname {Var} \left[S^{2}\right]=\operatorname {Var} \left({\frac {\sigma ^{2}}{n-1}}\chi _{n-1}^{2}\right)={\frac {\sigma ^{4}}{(n-1)^{2}}}\operatorname {Var} \left(\chi _{n-1}^{2}\right)={\frac {2\sigma ^{4}}{n-1}}.}
+{\displaystyle \operatorname {E} \left[S^{2}\right]=\sigma ^{2},\quad \operatorname {Var} \left[S^{2}\right]={\frac {\sigma ^{4}}{n}}\left(\kappa -1+{\frac {2}{n-1}}\right)={\frac {1}{n}}\left(\mu _{4}-{\frac {n-3}{n-1}}\sigma ^{4}\right),}
+{\displaystyle {\bar {y}}\pm \sigma _{Y}(n-1)^{1/2}.}
+{\displaystyle \sigma _{y}^{2}\leq 2y_{\max }(A-H),}
+{\displaystyle \sigma _{y}^{2}}
+{\displaystyle \sigma _{y}^{2}\leq {\frac {y_{\max }(A-H)(y_{\max }-A)}{y_{\max }-H}},}
+{\displaystyle \sigma _{y}^{2}\geq {\frac {y_{\min }(A-H)(A-y_{\min })}{H-y_{\min }}},}
+{\displaystyle \Sigma }
+{\displaystyle I=n\left(\mathbf {1} _{3\times 3}\operatorname {tr} (\Sigma )-\Sigma \right).}
+{\displaystyle \Sigma ={\begin{bmatrix}10&0&0\\0&0.1&0\\0&0&0.1\end{bmatrix}}.}
+{\displaystyle I=n{\begin{bmatrix}0.2&0&0\\0&10.1&0\\0&0&10.1\end{bmatrix}}.}
+{\displaystyle \sigma _{1}}
+{\displaystyle \sigma _{2}}
+{\displaystyle {\sqrt {\sigma _{1}^{2}+\sigma _{2}^{2}}}}
+{\displaystyle x}
+{\displaystyle \mathbb {C} ,}
+{\displaystyle \operatorname {E} \left[(x-\mu )(x-\mu )^{*}\right],}
+{\displaystyle x^{*}}
+{\displaystyle x.}
+{\displaystyle X}
+{\displaystyle \mathbb {R} ^{n},}
+{\displaystyle \operatorname {E} \left[(X-\mu )(X-\mu )^{\operatorname {T} }\right],}
+{\displaystyle \mu =\operatorname {E} (X)}
+{\displaystyle X^{\operatorname {T} }}
+{\displaystyle X,}
+{\displaystyle X}
+{\displaystyle \mathbb {C} ^{n},}
+{\displaystyle \operatorname {E} \left[(X-\mu )(X-\mu )^{\dagger }\right],}
+{\displaystyle X^{\dagger }}
+{\displaystyle X.}
+{\displaystyle X}
+{\displaystyle \det(C)}
+{\displaystyle \operatorname {Var} (X)=\operatorname {E} \left[(X-\mu )^{2}\right]}
+{\displaystyle (X-\mu )^{2}}
+{\displaystyle X-\mu }
+{\displaystyle \operatorname {E} \left[(X-\mu )^{\operatorname {T} }(X-\mu )\right]=\operatorname {tr} (C),}

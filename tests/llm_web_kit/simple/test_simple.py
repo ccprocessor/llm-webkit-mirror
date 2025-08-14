@@ -162,3 +162,23 @@ class TestSimple(unittest.TestCase):
         html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
         md = extract_html_to_md(self.url, html_content, clip_html=False)
         assert 'For descriptions of the methods (AM1, HF, MP2, ...) a' in md
+
+    def test_filter_display_none_content(self):
+        """测试display:none的内容是否被正确过滤."""
+        html_content = '''<html><body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p>正常内容</p>
+        </body></html>'''
+
+        # 使用clip_html=False，因为我们要测试noclip模式下HTMLFileFormatCleanTagsPreExtractor是否正确处理main_html字段
+        md = extract_html_to_md(self.url, html_content, clip_html=False)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证正常内容被保留
+        self.assertIn('正常内容', md)

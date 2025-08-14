@@ -428,7 +428,8 @@ class TestTextParagraphRecognize(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert 'Show Ignored Content\n  1. DrDu\n\n Lieber Hendrik, \n\n kannst Du hierzu was beitragen? \n\n Ich finde keinen rechten Grund' in content_md
+        assert '1. DrDu\n\n Lieber Hendrik, \n\n kannst Du hierzu was beitragen? \n\n Ich finde keinen rechten Grund' in content_md
+        assert 'Show Ignored Content' not in content_md  # 这个是隐藏标签，不应该被识别出来
 
     def test_Lack_content1(self):
         """
@@ -453,3 +454,36 @@ class TestTextParagraphRecognize(unittest.TestCase):
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
         assert 'a) Electronic mail: airegg.py90g@nctu.edu.tw .' in content_md
+
+    def test_empty_string_fix(self):
+        """
+        测试修复字符串索引越界问题 - 当文本处理中出现空字符串时不应抛出IndexError
+        这个测试验证了__combine_text方法能够正确处理空字符串的情况
+        """
+        # 直接测试__combine_text方法处理空字符串的能力
+        text_recognizer = TextParagraphRecognizer()
+
+        # 测试各种空字符串组合
+        result1 = text_recognizer._TextParagraphRecognizer__combine_text('hello', '', 'en')
+        self.assertEqual(result1, 'hello')
+
+        result2 = text_recognizer._TextParagraphRecognizer__combine_text('', 'world', 'en')
+        self.assertEqual(result2, 'world')
+
+        result3 = text_recognizer._TextParagraphRecognizer__combine_text('', '', 'en')
+        self.assertEqual(result3, '')
+
+        # 测试包含空格但trim后变空的情况
+        result4 = text_recognizer._TextParagraphRecognizer__combine_text('hello', '   ', 'en')
+        self.assertEqual(result4, 'hello')
+
+        result5 = text_recognizer._TextParagraphRecognizer__combine_text('   ', 'world', 'en')
+        self.assertEqual(result5, 'world')
+
+        # 测试正常情况仍然工作
+        result6 = text_recognizer._TextParagraphRecognizer__combine_text('hello', 'world', 'en')
+        self.assertEqual(result6, 'hello world')
+
+        # 测试标点符号情况
+        result7 = text_recognizer._TextParagraphRecognizer__combine_text('hello', ',world', 'en')
+        self.assertEqual(result7, 'hello,world')
