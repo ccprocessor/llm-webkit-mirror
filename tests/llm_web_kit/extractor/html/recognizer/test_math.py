@@ -207,14 +207,6 @@ TEST_CASES_HTML = [
         'base_url': 'https://physicshelpforum.com/t/latex-upgrade-physics-forum-powered-by-mathjax-v3.17489/',
         'expected': 'assets/ccmath/math_physicsforums_2_1.html',
         'expected_inline': 'assets/ccmath/math_physicsforums_2_inline_1.html'
-    },
-    {
-        'input': [
-            'assets/ccmath/math_class_math.html',
-        ],
-        'base_url': 'https://convertoctopus.com/4-7-years-to-minutes',
-        'expected': 'assets/ccmath/math_class_math_1.html',
-        'expected_inline': 'assets/ccmath/math_class_math_inline_1.html'
     }
 ]
 

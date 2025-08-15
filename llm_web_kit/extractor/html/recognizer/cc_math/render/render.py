@@ -11,7 +11,6 @@ from llm_web_kit.libs.html_utils import html_to_element
 class MathRenderType:
     """数学公式渲染器类型."""
     MATHJAX = 'mathjax'
-    MATHJAX_MOCK = 'mathjax_mock'  # 虚拟的mathjax渲染器
     MATHJAX_CUSTOMIZED = 'mathjax_customized'  # 临时增加这个type，未来区分走自定义解析的数据
     KATEX = 'katex'
 

@@ -533,42 +533,6 @@ class MathJaxRender(BaseMathRender):
         return processascii
 
 
-class MathJaxRenderMock(MathJaxRender):
-    """虚拟的MathJax渲染器，用于没有MathJax配置但需要使用MathJax解析逻辑的情况.
-
-    这个类主要用于处理以下场景：
-    1. 网页中没有显式的MathJax配置（如<script type="text/x-mathjax-config">）
-    2. 但在HTML解析过程中检测到了数学公式元素（如<math>标签、公式相关的class等）
-    3. 需要使用MathJax渲染器方案扫一遍所有内容，防止漏抽取公式
-
-    与普通MathJaxRender的区别：
-    - MathJaxRender：会解析HTML中的MathJax配置，使用自定义的分隔符和选项
-    - MathJaxRenderMock：直接使用默认的MathJax配置，不解析HTML配置
-    """
-
-    def __init__(self):
-        """初始化虚拟MathJax渲染器."""
-        super().__init__()
-        self.render_type = MathRenderType.MATHJAX_MOCK
-        # 使用默认的MathJax选项
-        self.options = MATHJAX_OPTIONS.copy()
-
-    def get_options(self, html: str) -> Dict[str, Any]:
-        """虚拟渲染器直接返回默认选项，不解析HTML配置.
-
-        Args:
-            html: HTML字符串（忽略）
-
-        Returns:
-            Dict[str, Any]: 默认MathJax选项字典
-        """
-        return self.options
-
-    def is_customized_options(self) -> bool:
-        """虚拟渲染器始终返回False，表示使用默认配置."""
-        return False
-
-
 # 使用示例
 if __name__ == '__main__':
     # MathJax示例
