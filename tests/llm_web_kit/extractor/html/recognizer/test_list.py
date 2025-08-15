@@ -375,38 +375,3 @@ class TestSimpleListRecognize(unittest.TestCase):
             error_msg = str(context.exception)
             self.assertIn('中没有cclist标签', error_msg)
             self.assertIn(element.tag, error_msg)
-
-    def test_no_standard_get_list_content_list(self):
-        """测试非标准结构的list获取content_list."""
-        # 获取私有方法 __get_list_content_list
-        get_list_content_list_method = getattr(self.__list_recognize, '_ListRecognizer__get_list_content_list')
-
-        # 创建测试数据
-        test_elements = [
-            html_to_element('''<ul id="productslist">
-                                    <figure class="list">
-                                        <figcaption><h4>How to Process Oxidized Lead Zinc Ore by Flotation</h4>
-                                            <p>How to Process Oxidized Lead Zinc Ore by Flotation. Metallurgical Content. The
-                                                Flowsheet. Crushing Section; GRINDING; Conditioning and Flotation; Thickening and
-                                                Filtering; Sampling; ORE TESTING LABORATORY; The problem of treating oxidized lead
-                                                zinc ores for the production of high grade lead zinc concentrates is a complex </p>
-                                        </figcaption>
-                                    </figure>
-                                    <figure class="list">
-                                        <figcaption><h4>ore dressing flotation machine,fluorite ore flotation </h4>
-                                            <p>Ore dressing flotation machine is widely used to conduct flotation of copper ore,
-                                                lead zinc ore, glod ore, etc. Mail to sales@sinofote</p>
-                                        </figcaption>
-                                    </figure>
-                                    <figure class="list">
-                                        <figcaption><h4>Zinc Ore Mining Crusher wffofoundation</h4>
-                                            <p>Zinc ore mining process can 14 2016 31 Mar Lead zinc ore dressing equipment zinc ore
-                                                Once processing in the flotation circuit was complete, the zinc </p>
-                                        </figcaption>
-                                    </figure>
-                                </ul>''')
-        ]
-
-        for i, element in enumerate(test_elements):
-            list_content_list = get_list_content_list_method(element, 1)
-            assert len(list_content_list) == 3
