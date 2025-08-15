@@ -137,26 +137,26 @@ class TestSimple(unittest.TestCase):
         self.base_path = os.path.dirname(os.path.abspath(__file__))
 
     # ========================================
-    # 基础功能测试（对应原有的test_extractor_factory等）
+    # 基础功能测试
     # ========================================
 
-    def test_extract_html_to_md_equivalent(self):
-        """对应原有的test_extractor_factory - 测试提取HTML到MD"""
+    def test_extract_html_to_md(self):
+        """测试提取HTML到MD."""
         md = extract_content_from_html_with_magic_html(self.url, self.html_content)
         self.assertEqual(md, self.expected_md)
 
-    def test_extract_html_to_mm_md_equivalent(self):
-        """对应原有的test_extract_html_to_mm_md - 测试提取HTML到MM_MD"""
+    def test_extract_html_to_mm_md(self):
+        """测试提取HTML到MM_MD."""
         mm_md = extract_content_from_html_with_magic_html(self.url, self.html_content, 'mm_md')
         self.assertEqual(mm_md, self.expected_mm_md)
 
-    def test_extract_magic_main_html_equivalent(self):
-        """对应原有的test_extract_magic_main_html - 测试提取main_html"""
+    def test_extract_magic_main_html(self):
+        """测试提取main_html."""
         main_html = extract_main_html_only(self.url, self.html_content, PipeType.MAGIC_HTML)
         self.assertEqual(main_html, self.main_html)
 
-    def test_extract_noclip_equivalent(self):
-        """对应原有的noclip测试 - 测试从原始HTML直接提取内容"""
+    def test_extract_noclip(self):
+        """测试从原始HTML直接提取内容."""
         # 对应原来的clip_html=False
         md = extract_content_from_main_html(self.url, self.html_content)
         self.assertEqual(md, self.expected_md)
@@ -212,28 +212,28 @@ class TestSimple(unittest.TestCase):
         self.assertEqual(result, self.expected_mm_md)
 
     # ========================================
-    # 测试便利方法
+    # 测试对外方法
     # ========================================
 
     def test_extract_main_html_only_default(self):
-        """测试便利方法：extract_main_html_only默认使用MAGIC_HTML."""
+        """测试对外方法：extract_main_html_only默认使用MAGIC_HTML."""
         result = extract_main_html_only(self.url, self.html_content)
         self.assertIsInstance(result, str)
         self.assertTrue(len(result) > 0)
         self.assertIn('<', result)
 
     def test_extract_content_from_main_html_default(self):
-        """测试便利方法：extract_content_from_main_html默认md格式."""
+        """测试对外方法：extract_content_from_main_html默认md格式."""
         result = extract_content_from_main_html(self.url, self.main_html)
         self.assertEqual(result, self.expected_md)
 
     def test_extract_content_from_main_html_mm_md(self):
-        """测试便利方法：extract_content_from_main_html输出mm_md格式."""
+        """测试对外方法：extract_content_from_main_html输出mm_md格式."""
         result = extract_content_from_main_html(self.url, self.main_html, 'mm_md')
         self.assertEqual(result, self.expected_mm_md)
 
     def test_extract_content_from_html_with_magic_html(self):
-        """测试便利方法：extract_content_from_html_with_magic_html."""
+        """测试对外方法：extract_content_from_html_with_magic_html."""
         result = extract_content_from_html_with_magic_html(self.url, self.html_content)
         self.assertEqual(result, self.expected_md)
 
@@ -241,7 +241,7 @@ class TestSimple(unittest.TestCase):
         self.assertEqual(result_mm, self.expected_mm_md)
 
     def test_extract_content_from_html_with_llm(self):
-        """测试便利方法：extract_content_from_html_with_llm."""
+        """测试对外方法：extract_content_from_html_with_llm."""
         try:
             result = extract_content_from_html_with_llm(self.url, self.html_content)
             self.assertIsInstance(result, str)
@@ -250,7 +250,7 @@ class TestSimple(unittest.TestCase):
             self.assertTrue('待实现' in str(e) or 'not found' in str(e).lower() or 'ImportError' in str(e))
 
     def test_extract_content_from_html_with_layout_batch(self):
-        """测试便利方法：extract_content_from_html_with_layout_batch."""
+        """测试对外方法：extract_content_from_html_with_layout_batch."""
         try:
             result = extract_content_from_html_with_layout_batch(self.url, self.html_content)
             self.assertIsInstance(result, str)
@@ -300,64 +300,6 @@ class TestSimple(unittest.TestCase):
         self.assertTrue(result.startswith('{') or result.startswith('['))
 
     # ========================================
-    # 原有测试场景的适配
-    # ========================================
-
-    def test_extract_real_html_to_md(self):
-        """对应原有的test_extract_real_html_to_md - 测试真实HTML内容，验证JavaScript被过滤"""
-        md = extract_content_from_html_with_magic_html(self.url, self.real_html_content)
-        self.assertNotIn('DOMContentLoaded', md)
-
-    def test_extract_lack_item(self):
-        """对应原有的test_extract_lack_item - 测试lack_item.html文件"""
-        try:
-            html_content = open(os.path.join(self.base_path, 'assets', 'lack_item.html'), 'r').read()
-            md = extract_content_from_html_with_magic_html(self.url, html_content)
-            self.assertGreater(len(md), 0)
-        except FileNotFoundError:
-            self.skipTest('Test file lack_item.html not found')
-
-    def test_extract_lack_item_2(self):
-        """对应原有的test_extract_lack_item_2 - 测试lack_item_2.html文件"""
-        try:
-            html_content = open(os.path.join(self.base_path, 'assets', 'lack_item_2.html'), 'r').read()
-            md = extract_content_from_html_with_magic_html(self.url, html_content)
-            # 验证提取到了主要内容
-            self.assertIn('fundamental thermo question', md)
-            self.assertIn('multiple effect evaporator', md)
-        except FileNotFoundError:
-            self.skipTest('Test file lack_item_2.html not found')
-
-    def test_extract_word_press(self):
-        """对应原有的test_extract_word_press - 测试word_press.html文件"""
-        try:
-            html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
-            md = extract_content_from_html_with_magic_html(self.url, html_content)
-            self.assertIn('For descriptions of the methods (AM1, HF, MP2, ...) a', md)
-        except FileNotFoundError:
-            self.skipTest('Test file word_press.html not found')
-
-    def test_filter_display_none_content(self):
-        """对应原有的test_filter_display_none_content - 测试display:none的内容是否被正确过滤"""
-        html_content = '''<html><body>
-        <div class="options-div-0-0 option-box__items" style="display: none;">
-            <span class="bedroom-rate__title">Room Only Rate</span>
-            <span class="bedroom-rate__price">£1,230.00</span>
-        </div>
-        <p>正常内容</p>
-        </body></html>'''
-
-        # 使用MAGIC_HTML_NOCLIP模拟原来的clip_html=False
-        md = extract_content_from_main_html(self.url, html_content)
-
-        # 验证隐藏内容被过滤掉了
-        self.assertNotIn('Room Only Rate', md)
-        self.assertNotIn('£1,230.00', md)
-
-        # 验证正常内容被保留
-        self.assertIn('正常内容', md)
-
-    # ========================================
     # 测试ExtractorFactory缓存机制
     # ========================================
 
@@ -401,13 +343,61 @@ class TestSimple(unittest.TestCase):
         self.assertIsInstance(result, str)
 
     # ========================================
+    # 测试不同场景抽取内容符合预期
+    # ========================================
+
+    def test_extract_real_html_to_md(self):
+        """测试真实HTML内容，验证JavaScript被过滤."""
+        md = extract_content_from_main_html(self.url, self.real_html_content)
+        self.assertNotIn('DOMContentLoaded', md)
+
+    def test_extract_lack_item(self):
+        """测试lack_item.html文件."""
+        html_content = open(os.path.join(self.base_path, 'assets', 'lack_item.html'), 'r').read()
+        md = extract_content_from_main_html(self.url, html_content)
+        self.assertGreater(len(md), 0)
+
+    def test_extract_lack_item_2(self):
+        """测试lack_item_2.html文件."""
+        html_content = open(os.path.join(self.base_path, 'assets', 'lack_item_2.html'), 'r').read()
+        md = extract_content_from_main_html(self.url, html_content)
+        # 验证提取到了主要内容
+        self.assertIn('2001-2015 Physics Forums', md)
+
+    def test_extract_word_press(self):
+        """测试word_press.html文件."""
+        html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
+        md = extract_content_from_main_html(self.url, html_content)
+        self.assertIn('For descriptions of the methods (AM1, HF, MP2, ...) a', md)
+
+    def test_filter_display_none_content(self):
+        """测试display:none的内容是否被正确过滤."""
+        html_content = '''<html><body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p>正常内容</p>
+        </body></html>'''
+
+        # 使用MAGIC_HTML_NOCLIP模拟原来的clip_html=False
+        md = extract_content_from_main_html(self.url, html_content)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证正常内容被保留
+        self.assertIn('正常内容', md)
+
+    # ========================================
     # 集成测试
     # ========================================
 
     def test_full_pipeline_integration(self):
         """测试完整的两阶段流水线."""
         # 第一阶段：提取main_html
-        main_html = extract_main_html_only(self.url, self.html_content)
+        main_html = extract_main_html_only(self.url, self.real_html_content)
         self.assertIsInstance(main_html, str)
         self.assertTrue(len(main_html) > 0)
 
@@ -417,8 +407,8 @@ class TestSimple(unittest.TestCase):
         self.assertTrue(len(markdown) > 0)
 
         # 对比直接两阶段调用的结果
-        direct_result = extract_content_from_html_with_magic_html(self.url, self.html_content)
-        self.assertIsInstance(direct_result, str)
+        direct_result = extract_content_from_html_with_magic_html(self.url, self.real_html_content)
+        self.assertEqual(markdown, direct_result, "分步骤处理和直接处理的结果应该一致")
 
     def test_multiple_calls_consistency(self):
         """测试多次调用的一致性."""
