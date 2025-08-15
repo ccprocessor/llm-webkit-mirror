@@ -145,7 +145,7 @@ class TestExtractorChainNormal(unittest.TestCase):
                 'extractor': [
                     {
                         'enable': False,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.extractor.NoClipHTMLFIleFormatorExtractor',
                         'class_init_kwargs': {},
                     }
                 ],
@@ -226,7 +226,7 @@ class TestExtractorChainNormal(unittest.TestCase):
                 'extractor': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.extractor.NoClipHTMLFIleFormatorExtractor',
                         'class_init_kwargs': {},
                     }
                 ]

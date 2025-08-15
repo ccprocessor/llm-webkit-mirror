@@ -1,0 +1,17 @@
+{
+    "extractor_pipe": {
+            "enable": true,
+            "validate_input_format": false,
+            // 第一阶段：使用magic_html选择main_html
+            "main_html_parser": [
+                {
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser",
+                "class_init_kwargs": {}
+            }],
+            // 不执行第二阶段
+            "pre_extractor": [],
+            "extractor": [],
+            "post_extractor": []
+    }
+}

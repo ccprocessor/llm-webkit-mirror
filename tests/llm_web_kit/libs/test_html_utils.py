@@ -574,13 +574,13 @@ class TestRemoveElement(unittest.TestCase):
 
 class TestExtractMagicHtml(unittest.TestCase):
 
-    @patch('llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor')
-    def test_extract_magic_html_success(self, mock_extractor_class):
-        mock_extractor_instance = MagicMock()
-        mock_extractor_class.return_value = mock_extractor_instance
+    @patch('llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser')
+    def test_extract_magic_html_success(self, mock_parser_class):
+        mock_parser_instance = MagicMock()
+        mock_parser_class.return_value = mock_parser_instance
 
         expected_html = '<body><div>Test Content</div></body>'
-        mock_extractor_instance._extract_main_html.return_value = (expected_html, 'metadata', 'content_type')
+        mock_parser_instance._extract_main_html.return_value = (expected_html, 'metadata', 'content_type')
 
         html = '<html><body><div>Test Content</div></body></html>'
         base_url = 'https://example.com'
@@ -588,15 +588,15 @@ class TestExtractMagicHtml(unittest.TestCase):
 
         result = extract_magic_html(html, base_url, page_layout_type)
 
-        mock_extractor_class.assert_called_once_with({})
-        mock_extractor_instance._extract_main_html.assert_called_once_with(html, base_url, page_layout_type)
+        mock_parser_class.assert_called_once_with({})
+        mock_parser_instance._extract_main_html.assert_called_once_with(html, base_url, page_layout_type)
         self.assertEqual(result, expected_html)
 
-    @patch('llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor')
-    def test_extract_magic_html_exception(self, mock_extractor_class):
-        mock_extractor_instance = MagicMock()
-        mock_extractor_class.return_value = mock_extractor_instance
-        mock_extractor_instance._extract_main_html.side_effect = MagicHtmlExtractorException('Test error')
+    @patch('llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser')
+    def test_extract_magic_html_exception(self, mock_parser_class):
+        mock_parser_instance = MagicMock()
+        mock_parser_class.return_value = mock_parser_instance
+        mock_parser_instance._extract_main_html.side_effect = MagicHtmlExtractorException('Test error')
 
         html = '<html><body><div>Test Content</div></body></html>'
         base_url = 'https://example.com'

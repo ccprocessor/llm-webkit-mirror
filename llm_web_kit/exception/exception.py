@@ -559,3 +559,32 @@ class DomContentFilterParserException(HtmlProcessorException):
         if error_code is None:
             error_code = ErrorMsg.get_error_code('Parser', 'DomContentFilterParserException')
         super().__init__(custom_message, error_code)
+
+
+##############################################################################
+#
+#  SimpleAPI Exceptions
+#
+##############################################################################
+class SimpleAPIBaseException(LlmWebKitBaseException):
+    """Base exception class for Simple API."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('SimpleAPI', 'SimpleAPIBaseException')
+        super().__init__(custom_message, error_code)
+
+
+class InvalidExtractorTypeException(SimpleAPIBaseException):
+    """Exception raised for invalid extractor type."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('SimpleAPI', 'InvalidExtractorTypeException')
+        super().__init__(custom_message, error_code)
+
+
+class InvalidOutputFormatException(SimpleAPIBaseException):
+    """Exception raised for invalid output format."""
+    def __init__(self, custom_message: str | None = None, error_code: int | None = None):
+        if error_code is None:
+            error_code = ErrorMsg.get_error_code('SimpleAPI', 'InvalidOutputFormatException')
+        super().__init__(custom_message, error_code)

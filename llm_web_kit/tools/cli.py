@@ -5,8 +5,7 @@ from pathlib import Path
 import click
 from loguru import logger
 
-from llm_web_kit.extractor.html.extractor import MagicHTMLFIleFormatorExtractor
-from llm_web_kit.input.datajson import DataJson
+from llm_web_kit.simple import extract_content_from_html_with_magic_html
 
 
 @click.command()
@@ -55,9 +54,7 @@ def cli(input_path, output_path, debug_mode):
             else:
                 raise ValueError('Input JSON must contain either html or path field')
 
-        extractor = MagicHTMLFIleFormatorExtractor({})
-        data_e = extractor.extract(DataJson(input_data))
-        output_json = data_e.to_json()
+        output_json = extract_content_from_html_with_magic_html(input_data['url'], input_data['html'], 'json')
         if output_path:
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)

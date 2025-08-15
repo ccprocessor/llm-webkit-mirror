@@ -2,21 +2,28 @@
     "extractor_pipe": {
             "enable": true,
             "validate_input_format": false,
+            "main_html_parser": [
+                {
+                    "enable": true,
+                    "python_class": "llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser",
+                    "class_init_kwargs": {}
+                }
+            ],
             "pre_extractor": [
                 {
                     "enable": true,
-                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatFilterTablePreExtractor"
+                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipFilterTablePreExtractor"
                 },
                 {
                     "enable": true,
-                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor",
+                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipCleanTagsPreExtractor",
                     "class_init_kwargs": {}
                 }
             ],
             "extractor": [
                 {
                     "enable": true,
-                    "python_class": "llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor",
+                    "python_class": "llm_web_kit.extractor.html.extractor.NoClipHTMLFIleFormatorExtractor",
                     "class_init_kwargs": {}
                 }
             ],
