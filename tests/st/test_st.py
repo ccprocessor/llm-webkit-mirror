@@ -42,7 +42,12 @@ class TestST(unittest.TestCase):
                 'pre_extractor': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipFilterTablePreExtractor',
+                        'class_init_kwargs': {}
+                    },
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipCleanTagsPreExtractor',
                         'class_init_kwargs': {}
                     }
                 ],

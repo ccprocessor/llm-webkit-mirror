@@ -148,7 +148,7 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
 
 
 def extract_content_from_html_with_magic_html(url: str, html_content: str, output_format: str = 'md') -> str:
-    """场景2: 执行两个阶段，从magic_html抽取main_html，再从main_html抽取结构化内容.
+    """场景3: 执行两个阶段，从magic_html抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
@@ -162,7 +162,7 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
 
 
 def extract_content_from_html_with_llm(url: str, html_content: str, output_format: str = 'md') -> str:
-    """场景2: 执行两个阶段，从llm抽取main_html，再从main_html抽取结构化内容.
+    """场景3: 执行两个阶段，从llm抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
@@ -176,7 +176,7 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
 
 
 def extract_content_from_html_with_layout_batch(url: str, html_content: str, output_format: str = 'md') -> str:
-    """场景2: 执行两个阶段，从layout_batch抽取main_html，再从main_html抽取结构化内容.
+    """场景3: 执行两个阶段，从layout_batch抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL

@@ -25,6 +25,7 @@ class MainHtmlParserType:
     LLM = 'llm'
     LAYOUT_BATCH = 'layout_batch'
     MAGIC_HTML = 'magic_html'
+    TEST_HTML = 'test_html'
 
 
 class AbstractMainHtmlParser(ABC):
@@ -195,5 +196,6 @@ class TestHTMLFileFormatFilterMainHtmlParser(AbstractMainHtmlParser):
             html = f.read()
             data_json['html'] = html
             data_json['main_html'] = html
+            data_json['main_html_parser_method'] = MainHtmlParserType.TEST_HTML
             del data_json['path']
         return data_json
