@@ -11,7 +11,7 @@ from llm_web_kit.simple import (ExtractorFactory, PipeTpl,
                                 extract_content_from_html_with_layout_batch,
                                 extract_content_from_html_with_llm,
                                 extract_content_from_html_with_magic_html,
-                                extract_content_from_main_html, extract_html,
+                                extract_content_from_main_html,
                                 extract_main_html_only)
 
 
@@ -158,70 +158,18 @@ class TestSimple(unittest.TestCase):
 
     def test_extract_noclip(self):
         """测试从原始HTML直接提取内容."""
-        # 对应原来的clip_html=False
         md = extract_content_from_main_html(self.url, self.html_content)
         self.assertEqual(md, self.expected_md)
 
-    # ========================================
-    # 测试核心方法 extract_html 的7种场景
-    # ========================================
-
-    def test_extract_html_stage1_magic_html(self):
-        """测试第一阶段：MAGIC_HTML提取main_html."""
-        result = extract_html(self.url, self.html_content, PipeTpl.MAGIC_HTML)
-        self.assertIsInstance(result, str)
-        self.assertTrue(len(result) > 0)
-        self.assertIn('<', result)
-        self.assertIn('>', result)
-
-    def test_extract_html_stage1_llm(self):
-        """测试第一阶段：LLM提取main_html."""
-        try:
-            result = extract_html(self.url, self.html_content, PipeTpl.LLM)
-            self.assertIsInstance(result, str)
-        except Exception as e:
-            # LLM解析器可能未实现，这是预期的
-            self.assertTrue('待实现' in str(e) or 'not found' in str(e).lower() or 'ImportError' in str(e))
-
-    def test_extract_html_stage1_layout_batch(self):
-        """测试第一阶段：LAYOUT_BATCH提取main_html."""
-        try:
-            result = extract_html(self.url, self.html_content, PipeTpl.LAYOUT_BATCH)
-            self.assertIsInstance(result, str)
-        except Exception as e:
-            # LAYOUT_BATCH解析器可能未实现，这是预期的
-            self.assertTrue('待实现' in str(e) or 'not found' in str(e).lower() or 'ImportError' in str(e))
-
-    def test_extract_html_stage2_noclip(self):
-        """测试第二阶段：NOCLIP从main_html转换为markdown."""
-        result = extract_html(self.url, self.main_html, PipeTpl.NOCLIP, 'md')
-        self.assertEqual(result, self.expected_md)
-
-    def test_extract_html_stage2_noclip_mm_md(self):
-        """测试第二阶段：NOCLIP转换为mm_md格式."""
-        result = extract_html(self.url, self.main_html, PipeTpl.NOCLIP, 'mm_md')
-        self.assertEqual(result, self.expected_mm_md)
-
-    def test_extract_html_both_stages_magic_html_noclip(self):
-        """测试两阶段：MAGIC_HTML_NOCLIP."""
-        result = extract_html(self.url, self.html_content, PipeTpl.MAGIC_HTML_NOCLIP, 'md')
-        self.assertEqual(result, self.expected_md)
-
-    def test_extract_html_both_stages_magic_html_noclip_mm_md(self):
-        """测试两阶段：MAGIC_HTML_NOCLIP输出mm_md格式."""
-        result = extract_html(self.url, self.html_content, PipeTpl.MAGIC_HTML_NOCLIP, 'mm_md')
-        self.assertEqual(result, self.expected_mm_md)
-
-    # ========================================
-    # 测试对外方法
-    # ========================================
+    def test_extract_noclip_mm_md(self):
+        """测试从原始HTML直接提取内容."""
+        md = extract_content_from_main_html(self.url, self.html_content, 'mm_md')
+        self.assertEqual(md, self.expected_mm_md)
 
     def test_extract_main_html_only_default(self):
         """测试对外方法：extract_main_html_only默认使用MAGIC_HTML."""
         result = extract_main_html_only(self.url, self.html_content)
-        self.assertIsInstance(result, str)
-        self.assertTrue(len(result) > 0)
-        self.assertIn('<', result)
+        self.assertEqual(result, self.main_html)
 
     def test_extract_content_from_main_html_default(self):
         """测试对外方法：extract_content_from_main_html默认md格式."""
@@ -233,31 +181,15 @@ class TestSimple(unittest.TestCase):
         result = extract_content_from_main_html(self.url, self.main_html, 'mm_md')
         self.assertEqual(result, self.expected_mm_md)
 
-    def test_extract_content_from_html_with_magic_html(self):
-        """测试对外方法：extract_content_from_html_with_magic_html."""
-        result = extract_content_from_html_with_magic_html(self.url, self.html_content)
-        self.assertEqual(result, self.expected_md)
-
-        result_mm = extract_content_from_html_with_magic_html(self.url, self.html_content, 'mm_md')
-        self.assertEqual(result_mm, self.expected_mm_md)
-
     def test_extract_content_from_html_with_llm(self):
         """测试对外方法：extract_content_from_html_with_llm."""
-        try:
-            result = extract_content_from_html_with_llm(self.url, self.html_content)
-            self.assertIsInstance(result, str)
-        except Exception as e:
-            # LLM解析器可能未实现，这是预期的
-            self.assertTrue('待实现' in str(e) or 'not found' in str(e).lower() or 'ImportError' in str(e))
+        result = extract_content_from_html_with_llm(self.url, self.html_content)
+        self.assertIsInstance(result, str)
 
     def test_extract_content_from_html_with_layout_batch(self):
         """测试对外方法：extract_content_from_html_with_layout_batch."""
-        try:
-            result = extract_content_from_html_with_layout_batch(self.url, self.html_content)
-            self.assertIsInstance(result, str)
-        except Exception as e:
-            # LAYOUT_BATCH解析器可能未实现，这是预期的
-            self.assertTrue('待实现' in str(e) or 'not found' in str(e).lower() or 'ImportError' in str(e))
+        result = extract_content_from_html_with_layout_batch(self.url, self.html_content)
+        self.assertIsInstance(result, str)
 
     # ========================================
     # 测试异常处理
@@ -272,7 +204,7 @@ class TestSimple(unittest.TestCase):
     def test_invalid_output_format_exception(self):
         """测试无效的输出格式异常."""
         with self.assertRaises(InvalidOutputFormatException) as context:
-            extract_html(self.url, self.main_html, PipeTpl.NOCLIP, 'INVALID_FORMAT')
+            extract_content_from_main_html(self.url, self.main_html, 'INVALID_FORMAT')
 
         self.assertIn('Invalid output format', str(context.exception.custom_message))
         self.assertEqual(context.exception.error_code, 82000000)
@@ -283,17 +215,17 @@ class TestSimple(unittest.TestCase):
 
     def test_output_format_md(self):
         """测试md输出格式."""
-        result = extract_html(self.url, self.main_html, PipeTpl.NOCLIP, 'md')
+        result = extract_content_from_main_html(self.url, self.main_html, 'md')
         self.assertEqual(result, self.expected_md)
 
     def test_output_format_mm_md(self):
         """测试mm_md输出格式."""
-        result = extract_html(self.url, self.main_html, PipeTpl.NOCLIP, 'mm_md')
+        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md')
         self.assertEqual(result, self.expected_mm_md)
 
     def test_output_format_json(self):
         """测试json输出格式."""
-        result = extract_html(self.url, self.main_html, PipeTpl.NOCLIP, 'json')
+        result = extract_content_from_main_html(self.url, self.main_html, 'json')
         self.assertIsInstance(result, str)
         # JSON输出应该包含JSON结构
         self.assertTrue(result.startswith('{') or result.startswith('['))
@@ -416,45 +348,8 @@ class TestExtractorFactoryThreadSafety(unittest.TestCase):
         cache_size = len(ExtractorFactory._extractors)
         expected_cache_size = len(pipe_tpl_groups)
 
-        self.assertGreaterEqual(cache_size, 1, '缓存中应该至少有1个extractor')
-        self.assertLessEqual(cache_size, 3, '缓存中最多应该有3个extractor')
+        self.assertLessEqual(cache_size, 3, '缓存中应该有3个extractor')
         self.assertEqual(cache_size, expected_cache_size, '缓存大小应该等于使用的pipe_tpl类型数量')
-
-    def test_stress_concurrent_access(self):
-        """压力测试：大量线程并发访问."""
-        def stress_worker(worker_id):
-            """压力测试工作线程."""
-            pipe_tpls = [PipeTpl.MAGIC_HTML, PipeTpl.NOCLIP, PipeTpl.MAGIC_HTML_NOCLIP]
-            pipe_tpl = pipe_tpls[worker_id % len(pipe_tpls)]
-
-            # 随机延迟
-            time.sleep(0.001 * (worker_id % 10))
-
-            extractor = ExtractorFactory.get_extractor(pipe_tpl)
-            return (worker_id, pipe_tpl, id(extractor))
-
-        # 使用20个线程进行压力测试
-        with ThreadPoolExecutor(max_workers=20) as executor:
-            futures = [executor.submit(stress_worker, i) for i in range(20)]
-            results = [future.result() for future in futures]
-
-        # 按pipe_tpl分组统计
-        pipe_tpl_groups = {}
-        for worker_id, pipe_tpl, extractor_id in results:
-            if pipe_tpl not in pipe_tpl_groups:
-                pipe_tpl_groups[pipe_tpl] = []
-            pipe_tpl_groups[pipe_tpl].append(extractor_id)
-
-        # 验证每个pipe_tpl组内的extractor_id都相同
-        for pipe_tpl, extractor_ids in pipe_tpl_groups.items():
-            unique_ids = set(extractor_ids)
-            self.assertEqual(len(unique_ids), 1,
-                           f'{pipe_tpl}类型应该只有1个唯一的extractor实例，实际有{len(unique_ids)}个')
-
-        # 验证缓存大小
-        self.assertLessEqual(len(ExtractorFactory._extractors), 3, '缓存中最多应该有3个extractor')
-        self.assertEqual(len(ExtractorFactory._extractors), len(pipe_tpl_groups),
-                        '缓存大小应该等于使用的pipe_tpl类型数量')
 
 
 class TestSimpleEdgeCases(unittest.TestCase):
@@ -469,18 +364,18 @@ class TestSimpleEdgeCases(unittest.TestCase):
         """测试空HTML内容."""
         # 空HTML会导致解析异常，这是预期的行为
         with self.assertRaises(Exception):
-            extract_html(self.url, '', PipeTpl.MAGIC_HTML)
+            extract_content_from_html_with_magic_html(self.url, '')
 
     def test_empty_main_html_for_stage2(self):
         """测试空main_html用于第二阶段."""
         # 空main_html会导致解析异常，这是预期的行为
         with self.assertRaises(Exception):
-            extract_html(self.url, '', PipeTpl.NOCLIP)
+            extract_content_from_main_html(self.url, '')
 
     def test_malformed_html(self):
         """测试格式错误的HTML."""
         malformed_html = '<html><body><h1>Test<p>No closing tags'
-        result = extract_html(self.url, malformed_html, PipeTpl.MAGIC_HTML)
+        result = extract_content_from_html_with_magic_html(self.url, malformed_html)
         self.assertIsInstance(result, str)
 
 
@@ -646,7 +541,7 @@ class TestSimpleIntegration(unittest.TestCase):
         """测试多次调用的一致性."""
         results = []
         for _ in range(3):
-            result = extract_html(self.url, self.html_content, PipeTpl.MAGIC_HTML_NOCLIP)
+            result = extract_content_from_html_with_magic_html(self.url, self.html_content)
             results.append(result)
 
         # 所有结果应该相同

@@ -53,8 +53,8 @@ class ExtractorFactory:
         return ExtractorFactory._extractors[pipe_tpl_name]
 
 
-def extract_html(url: str, html_content: str, pipe_tpl: str, output_format: str = 'md') -> str:
-    """统一的HTML提取方法，支持7种场景.
+def _extract_html(url: str, html_content: str, pipe_tpl: str) -> DataJson:
+    """内部使用的统一HTML提取方法，返回处理后的DataJson对象.
 
     Args:
         url: 网页URL
@@ -70,10 +70,9 @@ def extract_html(url: str, html_content: str, pipe_tpl: str, output_format: str 
             - PipeTpl.MAGIC_HTML_NOCLIP: magic_html + markdown转换
             - PipeTpl.LLM_NOCLIP: LLM + markdown转换
             - PipeTpl.LAYOUT_BATCH_NOCLIP: layout_batch + markdown转换
-        output_format: 输出格式，'md' 或 'mm_md'（仅当有第二阶段时有效）
 
     Returns:
-        str: 根据pipe_tpl返回main_html或markdown内容
+        DataJson: 处理后的DataJson对象，包含main_html和content_list等信息
     """
     extractor = ExtractorFactory.get_extractor(pipe_tpl)
 
@@ -92,29 +91,11 @@ def extract_html(url: str, html_content: str, pipe_tpl: str, output_format: str 
         input_data_dict['main_html'] = html_content
 
     d = DataJson(input_data_dict)
-    result = extractor.extract(d)
-
-    # 根据pipe_tpl决定返回内容
-    is_stage1_only = pipe_tpl in [PipeTpl.MAGIC_HTML, PipeTpl.LLM, PipeTpl.LAYOUT_BATCH]
-
-    if is_stage1_only:
-        # 只执行第一阶段，返回main_html
-        return result.get('main_html', '')
-    else:
-        # 执行了第二阶段，返回markdown
-        content_list = result.get_content_list()
-        if output_format == 'mm_md':
-            return content_list.to_mm_md()
-        elif output_format == 'md':
-            return content_list.to_nlp_md()
-        elif output_format == 'json':
-            return result.to_json()
-        else:
-            raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
+    return extractor.extract(d)
 
 
 # ========================================
-# 便利方法（三种使用场景）
+# SDK方法（三种使用场景）
 # ========================================
 
 def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeTpl.MAGIC_HTML) -> str:
@@ -128,7 +109,8 @@ def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeT
     Returns:
         str: 提取的主要HTML内容
     """
-    return extract_html(url, html_content, parser_type)
+    result = _extract_html(url, html_content, parser_type)
+    return result.get('main_html', '')
 
 
 def extract_content_from_main_html(url: str, main_html: str, output_format: str = 'md') -> str:
@@ -142,7 +124,17 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    return extract_html(url, main_html, PipeTpl.NOCLIP, output_format)
+    result = _extract_html(url, main_html, PipeTpl.NOCLIP)
+    content_list = result.get_content_list()
+
+    if output_format == 'mm_md':
+        return content_list.to_mm_md()
+    elif output_format == 'md':
+        return content_list.to_nlp_md()
+    elif output_format == 'json':
+        return result.to_json()
+    else:
+        raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
 def extract_content_from_html_with_magic_html(url: str, html_content: str, output_format: str = 'md') -> str:
@@ -150,13 +142,23 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
 
     Args:
         url: 网页URL
-        main_html: 已经抽取的主要HTML内容
+        html_content: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    return extract_html(url, html_content, PipeTpl.MAGIC_HTML_NOCLIP, output_format)
+    result = _extract_html(url, html_content, PipeTpl.MAGIC_HTML_NOCLIP)
+    content_list = result.get_content_list()
+
+    if output_format == 'mm_md':
+        return content_list.to_mm_md()
+    elif output_format == 'md':
+        return content_list.to_nlp_md()
+    elif output_format == 'json':
+        return result.to_json()
+    else:
+        raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
 def extract_content_from_html_with_llm(url: str, html_content: str, output_format: str = 'md') -> str:
@@ -164,13 +166,23 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
 
     Args:
         url: 网页URL
-        main_html: 已经抽取的主要HTML内容
+        html_content: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    return extract_html(url, html_content, PipeTpl.LLM_NOCLIP, output_format)
+    result = _extract_html(url, html_content, PipeTpl.LLM_NOCLIP)
+    content_list = result.get_content_list()
+
+    if output_format == 'mm_md':
+        return content_list.to_mm_md()
+    elif output_format == 'md':
+        return content_list.to_nlp_md()
+    elif output_format == 'json':
+        return result.to_json()
+    else:
+        raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
 def extract_content_from_html_with_layout_batch(url: str, html_content: str, output_format: str = 'md') -> str:
@@ -178,10 +190,20 @@ def extract_content_from_html_with_layout_batch(url: str, html_content: str, out
 
     Args:
         url: 网页URL
-        main_html: 已经抽取的主要HTML内容
+        html_content: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    return extract_html(url, html_content, PipeTpl.LAYOUT_BATCH_NOCLIP, output_format)
+    result = _extract_html(url, html_content, PipeTpl.LAYOUT_BATCH_NOCLIP)
+    content_list = result.get_content_list()
+
+    if output_format == 'mm_md':
+        return content_list.to_mm_md()
+    elif output_format == 'md':
+        return content_list.to_nlp_md()
+    elif output_format == 'json':
+        return result.to_json()
+    else:
+        raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
