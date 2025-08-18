@@ -1,5 +1,6 @@
 """predefined simple user functions."""
 
+import threading
 import uuid
 from datetime import datetime
 
@@ -23,13 +24,16 @@ class PipeTpl:
 
 
 class ExtractorFactory:
+    """线程安全的提取器工厂."""
 
     # 提取器缓存
     _extractors = {}
+    # 线程锁，保证多线程安全
+    _lock = threading.Lock()
 
     @staticmethod
     def get_extractor(pipe_tpl_name: str):
-        """获取指定类型的提取器（带缓存）
+        """获取指定类型的提取器（带缓存，线程安全）
 
         Args:
             pipe_tpl_name: 管道模板名称，对应 PipeTpl 中的常量
@@ -37,10 +41,14 @@ class ExtractorFactory:
         Returns:
             提取器链实例
         """
+        # 双重检查锁定模式，避免不必要的锁竞争
         if pipe_tpl_name not in ExtractorFactory._extractors:
-            extractor_cfg = load_pipe_tpl(pipe_tpl_name)
-            chain = ExtractSimpleFactory.create(extractor_cfg)
-            ExtractorFactory._extractors[pipe_tpl_name] = chain
+            with ExtractorFactory._lock:
+                # 再次检查，防止在获取锁期间其他线程已经创建了实例
+                if pipe_tpl_name not in ExtractorFactory._extractors:
+                    extractor_cfg = load_pipe_tpl(pipe_tpl_name)
+                    chain = ExtractSimpleFactory.create(extractor_cfg)
+                    ExtractorFactory._extractors[pipe_tpl_name] = chain
 
         return ExtractorFactory._extractors[pipe_tpl_name]
 

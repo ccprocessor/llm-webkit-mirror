@@ -2,7 +2,9 @@
 """全面测试新的simple.py API，整合原有测试场景."""
 
 import os
+import time
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 
 from llm_web_kit.exception.exception import InvalidOutputFormatException
 from llm_web_kit.simple import (ExtractorFactory, PipeTpl,
@@ -297,7 +299,7 @@ class TestSimple(unittest.TestCase):
         self.assertTrue(result.startswith('{') or result.startswith('['))
 
     # ========================================
-    # 测试ExtractorFactory缓存机制
+    # 测试ExtractorFactory缓存机制和线程安全
     # ========================================
 
     def test_extractor_factory_caching(self):
@@ -310,16 +312,158 @@ class TestSimple(unittest.TestCase):
 
         self.assertIs(extractor1, extractor2, '应该返回同一个缓存的实例')
 
-    def test_extractor_factory_different_pipe_types(self):
-        """测试不同pipe_type会创建不同的extractor实例."""
+    def test_extractor_factory_different_pipe_tpls(self):
+        """测试不同pipe_tpl会创建不同的extractor实例."""
         extractor1 = ExtractorFactory.get_extractor(PipeTpl.MAGIC_HTML)
         extractor2 = ExtractorFactory.get_extractor(PipeTpl.NOCLIP)
 
-        self.assertIsNot(extractor1, extractor2, '不同pipe_type应该返回不同的实例')
+        self.assertIsNot(extractor1, extractor2, '不同pipe_tpl应该返回不同的实例')
 
-    # ========================================
-    # 测试边缘情况
-    # ========================================
+
+class TestExtractorFactoryThreadSafety(unittest.TestCase):
+    """ExtractorFactory线程安全性专项测试."""
+
+    def setUp(self):
+        """测试前清空缓存."""
+        self.original_cache = ExtractorFactory._extractors.copy()
+        ExtractorFactory._extractors.clear()
+
+    def tearDown(self):
+        """测试后恢复原始缓存."""
+        ExtractorFactory._extractors.clear()
+        ExtractorFactory._extractors.update(self.original_cache)
+
+    def test_thread_safety_same_pipe_tpl(self):
+        """测试多线程访问同一pipe_tpl的线程安全性."""
+        results = []
+
+        def get_extractor_worker(worker_id):
+            """工作线程函数."""
+            # 添加小延迟，增加竞态条件出现的概率
+            time.sleep(0.01)
+            extractor = ExtractorFactory.get_extractor(PipeTpl.MAGIC_HTML)
+            results.append((worker_id, id(extractor)))
+            return extractor
+
+        # 使用10个线程同时访问
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            futures = []
+            for i in range(10):
+                future = executor.submit(get_extractor_worker, i)
+                futures.append(future)
+
+            # 等待所有线程完成
+            extractors = [future.result() for future in futures]
+
+        # 验证所有extractor实例应该是同一个对象
+        extractor_ids = [id(ext) for ext in extractors if ext is not None]
+        unique_ids = set(extractor_ids)
+
+        self.assertEqual(len(extractors), 10, '应该有10个extractor返回')
+        self.assertEqual(len(unique_ids), 1, '所有线程应该获取到同一个extractor实例')
+        self.assertEqual(len(ExtractorFactory._extractors), 1, '缓存中应该只有1个extractor')
+
+        # 验证所有实例确实是同一个对象
+        first_extractor = extractors[0]
+        for extractor in extractors[1:]:
+            self.assertIs(extractor, first_extractor, '所有extractor应该是同一个对象')
+
+    def test_thread_safety_different_pipe_tpls(self):
+        """测试多线程访问不同pipe_tpl的线程安全性."""
+        results = {}  # 改用字典，以worker_id为key
+
+        def get_extractor_worker(pipe_tpl, worker_id):
+            """工作线程函数."""
+            # 添加小延迟，增加竞态条件出现的概率
+            time.sleep(0.01)
+            extractor = ExtractorFactory.get_extractor(pipe_tpl)
+            results[worker_id] = (pipe_tpl, extractor, id(extractor))
+            return extractor
+
+        # 使用多个线程访问不同的pipe_tpl
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = []
+            pipe_tpls = [PipeTpl.MAGIC_HTML, PipeTpl.NOCLIP, PipeTpl.MAGIC_HTML_NOCLIP]
+
+            for i in range(6):
+                pipe_tpl = pipe_tpls[i % len(pipe_tpls)]
+                future = executor.submit(get_extractor_worker, pipe_tpl, i)
+                futures.append(future)
+
+        # 重新组织结果，确保索引匹配
+        organized_results = []
+        for i in range(6):
+            pipe_tpl, extractor, extractor_id = results[i]
+            organized_results.append((i, pipe_tpl, extractor, extractor_id))
+
+        # 按pipe_tpl分组验证
+        pipe_tpl_groups = {}
+        for worker_id, pipe_tpl, extractor, extractor_id in organized_results:
+            if pipe_tpl not in pipe_tpl_groups:
+                pipe_tpl_groups[pipe_tpl] = []
+            pipe_tpl_groups[pipe_tpl].append((worker_id, extractor, extractor_id))
+
+        # 验证每个pipe_tpl组内的extractor是同一个实例
+        for pipe_tpl, group_extractors in pipe_tpl_groups.items():
+            if len(group_extractors) > 1:
+                first_extractor = group_extractors[0][1]
+
+                for worker_id, extractor, extractor_id in group_extractors[1:]:
+                    self.assertIs(extractor, first_extractor,
+                                 f'{pipe_tpl}类型的extractor应该是同一个实例 (Worker {worker_id})')
+
+        # 验证缓存大小
+        cache_size = len(ExtractorFactory._extractors)
+        expected_cache_size = len(pipe_tpl_groups)
+
+        self.assertGreaterEqual(cache_size, 1, '缓存中应该至少有1个extractor')
+        self.assertLessEqual(cache_size, 3, '缓存中最多应该有3个extractor')
+        self.assertEqual(cache_size, expected_cache_size, '缓存大小应该等于使用的pipe_tpl类型数量')
+
+    def test_stress_concurrent_access(self):
+        """压力测试：大量线程并发访问."""
+        def stress_worker(worker_id):
+            """压力测试工作线程."""
+            pipe_tpls = [PipeTpl.MAGIC_HTML, PipeTpl.NOCLIP, PipeTpl.MAGIC_HTML_NOCLIP]
+            pipe_tpl = pipe_tpls[worker_id % len(pipe_tpls)]
+
+            # 随机延迟
+            time.sleep(0.001 * (worker_id % 10))
+
+            extractor = ExtractorFactory.get_extractor(pipe_tpl)
+            return (worker_id, pipe_tpl, id(extractor))
+
+        # 使用20个线程进行压力测试
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            futures = [executor.submit(stress_worker, i) for i in range(20)]
+            results = [future.result() for future in futures]
+
+        # 按pipe_tpl分组统计
+        pipe_tpl_groups = {}
+        for worker_id, pipe_tpl, extractor_id in results:
+            if pipe_tpl not in pipe_tpl_groups:
+                pipe_tpl_groups[pipe_tpl] = []
+            pipe_tpl_groups[pipe_tpl].append(extractor_id)
+
+        # 验证每个pipe_tpl组内的extractor_id都相同
+        for pipe_tpl, extractor_ids in pipe_tpl_groups.items():
+            unique_ids = set(extractor_ids)
+            self.assertEqual(len(unique_ids), 1,
+                           f'{pipe_tpl}类型应该只有1个唯一的extractor实例，实际有{len(unique_ids)}个')
+
+        # 验证缓存大小
+        self.assertLessEqual(len(ExtractorFactory._extractors), 3, '缓存中最多应该有3个extractor')
+        self.assertEqual(len(ExtractorFactory._extractors), len(pipe_tpl_groups),
+                        '缓存大小应该等于使用的pipe_tpl类型数量')
+
+
+class TestSimpleEdgeCases(unittest.TestCase):
+    """边缘情况测试类."""
+
+    def setUp(self):
+        """设置测试数据."""
+        self.url = 'https://example.com'
+        self.main_html = '<div><body><h1>Test Content</h1><p>This is a test paragraph.</p><img src="https://example.com/image.jpg" alt="Test Image"></body></div>'
 
     def test_empty_html_content(self):
         """测试空HTML内容."""
@@ -339,9 +483,124 @@ class TestSimple(unittest.TestCase):
         result = extract_html(self.url, malformed_html, PipeTpl.MAGIC_HTML)
         self.assertIsInstance(result, str)
 
-    # ========================================
-    # 测试不同场景抽取内容符合预期
-    # ========================================
+
+class TestSimpleIntegration(unittest.TestCase):
+    """集成测试和真实场景测试类."""
+
+    def setUp(self):
+        """设置测试数据."""
+        self.url = 'https://example.com'
+        self.html_content = '<html><body><h1>Test Content</h1><p>This is a test paragraph.</p><img src="https://example.com/image.jpg" alt="Test Image" /></body></html>'
+        self.base_path = os.path.dirname(os.path.abspath(__file__))
+
+        # 原有测试中的复杂HTML内容
+        self.real_html_content = """
+        <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML标签综合示例</title>
+
+    <!-- 内嵌CSS样式 -->
+    <style>
+        /* 基础样式设置 */
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        /* 页眉样式 */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* 主体内容样式 */
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* 交互按钮样式 */
+        .action-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <!-- 语义化页眉 -->
+    <header>
+        <h1>网页标题</h1>
+        <nav>
+            <ul style="list-style-type: none; display: flex; justify-content: center; gap: 1rem;">
+                <li><a href="#" style="color: white; text-decoration: none;">首页</a></li>
+                <li><a href="#" style="color: white; text-decoration: none;">关于</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 主体内容区域 -->
+    <main>
+        <article>
+            <h2>文章标题</h2>
+            <p>这是有效的文本内容，展示了如何在HTML文档中组织实际内容。</p>
+
+            <!-- 带交互的元素 -->
+            <button id="demoBtn" class="action-btn">点击演示</button>
+            <div id="dynamicContent" style="margin-top: 1rem; display: none;">
+                <p>这是通过JavaScript动态显示的内容！</p>
+            </div>
+        </article>
+    </main>
+
+    <!-- 页脚区域 -->
+    <footer style="text-align: center; padding: 1rem; background-color: #34495e; color: white;">
+        <p>© 2025 版权所有</p>
+    </footer>
+
+    <!-- 内嵌JavaScript -->
+    <script>
+        // 等待DOM加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoBtn = document.getElementById('demoBtn');
+            const dynamicContent = document.getElementById('dynamicContent');
+
+            // 按钮点击事件处理
+            demoBtn.addEventListener('click', function() {
+                dynamicContent.style.display = 'block';
+                this.textContent = '已显示内容';
+
+                // 创建动态元素
+                const newElement = document.createElement('p');
+                newElement.textContent = '这是动态创建的元素！';
+                newElement.style.color = '#e74c3c';
+                dynamicContent.appendChild(newElement);
+            });
+
+            console.log('页面初始化完成');
+        });
+    </script>
+</body>
+</html>
+        """
 
     def test_extract_real_html_to_md(self):
         """测试真实HTML内容，验证JavaScript被过滤."""
@@ -366,30 +625,6 @@ class TestSimple(unittest.TestCase):
         html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
         md = extract_content_from_main_html(self.url, html_content)
         self.assertIn('For descriptions of the methods (AM1, HF, MP2, ...) a', md)
-
-    def test_filter_display_none_content(self):
-        """测试display:none的内容是否被正确过滤."""
-        html_content = '''<html><body>
-        <div class="options-div-0-0 option-box__items" style="display: none;">
-            <span class="bedroom-rate__title">Room Only Rate</span>
-            <span class="bedroom-rate__price">£1,230.00</span>
-        </div>
-        <p>正常内容</p>
-        </body></html>'''
-
-        # 使用MAGIC_HTML_NOCLIP模拟原来的clip_html=False
-        md = extract_content_from_main_html(self.url, html_content)
-
-        # 验证隐藏内容被过滤掉了
-        self.assertNotIn('Room Only Rate', md)
-        self.assertNotIn('£1,230.00', md)
-
-        # 验证正常内容被保留
-        self.assertIn('正常内容', md)
-
-    # ========================================
-    # 集成测试
-    # ========================================
 
     def test_full_pipeline_integration(self):
         """测试完整的两阶段流水线."""
@@ -416,6 +651,26 @@ class TestSimple(unittest.TestCase):
 
         # 所有结果应该相同
         self.assertTrue(all(r == results[0] for r in results))
+
+    def test_filter_display_none_content(self):
+        """测试display:none的内容是否被正确过滤."""
+        html_content = '''<html><body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p>正常内容</p>
+        </body></html>'''
+
+        # 使用MAGIC_HTML_NOCLIP模拟原来的clip_html=False
+        md = extract_content_from_main_html(self.url, html_content)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证正常内容被保留
+        self.assertIn('正常内容', md)
 
 
 if __name__ == '__main__':
