@@ -12,15 +12,15 @@ from llm_web_kit.input.datajson import DataJson
 
 class PipeTpl:
     # 只执行第一阶段：选择main_html
-    MAGIC_HTML = 'magic_html'
-    LLM = 'llm_html'
-    LAYOUT_BATCH = 'layout_batch_html'
+    MAGIC_HTML = 'magic_html'  # 输入html，输出main_html（magic_html）
+    LLM = 'llm_html'  # 输入html，输出main_html（llm）
+    LAYOUT_BATCH = 'layout_batch_html'  # 输入html，输出main_html（layout_batch）
     # 只执行第二阶段：html抽取为md
-    NOCLIP = 'noclip_html'
+    NOCLIP = 'noclip_html'  # 输入main_html，输出markdown
     # 执行两个阶段：选择main_html，html抽取为md
-    MAGIC_HTML_NOCLIP = 'magic_html_noclip_html'
-    LLM_NOCLIP = 'llm_noclip_html'
-    LAYOUT_BATCH_NOCLIP = 'layout_batch_noclip_html'
+    MAGIC_HTML_NOCLIP = 'magic_html_noclip_html'  # 输入html，输出markdown（magic_html）
+    LLM_NOCLIP = 'llm_noclip_html'  # 输入html，输出markdown（llm）
+    LAYOUT_BATCH_NOCLIP = 'layout_batch_noclip_html'  # 输入html，输出markdown（layout_batch）
 
 
 class ExtractorFactory:
