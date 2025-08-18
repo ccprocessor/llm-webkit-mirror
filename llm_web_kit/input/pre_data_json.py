@@ -12,8 +12,6 @@ class PreDataJsonKey:
     LAYOUT_ID = 'layout_id'
     LAYOUT_FILE_LIST = 'layout_file_list'
     RECORD_COUNT = 'record_count'
-    # main_html 解析方法
-    MAIN_HTML_PARSER_METHOD = 'main_html_parser_method'
 
     TYPICAL_RAW_HTML = 'typical_raw_html'
     TYPICAL_RAW_TAG_HTML = 'typical_raw_tag_html'

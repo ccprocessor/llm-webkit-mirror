@@ -20,14 +20,6 @@ class HTMLPageLayoutType:
     LAYOUT_LIST = 'list'
 
 
-class MainHtmlParserType:
-    """主要内容解析器类型常量."""
-    LLM = 'llm'
-    LAYOUT_BATCH = 'layout_batch'
-    MAGIC_HTML = 'magic_html'
-    TEST_HTML = 'test_html'
-
-
 class AbstractMainHtmlParser(ABC):
     """主要内容解析器的抽象基类."""
     def __init__(self, config: dict):
@@ -61,7 +53,6 @@ class LLMMainHtmlParser(AbstractMainHtmlParser):
         # 2. 解析结果
         # 3. 设置main_html字段
         data_json['main_html'] = data_json['html']
-        data_json['main_html_parser_method'] = MainHtmlParserType.LLM
         return data_json
 
 
@@ -73,7 +64,6 @@ class LayoutBatchMainHtmlParser(AbstractMainHtmlParser):
         # 2. 解析结果
         # 3. 设置main_html字段
         data_json['main_html'] = data_json['html']
-        data_json['main_html_parser_method'] = MainHtmlParserType.LAYOUT_BATCH
         return data_json
 
 
@@ -108,8 +98,6 @@ class MagicHTMLMainHtmlParser(AbstractMainHtmlParser):
         # 设置提取结果
         data_json['main_html'] = main_html
         data_json['title'] = title
-        # 可选：保存提取方法信息用于质量评估（xp_num表示xpath匹配数量）
-        data_json['main_html_parser_method'] = MainHtmlParserType.MAGIC_HTML
 
         return data_json
 
@@ -196,6 +184,5 @@ class TestHTMLFileFormatFilterMainHtmlParser(AbstractMainHtmlParser):
             html = f.read()
             data_json['html'] = html
             data_json['main_html'] = html
-            data_json['main_html_parser_method'] = MainHtmlParserType.TEST_HTML
             del data_json['path']
         return data_json
