@@ -157,7 +157,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         if idd and idd.strip():
             try:
                 idd_ele = tree.xpath(f'//*[@id="{idd}"]')
-                if len(idd_ele) > 5:
+                if len(idd_ele) > 3:
                     self.ids[idd] = False
                 else:
                     self.ids[idd] = True
@@ -189,7 +189,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             if layer_node_idd and layer_node_idd.strip() and layer_node_idd not in self.ids:
                 try:
                     idd_ele = template_doc.xpath(f'//*[@id="{layer_node_idd}"]')
-                    if len(idd_ele) > 5:
+                    if len(idd_ele) > 3:
                         self.ids[layer_node_idd] = False
                     else:
                         self.ids[layer_node_idd] = self.ids.get(layer_node_idd, True)
