@@ -3,13 +3,14 @@ from pathlib import Path
 
 from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.pre_extractor import \
-    HTMLFileFormatCleanTagsPreExtractor
+    HTMLFileFormatNoClipCleanTagsPreExtractor
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (
     CCMATH_INLINE, CSDN, ZHIHU)
 from llm_web_kit.extractor.html.recognizer.cc_math.tag_script import (
     process_katex_mathml, process_zhihu_custom_tag)
 from llm_web_kit.extractor.html.recognizer.ccmath import CCMATH, MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import CCTag
+from llm_web_kit.input.datajson import DataJson
 from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 
 TEST_CASES = [
@@ -457,10 +458,10 @@ class TestMathRecognizer(unittest.TestCase):
             #     for part in parts:
             #         f.write(str(part[0]))
             # 创建预处理器并清理隐藏元素
-            pre_extractor = HTMLFileFormatCleanTagsPreExtractor({})
-            data_json = {'html': raw_html, 'url': base_url}
+            pre_extractor = HTMLFileFormatNoClipCleanTagsPreExtractor({})
+            data_json = DataJson({'html': raw_html, 'url': base_url})
             data_json = pre_extractor._do_pre_extract(data_json)
-            cleaned_html = data_json['html']
+            cleaned_html = data_json['main_html']
 
             # 使用清理后的HTML进行公式识别
             parts = self.math_recognizer.recognize(

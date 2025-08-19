@@ -124,7 +124,6 @@ class TestHTMLFileToDataJsonPreExtractor(HTMLFileFormatFilterPreExtractor):
     @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
         """对输入的html和main_html拼装到DataJson中，形成标准输入格式."""
-        data_json = self._ensure_main_html(data_json)
         proj_root_dir = get_proj_root_dir()
         html_file_path = os.path.join(proj_root_dir, self.__html_parent_path, data_json.get('path'))
         main_html_file_path = os.path.join(proj_root_dir, self.__html_parent_path, data_json.get('main_path'))
