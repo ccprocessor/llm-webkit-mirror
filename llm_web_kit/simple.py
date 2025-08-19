@@ -52,46 +52,46 @@ class ExtractorFactory:
 
         return ExtractorFactory._extractors[pipe_tpl_name]
 
-    @staticmethod
-    def _extract_html(url: str, html_content: str, pipe_tpl: str) -> DataJson:
-        """内部使用的统一HTML提取方法，返回处理后的DataJson对象.
 
-        Args:
-            url: 网页URL
-            html_content: 原始HTML内容（或main_html，取决于pipe_tpl）
-            pipe_tpl: 处理类型，支持：
-                # 只执行第一阶段：
-                - PipeTpl.MAGIC_HTML: 使用magic_html提取main_html
-                - PipeTpl.LLM: 使用LLM提取main_html
-                - PipeTpl.LAYOUT_BATCH: 使用layout_batch提取main_html
-                # 只执行第二阶段：
-                - PipeTpl.NOCLIP: 从main_html转换为markdown
-                # 执行两个阶段：
-                - PipeTpl.MAGIC_HTML_NOCLIP: magic_html + markdown转换
-                - PipeTpl.LLM_NOCLIP: LLM + markdown转换
-                - PipeTpl.LAYOUT_BATCH_NOCLIP: layout_batch + markdown转换
+def _extract_html(url: str, html_content: str, pipe_tpl: str) -> DataJson:
+    """内部使用的统一HTML提取方法，返回处理后的DataJson对象.
 
-        Returns:
-            DataJson: 处理后的DataJson对象，包含main_html和content_list等信息
-        """
-        extractor = ExtractorFactory.get_extractor(pipe_tpl)
+    Args:
+        url: 网页URL
+        html_content: 原始HTML内容（或main_html，取决于pipe_tpl）
+        pipe_tpl: 处理类型，支持：
+            # 只执行第一阶段：
+            - PipeTpl.MAGIC_HTML: 使用magic_html提取main_html
+            - PipeTpl.LLM: 使用LLM提取main_html
+            - PipeTpl.LAYOUT_BATCH: 使用layout_batch提取main_html
+            # 只执行第二阶段：
+            - PipeTpl.NOCLIP: 从main_html转换为markdown
+            # 执行两个阶段：
+            - PipeTpl.MAGIC_HTML_NOCLIP: magic_html + markdown转换
+            - PipeTpl.LLM_NOCLIP: LLM + markdown转换
+            - PipeTpl.LAYOUT_BATCH_NOCLIP: layout_batch + markdown转换
 
-        input_data_dict = {
-            'track_id': str(uuid.uuid4()),
-            'url': url,
-            'html': html_content,
-            'dataset_name': f'llm-web-kit-{pipe_tpl}',
-            'data_source_category': 'HTML',
-            'file_bytes': len(html_content),
-            'meta_info': {'input_datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-        }
+    Returns:
+        DataJson: 处理后的DataJson对象，包含main_html和content_list等信息
+    """
+    extractor = ExtractorFactory.get_extractor(pipe_tpl)
 
-        # 对于只执行第二阶段的场景，html_content实际是main_html
-        if pipe_tpl == PipeTpl.NOCLIP:
-            input_data_dict['main_html'] = html_content
+    input_data_dict = {
+        'track_id': str(uuid.uuid4()),
+        'url': url,
+        'html': html_content,
+        'dataset_name': f'llm-web-kit-{pipe_tpl}',
+        'data_source_category': 'HTML',
+        'file_bytes': len(html_content),
+        'meta_info': {'input_datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    }
 
-        d = DataJson(input_data_dict)
-        return extractor.extract(d)
+    # 对于只执行第二阶段的场景，html_content实际是main_html
+    if pipe_tpl == PipeTpl.NOCLIP:
+        input_data_dict['main_html'] = html_content
+
+    d = DataJson(input_data_dict)
+    return extractor.extract(d)
 
 
 # ========================================
@@ -109,7 +109,7 @@ def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeT
     Returns:
         str: 提取的主要HTML内容
     """
-    result = ExtractorFactory._extract_html(url, html_content, parser_type)
+    result = _extract_html(url, html_content, parser_type)
     return result.get('main_html', '')
 
 
@@ -124,13 +124,13 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = ExtractorFactory._extract_html(url, main_html, PipeTpl.NOCLIP)
+    result = _extract_html(url, main_html, PipeTpl.NOCLIP)
     content_list = result.get_content_list()
 
-    if output_format == 'mm_md':
-        return content_list.to_mm_md()
-    elif output_format == 'md':
+    if output_format == 'md':
         return content_list.to_nlp_md()
+    elif output_format == 'mm_md':
+        return content_list.to_mm_md()
     elif output_format == 'json':
         return result.to_json()
     else:
@@ -148,13 +148,13 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = ExtractorFactory._extract_html(url, html_content, PipeTpl.MAGIC_HTML_NOCLIP)
+    result = _extract_html(url, html_content, PipeTpl.MAGIC_HTML_NOCLIP)
     content_list = result.get_content_list()
 
-    if output_format == 'mm_md':
-        return content_list.to_mm_md()
-    elif output_format == 'md':
+    if output_format == 'md':
         return content_list.to_nlp_md()
+    elif output_format == 'mm_md':
+        return content_list.to_mm_md()
     elif output_format == 'json':
         return result.to_json()
     else:
@@ -172,13 +172,13 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = ExtractorFactory._extract_html(url, html_content, PipeTpl.LLM_NOCLIP)
+    result = _extract_html(url, html_content, PipeTpl.LLM_NOCLIP)
     content_list = result.get_content_list()
 
-    if output_format == 'mm_md':
-        return content_list.to_mm_md()
-    elif output_format == 'md':
+    if output_format == 'md':
         return content_list.to_nlp_md()
+    elif output_format == 'mm_md':
+        return content_list.to_mm_md()
     elif output_format == 'json':
         return result.to_json()
     else:
@@ -196,13 +196,13 @@ def extract_content_from_html_with_layout_batch(url: str, html_content: str, out
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = ExtractorFactory._extract_html(url, html_content, PipeTpl.LAYOUT_BATCH_NOCLIP)
+    result = _extract_html(url, html_content, PipeTpl.LAYOUT_BATCH_NOCLIP)
     content_list = result.get_content_list()
 
-    if output_format == 'mm_md':
-        return content_list.to_mm_md()
-    elif output_format == 'md':
+    if output_format == 'md':
         return content_list.to_nlp_md()
+    elif output_format == 'mm_md':
+        return content_list.to_mm_md()
     elif output_format == 'json':
         return result.to_json()
     else:
