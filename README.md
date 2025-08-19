@@ -78,7 +78,7 @@ llm-web-kit is a python library that ..
 ### extract by magic_html+recognize
 
 ```python
-rom llm_web_kit.simple import extract_content_from_html_with_magic_html
+from llm_web_kit.simple import extract_content_from_html_with_magic_html
 from loguru import logger
 
 def extract(url:str, html:str) -> str:
