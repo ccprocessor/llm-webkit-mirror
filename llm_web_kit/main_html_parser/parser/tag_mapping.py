@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from lxml import etree, html
 
 from llm_web_kit.exception.exception import TagMappingParserException
@@ -31,6 +32,8 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # tag映射逻辑
         try:
             template_raw_html = pre_data[PreDataJsonKey.TYPICAL_RAW_HTML]
+            soup = BeautifulSoup(template_raw_html, 'html.parser')
+            template_raw_html = str(soup)
             template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
             response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
             root = html.fromstring(template_tag_html)
