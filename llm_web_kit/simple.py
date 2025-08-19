@@ -86,10 +86,6 @@ def _extract_html(url: str, html_content: str, pipe_tpl: str) -> DataJson:
         'meta_info': {'input_datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     }
 
-    # 对于只执行第二阶段的场景，html_content实际是main_html
-    if pipe_tpl == PipeTpl.NOCLIP:
-        input_data_dict['main_html'] = html_content
-
     d = DataJson(input_data_dict)
     return extractor.extract(d)
 

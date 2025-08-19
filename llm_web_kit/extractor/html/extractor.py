@@ -82,6 +82,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         # 第一步使用magic-html框选html正文部分
         # 第二步逐步精细解析特定的html标签
         # 第三步将解析结果存入content_list中
+        data_json = self._ensure_main_html(data_json)
         raw_html:str = data_json['html']
         base_url:str = data_json['url']
         main_html:str = data_json['main_html']
@@ -105,6 +106,22 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         content_list:ContentList = self._export_to_content_list(base_url, filtered_parsed_html, raw_html)
         data_json['content_list'] = content_list
         # data_json['title'] = title
+        return data_json
+
+    def _ensure_main_html(self, data_json: DataJson) -> DataJson:
+        """确保DataJson对象包含main_html字段.
+
+        如果main_html字段不存在或为空，则使用html字段的值作为main_html。
+        这个方法应该在所有HTML处理器的处理逻辑开始前调用。
+
+        Args:
+            data_json: 要处理的DataJson对象
+
+        Returns:
+            处理后的DataJson对象
+        """
+        if 'main_html' not in data_json or not data_json['main_html']:
+            data_json['main_html'] = data_json['html']
         return data_json
 
     def _extract_code(self, base_url:str, html_lst:List[Tuple[HtmlElement, HtmlElement]], raw_html:str, language:str) -> List[Tuple[HtmlElement,HtmlElement]]:
@@ -337,7 +354,7 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
         content_list = ContentList([one_page])  # 对于网页来说仅有一页，如果多页，则剩下的每个都是一个论坛的回复
         return content_list
 
-    def __get_cc_node(self, html:HtmlElement) -> (HtmlElement, str):
+    def __get_cc_node(self, html:HtmlElement) -> Tuple[HtmlElement, str]:
         """获取html文本的根标签名。只获取一个，如果html文本中包含多个cc标签，则抛异常。
 
         Args:
