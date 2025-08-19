@@ -27,7 +27,7 @@ class HTMLFileFormatFilterPreExtractor(BaseFileFormatFilterPreExtractor):
 
     @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
-        pass  # TODO
+        data_json = self._ensure_main_html(data_json)
         return data_json
 
     def _ensure_main_html(self, data_json: DataJson) -> DataJson:
