@@ -9,7 +9,7 @@ from bench.common.result import Result_Detail, Result_Summary
 from bench.eval.ours import eval_ours_extract_html
 from llm_web_kit.dataio.filebase import (FileBasedDataReader,
                                          FileBasedDataWriter)
-from llm_web_kit.extractor.html.extractor import MagicHTMLFIleFormatorExtractor
+from llm_web_kit.extractor.html.main_html_parser import MagicHTMLMainHtmlParser
 from llm_web_kit.libs.statics import Statics
 
 
@@ -100,7 +100,7 @@ def run_ours(config_path, data_path, output_path, statics_pre, reader, writer,
                         print(f'文件不存在或路径为空: {file_path}')
 
                     # 提取main_html
-                    htmlExtractor = MagicHTMLFIleFormatorExtractor(
+                    htmlExtractor = MagicHTMLMainHtmlParser(
                         chain_config)
                     main_html, method, title = htmlExtractor._extract_main_html(
                         html_content, data_json.get('url', ''),

@@ -25,24 +25,36 @@ class TestST(unittest.TestCase):
             'extractor_pipe': {
                 'enable': True,
                 'validate_input_format': False,
-                'pre_extractor': [
+                'main_html_parser': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.TestHTMLFileFormatFilterPreExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.main_html_parser.TestHTMLFileFormatFilterMainHtmlParser',
                         'class_init_kwargs': {
                             'html_parent_dir': 'bench/'
                         }
                     },
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatCleanTagsPreExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser',
+                        'class_init_kwargs': {}
+                    }
+                ],
+                'pre_extractor': [
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipFilterTablePreExtractor',
+                        'class_init_kwargs': {}
+                    },
+                    {
+                        'enable': True,
+                        'python_class': 'llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipCleanTagsPreExtractor',
                         'class_init_kwargs': {}
                     }
                 ],
                 'extractor': [
                     {
                         'enable': True,
-                        'python_class': 'llm_web_kit.extractor.html.extractor.MagicHTMLFIleFormatorExtractor',
+                        'python_class': 'llm_web_kit.extractor.html.extractor.NoClipHTMLFIleFormatorExtractor',
                         'class_init_kwargs': {}
                     }
                 ],

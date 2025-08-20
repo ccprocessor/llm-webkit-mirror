@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 from llm_web_kit.extractor.html.pre_extractor import \
-    HTMLFileFormatFilterTablePreExtractor
+    HTMLFileFormatNoClipFilterTablePreExtractor
 from llm_web_kit.input.datajson import DataJson
 
 TEST_CASES = [
@@ -17,7 +17,7 @@ base_dir = Path(__file__).parent
 
 class TestHtmlPreExtractorRemoveFormatTable(unittest.TestCase):
     def setUp(self):
-        self.pre_extract = HTMLFileFormatFilterTablePreExtractor({})
+        self.pre_extract = HTMLFileFormatNoClipFilterTablePreExtractor({})
 
     def test_RemoveFormatTable(self):
         """remove format table."""
