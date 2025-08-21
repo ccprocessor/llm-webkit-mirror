@@ -573,6 +573,9 @@ class DataJson(StructureChecker):
     def __delitem__(self, key):
         del self.__json_data[key]
 
+    def __contains__(self, key):
+        return key in self.__json_data
+
     def get_dataset_name(self) -> str:
         return self.__json_data[DataJsonKey.DATASET_NAME]
 

@@ -1,5 +1,5 @@
 import traceback
-from typing import List, Union
+from typing import List, Optional, Union
 
 import commentjson as json
 
@@ -10,6 +10,7 @@ from llm_web_kit.exception.exception import (ExtractorChainBaseException,
                                              ExtractorNotFoundException,
                                              LlmWebKitBaseException)
 from llm_web_kit.extractor.extractor import AbstractExtractor
+from llm_web_kit.extractor.html.main_html_parser import AbstractMainHtmlParser
 from llm_web_kit.extractor.post_extractor import AbstractPostExtractor
 from llm_web_kit.extractor.pre_extractor import AbstractPreExtractor
 from llm_web_kit.input.datajson import DataJson
@@ -20,8 +21,8 @@ from llm_web_kit.libs.class_loader import load_python_class_by_name
 # extractor chain
 # ##########################################################
 class ExtractorChain:
-    """Handles extraction by chaining pre_extractors, extractors and
-    post_extractors."""
+    """Handles extraction by chaining main_html_parser, pre_extractors,
+    extractors and post_extractors."""
 
     def __init__(self, config: dict):
         """Initialize extractor chain from config.
@@ -29,6 +30,7 @@ class ExtractorChain:
         Args:
             config (dict): Config dict containing extractor_pipe configuration
         """
+        self.__main_html_parser: Optional[List[AbstractMainHtmlParser]] = []
         self.__pre_extractors: List[AbstractPreExtractor] = []
         self.__extractors: List[AbstractExtractor] = []
         self.__post_extractors: List[AbstractPostExtractor] = []
@@ -37,6 +39,7 @@ class ExtractorChain:
         extractor_config = config.get('extractor_pipe', {})
 
         # Load extractors
+        self.__init_main_html_parser(extractor_config)
         self.__load_extractors(extractor_config)
 
     def extract(self, data: DataJson) -> DataJson:
@@ -45,6 +48,11 @@ class ExtractorChain:
         self.__validate_extract_input(data)
 
         try:
+            # Stage 1: Main HTML parser
+            for main_html_parser in self.__main_html_parser:
+                data = main_html_parser.parse(data)
+
+            # Stage 2: Pre extractors, main extractors, post extractors
             # Pre extractors
             for pre_ext in self.__pre_extractors:
                 data = pre_ext.pre_extract(data)
@@ -77,6 +85,13 @@ class ExtractorChain:
 
         return data
 
+    def __init_main_html_parser(self, config: dict):
+        """Initialize main HTML parser from config."""
+        for parser_config in config.get('main_html_parser', []):
+            if parser_config and parser_config.get('enable'):
+                main_html_parser = self.__create_extractor(parser_config)
+                self.__main_html_parser.append(main_html_parser)
+
     def __load_extractors(self, config: dict):
         """Load extractors from extractor_pipe config."""
         # Load pre extractors
@@ -97,7 +112,7 @@ class ExtractorChain:
                 post_extractor = self.__create_extractor(post_config)
                 self.__post_extractors.append(post_extractor)
 
-    def __create_extractor(self, config: dict) -> Union[AbstractPreExtractor, AbstractExtractor, AbstractPostExtractor]:
+    def __create_extractor(self, config: dict) -> Union[AbstractMainHtmlParser, AbstractPreExtractor, AbstractExtractor, AbstractPostExtractor]:
         """Create extractor instance from config."""
         python_class = config.get('python_class')
         if not python_class:

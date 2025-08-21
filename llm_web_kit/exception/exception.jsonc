@@ -236,5 +236,27 @@
       "code": 62109000,
       "message": "Dom content filter parser exception"
     }
+  },
+  // MainHtmlParser相关异常 (70000000)
+  "MainHtmlParser": {
+    "MainHtmlParserBaseException": {
+      "code": 70000000,
+      "message": "MainHtmlParser base exception"
+    }
+  },
+  // SimpleAPI相关异常 (80000000)
+  "SimpleAPI": {
+    "SimpleAPIBaseException": {
+      "code": 80000000,
+      "message": "Simple API base exception"
+    },
+    "InvalidExtractorTypeException": {
+      "code": 81000000,
+      "message": "Invalid extractor type exception"
+    },
+    "InvalidOutputFormatException": {
+      "code": 82000000,
+      "message": "Invalid output format exception"
+    }
   }
 }
