@@ -327,7 +327,8 @@ class TestLayoutParser(unittest.TestCase):
         parser = LayoutBatchParser(element_dict)
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
-        assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body
+        assert 'REGIONE CALABRIA' not in main_html_body and 'edizione del Festival delle' not in main_html_body
+        'Con la stesura di un' in main_html_body
 
     def test_table_integrity(self):
         # 构造测试html

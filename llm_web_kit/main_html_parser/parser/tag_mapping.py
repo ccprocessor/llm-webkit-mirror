@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
 from lxml import etree, html
+from selectolax.parser import HTMLParser
 
 from llm_web_kit.exception.exception import TagMappingParserException
 from llm_web_kit.html_layout.html_layout_cosin import get_feature, similarity
@@ -32,8 +32,8 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         # tag映射逻辑
         try:
             template_raw_html = pre_data[PreDataJsonKey.TYPICAL_RAW_HTML]
-            soup = BeautifulSoup(template_raw_html, 'html.parser')
-            template_raw_html = str(soup)
+            selectolax_tree = HTMLParser(template_raw_html)
+            template_raw_html = selectolax_tree.html
             template_tag_html = pre_data[PreDataJsonKey.TYPICAL_RAW_TAG_HTML]
             response_json = pre_data[PreDataJsonKey.LLM_RESPONSE]
             root = html.fromstring(template_tag_html)
@@ -149,7 +149,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         deal_element = elements[0]
         deal_element.set('magic_main_html', 'True')
         for ele in deal_element:
-            ele.set('magic_main_html', 'True')
+            try:
+                ele.set('magic_main_html', 'True')
+            except Exception:
+                continue
 
     def find_affected_element_after_drop(self, element):
         prev_sibling = element.getprevious()
@@ -159,7 +162,10 @@ class MapItemToHtmlTagsParser(BaseMainHtmlParser):
         if len(element) > 0:
             if is_main:
                 for ele in element:
-                    ele.set('magic_main_html', 'True')
+                    try:
+                        ele.set('magic_main_html', 'True')
+                    except Exception:
+                        continue
 
             element.drop_tag()
             # 如果包含子tag并且还有text，text有可能是兄弟节点的tail

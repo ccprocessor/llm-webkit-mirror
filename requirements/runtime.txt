@@ -23,6 +23,7 @@ overrides==7.7.0
 py-asciimath==0.3.0
 pyahocorasick==2.0.0
 scikit-learn>=1.6.1
+selectolax==0.3.33
 torch>=2.3.0
 tqdm==4.67.1
 transformers==4.40.2
