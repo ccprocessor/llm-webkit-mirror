@@ -155,6 +155,7 @@ class HTMLFileFormatNoClipPreExtractor(HTMLFileFormatFilterPreExtractor):
         """清除main_html中交互式元素."""
         html_content = data_json['main_html']
         tree = html_to_element(html_content)
+        # 删除main_html中的script和style标签
         for script_element in tree.xpath('//script'):
             remove_element(script_element)
         for style_element in tree.xpath('//style'):
