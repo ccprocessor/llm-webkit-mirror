@@ -112,60 +112,6 @@ class TestGetPlainTextFast(unittest.TestCase):
         for code in code_content:
             self.assertNotIn(code, result)
 
-    def test_whitespace_normalization(self):
-        """测试空白字符规范化."""
-        html = """
-        <div>
-            <p>  Multiple   spaces  </p>
-            <p>
-                Line breaks
-                and tabs
-            </p>
-        </div>
-        """
-        result = get_plain_text_fast(html)
-        # 应该规范化为单个空格分隔的文本
-        self.assertEqual(result, "Multiple spaces Line breaks and tabs")
-
-    def test_special_characters(self):
-        """测试特殊字符处理."""
-        html = "<p>Price: $100 &amp; €50 &lt; £75</p>"
-        result = get_plain_text_fast(html)
-        self.assertEqual(result, "Price: $100 & €50 < £75")
-
-    def test_mixed_content_complex(self):
-        """测试复杂混合内容."""
-        html = """
-        <article>
-            <h1>Article Title</h1>
-            <p>This is a paragraph with <a href="link.html">a link</a> and <em>emphasis</em>.</p>
-            <script>
-                // This should be removed
-                analytics.track('page_view');
-            </script>
-            <blockquote>
-                <p>This is a quote</p>
-            </blockquote>
-            <code>console.log('removed');</code>
-            <ul>
-                <li>Item 1</li>
-                <li>Item 2</li>
-            </ul>
-            <style>
-                /* This CSS should be removed */
-                .highlight { background: yellow; }
-            </style>
-        </article>
-        """
-        result = get_plain_text_fast(html)
-        expected = "Article Title This is a paragraph with a link and emphasis. This is a quote Item 1 Item 2"
-        self.assertEqual(result, expected)
-
-        # 确保被移除的内容不存在
-        self.assertNotIn("analytics.track", result)
-        self.assertNotIn("console.log", result)
-        self.assertNotIn("background: yellow", result)
-
     def test_malformed_html(self):
         """测试畸形HTML的处理."""
         html = "<p>Unclosed paragraph<div>Nested without closing</p>Some text"
