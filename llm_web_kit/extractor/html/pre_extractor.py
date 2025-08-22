@@ -155,7 +155,7 @@ class HTMLFileFormatNoClipPreExtractor(HTMLFileFormatFilterPreExtractor):
         """清除main_html中交互式元素."""
         html_content = data_json['main_html']
         tree = html_to_element(html_content)
-        interactive_tags = ['input', 'select', 'textarea', 'button']
+        interactive_tags = ['input', 'select', 'textarea', 'button', 'script', 'style']
         # 删除<body>内的交互标签及关联label
         for tag in interactive_tags:
             for element in tree.xpath(f'//body//{tag}'):
