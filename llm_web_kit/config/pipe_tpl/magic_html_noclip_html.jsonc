@@ -2,13 +2,15 @@
     "extractor_pipe": {
             "enable": true,
             "validate_input_format": false,
-            // 只执行第二阶段
-            "pre_extractor": [
+            // 第一阶段：选择main_html
+            "main_html_parser": [
                 {
-                    "enable": true,
-                    "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipPreExtractor",
-                    "class_init_kwargs": {}
-                },
+                "enable": true,
+                "python_class": "llm_web_kit.extractor.html.main_html_parser.MagicHTMLMainHtmlParser",
+                "class_init_kwargs": {}
+            }],
+            // 第二阶段：html抽取为md
+            "pre_extractor": [
                 {
                     "enable": true,
                     "python_class": "llm_web_kit.extractor.html.pre_extractor.HTMLFileFormatNoClipFilterTablePreExtractor"

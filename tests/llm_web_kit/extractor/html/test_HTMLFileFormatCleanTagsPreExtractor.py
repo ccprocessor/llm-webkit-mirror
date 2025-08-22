@@ -1,7 +1,7 @@
 import unittest
 
 from llm_web_kit.extractor.html.pre_extractor import \
-    HTMLFileFormatCleanTagsPreExtractor
+    HTMLFileFormatNoClipCleanTagsPreExtractor
 from llm_web_kit.input.datajson import DataJson
 
 TEST_CASES = [
@@ -130,13 +130,13 @@ TEST_CASES = [
 
 class TestHTMLFileFormatCleanTagsPreExtractor(unittest.TestCase):
     def setUp(self):
-        self.extractor = HTMLFileFormatCleanTagsPreExtractor({})
+        self.extractor = HTMLFileFormatNoClipCleanTagsPreExtractor({})
 
     def test_clean_invisible_tags(self):
         for test_case in TEST_CASES:
             data_json = DataJson(test_case['input'])
             self.extractor.pre_extract(data_json)
-            self.assertEqual(data_json['html'], test_case['expected_html'])
+            self.assertEqual(data_json['main_html'], test_case['expected_html'])
 
 
 if __name__ == '__main__':

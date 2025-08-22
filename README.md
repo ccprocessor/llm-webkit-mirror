@@ -78,14 +78,13 @@ llm-web-kit is a python library that ..
 ### extract by magic_html+recognize
 
 ```python
-from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
-import traceback
+from llm_web_kit.simple import extract_content_from_html_with_magic_html
 from loguru import logger
 
 def extract(url:str, html:str) -> str:
     try:
-        nlp_md = extract_html_to_md(url, html)
-        # or mm_nlp_md = extract_html_to_mm_md(url, html)
+        nlp_md = extract_content_from_html_with_magic_html(url, html)
+        # or mm_nlp_md = extract_content_from_html_with_magic_html(url, html, 'mm_md')
         return nlp_md
     except Exception as e:
         logger.exception(e)
@@ -93,21 +92,27 @@ def extract(url:str, html:str) -> str:
 
 if __name__=="__main__":
     url = ""
-    html = ""
+    html = '''<html><body>
+    <div class="options-div-0-0 option-box__items" style="display: none;">
+        <span class="bedroom-rate__title">Room Only Rate</span>
+        <span class="bedroom-rate__price">£1,230.00</span>
+    </div>
+    <p>正常内容</p>
+    </body></html>'''
     markdown = extract(url, html)
+    print(markdown)
 ```
 
 ### only extract by recognize
 
 ```python
-from llm_web_kit.simple import extract_html_to_md, extract_html_to_mm_md
-import traceback
+from llm_web_kit.simple import extract_content_from_main_html
 from loguru import logger
 
-def extract(url:str, raw_html:str) -> str:
+def extract(url:str, html:str) -> str:
     try:
-        nlp_md = extract_html_to_md(url, raw_html, clip_html=False)
-        # or mm_nlp_md = extract_html_to_mm_md(url, raw_html, clip_html=False)
+        nlp_md = extract_content_from_main_html(url, html)
+        # or mm_nlp_md = extract_content_from_main_html(url, html, 'mm_md')
         return nlp_md
     except Exception as e:
         logger.exception(e)
@@ -115,21 +120,26 @@ def extract(url:str, raw_html:str) -> str:
 
 if __name__=="__main__":
     url = ""
-    html = ""
+    html = '''<html><body>
+    <div class="options-div-0-0 option-box__items" style="display: none;">
+        <span class="bedroom-rate__title">Room Only Rate</span>
+        <span class="bedroom-rate__price">£1,230.00</span>
+    </div>
+    <p>正常内容</p>
+    </body></html>'''
     markdown = extract(url, html)
+    print(markdown)
 ```
 
 ### only extract main_html by magic-html
 
 ```python
-from llm_web_kit.simple import extract_main_html_by_maigic_html
-import traceback
+from llm_web_kit.simple import extract_main_html_only
 from loguru import logger
 
 def extract(url:str, html:str) -> str:
     try:
-        main_html = extract_main_html_by_maigic_html(url, html)
-        # or mm_main_html = extract_pure_html_to_mm_md(url, html)
+        main_html = extract_main_html_only(url, html)
         return main_html
     except Exception as e:
         logger.exception(e)
@@ -137,8 +147,15 @@ def extract(url:str, html:str) -> str:
 
 if __name__=="__main__":
     url = ""
-    html = ""
+    html = '''<html><body>
+    <div class="options-div-0-0 option-box__items" style="display: none;">
+        <span class="bedroom-rate__title">Room Only Rate</span>
+        <span class="bedroom-rate__price">£1,230.00</span>
+    </div>
+    <p>正常内容</p>
+    </body></html>'''
     main_html = extract(url, html)
+    print(main_html)
 ```
 
 ### extract main_html by model response
@@ -171,6 +188,16 @@ if __name__=="__main__":
     response_json =  {'item_id 1': 0, 'item_id 2': 1, 'item_id 3': 1}
     html = ""
     main_html, is_success = extract(response_json, html)
+```
+
+### extract plain text from html source
+
+```python
+from llm_web_kit.libs.html_utils import get_plain_text_fast
+html_source = ""
+text = get_plain_text_fast(html_source)
+# language = detect_lang(text)
+
 ```
 
 ## Pipeline

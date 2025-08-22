@@ -285,10 +285,10 @@ def extract_magic_html(html, base_url, page_layout_type):
         base_url: str: 基础url
         page_layout_type: str: 页面布局类型
     """
-    from llm_web_kit.extractor.html.extractor import \
-        MagicHTMLFIleFormatorExtractor
+    from llm_web_kit.extractor.html.main_html_parser import \
+        MagicHTMLMainHtmlParser
 
-    extractor = MagicHTMLFIleFormatorExtractor({})
+    extractor = MagicHTMLMainHtmlParser({})
     try:
         main_html, _, _ = extractor._extract_main_html(html, base_url, page_layout_type)
         return main_html
@@ -450,3 +450,28 @@ def html_normalize_space(text: str) -> str:
         return _text
     except Exception:
         return text
+
+
+def get_plain_text_fast(html_source: str) -> str:
+    """使用lxml快速获取html中的纯文本.
+
+    主要用于语言检测
+    """
+    if not html_source or not html_source.strip():
+        return ""
+
+    doc = html_to_element(html_source)
+    # === 第一步：移除不需要的标签及其内容 ===
+    # 噪声标签列表
+    noise_tags = ['script', 'style', 'noscript', 'iframe', 'embed', 'object']
+    code_tags = ['code', 'pre', 'kbd', 'samp']  # 代码相关
+    all_noise_tags = noise_tags + code_tags
+
+    for tag_name in all_noise_tags:
+        for elem in doc.xpath(f'//{tag_name}'):
+            elem.getparent().remove(elem)  # 安全移除
+
+    # === 第二步：提取所有文本 ===
+    texts = doc.xpath('//text()')
+    full_text = ' '.join(text.strip() for text in texts if text.strip())
+    return full_text
