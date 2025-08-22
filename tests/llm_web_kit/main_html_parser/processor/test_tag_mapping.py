@@ -95,3 +95,19 @@ class TestTagMapping(unittest.TestCase):
         parser = MapItemToHtmlTagsParser({})
         pre_data = parser.parse_single(pre_data)
         self.assertEqual(pre_data['typical_main_html'], '<html lang="it-IT" prefix="og: http://ogp.me/ns#"></html>')
+
+    def test_illegal_tag(self):
+        # 构造测试html
+        typical_raw_tag_html = base_dir.joinpath('assets/test_illegal_tag.html').read_text(
+            encoding='utf-8')
+        # 简化网页
+        # 模型结果格式改写
+        llm_path = 'assets/test_illegal_tag.json'
+        llm_response = json.loads(base_dir.joinpath(llm_path).read_text(encoding='utf-8'))
+        pre_data = {'typical_raw_tag_html': typical_raw_tag_html, 'typical_raw_html': typical_raw_tag_html,
+                    'llm_response': llm_response}
+        pre_data = PreDataJson(pre_data)
+        # 映射
+        parser = MapItemToHtmlTagsParser({})
+        pre_data = parser.parse(pre_data)
+        assert 'This course looks' in pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
