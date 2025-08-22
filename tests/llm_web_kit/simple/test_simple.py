@@ -567,6 +567,14 @@ class TestSimpleIntegration(unittest.TestCase):
         # 验证正常内容被保留
         self.assertIn('正常内容', md)
 
+    def test_extract_main_html_with_script(self):
+        """测试main_html中包含script标签的情况."""
+        html_content = open(os.path.join(self.base_path, 'assets', 'main_html_with_script.html'), 'r').read()
+        md = extract_content_from_main_html(self.url, html_content)
+        self.assertIn('A. What are the cultural factors which make expansion abroad in retailing difficult?', md)
+        self.assertIn('B. How does the TV advertising campaign initiated by IKEA overcome the entry barrier of high advertising expenditures?', md)
+        self.assertIn('Johansson, J. K. (2006). Global marketing (4th edition ed.). New York: McGraw Hill Irwin.', md)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
