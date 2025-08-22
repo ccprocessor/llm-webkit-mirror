@@ -244,6 +244,9 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
                 text = process_sub_sup_tags(el, text, recursive=False)
             elif el.tag == 'audio':  # 避免audio被识别为paragraph
                 pass
+            elif el.tag in ['script', 'style']:
+                # 跳过脚本和样式内容
+                pass
             else:
                 if el.text and el.text.strip():
                     tem_text = html_normalize_space(text)

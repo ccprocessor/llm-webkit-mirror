@@ -18,7 +18,8 @@ from llm_web_kit.extractor.html.recognizer.title import TitleRecognizer
 from llm_web_kit.extractor.html.recognizer.video import VideoRecognizer
 from llm_web_kit.input.datajson import ContentList, DataJson
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import element_to_html, html_to_element
+from llm_web_kit.libs.html_utils import (element_to_html, html_to_element,
+                                         remove_element)
 
 
 class HTMLPageLayoutType:
@@ -97,12 +98,16 @@ class NoClipHTMLFIleFormatorExtractor(BaseFileFormatExtractor):
                              self._extract_title, self._extract_paragraph]:
             parsed_html = extract_func(base_url, parsed_html, raw_html, language)
 
-        # 过滤掉包含script和style标签的元素,在这里改，是因为math提取需要保留script标签
+        # 仅从 cc_html 中移除 script/style 节点，保留内容本身（避免整段被丢弃）
         filtered_parsed_html = []
         for cc_html, o_html in parsed_html:
-            # 检查o_html是否包含script或style标签
-            if not (o_html.xpath('//script') or o_html.xpath('//style')):
+            try:
+                # 删除 cc_html 子树中的 script/style（保留 tail 文本，避免内容丢失）
+                for to_remove in list(cc_html.xpath('//script') + cc_html.xpath('//style')):
+                    remove_element(to_remove)
                 filtered_parsed_html.append((cc_html, o_html))
+            except Exception as e:
+                raise HtmlFileExtractorException(f'filtered_parsed_html error: {cc_html}, exception: {e}')
         content_list:ContentList = self._export_to_content_list(base_url, filtered_parsed_html, raw_html)
         data_json['content_list'] = content_list
         # data_json['title'] = title
