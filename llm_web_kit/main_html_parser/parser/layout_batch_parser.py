@@ -3,10 +3,10 @@ import re
 from hashlib import sha256
 
 import nltk
-from bs4 import BeautifulSoup
 from lxml import html
 from lxml.html import etree
 from nltk.tokenize import word_tokenize
+from selectolax.parser import HTMLParser
 
 from llm_web_kit.html_layout.html_layout_cosin import get_feature, similarity
 from llm_web_kit.input.pre_data_json import PreDataJson, PreDataJsonKey
@@ -43,8 +43,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
     def parse(self, pre_data: PreDataJson) -> PreDataJson:
         # 支持输入字符串和tag mapping后的dict对象
         html_source = pre_data[PreDataJsonKey.HTML_SOURCE]
-        soup = BeautifulSoup(html_source, 'html.parser')
-        html_source = str(soup)
+        selectolax_tree = HTMLParser(html_source)
+        html_source = selectolax_tree.html
         template_dict_html = pre_data.get(PreDataJsonKey.TYPICAL_DICT_HTML, '<html></html>')
         self.dynamic_id_enable = pre_data.get(PreDataJsonKey.DYNAMIC_ID_ENABLE, False)
         self.dynamic_classid_enable = pre_data.get(PreDataJsonKey.DYNAMIC_CLASSID_ENABLE, False)
@@ -146,7 +146,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         length = len(self.get_tokens(element.text_content().strip()))
         length_tail = 0
         text = element.xpath('string()').strip()
-        is_natural_language = self.__is_natural_language(text)
+        is_natural_language = self.__is_natural_language(text) or length_tail >= 10
         if element.tail:
             length_tail = len(element.tail.strip())
         idd = element.get('id')
@@ -276,7 +276,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 判断当前节点是否是红色节点
         if keyy in layer_nodes_dict:
             if 'red' not in layer_nodes_dict[keyy]:
-                if self.more_noise_enable and tag in ['p', 'ul'] and not idd and not class_tag and is_natural_language:
+                if self.more_noise_enable and tag in ['p', 'ul', 'br'] and not idd and is_natural_language:
                     label = 'red'
                 else:
                     parent = element.getparent()
@@ -306,7 +306,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
 
     def htmll_to_content2(self, body_str):
         body = html.fromstring(body_str)
-        tags_to_remove = ['header', 'footer', 'nav', 'aside', 'script', 'style']
+        tags_to_remove = ['footer', 'nav', 'aside', 'script', 'style']
         for tag in tags_to_remove:
             for element in list(body.xpath(f'//{tag}')):
                 prev = element.getprevious()
