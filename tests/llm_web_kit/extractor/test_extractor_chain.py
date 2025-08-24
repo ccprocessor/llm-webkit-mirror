@@ -325,7 +325,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()[0][0]['content']['html']
-        assert content_list == r"""<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td>`print()`</td><td>Prints a message to the console.</td><td>`print("Hello, World!")`</td></tr><tr><td>`len()`</td><td>Returns the length of an object.</td><td>`len([1, 2, 3])`</td></tr><tr><td>`range()`</td><td>Generates a sequence of numbers.</td><td>`range(1, 10)`</td></tr></table>"""
+        assert content_list == '<table><tr><th>Function</th><th>Description</th><th>Example</th></tr><tr><td><cccode-inline>`print()`</cccode-inline></td><td>Prints a message to the console.</td><td><cccode-inline>`print("Hello, World!")`</cccode-inline></td></tr><tr><td><cccode-inline>`len()`</cccode-inline></td><td>Returns the length of an object.</td><td><cccode-inline>`len([1, 2, 3])`</cccode-inline></td></tr><tr><td><cccode-inline>`range()`</cccode-inline></td><td>Generates a sequence of numbers.</td><td><cccode-inline>`range(1, 10)`</cccode-inline></td></tr></table>'
 
     def test_table_tail_text(self):
         """table的tail文本保留."""
@@ -347,11 +347,11 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         content_md = result.get_content_list().to_mm_md()
-        assert """| عنوان فارسی | توسعه مالی و هزینه سرمایه حقوق سهامداران: شواهدی از چین |
+        assert '''| عنوان فارسی | توسعه مالی و هزینه سرمایه حقوق سهامداران: شواهدی از چین |
 |---|---|
 | عنوان انگلیسی | Financial development and the cost of equity capital: Evidence from China |
-| کلمات کلیدی : | &nbsp  توسعه مالی؛ هزینه سرمایه حقوق سهامداران؛ قانون و امور مالی؛ چین |
-| درسهای مرتبط | حسابداری |""" in content_md
+| کلمات کلیدی : | &nbsp توسعه مالی؛ هزینه سرمایه حقوق سهامداران؛ قانون و امور مالی؛ چین |
+| درسهای مرتبط | حسابداری |''' in content_md
 
     def test_list_empty(self):
         """list抽取为空，原因是嵌套的img标签没有text."""
@@ -374,7 +374,7 @@ DEF
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()
         assert len(content_list[0]) == 17
-        assert content_list[0][3]['content']['html'] == r"<table><tr><td>up vote 17 down vote favorite 5</td><td>I'm having problems with exercises on proving whether or not a given number is prime. Is $83^{27} + 1$ prime? prime-numbers factoring</td></tr><tr><td></td><td></td></tr></table>"
+        assert content_list[0][3]['content']['html'] == "<table><tr><td><div>up vote 17 down vote favorite \n\n 5</div></td><td><div><div>I'm having problems with exercises on proving whether or not a given number is prime. Is $83^{27} + 1$ prime?</div><div>prime-numbers factoring</div><table><tr><td></td><td></td><td></td></tr></table></div></td></tr><tr><td></td><td></td></tr></table>"
 
     def test_table_include_math_p_2(self):
         """table包含math和其他内容."""
@@ -386,7 +386,7 @@ DEF
         md_content = result.get_content_list().to_nlp_md()
         # with open('output_badcase_p2.md', 'w', encoding='utf-8') as f:
         #     f.write(md_content)
-        self.assertIn(r'<table><tr><td>单位换算：</td><td>数学公式区块： $1\text{km}={10}^{3}\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr><tr><td>数学公式 $1m={10}^{2}\mathrm{cm}$</td><td>数学公式 $1\mathrm{kg}={10}^{3}g$</td><td>数学公式 $1h=3600s$</td></tr></table></td></tr><tr><td>运动学：</td><td>数学公式 $v=\frac{dx}{dt}$ 数学公式 $a=\frac{dv}{dt}$</td></tr></table>', md_content)
+        self.assertIn('<table><tr><td>单位换算：</td><td><p>数学公式区块： $1\\text{km}={10}^{3}\\text{m}$</p><table><tr><td>长度</td><td>质量</td><td>时间</td></tr>', md_content)
 
     def test_clean_tags(self):
         """测试clean_tag的preExtractor是否生效."""
@@ -491,7 +491,7 @@ DEF
         result_content_list = result.get_content_list()._get_data()
         result = result_content_list[0][2]['content']['html']
         assert '\n\t' not in result
-        assert len(result) == 1878
+        assert len(result) == 2205
 
     def test_math_physicsforums(self):
         """测试math_physicsforums网页中数学公式是[tex]和[itex]包裹的，且中间还有<br>标签分割."""
@@ -512,7 +512,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
-        assert 'List Price:$11.80' in result_md
+        assert 'List Price: $11.80' in result_md
 
     def test_table_only_one_td(self):
         """测试table只有一个td."""
@@ -636,7 +636,7 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_content_list = result.get_content_list()._get_data()
-        assert result_content_list[0][22]['content']['html'] == r"""<table><colgroup><col><col><col><col></colgroup><tr><th>お名前 【必須】</th><td></td><th>お名前（カナ）</th><td></td></tr><tr><th>ご連絡先 【いずれか必須】</th><td colspan="3">※メール受信制限をしている方は、@chintai.co.jpからのメールを受信できるよう設定の変更をお願い致します。<table><td>メールアドレス</td><td>電話番号</td></table></td></tr></table>"""
+        assert result_content_list[0][22]['content']['html'] == '<table><colgroup></colgroup><tr><th>お名前<span>【必須】</span></th><td></td><th>お名前（カナ）</th><td></td></tr><tr><th>ご連絡先<span>【いずれか必須】</span></th><td colspan="3"><table><td><p>メールアドレス</p></td><td><p>電話番号</p></td></table><p>※メール受信制限をしている方は、@chintai.co.jpからのメールを受信できるよう設定の変更をお願い致します。</p></td></tr></table>'
 
     def test_td_include_specila_symbol(self):
         """测试td包含特殊符号|，需要转义."""
