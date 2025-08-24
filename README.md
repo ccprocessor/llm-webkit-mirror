@@ -190,6 +190,16 @@ if __name__=="__main__":
     main_html, is_success = extract(response_json, html)
 ```
 
+### extract plain text from html source
+
+```python
+from llm_web_kit.libs.html_utils import get_plain_text_fast
+html_source = ""
+text = get_plain_text_fast(html_source)
+# language = detect_lang(text)
+
+```
+
 ## Pipeline
 
 1. [HTML pre-dedup](jupyter/html-pre-dedup/main.ipynb)
