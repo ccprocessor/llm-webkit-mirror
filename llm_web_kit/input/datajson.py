@@ -221,6 +221,7 @@ class StructureMapper(ABC):
                     continue  # 如果不是dict也不是list，跳过该项
 
             item_text = item.get('c', '')
+            item_text = self.__escape_md_special_chars(item_text)
 
             # 创建列表项行
             item_line = f'{indent}{list_prefix} {item_text}'
@@ -320,6 +321,7 @@ class StructureMapper(ABC):
             if not title_content:
                 return ''
             level = content_lst_node['content']['level']
+            title_content = self.__escape_md_special_chars(title_content)
             md_title_level = '#' * int(level)
             md_title = f'{md_title_level} {title_content}'
             return md_title
