@@ -151,9 +151,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             length_tail = len(element.tail.strip())
         idd = element.get('id')
         tag = element.tag
-        layer_nodes = element_dict.get(depth, [])
-        if len(layer_nodes) == 0:
-            return
+        layer_nodes = element_dict.get(depth, {})
         class_tag = element.get('class')
         ori_keyy = (tag, class_tag, idd)
         if idd and idd.strip():
