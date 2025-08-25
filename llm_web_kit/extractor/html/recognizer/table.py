@@ -1,4 +1,3 @@
-from itertools import chain
 from typing import Any, List, Tuple
 
 from lxml.html import HtmlElement
@@ -9,8 +8,29 @@ from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import process_sub_sup_tags, remove_element
+from llm_web_kit.libs.html_utils import (html_normalize_space,
+                                         process_sub_sup_tags)
 from llm_web_kit.libs.text_utils import normalize_text_segment
+
+from .text import inline_tags
+
+# 空元素
+VOID_ELEMENTS = {
+    'area', 'base', 'br', 'col', 'embed', 'hr',
+    'img', 'input', 'link', 'meta', 'param',
+    'source', 'track', 'wbr'
+}
+
+KEEP_ATTRS = {'colspan', 'rowspan'}
+
+
+def table_clean_attributes(element):
+    attrs = list(element.attrib.keys())
+    for attr in attrs:
+        if attr not in KEEP_ATTRS:
+            del element.attrib[attr]
+    for child in element.iterchildren():
+        table_clean_attributes(child)
 
 
 class TableRecognizer(BaseHTMLElementRecognizer):
@@ -175,6 +195,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
             raw_html=math_raw_html
         )
         result = []
+        if not math_res_parts:
+            if raw_html.tag == 'br' or raw_html.xpath('.//br'):
+                result.append("\n\n")
         for math_item in math_res_parts:
             ele_item = math_item[0]
 
@@ -211,79 +234,76 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
                 else:
+                    if node.tag == 'br' or node.tag not in inline_tags:
+                        result.append('\n\n')
+
                     # 提取当前节点的文本
                     if node.text and node.text.strip():
                         cleaned_text = node.text.strip()
-                        result.append(cleaned_text)
-                    # 处理节点的tail（元素闭合后的文本）
-                    if node.tail and node.tail.strip():
-                        cleaned_tail = node.tail.strip()
-                        result.append(cleaned_tail)
+                        result.append(html_normalize_space(cleaned_text))
+
                     # 递归处理子节点
                     for child in node:
                         process_node(child)
+                    # 处理节点的tail（元素闭合后的文本）
+                    if node.tail and node.tail.strip():
+                        if node.tag not in inline_tags:
+                            result.append('\n\n')
+                        cleaned_tail = node.tail.strip()
+                        result.append(html_normalize_space(cleaned_tail))
             # 从根节点开始处理
             process_node(ele_item)
         return result
 
     def __simplify_td_th_content(self, table_nest_level, elem: HtmlElement) -> None:
         """简化 <td> 和 <th> 内容，保留嵌套表格结构."""
-        if elem.tag in ['td', 'th']:
-            parse_res = []
-            # 检查是否存在嵌套的表格
-            if table_nest_level > 1:
-                if elem.text and elem.text.strip():
-                    parse_res.append(elem.text.strip())
-                    elem.text = None  # 防止后续重复处理
-                # 存在嵌套表格，递归处理子节点
+        if (elem.tag in ['td', 'th', 'table'] or
+                any(child.tag in ['table', 'td', 'th'] for child in elem.iterchildren()) or
+                elem.xpath('.//table') or elem.xpath('.//td') or elem.xpath('.//th')):
+            if len(elem) > 0:
+                # 需要继续遍历的情况
                 for child in elem.iterchildren():
-                    if child.tag == 'table':
-                        # 对嵌套表格递归调用简化处理
-                        self.__simplify_td_th_content(table_nest_level, child)
-                    else:
-                        # 处理非表格元素
-                        math_res = self.__check_table_include_math_code(child)
-                        parse_res.extend(math_res)
-                        remove_element(child)
-                # 将非表格内容拼接后放在表格前面
-                if parse_res:
-                    elem.text = ' '.join(normalize_text_segment(item) for item in parse_res)
+                    self.__simplify_td_th_content(table_nest_level, child)
             else:
-                # 没有嵌套表格，直接简化
                 math_res = self.__check_table_include_math_code(elem)
-                parse_res.extend(math_res)
-                for item in list(elem.iterchildren()):
-                    remove_element(item)
-                if parse_res:
-                    elem.text = ' '.join(normalize_text_segment(item) for item in parse_res)
-            return
-        # 非 td/th 元素继续递归处理
-        for child in elem.iterchildren():
-            self.__simplify_td_th_content(table_nest_level, child)
+                math_res_text = ' '.join(normalize_text_segment(item) for item in math_res)
+                elem.text = math_res_text
+        else:
+            math_res = self.__check_table_include_math_code(elem)
+            elem.clear()
+            math_res_text = ' '.join(normalize_text_segment(item) for item in math_res)
+            if elem.tag in VOID_ELEMENTS:
+                elem_pre = elem.getprevious()
+                if elem_pre is not None:
+                    elem_pre.tail = math_res_text
+                else:
+                    elem_parent = elem.getparent()
+                    if elem_parent is not None:
+                        elem_parent_text = elem_parent.text + ' ' if elem_parent is not None and elem_parent.text is not None else ''
+                        elem_parent.text = elem_parent_text + math_res_text
+            else:
+                elem.text = math_res_text
 
     def __get_table_body(self, table_type, table_nest_level, table_root):
         """获取并处理table body，返回处理后的HTML字符串。"""
         if table_type == 'empty':
             content = table_root.text_content()
             return content
-        allowed_attributes = ['colspan', 'rowspan']
         # 清理除了colspan和rowspan之外的属性
-        if len(table_root.attrib) > 0:
-            cleaned_attrs = {k: v for k, v in table_root.attrib.items() if k in allowed_attributes}
-            table_root.attrib.clear()
-            table_root.attrib.update(cleaned_attrs)
-        # text进行strip操作,tail保留（部分内容留在tail中）
-        for elem in chain([table_root], table_root.iterchildren()):
-            if elem.text is not None:
-                elem.text = elem.text.strip()
-            if elem.tail is not None:
-                elem.tail = elem.tail.strip()
-        # 单元格内的多标签内容进行简化，空格拼接，公式、代码识别
         self.__simplify_td_th_content(table_nest_level, table_root)
-        # 迭代
-        for child in table_root.iterchildren():
-            if child is not None:
-                self.__get_table_body(table_type, table_nest_level, child)
+        table_clean_attributes(table_root)
+
+        # doc = html.fromstring(html_content)
+        for element in table_root.iter():
+            # 清理元素前后的空白（不影响.text和.tail的内容）
+            if element.text is not None:
+                element.text = element.text.lstrip('\n\t ')
+            if element.tail is not None:
+                if "\n\n" in element.tail:
+                    element.tail = "\n\n" + element.tail.lstrip('\n\t ')
+                else:
+                    element.tail = element.tail.lstrip('\n\t ')
+
         return self._element_to_html_entity(table_root)
 
     def __do_extract_tables(self, root: HtmlElement) -> None:
