@@ -1,6 +1,7 @@
 import os
 
 from overrides import override
+from selectolax.parser import HTMLParser
 
 from llm_web_kit.extractor.config import INVISIBLE_TAGS
 from llm_web_kit.extractor.pre_extractor import \
@@ -154,7 +155,9 @@ class HTMLFileFormatNoClipPreExtractor(HTMLFileFormatFilterPreExtractor):
     def __clean_interactive_elements(self, data_json: DataJson) -> str:
         """清除main_html中交互式元素."""
         html_content = data_json['main_html']
-        tree = html_to_element(html_content)
+        selectolax_tree = HTMLParser(html_content)
+        fixed_html = selectolax_tree.html
+        tree = html_to_element(fixed_html)
         # 删除main_html中的script和style标签
         for script_element in tree.xpath('//script'):
             remove_element(script_element)
