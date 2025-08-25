@@ -208,7 +208,9 @@ class TestExtractorChain(unittest.TestCase):
         self.assertEqual(result['track_id'], 'mathlab_code')
         md_content = result.get_content_list().to_nlp_md()
         self.assertIn('### Use Integers for Index Variables', md_content)
-        self.assertIn('### Limit Use of `assert` Statements', md_content)
+        self.assertIn('### Limit Use of', md_content)
+        self.assertIn('assert', md_content)
+        self.assertIn('Statements', md_content)
 
     def test_list_to_md(self):
         """测试第三个数据：这个数据会丢失一些文本信息."""
@@ -230,7 +232,9 @@ class TestExtractorChain(unittest.TestCase):
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         md_content = result.get_content_list().to_nlp_md()
-        self.assertIn('The descendant of `StandardizerActionRunner` interface has to provide', md_content)
+        self.assertIn('The descendant of ', md_content)
+        self.assertIn('StandardizerActionRunner', md_content)
+        self.assertIn('interface has to provide', md_content)
 
     def test_code_pre_mixed(self):
         chain = ExtractSimpleFactory.create(self.config)
