@@ -85,6 +85,7 @@ def extract(url:str, html:str) -> str:
     try:
         nlp_md = extract_content_from_html_with_magic_html(url, html)
         # or mm_nlp_md = extract_content_from_html_with_magic_html(url, html, 'mm_md')
+        # or nlp_md = extract_content_from_html_with_magic_html(url, html, language='zh')
         return nlp_md
     except Exception as e:
         logger.exception(e)
@@ -113,6 +114,7 @@ def extract(url:str, html:str) -> str:
     try:
         nlp_md = extract_content_from_main_html(url, html)
         # or mm_nlp_md = extract_content_from_main_html(url, html, 'mm_md')
+        # or nlp_md = extract_content_from_main_html(url, html, language='zh')
         return nlp_md
     except Exception as e:
         logger.exception(e)
