@@ -16,76 +16,68 @@
 
 \[^1\]
 
-<pre>
-'''json
+```jsonc
 
-{"item_id 1": 0, "item_id 2": 0, "item_id 3": 1, "item_id 4": 1, "item_id 5": 1, "item_id 6": 1, "item_id 7": 1}  # 0：删除；1：保留
+{"item_id 1": 0, "item_id 2": 0, "item_id 3": 1, "item_id 4": 1, "item_id 5": 1, "item_id 6": 1, "item_id 7": 1}  // 0：删除；1：保留
 
-'''
-</pre>
+```
 
 \[^2\]
 
-<pre>
-'''json
+```jsonc
 
 {
-"html": "&lt;div&gt;&lt;div class=&quot;content&quot;&gt; &lt;div class=&quot;container&quot;&gt;&lt;dl class=&quot;col-xs-9 col-sm-8&quot;&gt;&lt;dt&gt;&lt;h1&gt;TFI Bearing
-Co.,Ltd&lt;/h1&gt;&lt;/dt&gt;&lt;dd&gt;&lt;strong&gt;Triple-Row Slewing&lt;/strong&gt;&lt;strong&gt;Silverthin Slewing Rings&lt;/strong&gt;&lt;strong&gt;Skf Slewing
-Bearing&lt;/strong&gt;&lt;/dd&gt;&lt;/dl&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;",  # 选出的代表main html经过处理之后的新html
-"post_delete_node": [  # 删除规则
-{
-"del_location": "start",  # 删除的位置【start（头部） or end（尾部）】
-"xpath": "/div/div[1]/div/div/div[1]",  # 删除节点的xpath
-"tag": "div",  # 删除节点的标签名称
-"attributes": {"class": "left-content"},  # 删除节点的属性
-"index_in_parent": 0,  # 删除节点在父节点的索引
-"parent_xpath": "/div/div[1]/div/div",  # 删除节点的父节点的xpath
-"parent_tag": "div",  # 删除节点的父节点的标签名称
-"parent_attributes": {"class": "main-content fl-clr"}  # 删除节点的父节点的属性
-},
-{
-"del_location": "end",
-"xpath": "/div/div[3]",
-"tag": "div",
-"attributes": {"class": "footer"},
-"index_in_parent": 2,
-"parent_xpath": "/div",
-"parent_tag": "div",
-"parent_attributes": {}
-}
-]
+    "html": "...",  // 选出的代表main html经过处理之后的新html
+    "post_delete_node": [  // 删除规则
+        {
+            "del_location": "start",  // 删除的位置【start（头部） or end（尾部）】
+            "xpath": "/div/div[1]/div/div/div[1]",  // 删除节点的xpath
+            "tag": "div",  // 删除节点的标签名称
+            "attributes": {"class": "left-content"},  // 删除节点的属性
+            "index_in_parent": 0,  // 删除节点在父节点的索引
+            "parent_xpath": "/div/div[1]/div/div",  // 删除节点的父节点的xpath
+            "parent_tag": "div",  // 删除节点的父节点的标签名称
+            "parent_attributes": {"class": "main-content fl-clr"}  // 删除节点的父节点的属性
+        },
+        {
+            "del_location": "end",
+            "xpath": "/div/div[3]",
+            "tag": "div",
+            "attributes": {"class": "footer"},
+            "index_in_parent": 2,
+            "parent_xpath": "/div",
+            "parent_tag": "div",
+            "parent_attributes": {}
+        }
+    ]
 }
 
-'''
-</pre>
+```
 
 \[^3\]
 
-<pre>
-'''json
+```jsonc
 [
-{
-"del_location": "start",  # 删除的位置【start（头部） or end（尾部）】
-"xpath": "/div/div[1]/div/div/div[1]",  # 删除节点的xpath
-"tag": "div",  # 删除节点的标签名称
-"attributes": {"class": "left-content"},  # 删除节点的属性
-"index_in_parent": 0,  # 删除节点在父节点的索引
-"parent_xpath": "/div/div[1]/div/div",  # 删除节点的父节点的xpath
-"parent_tag": "div",  # 删除节点的父节点的标签名称
-"parent_attributes": {"class": "main-content fl-clr"}  # 删除节点的父节点的属性
-},
-{
-"del_location": "end",
-"xpath": "/div/div[3]",
-"tag": "div",
-"attributes": {"class": "footer"},
-"index_in_parent": 2,
-"parent_xpath": "/div",
-"parent_tag": "div",
-"parent_attributes": {}
-}
+    {
+        "del_location": "start",  // 删除的位置【start（头部） or end（尾部）】
+        "xpath": "/div/div[1]/div/div/div[1]",  // 删除节点的xpath
+        "tag": "div",  // 删除节点的标签名称
+        "attributes": {"class": "left-content"},  // 删除节点的属性
+        "index_in_parent": 0,  // 删除节点在父节点的索引
+        "parent_xpath": "/div/div[1]/div/div",  // 删除节点的父节点的xpath
+        "parent_tag": "div",  // 删除节点的父节点的标签名称
+        "parent_attributes": {"class": "main-content fl-clr"}  // 删除节点的父节点的属性
+    },
+    {
+        "del_location": "end",
+        "xpath": "/div/div[3]",
+        "tag": "div",
+        "attributes": {"class": "footer"},
+        "index_in_parent": 2,
+        "parent_xpath": "/div",
+        "parent_tag": "div",
+        "parent_attributes": {}
+    }
 ]
 
-'''
-</pre>
+```
