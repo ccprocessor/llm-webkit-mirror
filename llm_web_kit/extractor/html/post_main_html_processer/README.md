@@ -30,9 +30,9 @@
 '''json
 
 {
-"html": "<div><div class="content"> <div class="container"><dl class="col-xs-9 col-sm-8"><dt><h1>TFI Bearing
-Co.,Ltd</h1></dt><dd><strong>Triple-Row Slewing</strong><strong>Silverthin Slewing Rings</strong><strong>Skf Slewing
-Bearing</strong></dd></dl></div></div></div>",  # 选出的代表main html经过处理之后的新html
+"html": "&lt;div&gt;&lt;div class=&quot;content&quot;&gt; &lt;div class=&quot;container&quot;&gt;&lt;dl class=&quot;col-xs-9 col-sm-8&quot;&gt;&lt;dt&gt;&lt;h1&gt;TFI Bearing
+Co.,Ltd&lt;/h1&gt;&lt;/dt&gt;&lt;dd&gt;&lt;strong&gt;Triple-Row Slewing&lt;/strong&gt;&lt;strong&gt;Silverthin Slewing Rings&lt;/strong&gt;&lt;strong&gt;Skf Slewing
+Bearing&lt;/strong&gt;&lt;/dd&gt;&lt;/dl&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;",  # 选出的代表main html经过处理之后的新html
 "post_delete_node": [  # 删除规则
 {
 "del_location": "start",  # 删除的位置【start（头部） or end（尾部）】
