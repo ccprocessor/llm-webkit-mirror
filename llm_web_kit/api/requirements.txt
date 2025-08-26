@@ -1,0 +1,21 @@
+
+# HTTP 客户端
+aiohttp>=3.9.0
+
+# HTML 解析
+beautifulsoup4>=4.12.0
+# FastAPI 相关依赖
+fastapi>=0.104.0
+lxml>=4.9.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# 日志和配置
+python-dotenv>=1.0.0
+
+# 数据处理
+python-multipart>=0.0.6
+
+# 类型提示支持
+typing-extensions>=4.8.0
+uvicorn[standard]>=0.24.0
