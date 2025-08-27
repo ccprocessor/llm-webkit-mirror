@@ -17,7 +17,12 @@ class HTMLService:
     def __init__(self):
         """初始化 HTML 服务."""
         # 目前使用简化管线
-        pass
+        try:
+            from .inference_service import InferenceService
+            self._inference_service = InferenceService()
+        except Exception as e:
+            logger.warning(f"InferenceService 初始化失败（将在首次调用时再尝试）：{e}")
+            self._inference_service = None
 
     def _init_components(self):
         """兼容保留（当前未使用）"""
@@ -71,42 +76,7 @@ class HTMLService:
             raise
 
     async def _parse_with_model(self, html_content: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        return {
-            "item_id 1": 0,
-            "item_id 2": 0,
-            "item_id 3": 0,
-            "item_id 4": 0,
-            "item_id 5": 0,
-            "item_id 6": 0,
-            "item_id 7": 0,
-            "item_id 8": 0,
-            "item_id 9": 1,
-            "item_id 10": 0,
-            "item_id 11": 0,
-            "item_id 12": 0,
-            "item_id 13": 0,
-            "item_id 14": 0,
-            "item_id 15": 0,
-            "item_id 16": 0,
-            "item_id 17": 0,
-            "item_id 18": 0,
-            "item_id 19": 0,
-            "item_id 20": 0,
-            "item_id 21": 0,
-            "item_id 22": 0,
-            "item_id 23": 0,
-            "item_id 24": 0,
-            "item_id 25": 0,
-            "item_id 26": 0,
-            "item_id 27": 0,
-            "item_id 28": 0,
-            "item_id 29": 0,
-            "item_id 30": 0,
-            "item_id 31": 0,
-            "item_id 32": 0,
-            "item_id 33": 0,
-            "item_id 34": 0,
-            "item_id 35": 0,
-            "item_id 36": 0,
-            "item_id 37": 0
-        }
+        if self._inference_service is None:
+            from .inference_service import InferenceService
+            self._inference_service = InferenceService()
+        return await self._inference_service.inference(html_content, options or {})
