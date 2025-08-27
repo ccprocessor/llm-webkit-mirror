@@ -163,7 +163,7 @@ class TestLayoutParser(unittest.TestCase):
         template_source = re.sub('post-37041', 'test-37041', template_source)
         expand_source = re.sub('test-37041', 'test-25031', template_source)
         # 简化网页
-        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        simplified_html, typical_raw_tag_html = simplify_html(template_source)
         # 模型结果格式改写
         llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
         llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
@@ -203,7 +203,7 @@ class TestLayoutParser(unittest.TestCase):
         expand_source2 = re.sub('testid-25031', '', expand_source)
         template_source2 = re.sub('testid-37041', '', template_source)
         # 简化网页
-        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        simplified_html, typical_raw_tag_html = simplify_html(template_source)
         # 模型结果格式改写
         llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
         llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
@@ -226,7 +226,7 @@ class TestLayoutParser(unittest.TestCase):
         assert 'Permalink link a questo articolo' not in main_html_body and 'Con la stesura di un' in main_html_body
 
         # 简化网页
-        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source2)
+        simplified_html, typical_raw_tag_html = simplify_html(template_source2)
         # 模型结果格式改写
         llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
         llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
@@ -268,7 +268,7 @@ class TestLayoutParser(unittest.TestCase):
         new_p.text = 'test more noise'
         expand_source = html.tostring(tree, encoding='utf-8').decode()
         # 简化网页
-        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        simplified_html, typical_raw_tag_html = simplify_html(template_source)
         # 模型结果格式改写
         llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
         llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
@@ -305,7 +305,7 @@ class TestLayoutParser(unittest.TestCase):
         template_source = re.sub('post-37041', '', template_source)
         expand_source = re.sub('post-classid', 'post-classid template-classid', template_source)
         # 简化网页
-        simplified_html, typical_raw_tag_html, _ = simplify_html(template_source)
+        simplified_html, typical_raw_tag_html = simplify_html(template_source)
         # 模型结果格式改写
         llm_path = base_dir.joinpath(TEST_CASES[0]['input'][2][0])
         llm_response = json.loads(llm_path.read_text(encoding='utf-8'))
@@ -385,7 +385,7 @@ class TestLayoutParser(unittest.TestCase):
         # 模型结果格式改写
         llm_path = 'assets/input_layout_batch_parser/test_incomplete_tag.json'
         llm_response = json.loads(base_dir.joinpath(llm_path).read_text(encoding='utf-8'))
-        simplified_html, typical_raw_tag_html, _ = simplify_html(html_source)
+        simplified_html, typical_raw_tag_html = simplify_html(html_source)
         pre_data = {'typical_raw_tag_html': typical_raw_tag_html, 'typical_raw_html': html_source,
                     'llm_response': llm_response}
         pre_data = PreDataJson(pre_data)
