@@ -1,25 +1,18 @@
+# vLLM 作为可选依赖：导入失败时保持模块可用，实际使用时再报错
+import json
+import re
 from dataclasses import dataclass
+from enum import Enum
+from typing import List
 
 import torch
 from transformers import AutoTokenizer
-
-# vLLM 作为可选依赖：导入失败时保持模块可用，实际使用时再报错
-try:
-    from vllm import LLM, SamplingParams
-    _VLLM_IMPORT_ERROR = None
-except Exception as _e:  # noqa: N816
-    LLM = None  # type: ignore
-    SamplingParams = None  # type: ignore
-    _VLLM_IMPORT_ERROR = _e
-import json
-import re
-from enum import Enum
-from typing import List
+from vllm import LLM, SamplingParams
 
 
 @dataclass
 class InferenceConfig:
-    model_path: str = "/share/liukaiwen/models/qwen3-0.6b/checkpoint-3296"
+    model_path: str = "/mnt/installers/checkpoint-3296"
     data_path: str = "/fs-computility/llmit_d/shared/liumengjie/NeuScraper_cc/benchmark_process/benchmark_with_alg_800.jsonl"
     output_path: str = "/share/liukaiwen/test_results"
     use_logits_processor: bool = True
@@ -29,16 +22,17 @@ class InferenceConfig:
     top_p: float = 0.95
     max_output_tokens: int = 8192
     tensor_parallel_size: int = 1
-    dtype: str = "bfloat16"
+    # 正式环境修改为bfloat16
+    dtype: str = "float16"
     template: bool = True
 
 
 config = InferenceConfig(
-    model_path="/share/liukaiwen/models/qwen3-0.6b/checkpoint-3296",  # checkpoint-3296路径
+    model_path="/mnt/installers/checkpoint-3296",  # checkpoint-3296路径
     output_path="/share/liukaiwen/test_results",
     use_logits_processor=True,  # 启用逻辑处理器确保JSON格式输出
     num_workers=8,              # 并行工作进程数
-    max_tokens=35000,           # 最大输入token数
+    max_tokens=26000,           # 最大输入token数
     temperature=0,              # 确定性输出
     top_p=0.95,
     max_output_tokens=8192,     # 最大输出token数
@@ -240,7 +234,7 @@ def main(simplified_html: str, model: object, tokenizer: object):
     if SamplingParams is None:
         raise RuntimeError(
             "当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，"
-            "或在 API 中使用占位/替代推理实现。原始导入错误: {}".format(_VLLM_IMPORT_ERROR)
+            "或在 API 中使用占位/替代推理实现。原始导入错误: {}".format("_VLLM_IMPORT_ERROR")
         )
     prompt = create_prompt(simplified_html)
     chat_prompt = add_template(prompt, tokenizer)
@@ -287,8 +281,117 @@ def clean_output(output):
 
 class InferenceService:
     """对外暴露的推理服务封装，供 HTMLService 调用。"""
+
+    def __init__(self):
+        """初始化推理服务，延迟加载模型."""
+        self._llm = None
+        self._tokenizer = None
+        self._initialized = False
+        self._init_lock = None  # 用于异步初始化锁
+
+    async def warmup(self):
+        """在服务启动阶段主动预热模型（异步初始化）。"""
+        await self._ensure_initialized()
+
+    async def _ensure_initialized(self):
+        """确保模型已初始化（异步安全）"""
+        if not self._initialized:
+            if self._init_lock is None:
+                import asyncio
+                self._init_lock = asyncio.Lock()
+
+            async with self._init_lock:
+                if not self._initialized:  # 双重检查
+                    await self._init_model()
+                    self._initialized = True
+
+    async def _init_model(self):
+        """初始化模型和tokenizer."""
+        try:
+            if SamplingParams is None:
+                raise RuntimeError(
+                    "当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，"
+                    "或在 API 中使用占位/替代推理实现。原始导入错误: {}".format("_VLLM_IMPORT_ERROR")
+                )
+
+            # 初始化 tokenizer
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                config.model_path,
+                trust_remote_code=True
+            )
+
+            # 初始化 LLM 模型
+            self._llm = LLM(
+                model=config.model_path,
+                trust_remote_code=True,
+                dtype=config.dtype,
+                tensor_parallel_size=config.tensor_parallel_size,
+                # 正式环境删掉
+                max_model_len=config.max_tokens,  # 减少序列长度避免内存不足
+            )
+
+            print(f"模型初始化成功: {config.model_path}")
+
+        except Exception as e:
+            print(f"模型初始化失败: {e}")
+            # 如果模型初始化失败，保持为 None，后续调用会返回占位结果
+            self._llm = None
+            self._tokenizer = None
+
     async def inference(self, simplified_html: str, options: dict | None = None) -> dict:
-        """占位实现：请在此处接入真实模型；保持返回 {"item_id N": 0/1} 的结构。"""
+        """执行推理，如果模型未初始化则返回占位结果."""
+        try:
+            await self._ensure_initialized()
+
+            if self._llm is None or self._tokenizer is None:
+                print("模型未初始化，返回占位结果")
+                return self._get_placeholder_result()
+
+            # 执行真实推理
+            return await self._run_real_inference(simplified_html, options)
+
+        except Exception as e:
+            print(f"推理过程出错: {e}")
+            return self._get_placeholder_result()
+
+    async def _run_real_inference(self, simplified_html: str, options: dict | None = None) -> dict:
+        """执行真实的模型推理."""
+        try:
+            # 创建 prompt
+            prompt = create_prompt(simplified_html)
+            chat_prompt = add_template(prompt, self._tokenizer)
+
+            # 设置采样参数
+            if config.use_logits_processor:
+                token_state = Token_state(config.model_path)
+                sampling_params = SamplingParams(
+                    temperature=config.temperature,
+                    top_p=config.top_p,
+                    max_tokens=config.max_output_tokens,
+                    logits_processors=[token_state.process_logit]
+                )
+            else:
+                sampling_params = SamplingParams(
+                    temperature=config.temperature,
+                    top_p=config.top_p,
+                    max_tokens=config.max_output_tokens
+                )
+
+            # 执行推理
+            output = self._llm.generate(chat_prompt, sampling_params)
+            output_json = clean_output(output)
+
+            # 格式化结果
+            result = reformat_map(output_json)
+            print(f"推理完成，结果: {result}")
+            return result
+
+        except Exception as e:
+            print(f"真实推理失败: {e}")
+            return self._get_placeholder_result()
+
+    def _get_placeholder_result(self) -> dict:
+        """返回占位结果."""
         return {
             "item_id 1": 0,
             "item_id 2": 0,
@@ -303,13 +406,36 @@ class InferenceService:
 
 
 if __name__ == "__main__":
-    tokenizer = AutoTokenizer.from_pretrained("D:/test_data/网页抽取/models/checkpoint-3296/checkpoint-3296/", trust_remote_code=True)
-    model = LLM(model=config.model_path,
-            trust_remote_code=True,
-            dtype=config.dtype,
-            tensor_parallel_size=config.tensor_parallel_size)
+    config = InferenceConfig(
+        model_path="/mnt/installers/checkpoint-3296",
+        output_path="/share/liukaiwen/test_results",
+        use_logits_processor=True,
+        num_workers=8,
+        max_tokens=26000,
+        temperature=0,
+        top_p=0.95,
+        max_output_tokens=8192,
+        tensor_parallel_size=1,
+        template=True,
+    )
+    try:
+        tokenizer = AutoTokenizer.from_pretrained("/mnt/installers/checkpoint-3296", trust_remote_code=True)
+        model = LLM(model=config.model_path,
+                trust_remote_code=True,
+                dtype=config.dtype,
+                # 设置最大模型长度
+                max_model_len=config.max_tokens,
+                tensor_parallel_size=config.tensor_parallel_size)
 
-    simplified_html = "<html><body><h1>Hello World</h1></body></html>"
-    response_json = main(simplified_html, model, tokenizer)
-    llm_response_dict = reformat_map(response_json)
-    print(llm_response_dict)
+        simplified_html = "<html><body><h1>Hello World</h1></body></html>"
+        response_json = main(simplified_html, model, tokenizer)
+        llm_response_dict = reformat_map(response_json)
+        print(llm_response_dict)
+    except Exception:
+        raise
+    finally:
+        import torch.distributed as dist
+
+        # 在程序结束前添加
+        if dist.is_initialized():
+            dist.destroy_process_group()

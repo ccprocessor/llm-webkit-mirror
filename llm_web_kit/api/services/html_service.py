@@ -5,7 +5,7 @@
 
 from typing import Any, Dict, Optional
 
-from ..dependencies import get_logger, get_settings
+from ..dependencies import get_inference_service, get_logger, get_settings
 
 logger = get_logger(__name__)
 settings = get_settings()
@@ -16,12 +16,11 @@ class HTMLService:
 
     def __init__(self):
         """初始化 HTML 服务."""
-        # 目前使用简化管线
+        # 目前使用简化管线；使用全局单例的 InferenceService，避免重复初始化模型
         try:
-            from .inference_service import InferenceService
-            self._inference_service = InferenceService()
+            self._inference_service = get_inference_service()
         except Exception as e:
-            logger.warning(f"InferenceService 初始化失败（将在首次调用时再尝试）：{e}")
+            logger.warning(f"InferenceService 获取失败（将在首次调用时再尝试）：{e}")
             self._inference_service = None
 
     def _init_components(self):
@@ -77,6 +76,5 @@ class HTMLService:
 
     async def _parse_with_model(self, html_content: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         if self._inference_service is None:
-            from .inference_service import InferenceService
-            self._inference_service = InferenceService()
+            self._inference_service = get_inference_service()
         return await self._inference_service.inference(html_content, options or {})

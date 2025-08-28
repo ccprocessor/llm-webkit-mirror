@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .dependencies import get_logger, get_settings
+from .dependencies import get_inference_service, get_logger, get_settings
 from .routers import htmls
 
 settings = get_settings()
@@ -51,6 +51,17 @@ async def root():
 async def health_check():
     """健康检查端点."""
     return {"status": "healthy", "service": "llm-web-kit-api"}
+
+
+@app.on_event("startup")
+async def app_startup():
+    """应用启动时预热模型，避免首个请求冷启动延迟."""
+    try:
+        service = get_inference_service()
+        await service.warmup()
+        logger.info("InferenceService 模型预热完成")
+    except Exception as e:
+        logger.warning(f"InferenceService 预热失败（服务仍可运行，将在首次请求时再初始化）: {e}")
 
 
 @app.exception_handler(Exception)

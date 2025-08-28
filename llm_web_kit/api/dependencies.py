@@ -64,3 +64,15 @@ def get_logger(name: str = __name__) -> logging.Logger:
 
 # 全局依赖项
 settings = get_settings()
+
+# InferenceService 单例
+_inference_service_singleton = None
+
+
+def get_inference_service():
+    """获取 InferenceService 单例."""
+    global _inference_service_singleton
+    if _inference_service_singleton is None:
+        from .services.inference_service import InferenceService
+        _inference_service_singleton = InferenceService()
+    return _inference_service_singleton
