@@ -168,17 +168,17 @@ class TestSimple(unittest.TestCase):
 
     def test_extract_main_html_only_default(self):
         """测试对外方法：extract_main_html_only默认使用MAGIC_HTML."""
-        result = extract_main_html_only(self.url, self.html_content)
+        result = extract_main_html_only(self.url, self.html_content, language='en')
         self.assertEqual(result, self.main_html)
 
     def test_extract_content_from_main_html_default(self):
         """测试对外方法：extract_content_from_main_html默认md格式."""
-        result = extract_content_from_main_html(self.url, self.main_html)
+        result = extract_content_from_main_html(self.url, self.main_html, language='en')
         self.assertEqual(result, self.expected_md)
 
     def test_extract_content_from_main_html_mm_md(self):
         """测试对外方法：extract_content_from_main_html输出mm_md格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md')
+        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', language='en')
         self.assertEqual(result, self.expected_mm_md)
 
     def test_extract_content_from_html_with_llm(self):
@@ -215,12 +215,12 @@ class TestSimple(unittest.TestCase):
 
     def test_output_format_md(self):
         """测试md输出格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'md')
+        result = extract_content_from_main_html(self.url, self.main_html, 'md', language='en')
         self.assertEqual(result, self.expected_md)
 
     def test_output_format_mm_md(self):
         """测试mm_md输出格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md')
+        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', language='en')
         self.assertEqual(result, self.expected_mm_md)
 
     def test_output_format_json(self):
@@ -229,6 +229,19 @@ class TestSimple(unittest.TestCase):
         self.assertIsInstance(result, str)
         # JSON输出应该包含JSON结构
         self.assertTrue(result.startswith('{') or result.startswith('['))
+
+    def test_language_option_affects_spacing_en(self):
+        """测试 language='en' 时英文片段合并插入空格."""
+        html_content = '<div><body><p><span>Hello</span><span>World</span></p></body></div>'
+        md = extract_content_from_main_html(self.url, html_content, language='en')
+        self.assertIn('Hello World', md)
+        self.assertNotIn('HelloWorld', md)
+
+    def test_language_option_affects_spacing_zh(self):
+        """测试 language='zh' 时英文片段合并不插入空格（与中文等无分词语言一致策略）。"""
+        html_content = '<div><body><p><span>Hello</span><span>World</span></p></body></div>'
+        md = extract_content_from_main_html(self.url, html_content, language='zh')
+        self.assertIn('HelloWorld', md)
 
     # ========================================
     # 测试ExtractorFactory缓存机制和线程安全
@@ -524,17 +537,17 @@ class TestSimpleIntegration(unittest.TestCase):
     def test_full_pipeline_integration(self):
         """测试完整的两阶段流水线."""
         # 第一阶段：提取main_html
-        main_html = extract_main_html_only(self.url, self.real_html_content)
+        main_html = extract_main_html_only(self.url, self.real_html_content, language='en')
         self.assertIsInstance(main_html, str)
         self.assertTrue(len(main_html) > 0)
 
         # 第二阶段：从main_html提取内容
-        markdown = extract_content_from_main_html(self.url, main_html)
+        markdown = extract_content_from_main_html(self.url, main_html, language='en')
         self.assertIsInstance(markdown, str)
         self.assertTrue(len(markdown) > 0)
 
         # 对比直接两阶段调用的结果
-        direct_result = extract_content_from_html_with_magic_html(self.url, self.real_html_content)
+        direct_result = extract_content_from_html_with_magic_html(self.url, self.real_html_content, language='en')
         self.assertEqual(markdown, direct_result, "分步骤处理和直接处理的结果应该一致")
 
     def test_multiple_calls_consistency(self):
