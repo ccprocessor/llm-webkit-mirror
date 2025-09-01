@@ -350,3 +350,36 @@ class TestImageRecognizer(unittest.TestCase):
             img_in_p.extend(p.xpath('.//img'))
 
         self.assertEqual(len(img_in_p), 0, '段落中不应该有img标签')
+
+    def test_image_caption(self):
+        complex_html = """
+        <figure class="wp-block-image size-full" data-anno-uid="anno-uid-q4azamuwlp"><img alt=""
+                                                                                          cc-select="true"
+                                                                                          class="wp-image-163239 mark-selected"
+                                                                                          data-anno-uid="anno-uid-trx696xmwg"
+                                                                                          decoding="async"
+                                                                                          height="899"
+                                                                                          loading="lazy"
+                                                                                          sizes="(max-width: 900px) 100vw, 730px"
+                                                                                          src="https://www.ask.com/wp-content/uploads/sites/3/2022/09/87f86f75062a6a7084c4d95d06e502ea.png"
+                                                                                          srcset="https://www.ask.com/wp-content/uploads/sites/3/2022/09/87f86f75062a6a7084c4d95d06e502ea.png?resize=900,505 900w, https://www.ask.com/wp-content/uploads/sites/3/2022/09/87f86f75062a6a7084c4d95d06e502ea.png?resize=730,410 730w, https://www.ask.com/wp-content/uploads/sites/3/2022/09/87f86f75062a6a7084c4d95d06e502ea.png?resize=500,280 500w, https://www.ask.com/wp-content/uploads/sites/3/2022/09/87f86f75062a6a7084c4d95d06e502ea.png?resize=370,207 370w"
+                                                                                          style=""
+                                                                                          width="1600">
+            <figcaption data-anno-uid="anno-uid-6qfcte0y2eh">
+                <marked-text cc-select="true" class="mark-selected"
+                             data-anno-uid="anno-uid-5ssd5opgc1e">Roger Moore in
+                </marked-text>
+                <em cc-select="true" class="mark-selected" data-anno-uid="anno-uid-lp7dtyaq7gl"> For
+                    Your Eyes Only</em>
+                <marked-tail cc-select="true" class="mark-selected"
+                             data-anno-uid="anno-uid-1qugevcscpa" style="">. Photo Courtesy: United
+                    Artists/Everett Collection
+                </marked-tail>
+            </figcaption>
+        </figure>
+        """
+        element = html_to_element(complex_html)
+        base_url = 'http://example.com'
+        parts = self.img_recognizer.recognize(base_url, [(element, element)], complex_html)
+        html = element_to_html(parts[0][0])
+        self.assertIn('caption="Roger Moore in For Your Eyes Only . Photo Courtesy: United Artists/Everett Collection', html)
