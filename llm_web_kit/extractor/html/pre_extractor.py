@@ -47,39 +47,82 @@ class HTMLFileFormatFilterPreExtractor(BaseFileFormatFilterPreExtractor):
         return data_json
 
 
+class LayoutTableDetector:
+    """排版表格检测器，用于识别排版表格."""
+
+    def __init__(self, max_links_ratio=0.51):
+        self.max_links_ratio = max_links_ratio
+
+    def is_layout_table(self, table):
+        """判断是否为排版表格."""
+        return (self.is_form_layout_table(table) or
+                self.is_navigation_layout_table(table))
+
+    def is_form_layout_table(self, table):
+        """
+        检测规则1: 表单内的表格
+        原因: 表单内的表格通常是排版表格，不包含有用的数据
+        """
+        # 检查表格是否在form元素内
+        parent = table.getparent()
+        while parent is not None:
+            if parent.tag == 'form':
+                return True
+            parent = parent.getparent()
+        return False
+
+    def is_navigation_layout_table(self, table):
+        """
+        检测规则2: 链接占比超过51%的表格
+        原因: 链接过多的表格通常是导航排版表格，不是数据表格
+        """
+        # 获取所有单元格
+        cells = table.xpath('.//td | .//th')
+        if not cells:
+            return False
+
+        # 统计包含链接的单元格数量
+        link_cells = 0
+        for cell in cells:
+            if cell.xpath('.//a'):
+                link_cells += 1
+
+        # 计算链接占比
+        link_ratio = link_cells / len(cells)
+        return link_ratio > self.max_links_ratio
+
+
 class HTMLFileFormatNoClipFilterTablePreExtractor(HTMLFileFormatFilterPreExtractor):
+    """HTML文件格式排版表格检测预处理器."""
+
     def __init__(self, config: dict):
         super().__init__(config)
 
     @override
-    def _filter_by_rule(self, data_json: DataJson) -> bool:
-        if self.__remove_format_table(data_json):
-            return True
-        else:
-            return False
-
-    @override
     def _do_pre_extract(self, data_json: DataJson) -> DataJson:
-        pass  # TODO
-        return data_json
-
-    def __remove_format_table(self, data_json: DataJson):
-        """remove 排版table."""
+        """检测并处理HTML内容中的排版表格."""
         html_content = self._get_html_content(data_json)
-        return self.__do_remove_layout_table(html_content)
+
+        html_tree = html_to_element(html_content)
+        layout_detector = LayoutTableDetector()
+
+        # 找到所有表格并处理排版表格
+        tables = html_tree.xpath('//table')
+        for table in tables:
+            if layout_detector.is_layout_table(table):
+                self._process_layout_table(table)
+
+        # 更新处理后的HTML内容
+        data_json['html'] = element_to_html(html_tree)
+        return data_json
 
     def _get_html_content(self, data_json: DataJson):
         return data_json['html']
 
-    def __do_remove_layout_table(self, html_content: str):
-        """remove 排版table."""
-        html_str = html_to_element(html_content)
-        first_structure = html_str.xpath('/html/body/table') != []
-        second_structure = html_str.xpath('/html/body/center/table') != []
-        if bool(first_structure and second_structure):
-            return True
-        else:
-            return False
+    def _process_layout_table(self, table):
+        # TODO: 排版表格的具体处理逻辑
+        print("Detected layout table, processing...")
+        pass
 
 
 class HTMLFileFormatNoClipCleanTagsPreExtractor(HTMLFileFormatFilterPreExtractor):
