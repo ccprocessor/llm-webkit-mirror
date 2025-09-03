@@ -1,99 +1,99 @@
-from loguru import logger
-from openai import BadRequestError, OpenAI
+import re
+from pathlib import Path
+from typing import List
 
 from llm_web_kit.libs.standard_utils import json_loads
 
-html_str = """<html lang="en-GB" dir="ltr" _item_id="1">
-<body class="gantry site com_content view-article no-layout no-task dir-ltr itemid-118 outline-141 g-offcanvas-left g-home-positions g-style-preset1"
-      _item_id="2">
-<div id="g-page-surround" _item_id="3">
-    <section id="g-utility" _item_id="4">
-        <div class="g-grid" _item_id="5">
-            <div class="g-block size-100" _item_id="6">
-                <div class="g-content" _item_id="7">
-                    <div class="platform-content row-fluid" _item_id="8">
-                        <div class="span12" _item_id="9">
-                            <div class="item-page" itemscope itemtype="https://schema.org/Article" _item_id="10">
-                                <div itemprop="articleBody" _item_id="11">
-                                    <p _item_id="12">All right... We have returned from Romania again! It was a pleasure
-                                        to slash you
-                                        with quality metal once again. Thanks to <b _item_id="13">Manu</b>, the
-                                        beginning of the
-                                        performance at <b _item_id="14">TATTOO &amp; MUSIC FEST II</b> in Iasi could be
-                                        seen below...
-                                        <br _item_id="15">
-                                        Thanks to all, who managed to attend the events, meet us and help us on the way!
-                                        You know who you are! <br _item_id="16">
-                                        Stay tuned! News coming soon...</p>
-
-                                    <p _item_id="17"><img src="/home/images/posters/06.08.2011.jpg" alt="" width="340"
-                                                          _item_id="18"></p>
-                                </div>
-
-                                <ul class="pager pagenav" _item_id="19">
-                                    <li class="previous" _item_id="20">
-                                        <a class="hasTooltip" title="Metal In Your Face"
-                                           aria-label="Previous article: Metal In Your Face"
-                                           href="/home/index.php/news/36-metal-in-your-face.html" rel="prev"
-                                           _item_id="21">
-                                            <span class="icon-chevron-left" aria-hidden="true" _item_id="22"></span>
-                                            <span aria-hidden="true" _item_id="23">Prev</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="next" _item_id="24">
-                                        <a class="hasTooltip" title="Romania, Vengeance is Near!"
-                                           aria-label="Next article: Romania, Vengeance is Near!"
-                                           href="/home/index.php/news/38-romania-vengeance-is-near.html" rel="next"
-                                           _item_id="25">
-                                            <span aria-hidden="true" _item_id="26">Next</span>
-                                            <span class="icon-chevron-right" aria-hidden="true" _item_id="27"></span>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-</body>
-</html>"""
-
-promtp = f"""你是文本识别专家，输入一个html字符串，且每个标签都有一个属性值不同的属性_item_id，你通过识别html能够解析出每个_item_id对应的内容是否是主体内容，主要在于去除以下两部分的内容：
-1.去除头部导航栏、时间、作者、广告、推荐等非正文主体内容；
-2.去除尾部链接、分享、翻页、广告、推荐等非正文主体内容。
-注意，主体内容链接保留
-识别出主体内容之后根据_item_id生成字典作为返回结果，无需解释生成依据，其中0代表非主体内容需要去除，1代表是主体内容要保留。示例如下：
-输入: {html_str}
-返回结果: {{'item_id 1': 1, 'item_id 2': 1, 'item_id 3': 1, 'item_id 4': 1, 'item_id 5': 1, 'item_id 6': 1, 'item_id 7': 1, 'item_id 8': 1, 'item_id 9': 1, 'item_id 10': 1, 'item_id 11': 1, 'item_id 12': 1, 'item_id 13': 1, 'item_id 14': 1, 'item_id 15': 1, 'item_id 16': 1, 'item_id 17': 1, 'item_id 18': 1, 'item_id 19': 0, 'item_id 20': 0, 'item_id 21': 0, 'item_id 22': 0, 'item_id 23': 0, 'item_id 24': 0, 'item_id 25': 0, 'item_id 26': 0, 'item_id 27': 0}}
-"""
+base_dir = Path(__file__).parent
 
 
-def get_llm_response(api_key: str, url: str, html_id_str: str, model_name: str) -> dict:
-    # Set OpenAI's API key and API base to use vLLM's API server.
+def __get_eg_data():
+    eg_input_lst = []
+    for i in range(3):
+        eg_input_lst.append(base_dir.joinpath(f'assets/html{i}.html').read_text(encoding='utf-8'))
+
+    eg_output = json_loads(base_dir.joinpath('assets/rule.json').read_text(encoding='utf-8'))
+    return eg_input_lst, eg_output
+
+
+output_format = [
+    {
+        'xpath': 'XPath of the node of the non-core content body',
+        'parent_tag': 'The label name of the parent node of the node that is not the core content body',
+        'parent_attributes': 'The class and id attributes of the parent node of the node that is not the core content body',
+        'reson': 'Reasons for determining it as non-core content'
+    }
+]
+
+
+def clean_json_data(md_text: str) -> dict:
+    try:
+        cleaned = re.sub(r'^```json|\```', '', md_text, flags=re.MULTILINE)
+    except Exception:
+        return None
+    return json_loads(cleaned)
+
+
+def get_llm_response(input_lst: List, api_key: str, url: str, model_name: str, is_llm: bool = True) -> dict:
+    if not is_llm:
+        post_llm_response = base_dir.joinpath('assets/llm_res.json').read_text(encoding='utf-8')
+        return json_loads(post_llm_response)
+
+    from openai import BadRequestError, OpenAI
+
     client = OpenAI(
         # 若没有配置环境变量，请用百炼API Key将下行替换为：api_key='sk-xxx',
         api_key=api_key,
         base_url=url,
     )
 
-    content = f"""{promtp}以下是需要判断的html代码：
-        ```
-        {html_id_str}
-        ```
-        返回结果：
-    """
+    html_count = len(input_lst)
+    eg_input_lst, eg_output = __get_eg_data()
+
+    prompt = f"""
+You are an expert in HTML semantics and will be assigned the following task:
+Accept input:{input_lst}containing{html_count}HTML pages.
+The input has the following characteristics:
+1. These{html_count}HTML pages are from the same website.
+2. These{html_count}pages use the same template, differing only in their main content.
+################
+The tasks you need to complete are:
+Deeply understand the{html_count}HTML input and find the node information and node paths for the non-core content at the head and tail of the {html_count} HTML.
+################
+You need to follow the following rules when completing the task:
+1. Only consider non-core content at the head and tail of the HTML, Non-core content can include breadcrumbs, analysis links, advertisements, page flips, sharing, and recommended content, etc.
+2. If non-core content appears in the middle of the HTML, such as the time and author in a forum reply, it can be ignored.
+3. If a node contains non-core content main nodes and core content main nodes, its internal elements need to be further analyzed; if a node is a wrapper for the entire page content or a container node containing multiple child elements, its internal elements need to be further analyzed.
+4. Tables have semantic ambiguity. When analyzing table nodes, we need to consider the following: if they present structured data (such as product tables or data reports), they are classified as core content. If they are used for layout or display of simple lists (such as navigation menus or link lists), there are two cases: if it is a complete table structure, mark the entire table as non-core content. If it is an incomplete table structure or complex nesting, further analysis of its internal elements is required.
+5. Non-core content should be carefully analyzed to prevent misjudgment. Uncertain elements should be excluded from non-core content.
+6. It is necessary to consider the location of the HTML node of the non-core content content and the commonality of semantics in the web page.
+7. When considering node paths, semantics should be prioritized. Avoid using indexes in node paths. Attribute values should be correct, especially those composed of multiple values. All attributes should be correctly matched.
+8. Use '//' and '/' correctly when considering node paths. '//' is used for recursive searches, while '/' is used to locate direct children.
+9. When considering node paths, always use the element's original tag name in the HTML source code.
+################
+Nodes for non-core content bodies are returned in the following format:
+{output_format}
+################
+The return data needs to follow the following rules:
+1. Both node attributes and parent node attributes only consider the id attribute and class attribute. If both the id attribute and the class attribute are empty, they are ignored.
+2. The returned node path must be unique and no duplicates are allowed.
+3. The return result is a json, the data structure is List[dict], no other description information is required, and the markdown format is not required.
+################
+Here are some examples for your reference:
+<example-1>
+input:{eg_input_lst}
+return:{eg_output}
+<end-example-1>
+################
+Now return your result:"""
     try:
         completion = client.chat.completions.create(
             model=model_name,
+            # 此处以qwen-plus为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/getting-started/models
             extra_body={'enable_thinking': False},
             messages=[
-                {'role': 'system', 'content': 'You are a text recognition expert.'},
-                {'role': 'user', 'content': content}
+                {'role': 'system', 'content': 'You are a HTML semantics expert.'},
+                {'role': 'user', 'content': prompt}
 
             ],
         )
@@ -102,9 +102,8 @@ def get_llm_response(api_key: str, url: str, html_id_str: str, model_name: str) 
         rtn_detail = json_loads(rtn)
         post_llm_response = rtn_detail.get('choices', [])[0].get('message', {}).get('content', '')
         if '}' not in post_llm_response:
-            logger.exception(f'post_llm_response more than token limit, post_llm_response: {post_llm_response}')
+            print(f'post_llm_response more than token limit, post_llm_response: {post_llm_response}')
             return None
-        return post_llm_response
-    except BadRequestError as e:
-        logger.exception(e)
+        return clean_json_data(post_llm_response)
+    except BadRequestError:
         return None
