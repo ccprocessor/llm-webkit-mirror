@@ -157,8 +157,7 @@ class ImageRecognizer(BaseHTMLElementRecognizer):
                 'html': raw_img_html,  # 保留原始 <img> 标签作为属性值
                 'format': 'url',  # 指定图片格式，url|base
             }
-            if elem.text and elem.text.strip():
-                attributes['caption'] = elem.text.strip()
+            attributes['caption'] = elem.xpath('normalize-space()')
             if tag in ['embed', 'object', 'iframe', 'video', 'audio', 'canvas']:
                 if not [img_elem for img_elem in self.IMG_LABEL if
                         img_elem in raw_img_html.lower()]:

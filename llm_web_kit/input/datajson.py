@@ -298,7 +298,7 @@ class StructureMapper(ABC):
             else:
                 image_caption = ''
 
-            image_des = image_title if image_title else image_caption if image_caption else ''
+            image_des = image_title if image_title else ''
             # 优先使用data, 其次path.其中data是base64编码的图片，path是图片的url
             if image_data:
                 if image_des:
@@ -310,7 +310,13 @@ class StructureMapper(ABC):
                     image = f'![{image_alt}]({image_path} "{image_des}")'
                 else:
                     image = f'![{image_alt}]({image_path})'
-            return image
+
+            if image_caption:
+                image_with_caption = f'{image}\n\n{image_caption}'
+            else:
+                image_with_caption = image
+
+            return image_with_caption
         elif node_type == DocElementType.AUDIO:
             return ''  # TODO: 音频格式
         elif node_type == DocElementType.VIDEO:

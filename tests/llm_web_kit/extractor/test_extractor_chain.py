@@ -105,7 +105,7 @@ class TestExtractorChain(unittest.TestCase):
         self.assertEqual(html_content['content']['title'], 'image-title')
         self.assertEqual(html_content['content']['alt'], 'image-alt')
         self.assertEqual(html_content['content']['url'], 'https://www.test.com/test.png')
-        self.assertEqual(html_content['content']['caption'], None)
+        self.assertEqual(html_content['content']['caption'], '')
 
         # 然后是simple table
         html_content = html_content_list[4]
