@@ -61,13 +61,13 @@ GET /api/v1/html/status
   "data": {
     "layout_file_list": [],
     "typical_raw_html": "<html><body><h1>Hello World</h1></body></html>",
-    "typical_raw_tag_html": "<html><body><h1 _item_id=\"1\">Hello World</h1></body></html>\n",
+    "typical_raw_tag_html": "<html><body><h1 _item_id=\"1\">Hello World</h1><h2 _item_id=\"2\">not main content</h2></body></html>\n",
     "llm_response": {
       "item_id 1": 0,
       "item_id 2": 1
     },
-    "typical_main_html": "<html></html>",
-    "html_target_list": []
+    "typical_main_html": "<html><body><h1 _item_id=\"1\">Hello World</h1></body></html>",
+    "html_target_list": ["Hello World"]
   },
   "metadata": null
 }

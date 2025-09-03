@@ -4,7 +4,6 @@
 """
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from fastapi.responses import JSONResponse
 
 from ..dependencies import get_logger, get_settings
 from ..models.request import HTMLParseRequest
@@ -64,12 +63,12 @@ async def upload_html_file(
 
         result = await html_service.parse_html(html_content=html_content)
 
-        return JSONResponse(content={
-            "success": True,
-            "data": result,
-            "message": "HTML 文件解析成功",
-            "filename": file.filename
-        })
+        return HTMLParseResponse(
+            success=True,
+            data=result,
+            message="HTML 文件解析成功",
+            filename=file.filename
+        )
     except Exception as e:
         logger.error(f"HTML 文件解析失败: {str(e)}")
         raise HTTPException(status_code=500, detail=f"HTML 文件解析失败: {str(e)}")
