@@ -18,13 +18,29 @@
 	<xsl:choose>
 		<xsl:when test="string-length(normalize-space(.))>1 and not(@mathvariant)">
 			<xsl:text>\mathrm{</xsl:text>
-				<xsl:apply-templates/>
+				<xsl:call-template name="escapeMiContent"/>
 			<xsl:text>}</xsl:text>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:apply-templates/>
+			<xsl:call-template name="escapeMiContent"/>
 		</xsl:otherwise>
 	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="escapeMiContent">
+    <xsl:param name="content" select="."/>
+    <xsl:choose>
+        <xsl:when test="contains($content, '%')">
+            <xsl:value-of select="substring-before($content, '%')"/>
+            <xsl:text>\%</xsl:text>
+            <xsl:call-template name="escapeMiContent">
+                <xsl:with-param name="content" select="substring-after($content, '%')"/>
+            </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$content"/>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template name="mn">
