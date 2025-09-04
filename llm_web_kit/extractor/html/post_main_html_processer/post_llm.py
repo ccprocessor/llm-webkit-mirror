@@ -27,14 +27,16 @@ output_format = [
 
 
 def clean_json_data(md_text: str) -> dict:
+    cleaned = re.sub(r'^```json|\```', '', md_text, flags=re.MULTILINE)
     try:
-        cleaned = re.sub(r'^```json|\```', '', md_text, flags=re.MULTILINE)
+        json_data = json_loads(cleaned)
     except Exception:
         return None
-    return json_loads(cleaned)
+    return json_data
 
 
-def get_llm_response(input_lst: List, api_key: str, url: str, model_name: str, is_llm: bool = True) -> dict:
+def get_llm_response(input_lst: List, api_key: str, url: str, model_name: str, is_llm: bool = True,
+                     max_retry: int = 3) -> dict:
     if not is_llm:
         post_llm_response = base_dir.joinpath('assets/llm_res.json').read_text(encoding='utf-8')
         return json_loads(post_llm_response)
@@ -101,9 +103,11 @@ Now return your result:"""
         rtn = completion.model_dump_json()
         rtn_detail = json_loads(rtn)
         post_llm_response = rtn_detail.get('choices', [])[0].get('message', {}).get('content', '')
-        if '}' not in post_llm_response:
-            print(f'post_llm_response more than token limit, post_llm_response: {post_llm_response}')
-            return None
         return clean_json_data(post_llm_response)
     except BadRequestError:
         return None
+    except Exception:
+        if max_retry > 0:
+            return get_llm_response(input_lst, api_key, url, model_name, is_llm, max_retry - 1)
+        else:
+            return None

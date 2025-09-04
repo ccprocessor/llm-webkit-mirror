@@ -44,15 +44,14 @@ def select_typical_htmls(html_strings: List[dict], select_n: int = 3) -> List[di
 
     # 分析每个HTML
     html_analysis = []
-    for i, htmlstr_file in enumerate(html_strings):
+    for htmlstr_file in html_strings:
         try:
             analysis = __analyze_html_structure(htmlstr_file['html'])
             if analysis:
                 analysis['html'] = htmlstr_file['html']
                 analysis['filename'] = htmlstr_file['filename']
                 html_analysis.append(analysis)
-        except Exception as e:
-            print(f"分析第{i}个HTML时出错: {e}")
+        except Exception:
             continue
 
     # 根据多个维度评分并排序

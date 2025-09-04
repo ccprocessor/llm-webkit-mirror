@@ -24,20 +24,16 @@ def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tu
 
     for remove_node in xpaths_to_remove:
         xpath_content = remove_node.get('xpath')
-        try:
-            # 获取所有元素节点
-            all_elements = [element for element in tree.iter() if isinstance(element, html.HtmlElement)]
-            for node in tree.xpath(xpath_content):
-                # 获取节点的位置
-                node_position = __analyze_node_position(all_elements, node)
-                if node_position == 'middle':
-                    continue
-                # 删除节点及其所有子节点
-                node.getparent().remove(node)
-                is_success = True
-        except Exception:
-            # 未找到节点
-            continue
+        # 获取所有元素节点
+        all_elements = [element for element in tree.iter() if isinstance(element, html.HtmlElement)]
+        for node in tree.xpath(xpath_content):
+            # 获取节点的位置
+            node_position = __analyze_node_position(all_elements, node)
+            if node_position == 'middle':
+                continue
+            # 删除节点及其所有子节点
+            node.getparent().remove(node)
+            is_success = True
 
     return element_to_html(tree), is_success
 
@@ -45,6 +41,15 @@ def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tu
 def __analyze_node_position(all_elements: List[html.HtmlElement], target_node: html.HtmlElement):
     # 计算总节点数
     total_nodes = len(all_elements)
+
+    # 新增逻辑：检查元素是否在<header>或<footer>标签内
+    parent = target_node.getparent()
+    while parent is not None:
+        if parent.tag == 'header':
+            return 'start'
+        elif parent.tag == 'footer':
+            return 'end'
+        parent = parent.getparent()
 
     # 查找当前节点在全部节点中的索引
     node_index = -1

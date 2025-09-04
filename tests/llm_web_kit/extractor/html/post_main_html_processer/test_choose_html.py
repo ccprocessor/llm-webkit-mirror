@@ -147,3 +147,12 @@ class TestChooseHtml(unittest.TestCase):
         # 应该跳过无效HTML，返回有效HTML
         self.assertIsNotNone(result)
         self.assertEqual(result[0]['html'], single_html)
+
+    def test_select_typical_html_with_zero(self):
+        """测试输入为空的情况."""
+        html_lst = list()
+
+        result = select_typical_htmls(html_lst, 1)
+
+        # 应该跳过无效HTML，返回有效HTML
+        self.assertIsNotNone(result)
