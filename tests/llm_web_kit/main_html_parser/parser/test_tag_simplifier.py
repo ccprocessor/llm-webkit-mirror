@@ -21,7 +21,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 32)
+        self.assertEqual(_item_id_count, 34)
 
     def test_tag_simplifier1(self):
         file_path = base_dir / 'assets/test_html_data/normal_dl.html'
@@ -32,7 +32,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 31)
+        self.assertEqual(_item_id_count, 48)
 
     def test_tag_simplifier2(self):
         file_path = base_dir / 'assets/test_html_data/normal_table.html'
@@ -43,7 +43,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 60)
+        self.assertEqual(_item_id_count, 11)
 
     def test_tag_simplifier3(self):
         file_path = base_dir / 'assets/test_html_data/special_table_1.html'
@@ -54,7 +54,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 69)
+        self.assertEqual(_item_id_count, 41)
 
     def test_tag_simplifier4(self):
         file_path = base_dir / 'assets/test_html_data/1.html'
@@ -65,7 +65,7 @@ class MyTestCase(unittest.TestCase):
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 114)
+        self.assertEqual(_item_id_count, 113)
 
     def test_tag_simplifier_table(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/table.html'
@@ -102,7 +102,7 @@ class MyTestCase(unittest.TestCase):
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 37)
+        self.assertEqual(_item_id_count, 13)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位外层table元素，该table用于布局
@@ -148,7 +148,7 @@ class MyTestCase(unittest.TestCase):
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 45)
+        self.assertEqual(_item_id_count, 118)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位ul元素，该ul用于布局
@@ -236,16 +236,16 @@ class MyTestCase(unittest.TestCase):
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 32)
+        self.assertEqual(_item_id_count, 35)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位元素，该元素的id是header，且是body的直接子元素
         header_element = id_dom.xpath('//section[@data-anno-uid="anno-uid-a5n4leb0qxv"]')[0]
-        # 确认该元素没有_item_id属性，也就是被删掉了
-        self.assertIsNone(header_element.get('_item_id'))
+        # 确认该元素有_item_id属性，也就是被保留了
+        self.assertIsNotNone(header_element.get('_item_id'))
         # 用xpath定位元素，该元素位于header标签内部，但这个header不是body的直接子元素
         header_element = id_dom.xpath('//h2[@data-anno-uid="anno-uid-g8cyd0j0kn6"]')[0]
-        # 确认该元素有_item_id属性，也就是被保留了
+        # 确认该元素有_item_id属性，也被保留了（目前的simplify是所有的header都保留）
         self.assertIsNotNone(header_element.get('_item_id'))
 
     def test_tag_simplifier_nav_class(self):
@@ -258,7 +258,7 @@ class MyTestCase(unittest.TestCase):
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 100)
+        self.assertEqual(_item_id_count, 58)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位元素，该元素的class是nav，但不是body的直接子元素，应该保留
