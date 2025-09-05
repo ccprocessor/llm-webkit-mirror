@@ -216,6 +216,14 @@ TEST_CASES_HTML = [
         'base_url': 'https://convertoctopus.com/4-7-years-to-minutes',
         'expected': 'assets/ccmath/math_class_math_1.html',
         'expected_inline': 'assets/ccmath/math_class_math_inline_1.html'
+    },
+    {
+        'input': [
+            'assets/ccmath/math_percentage.html',
+        ],
+        'base_url': 'https://test.com/',
+        'expected': 'assets/ccmath/math_percentage_1.html',
+        'expected_inline': 'assets/ccmath/math_percentage_inline_1.html'
     }
 ]
 

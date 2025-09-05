@@ -53,8 +53,8 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
 
             latex = cm.mml_to_latex(mathml)
             # 处理未转义的%为\%
-            # if latex:
-            #     latex = re.sub(r'(?<!\\)%', r'\\%', latex)
+            if latex:
+                latex = re.sub(r'(?<!\\)%', r'\\%', latex)
             text = cm.wrap_math_md(latex)
             if text:
                 # Set the html of the new span tag to the text
