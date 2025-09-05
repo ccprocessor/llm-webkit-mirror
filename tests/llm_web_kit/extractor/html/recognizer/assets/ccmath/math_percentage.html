@@ -16,58 +16,89 @@
     </script>
 </head>
 <body>
-    <h1>Mathematical Formulas Containing % Symbol</h1>
+<h1>Mathematical Formulas Containing % Symbol</h1>
 
-    <h2>1. LaTeX Format Examples</h2>
+<h2>1. LaTeX Format Examples</h2>
 
-    <h3>Inline LaTeX formulas:</h3>
-    <p>The percentage increase is calculated as $\frac{new - old}{old} \times 100\%$.</p>
+<h3>Inline LaTeX formulas:</h3>
+<p>The percentage increase is calculated as $\frac{new - old}{old} \times 100\%$.</p>
 
-    <h3>Display LaTeX formulas:</h3>
-    <p>Compound interest formula:</p>
-    $$A = P\left(1 + \frac{r\%}{n}\right)^{nt}$$
+<h3>Display LaTeX formulas:</h3>
+<p>Compound interest formula:</p>
+$$A = P\left(1 + \frac{r\%}{n}\right)^{nt}$$
 
-    <h2>2. MathML Format Examples</h2>
+<h2>2. MathML Format Examples</h2>
 
-    <p>Percentage change in MathML:</p>
-    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-        <mrow>
-            <mi>Δ</mi>
-            <mo>%</mo>
-            <mo>=</mo>
-            <mfrac>
-                <mrow>
-                    <mi>new</mi>
-                    <mo>-</mo>
-                    <mi>old</mi>
-                </mrow>
+<p>Percentage change in MathML:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+    <mrow>
+        <mi>Δ</mi>
+        <mo>%</mo>
+        <mo>=</mo>
+        <mfrac>
+            <mrow>
+                <mi>new</mi>
+                <mo>-</mo>
                 <mi>old</mi>
-            </mfrac>
-            <mo>×</mo>
-            <mn>100</mn>
-            <mo>%</mo>
-        </mrow>
-    </math>
+            </mrow>
+            <mi>old</mi>
+        </mfrac>
+        <mo>×</mo>
+        <mn>100</mn>
+        <mo>%</mo>
+    </mrow>
+</math>
 
-    <p>Discount percentage:</p>
-    <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-        <mrow>
-            <mi>Discount</mi>
-            <mo>%</mo>
-            <mo>=</mo>
-            <mfrac>
-                <mrow>
-                    <mi>Original</mi>
-                    <mo>-</mo>
-                    <mi>Sale</mi>
-                </mrow>
+<p>Discount percentage:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+    <mrow>
+        <mi>Discount</mi>
+        <mo>%</mo>
+        <mo>=</mo>
+        <mfrac>
+            <mrow>
                 <mi>Original</mi>
-            </mfrac>
-            <mo>×</mo>
-            <mn>100</mn>
-            <mo>%</mo>
-        </mrow>
-    </math>
+                <mo>-</mo>
+                <mi>Sale</mi>
+            </mrow>
+            <mi>Original</mi>
+        </mfrac>
+        <mo>×</mo>
+        <mn>100</mn>
+        <mo>%</mo>
+    </mrow>
+</math>
 
+<p>Puyu badcase:</p>
+<math display="block">
+    <mtable xmlns="http://www.w3.org/1998/Math/MathML" columnalign="left">
+        <mtr>
+            <mtd class="align-1">
+                <mi>%</mi>
+                <mspace width="0.25em"/>
+                <mtext>Cell Death</mtext>
+                <mo>=</mo>
+            </mtd>
+            <mtd class="align-2">
+                <mo>(</mo>
+                <mn>1</mn>
+                <mo>−</mo>
+                <mo>(</mo>
+                <mtext>Post treatment cell counts</mtext>
+            </mtd>
+        </mtr>
+        <mtr>
+
+            <mtd class="align-2">
+                <mo>/</mo>
+                <mtext>initial cell counts</mtext>
+                <mo>)</mo>
+                <mo>)</mo>
+                <mo>*</mo>
+                <mn>100</mn>
+            </mtd>
+        </mtr>
+    </mtable>
+</math>
 </body>
 </html>
