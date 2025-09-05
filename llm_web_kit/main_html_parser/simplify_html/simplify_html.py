@@ -3,8 +3,8 @@ import re
 import uuid
 from typing import Dict, List, Tuple
 
-from bs4 import BeautifulSoup
 from lxml import etree, html
+from selectolax.parser import HTMLParser
 
 # 行内标签
 inline_tags = {
@@ -21,18 +21,16 @@ table_tags_set = {"caption", "colgroup", "col", "thead", "tbody", "tfoot", "tr",
 
 # 需要删除的标签
 tags_to_remove = {
+    'title',
     'head',
-    'header',
-    'footer',
     'nav',
-    'aside',
     'style',
     'script',
     'noscript',
     'link',
     'meta',
     'iframe',
-    'frame'
+    'frame',
 }
 
 # 需要保留的特殊标签（即使它们是行内标签）
@@ -40,7 +38,7 @@ EXCLUDED_TAGS = {'img', 'br', 'li', 'dt', 'dd', 'td', 'th'}
 
 # 需要删除的属性名模式（独立单词）
 ATTR_PATTERNS_TO_REMOVE = {
-    'nav', 'footer', 'header',  # 独立单词
+    'nav',  # 'footer', 'header',  # 独立单词
 }
 
 # 需要删除的属性名模式（特定前缀/后缀）
@@ -75,59 +73,6 @@ def build_uid_map(dom: html.HtmlElement) -> Dict[str, html.HtmlElement]:
     return {node.get('data-uid'): node for node in dom.iter() if node.get('data-uid')}
 
 
-def is_unique_attribute(tree, attr_name, attr_value):
-    """检查给定的属性名和值组合是否在文档中唯一。"""
-    elements = tree.xpath(f"//*[@{attr_name}='{attr_value}']")
-    return len(elements) == 1
-
-
-def get_relative_xpath(element):
-    root_tree = element.getroottree()
-    current_element = element
-    path_from_element = []
-    found_unique_ancestor = False
-
-    # 从当前元素开始向上查找
-    while current_element is not None and current_element.getparent() is not None:
-        siblings = [sib for sib in current_element.getparent() if sib.tag == current_element.tag]
-
-        # 检查当前元素是否有唯一属性
-        unique_attr = None
-        candidate_attrs = [
-            attr for attr in current_element.attrib
-            if not (attr.startswith('data-') or attr == 'style' or
-                    attr == '_item_id' or
-                    (current_element.attrib[attr].startswith('{') and current_element.attrib[attr].endswith('}')))
-        ]
-
-        for attr in candidate_attrs:
-            if is_unique_attribute(root_tree, attr, current_element.attrib[attr]):
-                unique_attr = attr
-                break
-
-        # 如果有唯一属性，构建相对路径并停止向上查找
-        if unique_attr is not None:
-            path_from_element.insert(0, f'*[@{unique_attr}="{current_element.attrib[unique_attr]}"]')
-            found_unique_ancestor = True
-            break
-        else:
-            # 没有唯一属性，使用常规方式
-            if len(siblings) > 1:
-                index = siblings.index(current_element) + 1
-                path_from_element.insert(0, f'{current_element.tag}[{index}]')
-            else:
-                path_from_element.insert(0, current_element.tag)
-
-        current_element = current_element.getparent()
-
-    # 构建最终的XPath
-    if found_unique_ancestor:
-        return f'//{"/".join(path_from_element)}'
-    else:
-        # 如果没有找到唯一属性祖先，返回完整路径
-        return f'//{"/".join(path_from_element)}'
-
-
 def judge_table_parent(table_element, node_list):
     for node in node_list:
         ancestor = node.getparent()
@@ -153,19 +98,19 @@ def is_data_table(table_element: html.HtmlElement) -> bool:
     if judge_table_parent(table_element, col_nodes) or judge_table_parent(table_element, colgroup_nodes):
         return True
 
-    # 检查是否有 role="table" 或 data-table 属性
-    if table_element.get('role') == 'table' or table_element.get('data-table'):
-        return True
-
     # 检查当前表格（不包括内部嵌套表格）单元格是否有 headers 属性
     cell_nodes = table_element.xpath(".//*[self::td or self::th][@headers]")
     if judge_table_parent(table_element, cell_nodes):
         return True
 
+    # 检查是否有 role="table" 或 data-table 属性
+    if table_element.get('role') == 'table' or table_element.get('data-table'):
+        return True
+
     for node in table_element.iterdescendants():
         if node.tag in table_tags_set:
             continue
-        if node not in inline_tags:
+        if node.tag not in inline_tags:
             return False
 
     return True
@@ -177,22 +122,21 @@ def has_non_listitem_children(list_element):
     :param list_element: lxml元素对象 (ul, ol, dl)
     :return: True 如果存在非列表项的直接子节点，否则 False
     """
-    # 获取所有直接子元素（不包括文本节点）
-    direct_children = list_element.xpath("./*")
 
     # 根据列表类型确定允许的子元素标签
     if list_element.tag in ['ul', 'ol']:
         allowed_tags = {'li'}
     elif list_element.tag == 'dl':
         allowed_tags = {'dt', 'dd'}
-    else:
-        # 如果不是列表元素，返回False
-        return False
 
-    # 检查是否存在不允许的元素
-    for child in direct_children:
-        if child.tag not in allowed_tags:
-            return True
+    # 使用XPath直接查找是否存在不允许的直接子元素
+    # 例如，对于<ul>，查找所有不是<li>的直接子元素
+    # 对于<dl>，查找所有不是<dt>或<dd>的直接子元素
+    exclude_conditions = " and ".join([f"name()!='{tag}'" for tag in allowed_tags])
+    disallowed_children_xpath = f"./*[{exclude_conditions}]"
+
+    if list_element.xpath(disallowed_children_xpath):
+        return True
 
     # 检查是否存在非空白文本节点
     text_children = list_element.xpath("./text()")
@@ -272,9 +216,9 @@ def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html
         # 获取列表项（支持多种列表类型）
         items = list_element.xpath("li | dt | dd")
 
-        # 空列表直接返回普通列表
+        # 不包含列表项，则不是内容列表
         if len(items) == 0:
-            return True
+            return False
         # 列表包含非列表项子元素视为布局列表
         if has_non_listitem_children(list_element):
             return False
@@ -284,7 +228,7 @@ def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html
             if has_block_descendants(item):
                 return False
 
-        # 默认视为普通列表
+        # 默认视为内容列表
         return True
 
     # 先分析所有列表的类型
@@ -436,26 +380,11 @@ def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html
     return unique_paragraphs
 
 
-def safely_remove_comments(html_content):
-    # 创建解析器并设置为移除注释节点
-    parser = html.HTMLParser(remove_comments=True)
-    doc = html.fromstring(html_content, parser=parser)
-
-    # 重新序列化为字符串
-    return etree.tostring(
-        doc,
-        encoding='unicode',
-        method='html',
-        with_tail=False
-    )
-
-
 def remove_xml_declaration(html_string):
     # 正则表达式匹配 <?xml ...?> 或 <?xml ...>（没有问号结尾的情况）
     pattern = r'<\?xml\s+.*?\??>'
     html_content = re.sub(pattern, '', html_string, flags=re.DOTALL)
-    # 删除HTML注释
-    html_content = safely_remove_comments(html_content)
+
     return html_content
 
 
@@ -464,10 +393,7 @@ def post_process_html(html_content: str) -> str:
     if not html_content:
         return html_content
 
-    # 1. 删除HTML注释
-    html_content = safely_remove_comments(html_content)
-
-    # 2. 处理标签外的空白（保留标签内文本的换行）
+    # 处理标签外的空白（保留标签内文本的换行）
     def replace_outside_tag_space(match):
         """只替换标签外的连续空白."""
         if match.group(1):  # 如果是标签内容
@@ -493,11 +419,7 @@ def remove_tags(dom):
         for node in dom.xpath(f'.//{tag}'):
             parent = node.getparent()
             if parent is not None:
-                if tag == "header" or tag == "footer":
-                    if parent.tag == 'body':
-                        parent.remove(node)
-                else:
-                    parent.remove(node)
+                parent.remove(node)
 
 
 def is_meaningful_content(element) -> bool:
@@ -759,9 +681,7 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
 
     for para in paragraphs:
         try:
-            html_content = safely_remove_comments(para['html'])
-            # 解析段落HTML
-            root = html.fromstring(html_content)
+            root = html.fragment_fromstring(para['html'], create_parent=False)
             root_for_xpath = copy.deepcopy(root)
             content_type = para.get('content_type', 'block_element')
 
@@ -935,15 +855,15 @@ def simplify_html(html_str) -> etree.Element:
        original_html: 添加_item_id的原始HTML
        _xpath_mapping: xpath映射
    """
-    # 预处理
-    preprocessed_html = remove_xml_declaration(html_str)
+    # 使用selectolax的HTMLParser来修复html
+    soup = HTMLParser(html_str)
+    fixed_html = soup.html
 
-    # 用 BeautifulSoup 修复未闭合标签，lxml 无法完全修复
-    soup = BeautifulSoup(preprocessed_html, 'html.parser')
-    fixed_html = str(soup)
-
-    # 解析原始DOM
-    original_dom = html.fromstring(fixed_html)
+    preprocessed_html = remove_xml_declaration(fixed_html)
+    # 注释通过lxml的HTMLParser的remove_comments参数处理
+    parser = html.HTMLParser(remove_comments=True)
+    original_dom = html.fromstring(preprocessed_html, parser=parser)
+    # 添加data_uid
     add_data_uids(original_dom)
     original_uid_map = build_uid_map(original_dom)
 
