@@ -27,6 +27,10 @@ def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tu
         # 获取所有元素节点
         all_elements = [element for element in tree.iter() if isinstance(element, html.HtmlElement)]
         for node in tree.xpath(xpath_content):
+            # 获取节点内容占比
+            content_rate = __calculate_node_content_ratio(tree, node)
+            if content_rate > 0.4:
+                continue
             # 获取节点的位置
             node_position = __analyze_node_position(all_elements, node)
             if node_position == 'middle':
@@ -36,6 +40,24 @@ def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tu
             is_success = True
 
     return element_to_html(tree), is_success
+
+
+def __calculate_node_content_ratio(tree: html.HtmlElement, node: html.HtmlElement) -> float:
+    """计算节点内容占比.
+
+    参数:
+        tree(html.HtmlElement): 根节点对象
+        node (html.HtmlElement): 节点对象
+
+    返回:
+        float: 节点内容占比
+    """
+    # 获取节点的文本内容
+    text_content = node.text_content()
+
+    total_contents = tree.text_content()
+    content_rate = len(text_content) / len(total_contents) if total_contents else 0
+    return content_rate
 
 
 def __analyze_node_position(all_elements: List[html.HtmlElement], target_node: html.HtmlElement):

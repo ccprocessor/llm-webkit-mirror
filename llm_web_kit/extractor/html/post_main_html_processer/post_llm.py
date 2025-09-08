@@ -16,14 +16,14 @@ def __get_eg_data():
     return eg_input_lst, eg_output
 
 
-output_format = [
+output_format = '''[
     {
-        'xpath': 'XPath of the node of the non-core content body',
-        'parent_tag': 'The label name of the parent node of the node that is not the core content body',
-        'parent_attributes': 'The class and id attributes of the parent node of the node that is not the core content body',
-        'reson': 'Reasons for determining it as non-core content'
+        "xpath": "XPath of the node of the non-core content body",
+        "parent_tag": "The label name of the parent node of the node that is not the core content body",
+        "parent_attributes": "The class and id attributes of the parent node of the node that is not the core content body",
+        "reson": "Reasons for determining it as non-core content"
     }
-]
+]'''
 
 
 def clean_json_data(md_text: str) -> dict:
@@ -60,26 +60,25 @@ The input has the following characteristics:
 2. These{html_count}pages use the same template, differing only in their main content.
 ################
 The tasks you need to complete are:
-Deeply understand the{html_count}HTML input and find the node information and node paths for the non-core content at the head and tail of the {html_count} HTML.
+Deeply understand the{html_count}HTML input and find the node information and node paths for the non-core content at the page header (top section) and page footer (bottom section) of the {html_count} HTML.
 ################
 You need to follow the following rules when completing the task:
-1. Only consider non-core content at the head and tail of the HTML, Non-core content can include breadcrumbs, analysis links, advertisements, page flips, sharing, and recommended content, etc.
+1. Identify and extract non-core content modules located in the page header (top section) and page footer (bottom section) of the HTML body. Do not identify the main title as non-core content. Non-core content includes breadcrumb navigation, related article links, advertisements, page turning, sharing, recommended content, etc.
 2. If non-core content appears in the middle of the HTML, such as the time and author in a forum reply, it can be ignored.
 3. If a node contains non-core content main nodes and core content main nodes, its internal elements need to be further analyzed; if a node is a wrapper for the entire page content or a container node containing multiple child elements, its internal elements need to be further analyzed.
 4. Tables have semantic ambiguity. When analyzing table nodes, we need to consider the following: if they present structured data (such as product tables or data reports), they are classified as core content. If they are used for layout or display of simple lists (such as navigation menus or link lists), there are two cases: if it is a complete table structure, mark the entire table as non-core content. If it is an incomplete table structure or complex nesting, further analysis of its internal elements is required.
 5. Non-core content should be carefully analyzed to prevent misjudgment. Uncertain elements should be excluded from non-core content.
-6. It is necessary to consider the location of the HTML node of the non-core content content and the commonality of semantics in the web page.
+6. It is necessary to consider the location of the HTML node of the non-core content body and the commonality of semantics in the web page.
 7. When considering node paths, semantics should be prioritized. Avoid using indexes in node paths. Attribute values should be correct, especially those composed of multiple values. All attributes should be correctly matched.
 8. Use '//' and '/' correctly when considering node paths. '//' is used for recursive searches, while '/' is used to locate direct children.
 9. When considering node paths, always use the element's original tag name in the HTML source code.
-################
-Nodes for non-core content bodies are returned in the following format:
-{output_format}
+10. Each node of the final non-core content body must have only one type of content, and the content of this node must be determined to be all non-core content bodies, without inclusion relationships or uncertain factors.
 ################
 The return data needs to follow the following rules:
 1. Both node attributes and parent node attributes only consider the id attribute and class attribute. If both the id attribute and the class attribute are empty, they are ignored.
 2. The returned node path must be unique and no duplicates are allowed.
-3. The return result is a json, the data structure is List[dict], no other description information is required, and the markdown format is not required.
+3. The result is returned in JSON array format, requiring all strings to be enclosed in double quotes and not containing any additional information. The output format is as follows:
+{output_format}
 ################
 Here are some examples for your reference:
 <example-1>
