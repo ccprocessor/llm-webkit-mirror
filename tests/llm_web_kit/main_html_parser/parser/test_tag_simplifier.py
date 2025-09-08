@@ -23,6 +23,11 @@ class MyTestCase(unittest.TestCase):
         _item_id_count = simplifier_raw_html.count('_item_id')
         self.assertEqual(_item_id_count, 34)
 
+        raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
+        out_path = base_dir / 'assets/test_html_data/simplify_output/test_tah_simplifier_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier1(self):
         file_path = base_dir / 'assets/test_html_data/normal_dl.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -33,6 +38,11 @@ class MyTestCase(unittest.TestCase):
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
         self.assertEqual(_item_id_count, 48)
+
+        raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
+        out_path = base_dir / 'assets/test_html_data/simplify_output/normal_dl_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
 
     def test_tag_simplifier2(self):
         file_path = base_dir / 'assets/test_html_data/normal_table.html'
@@ -45,6 +55,11 @@ class MyTestCase(unittest.TestCase):
         _item_id_count = simplifier_raw_html.count('_item_id')
         self.assertEqual(_item_id_count, 11)
 
+        raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
+        out_path = base_dir / 'assets/test_html_data/simplify_output/normal_table_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier3(self):
         file_path = base_dir / 'assets/test_html_data/special_table_1.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -56,6 +71,11 @@ class MyTestCase(unittest.TestCase):
         _item_id_count = simplifier_raw_html.count('_item_id')
         self.assertEqual(_item_id_count, 41)
 
+        raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
+        out_path = base_dir / 'assets/test_html_data/simplify_output/special_table_1_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier4(self):
         file_path = base_dir / 'assets/test_html_data/1.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -66,6 +86,15 @@ class MyTestCase(unittest.TestCase):
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
         _item_id_count = simplifier_raw_html.count('_item_id')
         self.assertEqual(_item_id_count, 113)
+
+        raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
+        out_path = base_dir / 'assets/test_html_data/simplify_output/1_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
+        out_path = base_dir / 'assets/test_html_data/simplify_output/1_sim_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(simplifier_raw_html)
 
     def test_tag_simplifier_table(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/table.html'
@@ -92,6 +121,10 @@ class MyTestCase(unittest.TestCase):
                     td_item_count += 1
             self.assertNotEqual(td_item_count, 0)
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/table_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_nested_table_headers(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/nested_table_headers.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -115,6 +148,10 @@ class MyTestCase(unittest.TestCase):
         # 确认该table元素有_item_id属性
         self.assertIsNotNone(table_element.get('_item_id'))
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/nested_table_headers_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_nested_table_caption(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/nested_table_caption.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -137,6 +174,10 @@ class MyTestCase(unittest.TestCase):
         table_element = id_dom.xpath('//table[@data-anno-uid="anno-uid-olo3onur84"]')[0]
         # 确认该table元素有_item_id属性
         self.assertIsNotNone(table_element.get('_item_id'))
+
+        out_path = base_dir / 'assets/test_html_data/simplify_output/nested_table_caption_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
 
     def test_tag_simplifier_list(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/list.html'
@@ -163,6 +204,10 @@ class MyTestCase(unittest.TestCase):
                     li_item_count += 1
             self.assertNotEqual(li_item_count, 0)
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/list_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_non_list_child(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/non_list_child.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -188,6 +233,10 @@ class MyTestCase(unittest.TestCase):
                 li_item_count += 1
         self.assertNotEqual(li_item_count, 0)
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/non_list_child_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_inline_block(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/inline_block.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -209,6 +258,10 @@ class MyTestCase(unittest.TestCase):
         for child in span_element.iterchildren():
             self.assertIsNotNone(child.get("_item_id"))
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/inline_block_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_abnormal_comment(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/abnormal_comment.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -226,6 +279,10 @@ class MyTestCase(unittest.TestCase):
         comment_res = re.search(r'<!--.*?-->', raw_tag_html, flags=re.DOTALL)
         self.assertIsNone(comment_res)
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/abnormal_comment_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_header_tag(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/header_tag.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -239,14 +296,18 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(_item_id_count, 35)
 
         id_dom = html.fromstring(raw_tag_html)
-        # 用xpath定位元素，该元素的id是header，且是body的直接子元素
-        header_element = id_dom.xpath('//section[@data-anno-uid="anno-uid-a5n4leb0qxv"]')[0]
+        # 用xpath定位元素，该元素位于id名为header的元素内部，且这个'header'是body的直接子元素
+        header_element = id_dom.xpath('//h1[@data-anno-uid="anno-uid-g513k4pfha8"]')[0]
         # 确认该元素有_item_id属性，也就是被保留了
         self.assertIsNotNone(header_element.get('_item_id'))
         # 用xpath定位元素，该元素位于header标签内部，但这个header不是body的直接子元素
         header_element = id_dom.xpath('//h2[@data-anno-uid="anno-uid-g8cyd0j0kn6"]')[0]
         # 确认该元素有_item_id属性，也被保留了（目前的simplify是所有的header都保留）
         self.assertIsNotNone(header_element.get('_item_id'))
+
+        out_path = base_dir / 'assets/test_html_data/simplify_output/header_tag_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
 
     def test_tag_simplifier_nav_class(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/nav_class.html'
@@ -270,6 +331,10 @@ class MyTestCase(unittest.TestCase):
                 nav_item_count += 1
         self.assertNotEqual(nav_item_count, 0)
 
+        out_path = base_dir / 'assets/test_html_data/simplify_output/nav_class_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
+
     def test_tag_simplifier_block_select(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/block_select.html'
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -288,6 +353,10 @@ class MyTestCase(unittest.TestCase):
         # 验证该元素被加上了_item_id和cc-select
         self.assertIsNotNone(p_element.get("_item_id"))
         self.assertIsNotNone(p_element.get("cc-select"))
+
+        out_path = base_dir / 'assets/test_html_data/simplify_output/block_select_output.html'
+        with open(out_path, "w") as fp:
+            fp.write(raw_tag_html)
 
 
 if __name__ == '__main__':
