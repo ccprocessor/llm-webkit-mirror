@@ -444,6 +444,9 @@ class MyTestCase(unittest.TestCase):
                 nav_item_count += 1
         self.assertNotEqual(nav_item_count, 0)
 
+        nav_element = id_dom.xpath('//div[@data-anno-uid="anno-uid-189mlskr0fc"]')[0]
+        self.assertIsNone(nav_element.get("_item_id"))
+
     def test_tag_simplifier_block_select(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/block_select.html'
         with open(file_path, 'r', encoding='utf-8') as file:
