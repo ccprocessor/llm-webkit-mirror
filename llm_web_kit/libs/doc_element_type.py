@@ -21,3 +21,5 @@ class DocElementType(object):
     VIDEO = 'video'
 
     MM_NODE_LIST = [IMAGE, AUDIO, VIDEO]
+
+    EXCLUDE_PLAIN_MD_LIST = [CODE, EQUATION_INTERLINE, IMAGE, COMPLEX_TABLE]

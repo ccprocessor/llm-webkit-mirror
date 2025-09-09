@@ -61,6 +61,20 @@ class StructureMapper(ABC):
     def to_html(self):
         raise NotImplementedError('This method must be implemented by the subclass.')
 
+    def to_plain_md(self, exclude_nodes=DocElementType.EXCLUDE_PLAIN_MD_LIST, exclude_inline_types=[], use_raw_image_url=False):
+        """把content_list转化为md格式.
+
+        Args:
+            exclude_nodes (list): 需要排除的节点类型
+            exclude_inline_types: 需要排除的内联类型
+            use_raw_image_url: 是否使用原始img url
+        Returns:
+            str: md格式的文本内容
+        """
+        self.__validate_exclude_nodes(exclude_nodes, exclude_inline_types)
+        md = self.__to_md(exclude_nodes, exclude_inline_types, use_raw_image_url)
+        return md
+
     def to_txt(self, exclude_nodes=DocElementType.MM_NODE_LIST, exclude_inline_types=[]):
         """把content_list转化为txt格式.
 

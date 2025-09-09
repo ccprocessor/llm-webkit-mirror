@@ -168,13 +168,13 @@ class TestDataJsonInit(unittest.TestCase):
     def test_data_json_deepcopy(self):
         """从一个外部dict构建datajson, 改变datajson，不改变外部dict."""
         d = {'track_id': '32266dfa-c335-45c5-896e-56f057889d28',
-            'url': 'http://mathematica.stackexchange.com/users/1931/ywdr1987?tab=activity&sort=all',
-            'html': '',
-            'page_layout_type': 'forum',
-            'domain': 'mathematica.stackexchange.com',
-            'dataset_name': 'math',
-            'data_source_category': 'HTML',
-            'meta_info': {'warc_headers': {'WARC-IP-Address': '104.16.12.13'}}}
+             'url': 'http://mathematica.stackexchange.com/users/1931/ywdr1987?tab=activity&sort=all',
+             'html': '',
+             'page_layout_type': 'forum',
+             'domain': 'mathematica.stackexchange.com',
+             'dataset_name': 'math',
+             'data_source_category': 'HTML',
+             'meta_info': {'warc_headers': {'WARC-IP-Address': '104.16.12.13'}}}
         copied = copy.deepcopy(d)
         _ = DataJson(copied)
         cl = copied.get('content_list')  # 不该变外部变量d
@@ -263,7 +263,8 @@ class TestDataJsonInit(unittest.TestCase):
 
         def test_custom_exclude():
             datajson = DataJson(d)
-            md = datajson.get_content_list().to_nlp_md(exclude_nodes=[DocElementType.COMPLEX_TABLE, DocElementType.SIMPLE_TABLE])
+            md = datajson.get_content_list().to_nlp_md(
+                exclude_nodes=[DocElementType.COMPLEX_TABLE, DocElementType.SIMPLE_TABLE])
             assert 'Ziet u iets wat niet hoort of niet klopt?' in md
             assert 'Openingstijden' in md
             assert 'Maandag' not in md
@@ -390,7 +391,8 @@ class TestDataJsonInit(unittest.TestCase):
         for case in test_cases:
             doc = DataJson(case['data'])
             result = doc.get_content_list().to_txt()
-            assert result.strip() == case['expected'].strip(), f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result.strip()}'"
+            assert result.strip() == case[
+                'expected'].strip(), f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result.strip()}'"
 
     def test_to_nlp_md_with_math_delimiters(self):
         """测试 to_nlp_md 方法对数学特殊公式分隔符的处理."""
@@ -520,6 +522,90 @@ class TestDataJsonInit(unittest.TestCase):
             doc = DataJson(case['data'])
             result = doc.get_content_list().to_nlp_md()
             assert result == case['expected'], f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result}'"
+
+    def test_to_plain_md(self):
+        """测试to_plain_md方法调用."""
+        data = {
+            DataJsonKey.DATASET_NAME: 'test_dataset',
+            DataJsonKey.FILE_FORMAT: 'html',
+            DataJsonKey.CONTENT_LIST: [[
+                {
+                    'type': 'title',
+                    'raw_content': '<h2 class=\"text-center \" data-step=\"4\">Openingstijden</h2>',
+                    'content': {
+                        'title_content': 'Openingstijden',
+                        'level': '2'
+                    }
+                }, {
+                    'type': 'simple_table',
+                    'raw_content': "<table class=\"table itemDisplayTable\"><tr><td class=\"metadataFieldLabel dc_title\">Title: </td><td class=\"metadataFieldValue dc_title\">T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_contributor\">Authors: </td><td class=\"metadataFieldValue dc_contributor\"><a class=\"author\" href=\"/browse?type=author&amp;value=T.J.%2C+Byrne\">T.J., Byrne</a><br><a class=\"author\" href=\"/browse?type=author&amp;value=Fewer%2C+Michael\">Fewer, Michael</a></td></tr><tr><td class=\"metadataFieldLabel dc_subject\">Keywords: </td><td class=\"metadataFieldValue dc_subject\">T.J. Byrne<br>Cottages<br>Poor Law Commission</td></tr><tr><td class=\"metadataFieldLabel dc_date_issued\">Issue Date: </td><td class=\"metadataFieldValue dc_date_issued\">2011<br>2011</td></tr><tr><td class=\"metadataFieldLabel dc_description\">Description: </td><td class=\"metadataFieldValue dc_description\">T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_identifier_uri\">URI: </td><td class=\"metadataFieldValue dc_identifier_uri\"><a href=\"https://hdl.handle.net/10599/5719\">https://hdl.handle.net/10599/5719</a></td></tr><tr><td class=\"metadataFieldLabel\">Appears in Collections:</td><td class=\"metadataFieldValue\"><a href=\"/handle/10599/3\">Published Items</a><br><a href=\"/handle/10599/5553\">T.J. Byrne Collection</a><br></td></tr></table>",
+                    'content': {
+                        'html': "<table><tr><td>Title:</td><td>Sample Table.</td></tr><tr><td>Authors:</td><td>T.J., Byrne Fewer, Michael</td></tr><tr><td>Keywords:</td><td>T.J. Byrne Cottages Poor Law Commission</td></tr><tr><td>Issue Date:</td><td>2011 2011</td></tr><tr><td>Description:</td><td>T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td>URI:</td><td>https://hdl.handle.net/10599/5719</td></tr><tr><td>Appears in Collections:</td><td>Published Items T.J. Byrne Collection</td></tr></table>",
+                        'is_complex': False,
+                        'table_nest_level': '1'
+                    }
+                }, {
+                    'type': 'complex_table',
+                    'raw_content': "<table class=\"table itemDisplayTable\"><tr><td class=\"metadataFieldLabel dc_title\">Title: </td><td class=\"metadataFieldValue dc_title\">T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_contributor\">Authors: </td><td class=\"metadataFieldValue dc_contributor\"><a class=\"author\" href=\"/browse?type=author&amp;value=T.J.%2C+Byrne\">T.J., Byrne</a><br><a class=\"author\" href=\"/browse?type=author&amp;value=Fewer%2C+Michael\">Fewer, Michael</a></td></tr><tr><td class=\"metadataFieldLabel dc_subject\">Keywords: </td><td class=\"metadataFieldValue dc_subject\">T.J. Byrne<br>Cottages<br>Poor Law Commission</td></tr><tr><td class=\"metadataFieldLabel dc_date_issued\">Issue Date: </td><td class=\"metadataFieldValue dc_date_issued\">2011<br>2011</td></tr><tr><td class=\"metadataFieldLabel dc_description\">Description: </td><td class=\"metadataFieldValue dc_description\">T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td class=\"metadataFieldLabel dc_identifier_uri\">URI: </td><td class=\"metadataFieldValue dc_identifier_uri\"><a href=\"https://hdl.handle.net/10599/5719\">https://hdl.handle.net/10599/5719</a></td></tr><tr><td class=\"metadataFieldLabel\">Appears in Collections:</td><td class=\"metadataFieldValue\"><a href=\"/handle/10599/3\">Published Items</a><br><a href=\"/handle/10599/5553\">T.J. Byrne Collection</a><br></td></tr></table>",
+                    'content': {
+                        'html': "<table><tr><td>Title:</td><td>T.J. Byrne, Slide of floor plan, Poor Law Commission cottage, 1872.</td></tr><tr><td>Authors:</td><td>T.J., Byrne Fewer, Michael</td></tr><tr><td>Keywords:</td><td>T.J. Byrne Cottages Poor Law Commission</td></tr><tr><td>Issue Date:</td><td>2011 2011</td></tr><tr><td>Description:</td><td>T.J. Byrne's slide of a one storey cottage, labelled 'Mr Barney's Plan', recommended by the Poor Law Commission, 1872.</td></tr><tr><td>URI:</td><td>https://hdl.handle.net/10599/5719</td></tr><tr><td>Appears in Collections:</td><td>Published Items T.J. Byrne Collection</td></tr></table>",
+                        'is_complex': True,
+                        'table_nest_level': '1'
+                    }
+                }, {
+                    'type': 'image',
+                    'raw_content': "<img decoding=\"async\" loading=\"lazy\" aria-describedby=\"caption-attachment-17269\" class=\"wp-image-17269 size-full\" src=\"http://example.com/image.png\" alt=\"image \" width=\"765\" height=\"510\" srcset=\"http://example.com/image.png 765w, http://example.com/image.png 480w\" sizes=\"(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) 765px, 100vw\">",
+                    'content': {
+                        'url': 'http://example.com/image.png',
+                        'data': None,
+                        'alt': 'image',
+                        'title': None,
+                        'caption': None
+                    }
+                }, {
+                    'type': 'paragraph',
+                    'raw_content': '<div class=\"content\"><div class=\"description-wrapper\"><div class=\"container description\"><div class=\"report text-center\"><span class=\"text-muted\">\n\t\t\t\tZiet u iets wat niet hoort of niet klopt?\n\t\t\t</span></div></div></div></div>',
+                    'content': [
+                        {
+                            'c': 'Ziet u iets wat niet hoort of niet klopt?',
+                            't': 'text'
+                        }
+                    ]
+                }, {
+                    'type': 'code',
+                    'raw_content': '<code>frame.open();\nframe.write(html);\nframe.close();\n</code>',
+                    'inline': False,
+                    'content': {
+                        'code_content': 'frame.open();\nframe.write(html);\nframe.close();',
+                        'by': 'tag_pre_code'
+                    }
+                }, {
+                    'type': 'equation-interline',
+                    'raw_content': '<span class="math-container">$$h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}$$</span>',
+                    'content': {
+                        'math_content': 'h \\approx {{GM} \\over c^2} \\times {1 \\over r} \\times {v^2 \\over c^2}',
+                        'math_type': 'latex',
+                        'by': 'mathjax'
+                    }
+                }]]
+        }
+
+        datajson = DataJson(data)
+        content_list = datajson.get_content_list()
+        md = content_list.to_plain_md()
+        self.assertNotIn('<table>', md)
+        self.assertIn('Sample Table.', md)
+        self.assertNotIn('frame.write', md)
+
+        md2 = content_list.to_plain_md(['equation-interline'])
+        self.assertNotIn('approx', md2)
+        self.assertIn('frame.write', md2)
+        self.assertNotIn("![image](http://example.com/image.png)", md2)
+
+        md3 = content_list.to_plain_md(exclude_nodes=['simple_table'], use_raw_image_url=True)
+        self.assertIn('<table>', md3)
+        self.assertNotIn('Sample Table.', md3)
+        self.assertIn("![image](http://example.com/image.png)", md3)
 
 
 class TestDataJsonGetMagicHtml:
