@@ -209,6 +209,9 @@ def extract_paragraphs(processing_dom: html.HtmlElement, uid_map: Dict[str, html
     def has_block_descendants(node):
         for child in node.iterdescendants():
             if is_block_element(child):
+                if node.tag in inline_tags:
+                    original_element = uid_map.get(node.get('data-uid'))
+                    original_element.set('cc-block-type', "true")
                 return True
         return False
 
@@ -706,9 +709,9 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
             if content_type != 'block_element':
                 if original_parent is not None:
                     # root_for_xpath有子元素
+                    original_element = uid_map.get(root_for_xpath.get('data-uid'))
                     if len(root_for_xpath) > 0:
-                        if root_for_xpath.tag in inline_tags and uid_map.get(root_for_xpath.get('data-uid')).tag != 'body':
-                            original_element = uid_map.get(root_for_xpath.get('data-uid'))
+                        if root_for_xpath.tag in inline_tags and original_element.tag != 'body' and original_element.get('cc-block-type') != "true":
                             original_element.set('_item_id', current_id)
                         else:
                             # 收集需要包裹的子元素
@@ -769,7 +772,6 @@ def process_paragraphs(paragraphs: List[Dict[str, str]], uid_map: Dict[str, html
                                 #     last_child.tail = None
                     else:
                         if content_type == 'inline_elements':
-                            original_element = uid_map.get(root_for_xpath.get('data-uid'))
                             original_element.set('_item_id', current_id)
                         else:
                             # root_for_xpath只有文本内容

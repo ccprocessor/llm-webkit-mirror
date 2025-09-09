@@ -12,101 +12,143 @@ base_dir = Path(__file__).resolve().parent
 
 
 class MyTestCase(unittest.TestCase):
+    def check_and_find_max_item_id(self, input_str: str) -> int:
+        # 匹配所有 _item_id="XXX" 的模式，提取XXX部分
+        pattern = "_item_id" + r'="(\d+)"'
+        matches = re.findall(pattern, input_str)
+
+        # 至少匹配一个
+        if len(matches) == 0:
+            return 0
+
+        # 匹配到的对象全部转化为int
+        int_list = []
+        for match in matches:
+            try:
+                int_list.append(int(match))
+            except Exception:
+                raise ValueError(f'error while convert match {match} to int')
+
+        # 检查是否为从1开始的连续整数
+        target_value = 1
+        for int_id in int_list:
+            if int_id == target_value:
+                target_value += 1
+            else:
+                raise ValueError(
+                    f'mistake find in int list, current target value is {target_value}, but find {int_id}' + '\n' + input_str
+                )
+
+        # 都没有问题的情况下，返回最大的数
+        return int_list[-1]
+
     def test_tag_simplifier(self):
         file_path = base_dir / 'assets/test_html_data/test_tah_simplifier.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 34)
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 34)
 
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        out_path = base_dir / 'assets/test_html_data/simplify_output/test_tah_simplifier_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
     def test_tag_simplifier1(self):
         file_path = base_dir / 'assets/test_html_data/normal_dl.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 48)
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 48)
 
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        out_path = base_dir / 'assets/test_html_data/simplify_output/normal_dl_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
     def test_tag_simplifier2(self):
         file_path = base_dir / 'assets/test_html_data/normal_table.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 11)
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 11)
 
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        out_path = base_dir / 'assets/test_html_data/simplify_output/normal_table_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
     def test_tag_simplifier3(self):
         file_path = base_dir / 'assets/test_html_data/special_table_1.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 41)
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 41)
 
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        out_path = base_dir / 'assets/test_html_data/simplify_output/special_table_1_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
     def test_tag_simplifier4(self):
         file_path = base_dir / 'assets/test_html_data/1.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html, PreDataJsonKey.IS_XPATH: False}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 113)
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 113)
 
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        out_path = base_dir / 'assets/test_html_data/simplify_output/1_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
-        out_path = base_dir / 'assets/test_html_data/simplify_output/1_sim_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(simplifier_raw_html)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
     def test_tag_simplifier_table(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/table.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 35)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 35)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位data-anno-uid="anno-uid-3vtzg9uxee4"的table元素，该table用于布局
@@ -121,21 +163,23 @@ class MyTestCase(unittest.TestCase):
                     td_item_count += 1
             self.assertNotEqual(td_item_count, 0)
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/table_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_nested_table_headers(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/nested_table_headers.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 13)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 13)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位外层table元素，该table用于布局
@@ -148,21 +192,23 @@ class MyTestCase(unittest.TestCase):
         # 确认该table元素有_item_id属性
         self.assertIsNotNone(table_element.get('_item_id'))
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/nested_table_headers_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_nested_table_caption(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/nested_table_caption.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 14)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 14)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位外层table元素，该table用于布局
@@ -175,21 +221,23 @@ class MyTestCase(unittest.TestCase):
         # 确认该table元素有_item_id属性
         self.assertIsNotNone(table_element.get('_item_id'))
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/nested_table_caption_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_list(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/list.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 118)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 118)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位ul元素，该ul用于布局
@@ -204,21 +252,23 @@ class MyTestCase(unittest.TestCase):
                     li_item_count += 1
             self.assertNotEqual(li_item_count, 0)
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/list_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_non_list_child(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/non_list_child.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 151)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 151)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位ul元素，该ul用于布局
@@ -233,21 +283,23 @@ class MyTestCase(unittest.TestCase):
                 li_item_count += 1
         self.assertNotEqual(li_item_count, 0)
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/non_list_child_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_inline_block(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/inline_block.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 12)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 12)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位span元素，该span内部包含了块级元素
@@ -258,42 +310,47 @@ class MyTestCase(unittest.TestCase):
         for child in span_element.iterchildren():
             self.assertIsNotNone(child.get("_item_id"))
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/inline_block_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_abnormal_comment(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/abnormal_comment.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 53)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 53)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
+
         # 验证不规范的注释内包含的有效内容没有被删除
         self.assertIn('<body class="thrColLiqHdr">', raw_tag_html)
         # 验证规范的注释都已被删除
         comment_res = re.search(r'<!--.*?-->', raw_tag_html, flags=re.DOTALL)
         self.assertIsNone(comment_res)
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/abnormal_comment_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_header_tag(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/header_tag.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 35)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 35)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位元素，该元素位于id名为header的元素内部，且这个'header'是body的直接子元素
@@ -305,21 +362,23 @@ class MyTestCase(unittest.TestCase):
         # 确认该元素有_item_id属性，也被保留了（目前的simplify是所有的header都保留）
         self.assertIsNotNone(header_element.get('_item_id'))
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/header_tag_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_nav_class(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/nav_class.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 58)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 58)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位元素，该元素的class是nav，但不是body的直接子元素，应该保留
@@ -331,21 +390,23 @@ class MyTestCase(unittest.TestCase):
                 nav_item_count += 1
         self.assertNotEqual(nav_item_count, 0)
 
-        out_path = base_dir / 'assets/test_html_data/simplify_output/nav_class_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
-
     def test_tag_simplifier_block_select(self):
         file_path = base_dir / 'assets/test_html_data/simplify_cases/block_select.html'
         with open(file_path, 'r', encoding='utf-8') as file:
             raw_html = file.read()
+
         data_dict = {PreDataJsonKey.TYPICAL_RAW_HTML: raw_html}
         pre_data = PreDataJson(data_dict)
+
         pre_data_result = HtmlTagSimplifierParser({}).parse(pre_data)
+
         simplifier_raw_html = pre_data_result.get(PreDataJsonKey.TYPICAL_SIMPLIFIED_HTML, '')
+        simple_id_count = self.check_and_find_max_item_id(simplifier_raw_html)
+        self.assertEqual(simple_id_count, 7)
+
         raw_tag_html = pre_data_result.get(PreDataJsonKey.TYPICAL_RAW_TAG_HTML, '')
-        _item_id_count = simplifier_raw_html.count('_item_id')
-        self.assertEqual(_item_id_count, 7)
+        tag_id_count = self.check_and_find_max_item_id(raw_tag_html)
+        self.assertEqual(tag_id_count, simple_id_count)
 
         id_dom = html.fromstring(raw_tag_html)
         # 用xpath定位元素，该元素是块级元素且内部不包含块级元素，但该元素本身没有cc-select，只是其内部元素有cc-select
@@ -353,10 +414,6 @@ class MyTestCase(unittest.TestCase):
         # 验证该元素被加上了_item_id和cc-select
         self.assertIsNotNone(p_element.get("_item_id"))
         self.assertIsNotNone(p_element.get("cc-select"))
-
-        out_path = base_dir / 'assets/test_html_data/simplify_output/block_select_output.html'
-        with open(out_path, "w") as fp:
-            fp.write(raw_tag_html)
 
 
 if __name__ == '__main__':
