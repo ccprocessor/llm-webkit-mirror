@@ -492,6 +492,11 @@ class TestMathRecognizer(unittest.TestCase):
             parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
             expect_text = base_dir.joinpath(test_case['expected']).read_text(encoding='utf-8').strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
+            if len(parts) != len(expect_formulas):
+                print("出错样例：", test_case['input'])
+                print("期望公式数：", len(expect_formulas), "实际公式数：", len(parts))
+                print("期望公式：", expect_formulas)
+                print("实际公式：", parts)
             self.assertEqual(len(parts), len(expect_formulas))
             # answers = []
             for expect, part in zip(expect_formulas, parts):
