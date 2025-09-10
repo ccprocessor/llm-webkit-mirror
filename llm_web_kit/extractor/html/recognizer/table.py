@@ -273,9 +273,6 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                 elem.text = math_res_text
         else:
             math_res = self.__check_table_include_math_code(elem)
-            # 清除math和code元素
-            if any(child.tag in [CCTag.CC_MATH_INLINE, CCTag.CC_MATH_INTERLINE, CCTag.CC_CODE, CCTag.CC_CODE_INLINE] for child in elem.iterchildren()):
-                elem.clear()
             elem.clear()
             math_res_text = ' '.join(normalize_text_segment(item) for item in math_res)
             if elem.tag in VOID_ELEMENTS:
