@@ -1,0 +1,677 @@
+<html><head>
+<style id="cc-extraStyle" name="cc">
+        noscript {
+          display: none !important;
+        }
+        .cc-unloaded:not(iframe) {
+          width: 100px;
+          height: 100px;
+          background-color: #ffebeb;
+          border: 2px dashed #ff0000;
+        }
+        .mark-selected {
+            outline: 2px dashed #0d6efd !important;
+            background-color: rgba(13, 110, 253, 0.1) !important;
+        }
+        .selecto-selection {
+            background: rgba(13, 110, 253, 0.1);
+            outline: 1px dashed #0d6efd;
+        }
+    </style>
+<title>Bias class</title>
+<!-- start: headerinclude -->
+<link href="https://theultimatetone.com/syndication.php" rel="alternate" title="Latest Threads (RSS 2.0)" type="application/rss+xml">
+<link href="https://theultimatetone.com/syndication.php?type=atom1.0" rel="alternate" title="Latest Threads (Atom 1.0)" type="application/atom+xml">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta content="text/javascript" http-equiv="Content-Script-Type">
+<script src="https://theultimatetone.com/jscripts/jquery.js?ver=1823" type="text/javascript"></script>
+<script src="https://theultimatetone.com/jscripts/jquery.plugins.min.js?ver=1821" type="text/javascript"></script>
+<script src="https://theultimatetone.com/jscripts/general.js?ver=1827" type="text/javascript"></script>
+<link href="https://theultimatetone.com/cache/themes/theme2/global.css?t=1539611035" rel="stylesheet" type="text/css">
+<link href="https://theultimatetone.com/cache/themes/theme1/star_ratings.css?t=1634422321" rel="stylesheet" type="text/css">
+<link href="https://theultimatetone.com/cache/themes/theme1/showthread.css?t=1634422321" rel="stylesheet" type="text/css">
+<link href="https://theultimatetone.com/cache/themes/theme1/css3.css?t=1634422321" rel="stylesheet" type="text/css">
+<link href="https://theultimatetone.com/cache/themes/theme2/color_sun.css?t=1533583988" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+<!--
+	lang.unknown_error = "An unknown error has occurred.";
+	lang.confirm_title = "Please Confirm";
+	lang.expcol_collapse = "[-]";
+	lang.expcol_expand = "[+]";
+	lang.select2_match = "One result is available, press enter to select it.";
+	lang.select2_matches = "{1} results are available, use up and down arrow keys to navigate.";
+	lang.select2_nomatches = "No matches found";
+	lang.select2_inputtooshort_single = "Please enter one or more character";
+	lang.select2_inputtooshort_plural = "Please enter {1} or more characters";
+	lang.select2_inputtoolong_single = "Please delete one character";
+	lang.select2_inputtoolong_plural = "Please delete {1} characters";
+	lang.select2_selectiontoobig_single = "You can only select one item";
+	lang.select2_selectiontoobig_plural = "You can only select {1} items";
+	lang.select2_loadmore = "Loading more results&hellip;";
+	lang.select2_searching = "Searching&hellip;";
+
+	var templates = {
+		modal: '<div class=\"modal\">\
+	<div style=\"overflow-y: auto; max-height: 400px;\">\
+		<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\" class=\"tborder\">\
+			<tr>\
+				<td class=\"thead\"><strong>__title__</strong></td>\
+			</tr>\
+			<tr>\
+				<td class=\"trow1\">__message__</td>\
+			</tr>\
+			<tr>\
+				<td class=\"tfoot\">\
+					<div style=\"text-align: center\" class=\"modal_buttons\">__buttons__</div>\
+				</td>\
+			</tr>\
+		</table>\
+	</div>\
+</div>',
+		modal_button: '<input type=\"submit\" class=\"button\" value=\"__title__\"/>&nbsp;'
+	};
+
+	var cookieDomain = ".theultimatetone.com";
+	var cookiePath = "/";
+	var cookiePrefix = "";
+	var cookieSecureFlag = "0";
+	var deleteevent_confirm = "Are you sure you want to delete this event?";
+	var removeattach_confirm = "Are you sure you want to remove the selected attachment from this post?";
+	var loading_text = 'Loading. <br />Please Wait&hellip;';
+	var saving_changes = 'Saving changes&hellip;';
+	var use_xmlhttprequest = "1";
+	var my_post_key = "5cfb708bb00de625a1ea3767da608fbe";
+	var rootpath = "https://theultimatetone.com";
+	var imagepath = "https://theultimatetone.com/images";
+  	var yes_confirm = "Yes";
+	var no_confirm = "No";
+	var MyBBEditor = null;
+	var spinner_image = "https://theultimatetone.com/images/spinner.gif";
+	var spinner = "<img src='" + spinner_image +"' alt='' />";
+	var modal_zindex = 9999;
+// -->
+</script>
+<!-- end: headerinclude -->
+<script type="text/javascript">
+<!--
+	var quickdelete_confirm = "Are you sure you want to delete this post?";
+	var quickrestore_confirm = "Are you sure you want to restore this post?";
+	var allowEditReason = "1";
+	lang.save_changes = "Save Changes";
+	lang.cancel_edit = "Cancel Edit";
+	lang.quick_edit_update_error = "There was an error editing your reply:";
+	lang.quick_reply_post_error = "There was an error posting your reply:";
+	lang.quick_delete_error = "There was an error deleting your reply:";
+	lang.quick_delete_success = "The post was deleted successfully.";
+	lang.quick_delete_thread_success = "The thread was deleted successfully.";
+	lang.quick_restore_error = "There was an error restoring your reply:";
+	lang.quick_restore_success = "The post was restored successfully.";
+	lang.editreason = "Edit Reason";
+	lang.post_deleted_error = "You can not perform this action to a deleted post.";
+	lang.softdelete_thread = "Soft Delete Thread";
+	lang.restore_thread = "Restore Thread";
+// -->
+</script>
+<!-- jeditable (jquery) -->
+<script src="https://theultimatetone.com/jscripts/report.js?ver=1820" type="text/javascript"></script>
+<script src="https://theultimatetone.com/jscripts/jeditable/jeditable.min.js"></script>
+<script src="https://theultimatetone.com/jscripts/thread.js?ver=1827" type="text/javascript"></script>
+<meta content="Hi Guys The idle condition of a power amplifier output stage is referred to as its &quot;operating class&quot;. It is important to note that the bias condition is signal-dependent and has nothing to do with how" name="description">
+<link href="https://theultimatetone.com/thread-268.html" rel="canonical">
+</head>
+<body data-anno-uid="anno-uid-52mp67mf3hl" style="user-select: none;">
+<!-- start: header -->
+<div data-anno-uid="anno-uid-8ge20t5piep" id="container">
+<a data-anno-uid="anno-uid-h1d8ni9d1nw" id="top" name="top"></a>
+<div data-anno-uid="anno-uid-cnovpyc157b" id="header">
+<div data-anno-uid="anno-uid-q4vb0lvitll" id="logo">
+<div class="wrapper" data-anno-uid="anno-uid-756xwqlrfxt">
+<a data-anno-uid="anno-uid-iq9ilopjexe" href="https://theultimatetone.com/index.php"><img alt="Tube Amp Forum: The Ultimate Tone" data-anno-uid="anno-uid-oavoghr7jc" src="https://theultimatetone.com/images/tut-logo-plus-pyramids-plus-text-xparent.png" title="Tube Amp Forum: The Ultimate Tone"></a>
+<ul class="menu top_links" data-anno-uid="anno-uid-c03bwdjs8kl">
+<!-- start: header_menu_portal -->
+<li data-anno-uid="anno-uid-2os71y1oboj"><a class="portal" data-anno-uid="anno-uid-27s5odrj02lh" href="https://theultimatetone.com/portal.php">Portal</a></li>
+<!-- end: header_menu_portal -->
+<!-- start: header_menu_search -->
+<li data-anno-uid="anno-uid-yf72r06oz0j"><a class="search" data-anno-uid="anno-uid-6tbfy3c5wx" href="https://theultimatetone.com/search.php">Search</a></li>
+<!-- end: header_menu_search -->
+<li data-anno-uid="anno-uid-5w9i22qh9qu"><a class="help" data-anno-uid="anno-uid-lz6bse1wa28" href="https://theultimatetone.com/misc.php?action=help">Help</a></li>
+</ul>
+</div>
+</div>
+<div data-anno-uid="anno-uid-jvhzpl890wb" id="panel">
+<div class="upper" data-anno-uid="anno-uid-r5v7jdx67ni">
+<div class="wrapper" data-anno-uid="anno-uid-jtvjn748uu">
+<!-- start: header_quicksearch -->
+<form action="https://theultimatetone.com/search.php" data-anno-uid="anno-uid-ajonlnjpilm">
+<fieldset data-anno-uid="anno-uid-998elns31km" id="search">
+<input class="textbox" data-anno-uid="anno-uid-mjmybspkpgs" name="keywords" type="text">
+<input class="button" data-anno-uid="anno-uid-95eufq6ffw8" type="submit" value="Search">
+<input data-anno-uid="anno-uid-s3r3hyphc" name="action" type="hidden" value="do_search">
+<input data-anno-uid="anno-uid-xp2z7orjl6" name="postthread" type="hidden" value="1">
+</fieldset>
+</form>
+<!-- end: header_quicksearch -->
+<!-- start: header_welcomeblock_guest -->
+<!-- Continuation of div(class="upper") as opened in the header template -->
+<span class="welcome" data-anno-uid="anno-uid-tz0o8adwmve"><marked-text data-anno-uid="anno-uid-rczyztt9or">Hello There, Guest! </marked-text><a class="login" data-anno-uid="anno-uid-9l4jqv7ue5" href="https://theultimatetone.com/member.php?action=login" onclick="$('#quick_login').modal({ fadeDuration: 250, keepelement: true, zIndex: (typeof modal_zindex !== 'undefined' ? modal_zindex : 9999) }); return false;">Login</a> <a class="register" data-anno-uid="anno-uid-mdyybwe3y4g" href="https://theultimatetone.com/member.php?action=register">Register</a></span>
+</div>
+</div>
+<div class="modal" data-anno-uid="anno-uid-652bxadqzz7" id="quick_login" style="display: none;">
+<form action="https://theultimatetone.com/member.php" data-anno-uid="anno-uid-irx4g75y5mb" method="post">
+<input data-anno-uid="anno-uid-gk7l9q4an9h" name="action" type="hidden" value="do_login">
+<input data-anno-uid="anno-uid-4bkrzxqy9cq" name="url" type="hidden" value="https://theultimatetone.com/thread-268.html">
+<input data-anno-uid="anno-uid-3d1r8k6mdlf" name="quick_login" type="hidden" value="1">
+<input data-anno-uid="anno-uid-nmjplfrlle" name="my_post_key" type="hidden" value="5cfb708bb00de625a1ea3767da608fbe">
+<table border="0" cellpadding="5" cellspacing="0" class="tborder" data-anno-uid="anno-uid-jed7ny2jl" width="100%">
+<tbody data-anno-uid="anno-uid-ewcc8rv9l74"><tr data-anno-uid="anno-uid-gq62xb8llbm">
+<td class="thead" colspan="2" data-anno-uid="anno-uid-uydxom3rxb"><strong data-anno-uid="anno-uid-o56spvx0f6">Login</strong></td>
+</tr>
+<!-- start: header_welcomeblock_guest_login_modal -->
+<tr data-anno-uid="anno-uid-beftzc5bj2g">
+<td class="trow1" data-anno-uid="anno-uid-ij4nuuo9lwe" width="25%"><strong data-anno-uid="anno-uid-1oblce046jp">Username:</strong></td>
+<td class="trow1" data-anno-uid="anno-uid-uxpglphjhjb"><input class="textbox initial_focus" data-anno-uid="anno-uid-xh59ufkxtl9" id="quick_login_username" name="quick_username" type="text" value=""></td>
+</tr>
+<tr data-anno-uid="anno-uid-s629hdmieck">
+<td class="trow2" data-anno-uid="anno-uid-sed9eu4xnm8"><strong data-anno-uid="anno-uid-dk1j9fuw62i">Password:</strong></td>
+<td class="trow2" data-anno-uid="anno-uid-lr180tt6gd">
+<input class="textbox" data-anno-uid="anno-uid-5f63uusqksb" id="quick_login_password" name="quick_password" type="password" value=""><br data-anno-uid="anno-uid-9abh2xy610m">
+<a class="lost_password" data-anno-uid="anno-uid-51i9yy1c6t" href="https://theultimatetone.com/member.php?action=lostpw">Lost Password?</a>
+</td>
+</tr>
+<tr data-anno-uid="anno-uid-x0jd87zfo2">
+<td class="trow1" data-anno-uid="anno-uid-3hz13ot107w">&nbsp;</td>
+<td class="trow1 remember_me" data-anno-uid="anno-uid-82pk3irmc4m">
+<input checked="" class="checkbox" data-anno-uid="anno-uid-yr4lkrdujab" id="quick_login_remember" name="quick_remember" type="checkbox" value="yes">
+<label data-anno-uid="anno-uid-pnkxioo7w7n" for="quick_login_remember">Remember me</label>
+</td>
+</tr>
+<tr data-anno-uid="anno-uid-011qzf5jagpnl">
+<td class="trow2" colspan="2" data-anno-uid="anno-uid-s6xvgsmxegs">
+<div align="center" data-anno-uid="anno-uid-40w1k0v0mj3"><input class="button" data-anno-uid="anno-uid-x0ykdvksk3" name="submit" type="submit" value="Login"></div>
+</td>
+</tr>
+<!-- end: header_welcomeblock_guest_login_modal -->
+</tbody></table>
+</form>
+</div>
+<script data-anno-uid="anno-uid-xehb4e58ij" type="text/javascript">
+					$("#quick_login input[name='url']").val($(location).attr('href'));
+				</script>
+<!-- end: header_welcomeblock_guest -->
+<!-- </div> in header_welcomeblock_member and header_welcomeblock_guest -->
+<!-- </div> in header_welcomeblock_member and header_welcomeblock_guest -->
+</div>
+</div>
+<div data-anno-uid="anno-uid-346mzvtom3u" id="content">
+<div class="wrapper" data-anno-uid="anno-uid-ib9h5psma1k">
+<!-- BAM --><!-- start: bam_announcement_container -->
+<style data-anno-uid="anno-uid-ced3f72m2sc">
+	.bam_announcement.yellow {
+		background: #FFF6BF;
+		border: 1px solid #FFD324;
+	}
+
+	.bam_announcement.green {
+		background: #D6ECA6;
+		border: 1px solid #8DC93E;
+	}
+
+	.bam_announcement.blue {
+		background: #ADCBE7;
+		border: 1px solid #0F5C8E;
+	}
+
+	.bam_announcement.red {
+		background: #FBE3E4;
+		border: 1px solid #A5161A;
+	}
+
+	.bam_announcement {
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px; 
+		text-align: center;
+		margin: 10px auto;
+		padding: 8px 12px;
+		background: #EBEBEB;
+		color: #000000;
+		border: 1px solid #ADADAD;
+	}
+
+	.bam_date {
+		color: #636161;
+		font-size: 0.78em;
+		margin-left: 6px;
+	}	
+
+	/* Insert Custom CSS Here */
+</style>
+<div class="bam_announcements" data-anno-uid="anno-uid-m7e3y7cf4s"></div>
+<!-- end: bam_announcement_container --><!-- /BAM -->
+<!-- PLACE WHATEVER GRAPHIC YOU WANT IN THE HEADER AFTER THIS -->
+<center data-anno-uid="anno-uid-2ljppjtaf9r"><!-- IN HERE --><a data-anno-uid="anno-uid-ysqi9631bp" href="https://www.londonpower.com"><img alt="London Power ad" data-anno-uid="anno-uid-ae0suqvfnz8" src="https://theultimatetone.com/images/lp-need-our-products-ad.gif" style="" width="400"></a><!-- /IN HERE --></center>
+<!-- start: nav -->
+<div class="navigation" data-anno-uid="anno-uid-tddpw1lepcm">
+<!-- start: nav_bit -->
+<a data-anno-uid="anno-uid-03bv6qbv75bd" href="https://theultimatetone.com/index.php">Tube Amp Forum: The Ultimate Tone</a><!-- start: nav_sep --><marked-tail data-anno-uid="anno-uid-gx3svmbn9eq">
+›
+</marked-tail><!-- end: nav_sep -->
+<!-- end: nav_bit --><!-- start: nav_bit -->
+<a data-anno-uid="anno-uid-3ocl4wv5gu1" href="forum-1.html">Tube Amp Community (Hi-fi too!)</a><!-- start: nav_sep --><marked-tail data-anno-uid="anno-uid-fod1r69xjya">
+›
+</marked-tail><!-- end: nav_sep -->
+<!-- end: nav_bit --><!-- start: nav_bit -->
+<a data-anno-uid="anno-uid-347xww882iv" href="forum-20.html" style="">Power Amps</a>
+<!-- end: nav_bit --><!-- start: nav_sep_active -->
+<br data-anno-uid="anno-uid-a8evk48v5p"><img alt="" data-anno-uid="anno-uid-scp9wo6b5y" src="https://theultimatetone.com/images/nav_bit.png">
+<!-- end: nav_sep_active --><!-- start: nav_bit_active -->
+<span class="active" data-anno-uid="anno-uid-eilqvv85nrn">Bias class</span>
+<!-- end: nav_bit_active -->
+</div>
+<!-- end: nav -->
+<br data-anno-uid="anno-uid-wc932v7jgx">
+<!-- end: header -->
+<div class="float_left" data-anno-uid="anno-uid-jyffrciu6v">
+</div>
+<div class="float_right" data-anno-uid="anno-uid-tsxwp2jxfas">
+</div>
+<!-- start: asb_begin -->
+<table border="0" cellspacing="5" data-anno-uid="anno-uid-3vtzg9uxee4" width="100%">
+<tbody data-anno-uid="anno-uid-yc70ttrtoy"><tr data-anno-uid="anno-uid-onhmpwsn5pl">
+<!-- start: ASB left column -->
+<!-- start: asb_sidebox_column -->
+<td data-anno-uid="anno-uid-ddv8d29uxnp" id="asb_left_column_id" style="width: 200px;" valign="top">
+<!-- start side box #7 - box type search_box -->
+<!-- start: asb_wrapped_sidebox -->
+<table border="0" cellpadding="5" cellspacing="0" class="tborder search_box_main_7" data-anno-uid="anno-uid-m0pblofist" id="search_box_main_7" style="table-layout: fixed; word-wrap: break-word;">
+<thead data-anno-uid="anno-uid-8g5hdylrm6o">
+<tr data-anno-uid="anno-uid-0w8wzcnsf2mj">
+<td class="thead" data-anno-uid="anno-uid-9y5nm7qskpp">
+<!-- start: asb_expander -->
+<div class="expcolimage" data-anno-uid="anno-uid-dj0cauexyc">
+<img alt="[-]" class="expander" data-anno-uid="anno-uid-0rmw0vblti4k" id="search_box_7_img" src="https://theultimatetone.com/images/collapse.png" style="cursor: pointer;" title="[-]">
+</div>
+<!-- end: asb_expander -->
+<strong data-anno-uid="anno-uid-y76brfoamv">Search the Forum</strong>
+</td>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-y4pq1tu8elf" id="search_box_7_e" style="">
+<!-- start: asb_search -->
+<tr data-anno-uid="anno-uid-58wpyn5hnqw">
+<td class="trow1" data-anno-uid="anno-uid-6mrce989e3f">
+<form action="https://theultimatetone.com/search.php" data-anno-uid="anno-uid-bqpicrq0l9w" method="post">
+<input data-anno-uid="anno-uid-pops8qd9ukd" name="action" type="hidden" value="do_search">
+<input data-anno-uid="anno-uid-2nk9ha7ixxy" name="forums" type="hidden" value="all">
+<input data-anno-uid="anno-uid-1wic9w7tchz" name="sortby" type="hidden" value="lastpost">
+<input data-anno-uid="anno-uid-d4wi3ut6f9m" name="sortordr" type="hidden" value="desc">
+<label data-anno-uid="anno-uid-j0s5c0chh0f"><strong data-anno-uid="anno-uid-c9kmyxnr377">Search In:</strong></label><br data-anno-uid="anno-uid-cdipc2eyrv9">
+<input checked="" class="radio" data-anno-uid="anno-uid-ckvtuzx0e9" name="postthread" type="radio" value="1">
+<label data-anno-uid="anno-uid-oadn1g3ihae" for="postthread">Messages</label>
+<input class="radio" data-anno-uid="anno-uid-dwspy5832bm" name="postthread" type="radio" value="2">
+<label data-anno-uid="anno-uid-wdvrfn6mhze" for="postthread">Titles</label><br data-anno-uid="anno-uid-yeggrxhgu4h"><br data-anno-uid="anno-uid-tk8bd8203d">
+<label data-anno-uid="anno-uid-st8ur6izf7e"><strong data-anno-uid="anno-uid-cr61mrdn0o">Results As:</strong></label><br data-anno-uid="anno-uid-cnsx0q6wfut">
+<input class="radio" data-anno-uid="anno-uid-u8bge5clkzd" name="showresults" type="radio" value="posts">
+<label data-anno-uid="anno-uid-gm52bcgsw8o" for="showresults">Posts</label>
+<input checked="" class="radio" data-anno-uid="anno-uid-2neie4ndz4g" name="showresults" type="radio" value="threads">
+<label data-anno-uid="anno-uid-ev2ixr7c6e" for="showresults">Threads</label><br data-anno-uid="anno-uid-raurm08ww6f"><br data-anno-uid="anno-uid-ba3azqbe7qj">
+<label data-anno-uid="anno-uid-dp6nhq6rrka" for="keywords"><strong data-anno-uid="anno-uid-1kh3lhg6jlj">Search Keywords</strong></label><br data-anno-uid="anno-uid-kjs0jrcwh">
+<input class="textbox" data-anno-uid="anno-uid-r1pvzdjb0qi" name="keywords" style="width: 95%;" type="text">
+<!-- start: gobutton -->
+<input class="button" data-anno-uid="anno-uid-s3roncdi9lo" type="submit" value="Go">
+<!-- end: gobutton -->
+</form><br data-anno-uid="anno-uid-0ld4tywovz">
+<span class="smalltext" data-anno-uid="anno-uid-qx91h942tj"><marked-text data-anno-uid="anno-uid-7max9msufba">
+						(</marked-text><a data-anno-uid="anno-uid-c18fuda7wpm" href="https://theultimatetone.com/search.php">Advanced Search</a><marked-tail data-anno-uid="anno-uid-ki55jyb794l">)
+						</marked-tail></span>
+</td>
+</tr>
+<!-- end: asb_search -->
+</tbody>
+</table><br data-anno-uid="anno-uid-pkczltp7us">
+<!-- end: asb_wrapped_sidebox -->
+<!-- end side box #7 - box type search_box -->
+<!-- start: asb_content_pad -->
+<img alt="" data-anno-uid="anno-uid-q8sk5l3os3" height="1" src="https://theultimatetone.com/images/asb/transparent.png" style="width: 200px;">
+<!-- end: asb_content_pad -->
+</td>
+<!-- end: asb_sidebox_column -->
+<!-- end: ASB left column -->
+<!-- start: ASB middle column (page contents of showthread.php) -->
+<td data-anno-uid="anno-uid-veiy329hq3j" valign="top" width="auto">
+<!-- end: asb_begin -->
+<table border="0" cellpadding="5" cellspacing="0" class="tborder tfixed clear" data-anno-uid="anno-uid-l64cej53pp">
+<tbody data-anno-uid="anno-uid-l5a1raioiqe"><tr data-anno-uid="anno-uid-yuk00gdriu9">
+<td class="thead" data-anno-uid="anno-uid-2y0hgd15cfu">
+<div class="float_right" data-anno-uid="anno-uid-afmoln8gg9h">
+<span class="smalltext" data-anno-uid="anno-uid-n4c8nfikosf"><strong data-anno-uid="anno-uid-ri7x9o46p"><a data-anno-uid="anno-uid-ch7jo6sni5s" href="showthread.php?mode=threaded&amp;tid=268&amp;pid=1078#pid1078">Threaded Mode</a></strong></span>
+</div>
+<div data-anno-uid="anno-uid-kjwijlr51qk">
+<strong data-anno-uid="anno-uid-yfcquim4dwb">Bias class</strong>
+</div>
+</td>
+</tr>
+<tr data-anno-uid="anno-uid-wy5rr5a7lpm"><td data-anno-uid="anno-uid-b7ixib7miu" id="posts_container">
+<div data-anno-uid="anno-uid-l1u9smoijwk" id="posts">
+<!-- start: postbit_classic -->
+<a data-anno-uid="anno-uid-opixxr69wl" id="pid1078" name="pid1078"></a>
+<div class="post classic" data-anno-uid="anno-uid-1o2wuzqzbzmh" id="post_1078" style="">
+<div class="post_author scaleimages" data-anno-uid="anno-uid-syvow2mdyzg">
+<!-- start: postbit_avatar -->
+<div class="author_avatar" data-anno-uid="anno-uid-2w4x6lblrba"><a data-anno-uid="anno-uid-zk65ox8l0q" href="user-3.html"><img alt="" data-anno-uid="anno-uid-28hlmtjxdv2" height="55" src="https://theultimatetone.com/images/default_avatar.png" width="55"></a></div>
+<!-- end: postbit_avatar -->
+<div class="author_information" data-anno-uid="anno-uid-8jwu1ny7pcc">
+<strong data-anno-uid="anno-uid-3glevvkhxve"><span class="largetext" data-anno-uid="anno-uid-35utq5j2lb"><a data-anno-uid="anno-uid-qxmj9nvgeg" href="https://theultimatetone.com/user-3.html">K O'Connor</a></span></strong> <!-- start: postbit_offline -->
+<img alt="Offline" class="buddy_status" data-anno-uid="anno-uid-m2ed1bweze" src="https://theultimatetone.com/images/buddy_offline.png" title="Offline">
+<!-- end: postbit_offline --><br data-anno-uid="anno-uid-2xvsm64yqln">
+<span class="smalltext" data-anno-uid="anno-uid-twwgerds0x">
+<br data-anno-uid="anno-uid-o4x37hpt69">
+</span>
+</div>
+<div class="author_statistics" data-anno-uid="anno-uid-bwbuj94fahi">
+<!-- start: postbit_author_user --><marked-tail data-anno-uid="anno-uid-swx5zeyjzo">
+
+	Posts: 486</marked-tail><br data-anno-uid="anno-uid-oh56fp1u8go"><marked-tail data-anno-uid="anno-uid-rhm72qyj5">
+	Threads: 53</marked-tail><br data-anno-uid="anno-uid-d5x2s1bltqa"><marked-tail data-anno-uid="anno-uid-uh4j5kvscxl">
+	Joined: Aug 2018
+	</marked-tail><!-- start: postbit_profilefield -->
+<br data-anno-uid="anno-uid-a2pm4yi9r67"><marked-tail data-anno-uid="anno-uid-jv1t81qkpgh">Location: CANADA
+</marked-tail><!-- end: postbit_profilefield -->
+<!-- end: postbit_author_user --><!-- start: postbit_country -->
+<br data-anno-uid="anno-uid-edmxs2o0dtj"><marked-tail data-anno-uid="anno-uid-qn18wys0ade">Country: </marked-tail><img alt="Canada" data-anno-uid="anno-uid-94yhd9sqvvo" src="https://theultimatetone.com/images/flags/canada.png" title="Canada">
+<!-- end: postbit_country -->
+</div>
+</div>
+<div class="post_content" data-anno-uid="anno-uid-c9vtnbiw7l">
+<div class="post_head" data-anno-uid="anno-uid-vyu5lpzvxkn">
+<!-- start: postbit_posturl -->
+<div class="float_right" data-anno-uid="anno-uid-y56oshaq2m" style="vertical-align: top">
+<strong data-anno-uid="anno-uid-jiaywebezb"><a data-anno-uid="anno-uid-l7ambe4abfg" href="thread-268-post-1078.html#pid1078" title="Bias class">#1</a></strong>
+</div>
+<!-- end: postbit_posturl -->
+<span class="post_date" data-anno-uid="anno-uid-j3cg8g2guq"><marked-text data-anno-uid="anno-uid-ma1zar1gkhe">04-13-2023, 01:42 PM </marked-text><span class="post_edit" data-anno-uid="anno-uid-kq9pjvg1qzo" id="edited_by_1078"></span></span>
+</div>
+<div class="post_body scaleimages" data-anno-uid="anno-uid-4l203odpr9f" id="pid_1078"><marked-text cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vdlfna4dqe" style="">
+		Hi Guys</marked-text><br data-anno-uid="anno-uid-dg9tstmw4v9">
+<br data-anno-uid="anno-uid-mo0n0tef5sh"><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-2p3biakfd9r" style="">
+The idle condition of a power amplifier output stage is referred to as its "operating class". It is important to note that the </marked-tail><span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-d0d5eqdm55" style="font-weight: bold;">bias condition is signal-dependent</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-lzkf0s74fbq" style=""> and has nothing to do with how the output stage devices are controlled. Again, bias condition is a universally-applicable concept.</marked-tail><br data-anno-uid="anno-uid-7qct9tvhsoa">
+<br data-anno-uid="anno-uid-rt2gz6kci1b">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-mz3fngane4" style="font-weight: bold;">Class-A:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-q92y0wl48ae" style=""> All of the output devices contribute to the signal over the full audio cycle (360-degrees)</marked-tail><br data-anno-uid="anno-uid-955hsu8bosf">
+<br data-anno-uid="anno-uid-0fkcy3797kn">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-wt4wmu2si7q" style="font-weight: bold;">Class-A2:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-1kkd25e43t9" style=""> Tubes only, the "2" indicates that grid conduction occurs in the output devices. This is simply class-AB below with a low-impedance drive&nbsp; circuit and very high idle current.</marked-tail><br data-anno-uid="anno-uid-2ckkt6c7u7w">
+<br data-anno-uid="anno-uid-nr38ndsl22n">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-sl72hu3tos" style="font-weight: bold;">Limiting Class-A:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-xf7qhfod1u" style=""> The peak signal current never exceeds the total idle current. This term was common in tube days, but still applies universally although it may be considered redundant to the class-A definition above.</marked-tail><br data-anno-uid="anno-uid-25zz8vckkdm">
+<br data-anno-uid="anno-uid-njc4132ie3m">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-5r54oq24j9e" style="font-weight: bold;">Sliding Class-A:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-jl250bu6vf" style=""> Solid-state, a method of varying the idle condition so that neither half of the circuit ever turns off even though transference of signal control may occur.</marked-tail><br data-anno-uid="anno-uid-oq5szewtc8b">
+<br data-anno-uid="anno-uid-ggpiucu5anl">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-4q6rkc556xs" style="font-weight: bold;">Class-B:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-28koulabbyf" style=""> In push-pull, each half of the output stage contributes exactly half the output signal (180-degrees)</marked-tail><br data-anno-uid="anno-uid-00n1ddmh0hpmp">
+<br data-anno-uid="anno-uid-eeuo3pqiy">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-bkme11c1p7c" style="font-weight: bold;">Class-B2:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-uolrtgc06uo" style=""> Tubes only, the "2" indicates grid conduction made possible by a low-impedance drive circuit.</marked-tail><br data-anno-uid="anno-uid-9mqym1c5l9o">
+<br data-anno-uid="anno-uid-0hwoarz50ya8">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-40omrdj8eb9" style="font-weight: bold;">Class-AB:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-c573x5uyj4" style=""> In push-pull, each half of the output stage contributes to slightly more than half of the signal output. Most "class-B" output stages are actually biased this way, with a slight overlap of conduction between circuit halves.</marked-tail><br data-anno-uid="anno-uid-eugn9ld0dce">
+<br data-anno-uid="anno-uid-23hez3u48np">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-6z80abrwkth" style="font-weight: bold;">Class-C:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-lgvximk6oum" style=""> The output device conducts for only half the signal cycle (180-degrees) with a tuned load providing the remainder. Used in RF.</marked-tail><br data-anno-uid="anno-uid-5xi51wxtc5h">
+<br data-anno-uid="anno-uid-qyvu6gtmemb">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-snw7tnkmv5" style="font-weight: bold;">Class-D:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-w2ytk76mjej" style=""> Solid-state only, a method of using a nonlinear output stage where the devices switch 'on' and 'off' in a pulse-width-modulated (PWM) format, and the output signal is integrated using LC filters. This approach is highly load noncompliant inasmuch as the load should be of fixed value versus frequency (resistive rather than inductive or capacitive). Class-D allows cold operation of the output devices but is only suitable for driving subwoofers in audio.</marked-tail><br data-anno-uid="anno-uid-t096skuzbct">
+<br data-anno-uid="anno-uid-hick2edd3xf">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-5g6vw6ml7ub" style="font-weight: bold;">Class-E:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6xnd7atouze" style=""> Solid-state, where parallel-driven output stages supported by different supply values contribute to the signal. The low-voltage stage amplifies the signal up to its limits with the high-voltage stage contributing higher amplitude signals as required. The low-voltage output stage can be biased class-A,-B or -AB.</marked-tail><br data-anno-uid="anno-uid-9kb5jwdsjld">
+<br data-anno-uid="anno-uid-7zs1bc9aewt">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-668mbl4wh0t" style="font-weight: bold;">Class-G:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-fc4aqwdcxjj" style=""> Solid-state, a multi-tier output stage uses multiple supply voltages,switching between them as the signal requires. The transition shifts the burden of output heat from the low-tier device to the next higher-tier device. Overall dissipation is generally reduced by the number of tiers.</marked-tail><br data-anno-uid="anno-uid-y4aeys8ml3k">
+<br data-anno-uid="anno-uid-w9vcu2k5yw">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-t3admd91cwp" style="font-weight: bold;">Class-H:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-3zcez2p9gu1" style=""> Solid-state, a multi-tier output stage supported by multiple supply voltages, switching between them as the signal requires. The supply switches turn 'on' hard and the burden of heat dissipation remains with the lowest-tier devices. Overall dissipation is reduced by the number of tiers.</marked-tail><br data-anno-uid="anno-uid-rjwnwuv1haq">
+<br data-anno-uid="anno-uid-o528tnoah5b">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-8spj0dmfksj" style="font-weight: bold;">Class-I:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-h2z440psfgb"> Similar to sliding class-A.</marked-tail><br data-anno-uid="anno-uid-qikgpsb1pt">
+<br data-anno-uid="anno-uid-ptj7exp5kpq">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-ur1lynhqxvs" style="font-weight: bold;">Class-T:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vy7r7oq26bn" style=""> A variation of class-D, with all of the same inherent issues.</marked-tail><br data-anno-uid="anno-uid-cpneu6tp3ft">
+<br data-anno-uid="anno-uid-f0nsnxnnxlt">
+<span cc-select="true" class="mycode_b mark-selected" data-anno-uid="anno-uid-2nfeilfp9sx" style="font-weight: bold;">Class-Z:</span><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-j7edmjd2m4g" style=""> A method of power transfer using saturable coils "steered" by tubes with output stage power provided by a switching supply. designed by Lundahl (SE) in the 1960s, then revised and patented by Berning in the 1990s.
+	</marked-tail></div>
+<div class="post_meta" data-anno-uid="anno-uid-x2kdrtspbes" id="post_meta_1078">
+<div class="float_right" data-anno-uid="anno-uid-32rs7l38p41">
+</div>
+</div>
+</div>
+<div class="post_controls" data-anno-uid="anno-uid-7cf82mmrj1q">
+<div class="postbit_buttons author_buttons float_left" data-anno-uid="anno-uid-9o5kdwwajjf">
+<!-- start: postbit_find -->
+<a class="postbit_find" data-anno-uid="anno-uid-6cbgm27fa7" href="search.php?action=finduser&amp;uid=3" title="Find all posts by this user"><span data-anno-uid="anno-uid-mf8vyv1ohy">Find</span></a>
+<!-- end: postbit_find -->
+</div>
+<div class="postbit_buttons post_management_buttons float_right" data-anno-uid="anno-uid-fixwzrj6htm">
+<!-- start: postbit_quote -->
+<a class="postbit_quote postbit_mirage" data-anno-uid="anno-uid-p3lo2mvm3f" href="newreply.php?tid=268&amp;replyto=1078" title="Quote this message in a reply"><span data-anno-uid="anno-uid-kw8zuas6xj">Reply</span></a>
+<!-- end: postbit_quote -->
+</div>
+</div>
+</div>
+<!-- end: postbit_classic -->
+</div>
+</td></tr>
+<tr data-anno-uid="anno-uid-q3dsuiu9k0a">
+<td class="tfoot" data-anno-uid="anno-uid-nccmvdwyw4c">
+<!-- start: showthread_search -->
+<div class="float_right" data-anno-uid="anno-uid-eusmm86hiu">
+<form action="search.php" data-anno-uid="anno-uid-3z59eirii7e" method="post">
+<input data-anno-uid="anno-uid-mm6cvdmlnc" name="action" type="hidden" value="thread">
+<input data-anno-uid="anno-uid-m60j3uciagp" name="tid" type="hidden" value="268">
+<input class="textbox" data-anno-uid="anno-uid-qj3069lhtzl" name="keywords" onblur="if(this.value=='') { this.value='Enter Keywords'; }" onfocus="if(this.value == 'Enter Keywords') { this.value = ''; }" size="25" type="text" value="Enter Keywords">
+<input class="button" data-anno-uid="anno-uid-n0703iaq6x" type="submit" value="Search Thread">
+</form>
+</div>
+<!-- end: showthread_search -->
+<div data-anno-uid="anno-uid-qpyx9jedsr8">
+<strong data-anno-uid="anno-uid-dwzmt6j3nkn"><marked-text data-anno-uid="anno-uid-r8ftrc58pad">« </marked-text><a data-anno-uid="anno-uid-z8honr57j2" href="thread-268-nextoldest.html">Next Oldest</a><marked-tail data-anno-uid="anno-uid-xy1snvf1r7"> | </marked-tail><a data-anno-uid="anno-uid-239xu538355" href="thread-268-nextnewest.html">Next Newest</a><marked-tail data-anno-uid="anno-uid-36x0rcsljqv"> »</marked-tail></strong>
+</div>
+</td>
+</tr>
+</tbody></table>
+<div class="float_left" data-anno-uid="anno-uid-s8l24ttx1ie">
+</div>
+<div class="float_right" data-anno-uid="anno-uid-e8y4c47vy4i" style="padding-top: 4px;">
+</div>
+<br class="clear" data-anno-uid="anno-uid-l360jg1dok">
+<br data-anno-uid="anno-uid-pncexnciyec">
+<div class="float_left" data-anno-uid="anno-uid-ua4woa2kubc">
+<ul class="thread_tools" data-anno-uid="anno-uid-4vz4ojtsu6d">
+<!-- start: showthread_printthread -->
+<li class="printable" data-anno-uid="anno-uid-zmbvmi1g4f7"><a data-anno-uid="anno-uid-352y1w6r0r5" href="printthread.php?tid=268">View a Printable Version</a></li>
+<!-- end: showthread_printthread -->
+</ul>
+</div>
+<div class="float_right" data-anno-uid="anno-uid-xfvoju3o5bn" style="text-align: right;">
+<!-- start: forumjump_advanced -->
+<form action="forumdisplay.php" data-anno-uid="anno-uid-nlxj1h6z11e" method="get">
+<span class="smalltext" data-anno-uid="anno-uid-fyslfty6tmb"><strong data-anno-uid="anno-uid-mqma9ldwji">Forum Jump:</strong></span>
+<select class="forumjump" data-anno-uid="anno-uid-9z6xc1k4oo" name="fid">
+<option data-anno-uid="anno-uid-vzotgkp01p9" value="-4">Private Messages</option>
+<option data-anno-uid="anno-uid-8279ioaxylx" value="-3">User Control Panel</option>
+<option data-anno-uid="anno-uid-rd0muig6m7l" value="-5">Who's Online</option>
+<option data-anno-uid="anno-uid-epyldgvmrmj" value="-2">Search</option>
+<option data-anno-uid="anno-uid-0e9qsi75aour" value="-1">Forum Home</option>
+<!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-q653bfrasqd" value="1"> Tube Amp Community (Hi-fi too!)</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-nep47w1ux2b" value="2">-- TUT Q&amp;A</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-ur6srj4e3lh" value="5">-- Power Scaling</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-eqzm6ekykas" value="8">-- PCB Design</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-tzvv6gg84pl" value="9">-- Power Supplies</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-ou31bh6asgn" selected="" value="20">-- Power Amps</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-ikd3cc0n048" value="10">-- Preamp Mods &amp; Design</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-16xm06csnge" value="7">-- Sag &amp; Sustain</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-nlzwhz0uerq" value="11">-- Switching</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-8hdkak7l3pv" value="12">-- Wiring</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-uruwu82klia" value="6">-- Personal Projects</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-qn0nw9lkwvg" value="19">-- Test &amp; Measurement</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-qj7zg1zr07j" value="13">-- New Member Introductions</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-ss05bexkas" value="3"> Marketplace &amp; Products</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-zkkwdcx7sn" value="15">-- London Power Amps &amp; Gear</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-1r0jrakes6y" value="16">-- London Power Kits &amp; Mods</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-fqtza31sgg6" value="14">-- Gear for Sale by Forum Members</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-48e11tfsmdt" value="4">-- Vendor Info</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-5wa6kgxoq73" value="17">-- Miscellaneous for Sale</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-bs08nsis52" value="21"> Recording &amp; Playback</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-ulyyid5qk9n" value="22">-- Recording Methods</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-av0milxai1i" value="23">-- Headphones for Music Playback</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-sb2zp21zu3" value="24">-- Playback of Recorded Music</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-5vok5o6zaf" value="25">-- Specialized Headphone Amplifiers</option>
+<!-- end: forumjump_bit --><!-- start: forumjump_bit -->
+<option data-anno-uid="anno-uid-qgje843tfz9" value="26">-- Stereo Playback Systems for Music</option>
+<!-- end: forumjump_bit -->
+</select>
+<!-- start: gobutton -->
+<input class="button" data-anno-uid="anno-uid-9835dyfityi" type="submit" value="Go">
+<!-- end: gobutton -->
+</form>
+<script data-anno-uid="anno-uid-eg4j04tcyb" type="text/javascript">
+$(".forumjump").on('change', function() {
+	var option = $(this).val();
+
+	if(option < 0)
+	{
+		window.location = 'forumdisplay.php?fid='+option;
+	}
+	else
+	{
+		window.location = 'forum-'+option+'.html';
+	}
+});
+</script>
+<!-- end: forumjump_advanced -->
+</div>
+<br class="clear" data-anno-uid="anno-uid-mhqj5rc6yw9">
+<!-- start: asb_end -->
+</td>
+<!-- end: ASB middle column (page contents of showthread.php) -->
+<!-- start: ASB right column -->
+<!-- start: asb_sidebox_column -->
+<td data-anno-uid="anno-uid-39e9zksehd2" id="asb_right_column_id" style="width: 200px;" valign="top">
+<!-- start side box #8 - box type asb_custom_1 -->
+<!-- start: asb_wrapped_sidebox -->
+<table border="0" cellpadding="5" cellspacing="0" class="tborder asb_custom_1_main_8" data-anno-uid="anno-uid-l0ahprqma9j" id="asb_custom_1_main_8" style="table-layout: fixed; word-wrap: break-word;">
+<thead data-anno-uid="anno-uid-8u4z6fzcor">
+<tr data-anno-uid="anno-uid-iqmcck2kmbm">
+<td class="thead" data-anno-uid="anno-uid-znf3nygclv">
+<!-- start: asb_expander -->
+<div class="expcolimage" data-anno-uid="anno-uid-zcwdjamfi9h">
+<img alt="[-]" class="expander" data-anno-uid="anno-uid-em3iorfc0ys" id="asb_custom_1_8_img" src="https://theultimatetone.com/images/collapse.png" style="cursor: pointer;" title="[-]">
+</div>
+<!-- end: asb_expander -->
+<strong data-anno-uid="anno-uid-svyr0dyz5j9">Come in where it's warm!</strong>
+</td>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-by2vgigijhc" id="asb_custom_1_8_e" style="">
+<tr data-anno-uid="anno-uid-ryl3tvydmbd">
+<td class="trow1" data-anno-uid="anno-uid-g8vep8g9gw4"><marked-text data-anno-uid="anno-uid-bg1fo2kfq6u" style="">A warm welcome to tube amp modding fans and those interested in hi-fi audio! Readers of </marked-text><a data-anno-uid="anno-uid-7ezma7dlscg" href="http://www.londonpower.com/about-us"><b data-anno-uid="anno-uid-34fzuqasgb">Kevin O'Connor's</b></a> <i data-anno-uid="anno-uid-yipfo1wicv"><b data-anno-uid="anno-uid-scdgcc2ejw8"><a data-anno-uid="anno-uid-9dn1mxcxuij" href="http://www.londonpower.com/audio-design-books">The Ultimate Tone (TUT)</a></b></i><a data-anno-uid="anno-uid-8mm4krg95op" href="http://www.londonpower.com/audio-design-books" style=""> book series</a><marked-tail data-anno-uid="anno-uid-kg8srxc7qek"> form a part of our population. Kevin O'Connor is the creator of the popular </marked-tail><a data-anno-uid="anno-uid-nvz1g9w06ai" href="http://www.londonpower.com/power-scaling-faq"><b data-anno-uid="anno-uid-75cyljrvq1d">Power Scaling</b><marked-tail data-anno-uid="anno-uid-nq88395s6r"> methodology</marked-tail></a><marked-tail data-anno-uid="anno-uid-7j0q3ffbiwh"> for amplifiers.</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-wb87f1h674">
+<td class="trow2" data-anno-uid="anno-uid-f7ir2ny7erq"><marked-text data-anno-uid="anno-uid-7tfnj2yqihp"> Please remember these three principles:</marked-text><b data-anno-uid="anno-uid-vmscjld1hn"><i data-anno-uid="anno-uid-5q14d0fq54h"> respect, sharing, community</i></b><marked-tail data-anno-uid="anno-uid-e891i9t2ass">.</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-b96xylpwdhs">
+<td class="trow1" data-anno-uid="anno-uid-silabkb4ev"><marked-text data-anno-uid="anno-uid-1zt5ol56t4th">Not familiar with </marked-text><i data-anno-uid="anno-uid-k7pwdxl18b"><b data-anno-uid="anno-uid-xjb51njcwbq">The Ultimate Tone</b></i><marked-tail data-anno-uid="anno-uid-5d9ir884677"> book series? See discussion topics, or click </marked-tail><a data-anno-uid="anno-uid-upqpb3mwk1" href="http://www.londonpower.com"><b data-anno-uid="anno-uid-zci5nt2pjs">here</b><marked-tail data-anno-uid="anno-uid-jchzfapk6d"> to visit </marked-tail><b data-anno-uid="anno-uid-sl9s26k527o">London Power/Power Press Publishing</b></a><marked-tail data-anno-uid="anno-uid-aa9rn8gnt2">.</marked-tail></td>
+</tr>
+</tbody>
+</table><br data-anno-uid="anno-uid-sy50dx4su3">
+<!-- end: asb_wrapped_sidebox -->
+<!-- end side box #8 - box type asb_custom_1 -->
+<!-- start side box #12 - box type asb_custom_2 -->
+<!-- start: asb_wrapped_sidebox -->
+<table border="0" cellpadding="5" cellspacing="0" class="tborder asb_custom_2_main_12" data-anno-uid="anno-uid-hhzc20n74it" id="asb_custom_2_main_12" style="table-layout: fixed; word-wrap: break-word;">
+<thead data-anno-uid="anno-uid-djpqo5jye8">
+<tr data-anno-uid="anno-uid-1onovu1ps0w">
+<td class="thead" data-anno-uid="anno-uid-u9wqhypmpwf">
+<!-- start: asb_expander -->
+<div class="expcolimage" data-anno-uid="anno-uid-cyzkid4k29q">
+<img alt="[-]" class="expander" data-anno-uid="anno-uid-xadekqgf88k" id="asb_custom_2_12_img" src="https://theultimatetone.com/images/collapse.png" style="cursor: pointer;" title="[-]">
+</div>
+<!-- end: asb_expander -->
+<strong data-anno-uid="anno-uid-40l5a5d2zxr"><a data-anno-uid="anno-uid-xed75n1lf3b" href="https://londonpower.com">Tube Amp Forum Hosted by London Power</a></strong>
+</td>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-tp3fr5272r" id="asb_custom_2_12_e" style="">
+<tr data-anno-uid="anno-uid-ot744gj7mo">
+<td class="trow1" data-anno-uid="anno-uid-98un5ycsq4q"><a data-anno-uid="anno-uid-0ipuclbyv1rg" href="http://www.londonpower.com"><img alt="London Power logo" data-anno-uid="anno-uid-sqrdum18cr" src="https://theultimatetone.com/images/lp-logo-180.jpg"></a></td>
+</tr>
+</tbody>
+</table><br data-anno-uid="anno-uid-e5ql16v8trd">
+<!-- end: asb_wrapped_sidebox -->
+<!-- end side box #12 - box type asb_custom_2 -->
+<!-- start: asb_content_pad -->
+<img alt="" data-anno-uid="anno-uid-3ekdwa8u7mj" height="1" src="https://theultimatetone.com/images/asb/transparent.png" style="width: 200px;">
+<!-- end: asb_content_pad -->
+</td>
+<!-- end: asb_sidebox_column -->
+<!-- end: ASB right column -->
+</tr>
+</tbody></table>
+<!-- end: asb_end --><!-- start: footer -->
+</div>
+</div>
+<div data-anno-uid="anno-uid-4d2rvqr5xcy" id="footer">
+<div class="upper" data-anno-uid="anno-uid-28dxie0dtt1">
+<div class="wrapper" data-anno-uid="anno-uid-s1etnjvh46l">
+<ul class="menu bottom_links" data-anno-uid="anno-uid-4ld8pco9re7">
+<!-- start: footer_contactus -->
+<li data-anno-uid="anno-uid-15mp1fmojou"><a data-anno-uid="anno-uid-8t1qutjzw3v" href="mailto:tut@theultimatetone.com">Contact Us</a></li>
+<!-- end: footer_contactus -->
+<li data-anno-uid="anno-uid-t5vsn0noicl"><a data-anno-uid="anno-uid-g5096d9xtd" href="https://theultimatetone.com/">The Ultimate Tone Forum - Tube &amp; Hi-fi Amps</a></li>
+<li data-anno-uid="anno-uid-q9camz0r4un"><a data-anno-uid="anno-uid-ghj94uec8dc" href="#top">Return to Top</a></li>
+<li data-anno-uid="anno-uid-43eifehk2jd"><a data-anno-uid="anno-uid-hkenf8sy45v" href="https://theultimatetone.com/archive/index.php/thread-268.html">Lite (Archive) Mode</a></li>
+<li data-anno-uid="anno-uid-unzav744ff9"><a data-anno-uid="anno-uid-tlun9xsma8" href="https://theultimatetone.com/misc.php?action=markread">Mark all forums read</a></li>
+<li data-anno-uid="anno-uid-pte0gp89lqf"><a data-anno-uid="anno-uid-bsbmvyzladf" href="https://theultimatetone.com/misc.php?action=syndication">RSS Syndication</a></li>
+</ul>
+</div>
+</div>
+<div class="lower" data-anno-uid="anno-uid-4d4qohj6y4e">
+<div class="wrapper" data-anno-uid="anno-uid-hd6pp2fuzxj">
+<span data-anno-uid="anno-uid-did7qn1whs" id="current_time"><strong data-anno-uid="anno-uid-u6sbjptoxfo">Current time:</strong><marked-tail data-anno-uid="anno-uid-cdqebsew0cf"> 05-26-2024, 11:20 PM</marked-tail></span>
+<span data-anno-uid="anno-uid-e2uogovu9ba" id="copyright">
+<!-- MyBB is free software developed and maintained by a volunteer community.
+					It would be much appreciated by the MyBB Group if you left the full copyright and "powered by" notice intact,
+					to show your support for MyBB.  If you choose to remove or modify the copyright below,
+					you may be refused support on the MyBB Community Forums.
+
+					This is free software, support us and we'll support you. --><marked-tail data-anno-uid="anno-uid-jqccv75bq6">
+				Powered By </marked-tail><a data-anno-uid="anno-uid-9o5cmt2wa6" href="https://mybb.com" rel="noopener" target="_blank">MyBB</a><marked-tail data-anno-uid="anno-uid-odgmouyz097">, © 2002-2024 </marked-tail><a data-anno-uid="anno-uid-5fyq0bavgre" href="https://mybb.com" rel="noopener" target="_blank">MyBB Group</a><marked-tail data-anno-uid="anno-uid-4o2css48ian">.
+				</marked-tail><!-- End powered by -->
+</span>
+</div>
+</div>
+</div>
+<!-- The following piece of code allows MyBB to run scheduled tasks. DO NOT REMOVE --><!-- start: task_image -->
+<img alt="" data-anno-uid="anno-uid-htvhqou9qgn" height="1" src="https://theultimatetone.com/task.php" width="1">
+<!-- end: task_image --><!-- End task image code -->
+</div>
+<!-- end: footer -->
+<script data-anno-uid="anno-uid-sk5sep15tz9" type="text/javascript">
+		var thread_deleted = "0";
+		if(thread_deleted == "1")
+		{
+			$("#quick_reply_form, .new_reply_button, .thread_tools, .inline_rating").hide();
+			$("#moderator_options_selector option.option_mirage").attr("disabled","disabled");
+		}
+	</script>
+</body></html>
