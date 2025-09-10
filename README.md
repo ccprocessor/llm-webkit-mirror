@@ -103,14 +103,14 @@ def extract(url:str, html:str) -> str:
 
 if __name__=="__main__":
     url = ""
-    html = '''<html><body>
+    raw_html = '''<html><body>
     <div class="options-div-0-0 option-box__items" style="display: none;">
         <span class="bedroom-rate__title">Room Only Rate</span>
         <span class="bedroom-rate__price">£1,230.00</span>
     </div>
     <p>正常内容</p>
     </body></html>'''
-    markdown = extract(url, html)
+    markdown = extract(url, raw_html)
     print(markdown)
 ```
 
@@ -120,11 +120,11 @@ if __name__=="__main__":
 from llm_web_kit.simple import extract_content_from_main_html
 from loguru import logger
 
-def extract(url:str, html:str) -> str:
+def extract(url:str, raw_html: str, main_html:str) -> str:
     try:
-        nlp_md = extract_content_from_main_html(url, html)
-        # or mm_nlp_md = extract_content_from_main_html(url, html, 'mm_md')
-        # or nlp_md = extract_content_from_main_html(url, html, language='zh')
+        nlp_md = extract_content_from_main_html(url = url, raw_html = raw_html, main_html = main_html)
+        # or mm_nlp_md = extract_content_from_main_html(url = url, raw_html = raw_html, main_html = main_html, 'mm_md')
+        # or nlp_md = extract_content_from_main_html(url = url, raw_html = raw_html, main_html = main_html, language='zh')
         return nlp_md
     except Exception as e:
         logger.exception(e)
@@ -132,14 +132,26 @@ def extract(url:str, html:str) -> str:
 
 if __name__=="__main__":
     url = ""
-    html = '''<html><body>
+    raw_html = '''<html>
+    <meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport">
+    <script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],processEscapes:!0},svg:{fontCache:"global"}}</script><script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js" type="text/javascript"></script>
+    <body>
     <div class="options-div-0-0 option-box__items" style="display: none;">
         <span class="bedroom-rate__title">Room Only Rate</span>
         <span class="bedroom-rate__price">£1,230.00</span>
     </div>
+    <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
     <p>正常内容</p>
     </body></html>'''
-    markdown = extract(url, html)
+    main_html = '''<html><body>
+    <div class="options-div-0-0 option-box__items" style="display: none;">
+        <span class="bedroom-rate__title">Room Only Rate</span>
+        <span class="bedroom-rate__price">£1,230.00</span>
+    </div>
+    <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
+    <p>正常内容</p>
+    </body></html>'''
+    markdown = extract(url, raw_html, main_html)
     print(markdown)
 ```
 
@@ -159,14 +171,14 @@ def extract(url:str, html:str) -> str:
 
 if __name__=="__main__":
     url = ""
-    html = '''<html><body>
+    raw_html = '''<html><body>
     <div class="options-div-0-0 option-box__items" style="display: none;">
         <span class="bedroom-rate__title">Room Only Rate</span>
         <span class="bedroom-rate__price">£1,230.00</span>
     </div>
     <p>正常内容</p>
     </body></html>'''
-    main_html = extract(url, html)
+    main_html = extract(url, raw_html)
     print(main_html)
 ```
 

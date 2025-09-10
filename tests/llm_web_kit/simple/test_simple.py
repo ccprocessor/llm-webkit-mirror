@@ -158,12 +158,12 @@ class TestSimple(unittest.TestCase):
 
     def test_extract_noclip(self):
         """测试从原始HTML直接提取内容."""
-        md = extract_content_from_main_html(self.url, self.html_content)
+        md = extract_content_from_main_html(self.url, self.html_content, self.main_html)
         self.assertEqual(md, self.expected_md)
 
     def test_extract_noclip_mm_md(self):
         """测试从原始HTML直接提取内容."""
-        md = extract_content_from_main_html(self.url, self.html_content, 'mm_md')
+        md = extract_content_from_main_html(self.url, self.html_content, self.main_html, 'mm_md')
         self.assertEqual(md, self.expected_mm_md)
 
     def test_extract_main_html_only_default(self):
@@ -173,12 +173,12 @@ class TestSimple(unittest.TestCase):
 
     def test_extract_content_from_main_html_default(self):
         """测试对外方法：extract_content_from_main_html默认md格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, language='en')
+        result = extract_content_from_main_html(self.url,self.html_content, self.main_html, language='en')
         self.assertEqual(result, self.expected_md)
 
     def test_extract_content_from_main_html_mm_md(self):
         """测试对外方法：extract_content_from_main_html输出mm_md格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', language='en')
+        result = extract_content_from_main_html(self.url, self.html_content, self.main_html, 'mm_md', language='en')
         self.assertEqual(result, self.expected_mm_md)
 
     def test_extract_content_from_html_with_llm(self):
@@ -204,7 +204,7 @@ class TestSimple(unittest.TestCase):
     def test_invalid_output_format_exception(self):
         """测试无效的输出格式异常."""
         with self.assertRaises(InvalidOutputFormatException) as context:
-            extract_content_from_main_html(self.url, self.main_html, 'INVALID_FORMAT')
+            extract_content_from_main_html(self.url, self.html_content, self.main_html, 'INVALID_FORMAT')
 
         self.assertIn('Invalid output format', str(context.exception.custom_message))
         self.assertEqual(context.exception.error_code, 82000000)
@@ -215,17 +215,17 @@ class TestSimple(unittest.TestCase):
 
     def test_output_format_md(self):
         """测试md输出格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'md', language='en')
+        result = extract_content_from_main_html(self.url, self.html_content, self.main_html, 'md', language='en')
         self.assertEqual(result, self.expected_md)
 
     def test_output_format_mm_md(self):
         """测试mm_md输出格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', language='en')
+        result = extract_content_from_main_html(self.url, self.html_content, self.main_html, 'mm_md', language='en')
         self.assertEqual(result, self.expected_mm_md)
 
     def test_output_format_json(self):
         """测试json输出格式."""
-        result = extract_content_from_main_html(self.url, self.main_html, 'json')
+        result = extract_content_from_main_html(self.url, self.html_content, self.main_html, 'json')
         self.assertIsInstance(result, str)
         # JSON输出应该包含JSON结构
         self.assertTrue(result.startswith('{') or result.startswith('['))
@@ -233,14 +233,14 @@ class TestSimple(unittest.TestCase):
     def test_language_option_affects_spacing_en(self):
         """测试 language='en' 时英文片段合并插入空格."""
         html_content = '<div><body><p><span>Hello</span><span>World</span></p></body></div>'
-        md = extract_content_from_main_html(self.url, html_content, language='en')
+        md = extract_content_from_main_html(self.url, html_content, html_content, language='en')
         self.assertIn('Hello World', md)
         self.assertNotIn('HelloWorld', md)
 
     def test_language_option_affects_spacing_zh(self):
         """测试 language='zh' 时英文片段合并不插入空格（与中文等无分词语言一致策略）。"""
         html_content = '<div><body><p><span>Hello</span><span>World</span></p></body></div>'
-        md = extract_content_from_main_html(self.url, html_content, language='zh')
+        md = extract_content_from_main_html(self.url, html_content, html_content, language='zh')
         self.assertIn('HelloWorld', md)
 
     # ========================================
@@ -383,7 +383,7 @@ class TestSimpleEdgeCases(unittest.TestCase):
         """测试空main_html用于第二阶段."""
         # 空main_html会导致解析异常，这是预期的行为
         with self.assertRaises(Exception):
-            extract_content_from_main_html(self.url, '')
+            extract_content_from_main_html(self.url, '', '')
 
     def test_malformed_html(self):
         """测试格式错误的HTML."""
@@ -512,26 +512,26 @@ class TestSimpleIntegration(unittest.TestCase):
 
     def test_extract_real_html_to_md(self):
         """测试真实HTML内容，验证JavaScript被过滤."""
-        md = extract_content_from_main_html(self.url, self.real_html_content)
+        md = extract_content_from_main_html(self.url, self.real_html_content, self.real_html_content)
         self.assertNotIn('DOMContentLoaded', md)
 
     def test_extract_lack_item(self):
         """测试lack_item.html文件."""
         html_content = open(os.path.join(self.base_path, 'assets', 'lack_item.html'), 'r').read()
-        md = extract_content_from_main_html(self.url, html_content)
+        md = extract_content_from_main_html(self.url, html_content, html_content)
         self.assertGreater(len(md), 0)
 
     def test_extract_lack_item_2(self):
         """测试lack_item_2.html文件."""
         html_content = open(os.path.join(self.base_path, 'assets', 'lack_item_2.html'), 'r').read()
-        md = extract_content_from_main_html(self.url, html_content)
+        md = extract_content_from_main_html(self.url, html_content, html_content)
         # 验证提取到了主要内容
         self.assertIn('2001-2015 Physics Forums', md)
 
     def test_extract_word_press(self):
         """测试word_press.html文件."""
         html_content = open(os.path.join(self.base_path, 'assets', 'word_press.html'), 'r').read()
-        md = extract_content_from_main_html(self.url, html_content)
+        md = extract_content_from_main_html(self.url, html_content, html_content)
         self.assertIn('For descriptions of the methods (AM1, HF, MP2, ...) a', md)
 
     def test_full_pipeline_integration(self):
@@ -542,7 +542,7 @@ class TestSimpleIntegration(unittest.TestCase):
         self.assertTrue(len(main_html) > 0)
 
         # 第二阶段：从main_html提取内容
-        markdown = extract_content_from_main_html(self.url, main_html, language='en')
+        markdown = extract_content_from_main_html(self.url,self.real_html_content, main_html, language='en')
         self.assertIsInstance(markdown, str)
         self.assertTrue(len(markdown) > 0)
 
@@ -571,7 +571,7 @@ class TestSimpleIntegration(unittest.TestCase):
         </body></html>'''
 
         # 使用MAGIC_HTML_NOCLIP模拟原来的clip_html=False
-        md = extract_content_from_main_html(self.url, html_content)
+        md = extract_content_from_main_html(self.url, html_content, html_content)
 
         # 验证隐藏内容被过滤掉了
         self.assertNotIn('Room Only Rate', md)
@@ -583,10 +583,83 @@ class TestSimpleIntegration(unittest.TestCase):
     def test_extract_main_html_with_script(self):
         """测试main_html中包含script标签的情况."""
         html_content = open(os.path.join(self.base_path, 'assets', 'main_html_with_script.html'), 'r').read()
-        md = extract_content_from_main_html(self.url, html_content)
+        md = extract_content_from_main_html(self.url, html_content, html_content)
         self.assertIn('A. What are the cultural factors which make expansion abroad in retailing difficult?', md)
         self.assertIn('B. How does the TV advertising campaign initiated by IKEA overcome the entry barrier of high advertising expenditures?', md)
         self.assertIn('Johansson, J. K. (2006). Global marketing (4th edition ed.). New York: McGraw Hill Irwin.', md)
+
+    def test_extract_main_html_with_mathjax(self):
+        """测试包含MathJax数学公式的HTML内容提取."""
+        raw_html = r'''
+        <html>
+        <meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport">
+        <script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],processEscapes:!0},svg:{fontCache:"global"}}</script><script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js" type="text/javascript"></script>
+        <body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
+        <p>正常内容</p>
+        </body></html>
+        '''
+
+        main_html = r'''
+        <html><body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
+        <p>正常内容</p>
+        </body></html>
+        '''
+
+        md = extract_content_from_main_html(self.url, raw_html, main_html)
+
+        # 验证MathJax数学公式被正确提取
+        self.assertIn('$\\mathcal{F}_1$', md)
+        self.assertIn('Are the filtrations after these steps', md)
+        self.assertIn('正常内容', md)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证JavaScript代码被过滤掉了
+        self.assertNotIn('MathJax=', md)
+        self.assertNotIn('processEscapes', md)
+
+    def test_extract_magic_html_with_mathjax(self):
+        """测试包含MathJax数学公式的HTML内容提取."""
+        raw_html = r'''
+        <html>
+        <meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport">
+        <script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],processEscapes:!0},svg:{fontCache:"global"}}</script><script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js" type="text/javascript"></script>
+        <body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
+        <p>正常内容</p>
+        </body></html>
+        '''
+
+        md = extract_content_from_html_with_magic_html(self.url, raw_html)
+
+        # 验证MathJax数学公式被正确提取
+        self.assertIn('$\\mathcal{F}_1$', md)
+        self.assertIn('Are the filtrations after these steps', md)
+        self.assertIn('正常内容', md)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证JavaScript代码被过滤掉了
+        self.assertNotIn('MathJax=', md)
+        self.assertNotIn('processEscapes', md)
 
 
 if __name__ == '__main__':

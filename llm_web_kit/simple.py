@@ -53,12 +53,13 @@ class ExtractorFactory:
         return ExtractorFactory._extractors[pipe_tpl_name]
 
 
-def _extract_html(url: str, html_content: str, pipe_tpl: str, language: str = 'en') -> DataJson:
+def _extract_html(url: str, raw_html: str, main_html: str, pipe_tpl: str, language: str = 'en') -> DataJson:
     """内部使用的统一HTML提取方法，返回处理后的DataJson对象.
 
     Args:
         url: 网页URL
-        html_content: 原始HTML内容（或main_html，取决于pipe_tpl）
+        raw_html: 原始HTML内容
+        main_html: 正文对应的main_html
         pipe_tpl: 处理类型，支持：
             # 只执行第一阶段：
             - PipeTpl.MAGIC_HTML: 使用magic_html提取main_html
@@ -80,10 +81,11 @@ def _extract_html(url: str, html_content: str, pipe_tpl: str, language: str = 'e
     input_data_dict = {
         'track_id': str(uuid.uuid4()),
         'url': url,
-        'html': html_content,
+        'html': raw_html,
+        'main_html': main_html,
         'dataset_name': f'llm-web-kit-{pipe_tpl}',
         'data_source_category': 'HTML',
-        'file_bytes': len(html_content),
+        'file_bytes': len(raw_html),
         'language': language,
         'meta_info': {'input_datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     }
@@ -96,35 +98,36 @@ def _extract_html(url: str, html_content: str, pipe_tpl: str, language: str = 'e
 # SDK方法（三种使用场景）
 # ========================================
 
-def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeTpl.MAGIC_HTML, language: str = 'en') -> str:
+def extract_main_html_only(url: str, raw_html: str, pipe_tpl: str = PipeTpl.MAGIC_HTML, language: str = 'en') -> str:
     """场景1: 只执行第一阶段，抽取main_html.
 
     Args:
         url: 网页URL
-        html_content: 原始HTML内容
-        parser_type: 解析器类型，可选：PipeTpl.MAGIC_HTML, PipeTpl.LLM, PipeTpl.LAYOUT_BATCH
+        raw_html: 原始HTML内容
+        pipe_tpl: 解析器类型，可选：PipeTpl.MAGIC_HTML, PipeTpl.LLM, PipeTpl.LAYOUT_BATCH
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
         str: 提取的主要HTML内容
     """
-    result = _extract_html(url, html_content, parser_type, language)
+    result = _extract_html(url=url, raw_html=raw_html, main_html='', pipe_tpl=pipe_tpl, language=language)
     return result.get('main_html', '')
 
 
-def extract_content_from_main_html(url: str, main_html: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_main_html(url: str, raw_html: str, main_html: str, output_format: str = 'md', language: str = 'en') -> str:
     """场景2: 只执行第二阶段，从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
-        main_html: 已经抽取的主要HTML内容
+        raw_html: 原始HTML内容
+        main_html: 正文对应的main_html
         output_format: 输出格式，'md' 或 'mm_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = _extract_html(url, main_html, PipeTpl.NOCLIP, language)
+    result = _extract_html(url=url, raw_html=raw_html, main_html=main_html, pipe_tpl=PipeTpl.NOCLIP, language=language)
     content_list = result.get_content_list()
 
     if output_format == 'md':
@@ -137,19 +140,19 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
         raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
-def extract_content_from_html_with_magic_html(url: str, html_content: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_html_with_magic_html(url: str, raw_html: str, output_format: str = 'md', language: str = 'en') -> str:
     """场景3: 执行两个阶段，从magic_html抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
-        html_content: 原始HTML内容
+        raw_html: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = _extract_html(url, html_content, PipeTpl.MAGIC_HTML_NOCLIP, language)
+    result = _extract_html(url=url, raw_html=raw_html, main_html='', pipe_tpl=PipeTpl.MAGIC_HTML_NOCLIP, language=language)
     content_list = result.get_content_list()
 
     if output_format == 'md':
@@ -162,19 +165,19 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
         raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
-def extract_content_from_html_with_llm(url: str, html_content: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_html_with_llm(url: str, raw_html: str, output_format: str = 'md', language: str = 'en') -> str:
     """场景3: 执行两个阶段，从llm抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
-        html_content: 原始HTML内容
+        raw_html: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = _extract_html(url, html_content, PipeTpl.LLM_NOCLIP, language)
+    result = _extract_html(url=url, raw_html=raw_html, main_html='', pipe_tpl=PipeTpl.LLM_NOCLIP, language=language)
     content_list = result.get_content_list()
 
     if output_format == 'md':
@@ -187,19 +190,19 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
         raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
-def extract_content_from_html_with_layout_batch(url: str, html_content: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_html_with_layout_batch(url: str, raw_html: str, output_format: str = 'md', language: str = 'en') -> str:
     """场景3: 执行两个阶段，从layout_batch抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
-        html_content: 原始HTML内容
+        raw_html: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
         str: 结构化的内容（markdown格式）
     """
-    result = _extract_html(url, html_content, PipeTpl.LAYOUT_BATCH_NOCLIP, language)
+    result = _extract_html(url=url, raw_html=raw_html, main_html='', pipe_tpl=PipeTpl.LAYOUT_BATCH_NOCLIP, language=language)
     content_list = result.get_content_list()
 
     if output_format == 'md':
