@@ -48,6 +48,7 @@ class StructureMapper(ABC):
     Args:
         object (_type_): _description_
     """
+
     def __init__(self):
         self.__txt_para_splitter = '\n'
         self.__md_para_splitter = '\n\n'
@@ -55,13 +56,17 @@ class StructureMapper(ABC):
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
         self.__md_special_chars = ['#', '`', '$']  # TODO 拼装table的时候还应该转义掉|符号
-        self.__nodes_document_type = [DocElementType.MM_NODE_LIST, DocElementType.PARAGRAPH, DocElementType.LIST, DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.TITLE, DocElementType.IMAGE, DocElementType.AUDIO, DocElementType.VIDEO, DocElementType.CODE, DocElementType.EQUATION_INTERLINE]
+        self.__nodes_document_type = [DocElementType.MM_NODE_LIST, DocElementType.PARAGRAPH, DocElementType.LIST,
+                                      DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.TITLE,
+                                      DocElementType.IMAGE, DocElementType.AUDIO, DocElementType.VIDEO,
+                                      DocElementType.CODE, DocElementType.EQUATION_INTERLINE]
         self.__inline_types_document_type = [ParagraphTextType.EQUATION_INLINE, ParagraphTextType.CODE_INLINE]
 
     def to_html(self):
         raise NotImplementedError('This method must be implemented by the subclass.')
 
-    def to_plain_md(self, exclude_nodes=DocElementType.EXCLUDE_PLAIN_MD_LIST, exclude_inline_types=[], use_raw_image_url=False):
+    def to_plain_md(self, exclude_nodes=DocElementType.EXCLUDE_PLAIN_MD_LIST,
+                    exclude_inline_types=DocElementType.EXCLUDE_PLAIN_MD_INLINE_LIST, use_raw_image_url=False):
         """把content_list转化为md格式.
 
         Args:
@@ -110,7 +115,8 @@ class StructureMapper(ABC):
         for page in content_lst:
             for content_lst_node in page:
                 if content_lst_node['type'] not in exclude_nodes:
-                    txt_content = self.__content_lst_node_2_md(content_lst_node, exclude_inline_types, use_raw_image_url)
+                    txt_content = self.__content_lst_node_2_md(content_lst_node, exclude_inline_types,
+                                                               use_raw_image_url)
                     if txt_content and len(txt_content) > 0:
                         md_blocks.append(txt_content)
 
@@ -257,7 +263,8 @@ class StructureMapper(ABC):
 
         return result
 
-    def __content_lst_node_2_md(self, content_lst_node: dict, exclude_inline_types: list = [], use_raw_image_url=False) -> str:
+    def __content_lst_node_2_md(self, content_lst_node: dict, exclude_inline_types: list = [],
+                                use_raw_image_url=False) -> str:
         """把content_list里定义的每种元素块转化为markdown格式.
 
         Args:
@@ -267,7 +274,8 @@ class StructureMapper(ABC):
         """
         node_type = content_lst_node['type']
         if node_type == DocElementType.CODE:
-            code = content_lst_node['content']['code_content']  # 这里禁止有None的content, 如果有应该消灭在模块内部。模块应该处理更精细，防止因为拼装导致掩盖了错误。
+            code = content_lst_node['content'][
+                'code_content']  # 这里禁止有None的content, 如果有应该消灭在模块内部。模块应该处理更精细，防止因为拼装导致掩盖了错误。
             # 代码不可以 strip，因为首行可能有缩进，只能 rstrip
             code = code.rstrip()
             if not code:
@@ -606,7 +614,7 @@ class DataJson(StructureChecker):
         cl = self.__json_data[DataJsonKey.CONTENT_LIST]
         return cl
 
-    def get(self, key:str, default=None):
+    def get(self, key: str, default=None):
         return self.__json_data.get(key, default)
 
     def get_magic_html(self, page_layout_type=None):
