@@ -168,13 +168,13 @@ class TestDataJsonInit(unittest.TestCase):
     def test_data_json_deepcopy(self):
         """从一个外部dict构建datajson, 改变datajson，不改变外部dict."""
         d = {'track_id': '32266dfa-c335-45c5-896e-56f057889d28',
-            'url': 'http://mathematica.stackexchange.com/users/1931/ywdr1987?tab=activity&sort=all',
-            'html': '',
-            'page_layout_type': 'forum',
-            'domain': 'mathematica.stackexchange.com',
-            'dataset_name': 'math',
-            'data_source_category': 'HTML',
-            'meta_info': {'warc_headers': {'WARC-IP-Address': '104.16.12.13'}}}
+             'url': 'http://mathematica.stackexchange.com/users/1931/ywdr1987?tab=activity&sort=all',
+             'html': '',
+             'page_layout_type': 'forum',
+             'domain': 'mathematica.stackexchange.com',
+             'dataset_name': 'math',
+             'data_source_category': 'HTML',
+             'meta_info': {'warc_headers': {'WARC-IP-Address': '104.16.12.13'}}}
         copied = copy.deepcopy(d)
         _ = DataJson(copied)
         cl = copied.get('content_list')  # 不该变外部变量d
@@ -263,7 +263,8 @@ class TestDataJsonInit(unittest.TestCase):
 
         def test_custom_exclude():
             datajson = DataJson(d)
-            md = datajson.get_content_list().to_nlp_md(exclude_nodes=[DocElementType.COMPLEX_TABLE, DocElementType.SIMPLE_TABLE])
+            md = datajson.get_content_list().to_nlp_md(
+                exclude_nodes=[DocElementType.COMPLEX_TABLE, DocElementType.SIMPLE_TABLE])
             assert 'Ziet u iets wat niet hoort of niet klopt?' in md
             assert 'Openingstijden' in md
             assert 'Maandag' not in md
@@ -390,7 +391,8 @@ class TestDataJsonInit(unittest.TestCase):
         for case in test_cases:
             doc = DataJson(case['data'])
             result = doc.get_content_list().to_txt()
-            assert result.strip() == case['expected'].strip(), f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result.strip()}'"
+            assert result.strip() == case[
+                'expected'].strip(), f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result.strip()}'"
 
     def test_to_nlp_md_with_math_delimiters(self):
         """测试 to_nlp_md 方法对数学特殊公式分隔符的处理."""
@@ -520,6 +522,136 @@ class TestDataJsonInit(unittest.TestCase):
             doc = DataJson(case['data'])
             result = doc.get_content_list().to_nlp_md()
             assert result == case['expected'], f"测试失败: 期望得到 '{case['expected']}' 但得到 '{result}'"
+
+    def test_to_plain_md(self):
+        """测试to_plain_md方法调用."""
+        from llm_web_kit.libs.standard_utils import json_loads
+        from llm_web_kit.simple import (
+            extract_content_from_html_with_layout_batch,
+            extract_content_from_html_with_llm,
+            extract_content_from_html_with_magic_html,
+            extract_content_from_main_html)
+
+        base_dir = Path(__file__).parent
+        raw_html = base_dir.joinpath('assets/to_plain_md.html').read_text(encoding='utf-8')
+        url = 'http://example.com'
+
+        plain_md = extract_content_from_html_with_magic_html(url, raw_html, 'plain_md')
+        mm_md = extract_content_from_html_with_magic_html(url, raw_html, 'mm_md')
+        json_json = json_loads(extract_content_from_html_with_magic_html(url, raw_html, 'json'))
+
+        self.assertNotIn('code.language', plain_md)
+        self.assertNotIn('Private Sub sitemenu_ItemCreated', plain_md)
+        self.assertNotIn('<table>', plain_md)
+        self.assertNotIn('a^2', plain_md)
+        self.assertNotIn('x=4', plain_md)
+        self.assertNotIn('image', plain_md)
+        self.assertNotIn('test.mp3', plain_md)
+        self.assertNotIn('flower.mp4', plain_md)
+
+        self.assertIn('Title Test', plain_md)
+        self.assertIn('1.1', plain_md)
+        self.assertIn('UL1.1', plain_md)
+        self.assertIn('test paragraph', plain_md)
+
+        self.assertIn('code.language', mm_md)
+        self.assertIn('Private Sub sitemenu_ItemCreated', mm_md)
+        self.assertIn('<table>', mm_md)
+        self.assertIn('a^2', mm_md)
+        self.assertIn('x=4', mm_md)
+        self.assertIn('image', mm_md)
+        self.assertNotIn('test.mp3', mm_md)
+        self.assertNotIn('flower.mp4', mm_md)
+
+        content_json = json_loads(base_dir.joinpath('assets/content_json.json').read_text(encoding='utf-8'))
+        self.assertEqual(json_json['content_list'], content_json['content_list'])
+
+        plain_md_main = extract_content_from_main_html(url, raw_html, 'plain_md')
+        mm_md_main = extract_content_from_html_with_magic_html(url, raw_html, 'mm_md')
+        json_main = json_loads(extract_content_from_html_with_magic_html(url, raw_html, 'json'))
+
+        self.assertNotIn('code.language', plain_md_main)
+        self.assertNotIn('Private Sub sitemenu_ItemCreated', plain_md_main)
+        self.assertNotIn('<table>', plain_md_main)
+        self.assertNotIn('a^2', plain_md_main)
+        self.assertNotIn('x=4', plain_md_main)
+        self.assertNotIn('image', plain_md_main)
+        self.assertNotIn('test.mp3', plain_md_main)
+        self.assertNotIn('flower.mp4', plain_md_main)
+
+        self.assertIn('Title Test', plain_md_main)
+        self.assertIn('1.1', plain_md_main)
+        self.assertIn('UL1.1', plain_md_main)
+        self.assertIn('test paragraph', plain_md_main)
+
+        self.assertIn('code.language', mm_md_main)
+        self.assertIn('Private Sub sitemenu_ItemCreated', mm_md_main)
+        self.assertIn('<table>', mm_md_main)
+        self.assertIn('a^2', mm_md_main)
+        self.assertIn('x=4', mm_md_main)
+        self.assertIn('image', mm_md_main)
+        self.assertNotIn('test.mp3', mm_md_main)
+        self.assertNotIn('flower.mp4', mm_md_main)
+
+        self.assertEqual(json_main['content_list'], content_json['content_list'])
+
+        plain_md_llm = extract_content_from_html_with_llm(url, raw_html, 'plain_md')
+        mm_md_llm = extract_content_from_html_with_magic_html(url, raw_html, 'mm_md')
+        json_llm = json_loads(extract_content_from_html_with_magic_html(url, raw_html, 'json'))
+
+        self.assertNotIn('code.language', plain_md_llm)
+        self.assertNotIn('Private Sub sitemenu_ItemCreated', plain_md_llm)
+        self.assertNotIn('<table>', plain_md_llm)
+        self.assertNotIn('a^2', plain_md_llm)
+        self.assertNotIn('x=4', plain_md_llm)
+        self.assertNotIn('image', plain_md_llm)
+        self.assertNotIn('test.mp3', plain_md_llm)
+        self.assertNotIn('flower.mp4', plain_md_llm)
+
+        self.assertIn('Title Test', plain_md_llm)
+        self.assertIn('1.1', plain_md_llm)
+        self.assertIn('UL1.1', plain_md_llm)
+        self.assertIn('test paragraph', plain_md_llm)
+
+        self.assertIn('code.language', mm_md_llm)
+        self.assertIn('Private Sub sitemenu_ItemCreated', mm_md_llm)
+        self.assertIn('<table>', mm_md_llm)
+        self.assertIn('a^2', mm_md_llm)
+        self.assertIn('x=4', mm_md_llm)
+        self.assertIn('image', mm_md_llm)
+        self.assertNotIn('test.mp3', mm_md_llm)
+        self.assertNotIn('flower.mp4', mm_md_llm)
+
+        self.assertEqual(json_llm['content_list'], content_json['content_list'])
+
+        plain_md_layout = extract_content_from_html_with_layout_batch(url, raw_html, 'plain_md')
+        mm_md_layout = extract_content_from_html_with_magic_html(url, raw_html, 'mm_md')
+        json_layout = json_loads(extract_content_from_html_with_magic_html(url, raw_html, 'json'))
+
+        self.assertNotIn('code.language', plain_md_layout)
+        self.assertNotIn('Private Sub sitemenu_ItemCreated', plain_md_layout)
+        self.assertNotIn('<table>', plain_md_layout)
+        self.assertNotIn('a^2', plain_md_layout)
+        self.assertNotIn('x=4', plain_md_layout)
+        self.assertNotIn('image', plain_md_layout)
+        self.assertNotIn('test.mp3', plain_md_layout)
+        self.assertNotIn('flower.mp4', plain_md_layout)
+
+        self.assertIn('Title Test', plain_md_layout)
+        self.assertIn('1.1', plain_md_layout)
+        self.assertIn('UL1.1', plain_md_layout)
+        self.assertIn('test paragraph', plain_md_layout)
+
+        self.assertIn('code.language', mm_md_layout)
+        self.assertIn('Private Sub sitemenu_ItemCreated', mm_md_layout)
+        self.assertIn('<table>', mm_md_layout)
+        self.assertIn('a^2', mm_md_layout)
+        self.assertIn('x=4', mm_md_layout)
+        self.assertIn('image', mm_md_layout)
+        self.assertNotIn('test.mp3', mm_md_layout)
+        self.assertNotIn('flower.mp4', mm_md_layout)
+
+        self.assertEqual(json_layout['content_list'], content_json['content_list'])
 
 
 class TestDataJsonGetMagicHtml:

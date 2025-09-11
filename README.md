@@ -75,6 +75,16 @@ llm-web-kit is a python library that ..
 
 ## Quick Start
 
+![extract_method picture](/docs/images/extract_method.png)
+
+This diagram shows three main HTML content extraction methods:
+
+1. **extract by magic_html+recognize**: Two-stage complete extraction that first uses magic-html to extract main content, then converts it to structured markdown.
+
+2. **only extract by recognize**: Direct content recognition that converts main_html to structured format without main content identification.
+
+3. **only extract main_html by magic-html**: First-stage only extraction that identifies and extracts main content area while preserving HTML structure.
+
 ### extract by magic_html+recognize
 
 ```python
