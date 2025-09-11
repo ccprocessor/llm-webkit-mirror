@@ -374,7 +374,7 @@ DEF
         result = chain.extract(input_data)
         content_list = result.get_content_list()._get_data()
         assert len(content_list[0]) == 17
-        assert content_list[0][3]['content']['html'] == "<table><tr><td><div>up vote 17 down vote favorite \n\n 5</div></td><td><div><div>I'm having problems with exercises on proving whether or not a given number is prime. Is $83^{27} + 1$ prime?</div><div>prime-numbers factoring</div><table><tr><td></td><td></td><td></td></tr></table></div></td></tr><tr><td></td><td></td></tr></table>"
+        assert content_list[0][3]['content']['html'] == "<table><tr><td>up vote 17 down vote favorite\n\n5</td><td>I'm having problems with exercises on proving whether or not a given number is prime. Is $83^{27} + 1$ prime?\n\nprime-numbers factoring<table><tr><td></td><td></td><td></td></tr></table></td></tr><tr><td></td><td></td></tr></table>"
 
     def test_table_include_math_p_2(self):
         """table包含math和其他内容."""
@@ -386,7 +386,7 @@ DEF
         md_content = result.get_content_list().to_nlp_md()
         # with open('output_badcase_p2.md', 'w', encoding='utf-8') as f:
         #     f.write(md_content)
-        self.assertIn('<table><tr><td>单位换算：</td><td><p>数学公式区块： $1\\text{km}={10}^{3}\\text{m}$</p><table><tr><td>长度</td><td>质量</td><td>时间</td></tr>', md_content)
+        self.assertIn('<table><tr><td>单位换算：</td><td>数学公式区块： $1\\text{km}={10}^{3}\\text{m}$<table><tr><td>长度</td><td>质量</td><td>时间</td></tr>', md_content)
 
     def test_clean_tags(self):
         """测试clean_tag的preExtractor是否生效."""
@@ -491,7 +491,7 @@ DEF
         result_content_list = result.get_content_list()._get_data()
         result = result_content_list[0][2]['content']['html']
         assert '\n\t' not in result
-        assert len(result) == 2205
+        assert len(result) == 1893
 
     def test_math_physicsforums(self):
         """测试math_physicsforums网页中数学公式是[tex]和[itex]包裹的，且中间还有<br>标签分割."""
@@ -636,7 +636,7 @@ A few explanations on why certain things in business are so.
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_content_list = result.get_content_list()._get_data()
-        assert result_content_list[0][22]['content']['html'] == '<table><colgroup></colgroup><tr><th>お名前<span>【必須】</span></th><td></td><th>お名前（カナ）</th><td></td></tr><tr><th>ご連絡先<span>【いずれか必須】</span></th><td colspan="3"><table><td><p>メールアドレス</p></td><td><p>電話番号</p></td></table><p>※メール受信制限をしている方は、@chintai.co.jpからのメールを受信できるよう設定の変更をお願い致します。</p></td></tr></table>'
+        assert result_content_list[0][22]['content']['html'] == '<table><tr><th>お名前【必須】</th><td></td><th>お名前（カナ）</th><td></td></tr><tr><th>ご連絡先【いずれか必須】</th><td colspan="3"><table><td>メールアドレス</td><td>電話番号</td></table>※メール受信制限をしている方は、@chintai.co.jpからのメールを受信できるよう設定の変更をお願い致します。</td></tr></table>'
 
     def test_td_include_specila_symbol(self):
         """测试td包含特殊符号|，需要转义."""

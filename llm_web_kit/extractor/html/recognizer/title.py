@@ -1,6 +1,7 @@
 from typing import List, Tuple
 
 # from lxml.etree import _Element as HtmlElement
+from lxml import html as lxml_html
 from lxml.html import HtmlElement
 from overrides import override
 
@@ -8,8 +9,9 @@ from llm_web_kit.exception.exception import HtmlTitleRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import (html_normalize_space,
-                                         process_sub_sup_tags)
+from llm_web_kit.libs.html_utils import (html_normalize_space, html_to_element,
+                                         replace_sub_sup_with_text_regex,
+                                         restore_sub_sup_from_text_regex)
 
 from .text import PARAGRAPH_SEPARATOR
 
@@ -90,10 +92,14 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         """
         # 匹配需要替换的标签
         if root.tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            if root.tail and root.tail.strip():
+                tail_text = root.tail.strip()
+            else:
+                tail_text = ''
+            root.tail = None
             title_text = self.__extract_title_text(root)
             title_raw_html = self._element_to_html(root)
             title_level = str(self.__extract_title_level(root.tag))
-            tail_text = root.tail
             cc_element = self._build_cc_element(CCTag.CC_TITLE, title_text, tail_text, level=title_level, html=title_raw_html)
             self._replace_element(root, cc_element)
             return
@@ -122,8 +128,9 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
         Returns:
             str: 标题的文本
         """
+        blks = []
+
         def __extract_title_text_recusive(el: HtmlElement, with_tail: bool = True) -> list[str]:
-            blks = []
 
             if el.tag == CCTag.CC_CODE_INLINE:
                 blks.append(f'`{el.text}`')
@@ -134,21 +141,18 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
                     _new_text = html_normalize_space(el.text.strip())
                     blks.append(_new_text)
 
-            for child in el.getchildren():
-                if child.tag == 'sub' or child.tag == 'sup':
-                    blks.extend([process_sub_sup_tags(child, '', recursive=False), child.tail])
-                else:
-                    blks.extend(__extract_title_text_recusive(child))
-
             if with_tail:
                 blks.append((el.tail or '').strip())
 
             return blks
 
-        # 根元素不保留结尾
-        blks = __extract_title_text_recusive(header_el, False)
+        _html = lxml_html.tostring(header_el, encoding='utf-8').decode()
+        replace_tree_html = replace_sub_sup_with_text_regex(_html)
+        header_el = html_to_element(replace_tree_html)
 
-        return ' '.join(blk for blk in blks if blk).replace('$br$', PARAGRAPH_SEPARATOR)
+        for child in header_el.iter():
+            __extract_title_text_recusive(child, True)
+        return restore_sub_sup_from_text_regex(' '.join(blk for blk in blks if blk).replace('$br$', PARAGRAPH_SEPARATOR))
 
     def __get_attribute(self, html:HtmlElement) -> Tuple[int, str]:
         """获取element的属性."""
