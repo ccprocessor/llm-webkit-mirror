@@ -13,6 +13,16 @@
 
 ## 快速开始
 
+配置环境变量
+
+```bash
+export MODEL_PATH=""
+```
+
+或者配置文件.llm-web-kit.jsonc添加“model_path”
+
+安装依赖
+
 ```bash
 pip install -r requirements.txt
 python llm_web_kit/api/run_server.py
@@ -28,6 +38,20 @@ python llm_web_kit/api/run_server.py
 POST /api/v1/html/parse
 
 请求示例：
+
+```bash
+curl -s -X POST "http://127.0.0.1:8000/api/v1/html/parse" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "html_content": "<html><body><h1>Hello World</h1></body></html>",
+    "url": "https://helloworld.com/hello",
+    "options": {
+      "clean_html": true
+    }
+  }'
+```
+
+或直接发送以下 JSON 作为请求体：
 
 ```json
 {
@@ -51,7 +75,9 @@ curl -s -X POST "http://127.0.0.1:8000/api/v1/html/upload" \
 
 GET /api/v1/html/status
 
-## 返回结构示例
+## 返回结构示例（/api/v1/html/parse 与 /api/v1/html/upload 成功返回）
+
+以下示例为 HTML 解析成功时的统一响应结构：
 
 ```json
 {

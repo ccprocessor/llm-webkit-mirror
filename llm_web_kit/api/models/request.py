@@ -17,6 +17,12 @@ class HTMLParseRequest(BaseModel):
         max_length=10485760  # 10MB
     )
 
+    url: Optional[str] = Field(
+        None,
+        description="url 地址",
+        max_length=10485760  # 10MB
+    )
+
     options: Optional[Dict[str, Any]] = Field(
         default_factory=dict,
         description="解析选项配置"
