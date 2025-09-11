@@ -20,7 +20,7 @@ class HTMLService:
         try:
             self._inference_service = get_inference_service()
         except Exception as e:
-            logger.warning(f"InferenceService 获取失败（将在首次调用时再尝试）：{e}")
+            logger.warning(f'InferenceService 获取失败（将在首次调用时再尝试）：{e}')
             self._inference_service = None
 
     def _init_components(self):
@@ -36,7 +36,7 @@ class HTMLService:
         """解析 HTML 内容."""
         try:
             if not html_content:
-                raise ValueError("必须提供 HTML 内容")
+                raise ValueError('必须提供 HTML 内容')
 
             # 延迟导入，避免模块导入期异常导致服务类不可用
             try:
@@ -47,14 +47,14 @@ class HTMLService:
                 from llm_web_kit.main_html_parser.simplify_html.simplify_html import \
                     simplify_html
             except Exception as import_err:
-                logger.error(f"依赖导入失败: {import_err}")
+                logger.error(f'依赖导入失败: {import_err}')
                 raise
 
             # 简化网页
             try:
                 simplified_html, typical_raw_tag_html, _ = simplify_html(html_content)
             except Exception as e:
-                logger.error(f"简化网页失败: {e}")
+                logger.error(f'简化网页失败: {e}')
                 raise
 
             # 模型推理
@@ -72,7 +72,7 @@ class HTMLService:
             return dict(pre_data.items())
 
         except Exception as e:
-            logger.error(f"HTML 解析失败: {e}")
+            logger.error(f'HTML 解析失败: {e}')
             raise
 
     async def _parse_with_model(self, html_content: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:

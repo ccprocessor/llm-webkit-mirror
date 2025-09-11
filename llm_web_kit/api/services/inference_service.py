@@ -20,9 +20,9 @@ logger = get_logger(__name__)
 
 @dataclass
 class InferenceConfig:
-    model_path: str = ""
-    data_path: str = ""
-    output_path: str = ""
+    model_path: str = ''
+    data_path: str = ''
+    output_path: str = ''
     use_logits_processor: bool = True
     num_workers: int = 8
     max_tokens: int = 32768
@@ -31,13 +31,13 @@ class InferenceConfig:
     max_output_tokens: int = 8192
     tensor_parallel_size: int = 1
     # 正式环境修改为bfloat16
-    dtype: str = "float16"
+    dtype: str = 'float16'
     template: bool = True
 
 
 config = InferenceConfig(
-    model_path="",  # checkpoint-3296路径
-    output_path="",
+    model_path='',  # checkpoint-3296路径
+    output_path='',
     use_logits_processor=True,  # 启用逻辑处理器确保JSON格式输出
     num_workers=8,  # 并行工作进程数
     max_tokens=26000,  # 最大输入token数
@@ -100,7 +100,7 @@ def create_prompt(alg_html: str) -> str:
 
 def add_template(prompt: str, tokenizer: AutoTokenizer) -> str:
     messages = [
-        {"role": "user", "content": prompt}
+        {'role': 'user', 'content': prompt}
     ]
     chat_prompt = tokenizer.apply_chat_template(
         messages,
@@ -125,13 +125,13 @@ class Token_state:
     def __init__(self, model_path):
         self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
         token_id_map = {
-            State.Left_bracket: ["{"],
-            State.Right_bracket: ["}"],
+            State.Left_bracket: ['{'],
+            State.Right_bracket: ['}'],
             State.Space_quote: [' "'],
             State.Quote_colon_quote: ['":"'],
             State.Quote_comma: ['",'],
-            State.Main_other: ["main", "other"],
-            State.Number: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            State.Main_other: ['main', 'other'],
+            State.Number: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
         }
         self.token_id_map = {k: [self.tokenizer.encode(v)[0] for v in token_id_map[k]] for k in token_id_map}
 
@@ -157,7 +157,7 @@ class Token_state:
 
     def find_last_complete_number(self, input_ids: List[int]):
         if not input_ids:
-            return -1, "null", -1
+            return -1, 'null', -1
 
         tail_number_ids = []
         last_idx = len(input_ids) - 1
@@ -171,7 +171,7 @@ class Token_state:
             last_idx -= 1
 
         if last_idx < 0:
-            return tail_number, "tail", tail_number
+            return tail_number, 'tail', tail_number
 
         last_number_ids = []
         while last_idx >= 0 and input_ids[last_idx] in self.token_id_map[State.Number]:
@@ -181,8 +181,8 @@ class Token_state:
         last_number = int(self.tokenizer.decode(last_number_ids))
 
         if tail_number == last_number + 1:
-            return tail_number, "tail", tail_number
-        return last_number, "non_tail", tail_number
+            return tail_number, 'tail', tail_number
+        return last_number, 'non_tail', tail_number
 
     def process_logit(self, prompt_token_ids: List[int], input_ids: List[int], logits: torch.Tensor):
         if not input_ids:
@@ -205,7 +205,7 @@ class Token_state:
             return self.mask_other_logits(logits, self.tokenizer.encode(next_char))
         elif last_token in self.token_id_map[State.Number]:
             last_number, state, tail_number = self.find_last_complete_number(input_ids)
-            if state == "tail":
+            if state == 'tail':
                 return self.mask_other_logits(logits, self.token_id_map[State.Quote_colon_quote])
             else:
                 next_str = str(last_number + 1)
@@ -229,7 +229,7 @@ class Token_state:
 def reformat_map(text):
     try:
         data = json.loads(text)
-        return {"item_id " + k: 1 if v == "main" else 0 for k, v in data.items()}
+        return {'item_id ' + k: 1 if v == 'main' else 0 for k, v in data.items()}
     except json.JSONDecodeError:
         return {}
 
@@ -240,8 +240,8 @@ def main(simplified_html: str, model: object, tokenizer: object, model_path: str
     # print("sim_html length", len(simplified_html))
     if SamplingParams is None:
         raise RuntimeError(
-            "当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，"
-            "或在 API 中使用占位/替代推理实现。原始导入错误: {}".format("_VLLM_IMPORT_ERROR")
+            '当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，' +
+            '或在 API 中使用占位/替代推理实现。原始导入错误: {}'.format('_VLLM_IMPORT_ERROR')
         )
     prompt = create_prompt(simplified_html)
     chat_prompt = add_template(prompt, tokenizer)
@@ -270,8 +270,8 @@ def clean_output(output):
     prediction = output[0].outputs[0].text
 
     # Extract JSON from prediction
-    start_idx = prediction.rfind("{")
-    end_idx = prediction.rfind("}") + 1
+    start_idx = prediction.rfind('{')
+    end_idx = prediction.rfind('}') + 1
 
     if start_idx != -1 and end_idx != -1:
         json_str = prediction[start_idx:end_idx]
@@ -279,9 +279,9 @@ def clean_output(output):
         try:
             json.loads(json_str)  # Validate
         except Exception:
-            json_str = "{}"
+            json_str = '{}'
     else:
-        json_str = "{}"
+        json_str = '{}'
 
     return json_str
 
@@ -320,11 +320,11 @@ class InferenceService:
             self.model_path = os.environ['MODEL_PATH'] if 'MODEL_PATH' in os.environ else llm_config.get('model_path',
                                                                                                          None)
             if self.model_path is None:
-                raise RuntimeError("model_path为空，未配置模型路径")
+                raise RuntimeError('model_path为空，未配置模型路径')
             if SamplingParams is None:
                 raise RuntimeError(
-                    "当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，"
-                    "或在 API 中使用占位/替代推理实现。原始导入错误: {}".format("_VLLM_IMPORT_ERROR")
+                    '当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，' +
+                    '或在 API 中使用占位/替代推理实现。原始导入错误: {}'.format('_VLLM_IMPORT_ERROR')
                 )
 
             # 初始化 tokenizer
@@ -343,10 +343,10 @@ class InferenceService:
                 max_model_len=config.max_tokens,  # 减少序列长度避免内存不足
             )
 
-            logger.info(f"模型初始化成功: {self.model_path}")
+            logger.info(f'模型初始化成功: {self.model_path}')
 
         except Exception as e:
-            logger.error(f"模型初始化失败: {e}")
+            logger.error(f'模型初始化失败: {e}')
             # 如果模型初始化失败，保持为 None，后续调用会返回占位结果
             self._llm = None
             self._tokenizer = None
@@ -357,14 +357,14 @@ class InferenceService:
             await self._ensure_initialized()
 
             if self._llm is None or self._tokenizer is None:
-                logger.error("模型未初始化，返回占位结果")
+                logger.error('模型未初始化，返回占位结果')
                 return self._get_placeholder_result()
 
             # 执行真实推理
             return await self._run_real_inference(simplified_html, options)
 
         except Exception as e:
-            logger.error(f"推理过程出错: {e}")
+            logger.error(f'推理过程出错: {e}')
             return self._get_placeholder_result()
 
     async def _run_real_inference(self, simplified_html: str, options: dict | None = None) -> dict:
@@ -398,11 +398,11 @@ class InferenceService:
 
             # 格式化结果
             result = reformat_map(output_json)
-            logger.info(f"推理完成，结果: {result}, 耗时: {end_time - start_time}秒")
+            logger.info(f'推理完成，结果: {result}, 耗时: {end_time - start_time}秒')
             return result
 
         except Exception as e:
-            logger.error(f"真实推理失败: {e}")
+            logger.error(f'真实推理失败: {e}')
             return self._get_placeholder_result()
 
     def _get_placeholder_result(self) -> dict:
@@ -410,10 +410,10 @@ class InferenceService:
         return {}
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     config = InferenceConfig(
-        model_path="",
-        output_path="",
+        model_path='',
+        output_path='',
         use_logits_processor=True,
         num_workers=8,
         max_tokens=26000,
@@ -434,7 +434,7 @@ if __name__ == "__main__":
                     max_model_len=config.max_tokens,
                     tensor_parallel_size=config.tensor_parallel_size)
 
-        simplified_html = "<html><body><h1>Hello World</h1></body></html>"
+        simplified_html = '<html><body><h1>Hello World</h1></body></html>'
         response_json = main(simplified_html, model, tokenizer)
         llm_response_dict = reformat_map(response_json)
     except Exception:
