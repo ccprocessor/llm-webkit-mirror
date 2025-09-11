@@ -4,7 +4,6 @@ nbstripout==0.8.1
 nltk==3.8.1
 openai==1.75.0
 pre-commit==3.8.0
-pydantic==2.10.6
 pytest==8.3.3
 # coverage tools
 pytest-cov==6.0.0
