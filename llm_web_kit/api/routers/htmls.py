@@ -30,6 +30,7 @@ async def parse_html(
 
         result = await html_service.parse_html(
             html_content=request.html_content,
+            url=request.url,
             options=request.options
         )
 
