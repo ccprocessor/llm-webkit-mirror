@@ -588,6 +588,101 @@ class TestSimpleIntegration(unittest.TestCase):
         self.assertIn('B. How does the TV advertising campaign initiated by IKEA overcome the entry barrier of high advertising expenditures?', md)
         self.assertIn('Johansson, J. K. (2006). Global marketing (4th edition ed.). New York: McGraw Hill Irwin.', md)
 
+    def test_extract_main_html_with_mathjax(self):
+        """测试包含MathJax数学公式的HTML内容提取."""
+
+        main_html = r'''
+        <html><body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
+        <p>正常内容</p>
+        </body></html>
+        '''
+
+        md = extract_content_from_main_html(self.url, main_html)
+
+        # 验证MathJax数学公式被正确提取
+        self.assertIn('$\\mathcal{F}_1$', md)
+        self.assertIn('Are the filtrations after these steps', md)
+        self.assertIn('正常内容', md)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证JavaScript代码被过滤掉了
+        self.assertNotIn('MathJax=', md)
+        self.assertNotIn('processEscapes', md)
+
+    def test_extract_main_html_with_table_with_math(self):
+        """测试html中包含table且table中包含数学公式的HTML内容提取."""
+        main_html = r'''
+        <h2>Character values</h2>
+        <p>We give the values of \(\chi\) on generators for \(\left(\mathbb{Z}/3332\mathbb{Z}\right)^\times\).</p>
+        <table class="ntdata">
+        <tbody>
+                <tr>
+            <td class="dark border-right border-bottom">\(n\)</td>
+            <td class="light border-bottom">\(785\)</td>
+            <td class="dark border-bottom">\(885\)</td>
+            <td class="light border-bottom">\(1667\)</td>    </tr>
+            <tr>
+            <td class="dark border-right">\(\chi(n)\)</td>
+            <td class="light">\(e\left(\frac{3}{4}\right)\)</td>
+            <td class="dark">\(e\left(\frac{2}{3}\right)\)</td>
+            <td class="light">\(-1\)</td>    </tr>
+        </tbody>
+        </table>
+
+        <a name="coefficient_data"></a>
+        <h2>Coefficient data</h2>
+
+        <p>For each \(n\) we display the coefficients of the \(q\)-expansion \(a_n\), the
+        <a title="Satake parameters [cmf.satake_parameters]" knowl="cmf.satake_parameters" kwargs="">Satake parameters</a> \(\alpha_p\),
+        and the Satake angles \(\theta_p = \textrm{Arg}(\alpha_p)\).</p>
+        '''
+
+        md = extract_content_from_main_html(self.url, main_html)
+
+        # 验证MathJax数学公式被正确提取
+        self.assertIn('We give the values of $\\chi$ on generators for $\\left(\\mathbb{Z}/3332\\mathbb{Z}\\right)^\\times$ ', md)
+        self.assertIn('| $n$ | $785$ | $885$ | $1667$ |', md)
+        self.assertIn('| $\\chi(n)$ | $e\\left(\\frac{3}{4}\\right)$ | $e\\left(\\frac{2}{3}\\right)$ | $-1$ |', md)
+
+    def test_extract_magic_html_with_mathjax(self):
+        """测试包含MathJax数学公式的HTML内容提取."""
+        raw_html = r'''
+        <html>
+        <meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport">
+        <script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],processEscapes:!0},svg:{fontCache:"global"}}</script><script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js" type="text/javascript"></script>
+        <body>
+        <div class="options-div-0-0 option-box__items" style="display: none;">
+            <span class="bedroom-rate__title">Room Only Rate</span>
+            <span class="bedroom-rate__price">£1,230.00</span>
+        </div>
+        <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wygjielbjln" style="">Are the filtrations after these steps. Why only these? Looking at $\mathcal{F}_1$, we can obtain probabilities for the following events:</p>
+        <p>正常内容</p>
+        </body></html>
+        '''
+
+        md = extract_content_from_html_with_magic_html(self.url, raw_html)
+
+        # 验证MathJax数学公式被正确提取
+        self.assertIn('$\\mathcal{F}_1$', md)
+        self.assertIn('Are the filtrations after these steps', md)
+        self.assertIn('正常内容', md)
+
+        # 验证隐藏内容被过滤掉了
+        self.assertNotIn('Room Only Rate', md)
+        self.assertNotIn('£1,230.00', md)
+
+        # 验证JavaScript代码被过滤掉了
+        self.assertNotIn('MathJax=', md)
+        self.assertNotIn('processEscapes', md)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
