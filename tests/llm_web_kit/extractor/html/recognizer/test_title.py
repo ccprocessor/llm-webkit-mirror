@@ -18,17 +18,15 @@ def test_title_recognizer(title_recognizer):
 
     result = title_recognizer.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
     assert len(result) == 10
-    assert element_to_html(result[0][0]) == """<html><body><cctitle level="1" html="&lt;h1&gt;大模型好，大模型棒1&lt;/h1&gt;
-        ">大模型好，大模型棒1</cctitle></body></html>"""
-    assert element_to_html(result[6][0]) == """<html><body><cctitle level="3" html="&lt;h3&gt;大模型好，大模型棒5&lt;span&gt;大模型很棒&lt;/span&gt;&lt;/h3&gt;
-        ">大模型好，大模型棒5 大模型很棒</cctitle></body></html>"""
+    assert element_to_html(result[0][0]) == """<html><body><cctitle level="1" html="&lt;h1&gt;大模型好，大模型棒1&lt;/h1&gt;">大模型好，大模型棒1</cctitle></body></html>"""
+    assert element_to_html(result[6][0]) == """<html><body><cctitle level="3" html="&lt;h3&gt;大模型好，大模型棒5&lt;span&gt;大模型很棒&lt;/span&gt;&lt;/h3&gt;">大模型好，大模型棒5 大模型很棒</cctitle></body></html>"""
 
 
 def test_title_tails_and_levels(title_recognizer):
     html_content = """<h4>TEST:<cccode-inline>import *</cccode-inline>TEST</h4>Tail<p>aaa</p>"""
     result = title_recognizer.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
     assert len(result) == 2
-    assert element_to_html(result[0][0]) == '<div><cctitle level="4" html="&lt;h4&gt;TEST:&lt;cccode-inline&gt;import *&lt;/cccode-inline&gt;TEST&lt;/h4&gt;Tail">TEST: `import *` TEST</cctitle></div>'
+    assert element_to_html(result[0][0]) == '<div><cctitle level="4" html="&lt;h4&gt;TEST:&lt;cccode-inline&gt;import *&lt;/cccode-inline&gt;TEST&lt;/h4&gt;">TEST: `import *` TEST</cctitle></div>'
     pass
 
 
@@ -47,4 +45,4 @@ def test_title1(title_recognizer):
     with open(f'{os.path.dirname(os.path.abspath(__file__))}/assets/recognizer/title1.html', 'r') as file:
         html_content = file.read()
     result = title_recognizer.recognize('http://www.baidu.com', [(main_html_content, main_html_content)], html_content)
-    assert 'Compare vibrational frequencies for two calculations for C &lt;sub&gt;3&lt;/sub&gt;  (carbon trimer)' in element_to_html(result[1][0])
+    assert 'Compare vibrational frequencies for two calculations for C&lt;sub&gt;3&lt;/sub&gt; (carbon trimer)' in element_to_html(result[1][0])

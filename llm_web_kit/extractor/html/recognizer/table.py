@@ -1,6 +1,9 @@
+import re
 from typing import Any, List, Tuple
 
+from lxml import html
 from lxml.html import HtmlElement
+from lxml.html.clean import Cleaner
 from overrides import override
 
 from llm_web_kit.exception.exception import HtmlTableRecognizerException
@@ -8,11 +11,33 @@ from llm_web_kit.extractor.html.recognizer.ccmath import MathRecognizer
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType
-from llm_web_kit.libs.html_utils import (html_normalize_space,
-                                         process_sub_sup_tags)
+from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
+                                         html_normalize_space, html_to_element,
+                                         process_sub_sup_tags,
+                                         replace_sub_sup_with_text_regex,
+                                         restore_sub_sup_from_text_regex)
 from llm_web_kit.libs.text_utils import normalize_text_segment
 
 from .text import inline_tags
+
+new_inline_tags = inline_tags.union({'table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot', 'caption'})
+
+allow_tags = ['table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot', 'caption', 'sub', 'sup', 'ccmath-inline', 'ccmath-interline', 'cccode', 'cccode-inline']
+
+cleaner = Cleaner(
+    safe_attrs_only=False,
+    page_structure=False,
+    style=True,
+    scripts=True,
+    comments=True,
+    links=False,
+    meta=True,
+    embedded=True,
+    frames=True,
+    forms=True,
+    annoying_tags=True,
+    allow_tags=allow_tags
+)
 
 # 空元素
 VOID_ELEMENTS = {
@@ -234,7 +259,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                     if node.tail and node.tail.strip():
                         result.append(node.tail.strip())
                 else:
-                    if node.tag == 'br' or node.tag not in inline_tags:
+                    if node.tag == 'br' or node.tag not in new_inline_tags:
                         result.append('\n\n')
 
                     # 提取当前节点的文本
@@ -247,7 +272,7 @@ class TableRecognizer(BaseHTMLElementRecognizer):
                         process_node(child)
                     # 处理节点的tail（元素闭合后的文本）
                     if node.tail and node.tail.strip():
-                        if node.tag not in inline_tags:
+                        if node.tag not in new_inline_tags:
                             result.append('\n\n')
                         cleaned_tail = node.tail.strip()
                         result.append(html_normalize_space(cleaned_tail))
@@ -274,7 +299,10 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         else:
             math_res = self.__check_table_include_math_code(elem)
             elem.clear()
-            math_res_text = ' '.join(normalize_text_segment(item) for item in math_res)
+            if elem.tag not in new_inline_tags:
+                math_res_text = ' '.join(normalize_text_segment(item) for item in math_res) + "\n\n"
+            else:
+                math_res_text = ' '.join(normalize_text_segment(item) for item in math_res)
             if elem.tag in VOID_ELEMENTS:
                 elem_pre = elem.getprevious()
                 if elem_pre is not None:
@@ -292,22 +320,28 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         if table_type == 'empty':
             content = table_root.text_content()
             return content
+        table_html = html.tostring(table_root, encoding='utf-8').decode()
+        replace_tree_html = replace_sub_sup_with_text_regex(table_html)
+        table_root = html_to_element(replace_tree_html)
+
         # 清理除了colspan和rowspan之外的属性
         self.__simplify_td_th_content(table_nest_level, table_root)
         table_clean_attributes(table_root)
+        clean_html = cleaner.clean_html(self._element_to_html_entity(table_root))
+        new_table_root = self._build_html_tree(clean_html)
 
-        # doc = html.fromstring(html_content)
-        for element in table_root.iter():
+        pattern = re.compile(r'(\s*\n\s*\n\s*|\n{2,})')
+        for element in new_table_root.iter():
             # 清理元素前后的空白（不影响.text和.tail的内容）
             if element.text is not None:
-                element.text = element.text.lstrip('\n\t ')
+                element.text = re.sub(pattern, '\n\n', element.text.strip())
             if element.tail is not None:
-                if "\n\n" in element.tail:
-                    element.tail = "\n\n" + element.tail.lstrip('\n\t ')
-                else:
-                    element.tail = element.tail.lstrip('\n\t ')
+                element.tail = re.sub(pattern, '\n\n', element.tail.lstrip()).rstrip()
 
-        return self._element_to_html_entity(table_root)
+        tree_html = element_to_html_unescaped(new_table_root)
+        restore_tree_html = restore_sub_sup_from_text_regex(tree_html)
+
+        return restore_tree_html
 
     def __do_extract_tables(self, root: HtmlElement) -> None:
         """递归处理所有子标签."""

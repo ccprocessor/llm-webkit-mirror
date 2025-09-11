@@ -1,6 +1,7 @@
 import json
 from typing import Any, List, Tuple
 
+from lxml import html as lxml_html
 from lxml.html import HtmlElement
 from overrides import override
 
@@ -8,8 +9,10 @@ from llm_web_kit.exception.exception import HtmlListRecognizerException
 from llm_web_kit.extractor.html.recognizer.recognizer import (
     BaseHTMLElementRecognizer, CCTag)
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
-from llm_web_kit.libs.html_utils import (html_normalize_space,
-                                         process_sub_sup_tags)
+from llm_web_kit.libs.html_utils import (html_normalize_space, html_to_element,
+                                         process_sub_sup_tags,
+                                         replace_sub_sup_with_text_regex,
+                                         restore_sub_sup_from_text_regex)
 from llm_web_kit.libs.text_utils import normalize_text_segment
 
 from .text import inline_tags
@@ -224,7 +227,9 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         Returns:
             list: 包含列表项内容的列表，即items
         """
-
+        ele_html = lxml_html.tostring(ele, encoding='utf-8').decode()
+        replace_tree_html = replace_sub_sup_with_text_regex(ele_html)
+        ele = html_to_element(replace_tree_html)
         content_list = []
         # 处理根元素文本
         if ele.text and ele.text.strip():
@@ -239,6 +244,8 @@ class ListRecognizer(BaseHTMLElementRecognizer):
         for child in ele.iterchildren():
             text_paragraph = self.__extract_list_item_text(child)
             if len(text_paragraph) > 0:
+                json_paragraph = restore_sub_sup_from_text_regex(json.dumps(text_paragraph))
+                text_paragraph = json.loads(json_paragraph)
                 content_list.extend(text_paragraph)
         return content_list
 
