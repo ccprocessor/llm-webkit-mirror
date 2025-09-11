@@ -465,7 +465,6 @@ def replace_sub_sup_with_text_regex(html_content):
             return 'tem_sup_start'
         if tag == '</sup>':
             return 'tem_sup_end'
-        return tag
 
     pattern = r'</?(?:sub|sup)\b[^>]*>'
     return re.sub(pattern, replacer, html_content, flags=re.IGNORECASE)

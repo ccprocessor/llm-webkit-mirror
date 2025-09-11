@@ -334,15 +334,9 @@ class TableRecognizer(BaseHTMLElementRecognizer):
         for element in new_table_root.iter():
             # 清理元素前后的空白（不影响.text和.tail的内容）
             if element.text is not None:
-                if element.tag in allow_tags:
-                    element.text = re.sub(pattern, '\n\n', element.text.strip())
-                else:
-                    element.text = re.sub(pattern, '\n\n', element.text.lstrip())
+                element.text = re.sub(pattern, '\n\n', element.text.strip())
             if element.tail is not None:
-                if element.tag not in new_inline_tags:
-                    element.tail = "\n\n" + re.sub(pattern, '\n\n', element.tail.lstrip())
-                else:
-                    element.tail = re.sub(pattern, '\n\n', element.tail.lstrip()).rstrip()
+                element.tail = re.sub(pattern, '\n\n', element.tail.lstrip()).rstrip()
 
         tree_html = element_to_html_unescaped(new_table_root)
         restore_tree_html = restore_sub_sup_from_text_regex(tree_html)
