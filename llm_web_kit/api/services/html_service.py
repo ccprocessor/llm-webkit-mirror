@@ -30,6 +30,7 @@ class HTMLService:
     async def parse_html(
         self,
         html_content: Optional[str] = None,
+        url: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """解析 HTML 内容."""
