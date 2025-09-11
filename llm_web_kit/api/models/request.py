@@ -32,6 +32,7 @@ class HTMLParseRequest(BaseModel):
         json_schema_extra={
             "example": {
                 "html_content": "<html><body><h1>Hello World</h1></body></html>",
+                "url": "https://helloworld.com/hello",
                 "options": {
                     "clean_html": True
                 }

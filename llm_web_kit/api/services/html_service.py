@@ -52,7 +52,7 @@ class HTMLService:
 
             # 简化网页
             try:
-                simplified_html, typical_raw_tag_html, _ = simplify_html(html_content)
+                simplified_html, typical_raw_tag_html = simplify_html(html_content)
             except Exception as e:
                 logger.error(f'简化网页失败: {e}')
                 raise
@@ -72,7 +72,7 @@ class HTMLService:
             return dict(pre_data.items())
 
         except Exception as e:
-            logger.error(f'HTML 解析失败: {e}')
+            logger.error(f'HTML解析失败: {e}')
             raise
 
     async def _parse_with_model(self, html_content: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
