@@ -6,78 +6,90 @@
 
 ## 执行步骤
 
-| filename         | function                    | input & input_type                                                              | output_type                | 实现功能       |
-| :--------------- | :-------------------------- | :------------------------------------------------------------------------------ | :------------------------- | :------------- |
-| choose_html.py   | select_typical_html         | html_strs: html迭代器                                                           | str                        | 选出代表html   |
-| add_tags.py      | process_html                | input_html: str                                                                 | str                        | 添加itemid     |
-| post_llm.py      | get_llm_response            | api_key: str, url: str, html_id_str: str, model_name: str                       | Dict\[str, int\] \[^1\]    | 模型打标       |
-| generate_rule.py | restore_html_trim_ends_only | processed_html: str, llm_response: Dict\[str, int\](get_llm_response的输出结果) | Dict\[str, object\] \[^2\] | 生成删除规则   |
-| post_mapping.py  | mapping_html_by_rules       | html_str: str, post_delete_node: List\[object\] \[^3\]                          | str                        | 推广到所有数据 |
-
-\[^1\]
-
-```jsonc
-
-{"item_id 1": 0, "item_id 2": 0, "item_id 3": 1, "item_id 4": 1, "item_id 5": 1, "item_id 6": 1, "item_id 7": 1}  // 0：删除；1：保留
+### choose_html.py 选出代表html
 
 ```
+func: select_typical_htmls
 
-\[^2\]
+输入参数：
+    html_strings: List[dict]
+        [
+            {"html": "html字符串","filename": "数据来源路径"}
+        ]
+    select_n: int (选出代表html的数量，default: 3)
 
-```jsonc
-
-{
-    "html": "...",  // 选出的代表main html经过处理之后的新html
-    "post_delete_node": [  // 删除规则
-        {
-            "del_location": "start",  // 删除的位置【start（头部） or end（尾部）】
-            "xpath": "/div/div[1]/div/div/div[1]",  // 删除节点的xpath
-            "tag": "div",  // 删除节点的标签名称
-            "attributes": {"class": "left-content"},  // 删除节点的属性
-            "index_in_parent": 0,  // 删除节点在父节点的索引
-            "parent_xpath": "/div/div[1]/div/div",  // 删除节点的父节点的xpath
-            "parent_tag": "div",  // 删除节点的父节点的标签名称
-            "parent_attributes": {"class": "main-content fl-clr"}  // 删除节点的父节点的属性
-        },
-        {
-            "del_location": "end",
-            "xpath": "/div/div[3]",
-            "tag": "div",
-            "attributes": {"class": "footer"},
-            "index_in_parent": 2,
-            "parent_xpath": "/div",
-            "parent_tag": "div",
-            "parent_attributes": {}
-        }
-    ]
-}
-
+输出参数：
+    List[dict]
+        [
+            {"html": "html字符串","filename": "数据来源路径"}
+        ]
 ```
 
-\[^3\]
+### post_llm.py 模型识别生成规则
 
-```jsonc
-[
-    {
-        "del_location": "start",  // 删除的位置【start（头部） or end（尾部）】
-        "xpath": "/div/div[1]/div/div/div[1]",  // 删除节点的xpath
-        "tag": "div",  // 删除节点的标签名称
-        "attributes": {"class": "left-content"},  // 删除节点的属性
-        "index_in_parent": 0,  // 删除节点在父节点的索引
-        "parent_xpath": "/div/div[1]/div/div",  // 删除节点的父节点的xpath
-        "parent_tag": "div",  // 删除节点的父节点的标签名称
-        "parent_attributes": {"class": "main-content fl-clr"}  // 删除节点的父节点的属性
-    },
-    {
-        "del_location": "end",
-        "xpath": "/div/div[3]",
-        "tag": "div",
-        "attributes": {"class": "footer"},
-        "index_in_parent": 2,
-        "parent_xpath": "/div",
-        "parent_tag": "div",
-        "parent_attributes": {}
-    }
-]
+```
+func: get_llm_response
 
+输入参数：
+    html_strings: List[dict]
+        ["html0", "html1", "html2"]
+    api_key: str (openai api key)
+    url: str (openai api url)
+    model_name: str (openai model name)
+
+输出参数：
+    str
+        [
+            {
+              "xpath": "//div[@class='et_pb_social_media_follow']",
+              "parent_tag": "div",
+              "parent_attributes": {
+                "class": "et_pb_column et_pb_column_2_3 et_pb_column_6 et_pb_css_mix_blend_mode_passthrough et-last-child"
+              },
+              "reson": "Social media follow links are non-core content, typically used for sharing and external linking."
+            },
+            {
+              "xpath": "//form[@class='et_pb_contact_form clearfix']",
+              "parent_tag": "div",
+              "parent_attributes": {
+                "class": "et_pb_column et_pb_column_2_3 et_pb_column_6 et_pb_css_mix_blend_mode_passthrough et-last-child"
+              },
+              "reson": "Contact form is a footer widget, often considered as part of the contact section rather than main content."
+            }
+        ]
+```
+
+### post_mapping.py 推广到所有数据
+
+```
+func: mapping_html_by_rules
+
+输入参数：
+    html_content: str
+    xpaths_to_remove: List[dict]
+        [
+            {
+              "xpath": "//div[@class='et_pb_social_media_follow']",
+              "parent_tag": "div",
+              "parent_attributes": {
+                "class": "et_pb_column et_pb_column_2_3 et_pb_column_6 et_pb_css_mix_blend_mode_passthrough et-last-child"
+              },
+              "reson": "Social media follow links are non-core content, typically used for sharing and external linking."
+            },
+            {
+              "xpath": "//form[@class='et_pb_contact_form clearfix']",
+              "parent_tag": "div",
+              "parent_attributes": {
+                "class": "et_pb_column et_pb_column_2_3 et_pb_column_6 et_pb_css_mix_blend_mode_passthrough et-last-child"
+              },
+              "reson": "Contact form is a footer widget, often considered as part of the contact section rather than main content."
+            }
+        ]
+
+输出参数：
+    tuple[str, bool]
+        (
+            html_content,  # html字符串
+            is_success  # 推广是否成功
+        )
 ```

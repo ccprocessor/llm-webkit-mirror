@@ -1,0 +1,297 @@
+{
+  "track_id": "b68ba101-eaac-4eeb-83a2-761c43a91675",
+  "url": "http://example.com",
+  "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>To Plain Markdown Test</title>\n</head>\n<body>\n<div>==========================title====================================</div>\n<h1>Title Test</h1>\n<div>==========================code inline====================================</div>\n<div>\n    <li>\n        <strong>Dead simple</strong>\n        Include prism.css and prism.js, use proper HTML5 code tags (<code>code.language-xxxx</code>), done!\n    </li>\n</div>\n<div>==========================code====================================</div>\n<div class=\"tFormatCodeBlock supportThreadCodeBlock\"\n     style=\"border: 1px  solid  #7f9db9;overflow-y: auto;\"\n     id=\"highlighter_46368\">\n    <div style=\"background-color: #ffffff;\"><span\n            style=\"margin-left: 0px !important;\"><code\n            style=\"color: #000000;\">Private Sub sitemenu_ItemCreated(ByVal sender As Object, ByVal e As Telerik.Web.UI.RadMenuEventArgs) Handles sitemenu.ItemCreated</code></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span\n            style=\"margin-left: 24px !important;\"><code\n            style=\"color: #000000;\">Dim item As RadMenuItem = sitemenu.FindItemByUrl(Request.Url.PathAndQuery)</code></span></span>\n    </div>\n    <div style=\"background-color: #ffffff;\"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span\n            style=\"margin-left: 24px !important;\"><code\n            style=\"color: #000000;\">If item IsNot Nothing Then</code></span></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span\n            style=\"margin-left: 36px !important;\"><code\n            style=\"color: #000000;\">item.CssClass = \"focused\"</code></span></span>\n    </div>\n    <div style=\"background-color: #ffffff;\"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span\n            style=\"margin-left: 24px !important;\"><code\n            style=\"color: #000000;\">End If</code></span></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span\n            style=\"margin-left: 0px !important;\">&nbsp;</span></div>\n    <div style=\"background-color: #ffffff;\"><span><code>&nbsp;&nbsp;&nbsp;&nbsp;</code><span\n            style=\"margin-left: 12px !important;\"><code\n            style=\"color: #000000;\">End Sub</code></span></span>\n    </div>\n</div>\n\n<div>==========================simple table====================================</div>\n<div class=\"cross-sellss\">\n    <table>\n        <tr>\n            <td>1.1</td>\n            <td>2.1</td>\n        </tr>\n        <tr>\n            <td>3.1</td>\n            <td>4.1</td>\n        </tr>\n    </table>\n</div>\n<div>==========================complex table====================================</div>\n<div>\n    <span>\n        <!-- 复杂table -->\n    <table>\n        <tbody><tr>\n            <td rowspan=\"2\">1</td>\n            <td>2</td>\n            <td>3</td>\n        </tr>\n        <tr>\n            <td colspan=\"2\">4</td>\n        </tr>\n        <tr>\n            <td>5</td>\n            <td>6</td>\n            <td>7</td>\n        </tr>\n    </tbody></table>\n    </span>\n</div>\n<div>==========================equation inline====================================</div>\n<p>测试行内公式$x=4$。</p>\n<div>==========================equation interline====================================</div>\n<p>公式如下：</p><span class=\"mathjax_display\">$$a^2 + b^2 = c^2$$</span>\n<div>==========================img====================================</div>\n<div>\n    <img src=\"http://example.com/image.png\" alt=\"image\">\n</div>\n<div>==========================list====================================</div>\n<ul>\n    <li>UL1 <span>UL1.1</span></li>\n    <li>UL2</li>\n</ul>\n<dl>\n    <dt>HTML</dt>\n    <dd>瓒呮枃鏈爣璁拌瑷€</dd>\n    <dt>CSS</dt>\n    <dd>灞傚彔鏍峰紡琛�</dd>\n</dl>\n<div>==========================paragraph====================================</div>\n<p>test paragraph</p>\n<div>==========================audio====================================</div>\n<audio controls src=\"/shared-assets/audio/test.mp3\"></audio>\n<div>==========================video====================================</div>\n<video controls width=\"250\">\n    <source src=\"/shared-assets/videos/flower.webm\" type=\"video/webm\"/>\n\n    <source src=\"/shared-assets/videos/flower.mp4\" type=\"video/mp4\"/>\n\n    Download the\n    <a href=\"/shared-assets/videos/flower.webm\">WEBM</a>\n    or\n    <a href=\"/shared-assets/videos/flower.mp4\">MP4</a>\n    video.\n</video>\n</body>\n</html>",
+  "dataset_name": "llm-web-kit-magic_html_noclip_html",
+  "data_source_category": "HTML",
+  "file_bytes": 4548,
+  "language": "en",
+  "meta_info": {
+    "input_datetime": "2025-09-10 15:59:01"
+  },
+  "content_list": [
+    [
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================title====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================title====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "title",
+        "raw_content": "<h1>Title Test</h1>",
+        "content": {
+          "title_content": "Title Test",
+          "level": "1"
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================code inline====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================code inline====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div><li><strong>Dead simple</strong>\n        Include prism.css and prism.js, use proper HTML5 code tags (<cccode-inline by=\"tag_code\" html=\"&lt;code&gt;code.language-xxxx&lt;/code&gt;), done!\n    \" inline=\"true\">code.language-xxxx</cccode-inline>), done!\n    </li></div></div>",
+        "content": [
+          {
+            "c": "Dead simple Include prism.css and prism.js, use proper HTML5 code tags (",
+            "t": "text"
+          },
+          {
+            "c": "code.language-xxxx",
+            "t": "code-inline"
+          },
+          {
+            "c": "), done!",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================code====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================code====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "code",
+        "raw_content": "<div class=\"tFormatCodeBlock supportThreadCodeBlock\" style=\"border: 1px  solid  #7f9db9;overflow-y: auto;\" id=\"highlighter_46368\">\n    <div style=\"background-color: #ffffff;\"><span style=\"margin-left: 0px !important;\"><code style=\"color: #000000;\">Private Sub sitemenu_ItemCreated(ByVal sender As Object, ByVal e As Telerik.Web.UI.RadMenuEventArgs) Handles sitemenu.ItemCreated</code></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span><code>        </code><span style=\"margin-left: 24px !important;\"><code style=\"color: #000000;\">Dim item As RadMenuItem = sitemenu.FindItemByUrl(Request.Url.PathAndQuery)</code></span></span>\n    </div>\n    <div style=\"background-color: #ffffff;\"><span><code>        </code><span style=\"margin-left: 24px !important;\"><code style=\"color: #000000;\">If item IsNot Nothing Then</code></span></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span><code>            </code><span style=\"margin-left: 36px !important;\"><code style=\"color: #000000;\">item.CssClass = \"focused\"</code></span></span>\n    </div>\n    <div style=\"background-color: #ffffff;\"><span><code>        </code><span style=\"margin-left: 24px !important;\"><code style=\"color: #000000;\">End If</code></span></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span style=\"margin-left: 0px !important;\"> </span></div>\n    <div style=\"background-color: #ffffff;\"><span><code>    </code><span style=\"margin-left: 12px !important;\"><code style=\"color: #000000;\">End Sub</code></span></span>\n    </div>\n</div>\n\n",
+        "inline": false,
+        "content": {
+          "code_content": "Private Sub sitemenu_ItemCreated(ByVal sender As Object, ByVal e As Telerik.Web.UI.RadMenuEventArgs) Handles sitemenu.ItemCreated\n        Dim item As RadMenuItem = sitemenu.FindItemByUrl(Request.Url.PathAndQuery)\n        If item IsNot Nothing Then\n            item.CssClass = \"focused\"\n        End If\n\n    End Sub",
+          "by": "tag_code"
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================simple table====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================simple table====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "simple_table",
+        "raw_content": "<table><tr><td>1.1</td><td>2.1</td></tr><tr><td>3.1</td><td>4.1</td></tr></table>",
+        "content": {
+          "html": "<table><tr><td>1.1</td><td>2.1</td></tr><tr><td>3.1</td><td>4.1</td></tr></table>",
+          "is_complex": false,
+          "table_nest_level": "1"
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================complex table====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================complex table====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "complex_table",
+        "raw_content": "<table><tr><td rowspan=\"2\">1</td><td>2</td><td>3</td></tr><tr><td colspan=\"2\">4</td></tr><tr><td>5</td><td>6</td><td>7</td></tr></table>",
+        "content": {
+          "html": "<table><tr><td rowspan=\"2\">1</td><td>2</td><td>3</td></tr><tr><td colspan=\"2\">4</td></tr><tr><td>5</td><td>6</td><td>7</td></tr></table>",
+          "is_complex": true,
+          "table_nest_level": "1"
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================equation inline====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================equation inline====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><p>测试行内公式<ccmath-inline type=\"latex\" by=\"mathjax_mock\" html=\"$x=4$\">x=4</ccmath-inline>。</p></div>",
+        "content": [
+          {
+            "c": "测试行内公式",
+            "t": "text"
+          },
+          {
+            "c": "x=4",
+            "t": "equation-inline"
+          },
+          {
+            "c": "。",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================equation interline====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================equation interline====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><p>公式如下：</p></div>",
+        "content": [
+          {
+            "c": "公式如下：",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "equation-interline",
+        "raw_content": "<p>$$a^2 + b^2 = c^2$$</p>",
+        "content": {
+          "math_content": "a^2 + b^2 = c^2",
+          "math_type": "latex",
+          "by": "None"
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================img====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================img====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "raw_content": "<img src=\"http://example.com/image.png\" alt=\"image\">",
+        "content": {
+          "url": "http://example.com/image.png",
+          "data": null,
+          "alt": "image",
+          "title": null,
+          "caption": ""
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================list====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================list====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "raw_content": "<ul><li>UL1 <span>UL1.1</span></li><li>UL2</li></ul>",
+        "content": {
+          "items": [
+            {
+              "c": "UL1 UL1.1"
+            },
+            {
+              "c": "UL2"
+            }
+          ],
+          "list_attribute": "unordered",
+          "list_nest_level": "1"
+        }
+      },
+      {
+        "type": "list",
+        "raw_content": "<dl><dt>HTML</dt><dd>瓒呮枃鏈爣璁拌瑷€</dd><dt>CSS</dt><dd>灞傚彔鏍峰紡琛�</dd></dl>",
+        "content": {
+          "items": [
+            {
+              "c": "HTML"
+            },
+            {
+              "c": "瓒呮枃鏈爣璁拌瑷€"
+            },
+            {
+              "c": "CSS"
+            },
+            {
+              "c": "灞傚彔鏍峰紡琛"
+            }
+          ],
+          "list_attribute": "definition",
+          "list_nest_level": "1"
+        }
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================paragraph====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================paragraph====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><p>test paragraph</p></div>",
+        "content": [
+          {
+            "c": "test paragraph",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================audio====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================audio====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><div>==========================video====================================</div></div>",
+        "content": [
+          {
+            "c": "==========================video====================================",
+            "t": "text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "raw_content": "<div><video controls=\"\" width=\"250\">Download the<a href=\"/shared-assets/videos/flower.webm\">WEBM</a>\n    or\n    <a href=\"/shared-assets/videos/flower.mp4\">MP4</a>\n    video.\n</video></div>",
+        "content": [
+          {
+            "c": "Download the WEBM or MP4 video.",
+            "t": "text"
+          }
+        ]
+      }
+    ]
+  ],
+  "main_html": "<div>\n<div>==========================title====================================</div>\n<h1>Title Test</h1>\n<div>==========================code inline====================================</div>\n<div>\n    <li>\n        <strong>Dead simple</strong>\n        Include prism.css and prism.js, use proper HTML5 code tags (<code>code.language-xxxx</code>), done!\n    </li>\n</div>\n<div>==========================code====================================</div>\n<div class=\"tFormatCodeBlock supportThreadCodeBlock\" style=\"border: 1px  solid  #7f9db9;overflow-y: auto;\" id=\"highlighter_46368\">\n    <div style=\"background-color: #ffffff;\"><span style=\"margin-left: 0px !important;\"><code style=\"color: #000000;\">Private Sub sitemenu_ItemCreated(ByVal sender As Object, ByVal e As Telerik.Web.UI.RadMenuEventArgs) Handles sitemenu.ItemCreated</code></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span><code>        </code><span style=\"margin-left: 24px !important;\"><code style=\"color: #000000;\">Dim item As RadMenuItem = sitemenu.FindItemByUrl(Request.Url.PathAndQuery)</code></span></span>\n    </div>\n    <div style=\"background-color: #ffffff;\"><span><code>        </code><span style=\"margin-left: 24px !important;\"><code style=\"color: #000000;\">If item IsNot Nothing Then</code></span></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span><code>            </code><span style=\"margin-left: 36px !important;\"><code style=\"color: #000000;\">item.CssClass = \"focused\"</code></span></span>\n    </div>\n    <div style=\"background-color: #ffffff;\"><span><code>        </code><span style=\"margin-left: 24px !important;\"><code style=\"color: #000000;\">End If</code></span></span>\n    </div>\n    <div style=\"background-color: #f8f8f8;\"><span style=\"margin-left: 0px !important;\"> </span></div>\n    <div style=\"background-color: #ffffff;\"><span><code>    </code><span style=\"margin-left: 12px !important;\"><code style=\"color: #000000;\">End Sub</code></span></span>\n    </div>\n</div>\n\n<div>==========================simple table====================================</div>\n<div class=\"cross-sellss\">\n    <table>\n        <tr>\n            <td>1.1</td>\n            <td>2.1</td>\n        </tr>\n        <tr>\n            <td>3.1</td>\n            <td>4.1</td>\n        </tr>\n    </table>\n</div>\n<div>==========================complex table====================================</div>\n<div>\n    <span>\n        \n    <table>\n        <tr>\n            <td rowspan=\"2\">1</td>\n            <td>2</td>\n            <td>3</td>\n        </tr>\n        <tr>\n            <td colspan=\"2\">4</td>\n        </tr>\n        <tr>\n            <td>5</td>\n            <td>6</td>\n            <td>7</td>\n        </tr>\n    </table>\n    </span>\n</div>\n<div>==========================equation inline====================================</div>\n<p>测试行内公式$x=4$。</p>\n<div>==========================equation interline====================================</div>\n<p>公式如下：</p><span class=\"mathjax_display\">$$a^2 + b^2 = c^2$$</span>\n<div>==========================img====================================</div>\n<div>\n    <img src=\"http://example.com/image.png\" alt=\"image\">\n</div>\n<div>==========================list====================================</div>\n<ul>\n    <li>UL1 <span>UL1.1</span></li>\n    <li>UL2</li>\n</ul>\n<dl>\n    <dt>HTML</dt>\n    <dd>瓒呮枃鏈爣璁拌瑷€</dd>\n    <dt>CSS</dt>\n    <dd>灞傚彔鏍峰紡琛�</dd>\n</dl>\n<div>==========================paragraph====================================</div>\n<p>test paragraph</p>\n<div>==========================audio====================================</div>\n<audio controls src=\"/shared-assets/audio/test.mp3\"></audio>\n<div>==========================video====================================</div>\n<video controls width=\"250\">\n    <source src=\"/shared-assets/videos/flower.webm\" type=\"video/webm\"></source>\n\n    <source src=\"/shared-assets/videos/flower.mp4\" type=\"video/mp4\"></source>\n\n    Download the\n    <a href=\"/shared-assets/videos/flower.webm\">WEBM</a>\n    or\n    <a href=\"/shared-assets/videos/flower.mp4\">MP4</a>\n    video.\n</video>\n\n</div>",
+  "title": " Test"
+}

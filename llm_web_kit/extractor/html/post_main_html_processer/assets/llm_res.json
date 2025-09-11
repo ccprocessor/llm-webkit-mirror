@@ -1,0 +1,26 @@
+[
+  {
+    "xpath": "//div[@class='et_pb_section_1 et_pb_with_background et_section_regular']",
+    "parent_tag": "div",
+    "parent_attributes": {
+      "id": "main-content"
+    },
+    "reson": "This section contains contact information and social media links, which are typically non-core content placed at the bottom of a webpage."
+  },
+  {
+    "xpath": "//ul[@class='et_pb_module et_pb_social_media_follow et_pb_social_media_follow_0 clearfix  et_pb_text_align_center et_pb_bg_layout_light']",
+    "parent_tag": "div",
+    "parent_attributes": {
+      "class": "et_pb_section_1 et_pb_with_background et_section_regular"
+    },
+    "reson": "This is a social media follow block, commonly considered non-core content and usually found at the bottom of pages."
+  },
+  {
+    "xpath": "//form[@class='et_pb_contact_form clearfix']",
+    "parent_tag": "div",
+    "parent_attributes": {
+      "class": "et_pb_section_1 et_pb_with_background et_section_regular"
+    },
+    "reson": "This is a contact form, often used for user interaction but not central to the main page content."
+  }
+]

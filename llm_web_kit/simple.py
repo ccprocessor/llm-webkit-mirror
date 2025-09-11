@@ -96,7 +96,8 @@ def _extract_html(url: str, html_content: str, pipe_tpl: str, language: str = 'e
 # SDK方法（三种使用场景）
 # ========================================
 
-def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeTpl.MAGIC_HTML, language: str = 'en') -> str:
+def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeTpl.MAGIC_HTML,
+                           language: str = 'en') -> str:
     """场景1: 只执行第一阶段，抽取main_html.
 
     Args:
@@ -118,7 +119,7 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
     Args:
         url: 网页URL
         main_html: 已经抽取的主要HTML内容
-        output_format: 输出格式，'md' 或 'mm_md'
+        output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
@@ -131,19 +132,22 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
         return content_list.to_mm_md()
+    elif output_format == 'plain_md':
+        return content_list.to_plain_md()
     elif output_format == 'json':
         return result.to_json()
     else:
         raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
-def extract_content_from_html_with_magic_html(url: str, html_content: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_html_with_magic_html(url: str, html_content: str, output_format: str = 'md',
+                                              language: str = 'en') -> str:
     """场景3: 执行两个阶段，从magic_html抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
         html_content: 原始HTML内容
-        output_format: 输出格式，'md' 或 'mm_md'
+        output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
@@ -156,19 +160,22 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
         return content_list.to_mm_md()
+    elif output_format == 'plain_md':
+        return content_list.to_plain_md()
     elif output_format == 'json':
         return result.to_json()
     else:
         raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
-def extract_content_from_html_with_llm(url: str, html_content: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_html_with_llm(url: str, html_content: str, output_format: str = 'md',
+                                       language: str = 'en') -> str:
     """场景3: 执行两个阶段，从llm抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
         html_content: 原始HTML内容
-        output_format: 输出格式，'md' 或 'mm_md'
+        output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
@@ -181,19 +188,22 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
         return content_list.to_mm_md()
+    elif output_format == 'plain_md':
+        return content_list.to_plain_md()
     elif output_format == 'json':
         return result.to_json()
     else:
         raise InvalidOutputFormatException(f'Invalid output format: {output_format}')
 
 
-def extract_content_from_html_with_layout_batch(url: str, html_content: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_html_with_layout_batch(url: str, html_content: str, output_format: str = 'md',
+                                                language: str = 'en') -> str:
     """场景3: 执行两个阶段，从layout_batch抽取main_html，再从main_html抽取结构化内容.
 
     Args:
         url: 网页URL
         html_content: 原始HTML内容
-        output_format: 输出格式，'md' 或 'mm_md'
+        output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
 
     Returns:
@@ -206,6 +216,8 @@ def extract_content_from_html_with_layout_batch(url: str, html_content: str, out
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
         return content_list.to_mm_md()
+    elif output_format == 'plain_md':
+        return content_list.to_plain_md()
     elif output_format == 'json':
         return result.to_json()
     else:
