@@ -452,6 +452,37 @@ def html_normalize_space(text: str) -> str:
         return text
 
 
+def replace_sub_sup_with_text_regex(html_content):
+    """使用正则表达式将 HTML 中的 <sub>、</sup> 标签替换为特殊标记。"""
+
+    def replacer(match):
+        tag = match.group(0).lower()
+        if tag.startswith('<sub'):
+            return 'tem_sub_start'
+        if tag == '</sub>':
+            return 'tem_sub_end'
+        if tag.startswith('<sup'):
+            return 'tem_sup_start'
+        if tag == '</sup>':
+            return 'tem_sup_end'
+
+    pattern = r'</?(?:sub|sup)\b[^>]*>'
+    return re.sub(pattern, replacer, html_content, flags=re.IGNORECASE)
+
+
+def restore_sub_sup_from_text_regex(processed_content):
+    """将<sub>、</sup>的替换标记还原为原始的 HTML 标签。"""
+    replacement_map = {
+        'tem_sub_start': '<sub>',
+        'tem_sub_end': '</sub>',
+        'tem_sup_start': '<sup>',
+        'tem_sup_end': '</sup>'
+    }
+
+    pattern = '|'.join(re.escape(key) for key in replacement_map.keys())
+    return re.sub(pattern, lambda m: replacement_map[m.group(0)], processed_content)
+
+
 def get_plain_text_fast(html_source: str) -> str:
     """使用lxml快速获取html中的纯文本.
 

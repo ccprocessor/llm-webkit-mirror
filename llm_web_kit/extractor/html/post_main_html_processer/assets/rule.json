@@ -1,0 +1,23 @@
+[
+    {
+      "xpath": "//div[@class='breadcrumb']",
+      "parent_tag": "div",
+      "parent_attributes": {
+        "class": "master-wrapper-content"
+      }
+    },
+    {
+      "xpath": "//div[@class='product-selectors']",
+      "parent_tag": "div",
+      "parent_attributes": {
+        "class": "page-body"
+      }
+    },
+    {
+      "xpath": "//div[@class='pager']",
+      "parent_tag": "div",
+      "parent_attributes": {
+        "class": "page-body"
+      }
+    }
+]

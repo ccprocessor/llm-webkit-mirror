@@ -13,7 +13,9 @@ from llm_web_kit.extractor.html.recognizer.recognizer import (
 from llm_web_kit.libs.doc_element_type import DocElementType, ParagraphTextType
 from llm_web_kit.libs.html_utils import (element_to_html_unescaped,
                                          html_normalize_space, html_to_element,
-                                         process_sub_sup_tags)
+                                         process_sub_sup_tags,
+                                         replace_sub_sup_with_text_regex,
+                                         restore_sub_sup_from_text_regex)
 
 special_symbols = [  # TODO 从文件读取
     '®',  # 注册商标符号
@@ -65,7 +67,7 @@ inline_tags = {
     'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup',
     'textarea', 'time', 'var', 'u', 's', 'cccode-inline', 'ccmath-inline',
     'marked-tail', 'marked-text', 'math','mspace', 'font', 'nobr', 'bdi',
-    'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr', 'ins'
+    'mjx-container', 'mjx-assistive-mml', 'strike', 'wbr', 'ins', 'xhtml'
 }
 
 # 词间无分隔符的语言
@@ -205,7 +207,10 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             if (text2 and text2[0] in string.punctuation) or (text2 and text2[0] in special_symbols) or (text2 and text2[0] in other_symbols) or (text1 and text1[-1] in other_symbols):
                 words_sep = ''
             else:
-                words_sep = ' '
+                if text2.startswith('tem_sub_') or text2.startswith('tem_sup_') or text1.endswith("tem_sub_start") or text1.endswith("tem_sup_start"):
+                    words_sep = ''
+                else:
+                    words_sep = ' '
             txt = text1 + words_sep + text2
             return self.replace_entities(txt.strip(), entities_map)
 
@@ -222,12 +227,13 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
         Args:
             el: 代表一个段落的html元素
         """
+        _html = html.tostring(root, encoding='utf-8').decode()
+        replace_tree_html = replace_sub_sup_with_text_regex(_html)
+        root = html_to_element(replace_tree_html)
+
         para_text = []
 
         def __get_paragraph_text_recusive(el: HtmlElement, text: str) -> str:
-            # 标记当前元素是否是sub或sup类型
-            is_sub_sup = el.tag == 'sub' or el.tag == 'sup'
-
             if el.tag == CCTag.CC_MATH_INLINE:
                 if text:
                     para_text.append({'c': text, 't': ParagraphTextType.TEXT})
@@ -254,19 +260,17 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
 
             # 处理尾部文本
             if el.tail and el.tail.strip():
-                if is_sub_sup:
-                    _new_tail = html_normalize_space(el.tail.strip())
-                    text += _new_tail
-                else:
-                    _new_tail = html_normalize_space(el.tail.strip())
-                    new_tail = f' {_new_tail}' if el.tail.startswith(' ') and el.tail.strip()[0] in string.punctuation else _new_tail
-                    text = self.__combine_text(text, new_tail, language)
+                _new_tail = html_normalize_space(el.tail.strip())
+                new_tail = f' {_new_tail}' if el.tail.startswith(' ') and el.tail.strip()[0] in string.punctuation else _new_tail
+                text = self.__combine_text(text, new_tail, language)
 
             return text
 
         if final := __get_paragraph_text_recusive(root, ''):
             para_text.append({'c': final.replace('$br$', PARAGRAPH_SEPARATOR), 't': ParagraphTextType.TEXT})
 
+        for item in para_text:
+            item['c'] = restore_sub_sup_from_text_regex(item['c'])
         return para_text
 
     def __extract_paragraphs(self, root: HtmlElement):
