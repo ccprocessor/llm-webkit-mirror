@@ -115,8 +115,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
             return None
         tag, class_id, idd = tup
         if class_id:
-            class_id = re.sub(r' +', ' ', class_id)
-
+            class_id = re.sub(r'[ \t\n]+', ' ', class_id)
         if idd:
             valid_id = self.ids.get(idd, True)
             idd = re.sub(r' +', ' ', idd)
@@ -146,9 +145,9 @@ class LayoutBatchParser(BaseMainHtmlParser):
         length = len(self.get_tokens(element.text_content().strip()))
         length_tail = 0
         text = element.xpath('string()').strip()
-        is_natural_language = self.__is_natural_language(text) or length_tail >= 10
         if element.tail:
             length_tail = len(element.tail.strip())
+        is_natural_language = self.__is_natural_language(text) or length_tail >= 10
         idd = element.get('id')
         tag = element.tag
         layer_nodes = element_dict.get(depth, {})
@@ -276,7 +275,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
         # 判断当前节点是否是红色节点
         if keyy in layer_nodes_dict:
             if 'red' not in layer_nodes_dict[keyy]:
-                if self.more_noise_enable and tag in ['p', 'ul', 'br'] and not idd and is_natural_language:
+                if self.more_noise_enable and tag in ['p', 'ul', 'br', 'b'] and not idd and is_natural_language:
                     label = 'red'
                 else:
                     parent = element.getparent()
@@ -397,6 +396,7 @@ class LayoutBatchParser(BaseMainHtmlParser):
     def __match_tag(self, layer_nodes, current_layer_key, parent_key, node_html, template_doc, class_must=False,
                     id_exist=False):
         current_norm_key = (self.normalize_key((current_layer_key[0], None, None)), parent_key)
+        first_class_res = None, None, None
         for ele_keyy, ele_value in layer_nodes.items():
             # class id要存在
             if class_must and not ele_keyy[1]:
@@ -432,9 +432,8 @@ class LayoutBatchParser(BaseMainHtmlParser):
                 norm_ele_keyy_with_first_class = self.normalize_key((ele_keyy[0], ele_keyy[1].strip().split(' ')[0], None))
                 norm_ele_keyy_parent_with_first_class = (norm_ele_keyy_with_first_class, ele_parent_keyy)
                 if current_norm_key_with_first_class == norm_ele_keyy_parent_with_first_class:
-                    return ele_label, self.normalize_key(ele_keyy[0:3]), is_drop_tail
-
-        return None, None, None
+                    first_class_res = ele_label, self.normalize_key(ele_keyy[0:3]), is_drop_tail
+        return first_class_res
 
     def __is_natural_language(self, text, min_words=10):
         """判断文本是否像自然语言.
