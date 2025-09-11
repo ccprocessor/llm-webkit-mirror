@@ -1,6 +1,8 @@
 # vLLM 作为可选依赖：导入失败时保持模块可用，实际使用时再报错
 import json
+import os
 import re
+import time
 from dataclasses import dataclass
 from enum import Enum
 from typing import List
@@ -9,12 +11,18 @@ import torch
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 
+from llm_web_kit.config.cfg_reader import load_config
+
+from ..dependencies import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class InferenceConfig:
-    model_path: str = "/mnt/installers/checkpoint-3296"
-    data_path: str = "/fs-computility/llmit_d/shared/liumengjie/NeuScraper_cc/benchmark_process/benchmark_with_alg_800.jsonl"
-    output_path: str = "/share/liukaiwen/test_results"
+    model_path: str = ""
+    data_path: str = ""
+    output_path: str = ""
     use_logits_processor: bool = True
     num_workers: int = 8
     max_tokens: int = 32768
@@ -28,18 +36,17 @@ class InferenceConfig:
 
 
 config = InferenceConfig(
-    model_path="/mnt/installers/checkpoint-3296",  # checkpoint-3296路径
-    output_path="/share/liukaiwen/test_results",
+    model_path="",  # checkpoint-3296路径
+    output_path="",
     use_logits_processor=True,  # 启用逻辑处理器确保JSON格式输出
-    num_workers=8,              # 并行工作进程数
-    max_tokens=26000,           # 最大输入token数
-    temperature=0,              # 确定性输出
+    num_workers=8,  # 并行工作进程数
+    max_tokens=26000,  # 最大输入token数
+    temperature=0,  # 确定性输出
     top_p=0.95,
-    max_output_tokens=8192,     # 最大输出token数
-    tensor_parallel_size=1,     # 张量并行大小
-    template=True               # 启用聊天模板
+    max_output_tokens=8192,  # 最大输出token数
+    tensor_parallel_size=1,  # 张量并行大小
+    template=True  # 启用聊天模板
 )
-
 
 PROMPT = """As a front-end engineering expert in HTML, your task is to analyze the given HTML structure and accurately classify elements with the _item_id attribute as either "main" (primary content) or "other" (supplementary content). Your goal is to precisely extract the primary content of the page, ensuring that only the most relevant information is labeled as "main" while excluding navigation, metadata, and other non-essential elements.
 Guidelines for Classification:
@@ -227,7 +234,7 @@ def reformat_map(text):
         return {}
 
 
-def main(simplified_html: str, model: object, tokenizer: object):
+def main(simplified_html: str, model: object, tokenizer: object, model_path: str):
     # tokenizer = AutoTokenizer.from_pretrained("/share/liukaiwen/models/qwen3-0.6b/checkpoint-3296", trust_remote_code=True)
     # simplified_html = simplify_html(ori_html)
     # print("sim_html length", len(simplified_html))
@@ -240,7 +247,7 @@ def main(simplified_html: str, model: object, tokenizer: object):
     chat_prompt = add_template(prompt, tokenizer)
 
     if config.use_logits_processor:
-        token_state = Token_state(config.model_path)
+        token_state = Token_state(model_path)
         sampling_params = SamplingParams(
             temperature=config.temperature,
             top_p=config.top_p,
@@ -288,6 +295,7 @@ class InferenceService:
         self._tokenizer = None
         self._initialized = False
         self._init_lock = None  # 用于异步初始化锁
+        self._model_path = None
 
     async def warmup(self):
         """在服务启动阶段主动预热模型（异步初始化）。"""
@@ -308,6 +316,11 @@ class InferenceService:
     async def _init_model(self):
         """初始化模型和tokenizer."""
         try:
+            llm_config = load_config(suppress_error=True)
+            self.model_path = os.environ['MODEL_PATH'] if 'MODEL_PATH' in os.environ else llm_config.get('model_path',
+                                                                                                         None)
+            if self.model_path is None:
+                raise RuntimeError("model_path为空，未配置模型路径")
             if SamplingParams is None:
                 raise RuntimeError(
                     "当前环境未安装 vLLM 或安装失败，无法执行模型推理。建议在 Linux+NVIDIA GPU 环境安装 vLLM，"
@@ -316,13 +329,13 @@ class InferenceService:
 
             # 初始化 tokenizer
             self._tokenizer = AutoTokenizer.from_pretrained(
-                config.model_path,
+                self.model_path,
                 trust_remote_code=True
             )
 
             # 初始化 LLM 模型
             self._llm = LLM(
-                model=config.model_path,
+                model=self.model_path,
                 trust_remote_code=True,
                 dtype=config.dtype,
                 tensor_parallel_size=config.tensor_parallel_size,
@@ -330,10 +343,10 @@ class InferenceService:
                 max_model_len=config.max_tokens,  # 减少序列长度避免内存不足
             )
 
-            print(f"模型初始化成功: {config.model_path}")
+            logger.info(f"模型初始化成功: {self.model_path}")
 
         except Exception as e:
-            print(f"模型初始化失败: {e}")
+            logger.error(f"模型初始化失败: {e}")
             # 如果模型初始化失败，保持为 None，后续调用会返回占位结果
             self._llm = None
             self._tokenizer = None
@@ -344,14 +357,14 @@ class InferenceService:
             await self._ensure_initialized()
 
             if self._llm is None or self._tokenizer is None:
-                print("模型未初始化，返回占位结果")
+                logger.error("模型未初始化，返回占位结果")
                 return self._get_placeholder_result()
 
             # 执行真实推理
             return await self._run_real_inference(simplified_html, options)
 
         except Exception as e:
-            print(f"推理过程出错: {e}")
+            logger.error(f"推理过程出错: {e}")
             return self._get_placeholder_result()
 
     async def _run_real_inference(self, simplified_html: str, options: dict | None = None) -> dict:
@@ -363,7 +376,7 @@ class InferenceService:
 
             # 设置采样参数
             if config.use_logits_processor:
-                token_state = Token_state(config.model_path)
+                token_state = Token_state(self.model_path)
                 sampling_params = SamplingParams(
                     temperature=config.temperature,
                     top_p=config.top_p,
@@ -378,37 +391,29 @@ class InferenceService:
                 )
 
             # 执行推理
+            start_time = time.time()
             output = self._llm.generate(chat_prompt, sampling_params)
+            end_time = time.time()
             output_json = clean_output(output)
 
             # 格式化结果
             result = reformat_map(output_json)
-            print(f"推理完成，结果: {result}")
+            logger.info(f"推理完成，结果: {result}, 耗时: {end_time - start_time}秒")
             return result
 
         except Exception as e:
-            print(f"真实推理失败: {e}")
+            logger.error(f"真实推理失败: {e}")
             return self._get_placeholder_result()
 
     def _get_placeholder_result(self) -> dict:
         """返回占位结果."""
-        return {
-            "item_id 1": 0,
-            "item_id 2": 0,
-            "item_id 3": 0,
-            "item_id 4": 0,
-            "item_id 5": 0,
-            "item_id 6": 0,
-            "item_id 7": 0,
-            "item_id 8": 0,
-            "item_id 9": 1
-        }
+        return {}
 
 
 if __name__ == "__main__":
     config = InferenceConfig(
-        model_path="/mnt/installers/checkpoint-3296",
-        output_path="/share/liukaiwen/test_results",
+        model_path="",
+        output_path="",
         use_logits_processor=True,
         num_workers=8,
         max_tokens=26000,
@@ -419,18 +424,19 @@ if __name__ == "__main__":
         template=True,
     )
     try:
-        tokenizer = AutoTokenizer.from_pretrained("/mnt/installers/checkpoint-3296", trust_remote_code=True)
-        model = LLM(model=config.model_path,
-                trust_remote_code=True,
-                dtype=config.dtype,
-                # 设置最大模型长度
-                max_model_len=config.max_tokens,
-                tensor_parallel_size=config.tensor_parallel_size)
+        llm_config = load_config(suppress_error=True)
+        model_path = llm_config.get('model_path', None)
+        tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+        model = LLM(model=model_path,
+                    trust_remote_code=True,
+                    dtype=config.dtype,
+                    # 设置最大模型长度
+                    max_model_len=config.max_tokens,
+                    tensor_parallel_size=config.tensor_parallel_size)
 
         simplified_html = "<html><body><h1>Hello World</h1></body></html>"
         response_json = main(simplified_html, model, tokenizer)
         llm_response_dict = reformat_map(response_json)
-        print(llm_response_dict)
     except Exception:
         raise
     finally:
