@@ -519,7 +519,6 @@ class StructureMapper(ABC):
                 c = el['c']
                 if not c or not c.strip():
                     continue
-                c = c.strip()
                 new_c = self.__escape_md_special_chars(c)  # 转义特殊字符
                 one_para.append(new_c)
             elif el['t'] == ParagraphTextType.EQUATION_INLINE:
