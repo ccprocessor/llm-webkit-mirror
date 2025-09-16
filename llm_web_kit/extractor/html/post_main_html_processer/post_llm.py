@@ -103,7 +103,10 @@ Now return your result:"""
         rtn_detail = json_loads(rtn)
         post_llm_response = rtn_detail.get('choices', [])[0].get('message', {}).get('content', '')
         return clean_json_data(post_llm_response)
-    except BadRequestError:
+    except BadRequestError as e:
+        if 'Range of input length should be' in str(e):
+            if len(input_lst) > 1:
+                return get_llm_response(input_lst[:len(input_lst) - 1], api_key, url, model_name, is_llm, max_retry - 1)
         return None
     except Exception:
         if max_retry > 0:
