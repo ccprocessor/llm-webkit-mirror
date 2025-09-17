@@ -35,19 +35,8 @@ def clean_json_data(md_text: str) -> dict:
     return json_data
 
 
-def get_llm_response(input_lst: List, api_key: str, url: str, model_name: str, is_llm: bool = True,
-                     max_retry: int = 3) -> dict:
-    if not is_llm:
-        post_llm_response = base_dir.joinpath('assets/llm_res.json').read_text(encoding='utf-8')
-        return json_loads(post_llm_response)
-
-    from openai import BadRequestError, OpenAI
-
-    client = OpenAI(
-        # 若没有配置环境变量，请用百炼API Key将下行替换为：api_key='sk-xxx',
-        api_key=api_key,
-        base_url=url,
-    )
+def request_model(input_lst: List, api_key: str, url: str, model_name: str) -> str:
+    from openai import OpenAI
 
     html_count = len(input_lst)
     eg_input_lst, eg_output = __get_eg_data()
@@ -87,25 +76,44 @@ return:{eg_output}
 <end-example-1>
 ################
 Now return your result:"""
+
+    client = OpenAI(
+        # 若没有配置环境变量，请用百炼API Key将下行替换为：api_key='sk-xxx',
+        api_key=api_key,
+        base_url=url,
+    )
+
+    completion = client.chat.completions.create(
+        model=model_name,
+        # 此处以qwen-plus为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/getting-started/models
+        extra_body={'enable_thinking': False},
+        messages=[
+            {'role': 'system', 'content': 'You are a HTML semantics expert.'},
+            {'role': 'user', 'content': prompt}
+
+        ],
+    )
+
+    rtn = completion.model_dump_json()
+    return rtn
+
+
+def get_llm_response(input_lst: List, api_key: str, url: str, model_name: str, is_llm: bool = True,
+                     max_retry: int = 3) -> dict:
+    from openai import BadRequestError
+
+    if not is_llm:
+        post_llm_response = base_dir.joinpath('assets/llm_res.json').read_text(encoding='utf-8')
+        return json_loads(post_llm_response)
+
     try:
-        completion = client.chat.completions.create(
-            model=model_name,
-            # 此处以qwen-plus为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/getting-started/models
-            extra_body={'enable_thinking': False},
-            messages=[
-                {'role': 'system', 'content': 'You are a HTML semantics expert.'},
-                {'role': 'user', 'content': prompt}
-
-            ],
-        )
-
-        rtn = completion.model_dump_json()
+        rtn = request_model(input_lst, api_key, url, model_name)
         rtn_detail = json_loads(rtn)
         post_llm_response = rtn_detail.get('choices', [])[0].get('message', {}).get('content', '')
         return clean_json_data(post_llm_response)
     except BadRequestError as e:
         if 'Range of input length should be' in str(e):
-            if len(input_lst) > 1:
+            if len(input_lst) > 1 and max_retry > 0:
                 return get_llm_response(input_lst[:len(input_lst) - 1], api_key, url, model_name, is_llm, max_retry - 1)
         return None
     except Exception:
