@@ -479,6 +479,30 @@ class TestTextParagraphRecognize(unittest.TestCase):
         content_md = result.get_content_list().to_mm_md()
         assert 'The interquartile range formula is the first quartile subtracted from the third quartile:\n\n $IQR = Q_{3}-Q_{1}' in content_md
 
+    def test_para_has_none(self):
+        """
+        兼容段落可能为None的情况
+        Returns:
+
+        """
+        chain = ExtractSimpleFactory.create(load_pipe_tpl('noclip_html_test'))
+        self.assertIsNotNone(chain)
+        test_data = {
+            'track_id': 'text_md',
+            'dataset_name': 'text_md',
+            'url': 'https://br.wikipedia.org/wiki/Faustina_an_Hena%C3%B1',
+            'data_source_category': 'HTML',
+            'path': 'para_has_none.html',
+            'main_path': 'para_has_none.html',
+            'file_bytes': 1000,
+            'meta_info': {'input_datetime': '2020-01-01 00:00:00'},
+            'language': 'en'
+        }
+        input_data = DataJson(test_data)
+        result = chain.extract(input_data)
+        content_md = result.get_content_list().to_mm_md()
+        assert content_md
+
     def test_empty_string_fix(self):
         """
         测试修复字符串索引越界问题 - 当文本处理中出现空字符串时不应抛出IndexError

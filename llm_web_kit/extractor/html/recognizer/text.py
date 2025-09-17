@@ -270,7 +270,11 @@ class TextParagraphRecognizer(BaseHTMLElementRecognizer):
             para_text.append({'c': final, 't': ParagraphTextType.TEXT})
 
         for item in para_text:
-            item['c'] = restore_sub_sup_from_text_regex(item['c']).replace('$br$', PARAGRAPH_SEPARATOR)
+            if item['c'] is not None:
+                item['c'] = restore_sub_sup_from_text_regex(item['c']).replace('$br$', PARAGRAPH_SEPARATOR)
+            else:
+                item['c'] = ""
+
         return para_text
 
     def __extract_paragraphs(self, root: HtmlElement):
