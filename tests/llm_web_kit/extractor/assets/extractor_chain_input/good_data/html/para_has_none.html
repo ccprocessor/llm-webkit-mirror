@@ -1,0 +1,1245 @@
+<html imt-state="original" xmlns="http://www.w3.org/1999/xhtml"><head>
+      <style id="cc-extraStyle" name="cc">
+        noscript {
+          display: none !important;
+        }
+        .cc-unloaded:not(iframe) {
+          width: 100px;
+          height: 100px;
+          background-color: #ffebeb;
+          border: 2px dashed #ff0000;
+        }
+        .mark-selected {
+            outline: 2px dashed #0d6efd !important;
+            background-color: rgba(13, 110, 253, 0.1) !important;
+        }
+        .selecto-selection {
+            background: rgba(13, 110, 253, 0.1);
+            outline: 1px dashed #0d6efd;
+        }
+    </style>
+   <title>Zk multiplecomposer using Spring use composer variable in zul - ZK Forum</title> <meta content="text/html; charset=utf-8" http-equiv="Content-Type"> <meta content="I have a view using a composer which has inside 5 columnChildren each one are the parentComponent of a macroComponent wh ..." name="description"> <meta content="6.5.3,ZK,CNPROG,forum,community" name="keywords"> <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"> <link href="http://www.zkoss.org/resource/img/favicon.ico" rel="shortcut icon"> <link href="http://forum.zkoss.org/feeds/rss/" rel="alternate" title="RSS feed from ZK Forum" type="application/rss+xml"> <link href="" rel="stylesheet" type="text/css"> <link href="" rel="stylesheet" type="text/css"> <link href="" rel="stylesheet" type="text/css"> <link href="" rel="stylesheet" type="text/css"> <link href="http://forum.zkoss.org/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/" rel="canonical"> <link href="" rel="stylesheet" type="text/css"> <link href="" rel="stylesheet" type="text/css"> <style>
+	.question-content iframe,
+    .answer iframe{
+		border:none;
+	}
+	.fiddleiframe{
+		display:none;
+	}
+	.commentBody iframe{
+	   border:none;
+	}
+	.grippie {
+		border: 1px solid #DDD;
+		border-width: 0pt 1px 1px;
+		cursor: s-resize;
+		height: 9px;
+		overflow: hidden;
+		background-color: #EEE;
+		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAKCAYAAABIQFUsAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEWAAABFgAVshLGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAACNJREFUOE9jYBgxYPfu3f/phQc2UOnlS5A9oz4d2BAYdrYDABL3AkD4Z9nHAAAAAElFTkSuQmCC);
+		background-repeat: no-repeat;
+		background-position: 344px 0;
+	}
+</style> <script src="" type="text/javascript"></script> <script src="" type="text/javascript"></script> <script type="text/javascript">
+    var askbot = {};
+    askbot['data'] = {};
+    askbot['data']['tinyurlKey'] = '00D20093CC7EB88D987A;';
+
+        askbot['data']['userIsAuthenticated'] = false;
+        askbot['data']['userReputation'] = 0;
+
+    askbot['data']['maxCommentLength'] = 300;
+    askbot['urls'] = {};
+    askbot['settings'] = {};
+    askbot['settings']['editorType'] = 'markdown';
+
+        askbot['settings']['allowedUploadFileTypes'] = [
+            "jpg", "jpeg", "gif", "bmp", "png", "tiff"
+        ];
+
+    askbot['messages'] = {};
+</script> <script type="text/javascript">/*----------------- ZK Fiddle integration --------------------------*/
+var head=document.getElementsByTagName("head")[0];var script=document.createElement("script");script.type="text/javascript";script.src="http://zkfiddle.org/status/?jsonp=forumcallback";head.appendChild(script);window.forumcallback=function(sucess){window.fiddleAlive=true;$(document).ready(function(){window.updateWidgetIframe()})};window.updateWidgetIframe=function(){if(window.fiddleAlive){var iframes=$("div[name='fiddlecontent']");iframes.each(function(){a=$(this).prev('a:contains("ZKFiddle-Link")');if(a.length)var a=a.get(0),href=a.href,newhref=href.replace(".org/sample/",".org/widget/");if(newhref)$(this.parentNode).empty().append('<iframe width="100%" height="300px" width="" src="'+newhref+'?height=250"></iframe>')})}};
+/*----------------- ZK Fiddle integration end --------------------------*/
+</script> <script type="text/javascript">
+    askbot['data']['canEditPost'] = 1000;
+    askbot['data']['tag_names'] = askbot['data']['tag_names'] || {};
+
+        /*<![CDATA[*/
+        //below is pure cross-browser javascript, no jQuery
+        askbot['data']['userIsThreadModerator'] = false;
+        (function(){
+            var data = askbot['data'];
+            if (data['userIsAuthenticated']){
+                var votes = {};
+
+                data['user_votes'] = votes;
+                var posts = {};
+
+                data['user_posts'] = posts;
+            }
+
+            function render_vote_buttons(post_type, post_id){
+                var upvote_btn = document.getElementById(
+                    post_type + '-img-upvote-' + post_id
+                );
+                var downvote_btn = document.getElementById(
+                    post_type + '-img-downvote-' + post_id
+                );
+                if (data['userIsAuthenticated']){
+                    if (post_id in data['user_votes']){
+                        var vote = data['user_votes'][post_id];
+                        if (vote == -1){
+                            var btn = downvote_btn;
+                        } else if (vote == 1){
+                            var btn = upvote_btn;
+                        } else {
+                            return;
+                        }
+                        if (post_type == 'comment'){
+                            btn.className = btn.className + ' upvoted';
+                        } else {
+                            btn.className = btn.className + ' on';
+                        }
+                    }
+                }
+            }
+
+            function hide_convert_answer_links(post_id){
+                var answer_convert_id = 'post-' + post_id + '-convert';
+                var convert_answer = document.getElementById(answer_convert_id);
+                if (data['userIsAdminOrMod']){
+                    var answer_id = 'post-id-' + post_id;
+                    var answer_container = document.getElementById(answer_id);
+                    var answer_element= answer_container.getElementsByClassName('answer-body')[0].children[1];
+                    if (
+                        answer_element.textContent.length >
+                        askbot['data']['maxCommentLength']
+                    ){
+                        convert_answer.parentNode.removeChild(convert_answer);
+                    }
+                } else if (askbot['data']['userReputation'] < askbot['data']['canEditPost']){
+                    convert_answer.parentNode.removeChild(convert_answer);
+                }
+            }
+
+            function hidePublishAnswerLink(postId) {
+                if (data['userIsThreadModerator'] === false) {
+                    //hide publish/unpublish answer links
+                    var answerId = 'post-' + postId + '-publish';
+                    var pubBtn = document.getElementById(answerId);
+                    pubBtn.parentNode.removeChild(pubBtn);
+                }
+            }
+
+            function render_post_controls(post_id){
+                if (data['userIsAdminOrMod']){
+                    return;//all remaining functions stay on
+                }
+                if (data['user_posts'] === undefined) {
+                    return;
+                }
+                if (post_id in data['user_posts']){
+                    //todo: remove edit button from older comments
+                    return;//same here
+                }
+                if (//maybe remove "delete" button
+                    data['userReputation'] <
+                    2000
+                ) {
+                    var delete_btn = document.getElementById(
+                        'post-' + post_id + '-delete'
+                    );
+                    delete_btn.parentNode.removeChild(delete_btn);
+                }
+                if (//maybe remove "edit" button
+                    data['userReputation'] <
+                    1000
+                ){
+                    var edit_btn = document.getElementById(
+                        'post-' + post_id + '-edit'
+                    )
+                    edit_btn.parentNode.removeChild(edit_btn);
+                }
+                if (//maybe remove retag button
+                    data['userReputation'] <
+                    500
+                ){
+                    var retag_btn = document.getElementById('retag');
+                    if (retag_btn && retag_btn.parentNode)
+	                    retag_btn.parentNode.removeChild(retag_btn);
+                }
+            }
+            function render_add_comment_button(post_id, extra_comment_count){
+                var can_add = false;
+                if (data['user_posts'] === undefined) {
+                    return;
+                }
+
+                    if (data['user_posts'] && post_id in data['user_posts']){
+                        can_add = true;
+                    }
+
+                var add_comment_btn = document.getElementById(
+                    'add-comment-to-post-' + post_id
+                );
+                if (can_add === false){
+                    add_comment_btn.parentNode.removeChild(add_comment_btn);
+                    return;
+                }
+
+                var text = '';
+                if (extra_comment_count > 0){
+                    if (can_add){
+                        text =
+        "post a comment / <strong>some</strong> more";
+                    } else {
+                        text =
+        "see <strong>some</strong> more";
+                    }
+                } else {
+                    if (can_add){
+                        text = "post a comment";
+                    }
+                }
+                add_comment_btn.innerHTML = text;
+                //add the count
+                for (node in add_comment_btn.childNodes){
+                    if (node.nodeName === 'strong'){
+                        node.innerHTML = extra_comment_count;
+                        break;
+                    }
+                }
+            }
+            function render_add_answer_button(){
+                var add_answer_btn = document.getElementById('add-answer-btn');
+                if (askbot['data']['userIsAuthenticated']){
+                    if (askbot['data']['userId'] == 63973){
+                        add_answer_btn.className += ' answer-own-question';
+                        add_answer_btn.setAttribute(
+                            'value',
+                            'Answer Your Own Question'
+                        )
+                    } else {
+                        add_answer_btn.setAttribute(
+                           'value',
+                            'Post Your Answer'
+                        )
+                    }
+                } else {
+                    add_answer_btn.setAttribute(
+                        'value',
+                        'Login/Signup to Post'
+                    );
+                }
+            }
+
+            function hide_convert_links(){
+              if (!askbot['data']['userIsAdminOrMod'] && askbot['data']['userReputation'] < askbot['data']['canEditPost']){
+                var links = document.getElementsByClassName('convert-comment');
+                for (i=0; i<links.length; i++){
+                  links[i].setAttribute('style', 'display:none;');
+                }
+              }
+            }
+
+            askbot['functions'] = askbot['functions'] || {};
+            askbot['functions']['renderPostVoteButtons'] = render_vote_buttons;
+            askbot['functions']['renderPostControls'] = render_post_controls;
+            askbot['functions']['renderAddCommentButton'] = render_add_comment_button;
+            askbot['functions']['renderAddAnswerButton'] = render_add_answer_button;
+            askbot['functions']['hideConvertLinks'] = hide_convert_links;
+            askbot['functions']['hideConvertAnswerLinks'] = hide_convert_answer_links;
+            askbot['functions']['hidePublishAnswerLink'] = hidePublishAnswerLink;
+        })();
+        /*]]>*/
+    </script> <style data-id="immersive-translate-default-injected-css">:root {
+  --immersive-translate-theme-underline-borderColor: #72ece9;
+  --immersive-translate-theme-nativeUnderline-borderColor: #72ece9;
+  --immersive-translate-theme-nativeDashed-borderColor: #72ece9;
+  --immersive-translate-theme-nativeDotted-borderColor: #72ece9;
+  --immersive-translate-theme-highlight-backgroundColor: #ffff00;
+  --immersive-translate-theme-dashed-borderColor: #59c1bd;
+  --immersive-translate-theme-blockquote-borderColor: #cc3355;
+  --immersive-translate-theme-thinDashed-borderColor: #ff374f;
+  --immersive-translate-theme-dashedBorder-borderColor: #94a3b8;
+  --immersive-translate-theme-dashedBorder-borderRadius: 0;
+  --immersive-translate-theme-solidBorder-borderColor: #94a3b8;
+  --immersive-translate-theme-solidBorder-borderRadius: 0;
+  --immersive-translate-theme-dotted-borderColor: #94a3b8;
+  --immersive-translate-theme-wavy-borderColor: #72ece9;
+  --immersive-translate-theme-dividingLine-borderColor: #94a3b8;
+  --immersive-translate-theme-grey-textColor: #2f4f4f;
+  --immersive-translate-theme-marker-backgroundColor: #fbda41;
+  --immersive-translate-theme-marker-backgroundColor-rgb: 251, 218, 65;
+  --immersive-translate-theme-marker2-backgroundColor: #ffff00;
+  --immersive-translate-theme-background-backgroundColor: #dbafaf;
+  --immersive-translate-theme-background-backgroundColor-rgb: 219, 175, 175;
+  --immersive-translate-theme-background-backgroundOpacity: 12;
+  --immersive-translate-theme-opacity-opacity: 10;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-pre-whitespace {
+  white-space: pre-wrap !important;
+}
+
+[imt-state="dual"] .immersive-translate-pdf-target-container {
+  position: absolute;
+  background-color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    sans-serif;
+  top: 0;
+  width: 600px;
+  height: 100%;
+  z-index: 2;
+  line-height: 1.3;
+  font-size: 16px;
+}
+[imt-state="dual"] .immersive-translate-target-wrapper[dir="rtl"] {
+  text-align: right;
+}
+
+[imt-state="dual"]
+  .immersive-translate-pdf-target-container
+  .immersive-translate-target-wrapper {
+  color: rgb(0, 0, 0);
+  white-space: normal;
+  position: absolute;
+}
+
+[imt-state="dual"]
+  .immersive-translate-pdf-target-container
+  .immersive-translate-target-wrapper
+  font {
+  color: inherit;
+  white-space: inherit;
+  position: unset;
+}
+
+[imt-state="translation"] .immersive-translate-target-wrapper > br {
+  display: none;
+}
+
+[imt-state="translation"]
+  .immersive-translate-target-translation-block-wrapper {
+  margin: 0 !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-block-wrapper {
+  margin: 8px 0 !important;
+  display: inline-block;
+}
+
+[imt-trans-position="before"]
+  .immersive-translate-target-translation-block-wrapper {
+  display: block;
+}
+
+[imt-trans-position="before"]
+  .immersive-translate-target-translation-block-wrapper {
+  margin-top: 0 !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-pdf-block-wrapper {
+  margin: 0 !important;
+  display: inline-block;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-grey-inner {
+  color: var(--immersive-translate-theme-grey-textColor);
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-underline-inner {
+  border-bottom: 1px solid
+    var(--immersive-translate-theme-underline-borderColor) !important;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-nativeUnderline-inner {
+  text-decoration: underline !important;
+  text-decoration-color: var(
+    --immersive-translate-theme-nativeUnderline-borderColor
+  ) !important;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-dashedBorder {
+  border: 1px dashed var(--immersive-translate-theme-dashedBorder-borderColor) !important;
+  border-radius: var(
+    --immersive-translate-theme-dashedBorder-borderRadius
+  ) !important;
+  padding: 6px;
+  margin-top: 2px;
+  display: inline-block;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-inline-wrapper-theme-dashedBorder {
+  border: 1px dashed var(--immersive-translate-theme-dashedBorder-borderColor) !important;
+  border-radius: var(
+    --immersive-translate-theme-dashedBorder-borderRadius
+  ) !important;
+  padding: 2px;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-solidBorder {
+  border: 1px solid var(--immersive-translate-theme-solidBorder-borderColor) !important;
+  border-radius: var(
+    --immersive-translate-theme-solidBorder-borderRadius
+  ) !important;
+  padding: 6px;
+  margin-top: 2px;
+  display: inline-block;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-inline-wrapper-theme-solidBorder {
+  border: 1px solid var(--immersive-translate-theme-solidBorder-borderColor) !important;
+  border-radius: var(
+    --immersive-translate-theme-solidBorder-borderRadius
+  ) !important;
+  padding: 2px;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-nativeDashed-inner {
+  text-decoration: underline !important;
+  text-decoration-color: var(
+    --immersive-translate-theme-nativeDashed-borderColor
+  ) !important;
+  text-decoration-style: dashed !important;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-thinDashed-inner {
+  border-bottom: 1px dashed
+    var(--immersive-translate-theme-thinDashed-borderColor) !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-dotted-inner {
+  background-image: linear-gradient(
+    to right,
+    var(--immersive-translate-theme-dotted-borderColor) 30%,
+    rgba(255, 255, 255, 0) 0%
+  );
+  background-position: bottom;
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  padding-bottom: 3px;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-nativeDotted-inner {
+  text-decoration: underline !important;
+  text-decoration-color: var(
+    --immersive-translate-theme-nativeDotted-borderColor
+  ) !important;
+  text-decoration-style: dotted !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-wavy-inner {
+  text-decoration: underline !important;
+  text-decoration-color: var(
+    --immersive-translate-theme-wavy-borderColor
+  ) !important;
+  text-decoration-style: wavy !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-dashed-inner {
+  background: linear-gradient(
+      to right,
+      var(--immersive-translate-theme-dashed-borderColor) 0%,
+      var(--immersive-translate-theme-dashed-borderColor) 50%,
+      transparent 50%,
+      transparent 100%
+    )
+    repeat-x left bottom;
+  background-size: 8px 2px;
+  padding-bottom: 2px;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-dividingLine::before {
+  content: "";
+  display: block;
+  max-width: 80px;
+  width: 10%;
+  border-top: 1px dashed
+    var(--immersive-translate-theme-dividingLine-borderColor);
+  padding-top: 8px;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-inline-wrapper-theme-dividingLine::before {
+  content: "";
+  border-left: 1px dashed
+    var(--immersive-translate-theme-dividingLine-borderColor);
+  max-height: 16px;
+  height: 16px;
+  padding-left: 8px;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-highlight-inner {
+  background: var(--immersive-translate-theme-highlight-backgroundColor);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-marker {
+  line-height: 1.5em;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-marker2-inner {
+  font-weight: bold;
+  text-shadow: 10px 0px 3px
+      var(--immersive-translate-theme-marker2-backgroundColor),
+    16px 3px 9px var(--immersive-translate-theme-marker2-backgroundColor),
+    2px 0px 6px var(--immersive-translate-theme-marker2-backgroundColor),
+    -12px 0px 12px var(--immersive-translate-theme-marker2-backgroundColor) !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-marker-inner {
+  /* TODO: add more texture */
+  background: linear-gradient(
+    to right,
+    rgba(var(--immersive-translate-theme-marker-backgroundColor-rgb), 0.1),
+    rgba(var(--immersive-translate-theme-marker-backgroundColor-rgb), 0.9) 3%,
+    rgba(var(--immersive-translate-theme-marker-backgroundColor-rgb), 0.9) 35%,
+    rgba(var(--immersive-translate-theme-marker-backgroundColor-rgb), 0.9) 70%,
+    rgba(var(--immersive-translate-theme-marker-backgroundColor-rgb), 0.8) 95%,
+    rgba(var(--immersive-translate-theme-marker-backgroundColor-rgb), 0.3)
+  );
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-weakening {
+  opacity: 0.618 !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-italic {
+  font-style: italic !important;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-bold {
+  font-weight: bold !important;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-paper {
+  margin: 8px 0;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 16px 32px;
+  display: inline-block;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-blockquote {
+  border-left: 4px solid var(--immersive-translate-theme-blockquote-borderColor) !important;
+  padding-left: 12px !important;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  display: inline-block;
+}
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-mask-inner {
+  filter: blur(5px) !important;
+  transition: filter 0.3s ease !important;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+[data-immersive-translate-root-translation-theme="none"]
+  .immersive-translate-target-translation-theme-mask-inner {
+  filter: none !important;
+}
+
+[data-immersive-translate-root-translation-theme="mask"]
+  .immersive-translate-target-inner {
+  filter: blur(5px) !important;
+  transition: filter 0.3s ease !important;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+/* opacity theme start */
+
+[imt-state="dual"] .immersive-translate-target-translation-theme-opacity-inner {
+  filter: opacity(
+    calc(var(--immersive-translate-theme-opacity-opacity) * 1%)
+  ) !important;
+  transition: filter 0.3s ease !important;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+[data-immersive-translate-root-translation-theme="none"]
+  .immersive-translate-target-translation-theme-opacity-inner {
+  filter: none !important;
+}
+[data-immersive-translate-root-translation-theme="opacity"]
+  .immersive-translate-target-inner,
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-opacity-inner:hover {
+  filter: opacity(
+    calc(var(--immersive-translate-theme-opacity-opacity) * 1%)
+  ) !important;
+  transition: filter 0.3s ease !important;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-opacity-inner:hover {
+  filter: none !important;
+}
+
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-mask-inner:hover {
+  filter: none !important;
+}
+[data-immersive-translate-root-translation-theme="opacity"]
+  .immersive-translate-target-inner:hover {
+  filter: none !important;
+}
+
+[data-immersive-translate-root-translation-theme="mask"]
+  .immersive-translate-target-inner:hover {
+  filter: none !important;
+}
+
+/* opacity theme end */
+
+/* background theme start */
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper-theme-background {
+  margin: 8px 0;
+  background: rgba(
+    var(--immersive-translate-theme-background-backgroundColor-rgb),
+    calc(var(--immersive-translate-theme-background-backgroundOpacity) * 1%)
+  );
+  border-radius: 4px;
+  box-shadow: unset !important;
+  padding: 12px;
+  display: inline-block;
+}
+[imt-state="dual"]
+  .immersive-translate-target-translation-theme-background-inner {
+  background: rgba(
+    var(--immersive-translate-theme-background-backgroundColor-rgb),
+    calc(var(--immersive-translate-theme-background-backgroundOpacity) * 1%)
+  );
+  padding-left: 6px;
+  padding-right: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+[imt-state="dual"]
+  .immersive-translate-target-translation-block-wrapper
+  .immersive-translate-target-translation-theme-background-inner {
+  background: unset;
+  padding-left: unset;
+  padding-right: unset;
+}
+/* background theme end */
+
+/* vertical css , please remain it in the last one. */
+.immersive-translate-target-translation-vertical-block-wrapper {
+  margin: 0px 8px !important;
+}
+
+.immersive-translate-text {
+  font-size: 15px !important;
+}
+
+.immersive-translate-error-toast {
+  position: fixed;
+  top: 5%;
+  z-index: 99999999;
+  left: 0;
+  right: 0;
+  margin: auto;
+  max-width: 300px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media all and (min-width: 750px) {
+  .immersive-translate-error-toast {
+    max-width: 400px;
+  }
+}
+
+.immersive-translate-clickable-button {
+  cursor: pointer;
+}
+
+.immersive-translate-help-button {
+  cursor: pointer;
+}
+
+.immersive-translate-loading-text:before {
+  content: "...";
+}
+
+/* dark mode for loading */
+
+@media only screen and (prefers-color-scheme: dark) {
+  .immersive-translate-loading {
+    border: 2px rgba(255, 255, 255, 0.25) solid !important;
+    border-top: 2px rgba(255, 255, 255, 1) solid !important;
+  }
+}
+
+.immersive-translate-error-wrapper {
+  position: relative;
+  display: inline-flex;
+  padding: 6px;
+  margin: 0 12px;
+  white-space: nowrap;
+  font-size: 0.9em;
+}
+[lang="zh-CN"] .immersive-translate-error-wrapper {
+  font-size: 0.75em;
+}
+[lang="zh-TW"] .immersive-translate-error-wrapper {
+  font-size: 0.75em;
+}
+
+.immersive-translate-tooltip {
+  position: relative;
+  display: inline-flex;
+  /* little indicater to indicate it's hoverable */
+}
+
+.immersive-translate-tooltip-content {
+  /* here's the magic */
+  position: absolute;
+  z-index: 100000000000;
+
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 110%);
+  line-height: 1;
+  /* and add a small left margin */
+
+  /* basic styles */
+  width: max-content;
+  max-width: 250px;
+  word-wrap: break-word;
+  white-space: pre-line;
+  padding: 10px;
+  border-radius: 10px;
+  background: #000c;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  display: none;
+  /* hide by default */
+}
+
+.immersive-translate-tooltip:hover .immersive-translate-tooltip-content {
+  display: inline-block;
+}
+
+.immersive-translate-tooltip:hover + .immersive-translate-tooltip-content {
+  display: inline-block;
+}
+
+.immersive-translate-tooltip-content-table {
+  left: unset !important;
+  bottom: unset !important;
+  transform: translate(-10%, 50%) !important;
+}
+
+.immersive-translate-tooltip:hover:before {
+  display: inline-block;
+}
+
+.immersive-translate-loading-spinner {
+  vertical-align: middle !important;
+  width: 10px !important;
+  height: 10px !important;
+  display: inline-block !important;
+  margin: 0 4px !important;
+  border: 2px rgba(221, 244, 255, 0.6) solid !important;
+  border-top: 2px rgba(0, 0, 0, 0.375) solid !important;
+  border-left: 2px rgba(0, 0, 0, 0.375) solid !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  -webkit-animation: immersive-translate-loading-animation 0.6s infinite linear !important;
+  animation: immersive-translate-loading-animation 0.6s infinite linear !important;
+}
+
+@-webkit-keyframes immersive-translate-loading-animation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
+
+@keyframes immersive-translate-loading-animation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.imt-image-status {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg-2, #fff);
+  font-size: 14px;
+}
+</style><style data-id="immersive-translate-user-custom-style">:root {
+
+.immersive-translate-target-inner { font-family: inherit; }
+
+
+.immersive-translate-target-inner { font-family: inherit; }
+}
+</style><style data-id="immersive-translate-dynamic-injected-css">.immersive-translate-target-wrapper[dir='rtl'] {text-align: right;}
+.immersive-translate-target-wrapper[dir='rtl'] [data-immersive-translate-class-bak*='block-wrapper'] {display:block;}
+.immersive-translate-target-wrapper {word-break:break-word; user-select:text;}
+[imt-state="translation"] .immersive-translate-target-wrapper[dir='rtl'] {display:inline-block!important;}
+[dir='rtl'] .immersive-translate-target-wrapper:not([dir]) {text-align:left;direction:ltr;}
+[imt-state=dual] .immersive-translate-target-translation-block-wrapper-theme-dividingLine::before {display:block;}
+[imt-trans-position=before] .immersive-translate-target-translation-block-wrapper {display:block!important;}
+[imt-state][data-immersive-translate_rtl] .immersive-translate-target-wrapper {display:block!important;}
+</style></head> <body class="two-col user-messages question-page anon lang-en" data-anno-uid="anno-uid-nszqc2r1i3l" style="user-select: none;"> <div class="notify" data-anno-uid="anno-uid-n2wbhy5b7di" style="display:none"> <p class="notification" data-anno-uid="anno-uid-xyzlob7egh"><marked-text data-anno-uid="anno-uid-i9sgvl3twa">First time here? Check out the </marked-text><a data-anno-uid="anno-uid-ytd5l3gndn" href="http://forum.zkoss.org/faq/">FAQ</a><marked-tail data-anno-uid="anno-uid-k0s9saxptcq">!</marked-tail></p> <a data-anno-uid="anno-uid-qc8omfqch2" id="closeNotify" onclick="notify.close(true)"></a> </div> <!-- template header.html --> <div class="with-logo" data-anno-uid="anno-uid-4t800seboa8" id="header"> <div class="content-wrapper" data-anno-uid="anno-uid-lbby1iwvw58"> <div data-anno-uid="anno-uid-fywgpbqvvou" id="userToolsNav"> <font _mstmutation="1"><a data-anno-uid="anno-uid-d7bwr1ud7u" href="http://forum.zkoss.org/tags/" id="navTags" style="margin-right:1px;" _mstmutation="1"><img data-anno-uid="anno-uid-26v1pbspuhe" height="16" src="http://forum.zkoss.org/m/default/media/images/zk/icon_tags.png?v=1" width="16"><marked-tail data-anno-uid="anno-uid-djl0cqrkseu">&nbsp;Tags</marked-tail></a><a data-anno-uid="anno-uid-ym1jp2tik9" href="http://forum.zkoss.org/users/" id="navUsers" style="margin-right:1px;" _mstmutation="1"><img data-anno-uid="anno-uid-u9i97pyq3jp" height="16" src="http://forum.zkoss.org/m/default/media/images/zk/icon_people.png?v=1" width="16"><marked-tail data-anno-uid="anno-uid-8t86borghfy">&nbsp;People</marked-tail></a><a data-anno-uid="anno-uid-ozekjyh159" href="http://forum.zkoss.org/badges/" id="navBadges" style="margin-right:1px;" _mstmutation="1"><img data-anno-uid="anno-uid-nouxognnsu9" height="16" src="http://forum.zkoss.org/m/default/media/images/zk/icon_badges.png?v=1" width="16"><marked-tail data-anno-uid="anno-uid-9zv9pcnjed9">&nbsp;Badges</marked-tail></a><a class="help" data-anno-uid="anno-uid-01j98aott3eo" href="http://forum.zkoss.org/help/" title="Help" _mstmutation="1"><img data-anno-uid="anno-uid-0oybj05u44z" height="16" src="http://forum.zkoss.org/m/default/media/images/zk/icon_help.png?v=1" width="16"><marked-tail data-anno-uid="anno-uid-k426w0pl5kd">&nbsp;Help</marked-tail></a> <a data-anno-uid="anno-uid-kuuydludzl" href="http://forum.zkoss.org/account/signin/?next=/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/" style="margin-left:1px;" _mstmutation="1">Hi there! Please sign in</a></font></div> <a data-anno-uid="anno-uid-5qur06bv42y" href="http://www.zkoss.org" id="logo"><img alt="ZK Forum logo" data-anno-uid="anno-uid-ldatcbj0tln" src="http://www.zkoss.org/resource/img/template/top_zk_logo_ext.png" title="back to ZK home page" _mstalt="178841"> </a> <div data-anno-uid="anno-uid-mnrvv47esg" id="main_menu"> <nav data-anno-uid="anno-uid-7c15y1wv8mn" vigation_menu=""> <header data-anno-uid="anno-uid-52w4oe3o2hk"> <h5 data-anno-uid="anno-uid-ngrvdfslycq">Navigation class="naMenu</h5> </header> <ul class="menu new-style" data-anno-uid="anno-uid-qy811tfbhkj"> <li class="menuitem" data-anno-uid="anno-uid-l22clfsc6eg"> <div class="menuitem-right" data-anno-uid="anno-uid-yfd0s8g6a0b"> <a class="menulink" data-anno-uid="anno-uid-hksu7fhx116" href="https://www.zkoss.org/product/">Products</a> </div> <ul data-anno-uid="anno-uid-alpd0u2wjha"> <li class="round-top" data-anno-uid="anno-uid-0cgkqylqnv85"> </li><li class="top" data-anno-uid="anno-uid-yhrxvx1d7zp"><a data-anno-uid="anno-uid-dtb1ue16k0q" href="https://www.zkoss.org/product/zk" title="ZK">ZK Framework</a> <div class="sep" data-anno-uid="anno-uid-8p3bsf3h1l4"></div> </li> <li data-anno-uid="anno-uid-fu73pkttqo7"><a data-anno-uid="anno-uid-mm9k7y7jdl" href="https://www.zkoss.org/product/zkspreadsheet" title="ZK Spreadsheet">ZK Spreadsheet</a> <div class="sep" data-anno-uid="anno-uid-65qriww2yvu"></div> </li> <li data-anno-uid="anno-uid-qivqmctatl"><a data-anno-uid="anno-uid-cbtxb7px2tf" href="https://www.zkoss.org/product/zkcharts" title="ZK Charts">ZK Charts</a> <div class="sep" data-anno-uid="anno-uid-38xjpwoqpj5"></div> </li> <li data-anno-uid="anno-uid-390fian8ti"><a data-anno-uid="anno-uid-x8zmux03fl" href="https://www.zkoss.org/product/zkpivottable" title="ZK Pivottable">ZK Pivottable</a> <div class="sep" data-anno-uid="anno-uid-x9a74dnj5d"></div> </li> <li data-anno-uid="anno-uid-r62otwx74wf"><a data-anno-uid="anno-uid-pn5f47vhxda" href="https://www.zkoss.org/product/zkthemepack" title="ZK Studio">ZK Theme Pack</a> <div class="sep" data-anno-uid="anno-uid-rte83v1dcq"></div> </li> <li data-anno-uid="anno-uid-jdsp6of5tf"><a data-anno-uid="anno-uid-u6t8y1d3fh" href="https://www.zkoss.org/product/zkstudio" title="ZK Studio">ZK Studio</a> <div class="sep" data-anno-uid="anno-uid-34o3ckdftmo"></div> </li> <li data-anno-uid="anno-uid-pq6jpvcvbj"><a data-anno-uid="anno-uid-nit007pujtj" href="https://www.zkoss.org/product/zkcalendar" title="ZK Calendar">ZK Calendar</a> <div class="sep" data-anno-uid="anno-uid-9ml2oi7h6yt"></div> </li> <li data-anno-uid="anno-uid-869t46cn6hr"><a data-anno-uid="anno-uid-57yg0h60fcx" href="https://www.zkoss.org/product/zkspring" title="ZK Spring">ZK Spring</a> <div class="sep" data-anno-uid="anno-uid-nzdqdcukyd"></div> </li> <li data-anno-uid="anno-uid-b0ka0p3zngg"><a data-anno-uid="anno-uid-zqdy64cmmar" href="https://www.zkoss.org/product/zkjsp" title="ZK JSP">ZK JSP</a> <div class="sep" data-anno-uid="anno-uid-pf75rxedkur"></div> </li> <!--
+<li class="bottom"><a href="https://www.zkoss.org/product/ztl" title="ZTL">ZTL</a> </li>
+ --> <li class="bottom" data-anno-uid="anno-uid-n3v5jpqpew"><a data-anno-uid="anno-uid-glu8k5d6i9" href="https://www.zkoss.org/product/zats" title="ZATS">ZATS Test</a> </li> <li class="round-bottom" data-anno-uid="anno-uid-tnrlsa4my9"> </li><li class="touch-close" data-anno-uid="anno-uid-5i1m6vebtdl"><a data-anno-uid="anno-uid-0lkvj6h2jora" href="#" title="Close Menu"></a></li> </ul></li></ul> <li class="menuitem" data-anno-uid="anno-uid-v6fihkv3yxr"> <div class="menuitem-right" data-anno-uid="anno-uid-4hojotw5nc2"> <a class="menulink" data-anno-uid="anno-uid-c950549i9ar" href="https://www.zkoss.org/demo/">Demos</a> </div> <ul data-anno-uid="anno-uid-jv1hr1e36lm"> <li class="round-top" data-anno-uid="anno-uid-am70z8zt9zf"> </li><li class="top" data-anno-uid="anno-uid-gpsi6zndfce"><a data-anno-uid="anno-uid-3cicsafybws" href="https://www.zkoss.org/zkdemo/">ZK Framework</a> <div class="sep" data-anno-uid="anno-uid-du5x6mbie64"></div> </li> <li data-anno-uid="anno-uid-bo3caiuftgc"><a data-anno-uid="anno-uid-pdblqe13d3" href="http://zssdemo.zkoss.org/zssdemo">ZK Spreadsheet</a> <div class="sep" data-anno-uid="anno-uid-t9g33g2ycl"></div> </li> <li data-anno-uid="anno-uid-0qxffrwgdyom"><a data-anno-uid="anno-uid-3qve3wsrmwt" href="http://www.zkoss.org/zkchartsdemo">ZK Charts</a> <div class="sep" data-anno-uid="anno-uid-gsgxgb4y20e"></div> </li> <li data-anno-uid="anno-uid-myjdqht2gv"><a data-anno-uid="anno-uid-1b6ljin19pz" href="https://www.zkoss.org/zkdemo/application/pivottable">ZK Pivottable</a> <div class="sep" data-anno-uid="anno-uid-zveucz7gx6c"></div> </li> <li data-anno-uid="anno-uid-0itjpb4285qh"><a data-anno-uid="anno-uid-0yn1tw6rj0ee" href="http://zcal.zkoss.org">ZK Calendar</a> <div class="sep" data-anno-uid="anno-uid-z652jxihzci"></div> </li> <!-- <li><a href="https://www.zkoss.org/zkmail/">ZK Web Mail</a> <div class="sep"></div> </li> --> <li data-anno-uid="anno-uid-4dxomxsmk3k"><a data-anno-uid="anno-uid-3cfef7j772v" href="https://www.zkoss.org/zksandbox">ZK Sandbox</a> <div class="sep" data-anno-uid="anno-uid-ge8ggkmcauw"></div> </li> <li class="bottom" data-anno-uid="anno-uid-8622pa03w4n"><a data-anno-uid="anno-uid-752ggliy0kg" href="https://www.zkoss.org/demo/external">Real World Apps</a> </li> <li class="round-bottom" data-anno-uid="anno-uid-hmqjazkjb7l"> </li><li class="touch-close" data-anno-uid="anno-uid-watnnyge3p"><a data-anno-uid="anno-uid-fubo1gk87no" href="#" title="Close Menu"></a> </li> </ul></li>  <li class="menuitem" data-anno-uid="anno-uid-8btjsja2s0q"> <div class="menuitem-right" data-anno-uid="anno-uid-yx196mk32f"> <a class="menulink" data-anno-uid="anno-uid-lshguncmny7" href="https://www.zkoss.org/download/">Downloads</a> </div> <ul data-anno-uid="anno-uid-sko804mcsj"> <li class="round-top" data-anno-uid="anno-uid-7xvr5x949hy"> </li><li class="top" data-anno-uid="anno-uid-dyn58myz73g"><a data-anno-uid="anno-uid-19idzmw9kcx" href="https://www.zkoss.org/download/zk">ZK Framework</a> <div class="sep" data-anno-uid="anno-uid-01k3ynka9782"></div></li> <li data-anno-uid="anno-uid-1nxcljzmx38"><a data-anno-uid="anno-uid-iv0rut0b96d" href="https://www.zkoss.org/download/zkspreadsheet">ZK Spreadsheet</a> <div class="sep" data-anno-uid="anno-uid-ixdf6veyxl"></div></li> <li data-anno-uid="anno-uid-4mefnp7thim"><a data-anno-uid="anno-uid-zk2me0vqrr9" href="https://www.zkoss.org/download/zkcharts">ZK Charts</a> <div class="sep" data-anno-uid="anno-uid-bclnrvvgth"></div></li> <li data-anno-uid="anno-uid-pp7tmxw571"><a data-anno-uid="anno-uid-hm4v1ymxr1g" href="https://www.zkoss.org/download/zkpivottable">ZK Pivottable</a> <div class="sep" data-anno-uid="anno-uid-fd1kbv62uyr"></div></li> <li data-anno-uid="anno-uid-9hda1xamtg4"><a data-anno-uid="anno-uid-fnqbo7w8jk" href="https://www.zkoss.org/download/zkstudio">ZK Studio</a> <div class="sep" data-anno-uid="anno-uid-k9248dzunm"></div></li> <li data-anno-uid="anno-uid-lwjq4dgud68"><a data-anno-uid="anno-uid-9w6735gwm8" href="https://www.zkoss.org/download/zkcalendar">ZK Calendar</a> <div class="sep" data-anno-uid="anno-uid-bfkgwtcxj65"></div></li> <li data-anno-uid="anno-uid-i4xsc5e117"><a data-anno-uid="anno-uid-r7lm4em66k" href="https://www.zkoss.org/download/zkspring">ZK Spring</a> <div class="sep" data-anno-uid="anno-uid-f63na9hlal"></div></li> <li data-anno-uid="anno-uid-qc3vw0zp67"><a data-anno-uid="anno-uid-hvcn53u45ml" href="https://www.zkoss.org/download/zkjsp">ZK JSP</a> <div class="sep" data-anno-uid="anno-uid-nmx6i19gync"></div></li> <li class="bottom" data-anno-uid="anno-uid-6pm25zvtceo"><a data-anno-uid="anno-uid-smwzz9ij6m9" href="https://www.zkoss.org/download/zats">ZATS Test</a></li> <li class="round-bottom" data-anno-uid="anno-uid-vj7hd9y9ur"> </li><li class="touch-close" data-anno-uid="anno-uid-ojnd5pvo1wh"><a data-anno-uid="anno-uid-ow3x9mzomt" href="#" title="Close Menu"></a> </li> </ul></li>  <li class="menuitem" data-anno-uid="anno-uid-8xuqvzabb"> <div class="menuitem-right" data-anno-uid="anno-uid-dg3ssld38pr"> <a class="menulink" data-anno-uid="anno-uid-6q1guz1v10u" href="https://www.zkoss.org/whyzk/">Why ZK</a> </div> <ul data-anno-uid="anno-uid-7uep25w5hz7"> <li class="round-top" data-anno-uid="anno-uid-2jsy7837ioz"> </li><li class="top" data-anno-uid="anno-uid-1grs6awh0am"><a data-anno-uid="anno-uid-0gwi4mn6te0s" href="https://www.zkoss.org/whyzk/TopReasons">Top Reasons</a> <div class="sep" data-anno-uid="anno-uid-7zxm4bcaar"></div> </li> <li data-anno-uid="anno-uid-rp40i7a4svk"><a data-anno-uid="anno-uid-uxszwmedsab" href="https://www.zkoss.org/whyzk/Features">Features</a> <div class="sep" data-anno-uid="anno-uid-jxqh9192ru"></div> </li> <li data-anno-uid="anno-uid-edudl96mtyi"><a data-anno-uid="anno-uid-36e3lv11hns" href="https://www.zkoss.org/whyzk/zkee">Why ZK EE</a> <div class="sep" data-anno-uid="anno-uid-d25enzjqz7l"></div> </li> <li data-anno-uid="anno-uid-iw3y3f4gm7"><a data-anno-uid="anno-uid-0v5kb88nsrso" href="https://www.zkoss.org/zk8keyfeaturedemo/">Why ZK 8</a> <div class="sep" data-anno-uid="anno-uid-5upj4rkxw9g"></div> </li> <li data-anno-uid="anno-uid-ykivxe82fz"><a data-anno-uid="anno-uid-b8hmkhw500a" href="https://www.zkoss.org/whyzk/WhosUsing">Who's Using</a> <div class="sep" data-anno-uid="anno-uid-x1cvdpm3u3q"></div> </li> <li data-anno-uid="anno-uid-ct4w1xucg6d"><a data-anno-uid="anno-uid-umov45vo13e" href="https://www.zkoss.org/whyzk/casestudies">Case Studies</a> <div class="sep" data-anno-uid="anno-uid-9gkgyx6n83i"></div> </li> <li class="bottom" data-anno-uid="anno-uid-jyt6bnslu9l"><a data-anno-uid="anno-uid-sza26wifmwg" href="https://www.zkoss.org/whyzk/Testimonials">Testimonials</a> </li> <li class="round-bottom" data-anno-uid="anno-uid-id8a38el5up"> </li><li class="touch-close" data-anno-uid="anno-uid-68hq0t1k1nq"><a data-anno-uid="anno-uid-xllkr7ku2ap" href="#" title="Close Menu"></a> </li> </ul></li>  <li class="menuitem" data-anno-uid="anno-uid-v04dag97n7g"> <div class="menuitem-right" data-anno-uid="anno-uid-dnqh1rh53dq"> <a class="menulink" data-anno-uid="anno-uid-xxz11vocbq" href="https://www.zkoss.org/community/">Community</a> </div> <ul data-anno-uid="anno-uid-wbvhrdyo3gn"> <li class="round-top" data-anno-uid="anno-uid-cmoq35zn5iv"> </li><li class="top" data-anno-uid="anno-uid-ncvji2s1qj8"><a data-anno-uid="anno-uid-wq0ajnzb89c" href="http://forum.zkoss.org/questions/">Forum</a> <div class="sep" data-anno-uid="anno-uid-4nscqw760rh"></div> </li> <li data-anno-uid="anno-uid-efr9vqa1t9"><a data-anno-uid="anno-uid-zfwgkgelh4" href="http://blog.zkoss.org">Blog</a> <div class="sep" data-anno-uid="anno-uid-o8z3p14jhz8"></div> </li> <li data-anno-uid="anno-uid-ub86s8kkcus"><a data-anno-uid="anno-uid-rnrshwyiby" href="https://www.zkoss.org/community/board">Board</a> <div class="sep" data-anno-uid="anno-uid-h87ag7hpxxj"></div> </li> <li data-anno-uid="anno-uid-idj0f6lt5b"><a data-anno-uid="anno-uid-i4esjihhixs" href="http://tracker.zkoss.org/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10002">Request Features</a> <div class="sep" data-anno-uid="anno-uid-gpu5ewlzjbm"></div> </li> <li class="bottom" data-anno-uid="anno-uid-8no953bmphk"><a data-anno-uid="anno-uid-4780wxa0rpe" href="http://tracker.zkoss.org/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10001">Report Bugs</a> </li> <li class="round-bottom" data-anno-uid="anno-uid-weup6cy078j"> </li><li class="touch-close" data-anno-uid="anno-uid-etlqwczmyfp"><a data-anno-uid="anno-uid-o0dc3r3tufo" href="#" title="Close Menu"></a> </li> </ul></li>  <li class="menuitem" data-anno-uid="anno-uid-kio1zvh7a9"> <div class="menuitem-right" data-anno-uid="anno-uid-fikyd0qzblc"> <a class="menulink" data-anno-uid="anno-uid-i6tiv9b5w4r" href="https://www.zkoss.org/documentation">Documentation</a> </div> <ul data-anno-uid="anno-uid-h1i2hnnah0q"> <li class="round-top" data-anno-uid="anno-uid-f7dlmt6b2s5"> </li><li class="top" data-anno-uid="anno-uid-c1l319am9vw"><a data-anno-uid="anno-uid-lzu6s62wksn" href="https://www.zkoss.org/documentation">ZK Framework</a> <div class="sep" data-anno-uid="anno-uid-zfpez3gsk6n"></div> </li> <li data-anno-uid="anno-uid-on7f7lxhgq"><a data-anno-uid="anno-uid-vlda2ccehe" href="https://www.zkoss.org/documentation/zkspreadsheet">ZK Spreadsheet</a> <div class="sep" data-anno-uid="anno-uid-4s8lnhjd395"></div> </li> <li data-anno-uid="anno-uid-jknyabro9rh"><a data-anno-uid="anno-uid-8f395f6z9rk" href="https://www.zkoss.org/documentation/zkcharts">ZK Charts</a> <div class="sep" data-anno-uid="anno-uid-643613ez0zd"></div> </li> <li data-anno-uid="anno-uid-wpc8qtwqls"><a data-anno-uid="anno-uid-zhuiikjdvjk" href="https://www.zkoss.org/documentation/zkpivottable">ZK Pivottable</a> <div class="sep" data-anno-uid="anno-uid-w84wsk1knvn"></div> </li> <li data-anno-uid="anno-uid-6ob3ia1xqvn"><a data-anno-uid="anno-uid-hahznvz43n6" href="https://www.zkoss.org/documentation/zkstudio">ZK Studio</a> <div class="sep" data-anno-uid="anno-uid-md4xnecogln"></div> </li> <li data-anno-uid="anno-uid-y43pyzjen1"><a data-anno-uid="anno-uid-20fa558blvu" href="https://www.zkoss.org/documentation/zkcalendar">ZK Calendar</a> <div class="sep" data-anno-uid="anno-uid-0f696fa6hqxo"></div> </li> <li data-anno-uid="anno-uid-dxamn7mgaj"><a data-anno-uid="anno-uid-2b530o4p04v" href="https://www.zkoss.org/documentation/zkspring">ZK Spring</a> <div class="sep" data-anno-uid="anno-uid-1sg5wn7h9zj"></div> </li> <li data-anno-uid="anno-uid-9f2sigochr4"><a data-anno-uid="anno-uid-cz80ytgkzn" href="https://www.zkoss.org/documentation/zkjsp">ZK JSP</a> <div class="sep" data-anno-uid="anno-uid-2q7hd3qvip5"></div> </li> <!--
+<li class="bottom"><a href="https://www.zkoss.org/documentation/ztl">ZTL</a> </li>
+--> <li class="bottom" data-anno-uid="anno-uid-vc4lxicov3j"><a data-anno-uid="anno-uid-hlvparsz54a" href="https://www.zkoss.org/documentation/zats">ZATS Test</a> </li> <li class="round-bottom" data-anno-uid="anno-uid-znnh0vlxwmn"> </li><li class="touch-close" data-anno-uid="anno-uid-6b6aswh7dtt"><a data-anno-uid="anno-uid-cxjrm4kgt8q" href="#" title="Close Menu"></a> </li> </ul></li>  <li class="menuitem" data-anno-uid="anno-uid-godlsgwktrf"> <div class="menuitem-right" data-anno-uid="anno-uid-ss3wa9odyeh"> <a class="menulink" data-anno-uid="anno-uid-lclpxb28hjp" href="https://www.zkoss.org/support/">Support</a> </div> <ul data-anno-uid="anno-uid-qeplgg0kza9"> <li class="round-top" data-anno-uid="anno-uid-0djw8vuiklwq"> </li><li class="top" data-anno-uid="anno-uid-ji5um0c28ej"><a data-anno-uid="anno-uid-09ideqisuri3" href="https://www.zkoss.org/support">Support</a> <div class="sep" data-anno-uid="anno-uid-tsvkbnnjey"></div> </li> <li data-anno-uid="anno-uid-6rk6e9381q3"><a data-anno-uid="anno-uid-gvqovhod6ok" href="https://www.zkoss.org/support/training">Training</a> <div class="sep" data-anno-uid="anno-uid-nmcnrqpvkz"></div> </li> <li data-anno-uid="anno-uid-i6ac9iit15"><a data-anno-uid="anno-uid-v5kb4xyelzo" href="https://www.zkoss.org/license">License</a> <div class="sep" data-anno-uid="anno-uid-jsm4u3cisxp"></div> </li> <li data-anno-uid="anno-uid-lgfhfv7l3ug"><a data-anno-uid="anno-uid-9c0ou3eu5u" href="https://www.zkoss.org/price/pricing">Pricing</a> <div class="sep" data-anno-uid="anno-uid-nyyg3h8jrz"></div> </li> <li data-anno-uid="anno-uid-0vihumcg8ke"><a data-anno-uid="anno-uid-neemrzhyill" href="https://www.zkoss.org/partner">Partners</a> <div class="sep" data-anno-uid="anno-uid-hirye9t9w3s"></div> </li> <li data-anno-uid="anno-uid-3kvhbym16rz"><a data-anno-uid="anno-uid-r87sqlo1ax" href="https://www.zkoss.org/support/about">About Us</a> <div class="sep" data-anno-uid="anno-uid-9a61s7zo4nk"></div> </li> <li class="bottom" data-anno-uid="anno-uid-z5zv8k4bug"><a data-anno-uid="anno-uid-cqee8e5tic6" href="https://www.zkoss.org/support/about/contact">Contact Us</a> </li> <li class="round-bottom" data-anno-uid="anno-uid-9rad9mh8z34"> </li><li class="touch-close" data-anno-uid="anno-uid-yrkb88lxqbo"><a data-anno-uid="anno-uid-n0iv3a0vcpe" href="#" title="Close Menu"></a> </li> </ul></li>   </nav> </div> <div class="clean" data-anno-uid="anno-uid-rq7r17fmykq"></div> </div> </div> <!-- end template header.html --> <!-- template secondary_header.html --> <div data-anno-uid="anno-uid-jagfozjqqo" id="secondaryHeader"> <div class="content-wrapper" data-anno-uid="anno-uid-7ruyrxiohnw"> <form action="/questions/" data-anno-uid="anno-uid-brtwwtcis6v" id="searchForm" method="get"> <div data-anno-uid="anno-uid-67xx76qi64g"> <a data-anno-uid="anno-uid-yyknzyqh8re" href="http://forum.zkoss.org/questions/" id="homeButton"></a> <div data-anno-uid="anno-uid-gpr8bxhlylf" id="scopeNav"> <font _mstmutation="1"><a class="scope-selector" data-anno-uid="anno-uid-umebh2wmiwi" href="http://forum.zkoss.org/questions/scope:all/sort:activity-desc/page:1/" title="see all questions" _mstmutation="1">ALL</a> <a class="scope-selector" data-anno-uid="anno-uid-aaplnpua3hv" href="http://forum.zkoss.org/questions/scope:unanswered/sort:age-desc/page:1/" title="see unanswered questions" _mstmutation="1">UNANSWERED</a></font> </div> <a data-anno-uid="anno-uid-y8fmk7w9v0n" href="http://forum.zkoss.org/questions/ask/" id="askButton"> </a> <input class="searchBtn" data-anno-uid="anno-uid-gyxndf8g7a" name="search" type="submit" value=""> <input class="cancelSearchBtn" data-anno-uid="anno-uid-d63iyx5k87a" name="reset_query" style="display: none;" type="button" value="X" _mstvalue="8008"> <div class="clearfix" data-anno-uid="anno-uid-ggqt3e8473r"></div> </div> <div data-anno-uid="anno-uid-o2w1uzu2ok" id="searchBar"><input autocomplete="off" class="searchInput" data-anno-uid="anno-uid-mykbidv20po" id="keywords" name="query" type="text" value=""></div> </form> </div> </div> <div class="content-wrapper" data-anno-uid="anno-uid-tdeeln0nnfs"> <div data-anno-uid="anno-uid-eul1u63d1nd" id="ContentLeft"> <div data-anno-uid="anno-uid-jzrac0tc3mi"> </div> <div class="vote-buttons" data-anno-uid="anno-uid-thpuzhz38q"> <div class="question-img-upvote post-vote" data-anno-uid="anno-uid-li5udcp3lff" id="question-img-upvote-109839"> </div> <div class="vote-number" data-anno-uid="anno-uid-oz6lr894ms8" id="question-vote-number-109839" style="" title="current number of votes">0</div> <div class="question-img-downvote post-vote" data-anno-uid="anno-uid-7kv5h6m5z7v" id="question-img-downvote-109839"> </div> <script data-anno-uid="anno-uid-zv2xb1d06e" type="text/javascript">
+    askbot['functions']['renderPostVoteButtons']('question', '109839');
+</script> </div> <div class="question-content" data-anno-uid="anno-uid-pygm7v4bl6" id="post-id-109839"> <h1 data-anno-uid="anno-uid-1ix1j9u7zo9"><a cc-select="true" class="mark-selected" data-anno-uid="anno-uid-0cptbruews7m" href="http://forum.zkoss.org/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/" style="">Zk multiplecomposer using Spring use composer variable in zul</a></h1> <ul class="tags post-tags" data-anno-uid="anno-uid-ny2zgh6de" id="question-tags"> <li class="tag-left" data-anno-uid="anno-uid-3cjsrdo415r"><a class="tag tag-right post-tag" data-anno-uid="anno-uid-swusxow0mdq" data-tag-name="6.5.3" href="http://forum.zkoss.org/questions/scope:all/sort:activity-desc/tags:6.5.3/page:1/" rel="tag" style="" title="see questions tagged '6.5.3'">6.5.3</a></li> </ul> <div data-anno-uid="anno-uid-zubkxfeposm" id="question-table"> <div class="question-body" data-anno-uid="anno-uid-9ke93u7jid"> <div class="post-update-info-container" data-anno-uid="anno-uid-hwx7974enpe"> <div class="post-update-info" data-anno-uid="anno-uid-7h6b9t2lrs"> <p data-anno-uid="anno-uid-vfksdj6pggn" style="line-height:12px;"><font _mstmutation="1"><marked-text class="" data-anno-uid="anno-uid-e86d6bi89mw" style="" _mstmutation="1">
+
+
+                asked
+
+
+                </marked-text><strong data-anno-uid="anno-uid-f0y934p4xz" _mstmutation="1"><abbr class="timeago" data-anno-uid="anno-uid-oppp8tyzj3d" style="" title="2018-01-10 05:05:54 +0800">
+        2018-01-10 05:05:54 +0800
+    </abbr></strong></font> </p> <a class="avatar-box" data-anno-uid="anno-uid-udutcczlxx9" href="http://forum.zkoss.org/users/63973/javiut/"><img alt="javiut gravatar image" class="gravatar cc-unloaded" data-anno-uid="anno-uid-bu81nfgb6u" height="32" src="" title="javiut" width="32" _mstalt="419614" style=""></a> <font _mstmutation="1"><a data-anno-uid="anno-uid-gsxwgg32eg" href="http://forum.zkoss.org/users/63973/javiut/" _mstmutation="1">javiut</a> <img alt="委内瑞拉玻利瓦尔共和国国旗" class="flag" data-anno-uid="anno-uid-w184uq6ymk" height="24" src="http://forum.zkoss.org/m/default/media/images/flags/ve.gif?v=1" style="" title="javiut is from Venezuela, Bolivarian Republic of" width="312.53125" _mstalt="53040858" _mstmutation="1"> <br data-anno-uid="anno-uid-4nx1e41etbw" _mstmutation="1"> <span class="reputation-score" data-anno-uid="anno-uid-qqjhvdvrpw" title="" _mstmutation="1">90</span> <span data-anno-uid="anno-uid-srnnpqf674b" title="" _mstmutation="1"> <span class="badge2" data-anno-uid="anno-uid-mv14t76lcda">●</span> <span class="badgecount" data-anno-uid="anno-uid-01rh2a9ob26w">1</span> <span class="badge3" data-anno-uid="anno-uid-7g12axp0jzu">●</span> <span class="badgecount" data-anno-uid="anno-uid-5gnauxnkavh">5</span> </span></font> <br data-anno-uid="anno-uid-j2ym1yskcls"> </div> </div> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-gewqeajyxt6" style="">I have a view using a composer which has inside 5 columnChildren each one are the parentComponent of a macroComponent which also uses a composer.</p> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-a58mml687te" style="">MyView.zul which has 5 columnChildrens</p> <pre data-anno-uid="anno-uid-lianc6tq35"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-fs6f8xr7qy6" style="">&lt;window id="win" apply='com.MyComposerController'&gt;
+&lt;portallayout maximizedMode="whole"&gt;
+    &lt;portalchildren style="padding:5px" width="50%"&gt;
+        &lt;panel sclass="innerPanel" title="${c:l('zul.m.zeus.ac.001')}" border="normal"&gt;
+            &lt;panelchildren&gt;
+                &lt;columnlayout&gt;
+                    &lt;columnchildren id='columnChildrenForInfo'/&gt;&lt;!-PARENT FOR THE MACROURI TEMPLATE-&gt;
+                &lt;/columnlayout&gt;
+            &lt;/panelchildren&gt;
+        &lt;/panel&gt;
+        &lt;panel sclass="innerPanel" title="${c:l('zul.m.zeus.ac.005')}" border="normal"&gt;
+            &lt;panelchildren&gt;
+                &lt;columnlayout&gt;
+                    &lt;columnchildren id='columnChildrenForPetition'/&gt;&lt;!-PARENT FOR THE MACROURI TEMPLATE-&gt;
+                &lt;/columnlayout&gt;
+            &lt;/panelchildren&gt;
+        &lt;/panel&gt;
+        &lt;panel sclass="innerPanel" title="${c:l('zul.m.zeus.ac.009')}" border="normal"&gt;
+            &lt;panelchildren&gt;
+                &lt;columnlayout&gt;
+                    &lt;columnchildren id='columnChildrenForErrors'/&gt;&lt;!-PARENT FOR THE MACROURI TEMPLATE-&gt;
+                &lt;/columnlayout&gt;
+            &lt;/panelchildren&gt;
+        &lt;/panel&gt;
+    &lt;/portalchildren&gt;
+    &lt;portalchildren style="padding:5px" width="50%"&gt;
+        &lt;panel sclass="innerPanel" title="${c:l('zul.m.zeus.ac.013')}" border="normal"&gt;
+            &lt;panelchildren&gt;
+                &lt;columnlayout&gt;
+                    &lt;columnchildren id='columnChildrenForEsperaNoAtendidos'/&gt;&lt;!-PARENT FOR THE MACROURI TEMPLATE-&gt;
+                &lt;/columnlayout&gt;
+            &lt;/panelchildren&gt;
+        &lt;/panel&gt;
+        &lt;panel sclass="innerPanel" title="${c:l('zul.m.zeus.ac.018')}" border="normal"&gt;
+            &lt;panelchildren&gt;
+                &lt;columnlayout&gt;
+                    &lt;columnchildren id='columnChildrenForDocs'/&gt;&lt;!-PARENT FOR THE MACROURI TEMPLATE-&gt;
+                &lt;/columnlayout&gt;
+            &lt;/panelchildren&gt;
+        &lt;/panel&gt;
+    &lt;/portalchildren&gt;
+&lt;/portallayout&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-0ygskebeq8k" style="">&lt;/window&gt;</p> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-b82i31jgxfi" style="">Latter i create in each columnChildren the following macroUri template
+MyViewDetail.zul</p> <pre data-anno-uid="anno-uid-qtvxghiwdp"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-uwnq8lmf89l" style="">&lt;zk&gt;
+                            &lt;panel&gt;
+                                &lt;panelchildren&gt;
+&lt;listbox id="results" style="margin-right:5px;margin-top:5px;margin-left:5px"&gt;
+
+&lt;listhead&gt;
+   &lt;listheader/&gt;
+   &lt;listheader/&gt;
+   &lt;listheader/&gt;
+&lt;/listhead&gt;
+&lt;template name="model"&gt;
+&lt;listitem onClick='$composer.listitemOnClick(event);'&gt;
+    &lt;listcell/&gt;
+    &lt;listcell/&gt;
+    &lt;listcell/&gt;
+ &lt;/listitem&gt;
+&lt;/template&gt;
+&lt;/listbox&gt;
+&lt;/panelchildren&gt;
+&lt;/panel&gt;
+&lt;/zk&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vnx95u52kj" style="">this macroComponent is mapped in lang-addon.xml like this</p> <pre data-anno-uid="anno-uid-tu5rptev1uk"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vakobvb1jhb" style="">&lt;component&gt;
+    &lt;component-name&gt;composerDetailController&lt;/component-name&gt;
+    &lt;component-class&gt;DetailController&lt;/component-class&gt;
+    &lt;macro-uri&gt;myViewDetail.zul&lt;/macro-uri&gt;
+&lt;/component&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-qlpu9lmy1ac" style="">Also the detail composer is a string bean which i retrieve like this</p> <pre data-anno-uid="anno-uid-v7prwzgnqz"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-7llz7mubqi8" style="">&lt;bean id="composerDetailControllerBean" class="...." autowire="byName" scope="prototype"/&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-a90641aor6t" style="">I bind it like this.</p> <pre data-anno-uid="anno-uid-z2ogsthw7g"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-2055lqa7fxi" style="">    final DetailController composerDetailControllerBean = (DetailController)SpringUtil.getBean("composerDetailControllerBean");//EXTRACT IT FROM SPRING CONTAINER
+    composerDetailControllerBean.setParent(columnChildren);//EACH DETAIL CONTROLLER HAS A COLUMN CHILDREN AS A PARENT
+    detail.afterCompose();
+    detail.inicializa();//SOME BUSINESS LOGIC
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vo64u4crp6d" style="">Everything is working like a charm but i had a problem as you can see in the template there is a listitem which doesn't have a id because if i put a id a NONUNIQUEIDINSPACE exception is thrown but i need to listen the onClick method on it i have try the following         </p> <pre data-anno-uid="anno-uid-4fgqa502x74"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-b4fj26dtmya" style="">onClick='$composer.listitemOnClick(event);'
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-l7hkkfduoxo" style="">But the composer variables points it to the first composer i mean the MyView.zul composer and i have the method and the Business logic in the template composer DetailController but as i dont do this    </p> <pre data-anno-uid="anno-uid-hsczkbm5ss"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6i90ysgtgj9" style="">&lt;div id="compA" apply="some.package.ComposerA"&gt;
+   &lt;div id="compB" apply="some.package.ComposerB"/&gt; i dont use apply in the detailComposer i bind it through lang-addon.xml file
+&lt;/div&gt;
+
+&lt;div apply="some.package.ComposerA"&gt;
+   &lt;custom-attributes composerName="myCompA"/&gt;i dont use apply in the detailComposer i bind it through lang-addon.xml file i cannot use customAttributes
+&lt;/div&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-pcn6m6j5vcf" style="">I mean i dont set a explicit name to the detail composer and i dont know how to referred it to it in the zul code </p> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-rc8lyje56s" style="">i cannot map the composer name to a variable the only thing i did was this try to set a composerName using custom-attributes trying to accomplish the custom-name by custom-attributes aforementioned</p> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-f83nso6v5nv" style="">lang-addon.xml file</p> <pre data-anno-uid="anno-uid-426907odfoa"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-tzvof5ae0oe" style="">&lt;component&gt;
+    &lt;component-name&gt;composerDetailController&lt;/component-name&gt;
+    &lt;component-class&gt;DetailController&lt;/component-class&gt;
+    &lt;macro-uri&gt;myViewDetail.zul&lt;/macro-uri&gt;
+  &lt;custom-attribute&gt;
+     &lt;attribute-name&gt;composerName&lt;/attribute-name&gt;
+     &lt;attribute-value&gt;composerDetail&lt;/attribute-value&gt;
+  &lt;/custom-attribute&gt;
+&lt;/component&gt;
+
+'$composerDetail.listitemOnClick(event);'
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-mi4o2ldquh" style="">Trying to map the custom attribute-name in the lang-addOn and use it in the zul but without success.</p> <p data-anno-uid="anno-uid-pk2muitlgph"><font _mstmutation="1"><marked-text cc-select="true" class="mark-selected" data-anno-uid="anno-uid-adsm9bjo3ks" style="" _mstmutation="1">I get Caused by: Sourced file: inline evaluation of: </marked-text><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-xgnostt90ja" style="" _mstmutation="1">             $composerDetail.listitemOnClick(event);'' : $composerDetail .listitemOnClick ( event ) </marked-tail></font><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-75ceq9iqoet" style="">$composerDetail.listitemOnClick(event);'' : Attempt to resolve method: listitemOnClick() on undefined variable or class name: $composerDetail : at Line: 14 : in file: inline evaluation of:</code></p> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-v9b43hgim2g" style="">I also try this in the MyViewDetail.zul</p> <pre data-anno-uid="anno-uid-tlvr7f34b0s"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-scixhhjthq9" style="">&lt;zk&gt;
+    &lt;custom-attributes composerName="composerDetail"/&gt;
+&lt;/zk&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-amh3xrig53" style="">But not works neither.</p> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-1qe3b6f3hba" style="">In resume i dont know to set a name to the detailComposer and i cannot use it in the MyViewDetail.zul</p> </div> <div class="post-controls" data-anno-uid="anno-uid-et45pfkvlz" id="question-controls"> <font _mstmutation="1"><a class="question-delete" data-anno-uid="anno-uid-8ytl5cy0n1f" id="post-109839-delete" _mstmutation="1">delete</a> <span class="offensive-flag" data-anno-uid="anno-uid-q7evsrrndxq" id="question-offensive-flag-109839" title="report as offensive (i.e containing spam, advertising, malicious text, etc.)" _mstmutation="1"> <a class="question-flag" data-anno-uid="anno-uid-j3op7mwcr9t">flag offensive</a> </span>  <a class="question-retag" data-anno-uid="anno-uid-v9serfza1ze" href="http://forum.zkoss.org/questions/109839/retag/" id="retag" _mstmutation="1">retag</a> <a class="question-edit" data-anno-uid="anno-uid-nywrqnnbrfr" href="http://forum.zkoss.org/questions/109839/edit/" id="post-109839-edit" _mstmutation="1">edit</a></font><script data-anno-uid="anno-uid-jof9nzbvhs" type="text/javascript">
+    var retagUrl = "/questions/109839/retag/";
+</script> <script data-anno-uid="anno-uid-4kcu3zbrs4q" type="text/javascript">
+    askbot['functions']['renderPostControls']('109839');
+</script> </div> <script data-anno-uid="anno-uid-6hylpry2k19" type="text/javascript">
+            (function(){
+                if (askbot['data']['userIsAuthenticated'] === false){
+                    var ctrl = document.getElementById('question-controls')
+                    ctrl.parentNode.removeChild(ctrl);
+                }
+            })();
+        </script> <div class="comments" data-anno-uid="anno-uid-5b8cyosvq7h" id="comments-for-question-109839"><div class="content" data-anno-uid="anno-uid-2smaaob0jmi"></div><div class="controls" data-anno-uid="anno-uid-7j91hxxn2zc"><a class="button" data-anno-uid="anno-uid-vhhsgegrw0s" id="add-comment-to-post-109839"></a><script data-anno-uid="anno-uid-ph2ks85cb4j" type="text/javascript">
+        askbot['data']['comments-for-question-109839'] = {
+            truncated: false
+        };
+        askbot['functions']['renderAddCommentButton'](
+                                                '109839',
+                                                0
+                                            );
+    </script></div></div> </div> </div> <div class="clean" data-anno-uid="anno-uid-08se4pb1amx3"></div> <div class="tabBar tabBar-answer" data-anno-uid="anno-uid-i40zbsm33xj"> <h2 data-anno-uid="anno-uid-1w5hq9zgd9i" id="questionCount" style="">
+
+
+            1 Answer
+
+
+    </h2> <div class="tabsA" data-anno-uid="anno-uid-34o40iqldu2"> <font _mstmutation="1"><span class="label" data-anno-uid="anno-uid-qhihwq3mu87" _mstmutation="1">
+                    Sort by »
+                    </span> <a data-anno-uid="anno-uid-eg3nlurv97c" href="http://forum.zkoss.org/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/?sort=oldest#sort-top" id="oldest" title="oldest answers will be shown first" _mstmutation="1"><span data-anno-uid="anno-uid-l6qhde0w6cs">oldest</span></a> <a data-anno-uid="anno-uid-awmigjumecv" href="http://forum.zkoss.org/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/?sort=latest#sort-top" id="latest" title="newest answers will be shown first" _mstmutation="1"><span data-anno-uid="anno-uid-wegw3xd1nba" style="">newest</span></a> <a data-anno-uid="anno-uid-xy93o7fp5z8" href="http://forum.zkoss.org/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/?sort=votes#sort-top" id="votes" title="most voted answers will be shown first" _mstmutation="1"><span data-anno-uid="anno-uid-qxlf0ktsfmp" style="">most voted</span></a></font> </div> </div> <div class="clean" data-anno-uid="anno-uid-vzfj4zefwud"></div> <div class="clean" data-anno-uid="anno-uid-jifxjmqxh6c"></div> <a data-anno-uid="anno-uid-bbubzzrte4" name="109846"></a> <div class="answer accepted-answer" data-anno-uid="anno-uid-xgbz1tn1f8" id="post-id-109846"> <div class="vote-buttons" data-anno-uid="anno-uid-7o5odkebbc3"> <div class="answer-img-upvote post-vote" data-anno-uid="anno-uid-fnymwej9r3i" id="answer-img-upvote-109846"> </div> <div class="vote-number" data-anno-uid="anno-uid-8y6i0qfrpq4" id="answer-vote-number-109846" style="" title="current number of votes">0</div> <div class="answer-img-downvote post-vote" data-anno-uid="anno-uid-kyhd7ay7zra" id="answer-img-downvote-109846"> </div> <script data-anno-uid="anno-uid-8iqp38ytdvy" type="text/javascript">
+    askbot['functions']['renderPostVoteButtons']('answer', '109846');
+</script> <div class="answer-img-accept" data-anno-uid="anno-uid-n5uio3aay9l" id="answer-img-accept-109846" title="this answer has been selected as correct"></div> </div> <div class="answer-table" data-anno-uid="anno-uid-iivwmm4mvb"> <div class="item-right" data-anno-uid="anno-uid-qmck5zj9wbo"> <div class="answer-body" data-anno-uid="anno-uid-78n5llt2gxc"> <div class="post-update-info-container" data-anno-uid="anno-uid-hvszgfrk87j"> <div class="post-update-info" data-anno-uid="anno-uid-8s2kp75glmg"> <p data-anno-uid="anno-uid-pu2hwgndas" style="line-height:12px;"><font _mstmutation="1"><marked-text class="" data-anno-uid="anno-uid-n6kcqr1m73q" _mstmutation="1" style="">
+
+
+                answered
+
+
+                </marked-text><strong data-anno-uid="anno-uid-f2r31tiaswj" _mstmutation="1"><abbr class="timeago" data-anno-uid="anno-uid-owikd0q39j" style="" title="2018-01-10 16:03:56 +0800">
+        2018-01-10 16:03:56 +0800
+    </abbr></strong></font> </p> <a class="avatar-box" data-anno-uid="anno-uid-adtm550iqfh" href="http://forum.zkoss.org/users/64384/cor3000/"><img alt="cor3000 gravatar image" class="gravatar cc-unloaded" data-anno-uid="anno-uid-86cl0epm9ut" height="32" src="" title="cor3000" width="32" _mstalt="418405" style=""></a> <font _mstmutation="1"><a data-anno-uid="anno-uid-c3en9xyetg" href="http://forum.zkoss.org/users/64384/cor3000/" style="" _mstmutation="1">cor3000</a><br data-anno-uid="anno-uid-xu9gahh6nqr" _mstmutation="1"> <span class="reputation-score" data-anno-uid="anno-uid-egism1hffzj" title="" _mstmutation="1">4406</span> <span data-anno-uid="anno-uid-xl4uique07r" title="" _mstmutation="1"> <span class="badge2" data-anno-uid="anno-uid-2kzzgl33p53">●</span> <span class="badgecount" data-anno-uid="anno-uid-psvwmzw4xn8" style="">2</span> <span class="badge3" data-anno-uid="anno-uid-b9d44gspxv" style="">●</span> <span class="badgecount" data-anno-uid="anno-uid-eoy5w3fcqma" style="">7</span> </span></font> <br data-anno-uid="anno-uid-xl1l280wkfk"> <img alt="ZK Team" data-anno-uid="anno-uid-mkwh9so2n3" src="http://forum.zkoss.org/m/default/media/images/zk/zk.png?v=1" style="float: left;" title="ZK Team" _mstalt="69823"> </div> </div> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-af78g149i7u" style="">I can't really follow your explanations... and maybe I don't have to.
+I think you are trying to solve a problem that shouldn't be there in the first place.</p> <p data-anno-uid="anno-uid-wxbp0ui7w5"><marked-text cc-select="true" class="mark-selected" data-anno-uid="anno-uid-id2zjtwvts" style="">Wiring a listener to dynamically created items such as listitems is best done using </marked-text><a cc-select="true" class="mark-selected" data-anno-uid="anno-uid-gp8vvstjevs" href="https://www.zkoss.org/wiki/ZK_Developer's_Reference/Event_Handling/Event_Forwarding" style="">event-forwarding</a><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-ngw69plv4e" style=""> to a non dynamic component such as the surrounding listbox.</marked-tail></p> <pre data-anno-uid="anno-uid-joc09gsw5hi"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-w35uho4c8ta" style="">&lt;listbox id="results" style="margin-right:5px;margin-top:5px;margin-left:5px"&gt;
+   ...
+   &lt;template name="model"&gt;
+      &lt;!-- don't to this, this is zscript/beanshell --&gt;
+      &lt;!-- &lt;listitem onClick='$composer.listitemOnClick(event);'&gt; --&gt;
+      &lt;!-- use event forwarding --&gt;
+      &lt;listitem forward='onClick=results.onListitemClick'&gt;
+   &lt;/template&gt;
+&lt;/listbox&gt;
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-e8vihqljvuq" style="">Then in your composer you can easily bind an event listener to the results listbox:</p> <pre data-anno-uid="anno-uid-nd6stj8fkc"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-a1lov8plkz" style="">@Listen("onListitemClick=#results")
+public void listitemOnClick(ForwardEvent event) {
+    //get the original MouseEvent and click target
+    MouseEvent me = (MouseEvent) event.getOrigin();
+    Listitem listitem = me.getTarget();
+}
+</code></pre> <p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-u5d2jrmqo8b" style="">I think that should avoid the complications you are encountering.</p> <p data-anno-uid="anno-uid-pqhe3gwl2tq" style="" class="mark-selected" cc-select="true">Robert</p> </div> <div class="answer-controls post-controls" data-anno-uid="anno-uid-9wtglobdvo"> <font _mstmutation="1"><span class="action-link" data-anno-uid="anno-uid-3toatr6460h" _mstmutation="1"> <a class="permant-link" data-anno-uid="anno-uid-t90l4ty7av" href="http://forum.zkoss.org/question/109839/zk-multiplecomposer-using-spring-use-composer-variable-in-zul/?answer=109846#post-id-109846" title="permanent link" style="">
+        link
+    </a> </span> <span class="action-link" data-anno-uid="anno-uid-p638jw2wlgj" id="post-109846-publish" _mstmutation="1"> <a class="answer-publish" data-anno-uid="anno-uid-vjndwvqnpsp" data-answer-id="109846" style="">publish</a> </span> <span class="action-link delete-post" data-anno-uid="anno-uid-wf9zzf2w8lr" id="post-109846-delete" _mstmutation="1"> <a class="question-delete" data-anno-uid="anno-uid-nkq9c61tk6d" style="">delete</a> </span> <span class="action-link offensive-flag" data-anno-uid="anno-uid-ldy07wiyys" id="answer-offensive-flag-109846" title="report as offensive (i.e containing spam, advertising, malicious text, etc.)" _mstmutation="1"> <a class="question-flag" data-anno-uid="anno-uid-hpsf4k9adab" style="">flag offensive</a> </span> <span class="action-link" data-anno-uid="anno-uid-hmwpds8jqx8" id="post-109846-edit" _mstmutation="1"> <a class="question-edit" data-anno-uid="anno-uid-xgk2irsf5g" href="http://forum.zkoss.org/answers/109846/edit/" style="">edit</a> </span></font> <span class="action-link" data-anno-uid="anno-uid-unpms9wg4lr" id="post-109846-convert"> <form action="/answer/convert/" class="answer-convert" data-anno-uid="anno-uid-k9ymc4k670f" method="POST"> <div data-anno-uid="anno-uid-cbameekstsf" style="display:none"><input data-anno-uid="anno-uid-7jteb799p7n" name="csrfmiddlewaretoken" type="hidden" value="50223d65371acfe17a78f43a238c9af3"></div> <input data-anno-uid="anno-uid-i2t42z4qb8g" id="id_answer_id" name="answer_id" type="hidden" value="109846"> <input data-anno-uid="anno-uid-g2wxdds1bch" name="" type="submit" value="convert to comment" _mstvalue="330369"> </form> </span> <script data-anno-uid="anno-uid-8uyvlu5vbog" type="text/javascript">
+    askbot['functions']['hideConvertAnswerLinks']('109846');
+    askbot['functions']['hidePublishAnswerLink']('109846');
+    askbot['functions']['renderPostControls']('109846');
+</script> </div> <div class="comments" data-anno-uid="anno-uid-hk7rrlow76q" id="comments-for-answer-109846"><div class="content" data-anno-uid="anno-uid-swxlvfz85hi"></div><div class="controls" data-anno-uid="anno-uid-t24xgugcwl"><a class="button" data-anno-uid="anno-uid-3fzwbpn0c7r" id="add-comment-to-post-109846"></a><script data-anno-uid="anno-uid-6j3wkq61fvq" type="text/javascript">
+        askbot['data']['comments-for-answer-109846'] = {
+            truncated: false
+        };
+        askbot['functions']['renderAddCommentButton'](
+                                                '109846',
+                                                0
+                                            );
+    </script></div></div> </div> </div> <div class="clean" data-anno-uid="anno-uid-b7xh4poam2u"></div> </div> <div class="clean" data-anno-uid="anno-uid-gzavkskmajr"></div> <div class="clean" data-anno-uid="anno-uid-77118dtah9b"></div> <form action="/questions/109839/answer/" data-anno-uid="anno-uid-alrkmzhmol7" id="fmanswer" method="post"><div data-anno-uid="anno-uid-rkyako54ob" style="display:none"><input data-anno-uid="anno-uid-h608js43ext" name="csrfmiddlewaretoken" type="hidden" value="50223d65371acfe17a78f43a238c9af3"></div> <div data-anno-uid="anno-uid-hyvpbcopdt" style="clear:both"></div> <div data-anno-uid="anno-uid-1tqehp15agti"> <div class="answer-notes" data-anno-uid="anno-uid-v0bkan8cfsa" style="">
+
+
+	                            Your answer
+
+
+                    </div> </div> <div class="message" data-anno-uid="anno-uid-fl0o7eupnc"><span class="strong big" data-anno-uid="anno-uid-3cocxbtg2em">Please start posting your answer anonymously</span><marked-tail data-anno-uid="anno-uid-t2hp8a8tnjq" style=""> - your answer will be saved within the current session and published after you log in or create a new account. Please try to give a </marked-tail><strong data-anno-uid="anno-uid-jo086e47eof">substantial answer</strong><marked-tail data-anno-uid="anno-uid-liheuvtwg5">, for discussions, </marked-tail><strong data-anno-uid="anno-uid-e7nrlmco9nl">please use comments</strong><marked-tail data-anno-uid="anno-uid-4qyfnwkb9nn"> and </marked-tail><strong data-anno-uid="anno-uid-qdb88he6w4q">please do remember to vote</strong><marked-tail data-anno-uid="anno-uid-0yq4a504079r"> (after you log in)!</marked-tail></div> <div class="wmd-container" data-anno-uid="anno-uid-2rtpnju8loe"> <div class="wmd-panel" data-anno-uid="anno-uid-a6oogto4tu" id="wmd-button-bar"></div> <textarea cols="40" data-anno-uid="anno-uid-m25j6xhfmw" id="editor" name="text" rows="10"></textarea> </div> <div class="form-item" data-anno-uid="anno-uid-3clkfori8gx"> <label class="form-error" data-anno-uid="anno-uid-l2mex9x8o" for="editor"><ul class="errorlist" data-anno-uid="anno-uid-b3vmh22cx94"><li data-anno-uid="anno-uid-411ysb2t36w">answer must be &gt; 10 characters</li></ul></label> <p class="editor-status action-status" data-anno-uid="anno-uid-qffbwprs65m"><span data-anno-uid="anno-uid-jq8qtdbs6d"></span></p> </div> <div class="preview-toggle" data-anno-uid="anno-uid-vesiw5q39td"> <span data-anno-uid="anno-uid-js95hw3375" id="pre-collapse" title="Toggle the real time Markdown editor preview">
+            [hide preview]
+        </span> </div> <div class="wmd-preview" data-anno-uid="anno-uid-uoqdiypd0fi" id="previewer"></div> <input class="submit after-editor" data-anno-uid="anno-uid-rbwmbif5xi" id="add-answer-btn" style="float:left" type="submit"> <script data-anno-uid="anno-uid-ah5h5oxn9hf" type="text/javascript">
+                askbot['functions']['renderAddAnswerButton']();
+            </script> </form> </div> <div data-anno-uid="anno-uid-esyim7rtl7g" id="ContentRight"> <div class="box vote-buttons" data-anno-uid="anno-uid-iygupnow7m"> <h2 data-anno-uid="anno-uid-jujjceeoeec">Question tools</h2> <a alt="click to follow this question" class="button followed" data-anno-uid="anno-uid-ybbqplsueo">
+            Follow
+        </a> <div class="clearfix" data-anno-uid="anno-uid-nyj4r2ada4l"></div> <div class="favorite-number" data-anno-uid="anno-uid-20so2k0nofyh" id="favorite-number"> </div> <div class="notify-sidebar" data-anno-uid="anno-uid-yr7n741waj"> <input data-anno-uid="anno-uid-en6vq2457e" id="question-subscribe-sidebar" type="checkbox"> <label data-anno-uid="anno-uid-5iqc8hfodc3" for="question-subscribe-sidebar"><strong data-anno-uid="anno-uid-k0n44tll57h">Here</strong><marked-tail data-anno-uid="anno-uid-39pr7sv5q47" style=""> (once you log in) you will be able to sign up for the periodic email updates about this question.</marked-tail></label> <p class="rss" data-anno-uid="anno-uid-1ny250xc6"> <a data-anno-uid="anno-uid-pz1upwipj" href="http://forum.zkoss.org/feeds/question/109839" title="subscribe to this question rss feed">RSS</a> </p> </div> </div> <div class="clearfix" data-anno-uid="anno-uid-1qr5a13z0y5"></div> <div class="box statsWidget" data-anno-uid="anno-uid-rl9zznprfa"> <div class="clearfix" data-anno-uid="anno-uid-5pt80lio4xt"></div> <h2 data-anno-uid="anno-uid-bno3zpla01r">Stats</h2> <p data-anno-uid="anno-uid-ltjs8i4gitk"><font _mstmutation="1"><marked-text data-anno-uid="anno-uid-cyuzjgupsan" _mstmutation="1">
+        Asked: </marked-text><strong data-anno-uid="anno-uid-q8wbvrri1ce" _mstmutation="1"><abbr class="timeago" data-anno-uid="anno-uid-w9v4xlngbll" title="2018-01-10 05:05:54 +0800">
+        2018-01-10 05:05:54 +0800
+    </abbr></strong></font> </p> <p data-anno-uid="anno-uid-ikivde5pis"><font _mstmutation="1"><marked-text data-anno-uid="anno-uid-uia3bywg5bg" _mstmutation="1">
+        Seen: </marked-text><strong data-anno-uid="anno-uid-ckqjl01ijgu" _mstmutation="1">9 times</strong></font> </p> <p data-anno-uid="anno-uid-kc0h7uebfzk"><font _mstmutation="1"><marked-text data-anno-uid="anno-uid-sr4oolsil3j" _mstmutation="1">
+        Last updated: </marked-text><strong data-anno-uid="anno-uid-c5q1fvelirm" title="2018-01-10 16:03:56" _mstmutation="1">Jan 10 '18</strong></font> </p> </div> <div class="box" data-anno-uid="anno-uid-rnk8bcg0qap"> <h2 data-anno-uid="anno-uid-2pvv6ksz099">Related questions</h2> <div class="questions-related" data-anno-uid="anno-uid-qa6vcxm464m"> <p data-anno-uid="anno-uid-cz0b2w7mwf5"> <a data-anno-uid="anno-uid-8mvd6zb52z5" href="http://forum.zkoss.org/question/93193/wrong-valueexception-come-in-front-of-modal-popup/">wrong valueException come in front of modal popup [closed]</a> </p> <p data-anno-uid="anno-uid-cd9qi99pd79"> <a data-anno-uid="anno-uid-kyqhm9glni" href="http://forum.zkoss.org/question/93208/composer-in-el-expressions/">@composer in EL expressions</a> </p> <p data-anno-uid="anno-uid-4cpjmzw8r0f"> <a data-anno-uid="anno-uid-z76ykxds5j" href="http://forum.zkoss.org/question/93321/use-parameters-in-a-conditional-command/">Use parameters in a conditional @command</a> </p> <p data-anno-uid="anno-uid-j5mixhmp6la"> <a data-anno-uid="anno-uid-0l43yeidkosn" href="http://forum.zkoss.org/question/93437/problems-with-multiple-press-and-onctrlkey/">Problems with multiple press and onCtrlKey</a> </p> <p data-anno-uid="anno-uid-1q7y90dgro9"> <a data-anno-uid="anno-uid-fuq0c31ntq7" href="http://forum.zkoss.org/question/93519/mvvm-save-on-the-fly/">MVVM @save on the fly [closed]</a> </p> <p data-anno-uid="anno-uid-pb5umtj5p4o"> <a data-anno-uid="anno-uid-23k4t2wsyhw" href="http://forum.zkoss.org/question/93665/helpuse-enter-on-listbox/">[Help]use Enter on listbox</a> </p> <p data-anno-uid="anno-uid-2trjhgg1yxg"> <a data-anno-uid="anno-uid-re38d48o64q" href="http://forum.zkoss.org/question/93814/unable-to-activate-destroyed-desktop/">Unable to activate destroyed desktop</a> </p> <p data-anno-uid="anno-uid-a10vu09d1w"> <a data-anno-uid="anno-uid-6e993sb6jr8" href="http://forum.zkoss.org/question/93887/orgzkosszkuiuiexception-javalangclassnotfoundexception/">org.zkoss.zk.ui.UiException: java.lang.ClassNotFoundException</a> </p> <p data-anno-uid="anno-uid-a3y2855vy2d"> <a data-anno-uid="anno-uid-9105i1n2y15" href="http://forum.zkoss.org/question/93890/how-to-put-a-image-or-letter-over-image-on-a-specific-xy-coordinate/">How to put a image or Letter over image on a specific XY Coordinate</a> </p> <p data-anno-uid="anno-uid-5t71tnpto0m"> <a data-anno-uid="anno-uid-5mf355ina2d" href="http://forum.zkoss.org/question/93922/zk-silent-printer/">zk silent printer</a> </p> </div> </div> <div class="box" data-anno-uid="anno-uid-58org0boyf"> </div> </div> </div> <!-- template footer.html --> <div data-anno-uid="anno-uid-f1kuittzveh" id="ground"> <div class="content-wrapper" data-anno-uid="anno-uid-oqvisk8lpcr"> <div class="footer-links" data-anno-uid="anno-uid-wskc3la0p2"> <font _mstmutation="1"><a data-anno-uid="anno-uid-go8cm3ks247" href="http://www.zkoss.org/support/about" target="_blank" _mstmutation="1">About Us</a><span class="link-separator" data-anno-uid="anno-uid-s0k6b6kuma" _mstmutation="1"> |</span> <a data-anno-uid="anno-uid-c7xd8fodv9t" href="http://forum.zkoss.org/faq/" _mstmutation="1">Faq</a><span class="link-separator" data-anno-uid="anno-uid-gyb3oqv6cv" _mstmutation="1"> |</span> <a data-anno-uid="anno-uid-maxxmefwbx" href="http://forum.zkoss.org/help/" title="help" _mstmutation="1">Help</a> <span class="link-separator" data-anno-uid="anno-uid-32sf4uk59y7" _mstmutation="1"> |</span> <a data-anno-uid="anno-uid-r1oqiw7vceq" href="https://www.zkoss.org/privacy" _mstmutation="1">Privacy Policy</a><span class="link-separator" data-anno-uid="anno-uid-pwmw597a8z" _mstmutation="1"> |</span> <a data-anno-uid="anno-uid-iipxrebn7ti" href="http://www.zkoss.org/support/about/contact" target="_blank" _mstmutation="1">
+                        Contact Us
+                    </a></font> </div> <div class="copyright" data-anno-uid="anno-uid-e6aektlqqq6"><marked-text data-anno-uid="anno-uid-hwtzhmcnu7h">
+
+                Copyright Potix Corporation 2015. </marked-text><br data-anno-uid="anno-uid-fbuocmb97w9"><marked-tail data-anno-uid="anno-uid-ro0rhajjxg">Content on this site is licensed under a </marked-tail><a data-anno-uid="anno-uid-aog0qbcngkw" href="http://creativecommons.org/licenses/by-sa/3.0/legalcode">Creative Commons Attribution Share Alike 3.0</a><marked-tail data-anno-uid="anno-uid-cfhlvit7itu"> license.
+
+            </marked-tail></div> <div class="clean" data-anno-uid="anno-uid-9n6ijvqn5sh"></div> </div> </div> <!-- end template footer.html --> <div data-anno-uid="anno-uid-bpq33xghfb4" id="no-javascript">  <script data-anno-uid="anno-uid-02np3qo8bsvs" type="text/javascript">
+        //IE fix to hide the red margin
+        var noscript = document.getElementsByTagName('noscript')[0];
+        noscript.style.padding = '0px';
+        noscript.style.backgroundColor = 'transparent';
+    </script> </div> <script data-anno-uid="anno-uid-oturr0mov1h" type="text/javascript">
+    var i18nLang = 'en';
+    var scriptUrl = '/'
+    var askbotSkin = 'default';
+    var enableMathJax = false;
+    askbot['urls']['mark_read_message'] = '/messages/markread/';
+    askbot['urls']['get_tags_by_wildcard'] = '/get-tags-by-wildcard/';
+    askbot['urls']['get_tag_list'] = '/get-tag-list/';
+    askbot['urls']['follow_user'] = '/followit/follow/user/{{userId}}/';
+    askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{userId}}/';
+    askbot['urls']['user_signin'] = '/account/signin/';
+    askbot['urls']['getEditor'] = '/get-editor/';
+    askbot['urls']['titleSearch'] = '/api/title_search/';
+    askbot['urls']['ask'] = '/questions/ask/';
+	askbot['urls']['questions'] = '/questions/';
+    askbot['settings']['static_url'] = '/m/';
+    askbot['settings']['minSearchWordLength'] = 4;
+</script> <script data-anno-uid="anno-uid-p1sez0r65rk" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-mzevs2xwrc" src="" type="text/javascript"></script> <!-- History.js --> <script data-anno-uid="anno-uid-xi77qiq1qhe" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-11tyyirjtsrj" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-a9z9qglfomp" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-oo171eqwe9q" type="text/javascript">
+    /*<![CDATA[*/
+    if ($.browser.msie) {
+        $("body").addClass("ie");
+	}
+    $(document).ready(function(){
+    	//kissmetrics
+    	if (askbot['data']['userIsAuthenticated']) {
+    		var zks = $.cookie('zkissms');
+	    	if (zks && zks.replace(/"/g, '') != askbot['data']['userEmail']) {
+	    		_kmq.push(['identify', askbot['data']['userEmail']]);
+	    		$.cookie('zkissms', askbot['data']['userEmail'], {path: '/'});
+	    	}
+    	}
+
+        // focus input on the search bar endcomment
+
+            var searchInput = $('#keywords');
+
+
+        if (searchInput) {
+            searchInput.focus();
+            putCursorAtEnd(searchInput);
+        }
+
+
+        if (searchInput) {
+            var search = new FullTextSearch();
+            askbot['controllers'] = askbot['controllers'] || {};
+            askbot['controllers']['fullTextSearch'] = search;
+
+                search.setSearchUrl('');
+
+
+            search.decorate(searchInput);
+        }
+
+
+        if (askbot['data']['userIsAdminOrMod']) {
+            $('body').addClass('admin');
+        }
+
+    });
+
+    $('#validate_email_alert').click(function(){notify.close(true)})
+    notify.show();
+
+    $('abbr.timeago').timeago();
+    /*]]>*/
+</script> <!-- Google  --> <script data-anno-uid="anno-uid-jkjtqwetyr" type="text/javascript">
+ var z_n = "null",
+	z_i = "34.204.52.4";
+ var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script> <script data-anno-uid="anno-uid-klr8e0iy5u9" src="" type="text/javascript"></script> <!-- Google  --> <style data-anno-uid="anno-uid-o34t94sgy">
+.stuck{width:332px;height:225px;position:fixed;top:30%;right:-300px;cursor:pointer}
+.stuck-button-site{width:32px;height:225px;float:left}
+.stuck-button-site-back{width:32px;height:113px;float:left;cursor:hand;background:url(/m/default/media/images/zk/button_support.png?v=1) no-repeat scroll 0 0}
+.stuck-button-site-back:hover{background-position:-32px 0}
+.stuck-panel{background-color:#FCFCFC;box-shadow:0 0 5px rgba(0,0,0,0.2);float:left;height:225px;width:300px}
+.stuck-panel-header{height:225px;margin-left:25px;margin-top:20px}
+.learn-more{font-family:Arial;font-size:16px;color:#008db7;text-decoration:none}
+.learn-more:hover{color:#006684}
+#support-list-ul{font-family:Arial;font-size:15px;color:#7d7d7d;list-style-image:url(/m/default/media/images/zk/icon_check.png?v=1);margin-top:15px;margin-bottom:15px;padding-left:15px}
+#support-list-ul li{line-height:26px}
+.stuck-title{width:250px;color:#517423;font-family:Arial;font-size:24px;margin:0}
+</style> <div class="stuck" data-anno-uid="anno-uid-yo5vmyef96" style="top:35%"> <div class="stuck-button-site" data-anno-uid="anno-uid-ja3s5qk3um"> <div class="stuck-button-site-back" data-anno-uid="anno-uid-tudwzu5c87"> </div> </div> <div class="stuck-panel" data-anno-uid="anno-uid-82fq7v02328"> <div class="stuck-panel-header" data-anno-uid="anno-uid-qv99xkf1paq"> <div class="stuck-title" data-anno-uid="anno-uid-5bcef640rdg">Support Options</div> <div class="support-list" data-anno-uid="anno-uid-twjnogazaj"> <ul data-anno-uid="anno-uid-i402jdzgzji" id="support-list-ul"> <li data-anno-uid="anno-uid-e0ubsatjwln">Email Support</li> <li data-anno-uid="anno-uid-4yxz4815q6h">Training</li> <li data-anno-uid="anno-uid-r1v2to62k9">Consulting</li> <li data-anno-uid="anno-uid-pvxahpopl9">Outsourcing</li> </ul> </div> <a class="learn-more" data-anno-uid="anno-uid-8nolo5spv33" href="http://www.zkoss.org/support/">Learn More</a> </div> </div> </div> <script data-anno-uid="anno-uid-7akt769tkyl" type="text/javascript">
+$("body").click(function(event){if(!$(event.target).closest(".stuck").length)$(".stuck").animate({"right":"-300px"},"slow")});$(".stuck-button-site").click(function(){var stuck=$(this).parent();if(stuck.css("right")!="0px")stuck.animate({"right":"0px"},"slow");else stuck.animate({"right":"-300px"},"slow")});</script> <script data-anno-uid="anno-uid-wja0vfhdxrf" type="text/javascript">
+function isTouchDevice(){return"ontouchstart"in window}
+$(function(){var a=isTouchDevice();if(a){$("body").addClass("touch");var b;if($(".menuitem").length){$(document).mousedown(function(d){if(b&&!$.contains($("#main_menu")[0],d.target))b.removeClass("menuitem-hover")});$(".menuitem-right > a").bind("click",function(f){var g=$(this).parents("li.menuitem"),d=$("li.menuitem");if(g.hasClass("menuitem-hover"))return true;else{if(b)b.removeClass("menuitem-hover");g.addClass("menuitem-hover");b=g;return false}})}}else{if($.browser.msie)$("body").addClass("ie");if($(".menuitem").length)$(".menuitem").hover(function(){$(this).addClass("menuitem-hover")},function(){$(this).removeClass("menuitem-hover")})}});
+</script> <script data-anno-uid="anno-uid-g4m6tzyhbv" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-o6mlgwq4phn" type="text/javascript">
+
+    var codeFriendlyMarkdown = false;
+
+    var maxCommentLength = 300;
+    askbot['urls']['editAutoAssign'] = '/comment/editautoassign/';
+    askbot['urls']['listAutoAssign'] = '/comment/listautoassign/';
+    askbot['urls']['sendEmailkey'] = '/comment/sendemailkey/';
+    askbot['urls']['postComments'] = '/post_comments/';
+    askbot['urls']['editComment'] = '/edit_comment/';
+    askbot['urls']['deleteComment'] = '/comment/delete/';
+    askbot['urls']['convertComment'] = '/comment/convert/';
+    askbot['urls']['convertAnswer'] = '/answer/convert/';
+    askbot['urls']['getComment'] = '/comment/get_text/';
+    askbot['urls']['saveDraftAnswer'] = '/save-draft-answer/';
+    askbot['urls']['question_url_template'] = scriptUrl + 'question/{{QuestionID}}/{{questionSlug}}';
+    askbot['urls']['vote_url_template'] = scriptUrl + 'questions/{{QuestionID}}/vote/';
+    askbot['urls']['user_signin'] = '/account/signin/';
+    askbot['urls']['swap_question_with_answer'] = '/swap-question-with-answer/';
+    askbot['urls']['upvote_comment'] = '/comment/upvote/';
+    askbot['urls']['delete_post'] = '/post/delete/';
+    askbot['urls']['get_html_template'] = '/get-html-template/';
+    askbot['urls']['getGroupsList'] = '/get-groups-list/';
+    askbot['urls']['publishAnswer'] = '/answer/publish/';
+    askbot['data']['userIsThreadModerator'] = false;
+    askbot['messages']['addComment'] = 'post a comment';
+
+        askbot['settings']['saveCommentOnEnter'] = true;
+
+    askbot['settings']['tagSource'] = 'user-input';
+</script> <script data-anno-uid="anno-uid-cvfkpqeul9" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-ss30py51lds" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-l4txj2w7bzi" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-lwdgc7qvw5" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-28xpwq38d01" src="" type="text/javascript"></script> <script data-anno-uid="anno-uid-pwb3m6prdpp" type="text/javascript">
+    // define reputation needs for comments
+    var repNeededForComments = 50;
+    $(document).ready(function(){
+        $("#nav_questions").attr('className',"on");
+        var answer_sort_tab = "votes";
+        $("#" + answer_sort_tab).attr('className',"on");
+
+        Vote.init(109839, 'zk-multiplecomposer-using-spring-use-composer-variable-in-zul', '63973','None');
+
+        initEditor();
+
+        lanai.highlightSyntax();
+        $('#btLogin').bind('click', function(){window.location.href='http://forum.zkoss.org/account/signin/'; } )
+        if (window.location.hash === 'fmanswer'){
+            $('#fmanswer textarea').focus();
+        }
+
+
+
+
+        if (askbot['data']['userIsAuthenticated']) {
+            var draftHandler = new DraftAnswer();
+            draftHandler.setThreadId(33699);
+            draftHandler.decorate($(document));
+        }
+    });
+
+    $(window).bind('hashchange', animate_hashes);
+
+    function animate_hashes(){
+      var id_value = window.location.hash;
+      if (id_value != ""){
+        var previous_color = $(id_value).css('background-color');
+        $(id_value).css('backgroundColor', '#FFF8C6');
+        $(id_value).animate({backgroundColor: '#ff7f2a'}, 1000).animate({backgroundColor: '#FFF8C6'}, 1000, function(){
+            $(id_value).css('backgroundColor', previous_color);
+        });
+      }
+    }
+
+
+    function initEditor(){
+        $('#editor').TextAreaResizer();
+        //highlight code synctax when editor has new text
+        $("#editor").typeWatch({highlight: false, wait: 3000,
+                         captureLength: 5, callback: lanai.highlightSyntax});
+
+        var display = true;
+        var txt = "[hide preview]";
+        $('#pre-collapse').text(txt);
+        $('#pre-collapse').bind('click', function(){
+            txt = display ? "[show preview]" : "[hide preview]";
+            display = !display;
+            $('#previewer').toggle();
+            $('#pre-collapse').text(txt);
+        });
+        setupFormValidation(
+            $("#fmanswer"),
+            CPValidator.getAnswerFormRules(),
+            CPValidator.getAnswerFormMessages()
+        );
+    }
+</script> <script data-anno-uid="anno-uid-745342mmi96" type="text/javascript">
+
+    askbot['settings']['tagsAreRequired'] =
+        true;
+    askbot['settings']['maxTagLength'] = 20;
+                            "each tag must be shorter than %(max_chars)d characters",
+    askbot['messages']['maxTagLength'] = "each tag must be shorter than 20 characters";
+    askbot['settings']['maxTagsPerPost'] = 5;
+    askbot['settings']['tagKarmaLimits'] = 1500;
+    askbot['messages']['tagKarmaLimits'] = ">1500 points required to create new tags, please apply an existing tag";
+    askbot['messages']['maxTagsPerPost'] = "please use 5 tags or less";
+    askbot['messages']['tagLimits'] = "please use up to 5 tags, less than 20 characters each";
+    askbot['urls']['upload'] = '/upload/';
+    askbot['settings']['minTitleLength'] = 10;
+    askbot['settings']['minQuestionBodyLength'] = 10;
+    askbot['settings']['minAnswerBodyLength'] = 10;
+    askbot['settings']['tag_editor'] = '{\u0022max_tag_length\u0022: 20, \u0022tag_regex\u0022: \u0022^[\u005C\u005Cw+.#\u002D]+$\u0022, \u0022max_tags_per_post\u0022: 5, \u0022messages\u0022: {\u0022wrong_chars\u0022: \u0022please use letters, numbers and characters \u005C\u0022\u002D+.#\u005C\u0022\u0022, \u0022required\u0022: \u0022tags are required\u0022}, \u0022tags_are_required\u0022: true, \u0022force_lowercase_tags\u0022: true}';
+</script> <script data-anno-uid="anno-uid-kga62edzcor" type="text/javascript">
+    var oldFASR = AutoCompleter.prototype.filterAndShowResults;
+    AutoCompleter.prototype.filterAndShowResults = function(results, filter) {
+    	askbot['data']['tag_names'] = {};
+    	for (var i = 0, j = results.length; i < j; i++) {
+    		if (typeof results[i] === 'object') {
+	            askbot['data']['tag_names'][results[i].value] = true;
+	        }
+    	}
+    	return oldFASR.apply(this, arguments);
+    };
+    </script> <script data-anno-uid="anno-uid-0wo22xnibs18" type="text/javascript">
+            for (url_name in askbot['urls']){
+                askbot['urls'][url_name] = cleanUrl(askbot['urls'][url_name]);
+            }
+        </script>  </body></html>
