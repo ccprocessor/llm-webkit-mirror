@@ -113,7 +113,7 @@ def extract_main_html_only(url: str, html_content: str, parser_type: str = PipeT
     return result.get('main_html', '')
 
 
-def extract_content_from_main_html(url: str, main_html: str, output_format: str = 'md', language: str = 'en') -> str:
+def extract_content_from_main_html(url: str, main_html: str, output_format: str = 'md', language: str = 'en', use_raw_image_url: bool = False) -> str:
     """场景2: 只执行第二阶段，从main_html抽取结构化内容.
 
     Args:
@@ -121,6 +121,7 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
         main_html: 已经抽取的主要HTML内容
         output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
+        use_raw_image_url: 是否使用原始图片URL（仅对mm_md格式有效）
 
     Returns:
         str: 结构化的内容（markdown格式）
@@ -131,7 +132,7 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
     if output_format == 'md':
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
-        return content_list.to_mm_md()
+        return content_list.to_mm_md(use_raw_image_url=use_raw_image_url)
     elif output_format == 'plain_md':
         return content_list.to_plain_md()
     elif output_format == 'json':
@@ -141,7 +142,7 @@ def extract_content_from_main_html(url: str, main_html: str, output_format: str 
 
 
 def extract_content_from_html_with_magic_html(url: str, html_content: str, output_format: str = 'md',
-                                              language: str = 'en') -> str:
+                                              language: str = 'en', use_raw_image_url: bool = False) -> str:
     """场景3: 执行两个阶段，从magic_html抽取main_html，再从main_html抽取结构化内容.
 
     Args:
@@ -149,6 +150,7 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
         html_content: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
+        use_raw_image_url: 是否使用原始图片URL（仅对mm_md格式有效）
 
     Returns:
         str: 结构化的内容（markdown格式）
@@ -159,7 +161,7 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
     if output_format == 'md':
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
-        return content_list.to_mm_md()
+        return content_list.to_mm_md(use_raw_image_url=use_raw_image_url)
     elif output_format == 'plain_md':
         return content_list.to_plain_md()
     elif output_format == 'json':
@@ -169,7 +171,7 @@ def extract_content_from_html_with_magic_html(url: str, html_content: str, outpu
 
 
 def extract_content_from_html_with_llm(url: str, html_content: str, output_format: str = 'md',
-                                       language: str = 'en') -> str:
+                                       language: str = 'en', use_raw_image_url: bool = False) -> str:
     """场景3: 执行两个阶段，从llm抽取main_html，再从main_html抽取结构化内容.
 
     Args:
@@ -177,6 +179,7 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
         html_content: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
+        use_raw_image_url: 是否使用原始图片URL（仅对mm_md格式有效）
 
     Returns:
         str: 结构化的内容（markdown格式）
@@ -187,7 +190,7 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
     if output_format == 'md':
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
-        return content_list.to_mm_md()
+        return content_list.to_mm_md(use_raw_image_url=use_raw_image_url)
     elif output_format == 'plain_md':
         return content_list.to_plain_md()
     elif output_format == 'json':
@@ -197,7 +200,7 @@ def extract_content_from_html_with_llm(url: str, html_content: str, output_forma
 
 
 def extract_content_from_html_with_layout_batch(url: str, html_content: str, output_format: str = 'md',
-                                                language: str = 'en') -> str:
+                                                language: str = 'en', use_raw_image_url: bool = False) -> str:
     """场景3: 执行两个阶段，从layout_batch抽取main_html，再从main_html抽取结构化内容.
 
     Args:
@@ -205,6 +208,7 @@ def extract_content_from_html_with_layout_batch(url: str, html_content: str, out
         html_content: 原始HTML内容
         output_format: 输出格式，'md' 或 'mm_md' 或 'plain_md'
         language: 语言，可选：'en' 或 'zh'
+        use_raw_image_url: 是否使用原始图片URL（仅对mm_md格式有效）
 
     Returns:
         str: 结构化的内容（markdown格式）
@@ -215,7 +219,7 @@ def extract_content_from_html_with_layout_batch(url: str, html_content: str, out
     if output_format == 'md':
         return content_list.to_nlp_md()
     elif output_format == 'mm_md':
-        return content_list.to_mm_md()
+        return content_list.to_mm_md(use_raw_image_url=use_raw_image_url)
     elif output_format == 'plain_md':
         return content_list.to_plain_md()
     elif output_format == 'json':

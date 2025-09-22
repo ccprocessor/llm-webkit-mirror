@@ -135,6 +135,7 @@ class TestSimple(unittest.TestCase):
         self.main_html = '<div><body><h1>Test Content</h1><p>This is a test paragraph.</p><img src="https://example.com/image.jpg" alt="Test Image"></body></div>'
         self.expected_md = '# Test Content\n\nThis is a test paragraph.\n'
         self.expected_mm_md = '# Test Content\n\nThis is a test paragraph.\n\n![Test Image](e5db82b5bf63d49d80c5533616892d3386f43955369520986d67653c700fc53c)\n'
+        self.expected_mm_md_raw_url = '# Test Content\n\nThis is a test paragraph.\n\n![Test Image](https://example.com/image.jpg)\n'
         self.base_path = os.path.dirname(os.path.abspath(__file__))
 
     # ========================================
@@ -263,6 +264,47 @@ class TestSimple(unittest.TestCase):
         extractor2 = ExtractorFactory.get_extractor(PipeTpl.NOCLIP)
 
         self.assertIsNot(extractor1, extractor2, '不同pipe_tpl应该返回不同的实例')
+
+    # ========================================
+    # use_raw_image_url参数测试
+    # ========================================
+
+    def test_extract_content_from_main_html_with_raw_image_url(self):
+        """测试extract_content_from_main_html使用原始图片URL."""
+        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', 'en', use_raw_image_url=True)
+        self.assertEqual(result, self.expected_mm_md_raw_url)
+
+    def test_extract_content_from_html_with_magic_html_with_raw_image_url(self):
+        """测试extract_content_from_html_with_magic_html使用原始图片URL."""
+        result = extract_content_from_html_with_magic_html(self.url, self.html_content, 'mm_md', 'en', use_raw_image_url=True)
+        self.assertEqual(result, self.expected_mm_md_raw_url)
+
+    def test_extract_content_from_main_html_without_raw_image_url(self):
+        """测试extract_content_from_main_html不使用原始图片URL（默认行为）."""
+        result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', 'en', use_raw_image_url=False)
+        self.assertEqual(result, self.expected_mm_md)
+        # 确保不包含原始URL
+        self.assertNotIn('https://example.com/image.jpg', result)
+
+    def test_extract_content_from_html_with_magic_html_without_raw_image_url(self):
+        """测试extract_content_from_html_with_magic_html不使用原始图片URL（默认行为）."""
+        result = extract_content_from_html_with_magic_html(self.url, self.html_content, 'mm_md', 'en', use_raw_image_url=False)
+        self.assertEqual(result, self.expected_mm_md)
+        # 确保不包含原始URL
+        self.assertNotIn('https://example.com/image.jpg', result)
+
+    def test_use_raw_image_url_only_affects_mm_md_format(self):
+        """测试use_raw_image_url参数只对mm_md格式有效，对其他格式无影响."""
+        # 测试md格式不受影响
+        result_md_false = extract_content_from_main_html(self.url, self.main_html, 'md', 'en', use_raw_image_url=False)
+        result_md_true = extract_content_from_main_html(self.url, self.main_html, 'md', 'en', use_raw_image_url=True)
+        self.assertEqual(result_md_false, result_md_true)
+        self.assertEqual(result_md_false, self.expected_md)
+
+        # 测试plain_md格式不受影响
+        result_plain_md_false = extract_content_from_main_html(self.url, self.main_html, 'plain_md', 'en', use_raw_image_url=False)
+        result_plain_md_true = extract_content_from_main_html(self.url, self.main_html, 'plain_md', 'en', use_raw_image_url=True)
+        self.assertEqual(result_plain_md_false, result_plain_md_true)
 
 
 class TestExtractorFactoryThreadSafety(unittest.TestCase):
