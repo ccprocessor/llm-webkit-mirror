@@ -279,6 +279,18 @@ class TestSimple(unittest.TestCase):
         result = extract_content_from_html_with_magic_html(self.url, self.html_content, 'mm_md', 'en', use_raw_image_url=True)
         self.assertEqual(result, self.expected_mm_md_raw_url)
 
+    def test_extract_content_from_html_with_llm_with_raw_image_url(self):
+        """测试extract_content_from_html_with_llm使用原始图片URL."""
+        result = extract_content_from_html_with_llm(self.url, self.html_content, 'mm_md', 'en', use_raw_image_url=True)
+        # 由于LLM可能有不同的处理结果，我们只验证包含原始URL
+        self.assertIn('https://example.com/image.jpg', result)
+
+    def test_extract_content_from_html_with_layout_batch_with_raw_image_url(self):
+        """测试extract_content_from_html_with_layout_batch使用原始图片URL."""
+        result = extract_content_from_html_with_layout_batch(self.url, self.html_content, 'mm_md', 'en', use_raw_image_url=True)
+        # 由于layout_batch可能有不同的处理结果，我们只验证包含原始URL
+        self.assertIn('https://example.com/image.jpg', result)
+
     def test_extract_content_from_main_html_without_raw_image_url(self):
         """测试extract_content_from_main_html不使用原始图片URL（默认行为）."""
         result = extract_content_from_main_html(self.url, self.main_html, 'mm_md', 'en', use_raw_image_url=False)
