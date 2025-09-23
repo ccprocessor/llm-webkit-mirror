@@ -30,8 +30,8 @@ class InferenceConfig:
     top_p: float = 0.95
     max_output_tokens: int = 8192
     tensor_parallel_size: int = 1
-    # 正式环境修改为bfloat16
-    dtype: str = 'float16'
+    # 测试环境修改为float16
+    dtype: str = 'bfloat16'
     template: bool = True
 
 
@@ -339,8 +339,8 @@ class InferenceService:
                 trust_remote_code=True,
                 dtype=config.dtype,
                 tensor_parallel_size=config.tensor_parallel_size,
-                # 正式环境删掉
-                max_model_len=config.max_tokens,  # 减少序列长度避免内存不足
+                # 测试环境取消注释
+                # max_model_len=config.max_tokens,  # 减少序列长度避免内存不足
             )
 
             logger.info(f'模型初始化成功: {self.model_path}')
