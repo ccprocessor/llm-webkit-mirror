@@ -8,11 +8,11 @@ from llm_web_kit.libs.html_utils import element_to_html, html_to_element
 def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tuple[str, bool]:
     """从HTML中删除指定XPath匹配的所有节点.
 
-    参数:
+    Args:
         html_content (str): 原始HTML内容
         xpaths_to_remove (list): 需要删除的元素列表
 
-    返回:
+    Returns:
         str: 处理后的HTML
         bool: 推广是否成功
     """
@@ -22,10 +22,11 @@ def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tu
     is_success = False
     tree = html_to_element(html_content)
 
+    # 获取所有元素节点
+    all_elements = [element for element in tree.iter() if isinstance(element, html.HtmlElement)]
+
     for remove_node in xpaths_to_remove:
         xpath_content = remove_node.get('xpath')
-        # 获取所有元素节点
-        all_elements = [element for element in tree.iter() if isinstance(element, html.HtmlElement)]
         for node in tree.xpath(xpath_content):
             # 获取节点内容占比
             content_rate = __calculate_node_content_ratio(tree, node)
@@ -45,11 +46,11 @@ def mapping_html_by_rules(html_content: str, xpaths_to_remove: List[dict]) -> tu
 def __calculate_node_content_ratio(tree: html.HtmlElement, node: html.HtmlElement) -> float:
     """计算节点内容占比.
 
-    参数:
+    Args:
         tree(html.HtmlElement): 根节点对象
-        node (html.HtmlElement): 节点对象
+        node(html.HtmlElement): 节点对象
 
-    返回:
+    Returns:
         float: 节点内容占比
     """
     # 获取节点的文本内容

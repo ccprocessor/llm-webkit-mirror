@@ -95,6 +95,7 @@ def extract(url:str, html:str) -> str:
     try:
         nlp_md = extract_content_from_html_with_magic_html(url, html)
         # or mm_nlp_md = extract_content_from_html_with_magic_html(url, html, 'mm_md')
+        # or mm_nlp_md = extract_content_from_html_with_magic_html(url, html, 'mm_md', use_raw_image_url=True)
         # or nlp_md = extract_content_from_html_with_magic_html(url, html, language='zh')
         return nlp_md
     except Exception as e:
@@ -124,6 +125,7 @@ def extract(url:str, html:str) -> str:
     try:
         nlp_md = extract_content_from_main_html(url, html)
         # or mm_nlp_md = extract_content_from_main_html(url, html, 'mm_md')
+        # or mm_nlp_md = extract_content_from_main_html(url, html, 'mm_md', use_raw_image_url=True)
         # or nlp_md = extract_content_from_main_html(url, html, language='zh')
         return nlp_md
     except Exception as e:
@@ -214,9 +216,9 @@ text = get_plain_text_fast(html_source)
 
 ## Pipeline
 
-1. [HTML pre-dedup](jupyter/html-pre-dedup/main.ipynb)
+1. [HTML pre-dedup](jupyter/html-pre-dedup/README.md)
 2. [domain clustering](jupyter/domain_clustering/README.md)
-3. [layout clustering](jupyter/layout-clustering/main.ipynb)
+3. [layout clustering](jupyter/layout-clustering/README.md)
 4. [typical layout node selection](jupyter/typical-html-select/main.ipynb)
 5. [HTML node select by LLM](jupyter/html-node-select-llm/main.ipynb)
 6. [html parse layout by layout](jupyter/html-parse-by-layout/main.ipynb)
