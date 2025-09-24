@@ -469,7 +469,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
-        self.assertIn(r'\$16.8 million', result_md)
+        self.assertIn(r'$16.8 million', result_md)
 
     def test_math_non_asciimath(self):
         """测试普通文本中的``不应该被识别为asciimath."""

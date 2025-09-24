@@ -134,6 +134,8 @@ class TitleRecognizer(BaseHTMLElementRecognizer):
 
             if el.tag == CCTag.CC_CODE_INLINE:
                 blks.append(f'`{el.text}`')
+            elif el.tag == CCTag.CC_MATH_INLINE:
+                blks.append(f'${el.text.strip()}$')
             elif el.tag in ['br']:
                 blks.extend(['$br$'])
             else:

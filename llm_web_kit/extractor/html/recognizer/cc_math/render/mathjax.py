@@ -1,10 +1,13 @@
 import re
 from typing import Any, Dict, List
 
+from pylatexenc import latexwalker
+
 from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
-from llm_web_kit.libs.html_utils import HtmlElement, html_to_element
+from llm_web_kit.libs.html_utils import (HtmlElement, SimpleMatch,
+                                         html_to_element)
 from llm_web_kit.libs.text_utils import normalize_ctl_text
 
 # 添加MATHJAX_OPTIONS变量定义
@@ -358,8 +361,43 @@ class MathJaxRender(BaseMathRender):
             return text
 
         # 首先查找所有分隔符形式的匹配
-        matches = list(pattern.finditer(text))
-
+        if not is_display:
+            matches = list(pattern.finditer(text))
+        else:
+            matches = []
+            # 独立公式环境
+            independent_math_environments = [
+                'displaymath',
+                'equation',
+                'equation*',
+                'align',
+                'align*',
+                'gather',
+                'gather*',
+                'multline',
+                'multline*',
+                'vmatrix',
+                'Vmatrix'
+            ]
+            walker = latexwalker.LatexWalker(text)
+            nodelist, pos, len_ = walker.get_latex_nodes(pos=0)
+            for node in nodelist:
+                # 标准的数学环境
+                if node.isNodeType(latexwalker.LatexMathNode):
+                    # 判断是行内公式还是独立公式
+                    if node.displaytype == 'inline':
+                        pass
+                    elif node.displaytype == 'display':
+                        fake_match = SimpleMatch(text, node.pos, node.len)
+                        matches.append(fake_match)
+                # 其他数学环境
+                if (node.isNodeType(latexwalker.LatexEnvironmentNode) and
+                        hasattr(node, 'environmentname') and
+                        node.environmentname in independent_math_environments):
+                    fake_match = SimpleMatch(text, node.pos, node.len)
+                    matches.append(fake_match)
+            tex_pattern = re.compile('\\[tex\\](.*?)\\[/tex\\]', re.DOTALL)
+            matches.extend(list(tex_pattern.finditer(text)))
         # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
             return text
