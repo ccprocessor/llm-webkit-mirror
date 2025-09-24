@@ -554,31 +554,15 @@ class SimpleMatch:
     def group(self, group_num=0):
         if group_num == 0:
             return self._match
-        else:
-            # 这个简单的模拟不支持捕获组，调用 group(>0) 可能抛出异常或返回 None
-            # 可以根据需要扩展以支持捕获组
-            raise IndexError("no such group")
 
     def start(self, group_num=0):
         if group_num == 0:
             return self._start
-        else:
-            # 同样，不支持捕获组
-            raise IndexError("no such group")
 
     def end(self, group_num=0):
         if group_num == 0:
             return self._end
-        else:
-            raise IndexError("no such group")
-
-    def span(self, group_num=0):
-        return (self.start(group_num), self.end(group_num))
 
     def groups(self):
         # 返回空元组，因为不支持捕获组
         return ()
-
-    def groupdict(self):
-        # 返回空字典，因为不支持命名组
-        return {}
