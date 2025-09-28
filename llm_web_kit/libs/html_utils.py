@@ -566,3 +566,31 @@ class SimpleMatch:
     def groups(self):
         # 返回空元组，因为不支持捕获组
         return ()
+
+
+def optimized_dollar_matching(text):
+    """美元金额匹配."""
+    # 用于存储需要修改的位置和替换内容
+    replacements = []
+
+    pattern = r'(?<!\\)(\$\d{1,3}(?:,\d{3})*(?:\.\d{1,})?)'
+    matches_result = re.finditer(pattern, text)
+    for match in matches_result:
+        # 获取匹配的起始和结束位置
+        start, end = match.start(), match.end()
+        # 检查匹配后的字符（如果存在）
+        if end < len(text):
+            next_char = text[end]
+            # 只有当后接字符不在列表中时才进行替换
+            if next_char not in ["^", "$", "\\", "/"]:
+                replacements.append((start, end, match.group()))
+
+    if replacements:
+        text_chars = list(text)
+        for start, end, original_match in sorted(replacements, reverse=True):
+            # 只转义金额前的$符号
+            escaped_match = f"\\{original_match}"
+            text_chars[start:end] = list(escaped_match)
+        return ''.join(text_chars)
+    else:
+        return text

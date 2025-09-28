@@ -7,7 +7,8 @@ from llm_web_kit.extractor.html.recognizer.cc_math.common import CCMATH
 from llm_web_kit.extractor.html.recognizer.cc_math.render.render import (
     BaseMathRender, MathRenderType)
 from llm_web_kit.libs.html_utils import (HtmlElement, SimpleMatch,
-                                         html_to_element)
+                                         html_to_element,
+                                         optimized_dollar_matching)
 from llm_web_kit.libs.text_utils import normalize_ctl_text
 
 # 添加MATHJAX_OPTIONS变量定义
@@ -400,7 +401,7 @@ class MathJaxRender(BaseMathRender):
             matches.extend(list(tex_pattern.finditer(text)))
         # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
-            return text
+            return optimized_dollar_matching(text)
 
         # 从后向前处理，以避免位置偏移
         result = text
@@ -476,7 +477,7 @@ class MathJaxRender(BaseMathRender):
             last_position = start_pos
 
         # 返回处理后的文本
-        return result
+        return optimized_dollar_matching(result)
 
     def _is_escaped_delimiter(self, text: str, pos: int) -> bool:
         """检查分隔符是否被转义.

@@ -953,6 +953,14 @@ class TestMathRecognizer(unittest.TestCase):
                                                html_content)
         assert '\\{\\begin{array}{l}\\nabla \\cdot \\left({R}^{2}\\nabla \\phi \\right)=0\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{ }\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\left(6\\right)\\\\ D\\left(r,k,\\omega \\right)\\equiv \\frac{c}{2{k}_{0}}\\left[{k}^{2}-{\\left(n{k}_{0}\\right)}^{2}\\right]+W\\left(r,\\omega \\right)=0\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\left(7\\right)\\end{array}' in element_to_html(parts[0][0])
 
+    def test_dollar_sign(self):
+        """美元符合与公式共存的情况."""
+        html_content = """<p>referring $18.1 to $18.1 the packet center $ p$ and apparently coinciding with the particle velocity</p>"""
+        parts = self.math_recognizer.recognize('https://www.baidu.com',
+                                               [(html_to_element(html_content), html_to_element(html_content))],
+                                               html_content)
+        assert element_to_html(parts[0][0]) == '<p>referring \\$18.1 to \\$18.1 the packet center <ccmath-inline type="latex" by="mathjax_mock" html="$ p$">p</ccmath-inline> and apparently coinciding with the particle velocity</p>'
+
 
 class TestCCMATH(unittest.TestCase):
     def setUp(self):
