@@ -45,6 +45,7 @@ class HTMLParseData(BaseModel):
     llm_response: Dict[str, int] = Field(default_factory=dict, description="LLM 项目打标结果")
     typical_main_html: Optional[str] = Field(None, description="解析得到的主体 HTML")
     html_target_list: List[Any] = Field(default_factory=list, description="正文候选/目标列表")
+    markdown: Optional[str] = Field(None, description="从正文HTML提取的Markdown格式内容")
 
 
 class HTMLParseResponse(BaseResponse):
@@ -68,7 +69,8 @@ class HTMLParseResponse(BaseResponse):
                         "item_id 9": 1
                     },
                     "typical_main_html": "<html></html>",
-                    "html_target_list": []
+                    "html_target_list": [],
+                    "markdown": "# Hello World"
                 },
                 "metadata": None
             }

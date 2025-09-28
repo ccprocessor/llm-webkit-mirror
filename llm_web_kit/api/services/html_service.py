@@ -5,6 +5,8 @@
 
 from typing import Any, Dict, Optional
 
+from llm_web_kit.simple import extract_content_from_main_html
+
 from ..dependencies import get_inference_service, get_logger, get_settings
 
 logger = get_logger(__name__)
@@ -67,7 +69,9 @@ class HTMLService:
             pre_data[PreDataJsonKey.LLM_RESPONSE] = llm_response
             parser = MapItemToHtmlTagsParser({})
             pre_data = parser.parse_single(pre_data)
-
+            main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
+            mm_nlp_md = extract_content_from_main_html(url, main_html, 'mm_md', use_raw_image_url=True)
+            pre_data['markdown'] = mm_nlp_md
             # 将 PreDataJson 转为标准 dict，避免响应模型校验错误
             return dict(pre_data.items())
 
