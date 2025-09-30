@@ -5,9 +5,11 @@
 
 from typing import Any, Dict, Optional
 
-from llm_web_kit.simple import extract_content_from_main_html
+import httpx
 
-from ..dependencies import get_inference_service, get_logger, get_settings
+from llm_web_kit.api.dependencies import (get_inference_service, get_logger,
+                                          get_settings)
+from llm_web_kit.simple import extract_content_from_main_html
 
 logger = get_logger(__name__)
 settings = get_settings()
@@ -37,8 +39,26 @@ class HTMLService:
     ) -> Dict[str, Any]:
         """解析 HTML 内容."""
         try:
+            if not html_content and url:
+                logger.info(f'HTML 内容为空，尝试从 URL 爬取: {url}')
+                try:
+                    async with httpx.AsyncClient() as client:
+                        response = await client.post(settings.crawl_url, json={'url': url}, timeout=60)
+                        response.raise_for_status()
+                        data = response.json()
+                        html_content = data.get('html')
+                        if not html_content:
+                            raise ValueError('爬取成功，但未返回 HTML 内容')
+                        logger.info(f'URL 爬取成功，内容长度: {len(html_content)}')
+                except httpx.RequestError as exc:
+                    logger.error(f"调用爬虫服务失败: {exc}")
+                    raise ValueError(f"无法从 URL 爬取内容: {exc}")
+                except Exception as e:
+                    logger.error(f'爬取或解析爬取内容失败: {e}')
+                    raise ValueError(f'处理爬取内容时发生错误: {e}')
+
             if not html_content:
-                raise ValueError('必须提供 HTML 内容')
+                raise ValueError('必须提供 HTML 内容或有效的 URL')
 
             # 延迟导入，避免模块导入期异常导致服务类不可用
             try:
@@ -83,3 +103,21 @@ class HTMLService:
         if self._inference_service is None:
             self._inference_service = get_inference_service()
         return await self._inference_service.inference(html_content, options or {})
+
+
+if __name__ == '__main__':
+    import asyncio
+
+    # 重新导入以确保加载最新的代码，绕过缓存问题
+    from llm_web_kit.api.dependencies import get_settings
+    settings = get_settings()
+
+    async def main():
+        async with httpx.AsyncClient() as client:
+            response = await client.post(settings.crawl_url, json={'url': 'https://aws.amazon.com/what-is/retrieval-augmented-generation/'}, timeout=60)
+            response.raise_for_status()
+            data = response.json()
+            html_content = data.get('html')
+            print(html_content)
+
+    asyncio.run(main())
