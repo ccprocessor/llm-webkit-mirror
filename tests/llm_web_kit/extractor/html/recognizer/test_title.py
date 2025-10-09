@@ -46,3 +46,21 @@ def test_title1(title_recognizer):
         html_content = file.read()
     result = title_recognizer.recognize('http://www.baidu.com', [(main_html_content, main_html_content)], html_content)
     assert 'Compare vibrational frequencies for two calculations for C&lt;sub&gt;3&lt;/sub&gt; (carbon trimer)' in element_to_html(result[1][0])
+
+
+def test_title_has_formula(title_recognizer):
+    """
+    标题含有公式
+    Args:
+        title_recognizer:
+
+    Returns:
+
+    """
+    html_content = r"""<h4 class="record-header" data-anno-uid="anno-uid-ak93kqpj44f">
+    <a cc-select="true" class="mark-selected" data-anno-uid="anno-uid-37umi9vq7o2" href="https://www.hepdata.net/record/ins228250" style="">
+                                                Vector Meson Production in the Final State $K^+ K^- \pi^+ \pi^-$ Photon-photon Collisions
+                                            </a>
+    </h4>"""
+    result = title_recognizer.recognize('http://www.baidu.com', [(html_content, html_content)], html_content)
+    assert r"Vector Meson Production in the Final State $K^+ K^- \pi^+ \pi^-$ Photon-photon Collisions" in element_to_html(result[0][0])

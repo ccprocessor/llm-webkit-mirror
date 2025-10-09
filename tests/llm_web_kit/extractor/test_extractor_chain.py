@@ -512,7 +512,7 @@ DEF
         input_data = DataJson(test_data)
         result = chain.extract(input_data)
         result_md = result.get_content_list().to_nlp_md()
-        assert 'List Price: $11.80' in result_md
+        assert r'List Price: \$11.80' in result_md
 
     def test_table_only_one_td(self):
         """测试table只有一个td."""
