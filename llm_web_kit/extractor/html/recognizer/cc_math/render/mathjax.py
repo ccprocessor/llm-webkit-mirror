@@ -250,10 +250,10 @@ class MathJaxRender(BaseMathRender):
             display_patterns.append(pattern)
 
         # 添加对环境的支持
-        if MATHJAX_OPTIONS.get('processEnvironments', True):
-            # 通用匹配任何 \begin{...}\end{...} 环境的模式，保证环境名称相同时才匹配
-            env_pattern = r'(\\begin\{(?P<env>[^}]+)\}.*?\\end\{(?P=env)\})'
-            display_patterns.append(env_pattern)
+        # if MATHJAX_OPTIONS.get('processEnvironments', True):
+        #     # 通用匹配任何 \begin{...}\end{...} 环境的模式，保证环境名称相同时才匹配
+        #     env_pattern = r'(\\begin\{(?P<env>[^}]+)\}.*?\\end\{(?P=env)\})'
+        #     display_patterns.append(env_pattern)
 
         # 编译正则表达式
         inline_pattern = re.compile('|'.join(inline_patterns), re.DOTALL)
@@ -366,6 +366,7 @@ class MathJaxRender(BaseMathRender):
             matches = list(pattern.finditer(text))
         else:
             matches = []
+            tem_match_display = []
             # 独立公式环境
             independent_math_environments = [
                 'displaymath',
@@ -389,16 +390,24 @@ class MathJaxRender(BaseMathRender):
                     if node.displaytype == 'inline':
                         pass
                     elif node.displaytype == 'display':
+                        tem_match_display.append(node.latex_verbatim())
                         fake_match = SimpleMatch(text, node.pos, node.len)
                         matches.append(fake_match)
                 # 其他数学环境
                 if (node.isNodeType(latexwalker.LatexEnvironmentNode) and
                         hasattr(node, 'environmentname') and
                         node.environmentname in independent_math_environments):
+                    tem_match_display.append(node.latex_verbatim())
                     fake_match = SimpleMatch(text, node.pos, node.len)
                     matches.append(fake_match)
-            tex_pattern = re.compile('\\[tex\\](.*?)\\[/tex\\]', re.DOTALL)
-            matches.extend(list(tex_pattern.finditer(text)))
+            # 公式自定义边界逻辑
+            new_display_patterns = [item for item in pattern.pattern.split('|') if "$" not in item]
+            custom_pattern = re.compile('|'.join(new_display_patterns), re.DOTALL)
+            custom_matches = list(custom_pattern.finditer(text))
+            for item in custom_matches:
+                if item.group() not in tem_match_display:
+                    matches.append(item)
+            tem_match_display.clear()
         # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
             return optimized_dollar_matching(text)
