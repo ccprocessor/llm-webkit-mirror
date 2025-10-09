@@ -961,6 +961,14 @@ class TestMathRecognizer(unittest.TestCase):
                                                html_content)
         assert element_to_html(parts[0][0]) == '<p>referring \\$18.1 to \\$18.1 the packet center <ccmath-inline type="latex" by="mathjax_mock" html="$ p$">p</ccmath-inline> and apparently coinciding with the particle velocity</p>'
 
+    def test_begin_end(self):
+        """$begin end$的嵌套组合识别时候$$没有处理."""
+        html_content = r"""<p data-anno-uid="anno-uid-q8doimblafo"><span cc-select="true" class="mpa-ignore mark-selected" data-anno-uid="anno-uid-ldpcij9lbom" style="">$\begin{array}{1 1}(a)\;xy=c\\(b)\;xy=c^2\\(c)\;x^2+y^2=a^2\\(d)\;x^2+y^2=1\end{array}$</span></p>"""
+        parts = self.math_recognizer.recognize('https://www.baidu.com',
+                                               [(html_to_element(html_content), html_to_element(html_content))],
+                                               html_content)
+        assert element_to_html(parts[0][0]) == '<p data-anno-uid="anno-uid-q8doimblafo"><span cc-select="true" class="mpa-ignore mark-selected" data-anno-uid="anno-uid-ldpcij9lbom" style=""><ccmath-inline type="latex" by="mathjax_mock" html="$\\begin{array}{1 1}(a)\\;xy=c\\\\(b)\\;xy=c^2\\\\(c)\\;x^2+y^2=a^2\\\\(d)\\;x^2+y^2=1\\end{array}$">\\begin{array}{1 1}(a)\\;xy=c\\\\(b)\\;xy=c^2\\\\(c)\\;x^2+y^2=a^2\\\\(d)\\;x^2+y^2=1\\end{array}</ccmath-inline></span></p>'
+
 
 class TestCCMATH(unittest.TestCase):
     def setUp(self):

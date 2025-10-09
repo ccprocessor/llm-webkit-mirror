@@ -33,6 +33,21 @@ ASCIIMATH_KEYWORDS = [
     'AM_CHTML'
 ]
 
+# 独立公式环境
+independent_math_environments = [
+    'displaymath',
+    'equation',
+    'equation*',
+    'align',
+    'align*',
+    'gather',
+    'gather*',
+    'multline',
+    'multline*',
+    'vmatrix',
+    'Vmatrix'
+]
+
 
 class MathJaxRender(BaseMathRender):
     """MathJax渲染器实现."""
@@ -367,20 +382,6 @@ class MathJaxRender(BaseMathRender):
         else:
             matches = []
             tem_match_display = []
-            # 独立公式环境
-            independent_math_environments = [
-                'displaymath',
-                'equation',
-                'equation*',
-                'align',
-                'align*',
-                'gather',
-                'gather*',
-                'multline',
-                'multline*',
-                'vmatrix',
-                'Vmatrix'
-            ]
             walker = latexwalker.LatexWalker(text)
             nodelist, pos, len_ = walker.get_latex_nodes(pos=0)
             for node in nodelist:
