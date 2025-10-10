@@ -564,7 +564,7 @@ class TestDataJsonInit(unittest.TestCase):
         self.assertNotIn('flower.mp4', mm_md)
 
         content_json = json_loads(base_dir.joinpath('assets/content_json.json').read_text(encoding='utf-8'))
-        self.assertEqual(json_json['content_list'], content_json['content_list'])
+        assert json_json['content_list'] == content_json['content_list']
 
         plain_md_main = extract_content_from_main_html(url, raw_html, 'plain_md')
         mm_md_main = extract_content_from_html_with_magic_html(url, raw_html, 'mm_md')
