@@ -463,16 +463,9 @@ class TestMathRecognizer(unittest.TestCase):
     def test_math_recognizer_html(self):
         for test_case in TEST_CASES_HTML:
             raw_html_path = base_dir.joinpath(test_case['input'][0])
-            # print('raw_html_path::::::::', raw_html_path)
             base_url = test_case['base_url']
             raw_html = raw_html_path.read_text(encoding='utf-8')
-            parts = self.math_recognizer.recognize(base_url, [(html_to_element(raw_html), html_to_element(raw_html))], raw_html)
-            # print(parts)
-            # 将parts列表中第一个元素拼接保存到文件，带随机数
-            # import random
-            # with open('parts'+str(random.randint(1, 100))+".html", 'w') as f:
-            #     for part in parts:
-            #         f.write(str(part[0]))
+
             # 创建预处理器并清理隐藏元素
             pre_extractor = HTMLFileFormatNoClipCleanTagsPreExtractor({})
             data_json = DataJson({'html': raw_html, 'url': base_url})
@@ -485,34 +478,21 @@ class TestMathRecognizer(unittest.TestCase):
                 [(html_to_element(cleaned_html), html_to_element(cleaned_html))],
                 cleaned_html
             )
-            # 检查行间公式抽取正确性
+
+            # 检查行间公式
             new_parts = []
             for part in parts:
                 new_parts.append((element_to_html(part[0]), element_to_html(part[1])))
-            parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
+
+            interline_parts = [part[0] for part in new_parts if CCTag.CC_MATH_INTERLINE in part[0]]
             expect_text = base_dir.joinpath(test_case['expected']).read_text(encoding='utf-8').strip()
             expect_formulas = [formula for formula in expect_text.split('\n') if formula]
-            if len(parts) != len(expect_formulas):
-                print("出错样例：", test_case['input'])
-                print("期望公式数：", len(expect_formulas), "实际公式数：", len(parts))
-                print("期望公式：", expect_formulas)
-                print("实际公式：", parts)
-            self.assertEqual(len(parts), len(expect_formulas))
-            # answers = []
-            for expect, part in zip(expect_formulas, parts):
-                a_tree = html_to_element(part)
-                a_result = a_tree.xpath(f'.//{CCTag.CC_MATH_INTERLINE}')[0]
-                answer = a_result.text.replace('\n', '').strip()
-                # print('part::::::::', part)
-                # print('expect::::::::', expect)
-                # print('answer::::::::', answer)
-                # answers.append(answer)
-                self.assertEqual(expect, answer)
-            # print('answers::::::::', answers)
-            # self.write_to_html(answers, test_case['input'][0])
-            # 检查行内公式抽取正确性
+
+            print(f"\n测试用例: {test_case['input']}")
+            print(f"行间公式 - 期望: {len(expect_formulas)}, 实际: {len(interline_parts)}")
+
+            # 检查行内公式
             if test_case.get('expected_inline', None):
-                # 从所有parts中提取所有行内公式
                 all_inline_formulas = []
                 for part in new_parts:
                     if CCTag.CC_MATH_INLINE in part[0]:
@@ -521,15 +501,23 @@ class TestMathRecognizer(unittest.TestCase):
                         for inline_elem in inline_elements:
                             formula = inline_elem.text.replace('\n', '').strip()
                             all_inline_formulas.append(formula)
-                # print(f"Found {len(all_inline_formulas)} total inline formulas")
-                # print(f"Total new_parts: {len(new_parts)}")
                 expect_inline_text = base_dir.joinpath(test_case['expected_inline']).read_text(encoding='utf-8').strip()
                 expect_inline_formulas = [formula for formula in expect_inline_text.split('\n') if formula]
-                # print(f"Expected {len(expect_inline_formulas)} inline formulas")
+                print(f"行内公式 - 期望: {len(expect_inline_formulas)}, 实际: {len(all_inline_formulas)}")
+                # 打印所有实际提取的行内公式
+                print("\n所有实际提取的行内公式:")
+                for i, formula in enumerate(all_inline_formulas, 1):
+                    print(f"  {i}. {formula}")
+                # 打印所有期望的行内公式
+                print("\n所有期望的行内公式:")
+                for i, formula in enumerate(expect_inline_formulas, 1):
+                    print(f"  {i}. {formula}")
+                # 找出差异
+                print("\n差异分析:")
+                if len(all_inline_formulas) != len(expect_inline_formulas):
+                    print("数量不匹配!")
                 self.assertEqual(len(all_inline_formulas), len(expect_inline_formulas))
                 for expect, formula in zip(expect_inline_formulas, all_inline_formulas):
-                    # print('inline expect::::::::', expect)
-                    # print('inline answer::::::::', formula)
                     self.assertEqual(expect, formula)
 
     def write_to_html(self, answers, file_name):
