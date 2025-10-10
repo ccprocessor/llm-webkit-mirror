@@ -290,11 +290,19 @@ class MathJaxRender(BaseMathRender):
 
         # 先处理tail，再处理text，text的判断会多一些
         if element.tail:
+            # ⚠️ 关键修改:先尝试行间公式,再尝试行内公式,最后才处理金额
+            original_tail = element.tail
+
             # 处理行间公式（优先处理，因为可能包含行内公式）
             element.tail = self._process_math_in_text(element, element.tail, display_pattern, True, True)
             # 处理行内公式
             if element.tail:  # 检查是否还有文本需要处理
                 element.tail = self._process_math_in_text(element, element.tail, inline_pattern, False, True)
+
+            # 3. 只有当前两步都没有处理文本时,才调用 optimized_dollar_matching
+            # 判断条件:文本内容没有变化,说明没有匹配到数学公式
+            if element.tail == original_tail and '$' in element.tail:
+                element.tail = optimized_dollar_matching(element.tail)
 
         # 跳过特定标签
         skip_tags = MATHJAX_OPTIONS['skipTags']
@@ -314,11 +322,16 @@ class MathJaxRender(BaseMathRender):
 
         # 处理当前节点的文本
         if element.text:
+            original_text = element.text
+
             # 处理行间公式（优先处理，因为可能包含行内公式）
-            element.text = self._process_math_in_text(element, element.text, display_pattern, True)
+            element.text = self._process_math_in_text(element, element.text, display_pattern, True, False)
             # 处理行内公式
-            if element.text:  # 检查是否还有文本需要处理
-                element.text = self._process_math_in_text(element, element.text, inline_pattern, False)
+            if element.text:
+                element.text = self._process_math_in_text(element, element.text, inline_pattern, False, False)
+            # 3. 只有当前两步都没有处理文本时,才调用 optimized_dollar_matching
+            if element.text == original_text and '$' in element.text:
+                element.text = optimized_dollar_matching(element.text)
 
         # 获取子节点的副本，以避免在迭代过程中修改列表
         children = list(element)
@@ -411,7 +424,7 @@ class MathJaxRender(BaseMathRender):
             tem_match_display.clear()
         # 如果没有匹配到分隔符形式的公式，直接返回原文本
         if not matches:
-            return optimized_dollar_matching(text)
+            return text
 
         # 从后向前处理，以避免位置偏移
         result = text
@@ -487,7 +500,7 @@ class MathJaxRender(BaseMathRender):
             last_position = start_pos
 
         # 返回处理后的文本
-        return optimized_dollar_matching(result)
+        return result
 
     def _is_escaped_delimiter(self, text: str, pos: int) -> bool:
         """检查分隔符是否被转义.
