@@ -569,26 +569,42 @@ class SimpleMatch:
 
 
 def optimized_dollar_matching(text):
-    """美元金额匹配."""
-    # 用于存储需要修改的位置和替换内容
+    """美元金额匹配,避免误判数学公式."""
     replacements = []
 
     pattern = r'(?<!\\)(\$\d{1,3}(?:,\d{3})*(?:\.\d{1,})?)'
-    matches_result = re.finditer(pattern, text)
+    matches_result = list(re.finditer(pattern, text))
+
     for match in matches_result:
-        # 获取匹配的起始和结束位置
         start, end = match.start(), match.end()
-        # 检查匹配后的字符（如果存在）
+
+        # 检查匹配后的字符
         if end < len(text):
             next_char = text[end]
-            # 只有当后接字符不在列表中时才进行替换
-            if next_char not in ["^", "$", "\\", "/"]:
-                replacements.append((start, end, match.group()))
+            # 原有逻辑:排除数学运算符
+            if next_char in ["^", "$", "\\", "/"]:
+                continue
+
+        # 新增逻辑:检查后续是否存在配对的$符号
+        remaining_text = text[end:]
+        # 查找下一个未转义的$
+        next_dollar_match = re.search(r'(?<!\\)\$', remaining_text)
+
+        if next_dollar_match:
+            next_dollar_pos = end + next_dollar_match.start()
+            # 检查第二个$后面的字符
+            after_second_dollar = text[next_dollar_pos + 1:next_dollar_pos + 2]
+
+            # 如果第二个$后面不是数字或为空,则认为是公式,跳过转义
+            if not after_second_dollar or not after_second_dollar.isdigit():
+                continue
+
+        # 如果通过所有检查,则进行转义
+        replacements.append((start, end, match.group()))
 
     if replacements:
         text_chars = list(text)
         for start, end, original_match in sorted(replacements, reverse=True):
-            # 只转义金额前的$符号
             escaped_match = f"\\{original_match}"
             text_chars[start:end] = list(escaped_match)
         return ''.join(text_chars)
