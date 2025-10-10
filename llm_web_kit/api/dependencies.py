@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     # 模型配置
     model_path: Optional[str] = None
     max_content_length: int = 10 * 1024 * 1024  # 10MB
+    crawl_url: str = "http://10.140.0.94:9500/crawl"
 
     # 缓存配置
     cache_ttl: int = 3600  # 1小时
