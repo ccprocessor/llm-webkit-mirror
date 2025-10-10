@@ -955,11 +955,11 @@ class TestMathRecognizer(unittest.TestCase):
 
     def test_dollar_sign(self):
         """美元符合与公式共存的情况."""
-        html_content = """<p>referring $18.1 to $18.1 the packet center $ p$ and apparently coinciding with the particle velocity</p>"""
+        html_content = """<p>referring $18.1 to $18.1 the packet center $ p$ and <span class="math-container">$9 \cdot 10^9$</span> apparently coinciding with the particle velocity and $18.1</p>"""
         parts = self.math_recognizer.recognize('https://www.baidu.com',
                                                [(html_to_element(html_content), html_to_element(html_content))],
                                                html_content)
-        assert element_to_html(parts[0][0]) == '<p>referring \\$18.1 to \\$18.1 the packet center <ccmath-inline type="latex" by="mathjax_mock" html="$ p$">p</ccmath-inline> and apparently coinciding with the particle velocity</p>'
+        assert element_to_html(parts[0][0]) == '<p>referring \\$18.1 to \\$18.1 the packet center <ccmath-inline type="latex" by="mathjax_mock" html="$ p$">p</ccmath-inline> and <span class="math-container"><ccmath-inline type="latex" by="mathjax_mock" html="$9 \cdot 10^9$">9 \cdot 10^9</ccmath-inline></span> apparently coinciding with the particle velocity and \\$18.1</p>'
 
     def test_begin_end(self):
         """$begin end$的嵌套组合识别时候$$没有处理."""
