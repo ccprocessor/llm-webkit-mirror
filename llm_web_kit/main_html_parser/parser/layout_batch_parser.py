@@ -73,22 +73,25 @@ class LayoutBatchParser(BaseMainHtmlParser):
         content, body = self.process(html_source, template_dict_html)
 
         # 相似度计算
-        if pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, None):
-            template_main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
-            if pre_data.get(PreDataJsonKey.SIMILARITY_LAYER, None):
-                layer = pre_data[PreDataJsonKey.SIMILARITY_LAYER]
-            else:
-                layer = self.__get_max_width_layer(template_data)
-            feature1 = get_feature(template_main_html)
-            feature2 = get_feature(body)
-            sim = None
-            if feature1 is not None and feature2 is not None:
-                sim = similarity(feature1, feature2, layer_n=layer)
-                pre_data[PreDataJsonKey.MAIN_HTML_SIM] = sim
-            if sim is None or sim < SIMILARITY_THRESHOLD:
-                pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
-            else:
-                pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = True
+        try:
+            if pre_data.get(PreDataJsonKey.TYPICAL_MAIN_HTML, None):
+                template_main_html = pre_data[PreDataJsonKey.TYPICAL_MAIN_HTML]
+                if pre_data.get(PreDataJsonKey.SIMILARITY_LAYER, None):
+                    layer = pre_data[PreDataJsonKey.SIMILARITY_LAYER]
+                else:
+                    layer = self.__get_max_width_layer(template_data)
+                feature1 = get_feature(template_main_html)
+                feature2 = get_feature(body)
+                sim = None
+                if feature1 is not None and feature2 is not None:
+                    sim = similarity(feature1, feature2, layer_n=layer)
+                    pre_data[PreDataJsonKey.MAIN_HTML_SIM] = sim
+                if sim is None or sim < SIMILARITY_THRESHOLD:
+                    pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = False
+                else:
+                    pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = True
+        except Exception:
+            pre_data[PreDataJsonKey.MAIN_HTML_SUCCESS] = None
 
         # 结果返回
         pre_data[PreDataJsonKey.MAIN_HTML] = content
