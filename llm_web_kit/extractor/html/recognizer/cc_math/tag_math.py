@@ -24,11 +24,12 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         if len(annotation_tags) > 0:
             annotation_tag = annotation_tags[0]
             text = annotation_tag.text
-            style_value = parent.get('style')
-            if style_value:
-                normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
-                if 'display: none' in normalized_style_value:
-                    parent.style = ''
+            if parent:
+                style_value = parent.get('style')
+                if style_value:
+                    normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
+                    if 'display: none' in normalized_style_value:
+                        parent.style = ''
             text = cm.wrap_math_md(text)
             if text:
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
