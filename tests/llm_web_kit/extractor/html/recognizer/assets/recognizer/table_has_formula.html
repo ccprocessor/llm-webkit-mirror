@@ -1,0 +1,1964 @@
+<html lang="en"><head>
+<style id="cc-extraStyle" name="cc">
+        noscript {
+          display: none !important;
+        }
+        .cc-unloaded:not(iframe) {
+          width: 100px;
+          height: 100px;
+          background-color: #ffebeb;
+          border: 2px dashed #ff0000;
+        }
+        .mark-selected {
+            outline: 2px dashed #0d6efd !important;
+            background-color: rgba(13, 110, 253, 0.1) !important;
+        }
+        .selecto-selection {
+            background: rgba(13, 110, 253, 0.1);
+            outline: 1px dashed #0d6efd;
+        }
+    </style>
+<meta charset="utf-8">
+<title>Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset v1.0</title>
+<meta content="This is a dataset of continuous raw electrocardiogram (ECG) signals for representation learning containing 11 thousand patients and 2 billion labelled beats." name="description">
+<link href="" rel="stylesheet" type="text/css">
+<link href="" rel="stylesheet" type="text/css">
+<link href="" rel="stylesheet" type="text/css">
+<link href="" rel="stylesheet" type="text/css">
+<link href="" rel="stylesheet" type="text/css">
+<script src=""></script>
+<script src=""></script>
+<script async="" src=""></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-87592301-7');
+</script>
+<script src=""></script>
+<script src=""></script>
+<link href="https://physionet.org/static/favicon.ico" rel="shortcut icon" type="image/png">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+</head>
+<body class="flexbody" data-anno-uid="anno-uid-ao1b0btxua" style="user-select: none;">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark d-flex justify-content-between" data-anno-uid="anno-uid-es00hy7fwym" id="mainNav">
+<label class="navbar-icon" data-anno-uid="anno-uid-f07babtzuxw" for="navicon">☰</label>
+<input class="navbar-check" data-anno-uid="anno-uid-bqv6z88lchh" id="navicon" type="checkbox">
+<a class="navbar-brand" data-anno-uid="anno-uid-399cmyr1dfu" href="https://physionet.org/" id="nav_home">
+		PhysioNet
+	</a>
+<div class="collapse navbar-collapse" data-anno-uid="anno-uid-anwq6l2608h" id="navbarCollapse">
+<ul class="navbar-nav mr-auto" data-anno-uid="anno-uid-15pnfsfjv1v">
+<li class="nav-item" data-anno-uid="anno-uid-v79b80ex1lo">
+<a class="nav-link" data-anno-uid="anno-uid-vclei9m2am" href="https://physionet.org/content/" id="nav_index" style="">
+        Find
+    </a>
+</li>
+<li class="nav-item" data-anno-uid="anno-uid-0dybeaulpdim">
+<a class="nav-link" data-anno-uid="anno-uid-0407feilmwfd" href="https://physionet.org/about/publish/" id="nav_share" style="">
+          Share
+        </a>
+</li>
+<li class="nav-item" data-anno-uid="anno-uid-sf0m4nqtvul">
+<a class="nav-link" data-anno-uid="anno-uid-zqhljdw827a" href="https://physionet.org/about/" id="nav_about">
+          About
+        </a>
+</li>
+<li class="nav-item" data-anno-uid="anno-uid-dnk5zs5l1ps">
+<a class="nav-link" data-anno-uid="anno-uid-q0rqqf7c6en" href="https://physionet.org/news/" id="nav_news">
+      News
+    </a>
+</li>
+</ul>
+<ul class="navbar-nav ml-auto" data-anno-uid="anno-uid-tfx2x5f9xhb">
+<li class="nav-item dropdown" data-anno-uid="anno-uid-ir4jmwszy5">
+<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-anno-uid="anno-uid-58z74exdhg" data-toggle="dropdown" href="#" id="nav_account_dropdown" style="">
+              Account
+            </a>
+<div aria-labelledby="nav_account_dropdown" class="dropdown-menu" data-anno-uid="anno-uid-zigofs5t6sk">
+<a class="dropdown-item" data-anno-uid="anno-uid-tpzju7u13v9" href="https://physionet.org/login/" id="nav_login">
+                  Login
+                </a>
+<a class="dropdown-item" data-anno-uid="anno-uid-9yjldjs98w5" href="https://physionet.org/register/" id="nav_register" style="">
+                  Register
+                </a>
+</div>
+</li>
+</ul>
+</div>
+<div class="navbar-search" data-anno-uid="anno-uid-06tc2srx3km8">
+<form action="/content/" class="form-inline" data-anno-uid="anno-uid-49ucchcnzrq">
+<input _mstplaceholder="74607" class="search-input" data-anno-uid="anno-uid-vzh0jceeyu" name="topic" placeholder="Search" type="text">
+<span class="input-group-btn" data-anno-uid="anno-uid-2g26pegl96j">
+<button class="btn-search my-2 my-sm-0" data-anno-uid="anno-uid-v9de0ti6z6r" id="search-button" title="Search PhysioNet" type="submit"><span class="fa fa-search" data-anno-uid="anno-uid-9ppjvzs9bjm"><span class="visually-hidden" data-anno-uid="anno-uid-zn5ubbnseu">Search PhysioNet</span></span></button>
+</span>
+</form>
+</div>
+</nav>
+<main data-anno-uid="anno-uid-8g3nf0loqkk">
+<div class="container" data-anno-uid="anno-uid-d2jsjeoyov9">
+<p data-anno-uid="anno-uid-v38zsctm35">
+<span class="badge badge-dark" data-anno-uid="anno-uid-3zcdgat2b77"><i class="fa fa-database" data-anno-uid="anno-uid-2y1drl4ejnx"></i><marked-tail class="" data-anno-uid="anno-uid-n2vdudmifkh"> Database</marked-tail></span>
+<span class="badge badge-success" data-anno-uid="anno-uid-5r5uqfk9sqp"><i class="fas fa-lock-open" data-anno-uid="anno-uid-u1uv91xzcke"></i><marked-tail data-anno-uid="anno-uid-p5j73t4k8wn" style=""> Open Access</marked-tail></span>
+</p>
+<h1 cc-select="true" class="form-signin-heading mark-selected" data-anno-uid="anno-uid-hp2c1bi26lg" style="">Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset</h1>
+<p data-anno-uid="anno-uid-xjbpt38f54">
+<strong data-anno-uid="anno-uid-saamji1hru">
+<font _mstmutation="1" data-anno-uid="anno-uid-6q278fokh2k"><a _mstmutation="1" class="author" data-anno-uid="anno-uid-wlarug5jmrj">Shawn Tan</a> <marked-tail _mstmutation="1" data-anno-uid="anno-uid-e8vc7nvexuj">
+      ,&nbsp;
+
+      </marked-tail><a _mstmutation="1" class="author" data-anno-uid="anno-uid-onlxogpvr7" style="">Satya Ortiz-Gagné</a> <marked-tail _mstmutation="1" data-anno-uid="anno-uid-38vnm9mhcah">
+      ,&nbsp;
+
+      </marked-tail><a _mstmutation="1" class="author" data-anno-uid="anno-uid-e2nlkc4fsiv" style="">Nicolas Beaudoin-Gagnon</a> <marked-tail _mstmutation="1" data-anno-uid="anno-uid-1ttd3pl0b1l">
+      ,&nbsp;
+
+      </marked-tail><a _mstmutation="1" class="author" data-anno-uid="anno-uid-821y1jrhal">Pierre Fecteau</a> <marked-tail _mstmutation="1" data-anno-uid="anno-uid-5rjs7bpk8m">
+      ,&nbsp;
+
+      </marked-tail><a _mstmutation="1" class="author" data-anno-uid="anno-uid-3l4kye8ch3s" style="">Aaron Courville</a> <marked-tail _mstmutation="1" data-anno-uid="anno-uid-bdn224x527">
+      ,&nbsp;
+
+      </marked-tail><a _mstmutation="1" class="author" data-anno-uid="anno-uid-nazrkd1qll" style="">Yoshua Bengio</a> <marked-tail _mstmutation="1" data-anno-uid="anno-uid-jhx3bcjhjr">
+      ,&nbsp;
+
+      </marked-tail><a _mstmutation="1" class="author" data-anno-uid="anno-uid-2x31ngw6nxb" style="">Joseph Paul Cohen</a></font><i class="fas fa-info-circle" data-anno-uid="anno-uid-tyzo1t581s" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;Mila, DIRO, Université de Montréal&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/shanwtan target=_blank&gt;shanwtan&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i><i class="fas fa-info-circle" data-anno-uid="anno-uid-9ii4y6bw5ap" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;Mila&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/satya target=_blank&gt;satya&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i><i class="fas fa-info-circle" data-anno-uid="anno-uid-rly7jsu9b7f" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;Icentia&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/nicolasbg target=_blank&gt;nicolasbg&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i><i class="fas fa-info-circle" data-anno-uid="anno-uid-4idhe35mnkg" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;Icentia&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/pfecteau target=_blank&gt;pfecteau&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i><i class="fas fa-info-circle" data-anno-uid="anno-uid-j5ywrpxe08s" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;Mila, DIRO, Université de Montréal&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/aaroncourville target=_blank&gt;aaroncourville&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i><i class="fas fa-info-circle" data-anno-uid="anno-uid-j9s8jt9iri" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;University of Montreal&lt;br&gt;Mila&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/yoshuabengio target=_blank&gt;yoshuabengio&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i> <i class="fas fa-info-circle" data-anno-uid="anno-uid-z5onomcphp" data-content="&lt;b&gt;Affiliations&lt;/b&gt;&lt;p&gt;Mila, University of Montreal&lt;br&gt;Stanford University&lt;/p&gt;&lt;p&gt;&lt;b&gt;Profile&lt;/b&gt;&lt;br&gt;&lt;a href=/users/joecohen target=_blank&gt;joecohen&lt;/a&gt;&lt;/p&gt;" data-html="true" data-original-title="&lt;strong&gt;Author Info&lt;/strong&gt;" data-placement="bottom" data-toggle="popover" style="cursor: pointer;"></i>
+</strong>
+</p>
+<p data-anno-uid="anno-uid-cnta3v4xoct" style="">Published: April 12, 2022. Version: 1.0</p>
+<hr data-anno-uid="anno-uid-d6cf5tpyjpm">
+<!-- Latest news and announcements -->
+<div class="row" data-anno-uid="anno-uid-ba5prfronm9">
+<!-- Main column -->
+<div class="col-md-8" data-anno-uid="anno-uid-jbfvull9is">
+<div class="alert alert-secondary" data-anno-uid="anno-uid-p2tfyhweljc">
+<p data-anno-uid="anno-uid-uguh2i3p8vc">
+<font _mstmutation="1" data-anno-uid="anno-uid-uprpvfsje8q"><strong _mstmutation="1" class="" data-anno-uid="anno-uid-ib0mszurlej" style="">When using this resource, please cite: </strong>
+<a _mstmutation="1" data-anno-uid="anno-uid-n7fdd5axr1" data-toggle="modal" href="#citationModal" style="">(show more options)</a>
+<br _mstmutation="1" data-anno-uid="anno-uid-e1kngqypgoh"><span _mstmutation="1" data-anno-uid="anno-uid-tr8zoxvl4e"><marked-text data-anno-uid="anno-uid-8hzxsnjncn6" style="">Tan, S., Ortiz-Gagné, S., Beaudoin-Gagnon, N., Fecteau, P., Courville, A., Bengio, Y., &amp; Cohen, J. P. (2022). Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset (version 1.0). </marked-text><i data-anno-uid="anno-uid-c1tvabnszjm">PhysioNet</i><marked-tail data-anno-uid="anno-uid-ntnp7pfrwh">. </marked-tail><a data-anno-uid="anno-uid-8n94ip2ax9f" href="https://doi.org/10.13026/kk0v-r952" style="">https://doi.org/10.13026/kk0v-r952</a><marked-tail data-anno-uid="anno-uid-zt4d10s4u6p">.</marked-tail></span></font>
+</p>
+<div class="modal fade" data-anno-uid="anno-uid-vfxslxe22js" id="citationModal">
+<div class="modal-dialog citation" data-anno-uid="anno-uid-18146z6dgnd" role="document">
+<div class="modal-content" data-anno-uid="anno-uid-zmpi05on69">
+<div class="modal-header" data-anno-uid="anno-uid-fjudnsuy7ga">
+<h5 class="modal-title" data-anno-uid="anno-uid-aflh6uw1pgd">Cite</h5>
+<button _mstaria-label="59709" aria-label="Close" class="close" data-anno-uid="anno-uid-pqdc0l1gd18" data-dismiss="modal" type="button">
+<span aria-hidden="true" data-anno-uid="anno-uid-rp6fujt4s5i">×</span>
+</button>
+</div>
+<div class="modal-body" data-anno-uid="anno-uid-w81gkyohmw">
+<table data-anno-uid="anno-uid-7peib0g0uug"><tbody data-anno-uid="anno-uid-kaukk0ggvi">
+<tr data-anno-uid="anno-uid-avehiamgpr8">
+<th data-anno-uid="anno-uid-zdqwi3k712q">MLA</th>
+<td data-anno-uid="anno-uid-mau5yngj7il"><marked-text data-anno-uid="anno-uid-96e2dbbsl5w">Tan, Shawn, et al. "Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset" (version 1.0). </marked-text><i data-anno-uid="anno-uid-vel4t7tvgma">PhysioNet</i><marked-tail data-anno-uid="anno-uid-rxy53by8kad"> (2022), </marked-tail><a data-anno-uid="anno-uid-cmxh182dhqf" href="https://doi.org/10.13026/kk0v-r952">https://doi.org/10.13026/kk0v-r952</a><marked-tail data-anno-uid="anno-uid-6mtq8i2ehdy">.</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-xpdxynf334">
+<th data-anno-uid="anno-uid-cqdu5jbsyk9">APA</th>
+<td data-anno-uid="anno-uid-ds638di3izp"><marked-text data-anno-uid="anno-uid-7wqmt9g4ukc" style="">Tan, S., Ortiz-Gagné, S., Beaudoin-Gagnon, N., Fecteau, P., Courville, A., Bengio, Y., &amp; Cohen, J. P. (2022). Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset (version 1.0). </marked-text><i data-anno-uid="anno-uid-8zov0zcyn2o">PhysioNet</i><marked-tail data-anno-uid="anno-uid-680y3l57zjd">. </marked-tail><a data-anno-uid="anno-uid-fkusbdi0k" href="https://doi.org/10.13026/kk0v-r952">https://doi.org/10.13026/kk0v-r952</a><marked-tail data-anno-uid="anno-uid-r5c23mwbrdl">.</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-kkk5y1uphcd">
+<th data-anno-uid="anno-uid-4byi89iitea">Chicago</th>
+<td data-anno-uid="anno-uid-oupbuzhjr6"><marked-text data-anno-uid="anno-uid-79k6ur40ui9">Tan, Shawn, Ortiz-Gagné, Satya, Beaudoin-Gagnon, Nicolas, Fecteau, Pierre, Courville, Aaron, Bengio, Yoshua, and Joseph Paul Cohen. "Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset" (version 1.0). </marked-text><i data-anno-uid="anno-uid-9v6g4nsrih8">PhysioNet</i><marked-tail data-anno-uid="anno-uid-7g7pwoim0x7"> (2022). </marked-tail><a data-anno-uid="anno-uid-pjmkef1zl3g" href="https://doi.org/10.13026/kk0v-r952">https://doi.org/10.13026/kk0v-r952</a><marked-tail data-anno-uid="anno-uid-qpipxfcvut">.</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-qhult6je9d">
+<th data-anno-uid="anno-uid-zk7pbmqgmh">Harvard</th>
+<td data-anno-uid="anno-uid-t0lmfmia8a9"><marked-text data-anno-uid="anno-uid-t7u0hr7i6s">Tan, S., Ortiz-Gagné, S., Beaudoin-Gagnon, N., Fecteau, P., Courville, A., Bengio, Y., and Cohen, J. P. (2022) 'Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset' (version 1.0), </marked-text><i data-anno-uid="anno-uid-4nsjhr1dkad">PhysioNet</i><marked-tail data-anno-uid="anno-uid-47wk8bru2i7">. Available at: </marked-tail><a data-anno-uid="anno-uid-z33u9v8wpd7" href="https://doi.org/10.13026/kk0v-r952">https://doi.org/10.13026/kk0v-r952</a><marked-tail data-anno-uid="anno-uid-d0n66bydtl">.</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-og9pisrqpoc">
+<th data-anno-uid="anno-uid-mp5tj46ekza">Vancouver</th>
+<td data-anno-uid="anno-uid-4g06fh7jacb"><marked-text data-anno-uid="anno-uid-tgp7gb5rlw" style="">Tan S, Ortiz-Gagné S, Beaudoin-Gagnon N, Fecteau P, Courville A, Bengio Y, Cohen J P. Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset (version 1.0). PhysioNet. 2022. Available from: </marked-text><a data-anno-uid="anno-uid-ezihy8udlbk" href="https://doi.org/10.13026/kk0v-r952">https://doi.org/10.13026/kk0v-r952</a><marked-tail data-anno-uid="anno-uid-i3ggwf4s0h">.</marked-tail></td>
+</tr>
+</tbody></table>
+</div>
+<div class="modal-footer" data-anno-uid="anno-uid-cw1586gtsy9">
+<button class="btn btn-secondary" data-anno-uid="anno-uid-hc2jjovng3u" data-dismiss="modal" type="button">Close</button>
+</div>
+</div>
+</div>
+</div>
+<strong data-anno-uid="anno-uid-4iit5x7eoha" style="">Additionally, please cite the original publication:</strong>
+<p data-anno-uid="anno-uid-zcy3feqxmo"><a data-anno-uid="anno-uid-31rk0bepxl" href="https://www.cinc.org/2021/Program/accepted/229_Preprint.pdf" style="">Tan, S., Androz, G., Ortiz-Gagné, S., Chamseddine, A., Fecteau, P., Courville, A., Bengio, Y., &amp; Cohen, J. P. (2021, October 21). Icentia11K: An Unsupervised Representation Learning Dataset for Arrhythmia Subtype Discovery. Computing in Cardiology Conference (CinC).</a></p>
+<p data-anno-uid="anno-uid-5s834gu364e">
+<font _mstmutation="1" data-anno-uid="anno-uid-w3y998nc9d"><strong _mstmutation="1" data-anno-uid="anno-uid-ckk81dbcntd" style="">Please include the standard citation for PhysioNet:</strong>
+<a _mstmutation="1" data-anno-uid="anno-uid-txeq5u5m2fl" data-toggle="modal" href="#citationModalPlatform">(show more options)</a>
+<br _mstmutation="1" data-anno-uid="anno-uid-15cb4v11inj"><span _mstmutation="1" data-anno-uid="anno-uid-iw22qanbg3r" style="">Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... &amp; Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.</span></font>
+</p>
+<div class="modal fade" data-anno-uid="anno-uid-6y0v0l8mbwp" id="citationModalPlatform">
+<div class="modal-dialog citation" data-anno-uid="anno-uid-jb5kry9ga2r" role="document">
+<div class="modal-content" data-anno-uid="anno-uid-lap04wehjh">
+<div class="modal-header" data-anno-uid="anno-uid-snot0l4pxgj">
+<h5 class="modal-title" data-anno-uid="anno-uid-lcz7snvr8ft">Cite</h5>
+<button _mstaria-label="59709" aria-label="Close" class="close" data-anno-uid="anno-uid-7m4tlbi9lku" data-dismiss="modal" type="button">
+<span aria-hidden="true" data-anno-uid="anno-uid-szjwof9q5d">×</span>
+</button>
+</div>
+<div class="modal-body" data-anno-uid="anno-uid-y9l6s3lyvm9">
+<table data-anno-uid="anno-uid-dbyqutqd76v"><tbody data-anno-uid="anno-uid-6d7xcvng1fe">
+<tr data-anno-uid="anno-uid-esoognbdgr">
+<th data-anno-uid="anno-uid-up5uyyyemgh">APA</th>
+<td data-anno-uid="anno-uid-fgm9ecqeoo">Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... &amp; Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.</td>
+</tr>
+<tr data-anno-uid="anno-uid-fqrt1b1eyy">
+<th data-anno-uid="anno-uid-1yxh3833xvf">MLA</th>
+<td data-anno-uid="anno-uid-ddlhm2fv4lj" style="">Goldberger, A., et al. "PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220." (2000).</td>
+</tr>
+<tr data-anno-uid="anno-uid-r95aa7a45gj">
+<th data-anno-uid="anno-uid-28rwzgqh806">CHICAGO</th>
+<td data-anno-uid="anno-uid-sdzm9z4wsdo">Goldberger, A., L. Amaral, L. Glass, J. Hausdorff, P. C. Ivanov, R. Mark, J. E. Mietus, G. B. Moody, C. K. Peng, and H. E. Stanley. "PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220." (2000).</td>
+</tr>
+<tr data-anno-uid="anno-uid-c6kc6bsetu">
+<th data-anno-uid="anno-uid-oubb2xw16b">HARVARD</th>
+<td data-anno-uid="anno-uid-emv81q3vnb8">Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P.C., Mark, R., Mietus, J.E., Moody, G.B., Peng, C.K. and Stanley, H.E., 2000. PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.</td>
+</tr>
+<tr data-anno-uid="anno-uid-rxcb5rw81a">
+<th data-anno-uid="anno-uid-a6wuwnrsbog">VANCOUVER</th>
+<td data-anno-uid="anno-uid-7wqoygysqdl">Goldberger A, Amaral L, Glass L, Hausdorff J, Ivanov PC, Mark R, Mietus JE, Moody GB, Peng CK, Stanley HE. PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.</td>
+</tr>
+</tbody></table>
+</div>
+<div class="modal-footer" data-anno-uid="anno-uid-yp5athzo9br">
+<button class="btn btn-secondary" data-anno-uid="anno-uid-u15fkivcl08" data-dismiss="modal" type="button">Close</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-h9in5s4yv3" id="abstract" style="">Abstract</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-rp4nezekvmq" style="">This is a dataset of continuous raw electrocardiogram (ECG) signals containing 11 thousand patients and 2 billion labelled beats. The signals were recorded with a 16-bit resolution at 250Hz with a fixed chest mounted single lead probe for up to 2 weeks. The average age of the patient is 62.2±17.4 years. 20 technologists annotated each beat's type (Normal, Premature Atrial Contraction, Premature Ventricular contraction) and rhythm (Normal Sinusal Rhythm, Atrial Fibrillation, Atrial Flutter).</p>
+<hr data-anno-uid="anno-uid-rrfmeayoro">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wayiwpe5qxs" id="background" style="">Background</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-d0k3svx5w5" style="">Arrhythmia detection is presently performed by cardiologists or technologists familiar with ECG readings. Recently, supervised machine learning has been successfully applied to perform automated detection of many arrhythmias [1,2,3,4]. However, there may be ECG anomalies that warrant further investigation because they do not fit the morphology of presently known arrhythmia. We seek to use a data driven approach to finding these differences that cardiologists have anecdotally observed.&nbsp;Existing public ECG datasets include the the MIMIC-III Waveform Database and the ECG-ViEW II dataset [5,6]. Here we present&nbsp;Icentia11k, a dataset of continuous raw electrocardiogram (ECG) signals containing 11 thousand patients and 2 billion labelled beats</p>
+<hr data-anno-uid="anno-uid-xwfrlsbvo8j">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-5rb34rbr9ou" id="methods" style="">Methods</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-5tvdk9wlra6" style="">Our data is collected by the CardioSTAT, a single-lead heart monitor device from Icentia [7]. The raw signals were recorded with a 16-bit resolution and sampled at 250Hz with the CardioSTAT in a modified lead 1 position. The wealth of data this provides us can allow us to improve on the techniques currently used by the medical industry to process days worth of ECG data, and perhaps to catch anomalous events earlier than currently possible.</p>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-xcsct67x41" style="">The dataset is processed from data provided by 11,000 patients who used the CardioSTAT device predominantly in Ontario, Canada, from various medical centers. While the device captures ECG data for up to two weeks, the majority of the prescribed duration of wear was one week.</p>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-o4b4ip045zi" style="">The data is analyzed by Icentia's team of 20 technologists who performed annotation using proprietary analysis tools. Initial beat detection is performed automatically and then a technologist analyses the record labelling beat and rhythm types performing a full disclosure analysis (i.e. they see the whole recording). Finally the analysis is approved by a senior technologist before making it to the dataset.</p>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-69fqes9fa8k" style="">The ethics institutional review boards at the&nbsp;Université de Montréal approved the study and release of data (CERSES-19-065-D).</p>
+<hr data-anno-uid="anno-uid-b57vtv911ei">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6jgm1h7n5db" id="description" style="">Data Description</h2>
+<p data-anno-uid="anno-uid-6wsl4rtpbju"><marked-text cc-select="true" class="mark-selected" data-anno-uid="anno-uid-72m97v9ll6" style="">We segment each patient record into segments of </marked-text><math data-anno-uid="anno-uid-v96m335pd5"> <semantics data-anno-uid="anno-uid-4y53r8tfwp"> <mrow data-anno-uid="anno-uid-a4rl4pur3hq"> <msup data-anno-uid="anno-uid-h47gjihk4h"> <mn _msthash="78" cc-select="true" class="mark-selected" data-anno-uid="anno-uid-5dk4qz8lnyp" style="">2</mn> <mrow class="MJX-TeXAtom-ORD" data-anno-uid="anno-uid-o5y67xmox8"> <mn _msthash="79" cc-select="true" class="mark-selected" data-anno-uid="anno-uid-panc62xepxm" style="">20</mn> </mrow> </msup> <mo cc-select="true" class="mark-selected" data-anno-uid="anno-uid-nq8pezpqp6m" style="">+</mo> <mn _msthash="80" cc-select="true" class="mark-selected" data-anno-uid="anno-uid-oxrox9z9zpr" style="">1</mn> </mrow> <annotation _msthash="81" data-anno-uid="anno-uid-gysfono0fqm" encoding="application/x-tex">2^{20}+1</annotation> </semantics> </math><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6wbul191l9p" style="">&nbsp;signal samples (≈70 minutes). This longer time context was informed by discussions with technologists: the context is useful for rhythm detection. We made it a power of two with a middle sample to allow for easier convolution stack parameterization. From this, we randomly select 50 of the segments and their respective labels from the list of segments. The goal here is to reduce the size of the dataset while maintaining a fair representation of each patient.</marked-tail></p>
+<h3 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-1sa7ti0l2po" style="">Data structure</h3>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-cftcnwf4f5u" style="">The data is structured into patients and segments.</p>
+<h4 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-joh9dn35qlm" style="">Patient level (3-14 days)</h4>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-e1ykwxlg55" style="">At this level, the data can capture features which vary in a systematic way and not isolated events, like the placement of the probes or patient specific noise.</p>
+<h4 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-lonx0b08xo">Segment level&nbsp;(1,048,577 int16 samples, approximately 1 hour)</h4>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-a0ihisjuv9v" style="">A cardiologist can look at a specific segment and identify patterns which indicate a disease while ignoring noise from the signal such as a unique signal amplitude. Looking at trends in the segment help to correctly identify arrhythmia as half an hour provides the necessary context to observe the stress of a specific activity.</p>
+<h3 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vo6sw65djoq" style="">Aggregate statistics</h3>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6ew20akp3s" style="">Aggregate statistics are shown below:</p>
+<table data-anno-uid="anno-uid-m3y2x6g6kcl">
+<thead data-anno-uid="anno-uid-weddzisk0uh">
+<tr data-anno-uid="anno-uid-cxzylejxkcl">
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-e3xcmgsvw3f">Statistic</th>
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-nqkwh740p5c" style=""># (units)</th>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-6f2hjaxpybp">
+<tr data-anno-uid="anno-uid-7g9m9t5zagr">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-bdukjnaisn4">Number of patients</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-5v3d7zw5acj" style="">11,000</td>
+</tr>
+<tr data-anno-uid="anno-uid-0kcamqmvdlaa">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-kk2qqn1rlll">Number of labeled beats</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-zhp0q531ss9" style="">2,774,054,987</td>
+</tr>
+<tr data-anno-uid="anno-uid-ywnpt7j3af">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vak3ajnzsdi">Sample rate</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wrzidqwel9p">250Hz</td>
+</tr>
+<tr data-anno-uid="anno-uid-0az7w0ia8qe">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-4kglr8cuzyp">Segment size</td>
+<td data-anno-uid="anno-uid-zalrg4kjjj"><math data-anno-uid="anno-uid-pg9gm3cex1"> <semantics data-anno-uid="anno-uid-oerwiaql6g"> <mrow data-anno-uid="anno-uid-qasjvq559u"> <msup data-anno-uid="anno-uid-m1f0o278g9a"> <mn _msthash="100" cc-select="true" class="mark-selected" data-anno-uid="anno-uid-sv1wsoeip4a">2</mn> <mrow class="MJX-TeXAtom-ORD" data-anno-uid="anno-uid-k8echsydq4"> <mn _msthash="101" cc-select="true" class="mark-selected" data-anno-uid="anno-uid-rt8s1vkl04l">20</mn> </mrow> </msup> <mo cc-select="true" class="mark-selected" data-anno-uid="anno-uid-j29iw5g6no8">+</mo> <mn _msthash="102" cc-select="true" class="mark-selected" data-anno-uid="anno-uid-tk6p9i5qsz">1</mn> </mrow> <annotation _msthash="103" data-anno-uid="anno-uid-vllvm4zrj0h" encoding="application/x-tex">2^{20}+1</annotation> </semantics> </math><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-zo0dmwutvz7">&nbsp;= 1,048,577</marked-tail></td>
+</tr>
+<tr data-anno-uid="anno-uid-l2lwzj023d">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-32anpyk7idr">Total number of segments</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-2w7snhf3br6" style="">541,794 (not all patients have enough for 50 segments)</td>
+</tr>
+</tbody>
+</table>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-r1hiq28n9pb" style="">Beats are annotated in&nbsp;ann.symbols at the R timepoint&nbsp;in the QRS complex. The timepoint in the rec.signal for each annotation is found in ann.sample Below shows the counts for beats over the entire dataset. There are also annotations with a '+' symbol which just mean there is a rhythm annotation (next table).</p>
+<table data-anno-uid="anno-uid-vawk1aslakm">
+<thead data-anno-uid="anno-uid-gtb3ofllt26">
+<tr data-anno-uid="anno-uid-t84mt1kizbf">
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-9xhsk3zawug">Symbol</th>
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-kia4zifbbmi">Beat Description</th>
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-wg6fzyvfy4">Count</th>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-o9fohw9d3y">
+<tr data-anno-uid="anno-uid-cpqealg89ar">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-ybabnm8081" style="text-align: center;">N</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-db6jtlbclj" style="">Normal</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-fgu6paauwqk" style="text-align: right;">2,061,141,216</td>
+</tr>
+<tr data-anno-uid="anno-uid-apr5yujciok">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-jg9bit08hp" style="text-align: center;">S</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-ywru3y450kn">ESSV (PAC): Premature or ectopic supraventricular beat, premature atrial contraction</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-tc0q53l1th" style="text-align: right;">19,346,728</td>
+</tr>
+<tr data-anno-uid="anno-uid-vqc7chewl2">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-0tum9vxk63o" style="text-align: center;">V</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-l53qez75rj">ESV (PVC): Premature ventricular contraction, premature ventricular contraction</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-75irr37ffnx" style="text-align: right;">17,203,041</td>
+</tr>
+<tr data-anno-uid="anno-uid-e5ru20x8l0p">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-3g1de6wgv18" style="text-align: center;">Q</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-v3mrq2xneac">Undefined: Unclassifiable beat</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-58016jh8wnj" style="text-align: right;">676,364,002</td>
+</tr>
+</tbody>
+</table>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-n3o3ch9xhdp" style="">Rhythms are annotated in ann.aux_note at each timepoint.&nbsp;For example a normal sinusal rhythm will start with a '(N' annotation and then end with a ')' annotation. The entire sequence in between is annotated as a&nbsp;normal sinusal rhythm. Below are the counts of each annotated region which could be one beat or thousands.</p>
+<table data-anno-uid="anno-uid-8jjjaincx0f">
+<thead data-anno-uid="anno-uid-im0f7403lyd">
+<tr data-anno-uid="anno-uid-t5p8vdrp1l">
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-fwm2nesqbo5" style="text-align: center;">Symbol</th>
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-cbdoomj48im">Rhythm Labels</th>
+<th cc-select="true" class="mark-selected" data-anno-uid="anno-uid-jtnqpjjsozs" style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-stfy2tchk0s">
+<tr data-anno-uid="anno-uid-w36mw6oeep8">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6ssju8xeca5" style="text-align: center;">(N ... )</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-s1eop0xncxi">NSR (Normal sinusal rhythm)</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-2tqd2yvaali" style="text-align: right;">16,083,158</td>
+</tr>
+<tr data-anno-uid="anno-uid-d9zu0cgzgyu">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-yib92mdrky" style="text-align: center;">(AFIB ... )</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-crlnsv24ti9">AFib (Atrial fibrillation)</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-ik05h44se6q" style="text-align: right;">848,564</td>
+</tr>
+<tr data-anno-uid="anno-uid-7g7nn18dsu6">
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6rnpgusayya" style="text-align: center;">(AFL ... )</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-vspdttfhucq">AFlutter (Atrial flutter)</td>
+<td cc-select="true" class="mark-selected" data-anno-uid="anno-uid-xk5b8ba6sco" style="text-align: right;">313,251</td>
+</tr>
+</tbody>
+</table>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-6t35hyomsw">Details on how the dataset is encoded into wfdb format are available on GitHub [8].</p>
+<hr data-anno-uid="anno-uid-6hfi77rg5pt">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-fbeiah3mds" id="usage-notes">Usage Notes</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-8tvpyb0pr4t" style="">By releasing this dataset, we seek to enable the research community to develop better models for detection of arrhythmia and related heart disease.&nbsp;The dataset is described in more detail in our accompanying paper [9], which&nbsp;also describes our efforts to evaluation existing models for classification of&nbsp;arrhythmia. Code for working with the data, including executable notebooks, is available on GitHub [8].</p>
+<h3 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-phl18mr3qja" style="">Example code</h3>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-w5a3ilfe44p" style="">To look at patient 9000&nbsp;and segment 0&nbsp;the filename would be:&nbsp;p09/09000/p09000_s00 and it can loaded using wfdb as follows:</p>
+<pre data-anno-uid="anno-uid-l0pt9ntnvo"><code cc-select="true" class="mark-selected" data-anno-uid="anno-uid-miejjyoc1q" style="">import wfdb
+patient_id=9000
+segment_id=0
+start=2000
+length=1024
+filename = f'{data_path}/p0{str(patient_id)[:1]}/p{patient_id:05d}/p{patient_id:05d}_s{segment_id:02d}'
+rec = wfdb.rdrecord(filename, sampfrom=start, sampto=start+length)
+ann = wfdb.rdann(filename, "atr", sampfrom=start, sampto=start+length, shift_samps=True)
+wfdb.plot_wfdb(rec, ann, plot_sym=True, figsize=(15,4));</code></pre>
+<h3 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-14jkb7pt3uii" style="">Limitations</h3>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-34tcur6mn73" style="">It should be noted that since the people who wear the device are patients, the dataset does not represent a true random sample of the global population. &nbsp;For one, the average age of the patient is 62.2±17.4 years of age. &nbsp;Furthermore, whereas the CardioSTAT can be worn by any patient, it is mostly used for third line exam, so the majority of records in the dataset exhibit arrhythmias. No particular effort has been done on patient selection except data collection has been conducted over years 2017 and 2018.</p>
+<hr data-anno-uid="anno-uid-lun7d4p3yy">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-zzkd1ywv7kg" id="release-notes" style="">Release Notes</h2>
+<p data-anno-uid="anno-uid-6nev0kcqhtt"><strong cc-select="true" class="mark-selected" data-anno-uid="anno-uid-sdptoybq4u">Version 1.0</strong><marked-tail cc-select="true" class="mark-selected" data-anno-uid="anno-uid-adf7kurgco" style="">: First release on PhysioNet. Prior to this release&nbsp;data was made available&nbsp;on AcademicTorrents [10].</marked-tail></p>
+<hr data-anno-uid="anno-uid-p6rja7vgtok">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-96rwulwaiyc" id="ethics" style="">Ethics</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-oqydenmxhl" style="">The authors declare no ethics concerns.&nbsp;The ethics institutional review boards at the University&nbsp;of&nbsp;Montreal approved the study and release&nbsp;of data (#CERSES-19-065-D).</p>
+<hr data-anno-uid="anno-uid-babpoponuv">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-qyt6409sxvm" id="acknowledgements" style="">Acknowledgements</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-ht32t0x3qg8" style="">We thank Leon Glass, Yannick Le Devehat, Germain Ethier, and Margaux Luck, Kris Sankaran, and Gabriele Prato for useful discussions. This work is partially funded by a grant from Icentia, Fonds de Recherche en Santé&nbsp;du Québec, and the Institut de valorisation des donnees (IVADO). This work utilized the supercomputing facilities managed by Compute Canada and Calcul Quebec. We thank AcademicTorrents.com for making data available for our research.</p>
+<hr data-anno-uid="anno-uid-ps127wc4mk">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-gsquitp5yd" id="conflicts-of-interest">Conflicts of Interest</h2>
+<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-j6041xmz3gr">None</p>
+<hr data-anno-uid="anno-uid-8t6968dnw3x">
+<h2 cc-select="true" class="mark-selected" data-anno-uid="anno-uid-7g3secq4lmq" id="references" style="">References</h2>
+<ol data-anno-uid="anno-uid-ncxh58uxhy">
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-2v2wdprod55" style="">Hannun AY, Rajpurkar P, Haghpanahi M, Tison GH, Bourn C, Turakhia MP, Ng AY. Cardiologist-level arrhythmia detection and classification in ambulatory electrocardiograms using a deep neural network. Nature Medicine 2019</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-fwgqqoeyz4" style="">Yıldırım O, Pławiak P, Tan RS, Acharya UR. Arrhythmia detection using deep convolutional neural network with long duration ecg signals. Computers in biology and medicine 2018.</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-ryhjc6tf01p" style="">Minchole A, Rodriguez B. Artificial intelligence for the electrocardiogram. Nature Medicine 1 2019.</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-bhpoilgklm" style="">Porumb M, Iadanza E, Massaro S, Pecchia L. A convolutional neural network approach to detect congestive heart failure. Biomedical Signal Processing and Control 2020.</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-jy9hxdx9te" style="">Johnson, A., Pollard, T., &amp; Mark, R. (2016). MIMIC-III Clinical Database (version 1.4). PhysioNet. https://doi.org/10.13026/C2XW26.</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-j8c7vm8yf2e" style="">Kim YG, Shin D, Park MY, Lee S, Jeon MS, Yoon D, Park RW. ECG-ViEW II, a freely accessible electrocardiogram database. PloS one 2017.</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-nw0m1ny0jbj" style="">Icentia website. https://www.icentia.com/</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-x4vptqvni4p" style="">Icentia11k project on GitHub. https://github.com/shawntan/icentia-ecg/tree/master/physionet</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-eqiaox3oy9v" style="">Tan, S., Androz, G., Ortiz-Gagné, S., Chamseddine, A., Fecteau, P., Courville, A., Bengio, Y., &amp; Cohen, J. P. (2021, October 21). Icentia11K: An Unsupervised Representation Learning Dataset for Arrhythmia Subtype Discovery. Computing in Cardiology Conference (CinC). https://www.cinc.org/2021/Program/accepted/229_Preprint.pdf</li>
+<li cc-select="true" class="mark-selected" data-anno-uid="anno-uid-w1yluq41ayk" style="">Icentia11k Dataset on Academic Torrents. https://academictorrents.com/details/af04abfe9a3c96b30e5dd029eb185e19a7055272</li>
+</ol>
+<hr data-anno-uid="anno-uid-so03cw78sls">
+</div>
+<!-- /.main column -->
+<!-- Sidebar Column -->
+<div class="col-md-4" data-anno-uid="anno-uid-5p22jeff2a9">
+<div class="card" data-anno-uid="anno-uid-8gseajqrnq3" style="border: 0">
+<button aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle btn-rsp btn-right" data-anno-uid="anno-uid-hcrcgbeasd" data-toggle="dropdown" style="" type="button">
+          Contents
+        </button>
+<div class="dropdown-menu" data-anno-uid="anno-uid-3qojxif7i84">
+<a class="dropdown-item" data-anno-uid="anno-uid-59lf6u8asyq" href="#abstract" style="">Abstract</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-0x87ey0da2s" href="#background" style="">Background</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-8w7w3g9p0p2" href="#methods" style="">Methods</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-qp916vl1qjr" href="#description" style="">Data Description</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-8dmy98vzd96" href="#usage-notes" style="">Usage Notes</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-gnm12290ag" href="#release-notes" style="">Release Notes</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-uqkbm55lwi" href="#ethics" style="">Ethics</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-2lu5bafsw35" href="#acknowledgements" style="">Acknowledgements</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-69jov7lc0i6" href="#conflicts-of-interest" style="">Conflicts of Interest</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-oz57f0yzd9h" href="#references" style="">References</a>
+<a class="dropdown-item" data-anno-uid="anno-uid-oewqd4e9fp" href="#files" style="">Files</a>
+</div>
+</div>
+<div class="card my-4" data-anno-uid="anno-uid-pk8buzsjay9">
+<h5 class="card-header" data-anno-uid="anno-uid-eu4881sgdp" style="">Share</h5>
+<div class="card-body" data-anno-uid="anno-uid-vpc6rw50rek">
+<a class="btn btn-sm share-email sharebtn" data-anno-uid="anno-uid-e679ym2ucy" href="mailto:?subject=Icentia11k%20Single%20Lead%20Continuous%20Raw%20Electrocardiogram%20Dataset&amp;body=https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/" role="button" title="Share with email"><i class="far fa-envelope" data-anno-uid="anno-uid-zwpswa9bsi"></i></a>
+<a class="btn btn-sm facebook sharebtn" data-anno-uid="anno-uid-lpjo0cxurns" href="http://www.facebook.com/sharer.php?u=https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/" role="button" title="Share on Facebook"><i class="fab fa-facebook" data-anno-uid="anno-uid-zyr3apq57kp"></i></a>
+<a class="btn btn-sm linkedin sharebtn" data-anno-uid="anno-uid-sc1hcw7ud6g" href="https://www.linkedin.com/shareArticle?url=https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/" role="button" title="Share on LinkedIn"><i class="fab fa-linkedin" data-anno-uid="anno-uid-5ih7xnxiuk7"></i></a>
+<a class="btn btn-sm reddit sharebtn" data-anno-uid="anno-uid-rf0yssyyty" href="https://www.reddit.com/submit?url=https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/&amp;title=Icentia11k%20Single%20Lead%20Continuous%20Raw%20Electrocardiogram%20Dataset" role="button" title="Share on Reddit"><i class="fab fa-reddit" data-anno-uid="anno-uid-af5q48xipnl"></i></a>
+<a class="btn btn-sm twitter sharebtn" data-anno-uid="anno-uid-kjgtirmxj6" href="https://twitter.com/intent/tweet?text=Icentia11k%20Single%20Lead%20Continuous%20Raw%20Electrocardiogram%20Dataset.%20https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/" role="button" title="Share on Twitter"><i class="fab fa-twitter" data-anno-uid="anno-uid-pgad8z3vi3"></i></a>
+</div>
+</div>
+<div class="card my-4" data-anno-uid="anno-uid-fk5eue03pgd">
+<h5 class="card-header" data-anno-uid="anno-uid-v1cwohg7lp" style="">Access</h5>
+<div class="card-body" data-anno-uid="anno-uid-m3zwyw47xon">
+<p data-anno-uid="anno-uid-z0qal833gd9">
+<font _mstmutation="1" data-anno-uid="anno-uid-6wc8o78zedc"><strong _mstmutation="1" class="" data-anno-uid="anno-uid-4dgmqg6rqgh" style="">Access Policy:</strong>
+<br _mstmutation="1" data-anno-uid="anno-uid-n9j4r33rmep"><marked-tail _mstmutation="1" class="" data-anno-uid="anno-uid-2cs4uzwce8h" style="">
+            Anyone can access the files, as long as they conform to the terms of the specified license.
+          </marked-tail></font></p>
+<p data-anno-uid="anno-uid-lt2de12aa2q">
+<font _mstmutation="1" data-anno-uid="anno-uid-sjqt4tus5cf"><strong _mstmutation="1" class="" data-anno-uid="anno-uid-y7z0jbwdoon" style="">License (for files):</strong>
+<br _mstmutation="1" data-anno-uid="anno-uid-ig1rlt6125p">
+<a _mstmutation="1" class="" data-anno-uid="anno-uid-z7yk4cq1oek" href="https://physionet.org/content/icentia11k-continuous-ecg/view-license/1.0/" style="">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License</a></font>
+</p>
+</div>
+</div>
+<div class="card my-4" data-anno-uid="anno-uid-o0qzleeid2a">
+<h5 class="card-header" data-anno-uid="anno-uid-ebx0rt8h1g" style="">Discovery</h5>
+<div class="card-body" data-anno-uid="anno-uid-nz4042sinuq">
+<p data-anno-uid="anno-uid-y8neg3i37jq"><font _mstmutation="1" data-anno-uid="anno-uid-0pfr96cndoma"><strong _mstmutation="1" class="" data-anno-uid="anno-uid-8n05ynxn3vc" style="">DOI:</strong>
+<br _mstmutation="1" data-anno-uid="anno-uid-vyo4jdu9tpl">
+<a _mstmutation="1" class="" data-anno-uid="anno-uid-ysfojwldfgh" href="https://doi.org/10.13026/kk0v-r952" style="">https://doi.org/10.13026/kk0v-r952</a></font>
+</p>
+<p data-anno-uid="anno-uid-gu654ugid2d"><strong class="" data-anno-uid="anno-uid-5l0hraoecpw" style="">Topics:</strong>
+<br data-anno-uid="anno-uid-7o6cdhmidc">
+<a data-anno-uid="anno-uid-v2eik91dpzk" href="https://physionet.org/content/?topic=representation+learning"><span class="badge badge-pn" data-anno-uid="anno-uid-mr7rxhu0v" style="">representation learning</span></a>
+<a data-anno-uid="anno-uid-2235sbdj0ia" href="https://physionet.org/content/?topic=ecg"><span class="badge badge-pn" data-anno-uid="anno-uid-l2nqedwkzgp" style="">ecg</span></a>
+</p>
+<p data-anno-uid="anno-uid-yeofwdsvve"><strong class="" data-anno-uid="anno-uid-m15hddj3lv" style="">Project Website:</strong>
+<br data-anno-uid="anno-uid-5562xcqozxr">
+<a data-anno-uid="anno-uid-0zsph489wnqj" href="https://github.com/shawntan/icentia-ecg"><i class="fas fa-external-link-alt" data-anno-uid="anno-uid-0jb11nhwkjcs"></i><marked-tail class="" data-anno-uid="anno-uid-zvm2l1ahce" style=""> https://github.com/shawntan/icentia-ecg</marked-tail></a>
+</p>
+</div>
+</div>
+<div class="card my-4" data-anno-uid="anno-uid-s8b8m2oons">
+<h5 class="card-header" data-anno-uid="anno-uid-h7qa4yar119" style="">Corresponding Author</h5>
+<div class="card-body" data-anno-uid="anno-uid-zcf3e0eho2">
+<em class="" data-anno-uid="anno-uid-3d8xckth4h8" style="">You must be logged in to view the contact information.</em>
+</div>
+</div>
+</div>
+<!-- /.sidebar -->
+</div>
+<h2 class="" data-anno-uid="anno-uid-job14ecq05r" id="files" style="">Files</h2>
+<p class="" data-anno-uid="anno-uid-sc11yubebgh" style="">Total uncompressed size: 1.1 TB.
+
+        </p><h5 class="" data-anno-uid="anno-uid-t0i1hj40fia" style="">Access the files</h5>
+<ul data-anno-uid="anno-uid-1goh0i20k84i">
+<li data-anno-uid="anno-uid-3qihlgrbl2x"><a class="" data-anno-uid="anno-uid-ckg30fcg4gl" href="https://physionet.org/static/published-projects/icentia11k-continuous-ecg/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0.zip">Download the ZIP file</a><marked-tail class="" data-anno-uid="anno-uid-jswoftcgcs"> (188.3 GB)</marked-tail></li>
+<li data-anno-uid="anno-uid-rvjl4h22l9b"><marked-text class="" data-anno-uid="anno-uid-3rqav3lz73">Download the files using your terminal: </marked-text><pre class="shell-command" data-anno-uid="anno-uid-v95kvfk60kq" style="">wget -r -N -c -np https://physionet.org/files/icentia11k-continuous-ecg/1.0/</pre></li>
+</ul>
+<p data-anno-uid="anno-uid-zpdgifyg2id"><a data-anno-uid="anno-uid-8o89f1yn3hf" href="https://physionet.org/lightwave/?db=icentia11k-continuous-ecg/1.0"><i class="fas fa-chart-line" data-anno-uid="anno-uid-9m3hswtyxrv"></i><marked-tail class="" data-anno-uid="anno-uid-8thpjja8j3"> Visualize waveforms</marked-tail></a></p>
+<div class="card" data-anno-uid="anno-uid-ww1j9hnjxoi" id="files-panel">
+<div class="card-header" data-anno-uid="anno-uid-95gwwuzuc"><font _mstmutation="1" data-anno-uid="anno-uid-bq30kgpezva"><marked-text _mstmutation="1" class="" data-anno-uid="anno-uid-t1piwxxhro9" style="">
+  Folder Navigation:
+  </marked-text><span _mstmutation="1" class="dir-breadcrumbs" data-anno-uid="anno-uid-fmwlekb5rgv"><a class="dir-breadcrumb-up" data-anno-uid="anno-uid-f81m1xfenn" href="../../#files-panel" onclick="return navigateDir('')">&lt;base&gt;</a><span class="dir-breadcrumb-sep" data-anno-uid="anno-uid-xug412roq8">/</span><a class="dir-breadcrumb-up" data-anno-uid="anno-uid-qsvhet8q8r" href="../#files-panel" onclick="return navigateDir('p06')">p06</a><span class="dir-breadcrumb-sep" data-anno-uid="anno-uid-rwti2v8fba">/</span><span class="dir-breadcrumb-self" data-anno-uid="anno-uid-n3orh2hszmi">p06073</span></span></font>
+</div>
+<table class="files-panel" data-anno-uid="anno-uid-ah4sapgjswd">
+<colgroup data-anno-uid="anno-uid-0af6tgvj9lvk"><col class="files-panel-name" data-anno-uid="anno-uid-s13tjtzxpa">
+<col class="files-panel-size" data-anno-uid="anno-uid-hxbm8clv5lm">
+<col class="files-panel-date" data-anno-uid="anno-uid-xjqtnvd0qtn">
+</colgroup><thead data-anno-uid="anno-uid-1p8tnamnq3r">
+<tr data-anno-uid="anno-uid-d9yklg3njck">
+<th class="" data-anno-uid="anno-uid-n1dtbm0h0tm">Name</th>
+<th class="" data-anno-uid="anno-uid-uqnpv5clyn" style="">Size</th>
+<th class="" data-anno-uid="anno-uid-ptvxsy6a6j">Modified</th>
+</tr>
+</thead>
+<tbody data-anno-uid="anno-uid-82chh2hnszb">
+<tr class="parentdir" data-anno-uid="anno-uid-lwba475spp">
+<td data-anno-uid="anno-uid-hvesgr2ofgh"><a class="" data-anno-uid="anno-uid-6635zsprizb" href="../#files-panel" onclick="return navigateDir('p06')">Parent Directory</a></td>
+<td data-anno-uid="anno-uid-cboxylnayj6"></td>
+<td data-anno-uid="anno-uid-cjnlmkhq4oj"></td>
+</tr>
+<tr data-anno-uid="anno-uid-9lskij7m9w8">
+<td data-anno-uid="anno-uid-moxn2zzdqe"><a class="" data-anno-uid="anno-uid-62a20xt7716" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/RECORDS">RECORDS</a>
+<a class="download" data-anno-uid="anno-uid-qepiilknfpl" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/RECORDS?download" title="Download RECORDS">
+<span class="visually-hidden" data-anno-uid="anno-uid-5a9knpq6uf7">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-cw1tvcppu7u" style="">550 B</td>
+<td class="" data-anno-uid="anno-uid-265mqcnxxgm">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-8fp3t5o1h1y">
+<td data-anno-uid="anno-uid-li56itlt3jg"><a class="" data-anno-uid="anno-uid-y9g082e4ucd" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s00.atr">p06073_s00.atr</a>
+<a class="download" data-anno-uid="anno-uid-jz1f7wlwql" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s00.atr?download" title="Download p06073_s00.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-zyz1efu0gt8">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-r6j8w16fd3n" style="">36.9 KB</td>
+<td class="" data-anno-uid="anno-uid-i8k82bfohek">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-km5je3ob4x">
+<td data-anno-uid="anno-uid-nk0fi5lcxhj"><a class="" data-anno-uid="anno-uid-86exyszmqci" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s00.dat">p06073_s00.dat</a>
+<a class="download" data-anno-uid="anno-uid-d9f9m85t0w9" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s00.dat?download" title="Download p06073_s00.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-klemxdt02p">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-491l9tyuvqu">2 MB</td>
+<td class="" data-anno-uid="anno-uid-w62xokbnnh8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ei6d7chc447">
+<td data-anno-uid="anno-uid-agrrp0j8lh9"><a class="" data-anno-uid="anno-uid-6htuliadzgv" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s00.hea">p06073_s00.hea</a>
+<a class="download" data-anno-uid="anno-uid-jwybajyauog" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s00.hea?download" title="Download p06073_s00.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-k6suabbzll">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-5x8t4xqit7r">87 B</td>
+<td class="" data-anno-uid="anno-uid-qnbrht34vqe">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ktevuapeiok">
+<td data-anno-uid="anno-uid-5e8lxpzrv07"><a class="" data-anno-uid="anno-uid-k0mk09cbvx7" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s01.atr">p06073_s01.atr</a>
+<a class="download" data-anno-uid="anno-uid-iq5o2j8dtd" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s01.atr?download" title="Download p06073_s01.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-mg0k7riugvh">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-pif4m9c8cu">43.0 KB</td>
+<td class="" data-anno-uid="anno-uid-hbqz7s1l70o">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-95dvl0yfmz8">
+<td data-anno-uid="anno-uid-wn9oacxtnmf"><a class="" data-anno-uid="anno-uid-9r7qkcvpnew" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s01.dat">p06073_s01.dat</a>
+<a class="download" data-anno-uid="anno-uid-b00muixt87u" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s01.dat?download" title="Download p06073_s01.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-wfbw3sy1eq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-dymuh32wuih">2 MB</td>
+<td class="" data-anno-uid="anno-uid-mhrj2r61ofr">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-dd1gofkhkip">
+<td data-anno-uid="anno-uid-qfjl70ykv6"><a class="" data-anno-uid="anno-uid-8qkl6ts4dkb" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s01.hea">p06073_s01.hea</a>
+<a class="download" data-anno-uid="anno-uid-qcrjvwlp0fh" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s01.hea?download" title="Download p06073_s01.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-mqhz1vzbkif">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-qwb04ner55q">86 B</td>
+<td class="" data-anno-uid="anno-uid-gcwghww4lb9" style="">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-v9efg3be22">
+<td data-anno-uid="anno-uid-h3rv25du3c9"><a class="" data-anno-uid="anno-uid-f5w63vmi1e4" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s02.atr">p06073_s02.atr</a>
+<a class="download" data-anno-uid="anno-uid-ldn5pu1l7lb" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s02.atr?download" title="Download p06073_s02.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-7kqr8bv2r6l">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-xe7ukegox7">36.8 KB</td>
+<td class="" data-anno-uid="anno-uid-e7mp7o1u3we">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-phrze017efo">
+<td data-anno-uid="anno-uid-j18fhsilar"><a class="" data-anno-uid="anno-uid-ufg8fnnv0yo" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s02.dat">p06073_s02.dat</a>
+<a class="download" data-anno-uid="anno-uid-kqryy0rnqr" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s02.dat?download" title="Download p06073_s02.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-12ez7osy779j">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-kftldjggcr">2 MB</td>
+<td class="" data-anno-uid="anno-uid-yzzeftmw1v">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-mm9p74s1eo">
+<td data-anno-uid="anno-uid-f2koc3r88x"><a class="" data-anno-uid="anno-uid-f2ewl5mpqks" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s02.hea">p06073_s02.hea</a>
+<a class="download" data-anno-uid="anno-uid-9bm2fd4ldwv" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s02.hea?download" title="Download p06073_s02.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-aoknmaspzj">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-isb9amcqf5p">85 B</td>
+<td class="" data-anno-uid="anno-uid-ath7ta6y0eb">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-fb2qgatbs2r">
+<td data-anno-uid="anno-uid-z7xbqeo375s"><a class="" data-anno-uid="anno-uid-vom2cyij8vp" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s03.atr">p06073_s03.atr</a>
+<a class="download" data-anno-uid="anno-uid-jg4jphrcg8" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s03.atr?download" title="Download p06073_s03.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-2bxbru2oirt">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-xrxj1m9wdos">35.4 KB</td>
+<td class="" data-anno-uid="anno-uid-52glv1vst6v">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-p28zq26qgcs">
+<td data-anno-uid="anno-uid-lg1iizdv8sb"><a class="" data-anno-uid="anno-uid-nbauqqspp8" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s03.dat">p06073_s03.dat</a>
+<a class="download" data-anno-uid="anno-uid-63kpkre6j0y" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s03.dat?download" title="Download p06073_s03.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-7io2zoqhqn">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-nnhnznmh1mr">2 MB</td>
+<td class="" data-anno-uid="anno-uid-8yq2v26ccnx">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-yz3pjxfuqz">
+<td data-anno-uid="anno-uid-ntcbhjyb6v"><a class="" data-anno-uid="anno-uid-uz5acovix7" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s03.hea">p06073_s03.hea</a>
+<a class="download" data-anno-uid="anno-uid-jyr7tjfyxh" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s03.hea?download" title="Download p06073_s03.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-eo6jl3r1c5" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-vyts04kpc4j">87 B</td>
+<td class="" data-anno-uid="anno-uid-gwk9cd4ygl">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-htmi9epjmxm">
+<td data-anno-uid="anno-uid-0bbzdaidt4d"><a class="" data-anno-uid="anno-uid-s7gf27wpb5" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s04.atr">p06073_s04.atr</a>
+<a class="download" data-anno-uid="anno-uid-cjsapc3jg5l" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s04.atr?download" title="Download p06073_s04.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-ej390bi6c6p">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-c81ap0hg3o7">43.1 KB</td>
+<td class="" data-anno-uid="anno-uid-ekbzp72ja5v">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-nzhr442idr">
+<td data-anno-uid="anno-uid-jbsnx2hrei"><a class="" data-anno-uid="anno-uid-rtaxew3j3f" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s04.dat">p06073_s04.dat</a>
+<a class="download" data-anno-uid="anno-uid-vky8g4mnfd" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s04.dat?download" title="Download p06073_s04.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-2r288ss7uki">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-eecw0jwoukm">2 MB</td>
+<td class="" data-anno-uid="anno-uid-n3n6efzmua">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-d0w0igkz809">
+<td data-anno-uid="anno-uid-kcurbcsqtu"><a class="" data-anno-uid="anno-uid-0cz4j0z9d2nu" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s04.hea">p06073_s04.hea</a>
+<a class="download" data-anno-uid="anno-uid-gqq5lnsjdct" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s04.hea?download" title="Download p06073_s04.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-pjenvgf48xe">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-629un0gqfrd">87 B</td>
+<td class="" data-anno-uid="anno-uid-xyljsksl0td">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-e8ysrn0cnad">
+<td data-anno-uid="anno-uid-f823pfxu9fg"><a class="" data-anno-uid="anno-uid-nb4xq4d2b3l" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s05.atr">p06073_s05.atr</a>
+<a class="download" data-anno-uid="anno-uid-4ve5czfplk" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s05.atr?download" title="Download p06073_s05.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-rztgt2a783l">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-wwk645119j">41.4 KB</td>
+<td class="" data-anno-uid="anno-uid-tp8rqpr7w5e">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-pvjfk674r8j">
+<td data-anno-uid="anno-uid-9i3fvrtzazf"><a class="" data-anno-uid="anno-uid-mb16ht8jbq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s05.dat">p06073_s05.dat</a>
+<a class="download" data-anno-uid="anno-uid-tbd1gooh88h" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s05.dat?download" title="Download p06073_s05.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-w8phrvd3qzk">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-0pd7ima2ewhn">2 MB</td>
+<td class="" data-anno-uid="anno-uid-9oof01xe8uf">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-aiezcmb8d7">
+<td data-anno-uid="anno-uid-6y8qmwk0ljo"><a class="" data-anno-uid="anno-uid-u9tfco0q90g" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s05.hea">p06073_s05.hea</a>
+<a class="download" data-anno-uid="anno-uid-3hjo43k69qi" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s05.hea?download" title="Download p06073_s05.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-zp0re319fi">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-eultrbmo43k">87 B</td>
+<td class="" data-anno-uid="anno-uid-6y84w3bezhq">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-joft3z53rtj">
+<td data-anno-uid="anno-uid-rsr1xce8ei"><a class="" data-anno-uid="anno-uid-iok9gnc4yuk" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s06.atr">p06073_s06.atr</a>
+<a class="download" data-anno-uid="anno-uid-ml6jml34lm" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s06.atr?download" title="Download p06073_s06.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-u8ecqdo91ns">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-725j5nl3k4p">35.3 KB</td>
+<td class="" data-anno-uid="anno-uid-nz9qbsz339">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-70y3vf0a6eu">
+<td data-anno-uid="anno-uid-r47n117ttr"><a class="" data-anno-uid="anno-uid-8mycafkunwr" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s06.dat">p06073_s06.dat</a>
+<a class="download" data-anno-uid="anno-uid-2an8zp54ufo" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s06.dat?download" title="Download p06073_s06.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-qjnzu7aotb7">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-f0u1wpe20wh">2 MB</td>
+<td class="" data-anno-uid="anno-uid-yiacbbb3ffp">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-nnidpxv7jt">
+<td data-anno-uid="anno-uid-03tg95cd20av"><a class="" data-anno-uid="anno-uid-cs2ivx5epve" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s06.hea">p06073_s06.hea</a>
+<a class="download" data-anno-uid="anno-uid-jq7e3eugw2p" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s06.hea?download" title="Download p06073_s06.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-ieg0kwb5t78">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-bnpecsj9jbo">87 B</td>
+<td class="" data-anno-uid="anno-uid-61u7fm8h6qh">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-p35nq9gv72n">
+<td data-anno-uid="anno-uid-zd8l7fac17"><a class="" data-anno-uid="anno-uid-fafwmiurwlv" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s07.atr">p06073_s07.atr</a>
+<a class="download" data-anno-uid="anno-uid-4ihp9fbvz9l" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s07.atr?download" title="Download p06073_s07.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-9uek91vtbpd">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-z9z3a3owulm">37.3 KB</td>
+<td class="" data-anno-uid="anno-uid-nq7emrzbca">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-guju1ip3mai">
+<td data-anno-uid="anno-uid-xpeahtfnkxj"><a class="" data-anno-uid="anno-uid-pt63tx36ba" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s07.dat">p06073_s07.dat</a>
+<a class="download" data-anno-uid="anno-uid-27005892ixs" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s07.dat?download" title="Download p06073_s07.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-53eytqj93zt">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-b1ofks5b57f">2 MB</td>
+<td class="" data-anno-uid="anno-uid-qku3lpjhocf">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-vrhwp3fdt2d">
+<td data-anno-uid="anno-uid-axs20fc9i3p"><a class="" data-anno-uid="anno-uid-qnu1fio2d3a" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s07.hea">p06073_s07.hea</a>
+<a class="download" data-anno-uid="anno-uid-uj0ri3lf15h" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s07.hea?download" title="Download p06073_s07.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-g5ojof6vjwv">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ybw1lza3vca">86 B</td>
+<td class="" data-anno-uid="anno-uid-niewnjmr86d">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-6dgzivblkbd">
+<td data-anno-uid="anno-uid-hdf66o3wd8e"><a class="" data-anno-uid="anno-uid-txijjamyrgm" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s08.atr">p06073_s08.atr</a>
+<a class="download" data-anno-uid="anno-uid-rt20r7d1bz" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s08.atr?download" title="Download p06073_s08.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-k1ba36nc96a">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-07lb5ltzu155">39.6 KB</td>
+<td class="" data-anno-uid="anno-uid-ccoze304pv4">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-j2p34ldytg">
+<td data-anno-uid="anno-uid-kn73lrlp07l"><a class="" data-anno-uid="anno-uid-anotq27an4g" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s08.dat">p06073_s08.dat</a>
+<a class="download" data-anno-uid="anno-uid-dxzx4obdgme" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s08.dat?download" title="Download p06073_s08.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-37la7m6sffi">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-n5tjdrvo2lq">2 MB</td>
+<td class="" data-anno-uid="anno-uid-5t1twa8988n">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-gcx2mtz5ah9">
+<td data-anno-uid="anno-uid-nyu586fvpwq"><a class="" data-anno-uid="anno-uid-yyyha8oo35" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s08.hea">p06073_s08.hea</a>
+<a class="download" data-anno-uid="anno-uid-aacrs2qecal" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s08.hea?download" title="Download p06073_s08.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-b2r92npra7" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-lh3kdvemtdg">86 B</td>
+<td class="" data-anno-uid="anno-uid-7t9ib3l0fuu">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ricd3j0ihjn">
+<td data-anno-uid="anno-uid-iwuearfdv3s"><a class="" data-anno-uid="anno-uid-bq21jsxpmrn" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s09.atr">p06073_s09.atr</a>
+<a class="download" data-anno-uid="anno-uid-mfcylkim3ud" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s09.atr?download" title="Download p06073_s09.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-1olcbr1ktv3">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-4d9psm7xfke">43.7 KB</td>
+<td class="" data-anno-uid="anno-uid-bgnjuc05n7">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-v3jkl12lw2f">
+<td data-anno-uid="anno-uid-3ywu7mhtxc4"><a class="" data-anno-uid="anno-uid-m412g8p31ep" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s09.dat">p06073_s09.dat</a>
+<a class="download" data-anno-uid="anno-uid-1wxsa1tpnp7" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s09.dat?download" title="Download p06073_s09.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-6k8za45t658">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-4kic9qv8mdk">2 MB</td>
+<td class="" data-anno-uid="anno-uid-skieyj4sf6t">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-xik49jqzx9">
+<td data-anno-uid="anno-uid-itjgi7f2qy"><a class="" data-anno-uid="anno-uid-k1fcb36zpmk" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s09.hea">p06073_s09.hea</a>
+<a class="download" data-anno-uid="anno-uid-c6eiweij9tn" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s09.hea?download" title="Download p06073_s09.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-a6dn9c641oi" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-iitmfq95rk">87 B</td>
+<td class="" data-anno-uid="anno-uid-g3rzth38x6r">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-2c3mh2icae">
+<td data-anno-uid="anno-uid-p0mu8y58yyb"><a class="" data-anno-uid="anno-uid-tnpu7bxcgf8" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s10.atr">p06073_s10.atr</a>
+<a class="download" data-anno-uid="anno-uid-i2u54i3ph5b" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s10.atr?download" title="Download p06073_s10.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-egvjmcceqyq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-s69htb85tll">40.8 KB</td>
+<td class="" data-anno-uid="anno-uid-0orkqfluwdic">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-7o1hoy8vgyh">
+<td data-anno-uid="anno-uid-fyy2o2nmek"><a class="" data-anno-uid="anno-uid-1wotgonnv2v" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s10.dat">p06073_s10.dat</a>
+<a class="download" data-anno-uid="anno-uid-b95so403u9a" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s10.dat?download" title="Download p06073_s10.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-q7tlsjyn55q">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-vt3su8gs8i">2 MB</td>
+<td class="" data-anno-uid="anno-uid-fl3jez2mrxv">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-lnr0suqo3wp">
+<td data-anno-uid="anno-uid-fjgaad8qk2d"><a class="" data-anno-uid="anno-uid-lkmowpebime" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s10.hea">p06073_s10.hea</a>
+<a class="download" data-anno-uid="anno-uid-8dewy1etcgi" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s10.hea?download" title="Download p06073_s10.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-7tfjhrk306w" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-k0qbexjyjij">87 B</td>
+<td class="" data-anno-uid="anno-uid-8m7xrf47oad">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ly0s8fckmg9">
+<td data-anno-uid="anno-uid-438rrzi8s8i"><a class="" data-anno-uid="anno-uid-j3eu7qz82j" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s11.atr">p06073_s11.atr</a>
+<a class="download" data-anno-uid="anno-uid-o5c8ksf3zch" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s11.atr?download" title="Download p06073_s11.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-hoxk32xs9il" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-454d4sxocv9">44.8 KB</td>
+<td class="" data-anno-uid="anno-uid-fzgndslw0ok">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-1wi70g0a8sgh">
+<td data-anno-uid="anno-uid-om76cinmzt"><a class="" data-anno-uid="anno-uid-w5sqn3gcom" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s11.dat">p06073_s11.dat</a>
+<a class="download" data-anno-uid="anno-uid-o3m06r8usgs" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s11.dat?download" title="Download p06073_s11.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-g7xneg1bm0c" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-9ulafu3sxe8">2 MB</td>
+<td class="" data-anno-uid="anno-uid-bwex3o9plz">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-5f7y00g991h">
+<td data-anno-uid="anno-uid-ixhdj7puzid"><a class="" data-anno-uid="anno-uid-ccb391pmfpw" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s11.hea">p06073_s11.hea</a>
+<a class="download" data-anno-uid="anno-uid-kzy51lfe6fr" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s11.hea?download" title="Download p06073_s11.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-8penbcnplvk">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-hiy5uauptk">87 B</td>
+<td class="" data-anno-uid="anno-uid-3d1z0lx294d">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-1sas2i4wnqu">
+<td data-anno-uid="anno-uid-pudwb1aaeni"><a class="" data-anno-uid="anno-uid-d8gzngr41v" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s12.atr">p06073_s12.atr</a>
+<a class="download" data-anno-uid="anno-uid-ly19pixglo" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s12.atr?download" title="Download p06073_s12.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-dw4pzc4r02d">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-83wf19ejp9j">35.0 KB</td>
+<td class="" data-anno-uid="anno-uid-bwkt9z86dbt">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-p0l4sawzpqa">
+<td data-anno-uid="anno-uid-nxnskqy2kar"><a class="" data-anno-uid="anno-uid-heaucvef2u" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s12.dat">p06073_s12.dat</a>
+<a class="download" data-anno-uid="anno-uid-nmc6209ajs" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s12.dat?download" title="Download p06073_s12.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-ok4tniyutk">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-pgneu9tdbd">2 MB</td>
+<td class="" data-anno-uid="anno-uid-qkpzzydhs6">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-e1szfkk08x4">
+<td data-anno-uid="anno-uid-8pj72ssgjj3"><a class="" data-anno-uid="anno-uid-gp1dsbmla9" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s12.hea">p06073_s12.hea</a>
+<a class="download" data-anno-uid="anno-uid-rugffgeiark" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s12.hea?download" title="Download p06073_s12.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-tl3rdccx1oq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-emti5wzm7bp">87 B</td>
+<td class="" data-anno-uid="anno-uid-gn1w7mdwsq">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-8pg9i3suxwg">
+<td data-anno-uid="anno-uid-9laxxgj0ta"><a class="" data-anno-uid="anno-uid-xuc3zfob1mf" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s13.atr">p06073_s13.atr</a>
+<a class="download" data-anno-uid="anno-uid-1oiazvhxp4c" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s13.atr?download" title="Download p06073_s13.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-iun3oremk3p">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-uzymp3bhhhk">37.7 KB</td>
+<td class="" data-anno-uid="anno-uid-rrx6jedcdnj">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-3kzcxqvtkf2">
+<td data-anno-uid="anno-uid-nv4aagaaw1e"><a class="" data-anno-uid="anno-uid-oyu1nideax" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s13.dat">p06073_s13.dat</a>
+<a class="download" data-anno-uid="anno-uid-dovaxpdv3r" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s13.dat?download" title="Download p06073_s13.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-nuzrwrz0u5r">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-r90plarnhrs">2 MB</td>
+<td class="" data-anno-uid="anno-uid-inwu4yzj64">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-vs4hxfb6qpc">
+<td data-anno-uid="anno-uid-fx2panqiit"><a class="" data-anno-uid="anno-uid-8jokhdgpom" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s13.hea">p06073_s13.hea</a>
+<a class="download" data-anno-uid="anno-uid-oqwyuq50ypp" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s13.hea?download" title="Download p06073_s13.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-yo004760ct">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-1dqa5kphg3q">87 B</td>
+<td class="" data-anno-uid="anno-uid-zxuto0ex5p">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-6fipl9qezca">
+<td data-anno-uid="anno-uid-766frgtp83i"><a class="" data-anno-uid="anno-uid-o9mgjhjt5z" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s14.atr">p06073_s14.atr</a>
+<a class="download" data-anno-uid="anno-uid-tslbarfwp1p" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s14.atr?download" title="Download p06073_s14.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-ty8tmvqrid">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-b5cvbykh6la">41.7 KB</td>
+<td class="" data-anno-uid="anno-uid-npzijaydtv">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-7ybni2nxvz8">
+<td data-anno-uid="anno-uid-mildazn810p"><a class="" data-anno-uid="anno-uid-a1qry247q8q" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s14.dat">p06073_s14.dat</a>
+<a class="download" data-anno-uid="anno-uid-kgkmd0oohyi" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s14.dat?download" title="Download p06073_s14.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-zm0usydt5wk">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-zfn5rgcqys">2 MB</td>
+<td class="" data-anno-uid="anno-uid-xsbliwpjm7q">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-aqcie35njkr">
+<td data-anno-uid="anno-uid-nlzoh7gkyk"><a class="" data-anno-uid="anno-uid-63ipmn6tpse" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s14.hea">p06073_s14.hea</a>
+<a class="download" data-anno-uid="anno-uid-xxze3t10e17" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s14.hea?download" title="Download p06073_s14.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-x3rih2jvn5j">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-wcto1x9wop">86 B</td>
+<td class="" data-anno-uid="anno-uid-gqj6u2mk6e4">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-sh1est7f0p9">
+<td data-anno-uid="anno-uid-1r6iw46fcw1h"><a class="" data-anno-uid="anno-uid-1itlp15cerf" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s15.atr">p06073_s15.atr</a>
+<a class="download" data-anno-uid="anno-uid-lbsxflxb3ns" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s15.atr?download" title="Download p06073_s15.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-7ao7hpvn9dw">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-6zj8zqcdqcn">39.8 KB</td>
+<td class="" data-anno-uid="anno-uid-gy9vr1wf8ws">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-gnvehzub3ds">
+<td data-anno-uid="anno-uid-sbim7o4o6w8"><a class="" data-anno-uid="anno-uid-y4d6sr58ccp" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s15.dat">p06073_s15.dat</a>
+<a class="download" data-anno-uid="anno-uid-i8b8amw9pmg" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s15.dat?download" title="Download p06073_s15.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-gfay4r7agto">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-m03r4fy1b7">2 MB</td>
+<td class="" data-anno-uid="anno-uid-5g6s4viptdo">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ekjeb0o1dth">
+<td data-anno-uid="anno-uid-c5i4bumv8nr"><a class="" data-anno-uid="anno-uid-90x5fnr36o" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s15.hea">p06073_s15.hea</a>
+<a class="download" data-anno-uid="anno-uid-m6n4i9d06rq" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s15.hea?download" title="Download p06073_s15.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-sge1ljusud">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-7k96fttdtuu">86 B</td>
+<td class="" data-anno-uid="anno-uid-2hz8idxxy8b">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ubl9zzy3dk">
+<td data-anno-uid="anno-uid-bpktvzvlabn"><a class="" data-anno-uid="anno-uid-bouzj551qs" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s16.atr">p06073_s16.atr</a>
+<a class="download" data-anno-uid="anno-uid-7yymaygnug5" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s16.atr?download" title="Download p06073_s16.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-61qiq040hsj">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-4tdano9hnnn">35.5 KB</td>
+<td class="" data-anno-uid="anno-uid-xgsc90ke7p">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-3j6lviujgjx">
+<td data-anno-uid="anno-uid-oy4h2g99e7"><a class="" data-anno-uid="anno-uid-kqlz6rhswq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s16.dat">p06073_s16.dat</a>
+<a class="download" data-anno-uid="anno-uid-c2if14uemwf" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s16.dat?download" title="Download p06073_s16.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-23x0xdi7s9mi">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-36a3phj8c9p">2 MB</td>
+<td class="" data-anno-uid="anno-uid-hqy8upq95ou">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-5mm0taprago">
+<td data-anno-uid="anno-uid-wclz2xyuv58"><a class="" data-anno-uid="anno-uid-fx9b3ilwmpp" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s16.hea">p06073_s16.hea</a>
+<a class="download" data-anno-uid="anno-uid-32oop0duep" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s16.hea?download" title="Download p06073_s16.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-dywyqcvy9nn">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-q1zo1svz7h" style="">87 B</td>
+<td class="" data-anno-uid="anno-uid-uwp4v3q20t">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-v08rzsvf70p">
+<td data-anno-uid="anno-uid-22bemz25jhw"><a class="" data-anno-uid="anno-uid-2g1ygpyabql" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s17.atr">p06073_s17.atr</a>
+<a class="download" data-anno-uid="anno-uid-pt2edhgrp" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s17.atr?download" title="Download p06073_s17.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-9ugahlsetx">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ppmcv1i1kll" style="">37.3 KB</td>
+<td class="" data-anno-uid="anno-uid-caty8bg6iiu">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-166efo50aa5">
+<td data-anno-uid="anno-uid-w2vlv3zfoxd"><a class="" data-anno-uid="anno-uid-ttfuisih2xi" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s17.dat">p06073_s17.dat</a>
+<a class="download" data-anno-uid="anno-uid-1804d5ccj65" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s17.dat?download" title="Download p06073_s17.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-9pr2rgfxh2b">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-7kgu61m6ojw" style="">2 MB</td>
+<td class="" data-anno-uid="anno-uid-va0k2ckilxf">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-hn4eakux9sb">
+<td data-anno-uid="anno-uid-c2h3h6c5nlk"><a class="" data-anno-uid="anno-uid-mw2k2qp6tpe" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s17.hea">p06073_s17.hea</a>
+<a class="download" data-anno-uid="anno-uid-99hzffm1f3i" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s17.hea?download" title="Download p06073_s17.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-f0ok8kyfpd9">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-alm2w1tbdwr" style="">87 B</td>
+<td class="" data-anno-uid="anno-uid-m1f8bejewtq">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-oqpno9fbrgo">
+<td data-anno-uid="anno-uid-gl9haiggon"><a class="" data-anno-uid="anno-uid-h265oftt9u" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s18.atr">p06073_s18.atr</a>
+<a class="download" data-anno-uid="anno-uid-xd2d7hr0ek" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s18.atr?download" title="Download p06073_s18.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-4wi1508xi8f">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-84ef031knfo" style="">40.2 KB</td>
+<td class="" data-anno-uid="anno-uid-30n1evrwebm">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-sntufn84oo">
+<td data-anno-uid="anno-uid-par0yef6zlk"><a class="" data-anno-uid="anno-uid-k5pxzzrx4ea" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s18.dat">p06073_s18.dat</a>
+<a class="download" data-anno-uid="anno-uid-af29xlijei9" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s18.dat?download" title="Download p06073_s18.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-rk1ni8zqrv">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-bh0ga4khqn4">2 MB</td>
+<td class="" data-anno-uid="anno-uid-50h1jififkd">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-g1d1y3zhgmv">
+<td data-anno-uid="anno-uid-l7x171oma3d"><a class="" data-anno-uid="anno-uid-cburj984k7g" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s18.hea">p06073_s18.hea</a>
+<a class="download" data-anno-uid="anno-uid-8ci08tk24gs" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s18.hea?download" title="Download p06073_s18.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-xre63ivncbj">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ku02knl2oap">87 B</td>
+<td class="" data-anno-uid="anno-uid-ubcoeffiacr" style="">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-6hdzmwtpord">
+<td data-anno-uid="anno-uid-j6p1p5cyzos"><a class="" data-anno-uid="anno-uid-mubdp0jus7k" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s19.atr">p06073_s19.atr</a>
+<a class="download" data-anno-uid="anno-uid-eo6kf4udl4" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s19.atr?download" title="Download p06073_s19.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-c7w9bx6ljmc">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-av2lxjwi11">36.9 KB</td>
+<td class="" data-anno-uid="anno-uid-abmd2nqeaw4">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-5nkk007qlmb">
+<td data-anno-uid="anno-uid-k296bt07ndn"><a class="" data-anno-uid="anno-uid-rpwocinkgar" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s19.dat">p06073_s19.dat</a>
+<a class="download" data-anno-uid="anno-uid-2pk9a2gomg3" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s19.dat?download" title="Download p06073_s19.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-3yalycoyghe">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-3i84ixzbwnx">2 MB</td>
+<td class="" data-anno-uid="anno-uid-qmn5mcwtyj">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-0i7r5lw8nw7">
+<td data-anno-uid="anno-uid-atb720q202b"><a class="" data-anno-uid="anno-uid-91fv48mi5on" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s19.hea">p06073_s19.hea</a>
+<a class="download" data-anno-uid="anno-uid-0d51tgyhqjq" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s19.hea?download" title="Download p06073_s19.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-c8sfqcufp3b">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-nsn46biqf48">87 B</td>
+<td class="" data-anno-uid="anno-uid-qu30lpb97e">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-grt1vl1rtwh">
+<td data-anno-uid="anno-uid-83l90h9yz3f"><a class="" data-anno-uid="anno-uid-h4dy8fj61x5" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s20.atr">p06073_s20.atr</a>
+<a class="download" data-anno-uid="anno-uid-hf1blqn4lvp" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s20.atr?download" title="Download p06073_s20.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-rgr1u4u3uaf">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-dxcttglw9o">37.6 KB</td>
+<td class="" data-anno-uid="anno-uid-p4ac1bp2xke">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-pgue2081pfb">
+<td data-anno-uid="anno-uid-1s7th5y40mz"><a class="" data-anno-uid="anno-uid-hmwotepglt6" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s20.dat">p06073_s20.dat</a>
+<a class="download" data-anno-uid="anno-uid-jihn8upud4s" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s20.dat?download" title="Download p06073_s20.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-jz0bovhdjco">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-qya0mo420ed">2 MB</td>
+<td class="" data-anno-uid="anno-uid-g3tq77j611a">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-7ypmvxl6wu6">
+<td data-anno-uid="anno-uid-ue2qcteybz"><a class="" data-anno-uid="anno-uid-hsp41s1o3is" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s20.hea">p06073_s20.hea</a>
+<a class="download" data-anno-uid="anno-uid-40qpx37htbl" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s20.hea?download" title="Download p06073_s20.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-kfhoh7x4is">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-42oq4o3cech">86 B</td>
+<td class="" data-anno-uid="anno-uid-csavszki5d4">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-nykz1nwam2">
+<td data-anno-uid="anno-uid-nk6p32wpvql"><a class="" data-anno-uid="anno-uid-1rpkbt6ghvr" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s21.atr">p06073_s21.atr</a>
+<a class="download" data-anno-uid="anno-uid-qs0or13j7od" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s21.atr?download" title="Download p06073_s21.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-yfe0wlvdil">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-8xvx7afyx1">33.3 KB</td>
+<td class="" data-anno-uid="anno-uid-2h6hxfiy0lw">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-x3k6w4q0l7h">
+<td data-anno-uid="anno-uid-nwx6aoclyji"><a class="" data-anno-uid="anno-uid-9znoq6hp2f" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s21.dat">p06073_s21.dat</a>
+<a class="download" data-anno-uid="anno-uid-eaxesi5xjzo" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s21.dat?download" title="Download p06073_s21.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-bjwv1faj02">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-25mjpnzbe4m">2 MB</td>
+<td class="" data-anno-uid="anno-uid-3ia8uj4yw63">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-1cyusuzl2j1">
+<td data-anno-uid="anno-uid-7gg2tohsi16"><a class="" data-anno-uid="anno-uid-m1bwk4kabtm" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s21.hea">p06073_s21.hea</a>
+<a class="download" data-anno-uid="anno-uid-2yhrm186oy9" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s21.hea?download" title="Download p06073_s21.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-7zvhxlwem8r" style="">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-kqiw5yfm7mm">85 B</td>
+<td class="" data-anno-uid="anno-uid-kw3dt16hde">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-8ygwen4gk7h">
+<td data-anno-uid="anno-uid-nrkomap6mwo"><a class="" data-anno-uid="anno-uid-qiv1s67f16" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s22.atr">p06073_s22.atr</a>
+<a class="download" data-anno-uid="anno-uid-3nak8jzcf6v" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s22.atr?download" title="Download p06073_s22.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-a0u0u632sv6">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-hahuciytasu">36.4 KB</td>
+<td class="" data-anno-uid="anno-uid-62lx5x8u4n">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-qyelgebkhl">
+<td data-anno-uid="anno-uid-czgwo52a0rg"><a class="" data-anno-uid="anno-uid-37t49t968kz" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s22.dat">p06073_s22.dat</a>
+<a class="download" data-anno-uid="anno-uid-1x328lwkgnx" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s22.dat?download" title="Download p06073_s22.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-z255oqow8b">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-zzd5a3ye67c">2 MB</td>
+<td class="" data-anno-uid="anno-uid-k86spz3xx5">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-fuvqvhs9dj">
+<td data-anno-uid="anno-uid-zuj4t390g6r"><a class="" data-anno-uid="anno-uid-0ss8dtbopc99" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s22.hea">p06073_s22.hea</a>
+<a class="download" data-anno-uid="anno-uid-yme8i2rsyci" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s22.hea?download" title="Download p06073_s22.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-op1773hur8">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-3pqpjpc1lt">87 B</td>
+<td class="" data-anno-uid="anno-uid-1rp5nl4i455">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-44dypmo2hnj">
+<td data-anno-uid="anno-uid-2zk6mmahpl6"><a class="" data-anno-uid="anno-uid-0f5vz1c38knn" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s23.atr">p06073_s23.atr</a>
+<a class="download" data-anno-uid="anno-uid-01jg2icqpx2a" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s23.atr?download" title="Download p06073_s23.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-2qifetbpy7v">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-qpdgsyib1q">36.3 KB</td>
+<td class="" data-anno-uid="anno-uid-swv9y0i38tj">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-n2iv5zuuo">
+<td data-anno-uid="anno-uid-xbvee2k7ium"><a class="" data-anno-uid="anno-uid-ybla1o1fm3" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s23.dat">p06073_s23.dat</a>
+<a class="download" data-anno-uid="anno-uid-m4w0c7cdqzk" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s23.dat?download" title="Download p06073_s23.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-ao2j8eu7ftv">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-w2hmsg1p46">2 MB</td>
+<td class="" data-anno-uid="anno-uid-1v346te3mrr">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-7lkgnnnngkg">
+<td data-anno-uid="anno-uid-xsaw2925fja"><a class="" data-anno-uid="anno-uid-xhtx896wm6f" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s23.hea">p06073_s23.hea</a>
+<a class="download" data-anno-uid="anno-uid-queoy9ddv4h" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s23.hea?download" title="Download p06073_s23.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-n441ih3o9bt">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-9aadb2okzna">86 B</td>
+<td class="" data-anno-uid="anno-uid-o9vn15h0vo">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-kzrnfa2a0f">
+<td data-anno-uid="anno-uid-ymfn3zzwtej"><a class="" data-anno-uid="anno-uid-2kd5auihrqf" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s24.atr">p06073_s24.atr</a>
+<a class="download" data-anno-uid="anno-uid-5b3xi1d2nn7" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s24.atr?download" title="Download p06073_s24.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-ru1uil3bwcs">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ricwv33c1l">40.0 KB</td>
+<td class="" data-anno-uid="anno-uid-nk6ljft7b9h">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-kfhav4jw3yc">
+<td data-anno-uid="anno-uid-gw76hfcm6jw"><a class="" data-anno-uid="anno-uid-c8icurkmtjj" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s24.dat">p06073_s24.dat</a>
+<a class="download" data-anno-uid="anno-uid-ylsi6fx5cqj" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s24.dat?download" title="Download p06073_s24.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-2tekkfpf2zy">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-vcrb6p7c8x">2 MB</td>
+<td class="" data-anno-uid="anno-uid-dsddhq41tyb">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-in0g2y97x1s">
+<td data-anno-uid="anno-uid-n4fvgdgkh5"><a class="" data-anno-uid="anno-uid-xzef1jf348c" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s24.hea">p06073_s24.hea</a>
+<a class="download" data-anno-uid="anno-uid-xrnjoonvkp" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s24.hea?download" title="Download p06073_s24.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-tug6iq9lpvb">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ugnqm5oj64b">86 B</td>
+<td class="" data-anno-uid="anno-uid-uqatof7zv5">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-s2xwvkq2xw">
+<td data-anno-uid="anno-uid-549jl92u4bw"><a class="" data-anno-uid="anno-uid-ts96kzx70z" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s25.atr">p06073_s25.atr</a>
+<a class="download" data-anno-uid="anno-uid-0mjic9jdczrk" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s25.atr?download" title="Download p06073_s25.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-v8na2z0wwki">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-99wkyerromm">37.8 KB</td>
+<td class="" data-anno-uid="anno-uid-u3q2kg7lzh8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-5yq2temgnzt">
+<td data-anno-uid="anno-uid-42gd1vmludg"><a class="" data-anno-uid="anno-uid-7aomrzadk9p" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s25.dat">p06073_s25.dat</a>
+<a class="download" data-anno-uid="anno-uid-ormyuum2h3p" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s25.dat?download" title="Download p06073_s25.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-o8fnweun3n8">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-7phy26qvyvu">2 MB</td>
+<td class="" data-anno-uid="anno-uid-3iyja6k17q9">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-3rgf8p48s3y">
+<td data-anno-uid="anno-uid-vxnlnr50j0g"><a class="" data-anno-uid="anno-uid-7xgtfd3j84a" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s25.hea">p06073_s25.hea</a>
+<a class="download" data-anno-uid="anno-uid-ovaacjytfhm" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s25.hea?download" title="Download p06073_s25.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-rcwx4vhiwin">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-c1mzw5ugtpj">85 B</td>
+<td class="" data-anno-uid="anno-uid-ngt6x85masf">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-1dzagbky357">
+<td data-anno-uid="anno-uid-66su6dm5ury"><a class="" data-anno-uid="anno-uid-0x18ij9nuzta" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s26.atr">p06073_s26.atr</a>
+<a class="download" data-anno-uid="anno-uid-9jtrnwfi39" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s26.atr?download" title="Download p06073_s26.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-xqcse2lo6ih">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-4shyuvuzoh8">41.0 KB</td>
+<td class="" data-anno-uid="anno-uid-5xaby5plwe3">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-0zzxmqbbd7ei">
+<td data-anno-uid="anno-uid-65u12efphyi"><a class="" data-anno-uid="anno-uid-69hoenc3vus" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s26.dat">p06073_s26.dat</a>
+<a class="download" data-anno-uid="anno-uid-xvux3g7zldg" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s26.dat?download" title="Download p06073_s26.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-i3s3zys1fn">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-6nej7tsi3s7">2 MB</td>
+<td class="" data-anno-uid="anno-uid-m308x9gv3s">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-j5ayf632eee">
+<td data-anno-uid="anno-uid-xe18ubd90p"><a class="" data-anno-uid="anno-uid-5k7iwiur4sq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s26.hea">p06073_s26.hea</a>
+<a class="download" data-anno-uid="anno-uid-m6sxav788f" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s26.hea?download" title="Download p06073_s26.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-glpx2arrxmt">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-h2lb2x1i5rn">87 B</td>
+<td class="" data-anno-uid="anno-uid-tuwe6kxa3qd">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-bb9wbmw16qd">
+<td data-anno-uid="anno-uid-kmui9bg5a9"><a class="" data-anno-uid="anno-uid-1whjgzb990m" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s27.atr">p06073_s27.atr</a>
+<a class="download" data-anno-uid="anno-uid-jwiid3dmdx" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s27.atr?download" title="Download p06073_s27.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-s2u912st8q">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-3niipc9b2cu">40.7 KB</td>
+<td class="" data-anno-uid="anno-uid-gw8kt4q4wk5">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-bffn1k86juf">
+<td data-anno-uid="anno-uid-92nkyoz7l3"><a class="" data-anno-uid="anno-uid-e2n1v1x5vjg" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s27.dat">p06073_s27.dat</a>
+<a class="download" data-anno-uid="anno-uid-c0711h3b5df" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s27.dat?download" title="Download p06073_s27.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-cd89vvggcbw">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-2oxqwr7y9xt">2 MB</td>
+<td class="" data-anno-uid="anno-uid-gqvg2ssk6ti">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-99oddhlz0ip">
+<td data-anno-uid="anno-uid-3elzgk9h8a"><a class="" data-anno-uid="anno-uid-3lut9iptkxw" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s27.hea">p06073_s27.hea</a>
+<a class="download" data-anno-uid="anno-uid-lw43q8vbjnf" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s27.hea?download" title="Download p06073_s27.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-rb6wly1opt">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-c0rnll5fhpj">86 B</td>
+<td class="" data-anno-uid="anno-uid-9rv4w8nv82p">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-h2f1lem2jc6">
+<td data-anno-uid="anno-uid-j9xywd89xrt"><a class="" data-anno-uid="anno-uid-g8ia3e114rq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s28.atr">p06073_s28.atr</a>
+<a class="download" data-anno-uid="anno-uid-4i0i6vq02qw" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s28.atr?download" title="Download p06073_s28.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-n9k1o7zebtf">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-n0tmhb8r7w">39.8 KB</td>
+<td class="" data-anno-uid="anno-uid-vlwxyhgbrm">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-9pq2lugx9">
+<td data-anno-uid="anno-uid-vtrh1tbxf5"><a class="" data-anno-uid="anno-uid-dzlla22mtya" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s28.dat">p06073_s28.dat</a>
+<a class="download" data-anno-uid="anno-uid-wjat03jzzbs" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s28.dat?download" title="Download p06073_s28.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-0kfid4d0wi7k">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-tws6t364d8">2 MB</td>
+<td class="" data-anno-uid="anno-uid-269mkweqzgr">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-i36vc2vnvl9">
+<td data-anno-uid="anno-uid-8525pshtyo6"><a class="" data-anno-uid="anno-uid-zi6j7hwak9m" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s28.hea">p06073_s28.hea</a>
+<a class="download" data-anno-uid="anno-uid-k9lfxqynxcb" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s28.hea?download" title="Download p06073_s28.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-dd0pk66lg6f">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-xyqxrw58bl">86 B</td>
+<td class="" data-anno-uid="anno-uid-fh0gr2m438n">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-2ni4b68655k">
+<td data-anno-uid="anno-uid-rjeuq3v6c9n"><a class="" data-anno-uid="anno-uid-l86mhhhesn" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s29.atr">p06073_s29.atr</a>
+<a class="download" data-anno-uid="anno-uid-38n3y7vzjhm" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s29.atr?download" title="Download p06073_s29.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-02wtk25b8gxl">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-pw7qdr96on">33.9 KB</td>
+<td class="" data-anno-uid="anno-uid-jlbc0oyfyx8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-9fp5u2q681j">
+<td data-anno-uid="anno-uid-43x4dvv5768"><a class="" data-anno-uid="anno-uid-gr0k9ze57gi" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s29.dat">p06073_s29.dat</a>
+<a class="download" data-anno-uid="anno-uid-n6iwlzn76i9" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s29.dat?download" title="Download p06073_s29.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-3xdptevvch4">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-adcoj5qymwg">2 MB</td>
+<td class="" data-anno-uid="anno-uid-y86p8wo64yd">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-pslorwrpx4a">
+<td data-anno-uid="anno-uid-p5mqkw5deup"><a class="" data-anno-uid="anno-uid-mil9lcc0jx" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s29.hea">p06073_s29.hea</a>
+<a class="download" data-anno-uid="anno-uid-9x9ca5ugeg8" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s29.hea?download" title="Download p06073_s29.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-hlsp5soskmr">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-t960tty5b">86 B</td>
+<td class="" data-anno-uid="anno-uid-sxpzl8z623">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-2c0i7s4m7bj">
+<td data-anno-uid="anno-uid-ul5y0ajtct"><a class="" data-anno-uid="anno-uid-lrlloc0rlq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s30.atr">p06073_s30.atr</a>
+<a class="download" data-anno-uid="anno-uid-h9xzyikwgk" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s30.atr?download" title="Download p06073_s30.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-lm6ssndyypi">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-rly7bd5rlf">40.9 KB</td>
+<td class="" data-anno-uid="anno-uid-zrm3gwijod">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-7o8u07643eq">
+<td data-anno-uid="anno-uid-oabn3nwwyn"><a class="" data-anno-uid="anno-uid-nuug1f2k06o" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s30.dat">p06073_s30.dat</a>
+<a class="download" data-anno-uid="anno-uid-rmw70ldko6" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s30.dat?download" title="Download p06073_s30.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-6ix01bwa316">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-yapl8bxdurk">2 MB</td>
+<td class="" data-anno-uid="anno-uid-ssihij23pbc">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-6bxmlbckb04">
+<td data-anno-uid="anno-uid-8d8oawni89w"><a class="" data-anno-uid="anno-uid-bo2rw45shfq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s30.hea">p06073_s30.hea</a>
+<a class="download" data-anno-uid="anno-uid-4qpw02eo13h" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s30.hea?download" title="Download p06073_s30.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-ifj0ooydtif">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-2dq08pu72em">87 B</td>
+<td class="" data-anno-uid="anno-uid-lu08qgtdpwm">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-18dr6dny289">
+<td data-anno-uid="anno-uid-ne2c41g6ab"><a class="" data-anno-uid="anno-uid-zei48sl7m1" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s31.atr">p06073_s31.atr</a>
+<a class="download" data-anno-uid="anno-uid-n2nbz61jpr" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s31.atr?download" title="Download p06073_s31.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-wh35msug6w">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-zlq7os1ifyh">41.7 KB</td>
+<td class="" data-anno-uid="anno-uid-196raj4gw2h">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-6ksflx0fyov">
+<td data-anno-uid="anno-uid-spopr2bwuza"><a class="" data-anno-uid="anno-uid-k6c4e4u0bkb" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s31.dat">p06073_s31.dat</a>
+<a class="download" data-anno-uid="anno-uid-n0xquuq1ejc" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s31.dat?download" title="Download p06073_s31.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-mg16gq2401n">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-lpo94hfb4ig">2 MB</td>
+<td class="" data-anno-uid="anno-uid-8529fb2gy0x">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-b6qv38m3kw">
+<td data-anno-uid="anno-uid-8ynhvz7wj4w"><a class="" data-anno-uid="anno-uid-h4a6g1au5qt" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s31.hea">p06073_s31.hea</a>
+<a class="download" data-anno-uid="anno-uid-ik425jphh1s" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s31.hea?download" title="Download p06073_s31.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-phfbaebeh0p">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ecjkwrdvd84">86 B</td>
+<td class="" data-anno-uid="anno-uid-27rkkgywrij">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-fswk7c855uc">
+<td data-anno-uid="anno-uid-kfes5nr45hf"><a class="" data-anno-uid="anno-uid-rg2diduo2ub" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s32.atr">p06073_s32.atr</a>
+<a class="download" data-anno-uid="anno-uid-8zxgs6evtgt" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s32.atr?download" title="Download p06073_s32.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-8t3ignby8do">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-vez7ctj7di">40.3 KB</td>
+<td class="" data-anno-uid="anno-uid-diespa3u6e9">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-puu3fp9yy3m">
+<td data-anno-uid="anno-uid-9wj3v4y4g8e"><a class="" data-anno-uid="anno-uid-0q8l57k58fxq" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s32.dat">p06073_s32.dat</a>
+<a class="download" data-anno-uid="anno-uid-e95m4h8x3n5" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s32.dat?download" title="Download p06073_s32.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-1kabykh4dut">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-pgacc0xdsu">2 MB</td>
+<td class="" data-anno-uid="anno-uid-1rs0rlv0kps">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-hi28bz5eyp">
+<td data-anno-uid="anno-uid-2vn3z3k6ulx"><a class="" data-anno-uid="anno-uid-cdfdccrxe94" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s32.hea">p06073_s32.hea</a>
+<a class="download" data-anno-uid="anno-uid-ib5n24xfxf" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s32.hea?download" title="Download p06073_s32.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-4ewa801zc9w">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ktm1xqpfpc">87 B</td>
+<td class="" data-anno-uid="anno-uid-ok78hoosxf">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-4lprngpfehk">
+<td data-anno-uid="anno-uid-8ogoodjgx0p"><a class="" data-anno-uid="anno-uid-7g9ajx56qas" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s33.atr">p06073_s33.atr</a>
+<a class="download" data-anno-uid="anno-uid-e9bgezipxc" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s33.atr?download" title="Download p06073_s33.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-19mk5v9xaxe">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-hoj5nfrbuxm">40.3 KB</td>
+<td class="" data-anno-uid="anno-uid-lnhtlfoggbn">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ruuh46fsakr">
+<td data-anno-uid="anno-uid-p6vx08we3ws"><a class="" data-anno-uid="anno-uid-2ts28zwnyz4" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s33.dat">p06073_s33.dat</a>
+<a class="download" data-anno-uid="anno-uid-z99vlv9wtbl" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s33.dat?download" title="Download p06073_s33.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-zeajvxfni5a">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-r0d5a8xtlw">2 MB</td>
+<td class="" data-anno-uid="anno-uid-fbgprbzn957">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-tpub49020nb">
+<td data-anno-uid="anno-uid-8rieoymwiox"><a class="" data-anno-uid="anno-uid-c9c323mwp0a" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s33.hea">p06073_s33.hea</a>
+<a class="download" data-anno-uid="anno-uid-ch035pg4oi" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s33.hea?download" title="Download p06073_s33.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-17jvgsxh699">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-g5zebu116vm">87 B</td>
+<td class="" data-anno-uid="anno-uid-f9mrmq5os2">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-28mu2um46fx">
+<td data-anno-uid="anno-uid-x1o2h9sgmd8"><a class="" data-anno-uid="anno-uid-1zdeb66vlxf" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s34.atr">p06073_s34.atr</a>
+<a class="download" data-anno-uid="anno-uid-b3f76grmnte" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s34.atr?download" title="Download p06073_s34.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-0chl3uen612h">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-3lp5nfj16r3">39.0 KB</td>
+<td class="" data-anno-uid="anno-uid-fojki0gl5l8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-takpx892j2">
+<td data-anno-uid="anno-uid-tpa4m8tdft9"><a class="" data-anno-uid="anno-uid-zrg8i1yox3" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s34.dat">p06073_s34.dat</a>
+<a class="download" data-anno-uid="anno-uid-i3qdlb6mjt" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s34.dat?download" title="Download p06073_s34.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-o35hiap5yg">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-j5ucagsaz2e">2 MB</td>
+<td class="" data-anno-uid="anno-uid-pueaaxl77hp">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-bpjrob8tmv">
+<td data-anno-uid="anno-uid-c4etgditd7"><a class="" data-anno-uid="anno-uid-tc0grrhy8ii" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s34.hea">p06073_s34.hea</a>
+<a class="download" data-anno-uid="anno-uid-9gekqf23h4d" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s34.hea?download" title="Download p06073_s34.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-jhu0b59gnq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-2e8jmhrgy3o">87 B</td>
+<td class="" data-anno-uid="anno-uid-2mpi5848gsm">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-2z1m366sqru">
+<td data-anno-uid="anno-uid-qmdyg593cu"><a class="" data-anno-uid="anno-uid-9iurce7le6m" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s35.atr">p06073_s35.atr</a>
+<a class="download" data-anno-uid="anno-uid-hegnf752n7a" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s35.atr?download" title="Download p06073_s35.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-4rttdww26ax">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-eslby1uk1wg">36.7 KB</td>
+<td class="" data-anno-uid="anno-uid-vfoxcf9yr9">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-xb951y2v3sd">
+<td data-anno-uid="anno-uid-brjcz0r2tcl"><a class="" data-anno-uid="anno-uid-9mehjj1i4c" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s35.dat">p06073_s35.dat</a>
+<a class="download" data-anno-uid="anno-uid-ywu8qurq5k" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s35.dat?download" title="Download p06073_s35.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-1oo98cy9vpr">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-lsei2dqn1yi">2 MB</td>
+<td class="" data-anno-uid="anno-uid-ggs3gn1ced5">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-5b58ylow4a">
+<td data-anno-uid="anno-uid-5ovk625qslw"><a class="" data-anno-uid="anno-uid-knsbqlhs8qe" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s35.hea">p06073_s35.hea</a>
+<a class="download" data-anno-uid="anno-uid-awhnph018c8" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s35.hea?download" title="Download p06073_s35.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-jx9lwwmi2th">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-cguxfgc7q4f">86 B</td>
+<td class="" data-anno-uid="anno-uid-f8e4jn00m8a">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-bzy0v23ent">
+<td data-anno-uid="anno-uid-i9xsvetb6eq"><a class="" data-anno-uid="anno-uid-0pwv8p4k8a6k" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s36.atr">p06073_s36.atr</a>
+<a class="download" data-anno-uid="anno-uid-w80k3qsvgr9" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s36.atr?download" title="Download p06073_s36.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-dydemu54zo">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-e5jmsl4aw9j">42.0 KB</td>
+<td class="" data-anno-uid="anno-uid-inivw09x5w9">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-2jafmojd2wt">
+<td data-anno-uid="anno-uid-m9mf5tq2akp"><a class="" data-anno-uid="anno-uid-aadf4zr8s4e" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s36.dat">p06073_s36.dat</a>
+<a class="download" data-anno-uid="anno-uid-ls4n1l48jyq" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s36.dat?download" title="Download p06073_s36.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-ixvysv3wj9">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-1f4pk1mdja5i">2 MB</td>
+<td class="" data-anno-uid="anno-uid-jk7f5wppgi">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-42jzcht0n4l">
+<td data-anno-uid="anno-uid-1et974582wk"><a class="" data-anno-uid="anno-uid-pkqg6w84bxf" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s36.hea">p06073_s36.hea</a>
+<a class="download" data-anno-uid="anno-uid-03l872tsvlx5" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s36.hea?download" title="Download p06073_s36.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-ewvwyg257n">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-2cxcu2iny16">87 B</td>
+<td class="" data-anno-uid="anno-uid-uduetx8in3">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-byfnpa66bz">
+<td data-anno-uid="anno-uid-5rnlv4ed0xj"><a class="" data-anno-uid="anno-uid-ldih73zv8r" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s37.atr">p06073_s37.atr</a>
+<a class="download" data-anno-uid="anno-uid-kr9wqnoo8x" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s37.atr?download" title="Download p06073_s37.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-eck0clidjrr">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-bxy9lk9yi5t">40.6 KB</td>
+<td class="" data-anno-uid="anno-uid-gb14bwtu69d">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-a8a8ma9lb3s">
+<td data-anno-uid="anno-uid-shqqexjkhk"><a class="" data-anno-uid="anno-uid-01dfa31z9hs3" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s37.dat">p06073_s37.dat</a>
+<a class="download" data-anno-uid="anno-uid-da06tvqplu" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s37.dat?download" title="Download p06073_s37.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-cg57gydtqkm">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-8yqxexbg8wd">2 MB</td>
+<td class="" data-anno-uid="anno-uid-khw4shbant" style="">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-cjie6glk7od">
+<td data-anno-uid="anno-uid-bl1vxrsr9gc"><a class="" data-anno-uid="anno-uid-v8vnfnaq2y" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s37.hea">p06073_s37.hea</a>
+<a class="download" data-anno-uid="anno-uid-b2i5ggi729p" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s37.hea?download" title="Download p06073_s37.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-uctuvimgjcp">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-iamvkfm29oc">85 B</td>
+<td class="" data-anno-uid="anno-uid-nw1xk86d2w">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-otwayfod7u">
+<td data-anno-uid="anno-uid-4hb26xlyzp6"><a class="" data-anno-uid="anno-uid-p8czeci1lqo" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s38.atr">p06073_s38.atr</a>
+<a class="download" data-anno-uid="anno-uid-ln46app8hv8" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s38.atr?download" title="Download p06073_s38.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-z4g48sig4m">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-v669v19jn0o">40.9 KB</td>
+<td class="" data-anno-uid="anno-uid-8zibpc6zee7">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-qxt12enfump">
+<td data-anno-uid="anno-uid-ya113s6rn3b"><a class="" data-anno-uid="anno-uid-rd7c0fa5n8" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s38.dat">p06073_s38.dat</a>
+<a class="download" data-anno-uid="anno-uid-7gijwe9pfx8" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s38.dat?download" title="Download p06073_s38.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-pjmbvxb0krk">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-sz6k3z5c5ii">2 MB</td>
+<td class="" data-anno-uid="anno-uid-s5nkfese1sa">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-g98f57vgegn">
+<td data-anno-uid="anno-uid-32vxtmsbchx"><a class="" data-anno-uid="anno-uid-e6z23unzct4" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s38.hea">p06073_s38.hea</a>
+<a class="download" data-anno-uid="anno-uid-tqkxfc69seq" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s38.hea?download" title="Download p06073_s38.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-vilur7galum">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-eb7z6jhwtqt">87 B</td>
+<td class="" data-anno-uid="anno-uid-jkpb3ggu22b">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-jnfqk5wzwr">
+<td data-anno-uid="anno-uid-5ok1mzg9zcl"><a class="" data-anno-uid="anno-uid-op2yt1d8xzc" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s39.atr">p06073_s39.atr</a>
+<a class="download" data-anno-uid="anno-uid-5u9golv7t76" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s39.atr?download" title="Download p06073_s39.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-4dpcn1xsksa">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-x7s7hc3bydr">40.5 KB</td>
+<td class="" data-anno-uid="anno-uid-15963kv1eh">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-fsvaujp6by5">
+<td data-anno-uid="anno-uid-kfiwiq1kc5d"><a class="" data-anno-uid="anno-uid-301gbe6dakt" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s39.dat">p06073_s39.dat</a>
+<a class="download" data-anno-uid="anno-uid-7248sklfhrm" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s39.dat?download" title="Download p06073_s39.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-r79mlp5j8cb">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-ktp7xtcjwt">2 MB</td>
+<td class="" data-anno-uid="anno-uid-zrl61ctcx8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-opjsfnfadqd">
+<td data-anno-uid="anno-uid-vl1n6v0ksy"><a class="" data-anno-uid="anno-uid-085c66z5l6sj" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s39.hea">p06073_s39.hea</a>
+<a class="download" data-anno-uid="anno-uid-6s4klzoc9vb" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s39.hea?download" title="Download p06073_s39.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-pkosi0bnztj">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-pbtk2nl1fug">87 B</td>
+<td class="" data-anno-uid="anno-uid-fxrfde20my6">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-unimgqp680f">
+<td data-anno-uid="anno-uid-i3yi7uajhmf"><a class="" data-anno-uid="anno-uid-ls19ssiuwzk" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s40.atr">p06073_s40.atr</a>
+<a class="download" data-anno-uid="anno-uid-ndyxa18dzkq" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s40.atr?download" title="Download p06073_s40.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-nz1d8tmo6m">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-4pj9ne8ivdt">39.5 KB</td>
+<td class="" data-anno-uid="anno-uid-06il16s4dyxi">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-to2d0ewfav">
+<td data-anno-uid="anno-uid-3tlp3eh3b8b"><a class="" data-anno-uid="anno-uid-ovcyadwxeje" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s40.dat">p06073_s40.dat</a>
+<a class="download" data-anno-uid="anno-uid-r6ujn0fdl" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s40.dat?download" title="Download p06073_s40.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-w8ro1ltgkj">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-x5xfd0k1i1e">2 MB</td>
+<td class="" data-anno-uid="anno-uid-xfvkbgr2rnf">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-hgbjbungsw">
+<td data-anno-uid="anno-uid-lcy903sukwd"><a class="" data-anno-uid="anno-uid-b8tn9q67eb" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s40.hea">p06073_s40.hea</a>
+<a class="download" data-anno-uid="anno-uid-be3y6c7ceco" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s40.hea?download" title="Download p06073_s40.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-8vj6p35kilq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-44335g2p8gy">87 B</td>
+<td class="" data-anno-uid="anno-uid-jl22qggmtc9">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-vkerm5uf7a">
+<td data-anno-uid="anno-uid-5vnm8hsw3mq"><a class="" data-anno-uid="anno-uid-x0cra17un2" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s41.atr">p06073_s41.atr</a>
+<a class="download" data-anno-uid="anno-uid-4sijqvggrll" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s41.atr?download" title="Download p06073_s41.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-umdcs3mirnf">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-rgxu7eqlppd">40.7 KB</td>
+<td class="" data-anno-uid="anno-uid-bl6xh8x6yqa">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-48qcrixi4x3">
+<td data-anno-uid="anno-uid-qcdf98kff4k"><a class="" data-anno-uid="anno-uid-o4n7j8fj5q9" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s41.dat">p06073_s41.dat</a>
+<a class="download" data-anno-uid="anno-uid-ceidc0jy3wi" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s41.dat?download" title="Download p06073_s41.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-qnf9h7wfxbq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-4ltmqqf1sao">2 MB</td>
+<td class="" data-anno-uid="anno-uid-o02qos2oyw">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-x4v8q3vhyq">
+<td data-anno-uid="anno-uid-mvgmut27v8n"><a class="" data-anno-uid="anno-uid-lzsocwbvbrl" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s41.hea">p06073_s41.hea</a>
+<a class="download" data-anno-uid="anno-uid-7de2qka9lkt" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s41.hea?download" title="Download p06073_s41.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-a9pil86sija">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-6f94aj9elpi">87 B</td>
+<td class="" data-anno-uid="anno-uid-grkgo28ajr7">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-yqpx5cl0w1s">
+<td data-anno-uid="anno-uid-82g4atkfads"><a class="" data-anno-uid="anno-uid-oiqu0bpesr" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s42.atr">p06073_s42.atr</a>
+<a class="download" data-anno-uid="anno-uid-3c6qkxqd27a" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s42.atr?download" title="Download p06073_s42.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-8k5gc5wdqcn">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-wcc1pacwxtg">40.1 KB</td>
+<td class="" data-anno-uid="anno-uid-dyktdmihot8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-at7ohd0vgnb">
+<td data-anno-uid="anno-uid-5p4p910vlpb"><a class="" data-anno-uid="anno-uid-1tsan5aergb" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s42.dat">p06073_s42.dat</a>
+<a class="download" data-anno-uid="anno-uid-rpdyoph9ryl" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s42.dat?download" title="Download p06073_s42.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-g6cbde7fpur">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-jpmgx8iea9l">2 MB</td>
+<td class="" data-anno-uid="anno-uid-pjfymusy38">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-ad67kberdc6">
+<td data-anno-uid="anno-uid-1npi2k5qxxf"><a class="" data-anno-uid="anno-uid-nw05od9agl" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s42.hea">p06073_s42.hea</a>
+<a class="download" data-anno-uid="anno-uid-5uoa233fy3n" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s42.hea?download" title="Download p06073_s42.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-b4ad2o5cmxe">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-t7uau7iiuis">87 B</td>
+<td class="" data-anno-uid="anno-uid-brtm2ty46e6">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-1p09aea7rdd">
+<td data-anno-uid="anno-uid-jpgl7csk78"><a class="" data-anno-uid="anno-uid-76qy5rjs9sp" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s43.atr">p06073_s43.atr</a>
+<a class="download" data-anno-uid="anno-uid-7w8qla8m183" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s43.atr?download" title="Download p06073_s43.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-ktdhb10wn9b">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-r8dhbri5bae">39.6 KB</td>
+<td class="" data-anno-uid="anno-uid-rq7h0rla3s">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-9o6hsmulepg">
+<td data-anno-uid="anno-uid-2upz2fx0knx"><a class="" data-anno-uid="anno-uid-l8i695ljzep" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s43.dat">p06073_s43.dat</a>
+<a class="download" data-anno-uid="anno-uid-72wv5hleqy3" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s43.dat?download" title="Download p06073_s43.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-vg9f80lgsy">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-x4ejkqadwk">2 MB</td>
+<td class="" data-anno-uid="anno-uid-6by2m5nbkfg">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-iwxi6orvplr">
+<td data-anno-uid="anno-uid-xce93vwqfrn"><a class="" data-anno-uid="anno-uid-jwteyz8ypka" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s43.hea">p06073_s43.hea</a>
+<a class="download" data-anno-uid="anno-uid-35q4xgnos2d" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s43.hea?download" title="Download p06073_s43.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-q75zogk65ei">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-up62qyw2mje">87 B</td>
+<td class="" data-anno-uid="anno-uid-a99mef04jhb">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-05fyo74rrqbc">
+<td data-anno-uid="anno-uid-b6asghon6e4"><a class="" data-anno-uid="anno-uid-tedfktvgh8" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s44.atr">p06073_s44.atr</a>
+<a class="download" data-anno-uid="anno-uid-xtwciuinf5" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s44.atr?download" title="Download p06073_s44.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-crbp3rffwd">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-1gpss6a4s6g">42.0 KB</td>
+<td class="" data-anno-uid="anno-uid-j75snpmwsui">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-3hu52671ex7">
+<td data-anno-uid="anno-uid-1s6o56q3uaf"><a class="" data-anno-uid="anno-uid-9s5071l9aab" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s44.dat">p06073_s44.dat</a>
+<a class="download" data-anno-uid="anno-uid-ym6ixefn3w7" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s44.dat?download" title="Download p06073_s44.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-xhdk7fqsa9">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-p3lw5uwlkvq">2 MB</td>
+<td class="" data-anno-uid="anno-uid-jy5pilkt3bo">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-dkp1m4ooog6">
+<td data-anno-uid="anno-uid-ctrd3z1i1vh"><a class="" data-anno-uid="anno-uid-6t4hwy9821p" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s44.hea">p06073_s44.hea</a>
+<a class="download" data-anno-uid="anno-uid-3e2n4m5c1ou" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s44.hea?download" title="Download p06073_s44.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-59wasem3nof">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-g0q09rl9nxb">87 B</td>
+<td class="" data-anno-uid="anno-uid-22fthbmj928">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-6p27fg9t6o4">
+<td data-anno-uid="anno-uid-yse3to2maef"><a class="" data-anno-uid="anno-uid-o5tyqy9d8o" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s45.atr">p06073_s45.atr</a>
+<a class="download" data-anno-uid="anno-uid-809xnqpria" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s45.atr?download" title="Download p06073_s45.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-bl7rlutbkvw">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-akn8fcpgkge">37.5 KB</td>
+<td class="" data-anno-uid="anno-uid-flhqfyey63k">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-jbfiv6sp5ci">
+<td data-anno-uid="anno-uid-ih77mcryy9"><a class="" data-anno-uid="anno-uid-nhsd8wwyew" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s45.dat">p06073_s45.dat</a>
+<a class="download" data-anno-uid="anno-uid-scvb0psmtbr" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s45.dat?download" title="Download p06073_s45.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-wtt7skieqds">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-63e0p2z3z8i">2 MB</td>
+<td class="" data-anno-uid="anno-uid-t2pmm9ocx9h">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-bqsykfhmhp">
+<td data-anno-uid="anno-uid-o4ew0ztned"><a class="" data-anno-uid="anno-uid-ehenh9kitd8" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s45.hea">p06073_s45.hea</a>
+<a class="download" data-anno-uid="anno-uid-zgk6814oesl" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s45.hea?download" title="Download p06073_s45.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-me8bhtuck1s">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-n6ptvwgtwkf">86 B</td>
+<td class="" data-anno-uid="anno-uid-1zqdammknzm">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-9gywzk9crwt">
+<td data-anno-uid="anno-uid-g17rs60oulb"><a class="" data-anno-uid="anno-uid-w9mp5jogwis" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s46.atr">p06073_s46.atr</a>
+<a class="download" data-anno-uid="anno-uid-s6qzk95cso" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s46.atr?download" title="Download p06073_s46.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-8l3efae67ub">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-mw0dy57uk2">41.6 KB</td>
+<td class="" data-anno-uid="anno-uid-1jcumsuqw08">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-r8zm0t8071s">
+<td data-anno-uid="anno-uid-uxebhxph3c"><a class="" data-anno-uid="anno-uid-g074q9e5nfw" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s46.dat">p06073_s46.dat</a>
+<a class="download" data-anno-uid="anno-uid-byx83aoj2ou" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s46.dat?download" title="Download p06073_s46.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-1gn1jq2qc8r">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-lyomqut8ig">2 MB</td>
+<td class="" data-anno-uid="anno-uid-txp2cnah3o">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-qnerzlzls4k">
+<td data-anno-uid="anno-uid-4da774o7shn"><a class="" data-anno-uid="anno-uid-ojt4hxldq3b" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s46.hea">p06073_s46.hea</a>
+<a class="download" data-anno-uid="anno-uid-9vtdasdvxx" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s46.hea?download" title="Download p06073_s46.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-asynhhkowe9">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-fs18t3ajhyg">87 B</td>
+<td class="" data-anno-uid="anno-uid-09xrkoanj1jh">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-hlytapww9m">
+<td data-anno-uid="anno-uid-vp9vyfx3jtg"><a class="" data-anno-uid="anno-uid-hsaqx3dtajv" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s47.atr">p06073_s47.atr</a>
+<a class="download" data-anno-uid="anno-uid-d5oec8ul71i" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s47.atr?download" title="Download p06073_s47.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-ndqh3cilgrd">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-g9c6pn9wghv">40.3 KB</td>
+<td class="" data-anno-uid="anno-uid-y09krt9w4sg">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-zrkgkljcvin">
+<td data-anno-uid="anno-uid-b8uvuc3e07g"><a class="" data-anno-uid="anno-uid-wpqasi4e72l" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s47.dat">p06073_s47.dat</a>
+<a class="download" data-anno-uid="anno-uid-zez9y2s8kb" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s47.dat?download" title="Download p06073_s47.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-ocav2asmrwr">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-zd5zrc39fvr">2 MB</td>
+<td class="" data-anno-uid="anno-uid-l4k2a0y34f8">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-s45ktucicun">
+<td data-anno-uid="anno-uid-iw3hoobksi9"><a class="" data-anno-uid="anno-uid-t8y91g0iui8" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s47.hea">p06073_s47.hea</a>
+<a class="download" data-anno-uid="anno-uid-5ycb6rgf6dx" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s47.hea?download" title="Download p06073_s47.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-06wra20czzwq">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-k5kvj1qcnt">87 B</td>
+<td class="" data-anno-uid="anno-uid-qgou7o96cxl">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-czu4xr5kwz6">
+<td data-anno-uid="anno-uid-2nqgq7y5sru"><a class="" data-anno-uid="anno-uid-z3yo43gms4" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s48.atr">p06073_s48.atr</a>
+<a class="download" data-anno-uid="anno-uid-k6gqkmag4zf" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s48.atr?download" title="Download p06073_s48.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-ggpjkzz7sx7">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-8qzfrwf1fsf">36.0 KB</td>
+<td class="" data-anno-uid="anno-uid-arl65k746l">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-jtc4wjbs91">
+<td data-anno-uid="anno-uid-dt4e6mszn6o"><a class="" data-anno-uid="anno-uid-8ekgft08x9n" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s48.dat">p06073_s48.dat</a>
+<a class="download" data-anno-uid="anno-uid-irxtetxgbcc" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s48.dat?download" title="Download p06073_s48.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-y2f05bb1cyc">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-viron50a3o">2 MB</td>
+<td class="" data-anno-uid="anno-uid-ti1hd9qkr9">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-17hl7okrglg">
+<td data-anno-uid="anno-uid-yiz4j07c9ut"><a class="" data-anno-uid="anno-uid-4kpvjp8gdfv" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s48.hea">p06073_s48.hea</a>
+<a class="download" data-anno-uid="anno-uid-eccaw0xvq5f" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s48.hea?download" title="Download p06073_s48.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-zuis4zw5xgr">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-8qkmy6vfxxh">86 B</td>
+<td class="" data-anno-uid="anno-uid-600qcgmi60f">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-uuirn58etbn">
+<td data-anno-uid="anno-uid-og5gm4pzj4"><a class="" data-anno-uid="anno-uid-sr2hc32hwfc" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s49.atr">p06073_s49.atr</a>
+<a class="download" data-anno-uid="anno-uid-gjvyn3vr2wi" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s49.atr?download" title="Download p06073_s49.atr">
+<span class="visually-hidden" data-anno-uid="anno-uid-qhw5c4nsvk">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-1ysju07ah2k">36.2 KB</td>
+<td class="" data-anno-uid="anno-uid-qjyc5l5gq3">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-7pmi49ul95v">
+<td data-anno-uid="anno-uid-pv3a914ws0h"><a class="" data-anno-uid="anno-uid-vtqunafuc3s" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s49.dat">p06073_s49.dat</a>
+<a class="download" data-anno-uid="anno-uid-qv95uhcga1" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s49.dat?download" title="Download p06073_s49.dat">
+<span class="visually-hidden" data-anno-uid="anno-uid-8j1j37njqoo">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-w9wly2zyrx">2 MB</td>
+<td class="" data-anno-uid="anno-uid-qozlvwku26g" style="">2022-02-13</td>
+</tr>
+<tr data-anno-uid="anno-uid-8hs1uedu3kw">
+<td data-anno-uid="anno-uid-qgxa5xpugdc"><a class="" data-anno-uid="anno-uid-clo2pkyx6js" href="https://physionet.org/content/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s49.hea">p06073_s49.hea</a>
+<a class="download" data-anno-uid="anno-uid-p86ue80cuzk" href="https://physionet.org/files/icentia11k-continuous-ecg/1.0/p06/p06073/p06073_s49.hea?download" title="Download p06073_s49.hea">
+<span class="visually-hidden" data-anno-uid="anno-uid-1zgn8johnun">(download)</span>
+</a>
+</td>
+<td class="" data-anno-uid="anno-uid-1qe2jbsrrnxh">87 B</td>
+<td class="" data-anno-uid="anno-uid-5sxiu18quzx" style="">2022-02-13</td>
+</tr>
+</tbody>
+</table>
+<script data-anno-uid="anno-uid-kyhgsfuec9h">
+  // Navigate to another file directory and reload the file panel
+  // subdir is the full subdirectory
+  function navigateDir(subdir){
+    $.ajax({
+            type: "GET",
+            url: "/content/icentia11k-continuous-ecg/files-panel/1.0/",
+            data: {'subdir':subdir
+            },
+            success: function reloadSection(result){
+                $("#files-panel").html(result);
+            },
+    });
+    return false
+  }
+</script>
+</div>
+<br data-anno-uid="anno-uid-ng8dgjjhufi">
+</div>
+</main>
+<!-- This footer template is from the bootstrap 'blog' example -->
+<link data-anno-uid="anno-uid-mhk7oyry1gm" href="" rel="stylesheet" type="text/css">
+<footer class="blog-footer" data-anno-uid="anno-uid-h6rxj8x89q4">
+<div class="container" data-anno-uid="anno-uid-6weenr5q6ni">
+<div class="row row-centered" data-anno-uid="anno-uid-1h5dc9k47n7">
+<div class="col-xs-10 center col-centered" data-anno-uid="anno-uid-qa0fpphpnbc">
+<p data-anno-uid="anno-uid-rvo3dunkzs" style="">PhysioNet is a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology.</p>
+<p data-anno-uid="anno-uid-y4m50g62cf" style="">Supported by the National Institute of Biomedical Imaging and Bioengineering (NIBIB) under NIH grant number R01EB030362.</p>
+<p data-anno-uid="anno-uid-5mcv082dbgi"><marked-text data-anno-uid="anno-uid-wpeiox249wr">For more accessibility options, see the </marked-text><a data-anno-uid="anno-uid-aecwbckzf2w" href="https://accessibility.mit.edu/">MIT Accessibility Page</a><marked-tail data-anno-uid="anno-uid-hlo9txybstg">.</marked-tail></p>
+<p data-anno-uid="anno-uid-yz9jnvp98h"><a data-anno-uid="anno-uid-q9076vck3g" href="#">Back to top</a></p>
+</div>
+</div>
+</div>
+</footer>
+<script data-anno-uid="anno-uid-ppny28rbj5" src="https://physionet.org/static/bootstrap/js/bootstrap.min.js"></script>
+<script data-anno-uid="anno-uid-h3l5ppm05" src="https://physionet.org/static/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+<script data-anno-uid="anno-uid-m7uj845cjom" src="https://physionet.org/static/custom/js/enable-popover.js"></script>
+<script data-anno-uid="anno-uid-e0cdbi7m0j5">hljs.initHighlightingOnLoad();</script>
+<!-- https://schema.org/ metadata for discovery -->
+<script data-anno-uid="anno-uid-tdafi8zy4h" type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Dataset",
+  "name": "Icentia11k Single Lead Continuous Raw Electrocardiogram Dataset",
+  "description": "This is a dataset of continuous raw electrocardiogram (ECG) signals containing 11 thousand patients and 2 billion labelled beats. The signals were recorded with a 16\u002Dbit resolution at 250Hz with a fixed chest mounted single lead probe for up to 2 weeks. The average age of the patient is 62.2\u0026plusmn\u003B17.4 years. 20 technologists annotated each beat\u0026#39\u003Bs type (Normal, Premature Atrial Contraction, Premature Ventricular contraction) and rhythm (Normal Sinusal Rhythm, Atrial Fibrillation, Atrial Flutter).",
+  "version": "1.0",
+  "license": "https://creativecommons.org/licenses/by\u002Dnc\u002Dsa/4.0/legalcode",
+  "datePublished" : "April 12, 2022",
+  "url": "https://physionet.org/content/icentia11k%5Cu002Dcontinuous%5Cu002Decg/1.0/",
+
+  "identifier": "https://doi.org/10.13026/kk0v\u002Dr952",
+
+  "creator": [
+
+    {
+      "@type": "Person",
+      "givenName": "Shawn",
+      "familyName": "Tan",
+      "name": "Shawn Tan"
+    },
+
+    {
+      "@type": "Person",
+      "givenName": "Satya",
+      "familyName": "Ortiz\u002DGagné",
+      "name": "Satya Ortiz\u002DGagné"
+    },
+
+    {
+      "@type": "Person",
+      "givenName": "Nicolas",
+      "familyName": "Beaudoin\u002DGagnon",
+      "name": "Nicolas Beaudoin\u002DGagnon"
+    },
+
+    {
+      "@type": "Person",
+      "givenName": "Pierre",
+      "familyName": "Fecteau",
+      "name": "Pierre Fecteau"
+    },
+
+    {
+      "@type": "Person",
+      "givenName": "Aaron",
+      "familyName": "Courville",
+      "name": "Aaron Courville"
+    },
+
+    {
+      "@type": "Person",
+      "givenName": "Yoshua",
+      "familyName": "Bengio",
+      "name": "Yoshua Bengio"
+    },
+
+    {
+      "@type": "Person",
+      "givenName": "Joseph Paul",
+      "familyName": "Cohen",
+      "name": "Joseph Paul Cohen"
+    }
+
+    ],
+  "includedInDataCatalog":{
+     "@type": "DataCatalog",
+     "name": "physionet.org"
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "contentUrl": "https://physionet.org/content/icentia11k%5Cu002Dcontinuous%5Cu002Decg/1.0/#files"
+    }
+  ]
+}
+</script>
+</body></html>

@@ -1,3 +1,4 @@
+import copy
 import re
 from typing import Any, List, Tuple
 
@@ -212,16 +213,16 @@ class TableRecognizer(BaseHTMLElementRecognizer):
 
     def __check_table_include_math_code(self, raw_html: HtmlElement):
         """检查table中的内容，包括普通文本、数学公式和代码."""
-        math_raw_html = self._element_to_html(raw_html)
-        math_html = raw_html
+        tem_raw_html = copy.deepcopy(raw_html)
+        math_raw_html = self._element_to_html(tem_raw_html)
         math_res_parts = self.math_recognizer.recognize(
             base_url='',
-            main_html_lst=[(math_html, math_html)],
+            main_html_lst=[(tem_raw_html, tem_raw_html)],
             raw_html=math_raw_html
         )
         result = []
         if not math_res_parts:
-            if raw_html.tag == 'br' or raw_html.xpath('.//br'):
+            if tem_raw_html.tag == 'br' or tem_raw_html.xpath('.//br'):
                 result.append("\n\n")
         for math_item in math_res_parts:
             ele_item = math_item[0]
