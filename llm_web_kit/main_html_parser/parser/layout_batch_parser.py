@@ -168,17 +168,10 @@ class LayoutBatchParser(BaseMainHtmlParser):
         is_natural_language = self.__is_natural_language(text) or length_tail >= 10
         idd = element.get('id')
         tag = element.tag
+        if tag in ['script', 'style', 'meta', 'link']:
+            return
         class_tag = element.get('class')
         ori_keyy = (tag, class_tag, idd)
-        # if idd and idd.strip() and idd not in self.ids:
-        #     try:
-        #         idd_ele = tree.xpath(f'//*[@id="{idd}"]')
-        #         if len(idd_ele) > 3:
-        #             self.ids[idd] = False
-        #         else:
-        #             self.ids[idd] = True
-        #     except Exception:
-        #         self.ids[idd] = True
         keyy = self.normalize_key(ori_keyy)
         # 获取element的当前层的所有节点
         element_parent = element.getparent()
