@@ -419,7 +419,7 @@ class TestLayoutParser(unittest.TestCase):
         parser = LayoutBatchParser({})
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
-        assert '全部按定尺或倍尺供應,提高材料的利用率' in main_html_body and '在線留言' not in main_html_body and '批發兼零售' not in main_html_body
+        assert '全部按定尺或倍尺供應,提高材料的利用率' in main_html_body and '批發兼零售' not in main_html_body and '在線留言' not in main_html_body
 
     def test_multi_same_first_class_id(self):
         # 构造测试html
@@ -445,5 +445,4 @@ class TestLayoutParser(unittest.TestCase):
         parser = LayoutBatchParser({})
         parts = parser.parse(pre_data)
         main_html_body = parts[PreDataJsonKey.MAIN_HTML_BODY]
-        print(main_html_body)
         assert 'Spredfast wanted to follow' in main_html_body and 'Photography' not in main_html_body
