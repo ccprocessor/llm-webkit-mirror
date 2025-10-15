@@ -55,7 +55,7 @@ class StructureMapper(ABC):
         self.__text_end = '\n'
         self.__list_item_start = '-'  # md里的列表项前缀
         self.__list_para_prefix = '  '  # 两个空格，md里的列表项非第一个段落的前缀：如果多个段落的情况，第二个以及之后的段落前缀
-        self.__md_special_chars = ['#', '`', '$']  # TODO 拼装table的时候还应该转义掉|符号
+        self.__md_special_chars = ['#', '`']  # TODO 拼装table的时候还应该转义掉|符号
         self.__nodes_document_type = [DocElementType.MM_NODE_LIST, DocElementType.PARAGRAPH, DocElementType.LIST,
                                       DocElementType.SIMPLE_TABLE, DocElementType.COMPLEX_TABLE, DocElementType.TITLE,
                                       DocElementType.IMAGE, DocElementType.AUDIO, DocElementType.VIDEO,

@@ -483,6 +483,41 @@ def restore_sub_sup_from_text_regex(processed_content):
     return re.sub(pattern, lambda m: replacement_map[m.group(0)], processed_content)
 
 
+def check_and_balance_delimiters(latex_str):
+    """检查LaTeX字符串中的left和right是否成对，并移除多余的left或right，但保留分隔符。
+
+    Args:
+        latex_str (str): 输入的LaTeX字符串
+
+    Returns:
+        str: 处理后的字符串，多余的left或right已被移除，分隔符保留。
+    """
+    stack = []
+    to_remove = []
+    pattern = re.compile(r'(\\left|\\right)(\\[{}()[\]]|\.|)')
+
+    matches = list(pattern.finditer(latex_str))
+    for match in matches:
+        start_idx = match.start()  # 整个匹配的起始位置
+        command = match.group(1)  # 匹配到的命令，是 '\left' 或 '\right'
+
+        if command == r'\left':
+            stack.append((start_idx, len(command)))
+        elif command == r'\right':
+            if stack:
+                stack.pop()
+            else:
+                to_remove.append((start_idx, len(command)))
+
+    for left_start, left_cmd_len in stack:
+        to_remove.append((left_start, left_cmd_len))
+
+    for pos, cmd_len in sorted(to_remove, reverse=True):
+        latex_str = latex_str[:pos] + latex_str[pos + cmd_len:]
+
+    return latex_str
+
+
 def get_plain_text_fast(html_source: str) -> str:
     """使用lxml快速获取html中的纯文本.
 
@@ -506,3 +541,56 @@ def get_plain_text_fast(html_source: str) -> str:
     texts = doc.xpath('//text()')
     full_text = ' '.join(text.strip() for text in texts if text.strip())
     return full_text
+
+
+class SimpleMatch:
+    """一个简单的模拟 re.Match 的对象。 根据提供的原始字符串、起始位置和长度来模拟匹配结果。"""
+    def __init__(self, original_string, start_pos, length):
+        self._string = original_string
+        self._start = start_pos
+        self._end = start_pos + length
+        self._match = original_string[start_pos:self._end]  # 提取匹配的字符串
+
+    def group(self, group_num=0):
+        if group_num == 0:
+            return self._match
+
+    def start(self, group_num=0):
+        if group_num == 0:
+            return self._start
+
+    def end(self, group_num=0):
+        if group_num == 0:
+            return self._end
+
+    def groups(self):
+        # 返回空元组，因为不支持捕获组
+        return ()
+
+
+def optimized_dollar_matching(text):
+    """美元金额匹配."""
+    # 用于存储需要修改的位置和替换内容
+    replacements = []
+
+    pattern = r'(?<!\\)(\$\d{1,3}(?:,\d{3})*(?:\.\d{1,})?)'
+    matches_result = re.finditer(pattern, text)
+    for match in matches_result:
+        # 获取匹配的起始和结束位置
+        start, end = match.start(), match.end()
+        # 检查匹配后的字符（如果存在）
+        if end < len(text):
+            next_char = text[end]
+            # 只有当后接字符不在列表中时才进行替换
+            if next_char not in ["^", "$", "\\", "/"]:
+                replacements.append((start, end, match.group()))
+
+    if replacements:
+        text_chars = list(text)
+        for start, end, original_match in sorted(replacements, reverse=True):
+            # 只转义金额前的$符号
+            escaped_match = f"\\{original_match}"
+            text_chars[start:end] = list(escaped_match)
+        return ''.join(text_chars)
+    else:
+        return text

@@ -565,6 +565,410 @@ class TestMathRecognizer(unittest.TestCase):
             )
         self.assertIn('No ccmath element found in content', str(exc_info.exception))
 
+    def test_fix_re_match(self):
+        """修复正则无法正确匹配$...$$...$$...$这种连续公式."""
+        html_content = r"""<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-zdx1mj6hxf8" style="">$\newcommand{\cE}[2]{\mathbf{E}(#1\ |\ #2)}$$\newcommand{\cP}[2]{\mathbf{P}(#1\ |\ #2)}$$\renewcommand{\P}[1]{\mathbf{P}(#1)}$$\newcommand{\E}[1]{\mathbf{E}(#1)}$$\newcommand{\F}{\mathcal{F}}$$\newcommand{\G}{\mathcal{G}}$$\newcommand{\ind}[1]{\mathbf{1}_{#1}}$
+        To motivate this note, I’ll pose the following problem:</p>"""
+        parts = self.math_recognizer.recognize('https://www.baidu.com', [(html_to_element(html_content), html_to_element(html_content))], html_content)
+        assert element_to_html(parts[0][0]) == '<p cc-select="true" class="mark-selected" data-anno-uid="anno-uid-zdx1mj6hxf8" style=""><ccmath-inline type="latex" by="mathjax_mock" html="$\\newcommand{\\cE}[2]{\\mathbf{E}(#1\\ |\\ #2)}$">\\newcommand{\\cE}[2]{\\mathbf{E}(#1\\ |\\ #2)}</ccmath-inline><ccmath-inline type="latex" by="mathjax_mock" html="$\\newcommand{\\cP}[2]{\\mathbf{P}(#1\\ |\\ #2)}$">\\newcommand{\\cP}[2]{\\mathbf{P}(#1\\ |\\ #2)}</ccmath-inline><ccmath-inline type="latex" by="mathjax_mock" html="$\\renewcommand{\\P}[1]{\\mathbf{P}(#1)}$">\\renewcommand{\\P}[1]{\\mathbf{P}(#1)}</ccmath-inline><ccmath-inline type="latex" by="mathjax_mock" html="$\\newcommand{\\E}[1]{\\mathbf{E}(#1)}$">\\newcommand{\\E}[1]{\\mathbf{E}(#1)}</ccmath-inline><ccmath-inline type="latex" by="mathjax_mock" html="$\\newcommand{\\F}{\\mathcal{F}}$">\\newcommand{\\F}{\\mathcal{F}}</ccmath-inline><ccmath-inline type="latex" by="mathjax_mock" html="$\\newcommand{\\G}{\\mathcal{G}}$">\\newcommand{\\G}{\\mathcal{G}}</ccmath-inline><ccmath-inline type="latex" by="mathjax_mock" html="$\\newcommand{\\ind}[1]{\\mathbf{1}_{#1}}$">\\newcommand{\\ind}[1]{\\mathbf{1}_{#1}}</ccmath-inline>\n        To motivate this note, I’ll pose the following problem:</p>'
+
+    def test_latex_not_closed(self):
+        """移除LaTeX字符多余的left或right."""
+        html_content = """<p data-anno-uid="anno-uid-tk3exdgj4e9" style="text-align:center">
+                                <math data-anno-uid="anno-uid-3dgfeond6hi" display="inline"
+                                      xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mrow data-anno-uid="anno-uid-r718vwr5hfl">
+                                        <mrow data-anno-uid="anno-uid-i6n36co699">
+                                            <mo cc-select="true" class="mark-selected"
+                                                data-anno-uid="anno-uid-edi3h7n5ouw">
+                                                {
+                                            </mo>
+                                            <mtable columnalign="left" data-anno-uid="anno-uid-tbyb5rnon2d">
+                                                <mtr data-anno-uid="anno-uid-ka86f9f4t3q">
+                                                    <mtd data-anno-uid="anno-uid-obe0ejklk3j">
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-i1054l0zyoa">
+                                                            ∇
+                                                        </mo>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-u535wds30s">
+                                                            ⋅
+                                                        </mo>
+                                                        <mrow data-anno-uid="anno-uid-dnih3oc8gv">
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-yz4f5ot7avm">
+                                                                (
+                                                            </mo>
+                                                            <mrow data-anno-uid="anno-uid-414sg5z7way">
+                                                                <msup data-anno-uid="anno-uid-bejk1l77akq">
+                                                                    <mi cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-mldaws3k8l">
+                                                                        R
+                                                                    </mi>
+                                                                    <mn cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-1l4833mf4eah">
+                                                                        2
+                                                                    </mn>
+                                                                </msup>
+                                                                <mo cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-hqeqjqkei99">
+                                                                    ∇
+                                                                </mo>
+                                                                <mi cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-qmhzf7a35s">
+                                                                    φ
+                                                                </mi>
+                                                            </mrow>
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-2rhy03sx9p9">
+                                                                )
+                                                            </mo>
+                                                        </mrow>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-weo7tcl6aqt">
+                                                            =
+                                                        </mo>
+                                                        <mn cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-xw3qv4ev2f8">
+                                                            0
+                                                        </mn>
+                                                        <mtext data-anno-uid="anno-uid-v7o3uw0obkr">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-ojbhh2ys9cq">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-07973fhhe6wj">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-6t57gjhd01r">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-0ew4lxndxbb">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-om35cbnfkqm">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-q44q15urinc">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-j1sskerp8h">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-boehee3sgt">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-cze1pcadug6">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-37ugr7lw2yr">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-a7ridfd8nc7">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-448fxii6p3z">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-lhi97tzuyca">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-sdmmsx0yc7j">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-95ubjvvqheg">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-rtddlda2bb">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-xyf4c5yivzf">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-gy3cultrh1d">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-av8iu2wl2b8">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-odcbr72xjm">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-nvwqt8apavb">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-u48jtpq9ye">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-iobwczqavid">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-02z1t73vp22j">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-c6sod6mtzc">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-kw8y4v6kp6e">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-vxalkymtny">
+                                                             
+                                                        </mtext>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-bahp7m6f79m" stretchy="false">
+                                                            (
+                                                        </mo>
+                                                        <mn cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-s0fncjsxu7p">
+                                                            6
+                                                        </mn>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-4djwt12xcag" stretchy="false">
+                                                            )
+                                                        </mo>
+                                                    </mtd>
+                                                </mtr>
+                                                <mtr data-anno-uid="anno-uid-nkbsivhcy">
+                                                    <mtd data-anno-uid="anno-uid-qqr83cy0vi">
+                                                        <mi cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-17jqo3d255b">
+                                                            D
+                                                        </mi>
+                                                        <mrow data-anno-uid="anno-uid-g326s79dkt8">
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-3i6h482kv33">
+                                                                (
+                                                            </mo>
+                                                            <mrow data-anno-uid="anno-uid-ugeszt1dfd">
+                                                                <mstyle data-anno-uid="anno-uid-wqr5umipst"
+                                                                        mathsize="normal" mathvariant="bold">
+                                                                    <mi cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-02jmrb9mih2n">
+                                                                        r
+                                                                    </mi>
+                                                                </mstyle>
+                                                                <mo cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-pydhny3h5k">
+                                                                    ,
+                                                                </mo>
+                                                                <mstyle data-anno-uid="anno-uid-0psyv7sd5pz"
+                                                                        mathsize="normal" mathvariant="bold">
+                                                                    <mi cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-bobmdtwlg1a">
+                                                                        k
+                                                                    </mi>
+                                                                </mstyle>
+                                                                <mo cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-raixwh1o7x">
+                                                                    ,
+                                                                </mo>
+                                                                <mi cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-klyyrh899c">
+                                                                    ω
+                                                                </mi>
+                                                            </mrow>
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-pgtfx1ossym">
+                                                                )
+                                                            </mo>
+                                                        </mrow>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-rqv3g0eiyag">
+                                                            ≡
+                                                        </mo>
+                                                        <mfrac data-anno-uid="anno-uid-ccxkeg5mapo">
+                                                            <mi cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-uw3u96er84c">
+                                                                c
+                                                            </mi>
+                                                            <mrow data-anno-uid="anno-uid-1xo552f1djd">
+                                                                <mn cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-f1nnwiktgv">
+                                                                    2
+                                                                </mn>
+                                                                <msub data-anno-uid="anno-uid-1jbl84vkz1t">
+                                                                    <mi cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-f55fvvhnwtf">
+                                                                        k
+                                                                    </mi>
+                                                                    <mn cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-hgpkfctsd6">
+                                                                        0
+                                                                    </mn>
+                                                                </msub>
+                                                            </mrow>
+                                                        </mfrac>
+                                                        <mrow data-anno-uid="anno-uid-r76y2ye4p4f">
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-fvpin6ad1j6">
+                                                                [
+                                                            </mo>
+                                                            <mrow data-anno-uid="anno-uid-dy8li1qbs1n">
+                                                                <msup data-anno-uid="anno-uid-wtozpmk4sr">
+                                                                    <mi cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-k4ldd2ytjs">
+                                                                        k
+                                                                    </mi>
+                                                                    <mn cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-e81wonvlwgk">
+                                                                        2
+                                                                    </mn>
+                                                                </msup>
+                                                                <mo cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-gnj1vcx6fc">
+                                                                    −
+                                                                </mo>
+                                                                <msup data-anno-uid="anno-uid-4lpigmc49gp">
+                                                                    <mrow data-anno-uid="anno-uid-4cq7jt1rqgr">
+                                                                        <mrow data-anno-uid="anno-uid-l6l9mrs545">
+                                                                            <mo cc-select="true" class="mark-selected"
+                                                                                data-anno-uid="anno-uid-bj7lanqozaj">
+                                                                                (
+                                                                            </mo>
+                                                                            <mrow data-anno-uid="anno-uid-rphigeggdzn">
+                                                                                <mi cc-select="true"
+                                                                                    class="mark-selected"
+                                                                                    data-anno-uid="anno-uid-4itkqs79hh9">
+                                                                                    n
+                                                                                </mi>
+                                                                                <msub data-anno-uid="anno-uid-zs0rcwfo5ul">
+                                                                                    <mi cc-select="true"
+                                                                                        class="mark-selected"
+                                                                                        data-anno-uid="anno-uid-gnfqy2771y">
+                                                                                        k
+                                                                                    </mi>
+                                                                                    <mn cc-select="true"
+                                                                                        class="mark-selected"
+                                                                                        data-anno-uid="anno-uid-sa9j9zqu8h8">
+                                                                                        0
+                                                                                    </mn>
+                                                                                </msub>
+                                                                            </mrow>
+                                                                            <mo cc-select="true" class="mark-selected"
+                                                                                data-anno-uid="anno-uid-2aicccuzhq3">
+                                                                                )
+                                                                            </mo>
+                                                                        </mrow>
+                                                                    </mrow>
+                                                                    <mn cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-q8zt04e55p">
+                                                                        2
+                                                                    </mn>
+                                                                </msup>
+                                                            </mrow>
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-dbstxgcmkf5">
+                                                                ]
+                                                            </mo>
+                                                        </mrow>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-q3j70kfiy5">
+                                                            +
+                                                        </mo>
+                                                        <mi cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-zgunty1rla">
+                                                            W
+                                                        </mi>
+                                                        <mrow data-anno-uid="anno-uid-vmpb04lrso">
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-bl2iwkkxtc">
+                                                                (
+                                                            </mo>
+                                                            <mrow data-anno-uid="anno-uid-w4kza02pnto">
+                                                                <mstyle data-anno-uid="anno-uid-vevepl66s6"
+                                                                        mathsize="normal" mathvariant="bold">
+                                                                    <mi cc-select="true" class="mark-selected"
+                                                                        data-anno-uid="anno-uid-xu06cncbwyf">
+                                                                        r
+                                                                    </mi>
+                                                                </mstyle>
+                                                                <mo cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-t5en4fnmlx">
+                                                                    ,
+                                                                </mo>
+                                                                <mi cc-select="true" class="mark-selected"
+                                                                    data-anno-uid="anno-uid-muudhw3dh3">
+                                                                    ω
+                                                                </mi>
+                                                            </mrow>
+                                                            <mo cc-select="true" class="mark-selected"
+                                                                data-anno-uid="anno-uid-divd31bm0w7">
+                                                                )
+                                                            </mo>
+                                                        </mrow>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-53rje7qyf5c">
+                                                            =
+                                                        </mo>
+                                                        <mn cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-4inqn4d5uty">
+                                                            0
+                                                        </mn>
+                                                        <mtext data-anno-uid="anno-uid-4w3s8xhef6a">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-qjxb1uwam9">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-3q3gbckl745">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-grh3a2suo3">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-v46yyfhdz2">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-bdv940o47ui">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-nbot88zw7l">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-dmspxhg4we">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-dim7tx6v20b">
+                                                             
+                                                        </mtext>
+                                                        <mtext data-anno-uid="anno-uid-ykbg1o47wd8">
+                                                             
+                                                        </mtext>
+                                                        <mo cc-select="true" class="mark-selected"
+                                                            data-anno-uid="anno-uid-acai5thyxwg" stretchy="false"
+                                                            style="">
+                                                            (7)
+                                                        </mo>
+                                                    </mtd>
+                                                </mtr>
+                                            </mtable>
+                                        </mrow>
+                                    </mrow>
+                                </math>
+                            </p>"""
+        parts = self.math_recognizer.recognize('https://www.baidu.com',
+                                               [(html_to_element(html_content), html_to_element(html_content))],
+                                               html_content)
+        assert '\\{\\begin{array}{l}\\nabla \\cdot \\left({R}^{2}\\nabla \\phi \\right)=0\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{ }\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\left(6\\right)\\\\ D\\left(r,k,\\omega \\right)\\equiv \\frac{c}{2{k}_{0}}\\left[{k}^{2}-{\\left(n{k}_{0}\\right)}^{2}\\right]+W\\left(r,\\omega \\right)=0\\text{ }\\text{ }\\text{ }\\text{ }\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\text{ }\\text{\\hspace{0.17em}}\\text{\\hspace{0.17em}}\\left(7\\right)\\end{array}' in element_to_html(parts[0][0])
+
+    def test_dollar_sign(self):
+        """美元符合与公式共存的情况."""
+        html_content = """<p>referring $18.1 to $18.1 the packet center $ p$ and apparently coinciding with the particle velocity</p>"""
+        parts = self.math_recognizer.recognize('https://www.baidu.com',
+                                               [(html_to_element(html_content), html_to_element(html_content))],
+                                               html_content)
+        assert element_to_html(parts[0][0]) == '<p>referring \\$18.1 to \\$18.1 the packet center <ccmath-inline type="latex" by="mathjax_mock" html="$ p$">p</ccmath-inline> and apparently coinciding with the particle velocity</p>'
+
+    def test_begin_end(self):
+        """$begin end$的嵌套组合识别时候$$没有处理."""
+        html_content = r"""<p data-anno-uid="anno-uid-q8doimblafo"><span cc-select="true" class="mpa-ignore mark-selected" data-anno-uid="anno-uid-ldpcij9lbom" style="">$\begin{array}{1 1}(a)\;xy=c\\(b)\;xy=c^2\\(c)\;x^2+y^2=a^2\\(d)\;x^2+y^2=1\end{array}$</span></p>"""
+        parts = self.math_recognizer.recognize('https://www.baidu.com',
+                                               [(html_to_element(html_content), html_to_element(html_content))],
+                                               html_content)
+        assert element_to_html(parts[0][0]) == '<p data-anno-uid="anno-uid-q8doimblafo"><span cc-select="true" class="mpa-ignore mark-selected" data-anno-uid="anno-uid-ldpcij9lbom" style=""><ccmath-inline type="latex" by="mathjax_mock" html="$\\begin{array}{1 1}(a)\\;xy=c\\\\(b)\\;xy=c^2\\\\(c)\\;x^2+y^2=a^2\\\\(d)\\;x^2+y^2=1\\end{array}$">\\begin{array}{1 1}(a)\\;xy=c\\\\(b)\\;xy=c^2\\\\(c)\\;x^2+y^2=a^2\\\\(d)\\;x^2+y^2=1\\end{array}</ccmath-inline></span></p>'
+
 
 class TestCCMATH(unittest.TestCase):
     def setUp(self):
