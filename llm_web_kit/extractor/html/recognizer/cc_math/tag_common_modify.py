@@ -17,7 +17,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement):
             tail = node.tail
             new_span.tail = None
             for new_tag, math_type in tag_math_type_list:
-                new_span = cm.replace_math(new_tag, math_type, math_render, new_span, None)
+                new_span = cm.replace_math(new_tag, math_type, math_render, new_span)
             new_span.tail = tail
             replace_element(node,new_span)
 

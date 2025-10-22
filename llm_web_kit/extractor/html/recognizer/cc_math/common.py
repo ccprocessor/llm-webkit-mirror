@@ -537,7 +537,7 @@ class CCMATH():
             parent.remove(msup)
         return etree.tostring(root, encoding='unicode', pretty_print=True)
 
-    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func) -> HtmlElement:
+    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement) -> HtmlElement:
         """替换数学公式节点.
 
         Args:
@@ -593,12 +593,16 @@ if __name__ == '__main__':
     print(cm.wrap_math_md(r'$$a^2 + b^2 = c^2$$'))
     print(cm.wrap_math_md(r'\(a^2 + b^2 = c^2\)'))
     print(cm.extract_asciimath('x=(-b +- sqrt(b^2 - 4ac))/(2a)'))
-    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),None,True))
-    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>like this: \`E=mc^2\`</p>'),None,True))
-    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),None,True))
-    print(cm.replace_math('ccmath-interline','asciimath','',html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'),None,True))
-    print(cm.replace_math('ccmath-interline','latex','',html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),None,False))
-    print(cm.replace_math('ccmath-inline','latex','',html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),None,False))
+    print(cm.replace_math('ccmath-interline','asciimath','', html_to_element(r'<p>`x=(-b +- sqrt(b^2 - 4ac))/(2a)`</p>'),
+                          True))
+    print(cm.replace_math('ccmath-interline','asciimath','', html_to_element(r'<p>like this: \`E=mc^2\`</p>'), True))
+    print(cm.replace_math('ccmath-interline','asciimath','', html_to_element(r'<p>A `3xx3` matrix,`((1,2,3),(4,5,6),(7,8,9))`, and a `2xx1` matrix, or vector, `((1),(0))`.</p>'),
+                          True))
+    print(cm.replace_math('ccmath-interline','asciimath','', html_to_element(r'<p>`(x+1)/x^2``1/3245`</p>'), True))
+    print(cm.replace_math('ccmath-interline','latex','', html_to_element(r'<p>start $$f(a,b,c) = (a^2+b^2+c^2)^3$$end</p>'),
+                          False))
+    print(cm.replace_math('ccmath-inline','latex','', html_to_element(r'<p>\( \newcommand{\norm}[1]{\| #1 \|}\)</p>'),
+                          False))
     # cm.url = 'mathhelpforum.com'
     # print(cm.wrap_math_md_custom(r'<br />\begin{align} a^2+b=c\end{align}\<br />'))
     # print(cm.wrap_math_md_custom(r'<br />dz=\frac{1}{2}\frac{dx}{\cos ^2 x}<br />'))
