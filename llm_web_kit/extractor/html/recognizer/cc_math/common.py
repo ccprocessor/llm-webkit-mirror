@@ -538,11 +538,9 @@ class CCMATH():
             parent.remove(msup)
         return etree.tostring(root, encoding='unicode', pretty_print=True)
 
-    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func, asciimath_wrap: bool = False) -> HtmlElement:
+    def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func) -> HtmlElement:
         # pattern re数学公式匹配 func 公式预处理 默认不处理
         # ascii公式处理逻辑转移到mathjax渲染器方案中
-        if asciimath_wrap:
-            return node
 
         pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
         original_text = node.text or ''
