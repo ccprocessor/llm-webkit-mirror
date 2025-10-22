@@ -147,7 +147,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                         'x-ck12-mathEditor' in node.get('class') or
                         'tex' in node.get('class')
                 ):
-                    tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node, parent)
+                    tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node)
 
                 # math tags
                 if node.tag == 'math' or node.tag.endswith(':math'):
