@@ -539,59 +539,57 @@ class CCMATH():
         return etree.tostring(root, encoding='unicode', pretty_print=True)
 
     def replace_math(self, new_tag: str, math_type: str, math_render: str, node: HtmlElement, func) -> HtmlElement:
-        # pattern re数学公式匹配 func 公式预处理 默认不处理
-        # ascii公式处理逻辑转移到mathjax渲染器方案中
+        """替换数学公式节点.
 
-        pattern_type = MATH_TYPE_PATTERN.DISPLAYMATH if new_tag == CCMATH_INTERLINE else MATH_TYPE_PATTERN.INLINEMATH
-        original_text = node.text or ''
+        Args:
+            new_tag: 新标签名称(CCMATH_INLINE 或 CCMATH_INTERLINE)
+            math_type: 数学公式类型(MathType.LATEX 等)
+            math_render: 渲染器类型
+            node: 当前HTML节点
+            func: 公式预处理函数(可选)
 
-        def is_ccmath_wrapped(match_text, original_text: str) -> bool:
-            if not match_text or not original_text:
-                return False
-            start_idx = match_text.start()
-            end_idx = match_text.end()
-            before_match = original_text[:start_idx].strip()
-            after_match = original_text[end_idx:].strip()
-            if 'ccmath' in before_match and 'ccmath' in after_match:
-                return True
-            if pattern_type == MATH_TYPE_PATTERN.DISPLAYMATH:
-                for start, end in MATH_TYPE_TO_DISPLAY[MathType.LATEX][MATH_TYPE_PATTERN.INLINEMATH]:
-                    if start in before_match and end in after_match:
-                        return True
-            return False
-
-        def process(match_text):
-            try:
-                match = match_text.group(0)
-                if is_ccmath_wrapped(match_text, original_text):
-                    return match
-                wrapped_text = func(match) if func else match
-                # html保留原始的，而不是传入修改过的wrapped_text
-                original_wrapped = wrapped_text
-                wrapped_text = self.wrap_math_md(wrapped_text)
-                if not wrapped_text:
-                    return match
-                new_span = build_cc_element(
-                    html_tag_name=new_tag,
-                    text=wrapped_text,
-                    tail='',
-                    type=math_type,
-                    by=math_render,
-                    html=original_wrapped
-                )
-            except Exception:
-                return match
-            return element_to_html(new_span)
+        Returns:
+            处理后的节点
+        """
         try:
-            for start, end in MATH_TYPE_TO_DISPLAY[math_type][pattern_type]:
-                pattern = f'{re.escape(start)}.*?{re.escape(end)}'.replace(r'\.\*\?', '.*?')
-                regex = re.compile(pattern, re.DOTALL)
-                original_text = re.sub(regex, process, original_text)
-        except Exception:
-            node.text = self.build_cc_exception_tag(original_text, math_type, math_render)
-            return node
-        node.text = original_text
-        return html_to_element(element_to_html_unescaped(node))
+            text = node.text
+            if not text or not text_strip(text):
+                return node
+
+            # 预处理公式
+            if func:
+                text = func(text)
+
+            # 去除分隔符并标准化
+            formula = self.wrap_math_md(text)
+
+            # 处理特殊类型
+            if math_type == MathType.ASCIIMATH:
+                formula = self.extract_asciimath(formula)
+                formula = self.wrap_math_md(formula)
+
+            # 构建新节点
+            new_span = build_cc_element(
+                html_tag_name=new_tag,
+                text=formula,
+                tail=text_strip(node.tail),
+                type=math_type,
+                by=math_render,
+                html=element_to_html(node)
+            )
+
+            return new_span
+
+        except Exception as e:
+            # 处理失败时返回失败标记节点
+            return build_cc_element(
+                html_tag_name=CCMATH_HANDLE_FAILED,
+                text=node.text if node.text else '',
+                tail=text_strip(node.tail),
+                type=math_type,
+                by=math_render,
+                html=element_to_html(node)
+            )
 
     def build_cc_exception_tag(self, text, math_type, math_render) -> str:
         return element_to_html(build_cc_element(

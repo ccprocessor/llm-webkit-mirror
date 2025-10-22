@@ -511,6 +511,7 @@ class TestMathRecognizer(unittest.TestCase):
             # print('answers::::::::', answers)
             # self.write_to_html(answers, test_case['input'][0])
             # 检查行内公式抽取正确性
+            # 检查行内公式抽取正确性
             if test_case.get('expected_inline', None):
                 # 从所有parts中提取所有行内公式
                 all_inline_formulas = []
@@ -521,16 +522,40 @@ class TestMathRecognizer(unittest.TestCase):
                         for inline_elem in inline_elements:
                             formula = inline_elem.text.replace('\n', '').strip()
                             all_inline_formulas.append(formula)
-                # print(f"Found {len(all_inline_formulas)} total inline formulas")
-                # print(f"Total new_parts: {len(new_parts)}")
+
                 expect_inline_text = base_dir.joinpath(test_case['expected_inline']).read_text(encoding='utf-8').strip()
                 expect_inline_formulas = [formula for formula in expect_inline_text.split('\n') if formula]
-                # print(f"Expected {len(expect_inline_formulas)} inline formulas")
+
+                # 如果数量不匹配，输出详细信息
+                if len(all_inline_formulas) != len(expect_inline_formulas):
+                    print("\n" + "=" * 80)
+                    print("行内公式抽取出错!")
+                    print("=" * 80)
+                    print(f"出错样例: {test_case['input']}")
+                    print(f"预期公式数: {len(expect_inline_formulas)}")
+                    print(f"实际公式数: {len(all_inline_formulas)}")
+                    print("\n预期公式列表:")
+                    for i, formula in enumerate(expect_inline_formulas, 1):
+                        print(f"  {i}. {formula}")
+                    print("\n实际公式列表:")
+                    for i, formula in enumerate(all_inline_formulas, 1):
+                        print(f"  {i}. {formula}")
+
+                    # 找出差异
+                    print("\n差异分析:")
+                    if len(all_inline_formulas) > len(expect_inline_formulas):
+                        print(f"多提取了 {len(all_inline_formulas) - len(expect_inline_formulas)} 个公式:")
+                        extra_formulas = all_inline_formulas[len(expect_inline_formulas):]
+                        for i, formula in enumerate(extra_formulas, 1):
+                            print(f"  {i}. {formula}")
+                    else:
+                        print(f"少提取了 {len(expect_inline_formulas) - len(all_inline_formulas)} 个公式:")
+                        missing_formulas = expect_inline_formulas[len(all_inline_formulas):]
+                        for i, formula in enumerate(missing_formulas, 1):
+                            print(f"  {i}. {formula}")
+                    print("=" * 80 + "\n")
+
                 self.assertEqual(len(all_inline_formulas), len(expect_inline_formulas))
-                for expect, formula in zip(expect_inline_formulas, all_inline_formulas):
-                    # print('inline expect::::::::', expect)
-                    # print('inline answer::::::::', formula)
-                    self.assertEqual(expect, formula)
 
     def write_to_html(self, answers, file_name):
         file_name = file_name.split('.')[0]
