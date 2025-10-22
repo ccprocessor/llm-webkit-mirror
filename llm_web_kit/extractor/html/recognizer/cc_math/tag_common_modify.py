@@ -6,7 +6,7 @@ from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
 from llm_web_kit.libs.html_utils import replace_element
 
 
-def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
+def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement):
     try:
         text = node.text
         tag_math_type_list = cm.get_equation_type(o_html)
