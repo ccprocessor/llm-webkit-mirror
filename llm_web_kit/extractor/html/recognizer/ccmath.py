@@ -141,11 +141,10 @@ class MathRecognizer(BaseHTMLElementRecognizer):
 
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
                 if node.tag == 'span' and node.get('class') and (
-                        'math-container' in node.get('class') or
-                        'mathjax' in node.get('class') or
-                        'wp-katex-eq' in node.get('class') or
-                        'x-ck12-mathEditor' in node.get('class') or
-                        'tex' in node.get('class')
+                        'math-container' in node.get('class')
+                        # 'wp-katex-eq' in node.get('class') or
+                        # 'x-ck12-mathEditor' in node.get('class') or
+                        # 'tex' in node.get('class')
                 ):
                     tag_common_modify.modify_tree(self.cm, math_render_type, original_html, node)
 
