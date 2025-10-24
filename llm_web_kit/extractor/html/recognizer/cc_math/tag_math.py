@@ -7,8 +7,9 @@ from llm_web_kit.exception.exception import HtmlMathRecognizerException
 from llm_web_kit.extractor.html.recognizer.cc_math.common import (CCMATH,
                                                                   MathType,
                                                                   text_strip)
-from llm_web_kit.libs.html_utils import (build_cc_element, element_to_html,
-                                         replace_element)
+from llm_web_kit.libs.html_utils import (build_cc_element,
+                                         check_and_balance_delimiters,
+                                         element_to_html, replace_element)
 
 
 def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, parent: HtmlElement):
@@ -23,11 +24,12 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
         if len(annotation_tags) > 0:
             annotation_tag = annotation_tags[0]
             text = annotation_tag.text
-            style_value = parent.get('style')
-            if style_value:
-                normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
-                if 'display: none' in normalized_style_value:
-                    parent.style = ''
+            if parent:
+                style_value = parent.get('style')
+                if style_value:
+                    normalized_style_value = style_value.lower().strip().replace(' ', '').replace(';', '')
+                    if 'display: none' in normalized_style_value:
+                        parent.style = ''
             text = cm.wrap_math_md(text)
             if text:
                 new_span = build_cc_element(html_tag_name=new_tag, text=text, tail=text_strip(node.tail), type=math_type, by=math_render, html=o_html)
@@ -55,6 +57,7 @@ def modify_tree(cm: CCMATH, math_render: str, o_html: str, node: HtmlElement, pa
             # 处理未转义的%为\%
             if latex:
                 latex = re.sub(r'(?<!\\)%', r'\\%', latex)
+                latex = check_and_balance_delimiters(latex)
             text = cm.wrap_math_md(latex)
             if text:
                 # Set the html of the new span tag to the text
