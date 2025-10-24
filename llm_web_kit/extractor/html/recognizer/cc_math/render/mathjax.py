@@ -258,6 +258,9 @@ class MathJaxRender(BaseMathRender):
         # 处理所有文本节点
         self._find_math_in_element(root, inline_pattern, display_pattern)
 
+        # 后处理:转义孤立的单美元符号
+        self._escape_isolated_dollars_in_tree(root)
+
     def _find_math_in_element(self, element: HtmlElement, inline_pattern: re.Pattern, display_pattern: re.Pattern) -> None:
         """递归处理元素中的数学公式.
 
@@ -531,6 +534,76 @@ class MathJaxRender(BaseMathRender):
                 break
 
         return processascii
+
+    def _escape_isolated_dollars_in_tree(self, element: HtmlElement) -> None:
+        """扫描整个DOM树,转义孤立的单美元符号.
+
+        Args:
+            element: 根元素
+        """
+        if element is None:
+            return
+
+        # 跳过ccmath节点
+        from llm_web_kit.extractor.html.recognizer.recognizer import \
+            BaseHTMLElementRecognizer
+        if BaseHTMLElementRecognizer.is_cc_tag_node(element):
+            return
+
+        # 跳过特定标签
+        skip_tags = MATHJAX_OPTIONS['skipTags']
+        if element.tag in skip_tags:
+            return
+
+        # 处理text
+        if element.text and '$' in element.text:
+            element.text = self._escape_isolated_dollars(element.text)
+
+        # 处理tail
+        if element.tail and '$' in element.tail:
+            element.tail = self._escape_isolated_dollars(element.tail)
+
+        # 递归处理子节点
+        for child in list(element):
+            self._escape_isolated_dollars_in_tree(child)
+
+    def _escape_isolated_dollars(self, text: str) -> str:
+        """转义文本中孤立的单美元符号.
+
+        Args:
+            text: 原始文本
+
+        Returns:
+            str: 转义后的文本
+        """
+        if not text or '$' not in text:
+            return text
+
+        result = []
+        i = 0
+
+        while i < len(text):
+            if text[i] == '$':
+                # 已经被转义
+                if i > 0 and text[i - 1] == '\\':
+                    result.append('$')
+                    i += 1
+                    continue
+
+                # 是$$
+                if i + 1 < len(text) and text[i + 1] == '$':
+                    result.append('$$')
+                    i += 2
+                    continue
+
+                # 单个$,转义它
+                result.append('\\$')
+                i += 1
+            else:
+                result.append(text[i])
+                i += 1
+
+        return ''.join(result)
 
 
 class MathJaxRenderMock(MathJaxRender):
