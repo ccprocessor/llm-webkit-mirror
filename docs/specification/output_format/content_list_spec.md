@@ -18,123 +18,131 @@
 
 ```json
 [
-    [
-        {
-            "type": "code",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": "<code>def add(a, b):\n    return a + b</code>",
-            "content": {
-                "code_content": "def add(a, b):\n    return a + b",
-                "language": "python"
-            }
-        },
-        {
-            "type": "equation-interline",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": "a^2 + b^2 = c^2",
-            "content": {
-                "math_content": "a^2 + b^2 = c^2",
-                "math_type": "kelatex|mathml|asciimath"
-            }
-        },
-        {
-            "type": "image",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": {
-                "url": "https://www.example.com/image.jpg",
-                "path": "s3://llm-media/image.jpg",
-                "data": "如果是base64形式的图片，则用这个字段，忽略url和path ",
-                "alt": "example image",
-                "title": "example image",
-                "caption": "text from somewhere",
-                "image_style": "qrcode|table|chart"
-            }
-        }
-    ],
-    [
-        {
-            "type": "audio",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": {
-                "sources": ["https://www.example.com/audio.mp3"],
-                "path": "s3://llm-media/audio.mp3",
-                "title": "example audio",
-                "caption": "text from somewhere"
-            }
-        },
-        {
-            "type": "video",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": {
-                "sources": ["https://www.example.com/video.avi"],
-                "path": "s3://llm-media/video.mp4",
-                "title": "example video",
-                "caption": "text from somewhere"
-            }
-        },
-        {
-            "type": "simple_table", // 可以选填simple_table、complex_table
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": {
-                "html": "<table><tr><td>1</td><td>2</td></tr></table>",
-                "title": "example table",
-                "note": "数据来源于...",
-                "is_complex": false, // 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false
-                "table_nest_level": 1 //table的嵌套层级
-            }
-        },
-        {
-            "type": "list",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": {
-                "items": [ //列表里只考虑文本和公式，如果有其他类型元素，列表就转为若干个段落，否则结构太复杂了
-                    [
-                      [
-                        {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
-                        {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
-                        {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
-                      ]
-                    ],
-                    [
-                      [
-                        {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
-                        {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
-                        {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
-                      ]
-                    ]
-                ],
-                "ordered": true,
-                "list_nest_level": 1 //list的嵌套层级
-            }
-        }
-    ],
-    [
-        {
-            "type": "title",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": {
-                "title_content": "大模型好，大模型棒",
-                "level": 1 // 标题级别，1-N, 1最大
-            }
-        },
-        {
-            "type": "paragraph",
-            "bbox": [0, 0, 50, 50],
-            "raw_content": null,
-            "content": [
-                {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0, 0, 10, 10]},
-                {"c": "E=mc^2", "t": "equation-inline", "bbox": [10, 0, 10, 10]},
-                {"c": "，其中E是能量，m是质量，c是光速 ", "t": "text", "bbox": [20, 0, 10, 10]}
+  [
+    {
+      "type": "code",
+      "raw_content": "<code>x = 1</code>",
+      "inline": true,
+      "content": {
+        "code_content": "x = 1",
+        "language": "python",
+        "by": "highlightjs"
+      }
+    },
+    {
+      "type": "code",
+      "raw_content": "<code>def add(a, b):\n    return a + b</code>",
+      "inline": false,
+      "content": {
+        "code_content": "def add(a, b):\n    return a + b",
+        "language": "python",
+        "by": "highlightjs"
+      }
+    },
+    {
+      "type": "equation-inline",
+      "raw_content": "E=mc^2",
+      "content": {
+        "math_content": "E=mc^2",
+        "math_type": "latex",
+        "by": "mathjax"
+      }
+    },
+    {
+      "type": "equation-interline",
+      "raw_content": "a^2 + b^2 = c^2",
+      "content": {
+        "math_content": "a^2 + b^2 = c^2",
+        "math_type": "latex",
+        "by": "mathjax"
+      }
+    },
+    {
+      "type": "image",
+      "raw_content": "<img src=\"https://www.example.com/image.jpg\" alt=\"示例图片\">",
+      "content": {
+        "url": "https://www.example.com/image.jpg",
+        "alt": "示例图片",
+        "title": "示例图片标题",
+        "caption": "图片说明文字"
+      }
+    },
+    {
+      "type": "simple_table",
+      "raw_content": "<table><tr><th>项目</th><th>值</th></tr><tr><td>A</td><td>1</td></tr></table>",
+      "content": {
+        "html": "<table><tr><th>项目</th><th>值</th></tr><tr><td>A</td><td>1</td></tr></table>",
+        "is_complex": false,
+        "table_nest_level": 1
+      }
+    },
+    {
+      "type": "complex_table",
+      "raw_content": "<table><tr><th rowspan='2'>指标</th><th colspan='2'>数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></table>",
+      "content": {
+        "html": "<table><tr><th rowspan='2'>指标</th><th colspan='2'>数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></table>",
+        "is_complex": true,
+        "table_nest_level": 1
+      }
+    },
+    {
+      "type": "list",
+      "raw_content": "1. 第一项\n2. 第二项\n3. 第三项",
+      "content": {
+        "items": [
+          [
+            [
+              { "c": "第一项包含公式 ", "t": "text" },
+              { "c": "E=mc^2", "t": "equation-inline" },
+              { "c": " 与 markdown ", "t": "text" },
+              { "c": "`示例`", "t": "md" }
             ]
-        }
-    ]
-
+          ],
+          [
+            [
+              { "c": "第二项含内联代码 ", "t": "text" },
+              { "c": "sum(a)", "t": "code-inline" }
+            ],
+            [
+              { "c": "附加段落：使用 md 标记。", "t": "md" }
+            ]
+          ],
+          [
+            [
+              { "c": "第三项纯文本。", "t": "text" }
+            ]
+          ]
+        ],
+        "list_attribute": "ordered",
+        "list_nest_level": 1
+      }
+    },
+    {
+      "type": "title",
+      "raw_content": "<h1>大模型好，大模型棒</h1>",
+      "content": {
+        "title_content": "大模型好，大模型棒",
+        "level": 1
+      }
+    },
+    {
+      "type": "paragraph",
+      "raw_content": "爱因斯坦的质量方差公式是 E=mc^2，其中E是能量，m是质量，c是光速。示例代码 a+b",
+      "content": [
+        { "c": "爱因斯坦的质量方差公式是 ", "t": "text" },
+        { "c": "E=mc^2", "t": "equation-inline" },
+        { "c": "，其中", "t": "text" },
+        { "c": "E", "t": "md" },
+        { "c": " 是能量，", "t": "text" },
+        { "c": "m", "t": "md" },
+        { "c": " 是质量，", "t": "text" },
+        { "c": "c", "t": "md" },
+        { "c": " 是光速。示例代码: ", "t": "text" },
+        { "c": "a+b", "t": "code-inline" }
+      ]
+    }
+  ],
+  []
 ]
 ```
 
@@ -145,13 +153,12 @@
 ```json
 {
     "type": "code",
-    "bbox": [0, 0, 50, 50],
     "raw_content": "<code>def add(a, b):\n    return a + b</code>",
     "inline": false,
     "content": {
           "code_content": "def add(a, b):\n    return a + b",
           "language": "python",
-          "by": "hilightjs"
+          "by": "highlightjs"
     }
 }
 ```
@@ -159,7 +166,6 @@
 | 字段                 | 类型   | 描述                          | 是否必须 |
 | -------------------- | ------ | ----------------------------- | -------- |
 | type                 | string | 值固定为code                  | 是       |
-| bbox                 | array  | \[x1, y1, x2, y2\]            | 可选     |
 | raw_content          | string | 原始文本内容                  | 可选     |
 | inline               | bool   | 是否为行内代码                | 是       |
 | content.code_content | string | 干净的，格式化过的代码内容    | 是       |
@@ -171,11 +177,10 @@
 ```json
 {
     "type": "equation-interline",
-    "bbox": [0, 0, 50, 50],
     "raw_content": "a^2 + b^2 = c^2",
     "content": {
           "math_content": "a^2 + b^2 = c^2",
-          "math_type": "kelatex",
+          "math_type": "latex",
           "by": "mathjax"
     }
 }
@@ -184,7 +189,6 @@
 | 字段                 | 类型   | 描述                                                            | 是否必须 |
 | -------------------- | ------ | --------------------------------------------------------------- | -------- |
 | type                 | string | 值固定为equation-interline                                      | 是       |
-| bbox                 | array  | \[x1, y1, x2, y2\]                                              | 可选     |
 | raw_content          | string | 原始文本内容                                                    | 可选     |
 | content.math_content | string | 干净的，格式化过的公式内容。无论是行内还是行间公式两边都不能有$ | 是       |
 | content.math_type    | string | 公式语言类型，latex\\mathml\\asciimath                          | 可选     |
@@ -195,16 +199,13 @@
 ```json
 {
     "type": "image",
-    "bbox": [0, 0, 50, 50],
     "raw_content": null,
     "content": {
         "url": "https://www.example.com/image.jpg",
-        "path": "s3://llm-media/image.jpg",
-        "data": "如果是base64形式的图片，则用这个字段，忽略url和path ",
+        "data": "如果是base64形式的图片，则用这个字段，忽略url",
         "alt": "example image",
         "title": "example image",
-        "caption": "text from somewhere",
-        "image_style": "qrcode|table|chart"
+        "caption": "text from somewhere"
     }
 }
 ```
@@ -212,24 +213,20 @@
 | 字段                | 类型   | 描述                             | 是否必须 |
 | ------------------- | ------ | -------------------------------- | -------- |
 | type                | string | 值固定为image                    | 是       |
-| bbox                | array  | \[x1, y1, x2, y2\]               | 可选     |
 | raw_content         | string | 原始文本内容                     | 可选     |
 | content.url         | string | 图片的url地址                    | 可选     |
-| content.path        | string | 图片的存储路径                   | 可选     |
 | content.data        | string | base64形式的图片数据             | 可选     |
 | content.alt         | string | 图片的alt属性                    | 可选     |
 | content.title       | string | 图片的title属性                  | 可选     |
 | content.caption     | string | 图片的caption属性                | 可选     |
-| content.image_style | string | 图片的类型，qrcode\\table\\chart | 可选     |
 
-> `content.url`和`content.path`和`content.data`三者必须有一个，数据使用优先级是`data`>`path`。
+> `content.url`和`content.data`二者必须有一个，数据使用优先级是`data`>`url`。
 
-### 音频段
+### 音频段(未实现)
 
 ```json
 {
     "type": "audio",
-    "bbox": [0, 0, 50, 50],
     "raw_content": null,
     "content": {
         "sources": ["https://www.example.com/audio.mp3"],
@@ -250,7 +247,7 @@
 | content.title   | string | 音频的title属性    | 可选     |
 | content.caption | string | 音频的caption属性  | 可选     |
 
-### 视频段
+### 视频段(未实现)
 
 ```json
 {
@@ -281,13 +278,10 @@
 ```json
 {
     "type": "simple_table",  // 可以选填simple_table、complex_table
-    "bbox": [0, 0, 50, 50],
     "raw_content": null,
     "content": {
         "html": "<table><tr><td>1</td><td>2</td></tr></table>",
-        "title": "example table",
-        "note": "数据来源于...",
-        "is_complex": false // 是否是复杂表格(跨行、跨列的, 默认为false,
+        "is_complex": false, // 是否是复杂表格(跨行、跨列的), 默认为false,
         "table_nest_level": 1 //表格嵌套层级
     }
 }
@@ -296,11 +290,8 @@
 | 字段                     | 类型    | 描述                                              | 是否必须 |
 | ------------------------ | ------- | ------------------------------------------------- | -------- |
 | type                     | string  | 可选值为simple_table、complex_table               | 是       |
-| bbox                     | array   | \[x1, y1, x2, y2\]                                | 可选     |
 | raw_content              | string  | 原始文本内容                                      | 可选     |
 | content.html             | string  | 表格的html内容                                    | 是       |
-| content.title            | string  | 表格的title属性                                   | 可选     |
-| content.note             | string  | 表格的note属性                                    | 可选     |
 | content.is_complex       | boolean | 是否是复杂表格(跨行、跨列的/嵌套表格, 默认为false | 可选     |
 | content.table_nest_level | int     | table嵌套层级(单个table为1,两层为2，以此类推)     | 可选     |
 
@@ -309,52 +300,48 @@
 ```json
 {
     "type": "list",
-    "bbox": [0, 0, 50, 50],
     "raw_content": null,
     "content": {
         "items": [ //列表里只考虑文本和公式，如果有其他类型元素，列表就转为若干个段落，否则结构太复杂了
             [ //这是第一个item,每个item是个数组，数组里是段落，下面只有一个段落
               [
-                {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0,0,10,10]},
-                {"c": "E=mc^2", "t": "equation-inline", "bbox": [10,0,10,10]},
-                {"c": "，其中E是能量，m是质量，c是光速 ","t": "text", "bbox": [20,0,10,10]}
+                {"c": "爱因斯坦的质量方差公式是", "t": "text"},
+                {"c": "E=mc^2", "t": "equation-inline"},
+                {"c": "，其中E是能量，m是质量，c是光速 ","t": "text"}
               ]
            ],
-           [//这是第二个item
+           [
              [
-               {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0,0,10,10]},
-               {"c": "E=mc^2", "t": "equation-inline", "bbox": [10,0,10,10]},
-               {"c": "，其中E是能量，m是质量，c是光速 ","t": "text", "bbox": [20,0,10,10]}
+               {"c": "第二项示例代码 sum(a)", "t": "text"},
+               {"c": "sum(a)", "t": "code-inline"}
              ]
            ]
         ],
-        "ordered": true,
-        "list_nest_level": 1 //list嵌套层级
+        "list_attribute": "ordered",
+        "list_nest_level": 1
     }
 }
 ```
 
-| 字段                    | 类型    | 描述                                                | 是否必须 |
-| ----------------------- | ------- | --------------------------------------------------- | -------- |
-| type                    | string  | 值固定为list                                        | 是       |
-| bbox                    | array   | \[x1, y1, x2, y2\]                                  | 可选     |
-| raw_content             | string  | 原始文本内容                                        | 可选     |
-| content.items           | array   | 列表项，每个元素是N个段落，段落里的元素是文本或公式 | 是       |
-| content.ordered         | boolean | 是否是有序列表                                      | 可选     |
-| content.list_nest_level | int     | list的嵌套层级(单层list list_nest_level为1)         | 可选     |
+| 字段                    | 类型    | 描述                             | 是否必须 |
+| ----------------------- | ------- |--------------------------------| -------- |
+| type                    | string  | 值固定为list                       | 是       |
+| raw_content             | string  | 原始文本内容                         | 可选     |
+| content.items           | array   | 列表项，每个元素是N个段落，段落里的元素是文本或公式     | 是       |
+| content.list_attribute  | string | unordered/ordered/definition         | 可选     |
+| content.list_nest_level | int     | list的嵌套层级(单层list list_nest_level为1) | 可选     |
 
 <b>items字段说明</b>
 
-- `items`是一个二维数组，每个元素是一个段落，段落里的元素是文本或公式。
-- 每个元素是一个对象，包含3个字段，c和t,bbox。 c是内容，t是类型，bbox是坐标。
-- t的取值有3种，`text`和`equation-inline`和`md`，分别表示纯文本和行内公式和markdown。
+- `items`是一个二维数组，每个元素是一个段落，段落里的元素是文本、公式、markdown或行内代码。
+- 每个元素是一个对象，包含字段：c和t。 c是内容，t是类型。
+- t的取值有4种：`text`、`equation-inline`、`md`、`code-inline`。
 
 ### 标题段
 
 ```json
 {
     "type": "title",
-    "bbox": [0, 0, 50, 50],
     "raw_content": null,
     "content": {
         "title_content": "大模型好，大模型棒",
@@ -366,7 +353,6 @@
 | 字段                  | 类型   | 描述                 | 是否必须 |
 | --------------------- | ------ | -------------------- | -------- |
 | type                  | string | 值固定为title        | 是       |
-| bbox                  | array  | \[x1, y1, x2, y2\]   | 可选     |
 | raw_content           | string | 原始文本内容         | 可选     |
 | content.title_content | string | 标题内容             | 是       |
 | content.level         | int    | 标题级别，1-N, 1最大 | 可选     |
@@ -376,12 +362,11 @@
 ```json
 {
     "type": "paragraph",
-    "bbox": [0, 0, 50, 50],
     "raw_content": null,
     "content": [
-        {"c": "爱因斯坦的质量方差公式是", "t": "text", "bbox": [0,0,10,10]},
-        {"c": "E=mc^2", "t": "equation-inline", "bbox": [10,0,10,10]},
-        {"c": "，其中E是能量，m是质量，c是光速 ","t": "text", "bbox": [20,0,10,10]}
+        {"c": "爱因斯坦的质量方差公式是", "t": "text"},
+        {"c": "E=mc^2", "t": "equation-inline"},
+        {"c": "，其中E是能量，m是质量，c是光速 ","t": "text"}
       ]
 }
 ```
@@ -389,15 +374,13 @@
 | 字段        | 类型   | 描述                                                                                  | 是否必须 |
 | ----------- | ------ | ------------------------------------------------------------------------------------- | -------- |
 | type        | string | 值固定为paragraph                                                                     | 是       |
-| bbox        | array  | \[x1, y1, x2, y2\]                                                                    | 可选     |
 | raw_content | string | 原始文本内容                                                                          | 可选     |
-| content     | array  | 段落内容，每个元素是一个对象，包含3个字段，c和t,bbox。 c是内容，t是类型，bbox是坐标。 | 是       |
+| content     | array  | 段落内容，每个元素是一个对象，包含字段c和t。 c是内容，t是类型。 | 是       |
 
 <b>content字段说明</b>
 
-- content是一个数组，每个元素是一个对象，包含3个字段，`c`和`t`,`bbox`。 c是内容，t是类型，bbox是坐标。
-- t的取值有3种，`text`和`equation-inline`和`md`, `code-inline`，分别表示纯文本和行内公式和markdown。
-- `bbox`是一个数组，表示元素的坐标，\[x1, y1, x2, y2\]。 (x1, y1)左上角坐标，(x2, y2)右下角坐标。
+- content是一个数组，每个元素是一个对象，包含字段：`c`和`t`。 c是内容，t是类型。
+- t的取值有4种：`text`、`equation-inline`、`md`、`code-inline`。
 
 ## 参考
 
