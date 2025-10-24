@@ -138,6 +138,7 @@ class MathRecognizer(BaseHTMLElementRecognizer):
                 if ZHIHU.DOMAIN in self.cm.url and node.tag == 'span' and node.get('class') == ZHIHU.MATH:
                     tag_script.process_zhihu_custom_tag(self.cm, math_render_type, node)
 
+                # 提示：被mathjax兜底覆盖，逻辑已经删除
                 # tag = span， class 为 math-containerm， 或者 mathjax 或者 wp-katex-eq
                 # if node.tag == 'span' and node.get('class') and (
                 #         'math-container' in node.get('class') or
