@@ -188,7 +188,7 @@
 
 | 字段                 | 类型   | 描述                                                            | 是否必须 |
 | -------------------- | ------ | --------------------------------------------------------------- | -------- |
-| type                 | string | 值固定为equation-interline                                      | 是       |
+| type                 | string | 可选为equation-interline或者equation-inline                     | 是       |
 | raw_content          | string | 原始文本内容                                                    | 可选     |
 | content.math_content | string | 干净的，格式化过的公式内容。无论是行内还是行间公式两边都不能有$ | 是       |
 | content.math_type    | string | 公式语言类型，latex\\mathml\\asciimath                          | 可选     |
