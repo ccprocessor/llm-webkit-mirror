@@ -56,12 +56,34 @@ async def health_check():
 @app.on_event("startup")
 async def app_startup():
     """应用启动时预热模型，避免首个请求冷启动延迟."""
+    # 初始化数据库
+    try:
+        from .database import get_db_manager
+        db_manager = get_db_manager()
+        await db_manager.create_tables()
+        logger.info("数据库初始化完成")
+    except Exception as e:
+        logger.warning(f"数据库初始化失败（服务仍可运行，但请求日志功能将被禁用）: {e}")
+
+    # 预热模型
     try:
         service = get_inference_service()
         await service.warmup()
         logger.info("InferenceService 模型预热完成")
     except Exception as e:
         logger.warning(f"InferenceService 预热失败（服务仍可运行，将在首次请求时再初始化）: {e}")
+
+
+@app.on_event("shutdown")
+async def app_shutdown():
+    """应用关闭时清理资源."""
+    try:
+        from .database import get_db_manager
+        db_manager = get_db_manager()
+        await db_manager.close()
+        logger.info("数据库连接已关闭")
+    except Exception as e:
+        logger.error(f"关闭数据库连接失败: {e}")
 
 
 @app.exception_handler(Exception)
