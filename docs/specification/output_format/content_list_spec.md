@@ -21,50 +21,31 @@
   [
     {
       "type": "code",
-      "raw_content": "<code>x = 1</code>",
-      "inline": true,
-      "content": {
-        "code_content": "x = 1",
-        "language": "python",
-        "by": "highlightjs"
-      }
-    },
-    {
-      "type": "code",
-      "raw_content": "<code>def add(a, b):\n    return a + b</code>",
+      "raw_content": "<code>def add(a, b):\\n    return a + b</code>",
       "inline": false,
       "content": {
-        "code_content": "def add(a, b):\n    return a + b",
-        "language": "python",
-        "by": "highlightjs"
-      }
-    },
-    {
-      "type": "equation-inline",
-      "raw_content": "E=mc^2",
-      "content": {
-        "math_content": "E=mc^2",
-        "math_type": "latex",
-        "by": "mathjax"
+        "code_content": "def add(a, b):\\n return a + b",
+        "by": "tag_code"
       }
     },
     {
       "type": "equation-interline",
-      "raw_content": "a^2 + b^2 = c^2",
+      "raw_content": "<p>$$a^2 + b^2 = c^2$$</p>",
       "content": {
         "math_content": "a^2 + b^2 = c^2",
         "math_type": "latex",
-        "by": "mathjax"
+        "by": "mathjax_mock"
       }
     },
     {
       "type": "image",
-      "raw_content": "<img src=\"https://www.example.com/image.jpg\" alt=\"示例图片\">",
+      "raw_content": "<figure class=\"thumb tright thumbinner\" style=\"width:182px;\"><a href=\"http://static4.wikia.nocookie.net/__cb20120619225143/central/images/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png\" class=\"image\"><img alt=\"Screen Shot 2012-06-19 at 6.25.45 PM\" src=\"data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D\" width=\"180\" height=\"113\" class=\"thumbimage lzy lzyPlcHld\" data-image-name=\"Screen Shot 2012-06-19 at 6.25.45 PM.png\" data-image-key=\"Screen_Shot_2012-06-19_at_6.25.45_PM.png\" data-src=\"http://static4.wikia.nocookie.net/__cb20120619225143/central/images/thumb/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png/180px-Screen_Shot_2012-06-19_at_6.25.45_PM.png\" onload='if(typeof ImgLzy==\"object\"){ImgLzy.load(this)}'><noscript><img alt=\"Screen Shot 2012-06-19 at 6.25.45 PM\" src=\"http://static4.wikia.nocookie.net/__cb20120619225143/central/images/thumb/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png/180px-Screen_Shot_2012-06-19_at_6.25.45_PM.png\" width=\"180\" height=\"113\" class=\"thumbimage\" data-image-name=\"Screen Shot 2012-06-19 at 6.25.45 PM.png\" data-image-key=\"Screen_Shot_2012-06-19_at_6.25.45_PM.png\"></noscript></a><a href=\"/wiki/File:Screen_Shot_2012-06-19_at_6.25.45_PM.png\" class=\"internal sprite details magnify\" title=\"View photo details\"></a><figcaption class=\"thumbcaption\">What it ACTUALLY looks like</figcaption></figure>",
       "content": {
-        "url": "https://www.example.com/image.jpg",
-        "alt": "示例图片",
-        "title": "示例图片标题",
-        "caption": "图片说明文字"
+        "url": "http://static4.wikia.nocookie.net/__cb20120619225143/central/images/thumb/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png/180px-Screen_Shot_2012-06-19_at_6.25.45_PM.png",
+        "data": null,
+        "alt": "Screen Shot 2012-06-19 at 6.25.45 PM",
+        "title": null,
+        "caption": "What it ACTUALLY looks like"
       }
     },
     {
@@ -78,44 +59,76 @@
     },
     {
       "type": "complex_table",
-      "raw_content": "<table><tr><th rowspan='2'>指标</th><th colspan='2'>数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></table>",
+      "raw_content": "<table><tbody><tr><th rowspan=\"2\">指标</th><th colspan=\"2\">数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></tbody></table>",
       "content": {
-        "html": "<table><tr><th rowspan='2'>指标</th><th colspan='2'>数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></table>",
+        "html": "<table><tbody><tr><th rowspan=\"2\">指标</th><th colspan=\"2\">数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></tbody></table>",
         "is_complex": true,
-        "table_nest_level": 1
+        "table_nest_level": "1"
       }
     },
     {
       "type": "list",
-      "raw_content": "<ul><li>You must be logged in to reply to this topic. <code>x = 1</code> $E=mc^2$</li></ul>",
+      "raw_content": "<dl><dt>外层列表项</dt><dd><ol><li>行内公式: <ccmath-inline type=\"latex\" by=\"mathjax_mock\" html=\"$E=mc^2$\">E=mc^2</ccmath-inline></li><li>行内代码: <cccode-inline by=\"tag_code\" html=\"&lt;code&gt;x = 1&lt;/code&gt;\" inline=\"true\">x = 1</cccode-inline></li></ol></dd><dt>外层另一个列表项</dt><dd><menu><li>第二层菜单项</li></menu></dd></dl>",
       "content": {
         "items": [
-          [
-            { "c": "You must be logged in to reply to this topic.", "t": "text" },
-            { "c": "x = 1", "t": "code-inline" },
-            { "c": "E=mc^2", "t": "equation-inline" }
-          ]
+          {
+            "c": "外层列表项"
+          },
+          {
+            "child_list": {
+              "list_attribute": "ordered",
+              "items": [
+                {
+                  "c": "行内公式: $E=mc^2$"
+                },
+                {
+                  "c": "行内代码: `x = 1`"
+                }
+              ]
+            }
+          },
+          {
+            "c": "外层另一个列表项"
+          },
+          {
+            "child_list": {
+              "list_attribute": "unordered",
+              "items": [
+                {
+                  "c": "第二层菜单项"
+                }
+              ]
+            }
+          }
         ],
-        "list_attribute": "unordered",
-        "list_nest_level": 1
+        "list_attribute": "definition",
+        "list_nest_level": "2"
       }
     },
     {
       "type": "title",
-      "raw_content": "<h1>大模型好，大模型棒</h1>",
+      "raw_content": "<h1>大模型好，大模型棒1</h1>",
       "content": {
-        "title_content": "大模型好，大模型棒",
-        "level": 1
+        "title_content": "大模型好，大模型棒1",
+        "level": "1"
       }
     },
     {
       "type": "paragraph",
-      "raw_content": "<html><head><title>Who Is In Your Top 3 Mentalists Of All Time? <code>x = 1</code> $E=mc^2$ • MAGICIANSANDMAGIC.COM</title></head></html>",
+      "raw_content": "<html><head><title>Who Is In Your Top 3 Mentalists Of All Time? &lt;code&gt;x = 1&lt;/code&gt; <ccmath-inline type=\"latex\" by=\"mathjax_mock\" html=\"$E=mc^2$\">E=mc^2</ccmath-inline> • MAGICIANSANDMAGIC.COM</title></head></html>",
       "content": [
-        { "c": "Who Is In Your Top 3 Mentalists Of All Time?", "t": "text" },
-        { "c": "x = 1", "t": "code-inline" },
-        { "c": "E=mc^2", "t": "equation-inline" },
-        { "c": "• MAGICIANSANDMAGIC.COM", "t": "text" }
+        {
+          "c": "Who Is In Your Top 3 Mentalists Of All Time? x = 1",
+          "t": "text"
+        },
+        {
+          "c": "E=mc^2",
+          "t": "equation-inline"
+        },
+        {
+          "c": "• MAGICIANSANDMAGIC.COM",
+          "t": "text"
+        }
       ]
     }
   ],
@@ -129,14 +142,13 @@
 
 ```json
 {
-    "type": "code",
-    "raw_content": "<code>def add(a, b):\n    return a + b</code>",
-    "inline": false,
-    "content": {
-          "code_content": "def add(a, b):\n    return a + b",
-          "language": "python",
-          "by": "highlightjs"
-    }
+  "type": "code",
+  "raw_content": "<code>def add(a, b):\\n    return a + b</code>",
+  "inline": false,
+  "content": {
+    "code_content": "def add(a, b):\\n return a + b",
+    "by": "tag_code"
+  }
 }
 ```
 
@@ -153,13 +165,13 @@
 
 ```json
 {
-    "type": "equation-interline",
-    "raw_content": "a^2 + b^2 = c^2",
-    "content": {
-          "math_content": "a^2 + b^2 = c^2",
-          "math_type": "latex",
-          "by": "mathjax"
-    }
+  "type": "equation-interline",
+  "raw_content": "<p>$$a^2 + b^2 = c^2$$</p>",
+  "content": {
+    "math_content": "a^2 + b^2 = c^2",
+    "math_type": "latex",
+    "by": "mathjax_mock"
+  }
 }
 ```
 
@@ -175,15 +187,15 @@
 
 ```json
 {
-    "type": "image",
-    "raw_content": null,
-    "content": {
-        "url": "https://www.example.com/image.jpg",
-        "data": "如果是base64形式的图片，则用这个字段，忽略url",
-        "alt": "example image",
-        "title": "example image",
-        "caption": "text from somewhere"
-    }
+  "type": "image",
+  "raw_content": "<figure class=\"thumb tright thumbinner\" style=\"width:182px;\"><a href=\"http://static4.wikia.nocookie.net/__cb20120619225143/central/images/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png\" class=\"image\"><img alt=\"Screen Shot 2012-06-19 at 6.25.45 PM\" src=\"data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D\" width=\"180\" height=\"113\" class=\"thumbimage lzy lzyPlcHld\" data-image-name=\"Screen Shot 2012-06-19 at 6.25.45 PM.png\" data-image-key=\"Screen_Shot_2012-06-19_at_6.25.45_PM.png\" data-src=\"http://static4.wikia.nocookie.net/__cb20120619225143/central/images/thumb/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png/180px-Screen_Shot_2012-06-19_at_6.25.45_PM.png\" onload='if(typeof ImgLzy==\"object\"){ImgLzy.load(this)}'><noscript><img alt=\"Screen Shot 2012-06-19 at 6.25.45 PM\" src=\"http://static4.wikia.nocookie.net/__cb20120619225143/central/images/thumb/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png/180px-Screen_Shot_2012-06-19_at_6.25.45_PM.png\" width=\"180\" height=\"113\" class=\"thumbimage\" data-image-name=\"Screen Shot 2012-06-19 at 6.25.45 PM.png\" data-image-key=\"Screen_Shot_2012-06-19_at_6.25.45_PM.png\"></noscript></a><a href=\"/wiki/File:Screen_Shot_2012-06-19_at_6.25.45_PM.png\" class=\"internal sprite details magnify\" title=\"View photo details\"></a><figcaption class=\"thumbcaption\">What it ACTUALLY looks like</figcaption></figure>",
+  "content": {
+    "url": "http://static4.wikia.nocookie.net/__cb20120619225143/central/images/thumb/3/30/Screen_Shot_2012-06-19_at_6.25.45_PM.png/180px-Screen_Shot_2012-06-19_at_6.25.45_PM.png",
+    "data": null,
+    "alt": "Screen Shot 2012-06-19 at 6.25.45 PM",
+    "title": null,
+    "caption": "What it ACTUALLY looks like"
+  }
 }
 ```
 
@@ -254,13 +266,13 @@
 
 ```json
 {
-    "type": "simple_table",  // 可以选填simple_table、complex_table
-    "raw_content": null,
-    "content": {
-        "html": "<table><tr><td>1</td><td>2</td></tr></table>",
-        "is_complex": false, // 是否是复杂表格(跨行、跨列的), 默认为false,
-        "table_nest_level": 1 //表格嵌套层级
-    }
+  "type": "complex_table",
+  "raw_content": "<table><tbody><tr><th rowspan=\"2\">指标</th><th colspan=\"2\">数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></tbody></table>",
+  "content": {
+    "html": "<table><tbody><tr><th rowspan=\"2\">指标</th><th colspan=\"2\">数据</th></tr><tr><td>2023</td><td>2024</td></tr><tr><td>营收</td><td>10</td><td>15</td></tr></tbody></table>",
+    "is_complex": true,
+    "table_nest_level": "1"
+  }
 }
 ```
 
@@ -276,37 +288,53 @@
 
 ```json
 {
-    "type": "list",
-    "raw_content": null,
-    "content": {
-        "items": [ //列表里只考虑文本和公式，如果有其他类型元素，列表就转为若干个段落，否则结构太复杂了
-            [ //这是第一个item,每个item是个数组，数组里是段落，下面只有一个段落
-              [
-                {"c": "爱因斯坦的质量方差公式是", "t": "text"},
-                {"c": "E=mc^2", "t": "equation-inline"},
-                {"c": "，其中E是能量，m是质量，c是光速 ","t": "text"}
-              ]
-           ],
-           [
-             [
-               {"c": "第二项示例代码 sum(a)", "t": "text"},
-               {"c": "sum(a)", "t": "code-inline"}
-             ]
-           ]
-        ],
-        "list_attribute": "ordered",
-        "list_nest_level": 1
-    }
+  "type": "list",
+  "raw_content": "<dl><dt>外层列表项</dt><dd><ol><li>行内公式: <ccmath-inline type=\"latex\" by=\"mathjax_mock\" html=\"$E=mc^2$\">E=mc^2</ccmath-inline></li><li>行内代码: <cccode-inline by=\"tag_code\" html=\"&lt;code&gt;x = 1&lt;/code&gt;\" inline=\"true\">x = 1</cccode-inline></li></ol></dd><dt>外层另一个列表项</dt><dd><menu><li>第二层菜单项</li></menu></dd></dl>",
+  "content": {
+    "items": [
+      {
+        "c": "外层列表项"
+      },
+      {
+        "child_list": {
+          "list_attribute": "ordered",
+          "items": [
+            {
+              "c": "行内公式: $E=mc^2$"
+            },
+            {
+              "c": "行内代码: `x = 1`"
+            }
+          ]
+        }
+      },
+      {
+        "c": "外层另一个列表项"
+      },
+      {
+        "child_list": {
+          "list_attribute": "unordered",
+          "items": [
+            {
+              "c": "第二层菜单项"
+            }
+          ]
+        }
+      }
+    ],
+    "list_attribute": "definition",
+    "list_nest_level": "2"
+  }
 }
 ```
 
-| 字段                    | 类型   | 描述                                                | 是否必须 |
-| ----------------------- | ------ | --------------------------------------------------- | -------- |
-| type                    | string | 值固定为list                                        | 是       |
-| raw_content             | string | 原始文本内容                                        | 可选     |
-| content.items           | array  | 列表项，每个元素是N个段落，段落里的元素是文本或公式 | 是       |
-| content.list_attribute  | string | unordered/ordered/definition                        | 可选     |
-| content.list_nest_level | int    | list的嵌套层级(单层list list_nest_level为1)         | 可选     |
+| 字段                    | 类型   | 描述                                  | 是否必须 |
+| ----------------------- | ------ |-------------------------------------| -------- |
+| type                    | string | 值固定为list                            | 是       |
+| raw_content             | string | 原始文本内容                              | 可选     |
+| content.items           | array  | 列表项，每个元素是N个段落，段落里的元素是文本、公式或代码       | 是       |
+| content.list_attribute  | string | unordered/ordered/definition        | 可选     |
+| content.list_nest_level | int    | list的嵌套层级(单层list list_nest_level为1) | 可选     |
 
 <b>items字段说明</b>
 
@@ -318,12 +346,12 @@
 
 ```json
 {
-    "type": "title",
-    "raw_content": null,
-    "content": {
-        "title_content": "大模型好，大模型棒",
-        "level": 1 // 标题级别，1-N, 1最大
-    }
+  "type": "title",
+  "raw_content": "<h1>大模型好，大模型棒1</h1>",
+  "content": {
+    "title_content": "大模型好，大模型棒1",
+    "level": "1"
+  }
 }
 ```
 
@@ -338,13 +366,22 @@
 
 ```json
 {
-    "type": "paragraph",
-    "raw_content": null,
-    "content": [
-        {"c": "爱因斯坦的质量方差公式是", "t": "text"},
-        {"c": "E=mc^2", "t": "equation-inline"},
-        {"c": "，其中E是能量，m是质量，c是光速 ","t": "text"}
-      ]
+  "type": "paragraph",
+  "raw_content": "<html><head><title>Who Is In Your Top 3 Mentalists Of All Time? &lt;code&gt;x = 1&lt;/code&gt; <ccmath-inline type=\"latex\" by=\"mathjax_mock\" html=\"$E=mc^2$\">E=mc^2</ccmath-inline> • MAGICIANSANDMAGIC.COM</title></head></html>",
+  "content": [
+    {
+      "c": "Who Is In Your Top 3 Mentalists Of All Time? x = 1",
+      "t": "text"
+    },
+    {
+      "c": "E=mc^2",
+      "t": "equation-inline"
+    },
+    {
+      "c": "• MAGICIANSANDMAGIC.COM",
+      "t": "text"
+    }
+  ]
 }
 ```
 
