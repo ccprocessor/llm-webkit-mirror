@@ -87,15 +87,17 @@
     },
     {
       "type": "list",
-      "raw_content": "<ul><li>You must be logged in to reply to this topic.</li></ul>",
+      "raw_content": "<ul><li>You must be logged in to reply to this topic. <code>x = 1</code> $E=mc^2$</li></ul>",
       "content": {
         "items": [
-          {
-            "c": "You must be logged in to reply to this topic."
-          }
+          [
+            { "c": "You must be logged in to reply to this topic.", "t": "text" },
+            { "c": "x = 1", "t": "code-inline" },
+            { "c": "E=mc^2", "t": "equation-inline" }
+          ]
         ],
         "list_attribute": "unordered",
-        "list_nest_level": "1"
+        "list_nest_level": 1
       }
     },
     {
@@ -108,12 +110,12 @@
     },
     {
       "type": "paragraph",
-      "raw_content": "<html><head><title>Who Is In Your Top 3 Mentalists Of All Time? • MAGICIANSANDMAGIC.COM</title></head></html>",
+      "raw_content": "<html><head><title>Who Is In Your Top 3 Mentalists Of All Time? <code>x = 1</code> $E=mc^2$ • MAGICIANSANDMAGIC.COM</title></head></html>",
       "content": [
-        {
-          "c": "Who Is In Your Top 3 Mentalists Of All Time? • MAGICIANSANDMAGIC.COM",
-          "t": "text"
-        }
+        { "c": "Who Is In Your Top 3 Mentalists Of All Time?", "t": "text" },
+        { "c": "x = 1", "t": "code-inline" },
+        { "c": "E=mc^2", "t": "equation-inline" },
+        { "c": "• MAGICIANSANDMAGIC.COM", "t": "text" }
       ]
     }
   ],
