@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     cache_ttl: int = 3600  # 1小时
 
     # 数据库配置
-    database_url: Optional[str] = "mysql+aiomysql://mineru_ai:8L5D2_#W6tu9QWT@rm-uf6btdj3pp7idm669oo.mysql.rds.aliyuncs.com:3306/mineru_ai"
+    database_url: Optional[str] = None  # 从环境变量 DATABASE_URL 读取
     db_pool_size: int = 5
     db_max_overflow: int = 10
 

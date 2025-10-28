@@ -55,7 +55,17 @@ async def health_check():
 
 @app.on_event("startup")
 async def app_startup():
-    """应用启动时预热模型，避免首个请求冷启动延迟."""
+    """应用启动时初始化资源."""
+    logger.info("应用启动中...")
+
+    # 显示数据库配置（隐藏密码）
+    if settings.database_url:
+        # 隐藏密码部分用于日志输出
+        db_url_safe = settings.database_url.split('@')[1] if '@' in settings.database_url else settings.database_url
+        logger.info(f"数据库配置已加载: ...@{db_url_safe}")
+    else:
+        logger.info("未配置数据库连接，请求日志功能将被禁用")
+
     # 初始化数据库
     try:
         from .database import get_db_manager
